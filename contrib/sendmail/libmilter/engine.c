@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: engine.c,v 8.67.4.14 2000/08/14 08:27:30 gshapiro Exp $"
+literal|"@(#)$Id: engine.c,v 8.67.4.15 2000/12/29 19:43:10 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 

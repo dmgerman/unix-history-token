@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: rmail.c,v 8.39.4.8 2000/09/16 22:20:25 gshapiro Exp $"
+literal|"@(#)$Id: rmail.c,v 8.39.4.9 2000/11/17 08:42:56 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1618,7 +1618,7 @@ name|stdin
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Allocate args (with room for sendmail args as well as recipients */
+comment|/* Allocate args (with room for sendmail args as well as recipients) */
 name|args
 operator|=
 operator|(
@@ -1654,15 +1654,6 @@ operator|=
 name|_PATH_SENDMAIL
 expr_stmt|;
 comment|/* Build sendmail's argument list. */
-name|args
-index|[
-name|i
-operator|++
-index|]
-operator|=
-literal|"-G"
-expr_stmt|;
-comment|/* relay submission */
 name|args
 index|[
 name|i

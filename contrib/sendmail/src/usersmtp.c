@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: usersmtp.c,v 8.245.4.13 2000/09/26 00:46:21 gshapiro Exp $ (with SMTP)"
+literal|"@(#)$Id: usersmtp.c,v 8.245.4.18 2000/12/20 16:36:11 ca Exp $ (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: usersmtp.c,v 8.245.4.13 2000/09/26 00:46:21 gshapiro Exp $ (without SMTP)"
+literal|"@(#)$Id: usersmtp.c,v 8.245.4.18 2000/12/20 16:36:11 ca Exp $ (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4787,7 +4787,7 @@ argument_list|,
 operator|&
 name|addrsize
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
@@ -5240,11 +5240,13 @@ literal|'\0'
 expr_stmt|;
 name|smtpmessage
 argument_list|(
-name|in64
+literal|"%s"
 argument_list|,
 name|m
 argument_list|,
 name|mci
+argument_list|,
+name|in64
 argument_list|)
 expr_stmt|;
 name|smtpresult
@@ -6424,7 +6426,7 @@ if|if
 condition|(
 name|r
 operator|==
-literal|421
+name|SMTPCLOSING
 condition|)
 block|{
 comment|/* service shutting down */
@@ -8806,7 +8808,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"smtpquit: mailer%s%s exited with exit value %d\n"
+literal|"smtpquit: mailer%s%s exited with exit value %d"
 argument_list|,
 name|mailer
 operator|==
@@ -8933,7 +8935,15 @@ name|MCIS_ERROR
 expr_stmt|;
 else|else
 block|{
-comment|/* 		**  Any response is deemed to be acceptable. 		**  The standard does not state the proper action 		**  to take when a value other than 250 is received. 		*/
+comment|/* 		**  Any response is deemed to be acceptable. 		**  The standard does not state the proper action 		**  to take when a value other than 250 is received. 		** 		**  However, if 421 is returned for the RSET, leave 		**  mci_state as MCIS_SSD (set in reply()). 		*/
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|!=
+name|MCIS_SSD
+condition|)
 name|mci
 operator|->
 name|mci_state

@@ -54,7 +54,7 @@ name|char
 name|MilterlId
 index|[]
 init|=
-literal|"@(#)$Id: libmilter.h,v 8.3.6.9 2000/09/01 00:49:04 ca Exp $"
+literal|"@(#)$Id: libmilter.h,v 8.3.6.10 2000/11/20 21:15:36 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,6 +219,63 @@ directive|define
 name|sthread_get_id
 parameter_list|()
 value|pthread_self()
+end_define
+
+begin_typedef
+typedef|typedef
+name|pthread_mutex_t
+name|smutex_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|smutex_init
+parameter_list|(
+name|mp
+parameter_list|)
+value|(pthread_mutex_init(mp, NULL) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|smutex_destroy
+parameter_list|(
+name|mp
+parameter_list|)
+value|(pthread_mutex_destroy(mp) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|smutex_lock
+parameter_list|(
+name|mp
+parameter_list|)
+value|(pthread_mutex_lock(mp) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|smutex_unlock
+parameter_list|(
+name|mp
+parameter_list|)
+value|(pthread_mutex_unlock(mp) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|smutex_trylock
+parameter_list|(
+name|mp
+parameter_list|)
+value|(pthread_mutex_trylock(mp) == 0)
 end_define
 
 begin_include

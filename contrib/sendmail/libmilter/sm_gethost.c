@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: sm_gethost.c,v 8.7.8.2 2000/09/17 17:04:24 gshapiro Exp $"
+literal|"@(#)$Id: sm_gethost.c,v 8.7.8.4 2000/12/19 04:26:33 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,6 +237,38 @@ name|h
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|_FFR_FREEHOSTENT
+end_if
+
+begin_function
+name|void
+name|freehostent
+parameter_list|(
+name|h
+parameter_list|)
+name|struct
+name|hostent
+modifier|*
+name|h
+decl_stmt|;
+block|{
+comment|/* 	**  Stub routine -- if they don't have getipnodeby*(), 	**  they probably don't have the free routine either. 	*/
+return|return;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_FREEHOSTENT */
+end_comment
 
 begin_endif
 endif|#

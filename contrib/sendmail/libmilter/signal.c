@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: signal.c,v 8.10.4.7 2000/09/01 00:49:04 ca Exp $"
+literal|"@(#)$Id: signal.c,v 8.10.4.8 2000/11/20 21:15:37 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,63 +39,6 @@ include|#
 directive|include
 file|"libmilter.h"
 end_include
-
-begin_typedef
-typedef|typedef
-name|pthread_mutex_t
-name|smutex_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|smutex_init
-parameter_list|(
-name|mp
-parameter_list|)
-value|(pthread_mutex_init(mp, NULL) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|smutex_destroy
-parameter_list|(
-name|mp
-parameter_list|)
-value|(pthread_mutex_destroy(mp) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|smutex_lock
-parameter_list|(
-name|mp
-parameter_list|)
-value|(pthread_mutex_lock(mp) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|smutex_unlock
-parameter_list|(
-name|mp
-parameter_list|)
-value|(pthread_mutex_unlock(mp) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|smutex_trylock
-parameter_list|(
-name|mp
-parameter_list|)
-value|(pthread_mutex_trylock(mp) == 0)
-end_define
 
 begin_comment
 comment|/* **  thread to handle signals */

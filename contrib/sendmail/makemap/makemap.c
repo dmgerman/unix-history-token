@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: makemap.c,v 8.135.4.11 2000/09/13 01:11:10 gshapiro Exp $"
+literal|"@(#)$Id: makemap.c,v 8.135.4.13 2000/10/05 23:00:50 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1415,9 +1415,6 @@ condition|(
 name|unmake
 condition|)
 block|{
-name|bool
-name|stop
-decl_stmt|;
 name|errno
 operator|=
 name|database
@@ -1482,16 +1479,10 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|stop
-operator|=
-name|FALSE
-operator|,
 name|lineno
 operator|=
 literal|0
 init|;
-operator|!
-name|stop
 condition|;
 name|lineno
 operator|++
@@ -1520,17 +1511,7 @@ name|errno
 operator|!=
 name|SMDBE_OK
 condition|)
-block|{
-name|stop
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|stop
-condition|)
+break|break;
 name|printf
 argument_list|(
 literal|"%.*s\t%.*s\n"
@@ -1540,8 +1521,6 @@ name|int
 operator|)
 name|db_key
 operator|.
-name|data
-operator|.
 name|size
 argument_list|,
 operator|(
@@ -1551,15 +1530,11 @@ operator|)
 name|db_key
 operator|.
 name|data
-operator|.
-name|data
 argument_list|,
 operator|(
 name|int
 operator|)
 name|db_val
-operator|.
-name|data
 operator|.
 name|size
 argument_list|,
@@ -1568,8 +1543,6 @@ name|char
 operator|*
 operator|)
 name|db_val
-operator|.
-name|data
 operator|.
 name|data
 argument_list|)
@@ -1761,8 +1734,6 @@ expr_stmt|;
 name|db_key
 operator|.
 name|data
-operator|.
-name|data
 operator|=
 name|ibuf
 expr_stmt|;
@@ -1818,8 +1789,6 @@ expr_stmt|;
 block|}
 name|db_key
 operator|.
-name|data
-operator|.
 name|size
 operator|=
 name|p
@@ -1831,8 +1800,6 @@ condition|(
 name|inclnull
 condition|)
 name|db_key
-operator|.
-name|data
 operator|.
 name|size
 operator|++
@@ -1891,8 +1858,6 @@ operator|)
 name|db_key
 operator|.
 name|data
-operator|.
-name|data
 argument_list|)
 expr_stmt|;
 name|exitstat
@@ -1904,14 +1869,10 @@ block|}
 name|db_val
 operator|.
 name|data
-operator|.
-name|data
 operator|=
 name|p
 expr_stmt|;
 name|db_val
-operator|.
-name|data
 operator|.
 name|size
 operator|=
@@ -1925,8 +1886,6 @@ condition|(
 name|inclnull
 condition|)
 name|db_val
-operator|.
-name|data
 operator|.
 name|size
 operator|++
@@ -1948,16 +1907,12 @@ operator|)
 name|db_key
 operator|.
 name|data
-operator|.
-name|data
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 name|db_val
-operator|.
-name|data
 operator|.
 name|data
 argument_list|)
@@ -2035,8 +1990,6 @@ operator|)
 name|db_key
 operator|.
 name|data
-operator|.
-name|data
 argument_list|,
 name|errstring
 argument_list|(
@@ -2074,8 +2027,6 @@ name|char
 operator|*
 operator|)
 name|db_key
-operator|.
-name|data
 operator|.
 name|data
 argument_list|)

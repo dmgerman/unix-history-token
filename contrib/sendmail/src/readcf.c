@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: readcf.c,v 8.382.4.27 2000/09/28 01:31:16 gshapiro Exp $"
+literal|"@(#)$Id: readcf.c,v 8.382.4.31 2000/12/18 18:00:43 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1249,6 +1249,13 @@ operator|&
 name|ep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mid
+operator|==
+literal|0
+condition|)
+break|break;
 name|p
 operator|=
 name|munchstring
@@ -1328,6 +1335,13 @@ operator|&
 name|ep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mid
+operator|==
+literal|0
+condition|)
+break|break;
 name|expand
 argument_list|(
 name|ep
@@ -1478,6 +1492,13 @@ operator|&
 name|ep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mid
+operator|==
+literal|0
+condition|)
+break|break;
 for|for
 control|(
 name|p
@@ -3330,11 +3351,14 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"name required for mailer"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|m
 operator|->
 name|m_name
@@ -3491,6 +3515,7 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+else|else
 name|m
 operator|->
 name|m_mailer
@@ -3535,8 +3560,11 @@ operator|)
 condition|)
 name|setbitn
 argument_list|(
+name|bitidx
+argument_list|(
 operator|*
 name|p
+argument_list|)
 argument_list|,
 name|m
 operator|->
@@ -3670,6 +3698,7 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+else|else
 name|m
 operator|->
 name|m_eol
@@ -3700,6 +3729,7 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+else|else
 name|m
 operator|->
 name|m_argv
@@ -3820,6 +3850,7 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+else|else
 name|m
 operator|->
 name|m_execdir
@@ -3850,6 +3881,7 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+else|else
 name|m
 operator|->
 name|m_defcharset
@@ -4127,6 +4159,7 @@ name|q
 operator|==
 literal|'\0'
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"mailer %s: null user name"
@@ -4136,6 +4169,8 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|pw
 operator|=
 name|sm_getpwnam
@@ -4149,6 +4184,7 @@ name|pw
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"readcf: mailer U= flag: unknown user %s"
@@ -4156,6 +4192,8 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 else|else
 block|{
 name|m
@@ -4311,6 +4349,7 @@ name|q
 operator|==
 literal|'\0'
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"mailer %s: null group name"
@@ -4320,6 +4359,8 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|gr
 operator|=
 name|getgrnam
@@ -4333,6 +4374,7 @@ name|gr
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"readcf: mailer U= flag: unknown group %s"
@@ -4340,6 +4382,8 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 else|else
 name|m
 operator|->
@@ -4579,6 +4623,7 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+return|return;
 else|#
 directive|else
 comment|/* _FFR_REMOVE_TCP_MAILER_PATH */
@@ -4674,6 +4719,7 @@ operator|->
 name|m_mailer
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
@@ -4839,6 +4885,7 @@ else|:
 literal|"many"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 elseif|else
 if|if
@@ -4867,6 +4914,7 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 block|}
 if|if
@@ -8369,6 +8417,7 @@ argument_list|(
 literal|"need QUEUE to set -odqueue or -oddefer"
 argument_list|)
 expr_stmt|;
+break|break;
 endif|#
 directive|endif
 comment|/* !QUEUE */
@@ -8989,6 +9038,10 @@ case|case
 literal|'M'
 case|:
 comment|/* define macro */
+name|sticky
+operator|=
+name|FALSE
+expr_stmt|;
 name|mid
 operator|=
 name|macid
@@ -8999,6 +9052,13 @@ operator|&
 name|ep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mid
+operator|==
+literal|0
+condition|)
+break|break;
 name|p
 operator|=
 name|newstr
@@ -9028,10 +9088,6 @@ name|p
 argument_list|,
 name|CurEnv
 argument_list|)
-expr_stmt|;
-name|sticky
-operator|=
-name|FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -9074,7 +9130,6 @@ argument_list|(
 name|val
 argument_list|)
 condition|)
-block|{
 name|syserr
 argument_list|(
 literal|"too many daemons defined (%d max)"
@@ -9082,7 +9137,6 @@ argument_list|,
 name|MAXDAEMONS
 argument_list|)
 expr_stmt|;
-block|}
 else|#
 directive|else
 comment|/* DAEMON */
@@ -9260,6 +9314,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+else|else
 name|PrivacyFlags
 operator||=
 name|pv
@@ -9585,6 +9640,7 @@ name|pw
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"readcf: option u: unknown user %s"
@@ -9592,6 +9648,8 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 else|else
 block|{
 name|DefUid
@@ -9631,11 +9689,18 @@ name|syserr
 argument_list|(
 literal|"readcf: option u: uid value (%ld)> UID_MAX (%ld); ignored"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|DefUid
 argument_list|,
+operator|(
+name|long
+operator|)
 name|UID_MAX
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 endif|#
 directive|endif
@@ -10591,6 +10656,7 @@ name|pw
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"readcf: option RunAsUser: unknown user %s"
@@ -10598,6 +10664,8 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 elseif|else
 if|if
 condition|(
@@ -10646,11 +10714,18 @@ name|syserr
 argument_list|(
 literal|"readcf: option RunAsUser: uid value (%ld)> UID_MAX (%ld); ignored"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|RunAsUid
 argument_list|,
+operator|(
+name|long
+operator|)
 name|UID_MAX
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 endif|#
 directive|endif
@@ -11168,6 +11243,7 @@ name|pw
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"readcf: option TrustedUser: unknown user %s"
@@ -11175,6 +11251,8 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 else|else
 name|TrustedUid
 operator|=
@@ -11197,8 +11275,14 @@ name|syserr
 argument_list|(
 literal|"readcf: option TrustedUser: uid value (%ld)> UID_MAX (%ld)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|TrustedUid
 argument_list|,
+operator|(
+name|long
+operator|)
 name|UID_MAX
 argument_list|)
 expr_stmt|;
@@ -12237,7 +12321,7 @@ if|if
 condition|(
 name|mid
 operator|==
-literal|'\0'
+literal|0
 condition|)
 return|return;
 if|if
@@ -12308,7 +12392,10 @@ argument_list|)
 expr_stmt|;
 name|setbitn
 argument_list|(
+name|bitidx
+argument_list|(
 name|class
+argument_list|)
 argument_list|,
 name|s
 operator|->
@@ -13258,6 +13345,10 @@ condition|(
 name|stabmode
 operator|==
 name|ST_ENTER
+operator|&&
+name|ruleset
+operator|>=
+literal|0
 condition|)
 block|{
 name|char
@@ -13801,6 +13892,12 @@ name|to_name
 operator|==
 name|NULL
 condition|)
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+comment|/* avoid bogus error text */
 name|syserr
 argument_list|(
 literal|"settimeout: invalid timeout %s"
@@ -13808,6 +13905,8 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* 	**  See if this option is preset for us. 	*/
 if|if
 condition|(

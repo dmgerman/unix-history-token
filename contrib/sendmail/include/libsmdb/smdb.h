@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. ** ** $Id: smdb.h,v 8.29.2.1.2.1 2000/08/24 17:08:00 gshapiro Exp $ */
+comment|/* ** Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. ** ** $Id: smdb.h,v 8.29.2.1.2.2 2000/10/05 22:23:55 gshapiro Exp $ */
 end_comment
 
 begin_ifndef
@@ -129,8 +129,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|union
-name|database_entity_union
+name|struct
+name|entry_struct
 name|SMDB_DBENT
 typedef|;
 end_typedef
@@ -663,31 +663,11 @@ name|SMDB_USER_INFO
 typedef|;
 end_typedef
 
-begin_union
-union|union
-name|database_entity_union
-block|{
-ifdef|#
-directive|ifdef
-name|NDBM
-name|datum
-name|dbm
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* NDBM */
-ifdef|#
-directive|ifdef
-name|NEWDB
-name|DBT
-name|db
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* NEWDB */
+begin_struct
 struct|struct
+name|entry_struct
 block|{
-name|char
+name|void
 modifier|*
 name|data
 decl_stmt|;
@@ -695,11 +675,8 @@ name|size_t
 name|size
 decl_stmt|;
 block|}
-name|data
 struct|;
-block|}
-union|;
-end_union
+end_struct
 
 begin_typedef
 typedef|typedef

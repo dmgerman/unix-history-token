@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: deliver.c,v 8.600.2.1.2.44 2000/09/21 21:52:17 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.600.2.1.2.56 2000/12/19 01:16:12 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2058,6 +2058,12 @@ operator|!=
 name|SM_VERIFY
 condition|)
 block|{
+name|time_t
+name|now
+init|=
+name|curtime
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -2081,8 +2087,7 @@ name|e
 operator|->
 name|e_dtime
 operator|=
-name|curtime
-argument_list|()
+name|now
 expr_stmt|;
 if|if
 condition|(
@@ -2115,8 +2120,7 @@ name|ee
 operator|->
 name|e_dtime
 operator|=
-name|curtime
-argument_list|()
+name|now
 expr_stmt|;
 if|if
 condition|(
@@ -4905,6 +4909,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 literal|4
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -9457,10 +9463,6 @@ operator|!=
 name|MCIS_CLOSED
 condition|)
 block|{
-specifier|static
-name|u_short
-name|again
-decl_stmt|;
 if|#
 directive|if
 name|SASL
@@ -9468,12 +9470,11 @@ operator|&&
 name|SFIO
 define|#
 directive|define
-name|DONE_TLS_B
-value|0x01
-define|#
-directive|define
-name|DONE_TLS
-value|bitset(DONE_TLS_B, again)
+name|DONE_AUTH
+parameter_list|(
+name|f
+parameter_list|)
+value|bitset(MCIF_AUTHACT, f)
 endif|#
 directive|endif
 comment|/* SASL&& SFIO */
@@ -9482,35 +9483,35 @@ directive|if
 name|STARTTLS
 define|#
 directive|define
-name|DONE_STARTTLS_B
-value|0x02
-define|#
-directive|define
 name|DONE_STARTTLS
-value|bitset(DONE_STARTTLS_B, again)
+parameter_list|(
+name|f
+parameter_list|)
+value|bitset(MCIF_TLSACT, f)
 endif|#
 directive|endif
 comment|/* STARTTLS */
 define|#
 directive|define
-name|ONLY_HELO_B
-value|0x04
-define|#
-directive|define
 name|ONLY_HELO
-value|bitset(ONLY_HELO_B, again)
+parameter_list|(
+name|f
+parameter_list|)
+value|bitset(MCIF_ONLY_EHLO, f)
 define|#
 directive|define
 name|SET_HELO
-value|again |= ONLY_HELO_B
+parameter_list|(
+name|f
+parameter_list|)
+value|f |= MCIF_ONLY_EHLO
 define|#
 directive|define
 name|CLR_HELO
-value|again&= ~ONLY_HELO_B
-name|again
-operator|=
-literal|0
-expr_stmt|;
+parameter_list|(
+name|f
+parameter_list|)
+value|f&= ~MCIF_ONLY_EHLO
 if|#
 directive|if
 name|STARTTLS
@@ -9547,9 +9548,19 @@ argument_list|,
 name|e
 argument_list|,
 name|ONLY_HELO
+argument_list|(
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|CLR_HELO
+argument_list|(
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -9565,6 +9576,11 @@ name|MCIS_CLOSED
 operator|&&
 operator|!
 name|DONE_STARTTLS
+argument_list|(
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
 condition|)
 block|{
 name|int
@@ -9585,6 +9601,12 @@ name|bool
 name|saveSuprErrs
 init|=
 name|SuprErrs
+decl_stmt|;
+name|char
+modifier|*
+name|host
+init|=
+name|NULL
 decl_stmt|;
 if|#
 directive|if
@@ -9766,14 +9788,28 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_TLS_O_T
 if|if
 condition|(
 name|usetls
 condition|)
 block|{
+name|host
+operator|=
+name|macvalue
+argument_list|(
+name|macid
+argument_list|(
+literal|"{server_name}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|_FFR_TLS_O_T
 name|olderrors
 operator|=
 name|Errors
@@ -9803,6 +9839,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 literal|8
+argument_list|,
+name|host
 argument_list|)
 operator|!=
 name|EX_OK
@@ -9823,10 +9861,10 @@ name|QuickAbort
 operator|=
 name|saveQuickAbort
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* _FFR_TLS_O_T */
+block|}
 comment|/* undo change of CurHostName */
 if|if
 condition|(
@@ -9866,10 +9904,6 @@ name|EX_OK
 condition|)
 block|{
 comment|/* start again without STARTTLS */
-name|again
-operator||=
-name|DONE_STARTTLS_B
-expr_stmt|;
 name|mci
 operator|->
 name|mci_flags
@@ -9958,6 +9992,38 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_ssl
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* active TLS connection, use that data */
+operator|(
+name|void
+operator|)
+name|tls_get_info
+argument_list|(
+name|mci
+operator|->
+name|mci_ssl
+argument_list|,
+name|e
+argument_list|,
+name|FALSE
+argument_list|,
+name|mci
+operator|->
+name|mci_host
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|define
 argument_list|(
@@ -10013,6 +10079,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 literal|6
+argument_list|,
+name|host
 argument_list|)
 operator|!=
 name|EX_OK
@@ -10167,6 +10235,13 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* avoid bogus error msg */
+name|mci
+operator|->
+name|mci_errno
+operator|=
+literal|0
+expr_stmt|;
 comment|/* temp or permanent failure? */
 name|rcode
 operator|=
@@ -10221,6 +10296,11 @@ expr_stmt|;
 if|if
 condition|(
 name|DONE_STARTTLS
+argument_list|(
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
 operator|&&
 name|mci
 operator|->
@@ -10230,6 +10310,11 @@ name|MCIS_CLOSED
 condition|)
 block|{
 name|SET_HELO
+argument_list|(
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
 expr_stmt|;
 name|mci
 operator|->
@@ -10242,6 +10327,38 @@ goto|goto
 name|reconnect
 goto|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_ssl
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* active TLS connection, use that data */
+operator|(
+name|void
+operator|)
+name|tls_get_info
+argument_list|(
+name|mci
+operator|->
+name|mci_ssl
+argument_list|,
+name|e
+argument_list|,
+name|FALSE
+argument_list|,
+name|mci
+operator|->
+name|mci_host
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -10268,7 +10385,12 @@ if|#
 directive|if
 name|SFIO
 operator|!
-name|DONE_TLS
+name|DONE_AUTH
+argument_list|(
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
 operator|&&
 endif|#
 directive|endif
@@ -10391,11 +10513,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|again
-operator||=
-name|DONE_TLS_B
-expr_stmt|;
 name|SET_HELO
+argument_list|(
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
 expr_stmt|;
 name|mci
 operator|->
@@ -10911,6 +11034,10 @@ argument_list|,
 name|TRUE
 argument_list|,
 literal|4
+argument_list|,
+name|mci
+operator|->
+name|mci_host
 argument_list|)
 expr_stmt|;
 if|if
@@ -10920,6 +11047,11 @@ operator|!=
 name|EX_OK
 condition|)
 block|{
+comment|/* avoid bogus error msg */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|markfailure
 argument_list|(
 name|e
@@ -13808,6 +13940,9 @@ decl_stmt|;
 name|int
 name|l
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -13916,6 +14051,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* delay& xdelay: max 41 bytes */
+name|now
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|bp
@@ -13931,8 +14071,7 @@ literal|", delay=%s"
 argument_list|,
 name|pintvl
 argument_list|(
-name|curtime
-argument_list|()
+name|now
 operator|-
 name|e
 operator|->
@@ -13974,8 +14113,7 @@ literal|", xdelay=%s"
 argument_list|,
 name|pintvl
 argument_list|(
-name|curtime
-argument_list|()
+name|now
 operator|-
 name|xstart
 argument_list|,
@@ -14855,8 +14993,7 @@ literal|"delay=%s"
 argument_list|,
 name|pintvl
 argument_list|(
-name|curtime
-argument_list|()
+name|now
 operator|-
 name|e
 operator|->
@@ -14898,8 +15035,7 @@ literal|", xdelay=%s"
 argument_list|,
 name|pintvl
 argument_list|(
-name|curtime
-argument_list|()
+name|now
 operator|-
 name|xstart
 argument_list|,
@@ -16381,6 +16517,14 @@ name|TRUE
 expr_stmt|;
 continue|continue;
 block|}
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|pos
 operator|++
 expr_stmt|;
@@ -16424,11 +16568,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 block|}
+else|else
+block|{
 comment|/* record progress for DATA timeout */
 name|DataProgress
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -16460,6 +16607,14 @@ operator|==
 name|EOF
 condition|)
 break|break;
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|pos
 operator|=
 literal|0
@@ -16486,11 +16641,6 @@ operator|=
 name|c
 expr_stmt|;
 block|}
-comment|/* record progress for DATA timeout */
-name|DataProgress
-operator|=
-name|TRUE
-expr_stmt|;
 name|bp
 operator|=
 name|buf
@@ -16552,11 +16702,14 @@ operator|==
 name|EOF
 condition|)
 continue|continue;
+else|else
+block|{
 comment|/* record progress for DATA timeout */
 name|DataProgress
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -16766,6 +16919,14 @@ name|TRUE
 expr_stmt|;
 continue|continue;
 block|}
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|pos
 operator|++
 expr_stmt|;
@@ -16806,11 +16967,14 @@ name|TRUE
 expr_stmt|;
 continue|continue;
 block|}
+else|else
+block|{
 comment|/* record progress for DATA timeout */
 name|DataProgress
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -16889,6 +17053,14 @@ operator|==
 name|EOF
 condition|)
 continue|continue;
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|pos
 operator|=
 literal|0
@@ -16944,6 +17116,14 @@ name|TRUE
 expr_stmt|;
 continue|continue;
 block|}
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|pos
 operator|++
 expr_stmt|;
@@ -16952,11 +17132,6 @@ operator|=
 name|OS_INLINE
 expr_stmt|;
 block|}
-comment|/* record progress for DATA timeout */
-name|DataProgress
-operator|=
-name|TRUE
-expr_stmt|;
 break|break;
 block|}
 block|}
@@ -17043,11 +17218,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 block|}
+else|else
+block|{
 comment|/* record progress for DATA timeout */
 name|DataProgress
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 name|pos
 operator|+=
@@ -18357,15 +18535,26 @@ operator|&&
 name|ctladdr
 operator|->
 name|q_uid
-operator|!=
-literal|0
-condition|)
-name|RealGid
-operator|=
+operator|==
+name|DefUid
+operator|&&
 name|ctladdr
 operator|->
 name|q_gid
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 				**  Special case:  This means it is an 				**  alias and we should act as DefaultUser. 				**  See alias()'s comments. 				*/
+name|RealGid
+operator|=
+name|DefGid
 expr_stmt|;
+name|RealUserName
+operator|=
+name|DefUser
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -18376,18 +18565,14 @@ operator|&&
 name|ctladdr
 operator|->
 name|q_uid
-operator|==
-name|DefUid
-operator|&&
-name|ctladdr
-operator|->
-name|q_gid
-operator|==
+operator|!=
 literal|0
 condition|)
 name|RealGid
 operator|=
-name|DefGid
+name|ctladdr
+operator|->
+name|q_gid
 expr_stmt|;
 elseif|else
 if|if
@@ -19709,6 +19894,9 @@ decl_stmt|;
 name|int
 name|hl
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 name|char
 modifier|*
 name|hp
@@ -19915,6 +20103,11 @@ name|RES_DNSRCH
 operator|)
 expr_stmt|;
 comment|/* XXX */
+name|now
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|hp
@@ -20098,8 +20291,7 @@ name|mci
 operator|->
 name|mci_lastuse
 operator|=
-name|curtime
-argument_list|()
+name|now
 expr_stmt|;
 if|if
 condition|(
@@ -21370,6 +21562,8 @@ argument_list|,
 name|mci
 operator|->
 name|mci_host
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* switch to use SSL... */

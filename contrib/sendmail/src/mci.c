@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: mci.c,v 8.133.10.3 2000/06/23 16:17:06 ca Exp $"
+literal|"@(#)$Id: mci.c,v 8.133.10.7 2000/12/12 00:39:34 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,6 +905,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|allbut
@@ -925,6 +926,7 @@ argument_list|,
 name|doquit
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1004,7 +1006,7 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"negative mno %d (%s)"
+literal|"!negative mno %d (%s)"
 argument_list|,
 name|m
 operator|->
@@ -1334,6 +1336,12 @@ operator|->
 name|m_mno
 operator|<
 literal|0
+operator|||
+name|m
+operator|->
+name|m_mno
+operator|>
+name|MAXMAILERS
 condition|)
 return|return
 name|FALSE
@@ -4972,10 +4980,10 @@ literal|0
 index|]
 operator|==
 literal|'['
-operator|&&
 if|#
 directive|if
 name|NETINET6
+operator|&&
 name|inet_pton
 argument_list|(
 name|AF_INET6
@@ -4987,13 +4995,13 @@ name|in6_addr
 argument_list|)
 operator|!=
 literal|1
-operator|&&
 endif|#
 directive|endif
 comment|/* NETINET6 */
 if|#
 directive|if
 name|NETINET
+operator|&&
 name|inet_addr
 argument_list|(
 name|t_host

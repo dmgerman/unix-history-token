@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: mime.c,v 8.94 1999/10/17 17:35:58 ca Exp $"
+literal|"@(#)$Id: mime.c,v 8.94.16.3 2000/10/09 02:46:10 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1145,6 +1145,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|boundaries
@@ -1155,6 +1156,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 name|i
@@ -2910,9 +2912,10 @@ if|if
 condition|(
 name|bitnset
 argument_list|(
+name|bitidx
+argument_list|(
 name|c1
-operator|&
-literal|0xff
+argument_list|)
 argument_list|,
 name|badchars
 argument_list|)
@@ -3660,6 +3663,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|i
+operator|>
+literal|0
+operator|&&
 name|line
 index|[
 name|i
@@ -3675,6 +3682,11 @@ expr_stmt|;
 comment|/* strip off trailing whitespace */
 while|while
 condition|(
+name|i
+operator|>
+literal|0
+operator|&&
+operator|(
 name|line
 index|[
 name|i
@@ -3692,6 +3704,7 @@ literal|1
 index|]
 operator|==
 literal|'\t'
+operator|)
 condition|)
 name|i
 operator|--
@@ -3946,6 +3959,10 @@ name|i
 operator|=
 literal|0
 init|;
+name|i
+operator|<=
+name|MAXMIMENESTING
+operator|&&
 name|boundaries
 index|[
 name|i

@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.58 2000/09/21 21:52:18 ca Exp $ (with SMTP)"
+literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.66 2000/12/18 18:00:44 ca Exp $ (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.58 2000/09/21 21:52:18 ca Exp $ (without SMTP)"
+literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.66 2000/12/18 18:00:44 ca Exp $ (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1927,6 +1927,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 literal|8
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -4395,6 +4397,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|CurSmtpClient
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* 			**  call Stls_client to find out whether 			**  to accept the connection from the client 			*/
@@ -4441,6 +4445,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 literal|6
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -6230,6 +6236,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 literal|4
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -7047,6 +7055,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 literal|4
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -8424,6 +8434,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 literal|4
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -8459,11 +8471,12 @@ name|wt
 operator|>
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|sleep
-argument_list|(
+block|{
+name|time_t
+name|t
+decl_stmt|;
+name|t
+operator|=
 name|wt
 operator|-
 operator|(
@@ -8472,8 +8485,22 @@ argument_list|()
 operator|-
 name|previous
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|>
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|sleep
+argument_list|(
+name|t
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|Errors
@@ -8725,6 +8752,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 literal|4
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -9405,7 +9434,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CHECKSMTPATTACK -- check for denial-of-service attack by repetition ** **	Parameters: **		pcounter -- pointer to a counter for this command. **		maxcount -- maximum value for this counter before we **			slow down. **		waitnow -- sleep now (in this routine)? **		cname -- command name for logging. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Slows down if we seem to be under attack. */
+comment|/* **  CHECKSMTPATTACK -- check for denial-of-service attack by repetition ** **	Parameters: **		pcounter -- pointer to a counter for this command. **		maxcount -- maximum value for this counter before we **			slow down. **		waitnow -- sleep now (in this routine)? **		cname -- command name for logging. **		e -- the current envelope. ** **	Returns: **		time to wait. ** **	Side Effects: **		Slows down if we seem to be under attack. */
 end_comment
 
 begin_function
@@ -10391,6 +10420,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 literal|10
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -11570,6 +11601,10 @@ name|result
 argument_list|,
 name|num
 argument_list|)
+expr_stmt|;
+name|num
+operator|=
+literal|0
 expr_stmt|;
 block|}
 return|return
@@ -15012,7 +15047,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  TLS_GET_INFO -- get information about TLS connection ** **	Parameters: **		ssl -- SSL connection structure **		e -- current envelope **		srv -- server or client **		host -- hostname of other side ** **	Returns: **		result of authentication. ** **	Side Effects: **		sets ${cipher}, ${tls_version}, ${verify}, ${cipher_bits}, **		${cert} */
+comment|/* **  TLS_GET_INFO -- get information about TLS connection ** **	Parameters: **		ssl -- SSL connection structure **		e -- current envelope **		srv -- server or client **		host -- hostname of other side **		log -- log connection information? ** **	Returns: **		result of authentication. ** **	Side Effects: **		sets ${cipher}, ${tls_version}, ${verify}, ${cipher_bits}, **		${cert} */
 end_comment
 
 begin_function
@@ -15026,6 +15061,8 @@ parameter_list|,
 name|srv
 parameter_list|,
 name|host
+parameter_list|,
+name|log
 parameter_list|)
 name|SSL
 modifier|*
@@ -15041,6 +15078,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|host
+decl_stmt|;
+name|bool
+name|log
 decl_stmt|;
 block|{
 name|SSL_CIPHER
@@ -15216,6 +15256,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|log
+operator|&&
 name|LogLevel
 operator|>=
 literal|14
@@ -15557,6 +15599,8 @@ expr_stmt|;
 comment|/* do some logging */
 if|if
 condition|(
+name|log
+operator|&&
 name|LogLevel
 operator|>
 literal|9

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: handler.c,v 8.19.4.2 2000/07/14 06:16:57 msk Exp $"
+literal|"@(#)$Id: handler.c,v 8.19.4.3 2000/12/29 19:45:39 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,7 @@ operator|->
 name|ctx_sd
 argument_list|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -117,6 +118,13 @@ operator|->
 name|ctx_sd
 argument_list|)
 expr_stmt|;
+name|ctx
+operator|->
+name|ctx_sd
+operator|=
+name|INVALID_SOCKET
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ctx
@@ -125,6 +133,7 @@ name|ctx_reply
 operator|!=
 name|NULL
 condition|)
+block|{
 name|free
 argument_list|(
 name|ctx
@@ -132,6 +141,13 @@ operator|->
 name|ctx_reply
 argument_list|)
 expr_stmt|;
+name|ctx
+operator|->
+name|ctx_reply
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ctx

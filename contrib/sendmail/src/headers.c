@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: headers.c,v 8.203.4.7 2000/08/22 21:50:36 gshapiro Exp $"
+literal|"@(#)$Id: headers.c,v 8.203.4.10 2000/10/13 17:54:30 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|size_t
 name|fix_mime_header
 name|__P
 argument_list|(
@@ -539,8 +539,11 @@ goto|;
 block|}
 name|setbitn
 argument_list|(
+name|bitidx
+argument_list|(
 operator|*
 name|p
+argument_list|)
 argument_list|,
 name|mopts
 argument_list|)
@@ -1433,6 +1436,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 literal|4
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -5584,14 +5589,23 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
+name|size_t
+name|len
+decl_stmt|;
+name|len
+operator|=
 name|fix_mime_header
 argument_list|(
 name|h
 operator|->
 name|h_value
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|0
 condition|)
 block|{
 name|sm_syslog
@@ -5602,11 +5616,17 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"Truncated MIME %s header due to field size (possible attack)"
+literal|"Truncated MIME %s header due to field size (length = %ld) (possible attack)"
 argument_list|,
 name|h
 operator|->
 name|h_field
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -5620,11 +5640,17 @@ argument_list|)
 condition|)
 name|dprintf
 argument_list|(
-literal|"  truncated MIME %s header due to field size (possible attack)\n"
+literal|"  truncated MIME %s header due to field size  (length = %ld) (possible attack)\n"
 argument_list|,
 name|h
 operator|->
 name|h_field
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|len
 argument_list|)
 expr_stmt|;
 block|}
@@ -5650,14 +5676,21 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
+name|size_t
+name|len
+decl_stmt|;
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|h
 operator|->
 name|h_value
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
 operator|>
 operator|(
 name|size_t
@@ -5684,11 +5717,17 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"Truncated long MIME %s header (possible attack)"
+literal|"Truncated long MIME %s header (length = %ld) (possible attack)"
 argument_list|,
 name|h
 operator|->
 name|h_field
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -5702,11 +5741,17 @@ argument_list|)
 condition|)
 name|dprintf
 argument_list|(
-literal|"  truncated long MIME %s header (possible attack)\n"
+literal|"  truncated long MIME %s header (length = %ld) (possible attack)\n"
 argument_list|,
 name|h
 operator|->
 name|h_field
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|len
 argument_list|)
 expr_stmt|;
 block|}
@@ -5732,6 +5777,18 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|size_t
+name|len
+decl_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|h
+operator|->
+name|h_value
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|shorten_rfc822_string
@@ -5752,11 +5809,17 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"Truncated long MIME %s header (possible attack)"
+literal|"Truncated long MIME %s header (length = %ld) (possible attack)"
 argument_list|,
 name|h
 operator|->
 name|h_field
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -5770,11 +5833,17 @@ argument_list|)
 condition|)
 name|dprintf
 argument_list|(
-literal|"  truncated long MIME %s header (possible attack)\n"
+literal|"  truncated long MIME %s header (length = %ld) (possible attack)\n"
 argument_list|,
 name|h
 operator|->
 name|h_field
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|len
 argument_list|)
 expr_stmt|;
 block|}
@@ -5902,11 +5971,12 @@ literal|'\0'
 operator|||
 name|macvalue
 argument_list|(
+name|bitidx
+argument_list|(
 name|h
 operator|->
 name|h_macro
-operator|&
-literal|0377
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -7445,12 +7515,12 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FIX_MIME_HEADER -- possibly truncate/rebalance parameters in a MIME header ** **	Run through all of the parameters of a MIME header and **	possibly truncate and rebalance the parameter according **	to MaxMimeFieldLength. ** **	Parameters: **		string -- the full header ** **	Returns: **		TRUE if the header was modified, FALSE otherwise ** **	Side Effects: **		string modified in place */
+comment|/* **  FIX_MIME_HEADER -- possibly truncate/rebalance parameters in a MIME header ** **	Run through all of the parameters of a MIME header and **	possibly truncate and rebalance the parameter according **	to MaxMimeFieldLength. ** **	Parameters: **		string -- the full header ** **	Returns: **		length of last offending field, 0 if all ok. ** **	Side Effects: **		string modified in place */
 end_comment
 
 begin_function
 specifier|static
-name|bool
+name|size_t
 name|fix_mime_header
 parameter_list|(
 name|string
@@ -7460,11 +7530,6 @@ modifier|*
 name|string
 decl_stmt|;
 block|{
-name|bool
-name|modified
-init|=
-name|FALSE
-decl_stmt|;
 name|char
 modifier|*
 name|begin
@@ -7474,6 +7539,16 @@ decl_stmt|;
 name|char
 modifier|*
 name|end
+decl_stmt|;
+name|size_t
+name|len
+init|=
+literal|0
+decl_stmt|;
+name|size_t
+name|retlen
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -7487,7 +7562,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-name|FALSE
+literal|0
 return|;
 comment|/* Split on each ';' */
 while|while
@@ -7521,6 +7596,13 @@ name|end
 operator|=
 literal|'\0'
 expr_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|begin
+argument_list|)
+expr_stmt|;
 comment|/* Shorten individual parameter */
 if|if
 condition|(
@@ -7531,9 +7613,9 @@ argument_list|,
 name|MaxMimeFieldLength
 argument_list|)
 condition|)
-name|modified
+name|retlen
 operator|=
-name|TRUE
+name|len
 expr_stmt|;
 comment|/* Collapse the possibly shortened string with rest */
 name|bp
@@ -7612,7 +7694,7 @@ literal|1
 expr_stmt|;
 block|}
 return|return
-name|modified
+name|retlen
 return|;
 block|}
 end_function
