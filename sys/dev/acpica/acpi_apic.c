@@ -200,6 +200,13 @@ name|device_t
 name|bus
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|1
+return|return;
+else|#
+directive|else
+comment|/* broken by new ACPICA update that doesn't support the APIC table */
 name|ACPI_BUFFER
 name|buf
 decl_stmt|;
@@ -224,13 +231,6 @@ name|void
 modifier|*
 name|private
 decl_stmt|;
-if|#
-directive|if
-literal|1
-return|return;
-else|#
-directive|else
-comment|/* broken by new ACPICA update that doesn't support the APIC table */
 comment|/*      * Perform the tedious double-get to fetch the actual table.      */
 name|buf
 operator|.
