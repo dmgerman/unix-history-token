@@ -15,6 +15,27 @@ directive|define
 name|_MACHINE_CLOCK_H_
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|tick_increment
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|tick_freq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|tick_MHz
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
