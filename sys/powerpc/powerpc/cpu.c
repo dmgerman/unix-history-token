@@ -588,9 +588,10 @@ case|:
 case|case
 name|MPC7450
 case|:
-comment|/* Disable BTIC on 7450 Rev 2.0 or earlier */
+comment|/* Disable BTIC on 7450 Rev 2.0 or earlier and on 7457 */
 if|if
 condition|(
+operator|(
 operator|(
 name|pvr
 operator|>>
@@ -606,6 +607,15 @@ literal|0xFFFF
 operator|)
 operator|<=
 literal|0x0200
+operator|)
+operator|||
+operator|(
+name|pvr
+operator|>>
+literal|16
+operator|)
+operator|==
+name|MPC7457
 condition|)
 name|hid0
 operator|&=
