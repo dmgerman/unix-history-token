@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp.c,v 1.18 1999/04/14 17:37:36 mjacob Exp $ */
+comment|/* $Id: isp.c,v 1.19 1999/05/11 05:06:55 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_5_11_99 */
+comment|/* release_5_11_99+ */
 end_comment
 
 begin_comment
@@ -16855,6 +16855,19 @@ operator|==
 literal|0
 condition|)
 block|{
+name|PRINTF
+argument_list|(
+literal|"%s: skipping update of target %d on bus %d\n"
+argument_list|,
+name|isp
+operator|->
+name|isp_name
+argument_list|,
+name|tgt
+argument_list|,
+name|bus
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * If the goal is to update the status of the device, 		 * take what's in dev_flags and try and set the device 		 * toward that. Otherwise, if we're just refreshing the 		 * current device state, get the current parameters. 		 */
@@ -17005,6 +17018,49 @@ operator|.
 name|dev_refresh
 operator|=
 literal|1
+expr_stmt|;
+name|IDPRINTF
+argument_list|(
+literal|3
+argument_list|,
+operator|(
+literal|"%s: bus %d set tgt %d flags 0x%x off 0x%x"
+literal|" period 0x%x\n"
+operator|,
+name|isp
+operator|->
+name|isp_name
+operator|,
+name|bus
+operator|,
+name|tgt
+operator|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|2
+index|]
+operator|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|3
+index|]
+operator|>>
+literal|8
+operator|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|3
+index|]
+operator|&
+literal|0xff
+operator|)
+argument_list|)
 expr_stmt|;
 name|get
 operator|=
