@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)getcwd.c	4.7	(Berkeley)	%G%	*/
+comment|/*	@(#)getcwd.c	4.8	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -62,6 +62,14 @@ directive|define
 name|ROOTDIR
 value|"/"
 end_define
+
+begin_function_decl
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
