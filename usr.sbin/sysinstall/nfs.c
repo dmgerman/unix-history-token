@@ -54,6 +54,21 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|mountpoint
+init|=
+operator|(
+operator|!
+name|Chrooted
+operator|&&
+name|RunningAsInit
+operator|)
+condition|?
+literal|"/mnt/dist"
+else|:
+literal|"/dist"
+decl_stmt|;
 name|Device
 modifier|*
 name|netDevice
@@ -92,7 +107,7 @@ if|if
 condition|(
 name|Mkdir
 argument_list|(
-literal|"/dist"
+name|mountpoint
 argument_list|)
 condition|)
 return|return
@@ -111,7 +126,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"mount_nfs %s %s %s /dist"
+literal|"mount_nfs %s %s %s %s"
 argument_list|,
 name|variable_get
 argument_list|(
@@ -134,25 +149,31 @@ argument_list|,
 name|dev
 operator|->
 name|name
+argument_list|,
+name|mountpoint
 argument_list|)
 condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Error mounting %s on /dist: %s (%u)"
+literal|"Error mounting %s on %s: %s."
 argument_list|,
 name|dev
 operator|->
 name|name
 argument_list|,
+name|mountpoint
+argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|netDevice
+condition|)
 name|netDevice
 operator|->
 name|shutdown
@@ -170,11 +191,13 @@ name|TRUE
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Mounted NFS device %s onto /dist\n"
+literal|"Mounted NFS device %s onto %s\n"
 argument_list|,
 name|dev
 operator|->
 name|name
+argument_list|,
+name|mountpoint
 argument_list|)
 expr_stmt|;
 return|return
@@ -338,6 +361,21 @@ name|dev
 parameter_list|)
 block|{
 comment|/* Device *netdev = (Device *)dev->private; */
+name|char
+modifier|*
+name|mountpoint
+init|=
+operator|(
+operator|!
+name|Chrooted
+operator|&&
+name|RunningAsInit
+operator|)
+condition|?
+literal|"/mnt/dist"
+else|:
+literal|"/dist"
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -346,14 +384,16 @@ condition|)
 return|return;
 name|msgNotify
 argument_list|(
-literal|"Unmounting NFS partition on /dist"
+literal|"Unmounting NFS partition on %s"
+argument_list|,
+name|mountpoint
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|unmount
 argument_list|(
-literal|"/dist"
+name|mountpoint
 argument_list|,
 name|MNT_FORCE
 argument_list|)

@@ -2874,8 +2874,8 @@ expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
-literal|"failed to retreive piece file %s: %s.\n"
-literal|"Reinitializing media."
+literal|"failed to retreive piece file %s.\n"
+literal|"%s: Reinitializing media."
 argument_list|,
 name|buf
 argument_list|,

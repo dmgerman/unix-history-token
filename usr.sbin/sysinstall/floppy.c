@@ -375,6 +375,21 @@ name|struct
 name|ufs_args
 name|u_args
 decl_stmt|;
+name|char
+modifier|*
+name|mountpoint
+init|=
+operator|(
+operator|!
+name|Chrooted
+operator|&&
+name|RunningAsInit
+operator|)
+condition|?
+literal|"/mnt/dist"
+else|:
+literal|"/dist"
+decl_stmt|;
 if|if
 condition|(
 name|floppyMounted
@@ -386,13 +401,15 @@ if|if
 condition|(
 name|Mkdir
 argument_list|(
-literal|"/dist"
+name|mountpoint
 argument_list|)
 condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to make directory mountpoint for %s!"
+literal|"Unable to make %s directory mountpoint for %s!"
+argument_list|,
+name|mountpoint
 argument_list|,
 name|dev
 operator|->
@@ -502,7 +519,7 @@ name|mount
 argument_list|(
 name|MOUNT_MSDOS
 argument_list|,
-literal|"/dist"
+name|mountpoint
 argument_list|,
 name|MNT_RDONLY
 argument_list|,
@@ -523,7 +540,7 @@ name|mount
 argument_list|(
 name|MOUNT_UFS
 argument_list|,
-literal|"/dist"
+name|mountpoint
 argument_list|,
 name|MNT_RDONLY
 argument_list|,
@@ -538,19 +555,9 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
-condition|(
-name|distWanted
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|1
-condition|)
 name|msgConfirm
 argument_list|(
-literal|"Error mounting floppy %s (%s) on /dist : %s"
+literal|"Error mounting floppy %s (%s) on %s : %s"
 argument_list|,
 name|dev
 operator|->
@@ -559,6 +566,8 @@ argument_list|,
 name|dev
 operator|->
 name|devname
+argument_list|,
+name|mountpoint
 argument_list|,
 name|strerror
 argument_list|(
@@ -573,11 +582,13 @@ block|}
 block|}
 name|msgDebug
 argument_list|(
-literal|"initFloppy: mounted floppy %s successfully on /dist\n"
+literal|"initFloppy: mounted floppy %s successfully on %s\n"
 argument_list|,
 name|dev
 operator|->
 name|devname
+argument_list|,
+name|mountpoint
 argument_list|)
 expr_stmt|;
 name|floppyMounted
@@ -743,6 +754,21 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|mountpoint
+init|=
+operator|(
+operator|!
+name|Chrooted
+operator|&&
+name|RunningAsInit
+operator|)
+condition|?
+literal|"/mnt/dist"
+else|:
+literal|"/dist"
+decl_stmt|;
 if|if
 condition|(
 name|floppyMounted
@@ -752,7 +778,7 @@ if|if
 condition|(
 name|unmount
 argument_list|(
-literal|"/dist"
+name|mountpoint
 argument_list|,
 name|MNT_FORCE
 argument_list|)
@@ -761,7 +787,9 @@ literal|0
 condition|)
 name|msgDebug
 argument_list|(
-literal|"Umount of floppy on /dist failed: %s (%d)\n"
+literal|"Umount of floppy on %s failed: %s (%d)\n"
+argument_list|,
+name|mountpoint
 argument_list|,
 name|strerror
 argument_list|(

@@ -1450,6 +1450,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Boolean
+name|Chrooted
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Yow, are we chrooted yet?			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
 name|DialogActive
 decl_stmt|;
 end_decl_stmt
