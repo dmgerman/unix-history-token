@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)yyput.c	1.1 (Berkeley) %G%"
+literal|"@(#)yyput.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,13 +334,14 @@ end_block
 begin_escape
 end_escape
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
 name|yygetunit
+init|=
 operator|-
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -871,12 +872,13 @@ name|nopflg
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
 name|printed
+init|=
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Set the current file name to be file,  * printing the name, or a header on a new  * page if required.  */

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)var.c	1.1 (Berkeley) %G%"
+literal|"@(#)var.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,14 +33,15 @@ directive|include
 file|"tree.h"
 end_include
 
-begin_expr_stmt
+begin_decl_stmt
 name|STATIC
 name|int
 name|varcnt
+init|=
 operator|-
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Var declaration part  */

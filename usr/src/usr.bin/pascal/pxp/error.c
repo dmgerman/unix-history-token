@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	1.2 (Berkeley) %G%"
+literal|"@(#)error.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,12 +54,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
 name|errpfx
+init|=
 literal|'E'
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

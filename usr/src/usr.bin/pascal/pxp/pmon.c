@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pmon.c	1.1 (Berkeley) %G%"
+literal|"@(#)pmon.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,14 +270,15 @@ return|return;
 block|}
 end_block
 
-begin_expr_stmt
+begin_decl_stmt
 name|STATIC
 name|char
 name|nospcm
 index|[]
+init|=
 literal|"Not enough memory for count buffers\n"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|pmnospac
@@ -557,6 +558,7 @@ argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
+operator|*
 name|zbuf
 argument_list|)
 operator|)
@@ -1215,14 +1217,15 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_decl_stmt
 name|STATIC
 name|char
 name|mism
 index|[]
+init|=
 literal|"Program and counter data do not correspond\n"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|cPANIC
