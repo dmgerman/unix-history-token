@@ -1712,14 +1712,9 @@ modifier|*
 name|getenv
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|O_APPEND
 name|int
 name|flags
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -1824,9 +1819,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|O_APPEND
 if|if
 condition|(
 operator|(
@@ -1861,8 +1853,6 @@ operator||
 name|O_APPEND
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|fputs
 argument_list|(
 literal|"\nTracing started.\n"
