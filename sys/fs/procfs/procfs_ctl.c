@@ -458,15 +458,11 @@ operator|(
 operator|(
 name|error
 operator|=
-name|p_can
+name|p_candebug
 argument_list|(
 name|curp
 argument_list|,
 name|p
-argument_list|,
-name|P_CAN_DEBUG
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 operator|)

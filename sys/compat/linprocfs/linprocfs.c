@@ -2582,15 +2582,11 @@ operator|(
 name|ps_argsopen
 operator|||
 operator|!
-name|p_can
+name|p_cansee
 argument_list|(
 name|curp
 argument_list|,
 name|p
-argument_list|,
-name|P_CAN_SEE
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 condition|)

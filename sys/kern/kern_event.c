@@ -955,15 +955,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|p_can
+name|p_cansee
 argument_list|(
 name|curproc
 argument_list|,
 name|p
-argument_list|,
-name|P_CAN_SEE
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 condition|)
