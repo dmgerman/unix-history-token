@@ -580,7 +580,7 @@ name|rootvp
 operator|->
 name|v_usecount
 operator|>
-literal|2
+literal|1
 condition|)
 return|return
 operator|(
