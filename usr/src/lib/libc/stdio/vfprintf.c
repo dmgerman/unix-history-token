@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.15 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,6 +905,27 @@ goto|;
 case|case
 literal|'p'
 case|:
+comment|/* 			 * the argument shall be a pointer to void.  The value 			 * of the pointer is converted to a sequence of 			 * printable characters, in an implementation-defined 			 * manner. 			 */
+name|_ulong
+operator|=
+operator|(
+name|u_long
+operator|)
+name|va_arg
+argument_list|(
+name|argp
+argument_list|,
+name|void
+operator|*
+argument_list|)
+expr_stmt|;
+name|base
+operator|=
+literal|16
+expr_stmt|;
+goto|goto
+name|num
+goto|;
 case|case
 literal|'s'
 case|:
