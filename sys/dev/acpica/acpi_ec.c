@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_EMBEDDED_CONTROLLER
+value|ACPI_EC
 end_define
 
 begin_macro
@@ -1210,6 +1210,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Handle a GPE sent to us.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1230,7 +1234,7 @@ decl_stmt|;
 name|int
 name|csrvalue
 decl_stmt|;
-comment|/*  	 * If EC is locked, the intr must process EcRead/Write wait only. 	 * Query request must be pending. 	 */
+comment|/*       * If EC is locked, the intr must process EcRead/Write wait only.      * Query request must be pending.      */
 if|if
 condition|(
 name|EcIsLocked
@@ -1296,7 +1300,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*Queue GpeQuery Handler*/
+comment|/* Queue GpeQuery Handler */
 if|if
 condition|(
 name|AcpiOsQueueForExecution
@@ -1616,6 +1620,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Wait for an event interrupt for a specific condition.  */
+end_comment
+
 begin_function
 specifier|static
 name|ACPI_STATUS
@@ -1636,18 +1644,31 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|FUNCTION_TRACE_U32
+argument_list|(
+name|__func__
+argument_list|,
+operator|(
+name|UINT32
+operator|)
+name|Event
+argument_list|)
+expr_stmt|;
+comment|/* XXX this should test whether interrupts are available some other way */
 if|if
 condition|(
 name|cold
 condition|)
-return|return
+name|return_ACPI_STATUS
+argument_list|(
 name|EcWaitEvent
 argument_list|(
 name|sc
 argument_list|,
 name|Event
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1672,7 +1693,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*Too long?*/
+comment|/* XXX waiting too long? */
 for|for
 control|(
 name|i
@@ -1687,6 +1708,7 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* 	 * Check EC status against the desired event. 	 */
 if|if
 condition|(
 operator|(
@@ -1701,11 +1723,11 @@ operator|&
 name|EC_FLAG_OUTPUT_BUFFER
 operator|)
 condition|)
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1721,11 +1743,11 @@ operator|&
 name|EC_FLAG_INPUT_BUFFER
 operator|)
 condition|)
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|ec_csrvalue
@@ -1734,16 +1756,19 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|tsleep
+name|ACPI_MSLEEP
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|ec_csrvalue
 argument_list|,
-literal|0
+operator|&
+name|acpi_mutex
 argument_list|,
-literal|"ECTRANS"
+name|PZERO
+argument_list|,
+literal|"EcWait"
 argument_list|,
 literal|1
 argument_list|)
@@ -1769,9 +1794,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_ERROR
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
