@@ -1721,7 +1721,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Switching needed for NFS with root access disabled */
+comment|/* 	 * Switching needed for NFS with root access disabled. 	 * 	 * XXX: This change fails to modify the additional groups for the 	 * process, and as such, may restrict rights normally granted 	 * through those groups. 	 */
 operator|(
 name|void
 operator|)
