@@ -434,23 +434,18 @@ value|0x01
 comment|/* requires user structure */
 define|#
 directive|define
-name|TEXT
-value|0x02
-comment|/* requires text table */
-define|#
-directive|define
 name|LJUST
-value|0x04
+value|0x02
 comment|/* right adjust on output */
 define|#
 directive|define
 name|COMM
-value|0x08
+value|0x04
 comment|/* requires exec arguments and environment (XXX) */
 define|#
 directive|define
 name|NLIST
-value|0x10
+value|0x08
 comment|/* requires nlist to get extra variables */
 name|int
 function_decl|(
@@ -543,6 +538,8 @@ block|,
 block|{
 block|{
 literal|"flag"
+block|,
+literal|"f"
 block|}
 block|,
 literal|"F"
@@ -1162,7 +1159,7 @@ name|LJUST
 block|,
 name|tname
 block|,
-literal|2
+literal|3
 block|}
 block|,
 block|{
@@ -1267,7 +1264,7 @@ literal|0
 block|,
 name|state
 block|,
-literal|3
+literal|4
 block|}
 block|,
 block|{
@@ -1427,7 +1424,7 @@ argument_list|)
 block|,
 name|CHAR
 block|,
-literal|"o"
+literal|"#o"
 block|}
 block|,
 block|{
@@ -1952,7 +1949,7 @@ begin_define
 define|#
 directive|define
 name|DFMT
-value|"pid tname stat cputime comm"
+value|"pid tname state cputime comm"
 end_define
 
 begin_define
@@ -1960,14 +1957,14 @@ define|#
 directive|define
 name|LFMT
 define|\
-value|"flag uid pid ppid cp pri nice vsz rss wchan stat tname cputime comm"
+value|"uid pid ppid cp pri nice vsz rss wchan state tname cputime comm"
 end_define
 
 begin_define
 define|#
 directive|define
 name|JFMT
-value|"user pid ppid pgid sess jobc stat tname cputime comm"
+value|"user pid ppid pgid sess jobc state tname cputime comm"
 end_define
 
 begin_define
@@ -1982,7 +1979,7 @@ define|#
 directive|define
 name|VFMT
 define|\
-value|"pid tt stat time sl re pagein vsz rss lim tsiz trs %cpu %mem comm"
+value|"pid tt state time sl re pagein vsz rss lim tsiz trs %cpu %mem comm"
 end_define
 
 begin_define
@@ -1990,7 +1987,7 @@ define|#
 directive|define
 name|UFMT
 define|\
-value|"uname pid %cpu %mem vsz rss tt stat start time comm"
+value|"uname pid %cpu %mem vsz rss tt state start time comm"
 end_define
 
 begin_struct
@@ -2422,7 +2419,7 @@ argument_list|)
 expr_stmt|;
 name|parsefmt
 argument_list|(
-literal|"stat tt time command"
+literal|"state tt time command"
 argument_list|)
 expr_stmt|;
 name|fmt
@@ -4122,15 +4119,17 @@ block|{
 name|char
 name|buf
 index|[
-literal|6
+literal|16
 index|]
 decl_stmt|;
+specifier|register
 name|char
 modifier|*
 name|cp
 init|=
 name|buf
 decl_stmt|;
+specifier|register
 name|struct
 name|proc
 modifier|*
@@ -4140,6 +4139,13 @@ name|k
 operator|->
 name|ki_p
 decl_stmt|;
+specifier|register
+name|flag
+operator|=
+name|p
+operator|->
+name|p_flag
+expr_stmt|;
 switch|switch
 condition|(
 name|p
@@ -4161,55 +4167,39 @@ name|SSLEEP
 case|:
 if|if
 condition|(
-name|p
-operator|->
-name|p_pri
-operator|>
-name|PZERO
+name|flag
+operator|&
+name|SSINTR
 condition|)
-if|if
-condition|(
+comment|/* interuptable (long) */
+operator|*
+name|cp
+operator|=
 name|p
 operator|->
 name|p_slptime
 operator|>=
 name|MAXSLP
-condition|)
-operator|*
-name|cp
-operator|=
+condition|?
 literal|'I'
-expr_stmt|;
-else|else
-operator|*
-name|cp
-operator|=
+else|:
 literal|'S'
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|SPAGE
-condition|)
-operator|*
-name|cp
-operator|=
-literal|'P'
-expr_stmt|;
 else|else
 operator|*
 name|cp
 operator|=
+operator|(
+name|flag
+operator|&
+name|SPAGE
+operator|)
+condition|?
+literal|'P'
+else|:
 literal|'D'
 expr_stmt|;
 break|break;
-case|case
-name|SWAIT
-case|:
 case|case
 name|SRUN
 case|:
@@ -4243,9 +4233,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|->
-name|p_flag
+name|flag
 operator|&
 name|SLOAD
 condition|)
@@ -4305,9 +4293,7 @@ literal|'N'
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|->
-name|p_flag
+name|flag
 operator|&
 name|SUANOM
 condition|)
@@ -4320,9 +4306,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|p
-operator|->
-name|p_flag
+name|flag
 operator|&
 name|SSEQL
 condition|)
@@ -4334,17 +4318,75 @@ literal|'S'
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|->
-name|p_flag
+name|flag
+operator|&
+name|STRC
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'X'
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|SWEXIT
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'E'
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|SVFORK
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'V'
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+operator|(
+name|SSYS
+operator||
+name|SLOCK
+operator||
+name|SULOCK
+operator||
+name|SKEEP
+operator||
+name|SPHYSIO
+operator|)
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'L'
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flag
 operator|&
 name|SCTTY
+operator|)
 operator|&&
 name|k
 operator|->
 name|ki_e
 operator|->
-name|e_tpgid
+name|e_pgid
 operator|==
 name|k
 operator|->
@@ -4716,17 +4758,33 @@ literal|3
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*.*s"
+literal|"%*.*s%c"
 argument_list|,
 name|v
 operator|->
 name|width
+operator|-
+literal|1
 argument_list|,
 name|v
 operator|->
 name|width
+operator|-
+literal|1
 argument_list|,
 name|tname
+argument_list|,
+name|k
+operator|->
+name|ki_p
+operator|->
+name|p_flag
+operator|&
+name|SCTTY
+condition|?
+literal|' '
+else|:
+literal|'-'
 argument_list|)
 expr_stmt|;
 block|}
@@ -5329,21 +5387,17 @@ name|secs
 operator|=
 name|k
 operator|->
-name|ki_u
+name|ki_p
 operator|->
-name|u_ru
-operator|.
-name|ru_utime
+name|p_utime
 operator|.
 name|tv_sec
 operator|+
 name|k
 operator|->
-name|ki_u
+name|ki_p
 operator|->
-name|u_ru
-operator|.
-name|ru_stime
+name|p_stime
 operator|.
 name|tv_sec
 expr_stmt|;
@@ -6399,11 +6453,12 @@ specifier|static
 name|char
 name|ofmt
 index|[
-literal|16
+literal|32
 index|]
 init|=
 literal|"%"
 decl_stmt|;
+specifier|register
 name|char
 modifier|*
 name|cp
@@ -6411,6 +6466,13 @@ init|=
 name|ofmt
 operator|+
 literal|1
+decl_stmt|,
+modifier|*
+name|fcp
+init|=
+name|v
+operator|->
+name|fmt
 decl_stmt|;
 if|if
 condition|(
@@ -6432,21 +6494,17 @@ operator|++
 operator|=
 literal|'*'
 expr_stmt|;
+while|while
+condition|(
 operator|*
 name|cp
 operator|++
 operator|=
 operator|*
-name|v
-operator|->
-name|fmt
-expr_stmt|;
-operator|*
-name|cp
+name|fcp
 operator|++
-operator|=
-literal|'\0'
-expr_stmt|;
+condition|)
+empty_stmt|;
 switch|switch
 condition|(
 name|v
