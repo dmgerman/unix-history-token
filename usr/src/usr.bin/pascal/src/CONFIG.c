@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)CONFIG.c	2.1 (Berkeley) 82/03/31"
+literal|"@(#)CONFIG.c	2.2 (Berkeley) 82/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,12 +22,12 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"2.1 (VERSION %G%)"
+literal|"VERSION (DATE)"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*      *	the location of the error strings      *	and the length of the path to it      *	(in case of execution of pc0 as a.out)      */
+comment|/*      *	the location of the error strings      *	and the length of the path to it      *	(in case of execution as a.something)      */
 end_comment
 
 begin_decl_stmt
@@ -74,6 +74,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*      *	things about the interpreter.      *	these are not used by the compiler.      */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -92,7 +96,7 @@ name|char
 modifier|*
 name|pi_comp
 init|=
-literal|"INTERPDIR/pi"
+literal|"INSTALLDIR/pi"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,7 +109,7 @@ name|char
 modifier|*
 name|px_intrp
 init|=
-literal|"INTERPDIR/px"
+literal|"INSTALLDIR/px"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +122,7 @@ name|char
 modifier|*
 name|px_debug
 init|=
-literal|"INTERPDIR/pdx"
+literal|"INSTALLDIR/pdx"
 decl_stmt|;
 end_decl_stmt
 
