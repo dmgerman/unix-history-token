@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local2.c	1.5 (Berkeley) %G%"
+literal|"@(#)local2.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3826,10 +3826,6 @@ name|p
 operator|->
 name|in
 operator|.
-name|left
-operator|->
-name|in
-operator|.
 name|type
 condition|)
 block|{
@@ -3909,10 +3905,6 @@ condition|(
 name|ISPTR
 argument_list|(
 name|p
-operator|->
-name|in
-operator|.
-name|left
 operator|->
 name|in
 operator|.
@@ -4444,16 +4436,20 @@ modifier|*
 name|q
 decl_stmt|;
 comment|/* tbl 			p = p->in.left; 			p->in.left->in.op = OREG; 			if( p->in.op == INCR ) { 				adrput( p->in.left ); 				printf( "+" ); 				} 			else { 				printf( "-" ); 				adrput( p->in.left ); 				}    tbl */
-name|printf
-argument_list|(
-literal|"%s(%s)%s"
-argument_list|,
-operator|(
+name|q
+operator|=
 name|p
 operator|->
 name|in
 operator|.
 name|left
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s(%s)%s"
+argument_list|,
+operator|(
+name|q
 operator|->
 name|in
 operator|.
@@ -4468,11 +4464,7 @@ operator|)
 argument_list|,
 name|rnames
 index|[
-name|p
-operator|->
-name|in
-operator|.
-name|left
+name|q
 operator|->
 name|in
 operator|.
@@ -4484,11 +4476,7 @@ name|rval
 index|]
 argument_list|,
 operator|(
-name|p
-operator|->
-name|in
-operator|.
-name|left
+name|q
 operator|->
 name|in
 operator|.
@@ -4516,11 +4504,7 @@ name|tn
 operator|.
 name|rval
 operator|=
-name|p
-operator|->
-name|in
-operator|.
-name|left
+name|q
 operator|->
 name|in
 operator|.
@@ -4530,14 +4514,6 @@ name|tn
 operator|.
 name|rval
 expr_stmt|;
-name|q
-operator|=
-name|p
-operator|->
-name|in
-operator|.
-name|left
-expr_stmt|;
 name|p
 operator|->
 name|tn
@@ -4545,11 +4521,7 @@ operator|.
 name|lval
 operator|=
 operator|(
-name|p
-operator|->
-name|in
-operator|.
-name|left
+name|q
 operator|->
 name|in
 operator|.
@@ -4558,11 +4530,7 @@ operator|==
 name|INCR
 condition|?
 operator|-
-name|p
-operator|->
-name|in
-operator|.
-name|left
+name|q
 operator|->
 name|in
 operator|.
