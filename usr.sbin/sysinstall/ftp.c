@@ -751,15 +751,6 @@ operator|!=
 literal|550
 condition|)
 block|{
-name|char
-modifier|*
-name|cp
-init|=
-name|variable_get
-argument_list|(
-name|VAR_FTP_PATH
-argument_list|)
-decl_stmt|;
 name|dev
 operator|->
 name|shutdown
@@ -767,6 +758,17 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ftpErrno
+argument_list|(
+name|OpenConn
+argument_list|)
+operator|!=
+literal|421
+condition|)
+block|)
+comment|/* Timeout? */
 name|variable_unset
 argument_list|(
 name|VAR_FTP_PATH
@@ -798,18 +800,15 @@ name|OpenConn
 operator|=
 name|NULL
 expr_stmt|;
+name|variable_unset
+argument_list|(
+name|VAR_FTP_PATH
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
-else|else
-name|variable_set2
-argument_list|(
-name|VAR_FTP_PATH
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -900,20 +899,23 @@ break|break;
 block|}
 block|}
 block|}
+end_function
+
+begin_return
 return|return
 name|fp
 return|;
-block|}
-end_function
+end_return
 
-begin_function
-name|void
+begin_macro
+unit|}  void
 name|mediaShutdownFTP
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|)
+argument_list|(
+argument|Device *dev
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -950,7 +952,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 
