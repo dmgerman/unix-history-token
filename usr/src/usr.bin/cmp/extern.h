@@ -1,6 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	8.2 (Berkeley) %G%  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OK_EXIT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIFF_EXIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_EXIT
+value|2
+end_define
+
+begin_comment
+comment|/* error exit code */
 end_comment
 
 begin_decl_stmt
@@ -83,23 +108,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|fmt
-operator|,
-operator|...
 operator|)
 argument_list|)
 decl_stmt|;

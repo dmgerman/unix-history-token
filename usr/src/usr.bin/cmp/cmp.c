@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmp.c	8.1 (Berkeley) %G%"
+literal|"@(#)cmp.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,19 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -129,6 +129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -245,8 +246,10 @@ name|lflag
 operator|&&
 name|sflag
 condition|)
-name|err
+name|errx
 argument_list|(
+name|ERR_EXIT
+argument_list|,
 literal|"only one of -l and -s may be specified"
 argument_list|)
 expr_stmt|;
@@ -318,14 +321,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+name|ERR_EXIT
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file1
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -349,8 +349,10 @@ if|if
 condition|(
 name|special
 condition|)
-name|err
+name|errx
 argument_list|(
+name|ERR_EXIT
+argument_list|,
 literal|"standard input may only be specified once"
 argument_list|)
 expr_stmt|;
@@ -387,14 +389,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+name|ERR_EXIT
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file2
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|skip1
@@ -455,14 +454,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+name|ERR_EXIT
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file1
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -493,14 +489,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+name|ERR_EXIT
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file2
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -588,7 +581,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|2
+name|ERR_EXIT
 argument_list|)
 expr_stmt|;
 block|}

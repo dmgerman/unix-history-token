@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regular.c	8.1 (Berkeley) %G%"
+literal|"@(#)regular.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,13 +49,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<limits.h>
 end_include
 
 begin_include
@@ -130,7 +130,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|u_char
 name|ch
 decl_stmt|,
@@ -140,7 +139,6 @@ decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|;
-specifier|register
 name|off_t
 name|byte
 decl_stmt|,
@@ -264,14 +262,11 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+name|ERR_EXIT
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file1
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -311,14 +306,11 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+name|ERR_EXIT
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file2
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|dfound
@@ -429,7 +421,7 @@ name|dfound
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|DIFF_EXIT
 argument_list|)
 expr_stmt|;
 block|}

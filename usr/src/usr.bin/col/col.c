@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)col.c	8.1 (Berkeley) %G%"
+literal|"@(#)col.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,13 +56,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -75,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_define
@@ -304,21 +310,120 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
+begin_decl_stmt
 name|LINE
 modifier|*
 name|alloc_line
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|void
+name|dowarn
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|flush_line
+name|__P
+argument_list|(
+operator|(
+name|LINE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|flush_lines
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|flush_blanks
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|free_line
+name|__P
+argument_list|(
+operator|(
+name|LINE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|wrerr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 modifier|*
 name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|CSET
@@ -399,6 +504,7 @@ value|if (putchar(ch) == EOF) \ 		wrerr();
 end_define
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -414,16 +520,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;
@@ -927,7 +1023,7 @@ operator|!
 name|warned
 operator|++
 condition|)
-name|warn
+name|dowarn
 argument_list|(
 name|cur_line
 argument_list|)
@@ -1234,20 +1330,15 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|flush_lines
-argument_list|(
-argument|nflush
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|nflush
+parameter_list|)
 name|int
 name|nflush
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|LINE
 modifier|*
@@ -1327,18 +1418,16 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print a number of newline/half newlines.  If fine flag is set, nblank_lines  * is the number of half line feeds, otherwise it is the number of whole line  * feeds.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|flush_blanks
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|half
@@ -1427,27 +1516,22 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Write a line to stdout taking care of space to tab conversion (-h flag)  * and character set shifts.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|flush_line
-argument_list|(
-argument|l
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|l
+parameter_list|)
 name|LINE
 modifier|*
 name|l
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|CHAR
 modifier|*
@@ -1585,13 +1669,15 @@ name|count_size
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|count
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1912,7 +1998,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -2015,9 +2101,11 @@ name|l
 operator|->
 name|l_next
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|l
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2033,21 +2121,16 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|free_line
-argument_list|(
-argument|l
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|l
+parameter_list|)
 name|LINE
 modifier|*
 name|l
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|l
 operator|->
@@ -2060,7 +2143,7 @@ operator|=
 name|l
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -2097,28 +2180,13 @@ name|size
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"col: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|ENOMEM
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|p
@@ -2127,12 +2195,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -2150,14 +2216,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|wrerr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -2175,31 +2239,21 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|warn
-argument_list|(
-argument|line
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|void
+name|dowarn
+parameter_list|(
+name|line
+parameter_list|)
 name|int
 name|line
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"col: warning: can't back up %s.\n"
+literal|"warning: can't back up %s"
 argument_list|,
 name|line
 operator|<
@@ -2211,7 +2265,7 @@ literal|"-- line already flushed"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
