@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.1 1995/11/05 04:37:25 gibbs Exp $  */
+comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.2 1996/01/03 06:25:32 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -1335,6 +1335,61 @@ directive|define
 name|ENABLE
 value|0x01
 end_define
+
+begin_comment
+comment|/*  * On the aic78X0 chips, Board Control is replaced by the DSCommand  * register (p. 4-64)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSCOMMAND
+value|0x084
+end_define
+
+begin_define
+define|#
+directive|define
+name|CACHETHEN
+value|0x80
+end_define
+
+begin_comment
+comment|/* Cache Threshold enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPARCKEN
+value|0x40
+end_define
+
+begin_comment
+comment|/* Data Parity Check Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPARCKEN
+value|0x20
+end_define
+
+begin_comment
+comment|/* Memory Parity Check Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXTREQLCK
+value|0x10
+end_define
+
+begin_comment
+comment|/* External Request Lock */
+end_comment
 
 begin_comment
 comment|/*  * Bus On/Off Time (p. 3-44)  */
