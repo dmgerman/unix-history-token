@@ -1308,7 +1308,7 @@ name|y
 parameter_list|,
 name|x
 parameter_list|)
-value|(y | (x& 0x3f))
+value|y = ((y& ~0x3f) | (x& 0x3f))
 end_define
 
 begin_define
@@ -1320,7 +1320,7 @@ name|y
 parameter_list|,
 name|x
 parameter_list|)
-value|(y | ((x& 0x1)<< 7))
+value|y = ((y& 0x3f) | ((x& 0x1)<< 7))
 end_define
 
 begin_comment
