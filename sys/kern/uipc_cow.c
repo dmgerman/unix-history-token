@@ -223,7 +223,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* note that sf_buf_free() unwires the page for us*/
-name|sf_buf_free
+name|sf_buf_mext
 argument_list|(
 name|addr
 argument_list|,
