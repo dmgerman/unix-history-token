@@ -187,11 +187,7 @@ modifier|*
 name|rt_gateway
 decl_stmt|;
 comment|/* value */
-name|short
-name|rt_filler
-decl_stmt|;
-comment|/* was short flags field */
-name|short
+name|long
 name|rt_refcnt
 decl_stmt|;
 comment|/* # held references */
