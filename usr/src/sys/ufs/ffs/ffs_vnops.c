@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.78 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.79 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1780,6 +1780,16 @@ name|USES_VOP_TRUNCATE
 expr_stmt|;
 name|USES_VOP_UPDATE
 expr_stmt|;
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -1799,9 +1809,7 @@ name|ip
 init|=
 name|VTOI
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 decl_stmt|;
 specifier|register
@@ -1861,9 +1869,7 @@ endif|#
 directive|endif
 switch|switch
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_type
 condition|)
@@ -1955,9 +1961,7 @@ return|;
 comment|/* 	 * Maybe this should be above the vnode op call, but so long as 	 * file servers have no limits, i don't think it matters 	 */
 if|if
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_type
 operator|==
@@ -2164,9 +2168,7 @@ name|n
 expr_stmt|;
 name|vnode_pager_setsize
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 operator|(
 name|u_long
@@ -2193,9 +2195,7 @@ name|void
 operator|)
 name|vnode_pager_uncache
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|n
@@ -2343,9 +2343,7 @@ name|void
 operator|)
 name|VOP_TRUNCATE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 name|osize
 argument_list|,
@@ -2400,9 +2398,7 @@ name|error
 operator|=
 name|VOP_UPDATE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 operator|&
 name|time

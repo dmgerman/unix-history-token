@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.52 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.53 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1032,6 +1032,16 @@ block|{
 name|USES_VOP_UPDATE
 expr_stmt|;
 specifier|register
+name|struct
+name|vnode
+modifier|*
+name|ovp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+specifier|register
 name|daddr_t
 name|lastblock
 decl_stmt|;
@@ -1104,9 +1114,7 @@ name|osize
 decl_stmt|;
 name|vnode_pager_setsize
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|ovp
 argument_list|,
 operator|(
 name|u_long
@@ -1120,9 +1128,7 @@ name|oip
 operator|=
 name|VTOI
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|ovp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1148,9 +1154,7 @@ name|error
 operator|=
 name|VOP_UPDATE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|ovp
 argument_list|,
 operator|&
 name|time
@@ -1379,9 +1383,7 @@ name|void
 operator|)
 name|vnode_pager_uncache
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|ovp
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1518,9 +1520,7 @@ name|IUPD
 expr_stmt|;
 name|vinvalbuf
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|ovp
 argument_list|,
 operator|(
 name|ap
@@ -1535,9 +1535,7 @@ name|allerror
 operator|=
 name|VOP_UPDATE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|ovp
 argument_list|,
 operator|&
 name|time

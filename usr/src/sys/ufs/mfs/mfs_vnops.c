@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -639,6 +639,16 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
+name|buf
+modifier|*
+name|bp
+init|=
+name|ap
+operator|->
+name|a_bp
+decl_stmt|;
+specifier|register
+name|struct
 name|mfsnode
 modifier|*
 name|mfsp
@@ -660,9 +670,7 @@ if|if
 condition|(
 name|vfinddev
 argument_list|(
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_dev
 argument_list|,
@@ -710,9 +718,7 @@ operator|->
 name|mfs_baseoff
 operator|+
 operator|(
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_blkno
 operator|<<
@@ -721,9 +727,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_flags
 operator|&
@@ -733,17 +737,13 @@ name|bcopy
 argument_list|(
 name|base
 argument_list|,
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_un
 operator|.
 name|b_addr
 argument_list|,
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_bcount
 argument_list|)
@@ -751,9 +751,7 @@ expr_stmt|;
 else|else
 name|bcopy
 argument_list|(
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_un
 operator|.
@@ -761,18 +759,14 @@ name|b_addr
 argument_list|,
 name|base
 argument_list|,
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_bcount
 argument_list|)
 expr_stmt|;
 name|biodone
 argument_list|(
-name|ap
-operator|->
-name|a_bp
+name|bp
 argument_list|)
 expr_stmt|;
 block|}
@@ -790,9 +784,7 @@ condition|)
 block|{
 name|mfs_doio
 argument_list|(
-name|ap
-operator|->
-name|a_bp
+name|bp
 argument_list|,
 name|mfsp
 operator|->
@@ -802,9 +794,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|av_forw
 operator|=
@@ -816,9 +806,7 @@ name|mfsp
 operator|->
 name|mfs_buflist
 operator|=
-name|ap
-operator|->
-name|a_bp
+name|bp
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -1459,15 +1447,23 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+specifier|register
+name|struct
 name|mfsnode
 modifier|*
 name|mfsp
 init|=
 name|VTOMFS
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 decl_stmt|;
 specifier|register
@@ -1515,9 +1511,7 @@ block|}
 comment|/* 	 * On last close of a memory filesystem 	 * we must invalidate any in core blocks, so that 	 * we can, free up its vnode. 	 */
 name|vflushbuf
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 literal|0
 argument_list|)
@@ -1526,9 +1520,7 @@ if|if
 condition|(
 name|vinvalbuf
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 literal|1
 argument_list|)
@@ -1541,9 +1533,7 @@ return|;
 comment|/* 	 * There should be no way to have any more uses of this 	 * vnode, so if we find any other uses, it is a panic. 	 */
 if|if
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_usecount
 operator|>
@@ -1553,18 +1543,14 @@ name|printf
 argument_list|(
 literal|"mfs_close: ref count %d> 1\n"
 argument_list|,
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_usecount
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_usecount
 operator|>
@@ -1599,9 +1585,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 return|return

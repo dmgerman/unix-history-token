@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1545,6 +1545,16 @@ name|USES_VOP_VGET
 expr_stmt|;
 specifier|register
 name|struct
+name|vnode
+modifier|*
+name|pvp
+init|=
+name|ap
+operator|->
+name|a_pvp
+decl_stmt|;
+specifier|register
+name|struct
 name|inode
 modifier|*
 name|pip
@@ -1582,9 +1592,7 @@ name|pip
 operator|=
 name|VTOI
 argument_list|(
-name|ap
-operator|->
-name|a_pvp
+name|pvp
 argument_list|)
 expr_stmt|;
 name|fs
@@ -1693,9 +1701,7 @@ name|error
 operator|=
 name|FFS_VGET
 argument_list|(
-name|ap
-operator|->
-name|a_pvp
+name|pvp
 operator|->
 name|v_mount
 argument_list|,
@@ -1713,9 +1719,7 @@ condition|)
 block|{
 name|VOP_VFREE
 argument_list|(
-name|ap
-operator|->
-name|a_pvp
+name|pvp
 argument_list|,
 name|ino
 argument_list|,

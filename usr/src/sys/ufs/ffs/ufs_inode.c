@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	7.46 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	7.47 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -232,6 +232,16 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+specifier|register
+name|struct
 name|inode
 modifier|*
 name|ip
@@ -245,9 +255,7 @@ if|if
 condition|(
 name|prtactive
 operator|&&
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_usecount
 operator|!=
@@ -257,9 +265,7 @@ name|vprint
 argument_list|(
 literal|"ufs_reclaim: pushing active"
 argument_list|,
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove the inode from its hash chain. 	 */
@@ -267,9 +273,7 @@ name|ip
 operator|=
 name|VTOI
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|remque
@@ -280,9 +284,7 @@ expr_stmt|;
 comment|/* 	 * Purge old data structures associated with the inode. 	 */
 name|cache_purge
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -337,9 +339,7 @@ condition|)
 block|{
 name|dqrele
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 name|ip
 operator|->
@@ -364,9 +364,7 @@ endif|#
 directive|endif
 switch|switch
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_mount
 operator|->
@@ -408,18 +406,14 @@ expr_stmt|;
 block|}
 name|FREE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_data
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_data
 operator|=

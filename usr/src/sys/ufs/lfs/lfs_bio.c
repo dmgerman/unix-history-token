@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -95,6 +95,16 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|bp
+init|=
+name|ap
+operator|->
+name|a_bp
+decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -113,9 +123,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_flags
 operator|&
@@ -126,9 +134,7 @@ block|{
 operator|++
 name|locked_queue_count
 expr_stmt|;
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_flags
 operator||=
@@ -136,9 +142,7 @@ name|B_DELWRI
 operator||
 name|B_LOCKED
 expr_stmt|;
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_flags
 operator|&=
@@ -171,9 +175,7 @@ name|ufsmount
 operator|*
 operator|)
 operator|(
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_vp
 operator|->
@@ -187,9 +189,7 @@ name|um_lfs
 operator|->
 name|lfs_ivnode
 operator|!=
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_vp
 condition|)
@@ -197,13 +197,9 @@ endif|#
 directive|endif
 name|reassignbuf
 argument_list|(
-name|ap
-operator|->
-name|a_bp
+name|bp
 argument_list|,
-name|ap
-operator|->
-name|a_bp
+name|bp
 operator|->
 name|b_vp
 argument_list|)
@@ -216,9 +212,7 @@ expr_stmt|;
 block|}
 name|brelse
 argument_list|(
-name|ap
-operator|->
-name|a_bp
+name|bp
 argument_list|)
 expr_stmt|;
 return|return

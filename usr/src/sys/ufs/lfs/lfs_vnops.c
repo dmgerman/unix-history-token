@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.82 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.83 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1321,6 +1321,16 @@ begin_block
 block|{
 specifier|register
 name|struct
+name|uio
+modifier|*
+name|uio
+init|=
+name|ap
+operator|->
+name|a_uio
+decl_stmt|;
+specifier|register
+name|struct
 name|inode
 modifier|*
 name|ip
@@ -1387,9 +1397,7 @@ directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_rw
 operator|!=
@@ -1431,9 +1439,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 operator|==
@@ -1446,9 +1452,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 operator|<
@@ -1480,9 +1484,7 @@ name|lblkno
 argument_list|(
 name|fs
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 argument_list|)
@@ -1493,9 +1495,7 @@ name|blkoff
 argument_list|(
 name|fs
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 argument_list|)
@@ -1515,9 +1515,7 @@ operator|-
 name|on
 argument_list|)
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 argument_list|)
@@ -1528,9 +1526,7 @@ name|ip
 operator|->
 name|i_size
 operator|-
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 expr_stmt|;
@@ -1693,9 +1689,7 @@ name|int
 operator|)
 name|n
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 argument_list|)
 expr_stmt|;
 if|if
@@ -1708,9 +1702,7 @@ name|fs
 operator|->
 name|lfs_bsize
 operator|||
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 operator|==
@@ -1736,9 +1728,7 @@ name|error
 operator|==
 literal|0
 operator|&&
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 operator|>
@@ -1782,6 +1772,16 @@ name|USES_VOP_TRUNCATE
 expr_stmt|;
 name|USES_VOP_UPDATE
 expr_stmt|;
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -1801,9 +1801,7 @@ name|ip
 init|=
 name|VTOI
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 decl_stmt|;
 specifier|register
@@ -1877,9 +1875,7 @@ endif|#
 directive|endif
 switch|switch
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_type
 condition|)
@@ -1972,9 +1968,7 @@ return|;
 comment|/* 	 * Maybe this should be above the vnode op call, but so long as 	 * file servers have no limits, i don't think it matters 	 */
 if|if
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_type
 operator|==
@@ -2115,9 +2109,7 @@ name|error
 operator|=
 name|lfs_balloc
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 name|n
 argument_list|,
@@ -2157,9 +2149,7 @@ name|n
 expr_stmt|;
 name|vnode_pager_setsize
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 operator|(
 name|u_long
@@ -2182,9 +2172,7 @@ name|void
 operator|)
 name|vnode_pager_uncache
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|n
@@ -2346,9 +2334,7 @@ name|void
 operator|)
 name|VOP_TRUNCATE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 name|osize
 argument_list|,
@@ -2403,9 +2389,7 @@ name|error
 operator|=
 name|VOP_UPDATE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 operator|&
 name|time

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -86,6 +86,14 @@ name|ap
 decl_stmt|;
 block|{
 specifier|register
+name|daddr_t
+name|bn
+init|=
+name|ap
+operator|->
+name|a_bn
+decl_stmt|;
+specifier|register
 name|struct
 name|inode
 modifier|*
@@ -162,9 +170,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_bn
+name|bn
 operator|<
 literal|0
 condition|)
@@ -182,9 +188,7 @@ expr_stmt|;
 comment|/* 	 * The first NDADDR blocks are direct blocks 	 */
 if|if
 condition|(
-name|ap
-operator|->
-name|a_bn
+name|bn
 operator|<
 name|NDADDR
 condition|)
@@ -195,9 +199,7 @@ name|ip
 operator|->
 name|i_db
 index|[
-name|ap
-operator|->
-name|a_bn
+name|bn
 index|]
 expr_stmt|;
 if|if
@@ -247,9 +249,7 @@ name|sh
 operator|=
 literal|1
 expr_stmt|;
-name|ap
-operator|->
-name|a_bn
+name|bn
 operator|-=
 name|NDADDR
 expr_stmt|;
@@ -276,16 +276,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_bn
+name|bn
 operator|<
 name|sh
 condition|)
 break|break;
-name|ap
-operator|->
-name|a_bn
+name|bn
 operator|-=
 name|sh
 expr_stmt|;
@@ -408,9 +404,7 @@ expr_stmt|;
 name|i
 operator|=
 operator|(
-name|ap
-operator|->
-name|a_bn
+name|bn
 operator|/
 name|sh
 operator|)

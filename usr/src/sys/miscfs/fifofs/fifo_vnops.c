@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -568,6 +568,16 @@ name|USES_VOP_UNLOCK
 expr_stmt|;
 specifier|register
 name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+specifier|register
+name|struct
 name|fifoinfo
 modifier|*
 name|fip
@@ -620,9 +630,7 @@ condition|(
 operator|(
 name|fip
 operator|=
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_fifoinfo
 operator|)
@@ -649,9 +657,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_fifoinfo
 operator|=
@@ -681,9 +687,7 @@ argument_list|,
 name|M_VNODE
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_fifoinfo
 operator|=
@@ -733,9 +737,7 @@ argument_list|,
 name|M_VNODE
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_fifoinfo
 operator|=
@@ -788,9 +790,7 @@ argument_list|,
 name|M_VNODE
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_fifoinfo
 operator|=
@@ -905,9 +905,7 @@ condition|)
 block|{
 name|VOP_UNLOCK
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|error
@@ -931,9 +929,7 @@ argument_list|)
 expr_stmt|;
 name|VOP_LOCK
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1023,9 +1019,7 @@ condition|)
 block|{
 name|VOP_UNLOCK
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|error
@@ -1049,9 +1043,7 @@ argument_list|)
 expr_stmt|;
 name|VOP_LOCK
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1068,9 +1060,7 @@ name|error
 condition|)
 name|VOP_CLOSE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 name|ap
 operator|->
@@ -1124,6 +1114,16 @@ name|USES_VOP_UNLOCK
 expr_stmt|;
 specifier|register
 name|struct
+name|uio
+modifier|*
+name|uio
+init|=
+name|ap
+operator|->
+name|a_uio
+decl_stmt|;
+specifier|register
+name|struct
 name|socket
 modifier|*
 name|rso
@@ -1146,9 +1146,7 @@ directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_rw
 operator|!=
@@ -1163,9 +1161,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 operator|==
@@ -1192,9 +1188,7 @@ name|SS_NBIO
 expr_stmt|;
 name|startresid
 operator|=
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
@@ -1219,9 +1213,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 argument_list|,
 operator|(
 name|int
@@ -1256,9 +1248,7 @@ expr_stmt|;
 comment|/* 	 * Clear EOF indication after first such return. 	 */
 if|if
 condition|(
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 operator|==
@@ -1786,13 +1776,21 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|fifoinfo
+name|vnode
 modifier|*
-name|fip
+name|vp
 init|=
 name|ap
 operator|->
 name|a_vp
+decl_stmt|;
+specifier|register
+name|struct
+name|fifoinfo
+modifier|*
+name|fip
+init|=
+name|vp
 operator|->
 name|v_fifoinfo
 decl_stmt|;
@@ -1856,9 +1854,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_usecount
 operator|>
@@ -1894,9 +1890,7 @@ argument_list|,
 name|M_VNODE
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_fifoinfo
 operator|=
