@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.9	%G%	*/
+comment|/*	hp.c	3.10	%G%	*/
 end_comment
 
 begin_comment
@@ -2362,18 +2362,22 @@ name|struct
 name|pte
 name|mpte
 decl_stmt|;
+name|short
+name|bcr
+decl_stmt|;
 comment|/* 	 * Npf is the number of sectors transferred before the sector 	 * containing the ECC error, and reg is the MBA register 	 * mapping (the first part of)the transfer. 	 * O is offset within a memory page of the first byte transferred. 	 */
+name|bcr
+operator|=
+name|mbp
+operator|->
+name|mba_bcr
+expr_stmt|;
+comment|/* get into short so can sign extend */
 name|npf
 operator|=
 name|btop
 argument_list|(
-operator|(
-name|mbp
-operator|->
-name|mba_bcr
-operator|&
-literal|0xffff
-operator|)
+name|bcr
 operator|+
 name|bp
 operator|->
@@ -2381,6 +2385,15 @@ name|b_bcount
 argument_list|)
 operator|-
 literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"bcr %d npf %d\n"
+argument_list|,
+name|bcr
+argument_list|,
+name|npf
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2493,7 +2506,7 @@ name|bit
 operator|=
 name|i
 operator|&
-literal|017
+literal|07
 expr_stmt|;
 name|i
 operator|=
@@ -2603,9 +2616,7 @@ expr_stmt|;
 comment|/* Either complete or continuing */
 if|if
 condition|(
-name|mbp
-operator|->
-name|mba_bcr
+name|bcr
 operator|==
 literal|0
 condition|)
