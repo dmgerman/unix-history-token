@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-beep.c,v 1.1 2001/12/10 08:21:24 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-beep.c,v 1.1.2.1 2002/07/11 07:47:01 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +204,11 @@ literal|"MSG"
 argument_list|,
 literal|4
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|length
@@ -224,6 +229,11 @@ literal|"RPY "
 argument_list|,
 literal|4
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|length
@@ -243,6 +253,11 @@ literal|"ERR "
 argument_list|,
 literal|4
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|length
@@ -262,6 +277,11 @@ literal|"ANS "
 argument_list|,
 literal|4
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|length
@@ -281,6 +301,11 @@ literal|"NUL "
 argument_list|,
 literal|4
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|length
@@ -300,6 +325,11 @@ literal|"SEQ "
 argument_list|,
 literal|4
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|length
@@ -319,6 +349,11 @@ literal|"END"
 argument_list|,
 literal|4
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|length

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/smbutil.c,v 1.18 2002/01/17 04:38:29 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/smbutil.c,v 1.18.2.3 2002/07/10 07:29:23 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,11 +96,22 @@ directive|include
 file|<string.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TIME_WITH_SYS_TIME
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<time.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1652,7 +1663,7 @@ modifier|*
 name|unistr
 parameter_list|(
 specifier|const
-name|char
+name|u_char
 modifier|*
 name|s
 parameter_list|,
@@ -1744,12 +1755,22 @@ name|len
 operator|=
 name|strlen
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|s
 argument_list|)
 operator|+
 literal|1
 expr_stmt|;
 return|return
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|s
 return|;
 block|}
@@ -1958,7 +1979,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
-init|=
+decl_stmt|;
+name|int
+name|l
+decl_stmt|;
+name|p
+operator|=
 name|strchr
 argument_list|(
 operator|++
@@ -1966,17 +1992,16 @@ name|fmt
 argument_list|,
 literal|'}'
 argument_list|)
-decl_stmt|;
-name|int
+expr_stmt|;
 name|l
-init|=
+operator|=
 name|PTR_DIFF
 argument_list|(
 name|p
 argument_list|,
 name|fmt
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|bitfmt
@@ -2039,6 +2064,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|fmt
 argument_list|)
@@ -2568,6 +2597,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|fmt
 argument_list|)
@@ -2612,6 +2645,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|fmt
 argument_list|)
@@ -2756,6 +2793,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|fmt
 argument_list|)
@@ -2903,6 +2944,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|fmt
 argument_list|)

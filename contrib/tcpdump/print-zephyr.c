@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-zephyr.c,v 1.2 2001/09/11 02:37:12 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-zephyr.c,v 1.2.4.2 2002/07/11 07:49:19 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,6 +150,7 @@ end_struct
 
 begin_enum
 enum|enum
+name|z_packet_type
 block|{
 name|Z_PACKET_UNSAFE
 init|=
@@ -171,7 +172,6 @@ name|Z_PACKET_CLIENTACK
 block|,
 name|Z_PACKET_STAT
 block|}
-name|z_packet_type
 enum|;
 end_enum
 
@@ -493,8 +493,14 @@ name|string
 operator|=
 name|tolower
 argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 operator|*
 name|string
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|string
