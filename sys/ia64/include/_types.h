@@ -398,7 +398,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|_BSD_VA_LIST_
+name|__va_list
 name|__gnuc_va_list
 typedef|;
 end_typedef
