@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	5.8 (Berkeley) %G%"
+literal|"@(#)subr.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1995,20 +1995,24 @@ name|select
 argument_list|(
 literal|32
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 operator|&
 name|rfds
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|timeout
@@ -2066,22 +2070,22 @@ argument_list|(
 literal|32
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|timeout
