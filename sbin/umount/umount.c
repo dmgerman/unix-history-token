@@ -661,6 +661,10 @@ operator|&
 name|nfshost_ai
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 name|errx
 argument_list|(
 literal|1
