@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfprintf.c,v 1.14 1997/12/24 13:47:13 ache Exp $"
+literal|"$Id: vfprintf.c,v 1.15 1997/12/24 23:02:43 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1382,6 +1382,10 @@ name|int
 name|size
 decl_stmt|;
 comment|/* size of converted field or string */
+name|int
+name|prsize
+decl_stmt|;
+comment|/* max size of printed field */
 name|char
 modifier|*
 name|xdigs
@@ -1762,6 +1766,26 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
+name|ret
+operator|+
+name|n
+operator|>
+name|INT_MAX
+condition|)
+block|{
+name|ret
+operator|=
+name|EOF
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 name|PRINT
 argument_list|(
 name|cp
@@ -3058,6 +3082,36 @@ name|realsz
 operator|+=
 literal|2
 expr_stmt|;
+name|prsize
+operator|=
+name|width
+operator|>
+name|realsz
+condition|?
+name|width
+else|:
+name|realsz
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
+name|ret
+operator|+
+name|prsize
+operator|>
+name|INT_MAX
+condition|)
+block|{
+name|ret
+operator|=
+name|EOF
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 comment|/* right-adjusting blank padding */
 if|if
 condition|(
@@ -3459,13 +3513,7 @@ expr_stmt|;
 comment|/* finally, adjust ret */
 name|ret
 operator|+=
-name|width
-operator|>
-name|realsz
-condition|?
-name|width
-else|:
-name|realsz
+name|prsize
 expr_stmt|;
 name|FLUSH
 argument_list|()
