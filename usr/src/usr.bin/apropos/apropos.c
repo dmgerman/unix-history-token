@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)apropos.c	8.2 (Berkeley) %G%"
+literal|"@(#)apropos.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,13 +119,6 @@ comment|/* max line handled */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 modifier|*
@@ -170,6 +163,9 @@ name|ch
 decl_stmt|;
 name|char
 modifier|*
+name|conffile
+decl_stmt|,
+modifier|*
 modifier|*
 name|p
 decl_stmt|,
@@ -179,9 +175,9 @@ decl_stmt|,
 modifier|*
 name|p_path
 decl_stmt|;
-name|progname
+name|conffile
 operator|=
-literal|"apropos"
+name|NULL
 expr_stmt|;
 name|p_augment
 operator|=
@@ -200,7 +196,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"M:m:P:"
+literal|"C:M:m:P:"
 argument_list|)
 operator|)
 operator|!=
@@ -211,6 +207,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'C'
+case|:
+name|conffile
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'M'
 case|:
@@ -264,7 +268,7 @@ operator|=
 name|malloc
 argument_list|(
 operator|(
-name|size_t
+name|u_int
 operator|)
 name|argc
 argument_list|)
@@ -353,7 +357,9 @@ expr_stmt|;
 else|else
 block|{
 name|config
-argument_list|()
+argument_list|(
+name|conffile
+argument_list|)
 expr_stmt|;
 name|ep
 operator|=
@@ -910,7 +916,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: apropos [-M path] [-m path] keyword ...\n"
+literal|"usage: apropos [-C file] [-M path] [-m path] keyword ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
