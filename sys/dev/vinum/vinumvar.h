@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.20 1999/07/02 07:56:47 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.20 1999/07/02 05:24:52 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -207,6 +207,20 @@ parameter_list|,
 name|t
 parameter_list|)
 value|makedev (CDEV_MAJOR, VINUMMINOR (v, p, s, t))
+define|#
+directive|define
+name|VINUM_BLOCK_SD
+parameter_list|(
+name|s
+parameter_list|)
+value|makedev (BDEV_MAJOR,				\ 					 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (s& 0xff)				\ 					 | ((s& ~0xff)<< 8) )
+define|#
+directive|define
+name|VINUM_CHAR_SD
+parameter_list|(
+name|s
+parameter_list|)
+value|makedev (CDEV_MAJOR,				\ 					 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (s& 0xff)				\ 					 | ((s& ~0xff)<< 8) )
 comment|/* Create a bit mask for x bits */
 define|#
 directive|define
@@ -597,6 +611,11 @@ init|=
 literal|0x100000
 block|,
 comment|/* for volumes: freshly created, more then new */
+name|VF_HOTSPARE
+init|=
+literal|0x200000
+block|,
+comment|/* for drives: use as hot spare */
 block|}
 enum|;
 end_enum
@@ -866,7 +885,7 @@ comment|/*** Drive definitions ***/
 end_comment
 
 begin_comment
-comment|/*  * A drive corresponds to a disk slice.  We use a different term to show  * the difference in usage: it doesn't have to be a slice, and could  * theroretically be a complete, unpartitioned disk   */
+comment|/*  * A drive corresponds to a disk slice.  We use a different term to show  * the difference in usage: it doesn't have to be a slice, and could  * theoretically be a complete, unpartitioned disk   */
 end_comment
 
 begin_struct
@@ -1211,6 +1230,18 @@ name|bytes_written
 decl_stmt|;
 comment|/* number of bytes written */
 name|u_int64_t
+name|recovered_reads
+decl_stmt|;
+comment|/* number of recovered read operations */
+name|u_int64_t
+name|degraded_writes
+decl_stmt|;
+comment|/* number of degraded writes */
+name|u_int64_t
+name|parityless_writes
+decl_stmt|;
+comment|/* number of parityless writes */
+name|u_int64_t
 name|multiblock
 decl_stmt|;
 comment|/* requests that needed more than one block */
@@ -1236,6 +1267,24 @@ end_struct
 begin_comment
 comment|/*** Volume definitions ***/
 end_comment
+
+begin_comment
+comment|/* Address range definitions, for locking volumes */
+end_comment
+
+begin_struct
+struct|struct
+name|rangelock
+block|{
+name|u_int64_t
+name|first
+decl_stmt|;
+name|u_int64_t
+name|last
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
