@@ -980,6 +980,12 @@ return|return
 literal|"AMD 768 ATA100 controller"
 return|;
 case|case
+literal|0x01bc10de
+case|:
+return|return
+literal|"nVIDIA nForce ATA100 controller"
+return|;
+case|case
 literal|0x02111166
 case|:
 return|return
@@ -2032,6 +2038,10 @@ case|case
 literal|0x74411022
 case|:
 comment|/* AMD 768 default setup */
+case|case
+literal|0x01bc10de
+case|:
+comment|/* nVIDIA nForce default setup */
 comment|/* set prefetch, postwrite */
 name|pci_write_config
 argument_list|(
