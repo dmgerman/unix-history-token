@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.24 (Berkeley) 85/02/05"
+literal|"@(#)docmd.c	4.25 (Berkeley) 85/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|RDIST
-value|"/usr/local/rdist"
+value|"/usr/ucb/rdist"
 end_define
 
 begin_endif
