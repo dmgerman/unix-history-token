@@ -1886,7 +1886,9 @@ name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|mp
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
 if|if
