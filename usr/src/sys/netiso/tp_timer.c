@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.c	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1197,7 +1197,7 @@ index|[
 name|which
 index|]
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|ticks
 argument_list|,
