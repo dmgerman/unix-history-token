@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.7	%G%"
+literal|"@(#)savemail.c	3.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,13 +511,6 @@ comment|/* 	**  Save the message in dead.letter. 	**	If we weren't mailing back,
 end_comment
 
 begin_expr_stmt
-name|To
-operator|=
-name|NULL
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|setuid
 argument_list|(
 name|getuid
@@ -626,33 +619,37 @@ argument_list|,
 literal|"/dead.letter"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|To
+operator|=
+name|buf
+expr_stmt|;
+name|i
+operator|=
 name|mailfile
 argument_list|(
 name|buf
 argument_list|)
-operator|!=
-name|EX_OK
-condition|)
-name|message
-argument_list|(
-literal|"050"
-argument_list|,
-literal|"Cannot save mail, sorry"
-argument_list|)
 expr_stmt|;
-else|else
-name|message
+name|giveresponse
 argument_list|(
-literal|"050"
+name|i
 argument_list|,
-literal|"Letter saved in dead.letter"
+name|TRUE
+argument_list|,
+name|Mailer
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+end_if
+
+begin_comment
 comment|/* add terminator to writeback message */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|WriteBack
