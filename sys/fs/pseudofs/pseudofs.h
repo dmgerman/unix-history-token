@@ -403,7 +403,7 @@ define|#
 directive|define
 name|PFS_IOCTL_ARGS
 define|\
-value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	unsigned long cmd, caddr_t data
+value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	unsigned long cmd, void *data
 end_define
 
 begin_define
