@@ -1165,7 +1165,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"EISA isable (0x%x)\n"
+literal|"EISA disable (0x%x)\n"
 argument_list|,
 name|vector
 argument_list|)
