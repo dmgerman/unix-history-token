@@ -768,7 +768,7 @@ begin_define
 define|#
 directive|define
 name|RFKERNELONLY
-value|(RFSTOPPED|RFHIGHPID|RFPPWAIT)
+value|(RFSTOPPED | RFHIGHPID | RFPPWAIT)
 end_define
 
 begin_endif
