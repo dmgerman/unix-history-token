@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dver.c	1.12	84/02/27  *  * VAX Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
+comment|/*	dver.c	1.13	84/03/16  *  * VAX Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
 end_comment
 
 begin_comment
@@ -201,7 +201,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.12	84/02/27"
+literal|"dver.c	1.13	84/03/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,26 +241,6 @@ end_decl_stmt
 begin_comment
 comment|/* pairs of page numbers */
 end_comment
-
-begin_decl_stmt
-name|int
-name|spage
-init|=
-literal|9999
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* stop every spage pages */
-end_comment
-
-begin_decl_stmt
-name|int
-name|scount
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1087,34 +1067,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-case|case
-literal|'s'
-case|:
-name|spage
-operator|=
-name|atoi
-argument_list|(
-name|operand
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|spage
-operator|<=
-literal|0
-condition|)
-name|spage
-operator|=
-literal|9999
-expr_stmt|;
-break|break;
 block|}
 block|}
 ifdef|#
@@ -1578,12 +1530,15 @@ literal|'\n'
 case|:
 comment|/* when input is text */
 case|case
-literal|' '
-case|:
-case|case
 literal|0
 case|:
 comment|/* occasional noise creeps in */
+case|case
+literal|'\t'
+case|:
+case|case
+literal|' '
+case|:
 break|break;
 case|case
 literal|'{'
@@ -1693,9 +1648,8 @@ case|case
 literal|'t'
 case|:
 comment|/* straight text */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|buf
@@ -1706,6 +1660,15 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"unexpected end of input"
 argument_list|)
 expr_stmt|;
 name|t_text
@@ -1718,9 +1681,8 @@ case|case
 literal|'D'
 case|:
 comment|/* draw function */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|buf
@@ -1731,6 +1693,15 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"unexpected end of input"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1949,7 +1920,6 @@ operator|&
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* ignore fractional sizes */
 name|setsize
 argument_list|(
 name|t_size
@@ -1984,7 +1954,6 @@ case|case
 literal|'H'
 case|:
 comment|/* absolute horizontal motion */
-comment|/* fscanf(fp, "%d",&n); */
 while|while
 condition|(
 operator|(
@@ -2184,34 +2153,32 @@ case|case
 literal|'n'
 case|:
 comment|/* end of line */
-while|while
-condition|(
-name|getc
-argument_list|(
-name|fp
-argument_list|)
-operator|!=
-literal|'\n'
-condition|)
-empty_stmt|;
 name|t_newline
 argument_list|()
 expr_stmt|;
-break|break;
 case|case
 literal|'#'
 case|:
 comment|/* comment */
-while|while
-condition|(
+do|do
+name|c
+operator|=
 name|getc
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+do|while
+condition|(
+name|c
 operator|!=
 literal|'\n'
+operator|&&
+name|c
+operator|!=
+name|EOF
 condition|)
-empty_stmt|;
+do|;
 break|break;
 case|case
 literal|'x'
@@ -4346,7 +4313,7 @@ operator|+
 operator|(
 name|RES
 operator|-
-literal|1
+literal|2
 operator|)
 operator|-
 name|pagelen
@@ -4375,27 +4342,52 @@ name|RES
 operator|*
 name|BYTES_PER_LINE
 expr_stmt|;
-comment|/* are assured that outsize */
 name|vwrite
 argument_list|(
 name|buf0p
 argument_list|,
 name|outsize
+operator|>
+name|BUFFER_SIZE
+condition|?
+name|BUFFER_SIZE
+else|:
+name|outsize
 argument_list|)
 expr_stmt|;
-comment|/* will NOT be> BUFFER_SIZE */
 name|vclear
 argument_list|(
 name|buf0p
 argument_list|,
+name|BUFFER_SIZE
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|outsize
+operator|-=
+name|BUFFER_SIZE
+operator|)
+operator|>
+literal|0
+condition|)
+name|vwrite
+argument_list|(
+name|buf0p
+argument_list|,
+name|outsize
+operator|>
+name|BUFFER_SIZE
+condition|?
+name|BUFFER_SIZE
+else|:
 name|outsize
 argument_list|)
 expr_stmt|;
-comment|/* since vsort makes sure of */
 block|}
 else|else
 block|{
-comment|/* putting P commands in */
 name|vorigin
 operator|+=
 name|NLINES
@@ -4861,16 +4853,6 @@ block|{
 name|vpos
 operator|=
 name|n
-expr_stmt|;
-if|if
-condition|(
-name|vpos
-operator|>
-name|maxv
-condition|)
-name|maxv
-operator|=
-name|vpos
 expr_stmt|;
 block|}
 end_block
@@ -6630,7 +6612,7 @@ specifier|register
 name|int
 name|off8
 decl_stmt|;
-comment|/* offset + 8 */
+comment|/* reverse of offset */
 if|if
 condition|(
 name|fontwanted
@@ -6742,8 +6724,6 @@ name|llen
 expr_stmt|;
 name|offset
 operator|=
-operator|-
-operator|(
 operator|(
 name|hpos
 operator|-
@@ -6753,13 +6733,12 @@ name|left
 operator|)
 operator|&
 literal|07
-operator|)
 expr_stmt|;
 name|off8
 operator|=
-name|offset
-operator|+
 literal|8
+operator|-
+name|offset
 expr_stmt|;
 for|for
 control|(
@@ -6841,7 +6820,7 @@ name|scanp
 operator||=
 operator|(
 name|fontdata
-operator|<<
+operator|>>
 name|offset
 operator|)
 operator|&
@@ -7247,19 +7226,22 @@ begin_comment
 comment|/*  * Plot a dot at (x, y).  Points should be in the range 0<= x< RASTER_LENGTH,  * vorigin<= y< vorigin + NLINES.  If the point will not fit on the buffer,  * it is left out.  Things outside the x boundary are wrapped around the end.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|point
 argument_list|(
-argument|x
+name|x
 argument_list|,
-argument|y
+name|y
 argument_list|)
-end_macro
-
-begin_decl_stmt
+specifier|register
 name|int
 name|x
-decl_stmt|,
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|int
 name|y
 decl_stmt|;
 end_decl_stmt
@@ -7290,14 +7272,15 @@ decl_stmt|;
 if|if
 condition|(
 name|ptr
-operator|<=
+operator|>
 name|BUFBOTTOM
-operator|&&
+operator|||
 name|ptr
-operator|>=
+operator|<
 name|BUFTOP
 condition|)
-comment|/* ignore it if it wraps over */
+comment|/* ignore if it's off buffer */
+return|return;
 operator|*
 name|ptr
 operator||=
@@ -7312,6 +7295,16 @@ operator|&
 literal|07
 operator|)
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|y
+operator|>
+name|maxv
+condition|)
+name|maxv
+operator|=
+name|y
 expr_stmt|;
 block|}
 end_block
