@@ -7627,6 +7627,19 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 		 * NOTE: For some reason that I can't comprehend, 		 * the RealTek engineers decided not to implement 		 * the 'frame alignment error' bit in the 8169's 		 * status word. Unfortunately, rather than simply 		 * mark the bit as 'reserved,' they took it away 		 * completely and shifted the other status bits 		 * over one slot. The OWN, EOR, FS and LS bits are 		 * still in the same places, as is the frame length 		 * field. We have already extracted the frame length 		 * and checked the OWN bit, so to work around this 		 * problem, we shift the status bits one space to 		 * the right so that we can evaluate everything else 		 * correctly. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|rl_type
+operator|==
+name|RL_8169
+condition|)
+name|rxstat
+operator|>>=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|rxstat
