@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c	5.4 (Berkeley) %G%"
+literal|"@(#)glob.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1303,11 +1303,6 @@ block|}
 goto|goto
 name|doit
 goto|;
-case|case
-literal|','
-operator||
-name|QUOTE
-case|:
 case|case
 literal|','
 case|:
