@@ -211,8 +211,8 @@ name|SYS_RES_IRQ
 operator|&&
 operator|*
 name|rid
-operator|>
-literal|1
+operator|>=
+name|ISA_NIRQ
 condition|)
 return|return
 literal|0
@@ -225,8 +225,8 @@ name|SYS_RES_DRQ
 operator|&&
 operator|*
 name|rid
-operator|>
-literal|1
+operator|>=
+name|ISA_NDRQ
 condition|)
 return|return
 literal|0
@@ -239,8 +239,8 @@ name|SYS_RES_MEMORY
 operator|&&
 operator|*
 name|rid
-operator|>
-literal|3
+operator|>=
+name|ISA_NMEM
 condition|)
 return|return
 literal|0
@@ -253,8 +253,8 @@ name|SYS_RES_IOPORT
 operator|&&
 operator|*
 name|rid
-operator|>
-literal|7
+operator|>=
+name|ISA_NPORT
 condition|)
 return|return
 literal|0
