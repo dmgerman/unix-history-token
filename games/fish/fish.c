@@ -514,7 +514,10 @@ name|fgets
 argument_list|(
 name|buf
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 name|stdin
 argument_list|)
