@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.15	82/10/10	*/
+comment|/*	sys_generic.c	5.16	82/10/13	*/
 end_comment
 
 begin_include
@@ -1296,6 +1296,10 @@ name|rw
 operator|==
 name|UIO_READ
 condition|)
+name|u
+operator|.
+name|u_error
+operator|=
 operator|(
 operator|*
 name|cdevsw
@@ -1324,6 +1328,10 @@ name|IUPD
 operator||
 name|ICHG
 expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
 operator|(
 operator|*
 name|cdevsw

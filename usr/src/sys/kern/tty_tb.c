@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tb.c	4.4	82/08/22	*/
+comment|/*	tty_tb.c	4.5	82/10/13	*/
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ file|"../h/uio.h"
 end_include
 
 begin_comment
-comment|/*  * Line discipline for RS232 tablets.  *  * This supplies binary coordinate data to a user level program  * with a minimum of fuss.  *  * This discipline requires that tty device drivers call  * the line specific l_ioctl routine from their ioctl routines,  * assigning the result to cmd so that we can refuse most tty specific  * ioctls which are unsafe because we have ambushed the  * teletype input queues and other data, overlaying them with  * the following information: the tty queue header, t_un.T_CTLQ,  * is overlaid with a MTABCHAR character buffer -- the raw input  * chars. The local characters (t_rocount on) are overlaid with  * the current coordinate position.  */
+comment|/*  * Line discipline for RS232 tablets.  * Supplies binary coordinate data.  *  * FIX WAY IN WHICH OVERLAYING IS DONE  * MAKE TABLET TYPE AN ioctl TO AVOID HAVING ONE DISCIPLINE PER TABLET TYPE.  */
 end_comment
 
 begin_define
@@ -112,11 +112,9 @@ name|int
 name|ypos
 decl_stmt|;
 name|short
-name|int
 name|status
 decl_stmt|;
 name|short
-name|int
 name|scount
 decl_stmt|;
 block|}
@@ -408,14 +406,11 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|EIO
 operator|)
 return|;
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|iomove
 argument_list|(
 operator|&
@@ -430,22 +425,6 @@ name|UIO_READ
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_error
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
@@ -469,6 +448,7 @@ argument_list|,
 name|tp
 argument_list|)
 specifier|register
+name|int
 name|c
 expr_stmt|;
 end_expr_stmt

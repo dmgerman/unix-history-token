@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_bk.c	4.4	82/08/22	*/
+comment|/*	tty_bk.c	4.5	82/10/13	*/
 end_comment
 
 begin_include
@@ -335,10 +335,12 @@ block|{
 specifier|register
 name|int
 name|i
-decl_stmt|;
-specifier|register
+decl_stmt|,
 name|s
-expr_stmt|;
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -408,9 +410,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|uiomove
 argument_list|(
@@ -461,7 +461,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

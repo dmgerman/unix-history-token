@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tty.c	4.10	82/08/22	*/
+comment|/*	tty_tty.c	4.11	82/10/13	*/
 end_comment
 
 begin_comment
@@ -149,15 +149,13 @@ name|u_ttyp
 operator|==
 name|NULL
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
+return|return
+operator|(
 operator|(
 operator|*
 name|cdevsw
@@ -179,7 +177,8 @@ name|u_ttyd
 operator|,
 name|uio
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -220,15 +219,13 @@ name|u_ttyp
 operator|==
 name|NULL
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
+return|return
+operator|(
 operator|(
 operator|*
 name|cdevsw
@@ -250,7 +247,8 @@ name|u_ttyd
 operator|,
 name|uio
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.29	82/09/12	*/
+comment|/*	tty.c	4.30	82/10/13	*/
 end_comment
 
 begin_comment
@@ -1646,43 +1646,15 @@ begin_block
 block|{
 name|int
 name|dev
+init|=
+name|tp
+operator|->
+name|t_dev
 decl_stmt|;
 specifier|extern
 name|int
 name|nldisp
 decl_stmt|;
-comment|/* 	 * This is especially so that isatty() will 	 * fail when carrier is gone. 	 */
-if|if
-condition|(
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_CARR_ON
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EBADF
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-name|dev
-operator|=
-name|tp
-operator|->
-name|t_dev
-expr_stmt|;
 comment|/* 	 * If the ioctl involves modification, 	 * insist on being able to write the device, 	 * and hang if in the background. 	 */
 switch|switch
 condition|(
@@ -5132,6 +5104,11 @@ name|c
 operator|,
 name|first
 expr_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -5146,7 +5123,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|EIO
 operator|)
 return|;
 name|loop
@@ -5226,7 +5203,7 @@ name|SVFORK
 condition|)
 return|return
 operator|(
-literal|0
+name|EIO
 operator|)
 return|;
 name|gsignal
@@ -5307,7 +5284,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EWOULDBLOCK
 operator|)
 return|;
 block|}
@@ -5353,9 +5330,7 @@ operator|->
 name|uio_iovcnt
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|passuc
 argument_list|(
@@ -5372,15 +5347,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
 break|break;
 block|}
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -5448,7 +5421,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EWOULDBLOCK
 operator|)
 return|;
 block|}
@@ -5654,9 +5627,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|passuc
 argument_list|(
@@ -5669,9 +5640,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
 break|break;
 if|if
@@ -5774,17 +5743,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|tp
-operator|->
-name|t_rawq
-operator|.
-name|c_cc
-operator|+
-name|tp
-operator|->
-name|t_canq
-operator|.
-name|c_cc
+name|error
 operator|)
 return|;
 block|}
@@ -5794,25 +5753,30 @@ begin_comment
 comment|/*  * Called from the device's write routine after it has  * calculated the tty-structure given as argument.  */
 end_comment
 
-begin_function
-name|caddr_t
+begin_expr_stmt
 name|ttwrite
-parameter_list|(
+argument_list|(
 name|tp
-parameter_list|,
+argument_list|,
 name|uio
-parameter_list|)
+argument_list|)
 specifier|register
-name|struct
+expr|struct
 name|tty
-modifier|*
+operator|*
 name|tp
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -5858,6 +5822,11 @@ name|uio
 operator|->
 name|uio_resid
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -5872,7 +5841,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|NULL
+name|EIO
 operator|)
 return|;
 name|loop
@@ -6021,9 +5990,7 @@ name|cp
 operator|=
 name|obuf
 expr_stmt|;
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|uiomove
 argument_list|(
@@ -6038,9 +6005,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
 break|break;
 if|if
@@ -6381,7 +6346,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|error
 operator|)
 return|;
 name|ovhiwat
@@ -6463,15 +6428,14 @@ name|uio_resid
 operator|==
 name|cnt
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EWOULDBLOCK
-expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|EWOULDBLOCK
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -6504,7 +6468,7 @@ goto|goto
 name|loop
 goto|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Rubout one character from the rawq of tp  * as cleanly as possible.  */
