@@ -6683,12 +6683,9 @@ name|tcp_seq
 operator|)
 literal|0
 argument_list|,
-name|ntohl
-argument_list|(
 name|tcp
 operator|->
 name|th_ack
-argument_list|)
 argument_list|,
 name|TH_RST
 argument_list|)
