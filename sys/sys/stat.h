@@ -1236,6 +1236,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|lchmod
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|mode_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|lstat
 name|__P
 argument_list|(
