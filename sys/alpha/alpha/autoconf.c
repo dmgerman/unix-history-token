@@ -399,8 +399,10 @@ name|cninit_finish
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Now we're ready to handle (pending) interrupts. 	 * XXX this is slightly misplaced. 	 */
-name|spl0
-argument_list|()
+name|alpha_pal_swpipl
+argument_list|(
+name|ALPHA_PSL_IPL_0
+argument_list|)
 expr_stmt|;
 name|cold
 operator|=

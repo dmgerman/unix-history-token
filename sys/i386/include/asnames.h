@@ -1239,13 +1239,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_ihandlers
-value|ihandlers
-end_define
-
-begin_define
-define|#
-directive|define
 name|_imen
 value|imen
 end_define
@@ -1822,6 +1815,13 @@ define|#
 directive|define
 name|_swi_generic
 value|swi_generic
+end_define
+
+begin_define
+define|#
+directive|define
+name|_swi_net
+value|swi_net
 end_define
 
 begin_define

@@ -675,18 +675,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|do_sir
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|dumpconf
 name|__P
 argument_list|(

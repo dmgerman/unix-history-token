@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -438,6 +444,9 @@ begin_function
 name|int
 name|alpha_platform_setup_ide_intr
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
 name|struct
 name|resource
 modifier|*
@@ -462,7 +471,7 @@ name|isa_setup_intr
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+name|dev
 argument_list|,
 name|res
 argument_list|,
@@ -482,6 +491,9 @@ begin_function
 name|int
 name|alpha_platform_teardown_ide_intr
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
 name|struct
 name|resource
 modifier|*
@@ -497,7 +509,7 @@ name|isa_teardown_intr
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+name|dev
 argument_list|,
 name|res
 argument_list|,

@@ -210,6 +210,16 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|device
+operator|*
+name|dev
+operator|,
+expr|struct
+name|device
+operator|*
+name|child
+operator|,
 name|int
 name|chan
 operator|,

@@ -105,7 +105,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ipl.h>
+file|<sys/ipl.h>
 end_include
 
 begin_include

@@ -305,6 +305,11 @@ name|int
 name|alpha_platform_setup_ide_intr
 parameter_list|(
 name|struct
+name|device
+modifier|*
+name|dev
+parameter_list|,
+name|struct
 name|resource
 modifier|*
 name|res
@@ -329,6 +334,11 @@ begin_function_decl
 name|int
 name|alpha_platform_teardown_ide_intr
 parameter_list|(
+name|struct
+name|device
+modifier|*
+name|dev
+parameter_list|,
 name|struct
 name|resource
 modifier|*

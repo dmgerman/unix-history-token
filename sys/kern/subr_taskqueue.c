@@ -48,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/ipl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/ipl.h>
+file|<sys/malloc.h>
 end_include
 
 begin_expr_stmt

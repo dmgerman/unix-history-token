@@ -288,7 +288,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Per-interrupt data.  We consider the soft interrupt to be a special  * case, so these arrays have NHWI + NSWI entries, not ICU_LEN.  */
+comment|/*  * Per-interrupt data.  */
 end_comment
 
 begin_decl_stmt
@@ -296,9 +296,7 @@ name|u_long
 modifier|*
 name|intr_countp
 index|[
-name|NHWI
-operator|+
-name|NSWI
+name|ICU_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -312,9 +310,7 @@ name|driver_intr_t
 modifier|*
 name|intr_handler
 index|[
-name|NHWI
-operator|+
-name|NSWI
+name|ICU_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -329,9 +325,7 @@ name|ithd
 modifier|*
 name|ithds
 index|[
-name|NHWI
-operator|+
-name|NSWI
+name|ICU_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -345,9 +339,7 @@ name|void
 modifier|*
 name|intr_unit
 index|[
-name|NHWI
-operator|+
-name|NSWI
+name|ICU_LEN
 index|]
 decl_stmt|;
 end_decl_stmt

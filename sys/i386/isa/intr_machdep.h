@@ -890,19 +890,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|intrmask_t
-name|splq
-name|__P
-argument_list|(
-operator|(
-name|intrmask_t
-name|mask
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * WARNING: These are internal functions and not to be used by device drivers!  * They are subject to change without notice.   */
 end_comment

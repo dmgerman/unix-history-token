@@ -76,6 +76,15 @@ typedef|));
 end_typedef
 
 begin_decl_stmt
+specifier|extern
+name|swihand_t
+modifier|*
+name|shandlers
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|register_swi
 name|__P
@@ -148,11 +157,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|swihand_t
-modifier|*
-name|ihandlers
-index|[]
+name|void
+name|sched_softintr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

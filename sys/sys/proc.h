@@ -1411,6 +1411,11 @@ decl_stmt|;
 comment|/* number of schedule events */
 endif|#
 directive|endif
+name|void
+modifier|*
+name|it_md
+decl_stmt|;
+comment|/* hook for MD interrupt code */
 block|}
 struct|;
 end_struct

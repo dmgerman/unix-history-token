@@ -394,23 +394,8 @@ comment|/* disable resettodr() if != 0 */
 end_comment
 
 begin_decl_stmt
-specifier|volatile
-name|u_int
-name|idelayed
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|statclock_disable
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|stat_imask
-init|=
-name|SWI_LOW_MASK
 decl_stmt|;
 end_decl_stmt
 
@@ -476,18 +461,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static	u_int	clk_imask = HWI_MASK | SWI_MASK;
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -3654,12 +3627,6 @@ name|statclock_disable
 condition|)
 block|{
 comment|/* 		 * The stat interrupt mask is different without the 		 * statistics clock.  Also, don't set the interrupt 		 * flag which would normally cause the RTC to generate 		 * interrupts. 		 */
-name|stat_imask
-operator|=
-name|HWI_MASK
-operator||
-name|SWI_MASK
-expr_stmt|;
 name|rtc_statusb
 operator|=
 name|RTCSB_24HR

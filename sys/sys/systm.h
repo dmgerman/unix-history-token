@@ -1695,16 +1695,6 @@ begin_comment
 comment|/* Interrupt management */
 end_comment
 
-begin_comment
-comment|/*   * For the alpha arch, some of these functions are static __inline, and  * the others should be.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
 begin_decl_stmt
 name|void
 name|setdelayed
@@ -2115,6 +2105,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|intrmask_t
+name|splq
+name|__P
+argument_list|(
+operator|(
+name|intrmask_t
+name|ipl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|splz
 name|__P
@@ -2126,23 +2129,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __i386__ */
-end_comment
-
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|__ia64__

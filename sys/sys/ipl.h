@@ -6,67 +6,160 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_IPL_H_
+name|_SYS_IPL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_IPL_H_
+name|_SYS_IPL_H_
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APIC_IO
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/apic_ipl.h>
+file|<machine/ipl.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu_ipl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|NSWI
-value|7
-end_define
 
 begin_comment
-comment|/*  * astpending bits  */
+comment|/*  * Software interrupt bit numbers in priority order.  The priority only  * determines which swi will be dispatched next; a higher priority swi  * may be dispatched when a nested h/w interrupt handler returns.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AST_PENDING
-value|0x00000001
+name|SWI_TTY
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|AST_RESCHED
-value|0x00000002
+name|SWI_NET
+value|1
 end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CAMNET
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CAMBIO
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_VM
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_TQ
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CLOCK
+value|6
+end_define
+
+begin_comment
+comment|/*  * Corresponding interrupt-pending bits for ipending.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWI_TTY_PENDING
+value|(1<< SWI_TTY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_NET_PENDING
+value|(1<< SWI_NET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CAMNET_PENDING
+value|(1<< SWI_CAMNET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CAMBIO_PENDING
+value|(1<< SWI_CAMBIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_VM_PENDING
+value|(1<< SWI_VM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_TQ_PENDING
+value|(1<< SWI_TQ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CLOCK_PENDING
+value|(1<< SWI_CLOCK)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_comment
+comment|/*  * spending and sdelayed are changed by interrupt handlers so they are  * volatile.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_int
+name|sdelayed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* interrupts to become pending */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_int
+name|spending
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pending software interrupts */
+end_comment
 
 begin_endif
 endif|#
@@ -74,7 +167,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_IPL_H_ */
+comment|/* !LOCORE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_SYS_IPL_H_ */
 end_comment
 
 end_unit
