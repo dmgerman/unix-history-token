@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fixunssfdi.c	5.1 (Berkeley) %G%"
+literal|"@(#)fixunssfdi.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,6 +97,10 @@ name|UQUAD_MAX
 operator|)
 return|;
 comment|/* ??? should be 0?  ERANGE??? */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* this falls afoul of a GCC bug */
 if|if
 condition|(
 name|f
@@ -108,6 +112,22 @@ operator|(
 name|UQUAD_MAX
 operator|)
 return|;
+else|#
+directive|else
+comment|/* so we wire in 2^64-1 instead */
+if|if
+condition|(
+name|f
+operator|>=
+literal|18446744073709551615.0
+condition|)
+return|return
+operator|(
+name|UQUAD_MAX
+operator|)
+return|;
+endif|#
+directive|endif
 name|x
 operator|=
 name|f

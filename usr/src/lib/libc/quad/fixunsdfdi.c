@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fixunsdfdi.c	5.4 (Berkeley) %G%"
+literal|"@(#)fixunsdfdi.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,6 +97,10 @@ name|UQUAD_MAX
 operator|)
 return|;
 comment|/* ??? should be 0?  ERANGE??? */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* this falls afoul of a GCC bug */
 if|if
 condition|(
 name|x
@@ -108,6 +112,22 @@ operator|(
 name|UQUAD_MAX
 operator|)
 return|;
+else|#
+directive|else
+comment|/* so we wire in 2^64-1 instead */
+if|if
+condition|(
+name|x
+operator|>=
+literal|18446744073709551615.0
+condition|)
+return|return
+operator|(
+name|UQUAD_MAX
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* 	 * Get the upper part of the result.  Note that the divide 	 * may round up; we want to avoid this if possible, so we 	 * subtract `1/2' first. 	 */
 name|toppart
 operator|=
