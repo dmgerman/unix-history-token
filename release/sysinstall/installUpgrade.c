@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.1 1995/10/19 16:15:40 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.2 1995/10/19 18:37:46 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -926,6 +926,22 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
+name|RunningAsInit
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"You can only perform this procedure when booted off the installation\n"
+literal|"floppy."
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
+block|}
+if|if
+condition|(
+operator|!
 name|Dists
 condition|)
 block|{
@@ -1014,14 +1030,22 @@ condition|)
 return|return
 name|RET_FAIL
 return|;
+comment|/* Note that we're now upgrading */
+name|variable_set2
+argument_list|(
+name|SYSTEM_INSTALLED
+argument_list|,
+literal|"upgrade"
+argument_list|)
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"OK.  First, we're going to go to the disk label editor.  In this editor\n"
 literal|"you will be expected to *Mount* any partitions you're interested in\n"
-literal|"upgrading.  Don't set the Newfs flag to `Y' on anything in the label\n"
-literal|"editor unless you're absolutely sure you know what you're doing!  In\n"
-literal|"this instance, you'll be using the label editor as little more than a\n"
-literal|"fancy screen-oriented filesystem mounting utility!\n\n"
+literal|"upgrading.  Don't set the Newfs flag to Y on anything in the label editor\n"
+literal|"unless you're absolutely sure you know what you're doing!  In this\n"
+literal|"instance, you'll be using the label editor as little more than a fancy\n"
+literal|"screen-oriented filesystem mounting utility, so think of it that way.\n\n"
 literal|"Once you're done in the label editor, press Q to return here for the next\n"
 literal|"step.\n"
 argument_list|)
@@ -1046,6 +1070,14 @@ return|return
 name|RET_FAIL
 return|;
 block|}
+comment|/* Don't write out MBR info */
+name|variable_set2
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|,
+literal|"written"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|diskLabelCommit
@@ -1183,7 +1215,7 @@ condition|)
 block|{
 name|msgNotify
 argument_list|(
-literal|"Moving old kernel to /kernel.205."
+literal|"Moving old kernel to /kernel.205"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1247,7 +1279,7 @@ name|msgConfirm
 argument_list|(
 literal|"The extraction process seems to have had some problems, but we got most\n"
 literal|"of the essentials.  We'll treat this as a warning since it may have been\n"
-literal|"a non-essential distribution which failed to load."
+literal|"only non-essential distributions which failed to load."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1374,11 +1406,6 @@ argument_list|()
 operator|)
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|fd
-decl_stmt|;
 name|struct
 name|termios
 name|foo
