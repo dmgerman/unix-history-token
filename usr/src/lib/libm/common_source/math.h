@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	math.h	4.6	9/11/85; 1.2 (ucb.elefunt) %G% */
+comment|/*	math.h	4.6	9/11/85; 1.3 (ucb.elefunt) %G% */
 end_comment
 
 begin_decl_stmt
@@ -112,11 +112,19 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|extern
@@ -130,6 +138,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
 
 begin_decl_stmt
 specifier|extern
