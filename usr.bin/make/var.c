@@ -2637,7 +2637,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|vp
 operator|->
 name|ptr
@@ -2646,9 +2645,7 @@ literal|0
 index|]
 operator|==
 name|endc
-operator|)
 operator|||
-operator|(
 name|vp
 operator|->
 name|ptr
@@ -2657,14 +2654,12 @@ literal|0
 index|]
 operator|==
 literal|':'
-operator|)
 condition|)
 block|{
 break|break;
 block|}
 if|if
 condition|(
-operator|(
 name|vp
 operator|->
 name|ptr
@@ -2673,9 +2668,7 @@ literal|0
 index|]
 operator|==
 literal|'\\'
-operator|)
 operator|&&
-operator|(
 operator|(
 name|vp
 operator|->
@@ -2685,9 +2678,7 @@ literal|1
 index|]
 operator|==
 name|endc
-operator|)
 operator|||
-operator|(
 name|vp
 operator|->
 name|ptr
@@ -2696,7 +2687,6 @@ literal|1
 index|]
 operator|==
 literal|':'
-operator|)
 operator|)
 condition|)
 block|{
@@ -4477,18 +4467,14 @@ decl_stmt|;
 comment|/* 		 * If substituting a local variable in a non-local context, 		 * assume it's for dynamic source stuff. We have to handle 		 * this specially and return the longhand for the variable 		 * with the dollar sign escaped so it makes it back to the 		 * caller. Only four of the local variables are treated 		 * specially as they are the only four that will be set when 		 * dynamic sources are expanded. 		 */
 if|if
 condition|(
-operator|(
 name|vlen
 operator|==
 literal|1
-operator|)
 operator|||
-operator|(
 operator|(
 name|vlen
 operator|==
 literal|2
-operator|)
 operator|&&
 operator|(
 name|vname
@@ -4564,20 +4550,16 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
 name|vlen
 operator|>
 literal|2
-operator|)
 operator|&&
-operator|(
 name|vname
 index|[
 literal|0
 index|]
 operator|==
 literal|'.'
-operator|)
 operator|&&
 name|isupper
 argument_list|(
@@ -4700,11 +4682,9 @@ block|{
 comment|/* 		 * Check for D and F forms of local variables since we're in 		 * a local context and the name is the right length. 		 */
 if|if
 condition|(
-operator|(
 name|vlen
 operator|==
 literal|2
-operator|)
 operator|&&
 operator|(
 name|vname
@@ -5005,20 +4985,14 @@ decl_stmt|;
 comment|/* 		 * If substituting a local variable in a non-local context, 		 * assume it's for dynamic source stuff. We have to handle 		 * this specially and return the longhand for the variable 		 * with the dollar sign escaped so it makes it back to the 		 * caller. Only four of the local variables are treated 		 * specially as they are the only four that will be set when 		 * dynamic sources are expanded. 		 */
 if|if
 condition|(
-operator|(
-operator|(
 name|vlen
 operator|==
 literal|1
-operator|)
-operator|)
 operator|||
-operator|(
 operator|(
 name|vlen
 operator|==
 literal|2
-operator|)
 operator|&&
 operator|(
 name|vname
@@ -5094,20 +5068,16 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
 name|vlen
 operator|>
 literal|2
-operator|)
 operator|&&
-operator|(
 name|vname
 index|[
 literal|0
 index|]
 operator|==
 literal|'.'
-operator|)
 operator|&&
 name|isupper
 argument_list|(
@@ -5230,11 +5200,9 @@ block|{
 comment|/* 		 * Check for D and F forms of local variables since we're in 		 * a local context and the name is the right length. 		 */
 if|if
 condition|(
-operator|(
 name|vlen
 operator|==
 literal|2
-operator|)
 operator|&&
 operator|(
 name|vname
