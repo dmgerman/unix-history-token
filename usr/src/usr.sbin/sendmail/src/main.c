@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.37 (Berkeley) %G%"
+literal|"@(#)main.c	8.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2796,6 +2796,25 @@ begin_comment
 comment|/* 	**  Do basic initialization. 	**	Read system control file. 	**	Extract special fields for local use. 	*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XDEBUG
+end_ifdef
+
+begin_expr_stmt
+name|checkfd012
+argument_list|(
+literal|"before readcf"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|readcf
 argument_list|(
@@ -3516,6 +3535,25 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XDEBUG
+end_ifdef
+
+begin_expr_stmt
+name|checkfd012
+argument_list|(
+literal|"before main() initmaps"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* 	**  Do operation-mode-dependent initialization. 	*/
