@@ -6189,6 +6189,8 @@ operator|!=
 literal|0
 operator|)
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|dc
 operator|=
 name|dev
@@ -8079,6 +8081,8 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|dev
@@ -8357,6 +8361,8 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|PDEBUG
 argument_list|(
 operator|(
