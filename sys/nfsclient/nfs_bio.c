@@ -1773,6 +1773,15 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+name|np
+operator|->
+name|n_flag
+operator|&
+name|NSIZECHANGED
+operator|)
+operator|||
+operator|(
 name|np
 operator|->
 name|n_mtime
@@ -1782,6 +1791,7 @@ operator|.
 name|va_mtime
 operator|.
 name|tv_sec
+operator|)
 condition|)
 block|{
 if|if
@@ -1836,6 +1846,13 @@ operator|.
 name|va_mtime
 operator|.
 name|tv_sec
+expr_stmt|;
+name|np
+operator|->
+name|n_flag
+operator|&=
+operator|~
+name|NSIZECHANGED
 expr_stmt|;
 block|}
 block|}
