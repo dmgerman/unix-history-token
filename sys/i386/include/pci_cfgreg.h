@@ -66,35 +66,12 @@ name|CONF2_ENABLE_PORT
 value|0x0cf8
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CONF2_FORWARD_PORT
-value|0x0cf9
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|CONF2_FORWARD_PORT
 value|0x0cfa
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

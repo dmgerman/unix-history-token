@@ -42,31 +42,6 @@ begin_comment
 comment|/* BIOS id */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|APM_BIOS
-value|0x9a
-end_define
-
-begin_define
-define|#
-directive|define
-name|APM_INT
-value|0x1f
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -80,11 +55,6 @@ directive|define
 name|APM_INT
 value|0x15
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* APM flags */
@@ -210,35 +180,12 @@ name|APM_RESTOREDEFAULT
 value|0x09
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|APM_GETPWSTATUS
-value|0x3a
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|APM_GETPWSTATUS
 value|0x0a
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -261,35 +208,12 @@ name|APM_ENABLEDISABLEDPM
 value|0x0d
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|APM_DRVVERSION
-value|0x3e
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|APM_DRVVERSION
 value|0x0e
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
