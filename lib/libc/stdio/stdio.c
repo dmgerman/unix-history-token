@@ -290,32 +290,6 @@ specifier|register
 name|off_t
 name|ret
 decl_stmt|;
-comment|/* 	 * Disallow negative seeks per POSIX. 	 * It is needed here to help upper level caller 	 * (fseek) in the cases it can't detect. 	 */
-if|if
-condition|(
-name|whence
-operator|==
-name|SEEK_SET
-operator|&&
-operator|(
-name|off_t
-operator|)
-name|offset
-operator|<
-literal|0
-condition|)
-block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 name|ret
 operator|=
 name|lseek
@@ -332,6 +306,7 @@ argument_list|,
 name|whence
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Disallow negative seeks per POSIX. 	 * It is needed here to help upper level caller 	 * (fseek) in the cases it can't detect. 	 */
 if|if
 condition|(
 name|ret
