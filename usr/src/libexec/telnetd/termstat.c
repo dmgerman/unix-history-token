@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termstat.c	5.7 (Berkeley) %G%"
+literal|"@(#)termstat.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -846,6 +846,7 @@ expr_stmt|;
 if|if
 condition|(
 name|tty_istrapsig
+argument_list|()
 condition|)
 name|useeditmode
 operator||=
