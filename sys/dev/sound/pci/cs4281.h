@@ -480,6 +480,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CS4281PCI_PMCS_PS_MASK
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
 name|CS4281PCI_CWPR
 value|0x3e0
 end_define
@@ -496,6 +503,13 @@ define|#
 directive|define
 name|CS4281PCI_EPPMC
 value|0x3e4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CS4281PCI_EPPMC_FPDN
+value|0x00004000
 end_define
 
 begin_define

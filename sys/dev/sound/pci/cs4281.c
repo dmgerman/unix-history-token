@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Orion Hodson<O.Hodson@cs.ucl.ac.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * The order of pokes in the initiation sequence is based on Linux  * driver by Thomas Sailer, gw boynton (wesb@crystal.cirrus.com), tom  * woller (twoller@crystal.cirrus.com).  */
+comment|/*  * Copyright (c) 2000 Orion Hodson<O.Hodson@cs.ucl.ac.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * The order of pokes in the initiation sequence is based on Linux  * driver by Thomas Sailer, gw boynton (wesb@crystal.cirrus.com), tom  * woller (twoller@crystal.cirrus.com).  Shingo Watanabe (nabe@nabechan.org)  * contributed towards power management.  */
 end_comment
 
 begin_include
@@ -173,9 +173,13 @@ decl_stmt|,
 name|fmt
 decl_stmt|,
 name|bps
+decl_stmt|,
+name|blksz
 decl_stmt|;
 name|int
 name|dma_setup
+decl_stmt|,
+name|dma_active
 decl_stmt|,
 name|dma_chan
 decl_stmt|;
@@ -287,7 +291,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* stuff */
+comment|/* power management and interrupt control */
 end_comment
 
 begin_function_decl
@@ -319,30 +323,6 @@ begin_function_decl
 specifier|static
 name|int
 name|cs4281_init
-parameter_list|(
-name|struct
-name|sc_info
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|cs4281_uninit
-parameter_list|(
-name|struct
-name|sc_info
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|cs4281_reinit
 parameter_list|(
 name|struct
 name|sc_info
@@ -1458,6 +1438,17 @@ literal|1
 expr_stmt|;
 name|ch
 operator|->
+name|blksz
+operator|=
+name|sndbuf_getsize
+argument_list|(
+name|ch
+operator|->
+name|buffer
+argument_list|)
+expr_stmt|;
+name|ch
+operator|->
 name|dma_chan
 operator|=
 operator|(
@@ -1518,8 +1509,6 @@ init|=
 name|data
 decl_stmt|;
 name|u_int32_t
-name|blksz
-decl_stmt|,
 name|go
 decl_stmt|;
 name|go
@@ -1532,6 +1521,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 2 interrupts are possible and used in buffer (half-empty,empty),      * hence factor of 2. */
+name|ch
+operator|->
 name|blksz
 operator|=
 name|MIN
@@ -1551,6 +1542,8 @@ name|buffer
 argument_list|,
 literal|2
 argument_list|,
+name|ch
+operator|->
 name|blksz
 argument_list|)
 expr_stmt|;
@@ -1580,6 +1573,8 @@ literal|"cs4281chan_setblocksize: bufsz %d Setting %d\n"
 argument_list|,
 name|blocksize
 argument_list|,
+name|ch
+operator|->
 name|blksz
 argument_list|)
 argument_list|)
@@ -2416,7 +2411,7 @@ comment|/* -------------------------------------------------------------------- 
 end_comment
 
 begin_comment
-comment|/* stuff */
+comment|/* power management related */
 end_comment
 
 begin_function
@@ -2441,20 +2436,65 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* full power */
+comment|/* Permit r/w access to all BA0 registers */
+name|cs4281_wr
+argument_list|(
+name|sc
+argument_list|,
+name|CS4281PCI_CWPR
+argument_list|,
+name|CS4281PCI_CWPR_MAGIC
+argument_list|)
+expr_stmt|;
+comment|/* Power on */
+name|cs4281_clr4
+argument_list|(
+name|sc
+argument_list|,
+name|CS4281PCI_EPPMC
+argument_list|,
+name|CS4281PCI_EPPMC_FPDN
+argument_list|)
+expr_stmt|;
 break|break;
-case|case
-literal|1
-case|:
-case|case
-literal|2
-case|:
 case|case
 literal|3
 case|:
-comment|/* power off */
+comment|/* Power off card and codec */
+name|cs4281_set4
+argument_list|(
+name|sc
+argument_list|,
+name|CS4281PCI_EPPMC
+argument_list|,
+name|CS4281PCI_EPPMC_FPDN
+argument_list|)
+expr_stmt|;
+name|cs4281_clr4
+argument_list|(
+name|sc
+argument_list|,
+name|CS4281PCI_SPMC
+argument_list|,
+name|CS4281PCI_SPMC_RSTN
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"cs4281_power %d -> %d\n"
+argument_list|,
+name|sc
+operator|->
+name|power
+argument_list|,
+name|state
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|power
@@ -2483,16 +2523,6 @@ name|i
 decl_stmt|,
 name|v
 decl_stmt|;
-comment|/* Permit r/w access to all BA0 registers */
-name|cs4281_wr
-argument_list|(
-name|sc
-argument_list|,
-name|CS4281PCI_CWPR
-argument_list|,
-name|CS4281PCI_CWPR_MAGIC
-argument_list|)
-expr_stmt|;
 comment|/* (0) Blast clock register and serial port */
 name|cs4281_wr
 argument_list|(
@@ -3230,42 +3260,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|cs4281_uninit
-parameter_list|(
-name|struct
-name|sc_info
-modifier|*
-name|sc
-parameter_list|)
-block|{
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|cs4281_reinit
-parameter_list|(
-name|struct
-name|sc_info
-modifier|*
-name|sc
-parameter_list|)
-block|{
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/* -------------------------------------------------------------------- */
 end_comment
@@ -3459,6 +3453,38 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pci_get_powerstate
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|PCI_POWERSTATE_D0
+condition|)
+block|{
+comment|/* Reset the power state. */
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"chip is in D%d power mode "
+literal|"-- setting to D0\n"
+argument_list|,
+name|pci_get_powerstate
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pci_set_powerstate
+argument_list|(
+name|dev
+argument_list|,
+name|PCI_POWERSTATE_D0
+argument_list|)
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|regid
@@ -4083,12 +4109,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* shutdown chip */
-name|cs4281_uninit
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* power off */
 name|cs4281_power
 argument_list|(
@@ -4198,8 +4218,38 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* save chip state */
-comment|/* power off */
+name|sc
+operator|->
+name|rch
+operator|.
+name|dma_active
+operator|=
+name|adcdac_go
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|rch
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|pch
+operator|.
+name|dma_active
+operator|=
+name|adcdac_go
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|pch
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|cs4281_power
 argument_list|(
 name|sc
@@ -4235,11 +4285,17 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* power up */
-comment|/* cs4281_power(sc, 0); */
-comment|/* reinit chip */
+name|cs4281_power
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* initialize chip */
 if|if
 condition|(
-name|cs4281_reinit
+name|cs4281_init
 argument_list|(
 name|sc
 argument_list|)
@@ -4259,7 +4315,6 @@ return|return
 name|ENXIO
 return|;
 block|}
-comment|/* restore chip state */
 comment|/* restore mixer state */
 if|if
 condition|(
@@ -4283,6 +4338,131 @@ return|return
 name|ENXIO
 return|;
 block|}
+comment|/* restore chip state */
+name|cs4281chan_setspeed
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rch
+argument_list|,
+name|sc
+operator|->
+name|rch
+operator|.
+name|spd
+argument_list|)
+expr_stmt|;
+name|cs4281chan_setblocksize
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rch
+argument_list|,
+name|sc
+operator|->
+name|rch
+operator|.
+name|blksz
+argument_list|)
+expr_stmt|;
+name|cs4281chan_setformat
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rch
+argument_list|,
+name|sc
+operator|->
+name|rch
+operator|.
+name|fmt
+argument_list|)
+expr_stmt|;
+name|adcdac_go
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|rch
+argument_list|,
+name|sc
+operator|->
+name|rch
+operator|.
+name|dma_active
+argument_list|)
+expr_stmt|;
+name|cs4281chan_setspeed
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|pch
+argument_list|,
+name|sc
+operator|->
+name|pch
+operator|.
+name|spd
+argument_list|)
+expr_stmt|;
+name|cs4281chan_setblocksize
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|pch
+argument_list|,
+name|sc
+operator|->
+name|pch
+operator|.
+name|blksz
+argument_list|)
+expr_stmt|;
+name|cs4281chan_setformat
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|pch
+argument_list|,
+name|sc
+operator|->
+name|pch
+operator|.
+name|fmt
+argument_list|)
+expr_stmt|;
+name|adcdac_go
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|pch
+argument_list|,
+name|sc
+operator|->
+name|pch
+operator|.
+name|dma_active
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
