@@ -3319,12 +3319,6 @@ name|errno
 decl_stmt|,
 name|sys_nerr
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
 name|char
 modifier|*
 name|s
