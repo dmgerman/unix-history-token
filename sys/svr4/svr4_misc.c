@@ -6171,9 +6171,9 @@ name|chgproccnt
 argument_list|(
 name|q
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_ruid
+name|cr_ruidinfo
 argument_list|,
 operator|-
 literal|1
