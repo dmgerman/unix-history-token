@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vxm.c	1.1	85/07/21	*/
+comment|/*	vxm.c	1.2	86/01/05	*/
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vba/vioc.h"
+file|"../tahoevba/vioc.h"
 end_include
 
 begin_include
@@ -279,6 +279,9 @@ name|xp
 operator|->
 name|v_nbr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cp
 operator|->
@@ -809,6 +812,9 @@ name|vcmd
 argument_list|(
 name|n
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cmdp
 operator|->

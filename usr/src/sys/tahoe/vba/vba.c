@@ -1,115 +1,127 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vba.c	1.1	85/07/21	*/
+comment|/*	vba.c	1.2	86/01/05	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"../tahoe/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"../tahoe/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/cmap.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dk.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/map.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"dk.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vba/vbavar.h"
+file|"user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"vmparam.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vmmac.h"
+file|"vmmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/proc.h"
+file|"proc.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoevba/vbavar.h"
+end_include
+
+begin_comment
+comment|/*  * Tahoe VERSAbus adapator support routines.  */
+end_comment
 
 begin_comment
 comment|/*  * Next piece of logic takes care of unusual cases when less (or more) than  * a full block (or sector) are required. This is done by the swaping  * logic, when it brings page table pages from the swap device.  * Since some controllers can't read less than a sector, the  * only alternative is to read the disk to a temporary buffer and  * then to move the amount needed back to the process (usually proc[0]  * or proc[2]).  * On Tahoe, the virtual addresses versus physical I/O problem creates  * the need to move I/O data through an intermediate buffer whenever one  * of the following is true:  *	1) The data length is not a multiple of sector size  *	2) The base address + length cross a physical page boundary  *	3) The virtual address for I/O is not in the system space.  */
 end_comment
 
-begin_macro
-name|buf_setup
+begin_comment
+comment|/*  * IO buffer preparation for possible buffered transfer.  * The relevant page table entries are kept in the 'buf' structure,  * for later use by the driver's 'start' routine or 'interrupt'  * routine, when user's data has to be moved to the intermediate  * buffer.  */
+end_comment
+
+begin_expr_stmt
+name|vbasetup
 argument_list|(
-argument|bp
-argument_list|,
-argument|sectsize
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|buf
-modifier|*
 name|bp
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|sectsize
+argument_list|)
+specifier|register
+expr|struct
+name|buf
+operator|*
+name|bp
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|long
+name|int
 name|sectsize
 decl_stmt|;
 end_decl_stmt
@@ -120,9 +132,12 @@ end_comment
 
 begin_block
 block|{
-comment|/*  * IO buffer preparation for possible buffered transfer.  * The relevant page table entries are kept in the 'buf' structure,  * for later use by the driver's 'start' routine or 'interrupt'  * routine, when user's data has to be moved to the intermediate  * buffer.  */
 name|caddr_t
 name|source_pte_adr
+decl_stmt|;
+specifier|register
+name|int
+name|v
 decl_stmt|;
 if|if
 condition|(
@@ -179,19 +194,29 @@ name|b_flags
 operator||=
 name|B_NOT1K
 expr_stmt|;
-if|if
-condition|(
+name|v
+operator|=
+name|btop
+argument_list|(
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+argument_list|)
+expr_stmt|;
+name|source_pte_adr
+operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|bp
 operator|->
 name|b_flags
 operator|&
 name|B_DIRTY
-condition|)
-name|source_pte_adr
-operator|=
-operator|(
-name|caddr_t
-operator|)
+condition|?
 name|vtopte
 argument_list|(
 operator|&
@@ -200,35 +225,16 @@ index|[
 literal|2
 index|]
 argument_list|,
-name|btop
-argument_list|(
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
+name|v
 argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|source_pte_adr
-operator|=
-operator|(
-name|caddr_t
-operator|)
+else|:
 name|vtopte
 argument_list|(
 name|bp
 operator|->
 name|b_proc
 argument_list|,
-name|btop
-argument_list|(
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
+name|v
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -265,10 +271,16 @@ name|bcopy
 argument_list|(
 name|source_pte_adr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|bp
 operator|->
 name|b_upte
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|bp
 operator|->
 name|b_ptecnt
@@ -280,22 +292,16 @@ block|}
 block|}
 end_block
 
-begin_decl_stmt
-name|int
-name|mapbusy
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* semaphore on the system IOmap buffer */
+comment|/*  * This routine is usually called by the 'start' routine. It  * returns the physical address of the first byte for IO, to  * be presented to the controller. If intermediate buffering is  * needed and a write out is done, now is the time to get the  * original user's data in the buffer.  */
 end_comment
 
 begin_macro
-name|get_ioadr
+name|vbastart
 argument_list|(
 argument|bp
 argument_list|,
-argument|buffer
+argument|v
 argument_list|,
 argument|map
 argument_list|,
@@ -312,9 +318,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|buffer
+name|caddr_t
+name|v
 decl_stmt|;
 end_decl_stmt
 
@@ -334,19 +339,13 @@ comment|/* A bunch of system pte's */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|user
-modifier|*
+name|caddr_t
 name|utl
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* The system address mapped through 'map' */
-end_comment
-
-begin_comment
-comment|/*  * This routine is usually called by the 'start' routine. It  * returns the physical address of the first byte for IO, to  * be presented to the controller. If intermediate buffering is  * needed and a write out is done, now is the time to get the  * original user's data in the buffer.  */
 end_comment
 
 begin_block
@@ -373,7 +372,10 @@ name|bp
 operator|->
 name|b_proc
 argument_list|,
-name|buffer
+operator|(
+name|unsigned
+operator|)
+name|v
 argument_list|)
 expr_stmt|;
 if|if
@@ -426,30 +428,24 @@ name|PG_KR
 expr_stmt|;
 name|mtpr
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|TBIS
+argument_list|,
 name|utl
 operator|+
 name|i
 operator|*
 name|NBPG
-argument_list|,
-name|TBIS
 argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|P1DC
+argument_list|,
 name|utl
 operator|+
 name|i
 operator|*
 name|NBPG
-argument_list|,
-name|P1DC
 argument_list|)
 expr_stmt|;
 block|}
@@ -468,13 +464,13 @@ operator|&
 name|PGOFSET
 operator|)
 operator|+
-operator|(
-name|caddr_t
-operator|)
 name|utl
 argument_list|,
-name|buffer
+name|v
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|bp
 operator|->
 name|b_bcount
@@ -491,6 +487,9 @@ name|bp
 operator|->
 name|b_proc
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|bp
 operator|->
 name|b_un
@@ -506,12 +505,16 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Called by the driver's interrupt routine, after the data is  * realy in or out. If that was a read, and the NOT1K flag was on,  * now is the time to move the data back into user's space.   * Similar to the vbastart routine, but in the reverse direction.  */
+end_comment
+
 begin_expr_stmt
-name|end_transfer
+name|vbadone
 argument_list|(
 name|bp
 argument_list|,
-name|buffer
+name|v
 argument_list|,
 name|map
 argument_list|,
@@ -526,9 +529,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|buffer
+name|caddr_t
+name|v
 decl_stmt|;
 end_decl_stmt
 
@@ -548,9 +550,7 @@ comment|/* A bunch of system pte's */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|user
-modifier|*
+name|caddr_t
 name|utl
 decl_stmt|;
 end_decl_stmt
@@ -561,7 +561,6 @@ end_comment
 
 begin_block
 block|{
-comment|/*  * Called by the driver's interrupt routine, after the data is  * realy in or out. If that was a read, and the NOT1K flag was on,  * now is the time to move the data back into user's space.   * Mostly analogous to the get_ioadr routine, but in the reverse direction.  */
 specifier|register
 name|i
 operator|,
@@ -603,20 +602,22 @@ control|)
 block|{
 name|mtpr
 argument_list|(
+name|P1DC
+argument_list|,
 operator|(
 name|int
 operator|)
-name|buffer
+name|v
 operator|+
 name|cnt
 operator|-
 literal|1
-argument_list|,
-name|P1DC
 argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
+name|P1DC
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -629,8 +630,6 @@ operator|+
 name|cnt
 operator|-
 literal|1
-argument_list|,
-name|P1DC
 argument_list|)
 expr_stmt|;
 block|}
@@ -640,7 +639,7 @@ operator|(
 operator|(
 name|int
 operator|)
-name|buffer
+name|v
 operator|&
 name|PGOFSET
 operator|)
@@ -649,9 +648,9 @@ literal|0
 condition|)
 name|mtpr
 argument_list|(
-name|buffer
-argument_list|,
 name|P1DC
+argument_list|,
+name|v
 argument_list|)
 expr_stmt|;
 if|if
@@ -673,6 +672,8 @@ literal|0
 condition|)
 name|mtpr
 argument_list|(
+name|P1DC
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -681,8 +682,6 @@ operator|->
 name|b_un
 operator|.
 name|b_addr
-argument_list|,
-name|P1DC
 argument_list|)
 expr_stmt|;
 for|for
@@ -722,22 +721,19 @@ name|PG_KW
 expr_stmt|;
 name|mtpr
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|TBIS
+argument_list|,
 name|utl
 operator|+
 name|i
 operator|*
 name|NBPG
-argument_list|,
-name|TBIS
 argument_list|)
 expr_stmt|;
 block|}
 name|bcopy
 argument_list|(
-name|buffer
+name|v
 argument_list|,
 operator|(
 operator|(
@@ -752,11 +748,11 @@ operator|&
 name|PGOFSET
 operator|)
 operator|+
-operator|(
-name|caddr_t
-operator|)
 name|utl
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|bp
 operator|->
 name|b_bcount
@@ -766,13 +762,13 @@ block|}
 else|else
 name|mtpr
 argument_list|(
+name|P1DC
+argument_list|,
 name|bp
 operator|->
 name|b_un
 operator|.
 name|b_addr
-argument_list|,
-name|P1DC
 argument_list|)
 expr_stmt|;
 name|bp
@@ -782,36 +778,6 @@ operator|&=
 operator|~
 name|B_NOT1K
 expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|movob
-argument_list|(
-argument|byte
-argument_list|,
-argument|address
-argument_list|)
-end_macro
-
-begin_block
-block|{
-asm|asm(" movob 7(fp),*8(fp);");
-block|}
-end_block
-
-begin_macro
-name|movow
-argument_list|(
-argument|word
-argument_list|,
-argument|address
-argument_list|)
-end_macro
-
-begin_block
-block|{
-asm|asm(" movow 6(fp),*8(fp);");
 block|}
 end_block
 

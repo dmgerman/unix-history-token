@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	scat_vddc.c	1.1	85/07/21	*/
+comment|/*	scat_vddc.c	1.2	86/01/05	*/
 end_comment
 
 begin_include
@@ -66,13 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"../tahoe/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"../tahoe/pte.h"
 end_include
 
 begin_include
@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vba/vbavar.h"
+file|"../tahoevba/vbavar.h"
 end_include
 
 begin_include
@@ -114,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vba/vddc.h"
+file|"../tahoevba/vddc.h"
 end_include
 
 begin_decl_stmt

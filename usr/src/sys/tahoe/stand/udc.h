@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udc.h	1.1	85/07/21	*/
+comment|/*	udc.h	1.2	86/01/05	*/
 end_comment
 
 begin_struct
@@ -532,7 +532,7 @@ name|IOaddr
 parameter_list|(
 name|off
 parameter_list|)
-value|(char *)((int)vmem + ((off)& 0x0fffff))
+value|(caddr_t)((int)vmem + ((off)& 0x0fffff))
 end_define
 
 begin_decl_stmt
@@ -548,9 +548,9 @@ name|scope_out
 parameter_list|(
 name|x
 parameter_list|)
-value|if(iospace_mapped) movob (0, IOaddr(OUT
+value|if(iospace_mapped) movob(IOaddr(OUT
 comment|/**/
-value|x))
+value|x),0)
 end_define
 
 begin_define

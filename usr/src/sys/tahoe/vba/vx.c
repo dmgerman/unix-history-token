@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vx.c	1.1	85/07/21	*/
+comment|/*	vx.c	1.2	86/01/05	*/
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ end_if
 begin_comment
 comment|/*  *	VIOC-X driver  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/pte.h"
+end_include
 
 begin_include
 include|#
@@ -60,19 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vba/vbavar.h"
 end_include
 
 begin_include
@@ -96,7 +90,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vba/vioc.h"
+file|"../h/proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoevba/vbavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoevba/vioc.h"
 end_include
 
 begin_ifdef
@@ -108,7 +120,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../vba/scope.h"
+file|"../tahoevba/scope.h"
 end_include
 
 begin_endif
@@ -265,13 +277,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|caddr_t
-name|vtoph
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|vxcmd
 modifier|*
@@ -344,7 +349,7 @@ literal|0
 block|,
 name|vxstd
 block|,
-literal|"vioc "
+literal|"vx"
 block|,
 name|vxinfo
 block|}
@@ -444,12 +449,35 @@ name|br
 operator|=
 name|cvec
 expr_stmt|;
+name|vackint
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|vunsol
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|vcmdrsp
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|vxfreset
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
 condition|(
 name|badaddr
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|vp
 argument_list|,
 literal|1
@@ -484,13 +512,26 @@ argument_list|(
 literal|4000000
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
 name|vp
 operator|->
 name|v_fault
-operator|==
+operator|!=
 name|VREADY
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|vp
+argument_list|)
 operator|)
 return|;
 block|}
@@ -528,6 +569,9 @@ name|ui
 operator|->
 name|ui_unit
 argument_list|,
+operator|(
+name|long
+operator|)
 literal|1
 argument_list|)
 expr_stmt|;
@@ -536,6 +580,10 @@ end_block
 
 begin_comment
 comment|/*  * Open a VX line.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -805,6 +853,9 @@ literal|0
 condition|)
 name|sleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|tp
 operator|->
@@ -849,6 +900,10 @@ end_block
 
 begin_comment
 comment|/*  * Close a VX line.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -1365,8 +1420,6 @@ name|c
 operator|)
 expr_stmt|;
 block|}
-name|nextsilo
-label|:
 name|i
 operator|=
 operator|*
@@ -2140,6 +2193,9 @@ name|xp
 operator|->
 name|v_nbr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cp
 operator|->
@@ -2150,6 +2206,9 @@ name|wait
 condition|)
 name|sleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|cp
 argument_list|,
 name|TTIPRI
@@ -2353,6 +2412,9 @@ name|LPARAX
 case|:
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;
@@ -2633,6 +2695,9 @@ name|vcmd
 argument_list|(
 name|n
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cp
 operator|->
@@ -2733,6 +2798,9 @@ name|vcmd
 argument_list|(
 name|n
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cp
 operator|->
@@ -2764,6 +2832,9 @@ name|vcmd
 argument_list|(
 name|n
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cp
 operator|->
@@ -2839,6 +2910,9 @@ name|xp
 operator|->
 name|v_nbr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cp
 operator|->
@@ -2875,7 +2949,7 @@ begin_block
 block|{
 specifier|register
 name|short
-name|nch
+name|n
 decl_stmt|;
 specifier|register
 name|struct
@@ -3077,7 +3151,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|nch
+name|n
 operator|=
 name|ndqb
 argument_list|(
@@ -3098,7 +3172,7 @@ condition|(
 name|full
 condition|)
 block|{
-name|nch
+name|n
 operator|=
 name|getc
 argument_list|(
@@ -3118,7 +3192,7 @@ operator|)
 name|tp
 argument_list|,
 operator|(
-name|nch
+name|n
 operator|&
 literal|0177
 operator|)
@@ -3196,7 +3270,7 @@ name|port
 argument_list|,
 name|outb
 argument_list|,
-name|nch
+name|n
 argument_list|)
 expr_stmt|;
 if|if
@@ -3258,6 +3332,9 @@ name|timeout
 argument_list|(
 name|vxforce
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|xp
 argument_list|,
 literal|3
@@ -3401,15 +3478,14 @@ specifier|register
 name|int
 name|j
 decl_stmt|;
-specifier|register
-name|struct
-name|vcmds
-modifier|*
-name|cpp
-decl_stmt|;
 name|char
 name|type
 decl_stmt|;
+if|#
+directive|if
+name|NVBSC
+operator|>
+literal|0
 specifier|register
 name|struct
 name|bsc
@@ -3423,6 +3499,8 @@ name|bsc
 name|bsc
 index|[]
 decl_stmt|;
+endif|#
+directive|endif
 name|kp
 operator|=
 name|VBAS
@@ -3440,14 +3518,6 @@ name|i
 index|]
 expr_stmt|;
 comment|/* index info/command buffers */
-name|cpp
-operator|=
-operator|&
-name|v_cmds
-index|[
-name|i
-index|]
-expr_stmt|;
 name|type
 operator|=
 name|kp
@@ -3983,6 +4053,9 @@ name|vcmd
 argument_list|(
 name|i
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cp
 operator|->
@@ -4370,7 +4443,7 @@ name|d
 argument_list|,
 name|addr
 argument_list|,
-name|cnt
+name|n
 argument_list|)
 specifier|register
 expr|struct
@@ -4512,7 +4585,7 @@ name|mp
 operator|->
 name|bcount
 operator|=
-name|cnt
+name|n
 operator|-
 literal|1
 expr_stmt|;
@@ -4533,7 +4606,7 @@ name|V_NEW
 operator|)
 operator|&&
 operator|(
-name|cnt
+name|n
 operator|<=
 literal|6
 operator|)
@@ -4549,18 +4622,26 @@ name|p
 operator|=
 name|addr
 expr_stmt|;
-comment|/* bcopy(addr,&(char *)mp->ostream, cnt) ; */
+comment|/* bcopy(addr,&(char *)mp->ostream, n) ; */
 block|}
 else|else
 block|{
 name|addr
 operator|=
+operator|(
+name|caddr_t
+operator|)
 name|vtoph
 argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
 literal|0
 argument_list|,
 operator|(
-name|caddr_t
+name|unsigned
 operator|)
 name|addr
 argument_list|)
@@ -4575,7 +4656,7 @@ operator|)
 operator|&
 name|addr
 expr_stmt|;
-name|cnt
+name|n
 operator|=
 sizeof|sizeof
 name|addr
@@ -4590,7 +4671,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|cnt
+name|n
 condition|;
 name|i
 operator|++
