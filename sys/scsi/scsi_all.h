@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_all.h,v 1.6 1993/11/18 05:02:49 rgrimes Exp $  */
+comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_all.h,v 1.7 1994/08/02 07:52:32 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -904,41 +904,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|scsi_sense_data_new
-block|{
-comment|/* 1*/
-name|u_char
-name|error_code
-decl_stmt|;
-define|#
-directive|define
-name|SSD_ERRCODE
-value|0x7F
-define|#
-directive|define
-name|SSD_ERRCODE_VALID
-value|0x80
-union|union
-block|{
-struct|struct
-comment|/* this is deprecated, the standard says "DON'T"*/
-block|{
-comment|/* 2*/
-name|u_char
-name|blockhi
-decl_stmt|;
-comment|/* 3*/
-name|u_char
-name|blockmed
-decl_stmt|;
-comment|/* 4*/
-name|u_char
-name|blocklow
-decl_stmt|;
-block|}
-name|unextended
-struct|;
-struct|struct
+name|scsi_sense_extended
 block|{
 comment|/* 2*/
 name|u_char
@@ -1020,6 +986,48 @@ decl_stmt|;
 block|}
 name|extended
 struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|scsi_sense_data_new
+block|{
+comment|/* 1*/
+name|u_char
+name|error_code
+decl_stmt|;
+define|#
+directive|define
+name|SSD_ERRCODE
+value|0x7F
+define|#
+directive|define
+name|SSD_ERRCODE_VALID
+value|0x80
+union|union
+block|{
+struct|struct
+comment|/* this is deprecated, the standard says "DON'T"*/
+block|{
+comment|/* 2*/
+name|u_char
+name|blockhi
+decl_stmt|;
+comment|/* 3*/
+name|u_char
+name|blockmed
+decl_stmt|;
+comment|/* 4*/
+name|u_char
+name|blocklow
+decl_stmt|;
+block|}
+name|unextended
+struct|;
+name|struct
+name|scsi_sense_extended
+name|extended
+decl_stmt|;
 block|}
 name|ext
 union|;

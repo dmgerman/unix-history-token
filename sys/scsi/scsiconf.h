@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.13 1994/10/23 21:27:56 wollman Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.14 1994/11/14 23:39:33 ats Exp $  */
 end_comment
 
 begin_ifndef
@@ -84,6 +84,90 @@ include|#
 directive|include
 file|<scsi/scsi_debug.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<scsi/scsi_all.h>
+end_include
+
+begin_comment
+comment|/* Minor number fields:  *  * OLD STYLE SCSI devices:  *  * ???? ???? ???? ???N MMMMMMMM mmmmmmmm  *  * ?: Don't know; those bits didn't use to exist, currently always 0.  * N: New style device: must be zero.  * M: Major device number.  * m: old style minor device number.  *  * NEW (FIXED) SCSI devices:  *  * ???? SBBB LLLI IIIN MMMMMMMM mmmmmmmm  *  * ?: Not used yet.  * S: "Super" device; reserved for things like resetting the SCSI bus.  * B: Scsi bus  * L: Logical unit  * I: Scsi target  (XXX: Why 16?  Why that many in scsiconf.h?)  * N: New style device; must be one.  * M: Major device number  * m: Old style minor device number.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_SUPER
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(((DEV)& 0x08000000)>> 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_MKSUPER
+parameter_list|(
+name|DEV
+parameter_list|)
+value|((DEV) | 0x08000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_BUS
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(((DEV)& 0x07000000)>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_LUN
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(((DEV)& 0x00E00000)>> 21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_ID
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(((DEV)& 0x001E0000)>> 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_NEW
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(((DEV)& 0x00010000)>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_MKDEV
+parameter_list|(
+name|B
+parameter_list|,
+name|L
+parameter_list|,
+name|I
+parameter_list|)
+value|( \          ((B)<< 24) | \          ((L)<< 21) | \          ((I)<< 17) | \          ( 1<< 16) )
+end_define
 
 begin_comment
 comment|/*  * The following documentation tries to describe the relationship between the  * various structures defined in this file:  *  * each adapter type has a scsi_adapter struct. This describes the adapter and  *    identifies routines that can be called to use the adapter.  * each device type has a scsi_device struct. This describes the device and  *    identifies routines that can be called to use the device.  * each existing device position (scsibus + target + lun)  *    can be described by a scsi_link struct.  *    Only scsi positions that actually have devices, have a scsi_link  *    structure assigned. so in effect each device has scsi_link struct.  *    The scsi_link structure contains information identifying both the  *    device driver and the adapter driver for that position on that scsi bus,  *    and can be said to 'link' the two.  * each individual scsi bus has an array that points to all the scsi_link  *    structs associated with that scsi bus. Slots with no device have  *    a NULL pointer.  * each individual device also knows the address of it's own scsi_link  *    structure.  *  *				-------------  *  * The key to all this is the scsi_link structure which associates all the   * other structures with each other in the correct configuration.  The  * scsi_link is the connecting information that allows each part of the   * scsi system to find the associated other parts.  */
@@ -197,6 +281,32 @@ directive|define
 name|ESCAPE_NOT_SUPPORTED
 value|4
 end_define
+
+begin_comment
+comment|/*  * Return value from sense handler.  IMHO, These ought to be merged  * in with the return codes above, all made negative to distinguish  * from valid errno values, and replace "try again later" with "do retry"  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSIRET_CONTINUE
+value|-1
+end_define
+
+begin_comment
+comment|/* Continue with standard sense processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSIRET_DO_RETRY
+value|-2
+end_define
+
+begin_comment
+comment|/* Retry the command that got this sense */
+end_comment
 
 begin_comment
 comment|/*  * Format of adapter_info() response data  * e.g. maximum number of entries queuable to a device by the adapter  */
@@ -569,6 +679,17 @@ modifier|*
 name|devmodes
 decl_stmt|;
 comment|/* device specific mode tables */
+comment|/* 36*/
+name|dev_t
+name|dev
+decl_stmt|;
+comment|/* Device major number (character) */
+comment|/* 40+*/
+name|struct
+name|scsi_inquiry_data
+name|inqbuf
+decl_stmt|;
+comment|/* Inquiry data */
 block|}
 struct|;
 end_struct
@@ -1020,6 +1141,17 @@ begin_comment
 comment|/* The device busy, try again later?	  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|XS_LENGTH
+value|0x09
+end_define
+
+begin_comment
+comment|/* Illegal length (over/under run)	*/
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1235,6 +1367,9 @@ name|scsi_do_ioctl
 name|__P
 argument_list|(
 operator|(
+name|dev_t
+name|dev
+operator|,
 expr|struct
 name|scsi_link
 operator|*
@@ -1252,6 +1387,82 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|scsi_link
+modifier|*
+name|scsi_link_get
+name|__P
+argument_list|(
+operator|(
+name|int
+name|bus
+operator|,
+name|int
+name|targ
+operator|,
+name|int
+name|lun
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|dev_t
+name|scsi_dev_lookup
+name|__P
+argument_list|(
+operator|(
+name|int
+argument_list|(
+argument|*opener
+argument_list|)
+operator|(
+name|dev_t
+name|dev
+operator|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|scsi_opened_ok
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|dev
+operator|,
+name|int
+name|flag
+operator|,
+name|int
+name|type
+operator|,
+expr|struct
+name|scsi_link
+operator|*
+name|sc_link
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|scsi_sense_print
+parameter_list|(
+name|struct
+name|scsi_xfer
+modifier|*
+name|xs
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -1504,6 +1715,228 @@ end_endif
 begin_comment
 comment|/* NEW_SCSICONF */
 end_comment
+
+begin_comment
+comment|/* Macros for getting and setting the unit numbers in the original  * (not fixed device name) device numbers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SH0_UNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(minor(DEV)&0xFF)
+end_define
+
+begin_comment
+comment|/* 8 bit unit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SH0SETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|makedev(major(DEV), (U))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH3_UNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|((minor(DEV)&0xF8)>> 3)
+end_define
+
+begin_comment
+comment|/* 5 bit unit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SH3SETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|makedev(major(DEV), ((U)<< 3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH4_UNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|((minor(DEV)&0xF0)>> 4)
+end_define
+
+begin_comment
+comment|/* 4 bit unit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SH4SETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|makedev(major(DEV), ((U)<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDUNITSHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDUNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|SH3_UNIT(DEV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDSETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|SH3SETUNIT((DEV), (U))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDUNITSHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDUNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|SH3_UNIT(DEV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDSETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|SH3SETUNIT((DEV), (U))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHUNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|SH4_UNIT(DEV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHSETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|SH4SETUNIT((DEV), (U))
+end_define
+
+begin_define
+define|#
+directive|define
+name|STUNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|SH4_UNIT(DEV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STSETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|SH4SETUNIT((DEV), (U))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UKUNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|SH0_UNIT(DEV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UKSETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|SH0SETUNIT((DEV), (U))
+end_define
+
+begin_comment
+comment|/* Build an old style device number (unit encoded in the minor number)  * from a base old one (no flag bits) and a full new one  * (BUS, LUN, TARG in the minor number, and flag bits).  *  * OLDDEV has the major number and device unit only.  It was constructed  * at attach time and is stored in the scsi_link structure.  *  * NEWDEV can have whatever in it, but only the old control flags and the  * super bit are present.  IT CAN'T HAVE ANY UNIT INFORMATION or you'll  * wind up with the wrong unit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OLD_DEV
+parameter_list|(
+name|NEWDEV
+parameter_list|,
+name|OLDDEV
+parameter_list|)
+value|((OLDDEV) | ((NEWDEV)& 0x080000FF))
+end_define
 
 begin_endif
 endif|#

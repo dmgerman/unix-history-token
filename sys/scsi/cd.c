@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.31 1994/12/16 06:03:22 phk Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.32 1994/12/24 09:48:32 bde Exp $  */
 end_comment
 
 begin_define
@@ -384,13 +384,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|UNITSHIFT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|PARTITION
 parameter_list|(
 name|z
@@ -403,16 +396,6 @@ define|#
 directive|define
 name|RAW_PART
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNIT
-parameter_list|(
-name|z
-parameter_list|)
-value|(  (minor(z)>> UNITSHIFT) )
 end_define
 
 begin_function_decl
@@ -823,6 +806,13 @@ block|}
 block|}
 end_function
 
+begin_function_decl
+name|errval
+name|cdopen
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * The routine called by the low level scsi routine when it discovers  * A device suitable for this driver  */
 end_comment
@@ -1098,6 +1088,20 @@ name|dev_unit
 operator|=
 name|unit
 expr_stmt|;
+name|sc_link
+operator|->
+name|dev
+operator|=
+name|CDSETUNIT
+argument_list|(
+name|scsi_dev_lookup
+argument_list|(
+name|cdopen
+argument_list|)
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cd
@@ -1283,7 +1287,7 @@ name|sc_link
 decl_stmt|;
 name|unit
 operator|=
-name|UNIT
+name|CDUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -1660,9 +1664,7 @@ operator||=
 name|SDEV_MEDIA_LOADED
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 name|bad
 label|:
@@ -1733,7 +1735,7 @@ name|sc_link
 decl_stmt|;
 name|unit
 operator|=
-name|UNIT
+name|CDUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -1857,7 +1859,7 @@ name|cd_driver
 operator|.
 name|cd_data
 index|[
-name|UNIT
+name|CDUNIT
 argument_list|(
 name|bp
 operator|->
@@ -1906,7 +1908,7 @@ decl_stmt|;
 name|u_int32
 name|unit
 init|=
-name|UNIT
+name|CDUNIT
 argument_list|(
 operator|(
 name|bp
@@ -2662,7 +2664,7 @@ decl_stmt|;
 comment|/* 	 * Find the device that the user is talking about 	 */
 name|unit
 operator|=
-name|UNIT
+name|CDUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -4645,11 +4647,18 @@ condition|(
 name|part
 operator|==
 name|RAW_PART
+operator|||
+name|SCSI_SUPER
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 name|error
 operator|=
 name|scsi_do_ioctl
 argument_list|(
+name|dev
+argument_list|,
 name|cd
 operator|->
 name|sc_link

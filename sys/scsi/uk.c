@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Dummy driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.4 1994/08/13 03:50:31 wollman Exp $  */
+comment|/*   * Dummy driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.5 1994/12/16 06:03:28 phk Exp $  */
 end_comment
 
 begin_include
@@ -121,6 +121,13 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|errval
+name|ukopen
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * The routine called by the low level scsi routine when it discovers  * a device suitable for this driver.  */
@@ -392,6 +399,20 @@ name|dev_unit
 operator|=
 name|unit
 expr_stmt|;
+name|sc_link
+operator|->
+name|dev
+operator|=
+name|UKSETUNIT
+argument_list|(
+name|scsi_dev_lookup
+argument_list|(
+name|ukopen
+argument_list|)
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"uk%d: unknown device\n"
@@ -448,7 +469,7 @@ name|sc_link
 decl_stmt|;
 name|unit
 operator|=
-name|minor
+name|UKUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -702,7 +723,7 @@ decl_stmt|;
 comment|/* 	 * Find the device that the user is talking about 	 */
 name|unit
 operator|=
-name|minor
+name|UKUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -726,6 +747,8 @@ return|return
 operator|(
 name|scsi_do_ioctl
 argument_list|(
+name|dev
+argument_list|,
 name|sc_link
 argument_list|,
 name|cmd

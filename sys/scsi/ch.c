@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.10 1994/10/21 01:19:20 wollman Exp $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.11 1994/10/23 21:27:53 wollman Exp $  */
 end_comment
 
 begin_include
@@ -153,16 +153,6 @@ parameter_list|(
 name|z
 parameter_list|)
 value|(  (minor(z)& 0x0F) )
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNIT
-parameter_list|(
-name|z
-parameter_list|)
-value|(  (minor(z)>> 4) )
 end_define
 
 begin_define
@@ -574,6 +564,20 @@ name|dev_unit
 operator|=
 name|unit
 expr_stmt|;
+name|sc_link
+operator|->
+name|dev
+operator|=
+name|CHSETUNIT
+argument_list|(
+name|scsi_dev_lookup
+argument_list|(
+name|chopen
+argument_list|)
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. 	 */
 if|if
 condition|(
@@ -696,7 +700,7 @@ name|sc_link
 decl_stmt|;
 name|unit
 operator|=
-name|UNIT
+name|CHUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -929,7 +933,7 @@ name|sc_link
 decl_stmt|;
 name|unit
 operator|=
-name|UNIT
+name|CHUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -1058,7 +1062,7 @@ expr_stmt|;
 comment|/* give error messages, act on errors etc. */
 name|unit
 operator|=
-name|UNIT
+name|CHUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -1394,6 +1398,8 @@ default|default:
 return|return
 name|scsi_do_ioctl
 argument_list|(
+name|dev
+argument_list|,
 name|sc_link
 argument_list|,
 name|cmd

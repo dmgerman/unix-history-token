@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.22 1994/10/28 13:19:36 jkh Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.23 1994/12/16 06:03:26 phk Exp $  */
 end_comment
 
 begin_comment
@@ -168,18 +168,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|UNIT
-parameter_list|(
-name|z
-parameter_list|)
-value|(  (minor(z)>> 4) )
+name|CTLMODE
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|CTLMODE
-value|3
+name|IS_CTLMODE
+parameter_list|(
+name|DEV
+parameter_list|)
+value|(MODE(DEV) == CTLMODE || SCSI_SUPER(DEV))
 end_define
 
 begin_define
@@ -1451,6 +1451,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+name|errval
+name|stopen
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * The routine called by the low level scsi routine when it discovers  * A device suitable for this driver  */
 end_comment
@@ -1710,6 +1717,20 @@ name|dev_unit
 operator|=
 name|unit
 expr_stmt|;
+name|sc_link
+operator|->
+name|dev
+operator|=
+name|STSETUNIT
+argument_list|(
+name|scsi_dev_lookup
+argument_list|(
+name|stopen
+argument_list|)
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check if the drive is a known criminal and take 	 * Any steps needed to bring it into line 	 */
 ifdef|#
 directive|ifdef
@@ -1888,10 +1909,6 @@ name|unit
 index|]
 decl_stmt|;
 name|struct
-name|scsi_inquiry_data
-name|inqbuf
-decl_stmt|;
-name|struct
 name|rogues
 modifier|*
 name|finger
@@ -1923,6 +1940,18 @@ decl_stmt|;
 name|u_int32
 name|model_len
 decl_stmt|;
+name|struct
+name|scsi_inquiry_data
+modifier|*
+name|inqbuf
+init|=
+operator|&
+name|st
+operator|->
+name|sc_link
+operator|->
+name|inqbuf
+decl_stmt|;
 comment|/* 	 * Get the device type information 	 */
 if|if
 condition|(
@@ -1932,7 +1961,6 @@ name|st
 operator|->
 name|sc_link
 argument_list|,
-operator|&
 name|inqbuf
 argument_list|,
 name|SCSI_NOSLEEP
@@ -1958,7 +1986,7 @@ if|if
 condition|(
 operator|(
 name|inqbuf
-operator|.
+operator|->
 name|version
 operator|&
 name|SID_ANSII
@@ -2024,7 +2052,7 @@ argument_list|(
 name|manu
 argument_list|,
 name|inqbuf
-operator|.
+operator|->
 name|vendor
 argument_list|,
 literal|8
@@ -2042,7 +2070,7 @@ argument_list|(
 name|model
 argument_list|,
 name|inqbuf
-operator|.
+operator|->
 name|product
 argument_list|,
 literal|16
@@ -2060,7 +2088,7 @@ argument_list|(
 name|version
 argument_list|,
 name|inqbuf
-operator|.
+operator|->
 name|revision
 argument_list|,
 literal|4
@@ -2549,7 +2577,7 @@ name|sc_link
 decl_stmt|;
 name|unit
 operator|=
-name|UNIT
+name|STUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -2674,12 +2702,13 @@ operator||=
 name|SDEV_OPEN
 expr_stmt|;
 comment|/* unit attn are now errors */
-comment|/* 	 * If the mode is 3 (e.g. minor = 3,7,11,15) 	 * then the device has been openned to set defaults 	 * This mode does NOT ALLOW I/O, only ioctls 	 */
+comment|/* 	 * If the mode is 3 (e.g. minor = 3,7,11,15) 	 * then the device has been openned to set defaults 	 * This mode does NOT ALLOW I/O, only ioctls. 	 * XXX: Where do we lock out I/O? 	 */
 if|if
 condition|(
-name|mode
-operator|==
-name|CTLMODE
+name|IS_CTLMODE
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 return|return
 literal|0
@@ -2812,9 +2841,7 @@ operator||=
 name|ST_OPEN
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -2851,7 +2878,7 @@ name|sc_link
 decl_stmt|;
 name|unit
 operator|=
-name|UNIT
+name|STUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -3038,7 +3065,7 @@ literal|0
 decl_stmt|;
 name|unit
 operator|=
-name|UNIT
+name|STUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -4067,7 +4094,7 @@ name|st_driver
 operator|.
 name|st_data
 index|[
-name|UNIT
+name|STUNIT
 argument_list|(
 name|bp
 operator|->
@@ -4128,7 +4155,7 @@ operator|++
 expr_stmt|;
 name|unit
 operator|=
-name|UNIT
+name|STUNIT
 argument_list|(
 operator|(
 name|bp
@@ -4945,7 +4972,7 @@ expr_stmt|;
 comment|/* give error messages, act on errors etc. */
 name|unit
 operator|=
-name|UNIT
+name|STUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -5520,17 +5547,17 @@ break|break;
 default|default:
 if|if
 condition|(
-name|MODE
+name|IS_CTLMODE
 argument_list|(
 name|dev
 argument_list|)
-operator|==
-name|CTLMODE
 condition|)
 name|errcode
 operator|=
 name|scsi_do_ioctl
 argument_list|(
+name|dev
+argument_list|,
 name|st
 operator|->
 name|sc_link
@@ -5621,12 +5648,10 @@ block|}
 comment|/* 	 * As the drive liked it, if we are setting a new default, 	 * set it into the structures as such. 	 *  	 * The means for deciding this are not finalised yet 	 */
 if|if
 condition|(
-name|MODE
+name|IS_CTLMODE
 argument_list|(
 name|dev
 argument_list|)
-operator|==
-literal|0x03
 condition|)
 block|{
 comment|/* special mode */
@@ -8013,7 +8038,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Look at the returned sense and act on the error and detirmine  * The unix error number to pass back... (0 = report no error)  *                            (-1 = continue processing)  */
+comment|/*  * Look at the returned sense and act on the error and detirmine  * The unix error number to pass back... (0 = report no error)  *                            (SCSIRET_CONTINUE = continue processing)  */
 end_comment
 
 begin_function
@@ -8147,10 +8172,7 @@ literal|0x70
 condition|)
 block|{
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+name|SCSIRET_CONTINUE
 return|;
 comment|/* let the generic code handle it */
 block|}
@@ -8611,10 +8633,7 @@ return|;
 block|}
 block|}
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+name|SCSIRET_CONTINUE
 return|;
 comment|/* let the default/generic handler handle it */
 block|}
