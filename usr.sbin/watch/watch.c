@@ -427,7 +427,7 @@ name|sgn
 operator|.
 name|sg_flags
 operator||=
-name|CBREAK
+name|RAW
 expr_stmt|;
 name|sgn
 operator|.
