@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * "@(#)dump.h	1.5 (Berkeley) %G%"  */
+comment|/*  * "@(#)dump.h	1.6 (Berkeley) %G%"  */
 end_comment
 
 begin_define
@@ -39,31 +39,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../h/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../h/stat.h"
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../h/fs.h"
+file|<sys/fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../h/inode.h"
+file|<sys/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../h/dumprestor.h"
+file|<dumprestor.h>
 end_include
 
 begin_include
