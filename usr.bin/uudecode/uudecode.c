@@ -119,6 +119,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libgen.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -178,6 +184,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|base64
+decl_stmt|,
 name|cflag
 decl_stmt|,
 name|iflag
@@ -185,6 +193,8 @@ decl_stmt|,
 name|oflag
 decl_stmt|,
 name|pflag
+decl_stmt|,
+name|rflag
 decl_stmt|,
 name|sflag
 decl_stmt|;
@@ -258,6 +268,27 @@ name|rval
 decl_stmt|,
 name|ch
 decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|basename
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|,
+literal|"b64decode"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|base64
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -269,7 +300,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cio:ps"
+literal|"cimo:prs"
 argument_list|)
 operator|)
 operator|!=
@@ -288,6 +319,8 @@ case|:
 if|if
 condition|(
 name|oflag
+operator|||
+name|rflag
 condition|)
 name|usage
 argument_list|()
@@ -308,6 +341,14 @@ expr_stmt|;
 comment|/* ask before override files */
 break|break;
 case|case
+literal|'m'
+case|:
+name|base64
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'o'
 case|:
 if|if
@@ -315,6 +356,8 @@ condition|(
 name|cflag
 operator|||
 name|pflag
+operator|||
+name|rflag
 operator|||
 name|sflag
 condition|)
@@ -352,6 +395,24 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* print output to stdout */
+break|break;
+case|case
+literal|'r'
+case|:
+if|if
+condition|(
+name|cflag
+operator|||
+name|oflag
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|rflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* decode raw data */
 break|break;
 case|case
 literal|'s'
@@ -484,6 +545,38 @@ name|r
 decl_stmt|,
 name|v
 decl_stmt|;
+if|if
+condition|(
+name|rflag
+condition|)
+block|{
+comment|/* relaxed alternative to decode2() */
+name|outfile
+operator|=
+literal|"/dev/stdout"
+expr_stmt|;
+name|outfp
+operator|=
+name|stdout
+expr_stmt|;
+if|if
+condition|(
+name|base64
+condition|)
+return|return
+operator|(
+name|base64_decode
+argument_list|()
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|uu_decode
+argument_list|()
+operator|)
+return|;
+block|}
 name|v
 operator|=
 name|decode2
@@ -552,8 +645,6 @@ name|void
 parameter_list|)
 block|{
 name|int
-name|base64
-decl_stmt|,
 name|flags
 decl_stmt|,
 name|fd
@@ -1279,11 +1370,22 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|rflag
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|warnx
 argument_list|(
-literal|"%s: short file"
+literal|"%s: %s: short file"
 argument_list|,
 name|infile
+argument_list|,
+name|outfile
 argument_list|)
 expr_stmt|;
 return|return
@@ -1733,7 +1835,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -1807,11 +1909,22 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|rflag
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|warnx
 argument_list|(
-literal|"%s: short file"
+literal|"%s: %s: short file"
 argument_list|,
 name|infile
+argument_list|,
+name|outfile
 argument_list|)
 expr_stmt|;
 return|return
@@ -1860,7 +1973,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -1988,9 +2101,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: uudecode [-cips] [file ...]\n"
+literal|"usage: uudecode [-cimprs] [file ...]\n"
 literal|"       uudecode [-i] -o output_file [file]\n"
-literal|"       b64decode [-cips] [file ...]\n"
+literal|"       b64decode [-cimprs] [file ...]\n"
 literal|"       b64decode [-i] -o output_file [file]\n"
 argument_list|)
 expr_stmt|;
