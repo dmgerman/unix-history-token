@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	6.4	84/08/29	*/
+comment|/*	tcp_usrreq.c	6.5	85/03/18	*/
 end_comment
 
 begin_include
@@ -247,6 +247,37 @@ decl_stmt|;
 name|int
 name|ostate
 decl_stmt|;
+if|if
+condition|(
+name|req
+operator|==
+name|PRU_CONTROL
+condition|)
+return|return
+operator|(
+name|in_control
+argument_list|(
+name|so
+argument_list|,
+operator|(
+name|int
+operator|)
+name|m
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|nam
+argument_list|,
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+name|rights
+argument_list|)
+operator|)
+return|;
 if|if
 condition|(
 name|rights
@@ -801,16 +832,6 @@ name|ECONNABORTED
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* SOME AS YET UNIMPLEMENTED HOOKS */
-case|case
-name|PRU_CONTROL
-case|:
-name|error
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-break|break;
-comment|/* END UNIMPLEMENTED HOOKS */
 case|case
 name|PRU_SENSE
 case|:
@@ -1081,7 +1102,7 @@ name|tcp_sendspace
 init|=
 literal|1024
 operator|*
-literal|2
+literal|4
 decl_stmt|;
 end_decl_stmt
 
@@ -1091,7 +1112,7 @@ name|tcp_recvspace
 init|=
 literal|1024
 operator|*
-literal|2
+literal|4
 decl_stmt|;
 end_decl_stmt
 
