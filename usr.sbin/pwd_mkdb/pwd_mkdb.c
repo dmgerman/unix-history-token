@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pwd_mkdb.c,v 1.22 1998/02/15 22:31:40 guido Exp $"
+literal|"$Id: pwd_mkdb.c,v 1.23 1998/02/16 19:08:18 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2265,6 +2265,7 @@ name|Cflag
 operator|&&
 name|makeold
 condition|)
+block|{
 comment|/* copy comments */
 if|if
 condition|(
@@ -2284,6 +2285,7 @@ argument_list|(
 literal|"write old"
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
