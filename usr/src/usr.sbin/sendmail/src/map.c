@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.18 (Berkeley) %G%"
+literal|"@(#)map.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -501,13 +501,26 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"map_rewrite(%.*s), av =\n"
+literal|"map_rewrite(%.*s), av ="
 argument_list|,
 name|slen
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|av
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|" (nullv)"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 for|for
 control|(
 name|avp
@@ -524,10 +537,16 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\t%s\n"
+literal|"\n\t%s"
 argument_list|,
 operator|*
 name|avp
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
