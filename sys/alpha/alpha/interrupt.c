@@ -1747,7 +1747,7 @@ name|ih_argument
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|td
+name|curthread
 operator|->
 name|td_pflags
 operator|&=
