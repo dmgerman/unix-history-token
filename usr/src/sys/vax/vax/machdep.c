@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.34	81/04/28	*/
+comment|/*	machdep.c	4.35	81/05/05	*/
 end_comment
 
 begin_include
@@ -169,6 +169,12 @@ begin_include
 include|#
 directive|include
 file|"../h/port.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/rpb.h"
 end_include
 
 begin_decl_stmt
@@ -2368,6 +2374,12 @@ end_macro
 
 begin_block
 block|{
+name|rpb
+operator|.
+name|rp_flag
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(
