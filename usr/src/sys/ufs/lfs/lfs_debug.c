@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_debug.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_debug.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -173,7 +173,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%d\t%s%d\n"
+literal|"%s%d\t%s%d\t%s%d\t%s%d\n"
 argument_list|,
 literal|"nseg     "
 argument_list|,
@@ -186,6 +186,12 @@ argument_list|,
 name|lfsp
 operator|->
 name|lfs_nspf
+argument_list|,
+literal|"cleansz  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_cleansz
 argument_list|,
 literal|"segtabsz "
 argument_list|,
@@ -263,7 +269,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%lx\n"
+literal|"%s%d\t%s%d\t%s%lx\t%s%qx\n"
+argument_list|,
+literal|"sushift  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_sushift
 argument_list|,
 literal|"fsbtodb  "
 argument_list|,
@@ -276,6 +288,12 @@ argument_list|,
 name|lfsp
 operator|->
 name|lfs_cksum
+argument_list|,
+literal|"maxfilesize "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_maxfilesize
 argument_list|)
 expr_stmt|;
 operator|(
@@ -361,7 +379,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%lx\t%s%d\t%s%lx\t%s%lx\n"
+literal|"%s%lx\t%s%d\t%s%lx\t%s%lx\t%s%lx\t%s%lx\n"
 argument_list|,
 literal|"bfree    "
 argument_list|,
@@ -386,6 +404,18 @@ argument_list|,
 name|lfsp
 operator|->
 name|lfs_nextseg
+argument_list|,
+literal|"curseg   "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_curseg
+argument_list|,
+literal|"offset   "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_offset
 argument_list|)
 expr_stmt|;
 operator|(
