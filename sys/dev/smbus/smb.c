@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: smb.c,v 1.5 1999/01/09 18:08:23 nsouch Exp $  *  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: smb.c,v 1.6 1999/01/14 22:55:03 nsouch Exp $  *  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -660,6 +666,39 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* allocate the bus */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|smbus_request_bus
+argument_list|(
+name|parent
+argument_list|,
+name|smbdev
+argument_list|,
+operator|(
+name|flags
+operator|&
+name|O_NONBLOCK
+operator|)
+condition|?
+name|SMB_DONTWAIT
+else|:
+operator|(
+name|SMB_WAIT
+operator||
+name|SMB_INTR
+operator|)
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 switch|switch
 condition|(
 name|cmd
@@ -681,9 +720,7 @@ argument_list|,
 name|SMB_QWRITE
 argument_list|)
 expr_stmt|;
-goto|goto
-name|end
-goto|;
+break|break;
 case|case
 name|SMB_QUICK_READ
 case|:
@@ -700,16 +737,7 @@ argument_list|,
 name|SMB_QREAD
 argument_list|)
 expr_stmt|;
-goto|goto
-name|end
-goto|;
-block|}
-empty_stmt|;
-switch|switch
-condition|(
-name|cmd
-condition|)
-block|{
+break|break;
 case|case
 name|SMB_SENDB
 case|:
@@ -998,8 +1026,14 @@ operator|=
 name|ENODEV
 expr_stmt|;
 block|}
-name|end
-label|:
+comment|/* release the bus */
+name|smbus_release_bus
+argument_list|(
+name|parent
+argument_list|,
+name|smbdev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
