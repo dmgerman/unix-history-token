@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)findfp.c	5.6 (Berkeley) %G%"
+literal|"@(#)findfp.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -611,26 +611,6 @@ name|iov
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
-
-begin_macro
-name|_cleanup
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|extern
-name|int
-name|fclose
-parameter_list|()
-function_decl|;
-name|_fwalk
-argument_list|(
-name|fclose
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
