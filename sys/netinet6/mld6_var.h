@@ -32,7 +32,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|MLD6_RANDOM_DELAY
+name|MLD_RANDOM_DELAY
 parameter_list|(
 name|X
 parameter_list|)
@@ -46,14 +46,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MLD6_OTHERLISTENER
+name|MLD_OTHERLISTENER
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MLD6_IREPORTEDLAST
+name|MLD_IREPORTEDLAST
 value|1
 end_define
 

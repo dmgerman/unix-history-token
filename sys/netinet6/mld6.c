@@ -122,7 +122,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MLD6_TIMER_SCALE
+name|MLD_TIMER_SCALE
 value|1000
 end_define
 
@@ -133,7 +133,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MLD6_UNSOLICITED_REPORT_INTERVAL
+name|MLD_UNSOLICITED_REPORT_INTERVAL
 value|10
 end_define
 
@@ -379,7 +379,7 @@ name|in6m
 operator|->
 name|in6m_state
 operator|=
-name|MLD6_OTHERLISTENER
+name|MLD_OTHERLISTENER
 expr_stmt|;
 block|}
 else|else
@@ -397,9 +397,9 @@ name|in6m
 operator|->
 name|in6m_timer
 operator|=
-name|MLD6_RANDOM_DELAY
+name|MLD_RANDOM_DELAY
 argument_list|(
-name|MLD6_UNSOLICITED_REPORT_INTERVAL
+name|MLD_UNSOLICITED_REPORT_INTERVAL
 operator|*
 name|PR_FASTHZ
 argument_list|)
@@ -408,7 +408,7 @@ name|in6m
 operator|->
 name|in6m_state
 operator|=
-name|MLD6_IREPORTEDLAST
+name|MLD_IREPORTEDLAST
 expr_stmt|;
 name|mld6_timers_are_running
 operator|=
@@ -475,7 +475,7 @@ name|in6m
 operator|->
 name|in6m_state
 operator|==
-name|MLD6_IREPORTEDLAST
+name|MLD_IREPORTEDLAST
 operator|&&
 operator|(
 operator|!
@@ -707,7 +707,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * In the MLD6 specification, there are 3 states and a flag. 	 * 	 * In Non-Listener state, we simply don't have a membership record. 	 * In Delaying Listener state, our timer is running (in6m->in6m_timer) 	 * In Idle Listener state, our timer is not running (in6m->in6m_timer==0) 	 * 	 * The flag is in6m->in6m_state, it is set to MLD6_OTHERLISTENER if 	 * we have heard a report from another member, or MLD6_IREPORTEDLAST 	 * if we sent the last report. 	 */
+comment|/* 	 * In the MLD6 specification, there are 3 states and a flag. 	 * 	 * In Non-Listener state, we simply don't have a membership record. 	 * In Delaying Listener state, our timer is running (in6m->in6m_timer) 	 * In Idle Listener state, our timer is not running (in6m->in6m_timer==0) 	 * 	 * The flag is in6m->in6m_state, it is set to MLD_OTHERLISTENER if 	 * we have heard a report from another member, or MLD_IREPORTEDLAST 	 * if we sent the last report. 	 */
 switch|switch
 condition|(
 name|mldh
@@ -803,7 +803,7 @@ argument_list|)
 operator|*
 name|PR_FASTHZ
 operator|/
-name|MLD6_TIMER_SCALE
+name|MLD_TIMER_SCALE
 expr_stmt|;
 if|if
 condition|(
@@ -941,7 +941,7 @@ name|in6m
 operator|->
 name|in6m_state
 operator|=
-name|MLD6_IREPORTEDLAST
+name|MLD_IREPORTEDLAST
 expr_stmt|;
 block|}
 elseif|else
@@ -965,7 +965,7 @@ name|in6m
 operator|->
 name|in6m_timer
 operator|=
-name|MLD6_RANDOM_DELAY
+name|MLD_RANDOM_DELAY
 argument_list|(
 name|timer
 argument_list|)
@@ -1081,7 +1081,7 @@ name|in6m
 operator|->
 name|in6m_state
 operator|=
-name|MLD6_OTHERLISTENER
+name|MLD_OTHERLISTENER
 expr_stmt|;
 comment|/* clear flag */
 block|}
@@ -1213,7 +1213,7 @@ name|in6m
 operator|->
 name|in6m_state
 operator|=
-name|MLD6_IREPORTEDLAST
+name|MLD_IREPORTEDLAST
 expr_stmt|;
 block|}
 else|else
