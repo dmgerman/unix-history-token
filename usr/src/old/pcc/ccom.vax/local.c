@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local.c	1.3 (Berkeley) %G%"
+literal|"@(#)local.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,7 +683,17 @@ operator|=
 name|m
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|m
+operator|!=
+name|FLOAT
+operator|&&
+name|m
+operator|!=
+name|DOUBLE
+condition|)
 break|break;
 comment|/* clobber conversion */
 name|p
