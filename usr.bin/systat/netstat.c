@@ -1969,16 +1969,9 @@ block|}
 endif|#
 directive|endif
 else|else
-block|{
-name|error
-argument_list|(
-literal|"Unsupported address family"
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
-block|}
 comment|/* 	 * Only take exact matches, any sockets with 	 * previously unbound addresses will be deleted 	 * below in the display routine because they 	 * will appear as ``not seen'' in the kernel 	 * data structures. 	 */
 name|TAILQ_FOREACH
 argument_list|(
