@@ -4291,7 +4291,7 @@ name|rman_set_bushandle
 argument_list|(
 name|res
 argument_list|,
-name|rman_get_bushandle
+name|rman_get_start
 argument_list|(
 name|res
 argument_list|)
