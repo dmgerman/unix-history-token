@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -936,6 +936,9 @@ case|:
 case|case
 name|EHOSTUNREACH
 case|:
+case|case
+name|ENETUNREACH
+case|:
 comment|/* there are others, I'm sure..... */
 return|return
 operator|(
@@ -973,7 +976,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EX_OK
 operator|)
 return|;
 block|}
