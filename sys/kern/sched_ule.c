@@ -1448,6 +1448,38 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * On P4 Xeons the round-robin interrupt delivery is broken.  As a result of  * this, we can't pin interrupts to the cpu that they were delivered to,   * otherwise all ithreads only run on CPU 0.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KSE_CAN_MIGRATE
+parameter_list|(
+name|ke
+parameter_list|,
+name|class
+parameter_list|)
+define|\
+value|((ke)->ke_thread->td_pinned == 0&& ((ke)->ke_flags& KEF_BOUND) == 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__i386__ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1460,6 +1492,15 @@ parameter_list|)
 define|\
 value|((class) != PRI_ITHD&& (ke)->ke_thread->td_pinned == 0&&		\     ((ke)->ke_flags& KEF_BOUND) == 0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__i386__ */
+end_comment
 
 begin_endif
 endif|#
