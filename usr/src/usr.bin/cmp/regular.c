@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regular.c	5.1 (Berkeley) %G%"
+literal|"@(#)regular.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,7 @@ expr_stmt|;
 if|if
 condition|(
 name|skip1
-operator|>=
+operator|>
 name|len1
 condition|)
 name|eofmsg
@@ -176,7 +176,7 @@ expr_stmt|;
 if|if
 condition|(
 name|skip2
-operator|>=
+operator|>
 name|len2
 condition|)
 name|eofmsg
