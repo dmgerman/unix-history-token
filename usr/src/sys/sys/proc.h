@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -496,6 +496,24 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * We use process IDs<= PID_MAX;  * PID_MAX + 1 must also fit in a pid_t  * (used to represent "no process group").  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PID_MAX
+value|30000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_PID
+value|30001
+end_define
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -593,7 +593,7 @@ if|if
 condition|(
 name|mpid
 operator|>=
-literal|30000
+name|PID_MAX
 condition|)
 block|{
 name|mpid
@@ -619,7 +619,7 @@ literal|0
 decl_stmt|;
 name|pidchecked
 operator|=
-literal|30000
+name|PID_MAX
 expr_stmt|;
 comment|/* 		 * Scan the proc table to check whether this pid 		 * is in use.  Remember the lowest pid that's greater 		 * than mpid, so we can avoid checking for a while. 		 */
 name|rpp
