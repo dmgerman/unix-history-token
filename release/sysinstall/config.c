@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.10 1995/10/14 09:30:42 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.11 1995/10/14 19:13:13 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -859,13 +859,21 @@ condition|(
 name|cnt
 condition|)
 block|{
+if|if
+condition|(
 name|Mkdir
 argument_list|(
 literal|"/cdrom"
 argument_list|,
 name|NULL
 argument_list|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Unable to make mount point for: /cdrom\n"
+argument_list|)
 expr_stmt|;
+else|else
 name|fprintf
 argument_list|(
 name|fstab
@@ -911,13 +919,23 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|Mkdir
 argument_list|(
 name|cdname
 argument_list|,
 name|NULL
 argument_list|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Unable to make mount point for: %s\n"
+argument_list|,
+name|cdname
+argument_list|)
 expr_stmt|;
+else|else
 name|fprintf
 argument_list|(
 name|fstab
@@ -1415,40 +1433,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* If we're an NFS server, we need an exports file */
-if|if
-condition|(
-name|variable_get
-argument_list|(
-literal|"nfs_server"
-argument_list|)
-operator|&&
-operator|!
-name|file_readable
-argument_list|(
-literal|"/etc/exports"
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"You have chosen to be an NFS server but have not yet configured\n"
-literal|"the /etc/exports file.  The format for an exports entry is:\n"
-literal|"<mountpoint><opts><host [..host]>\n"
-literal|"Where<mounpoint> is the name of a filesystem as specified\n"
-literal|"in the Label editor,<opts> is a list of special options we\n"
-literal|"won't concern ourselves with here (``man exports'' when the\n"
-literal|"system is fully installed) and<host> is one or more host\n"
-literal|"names who are allowed to mount this file system.  Press\n"
-literal|"[ENTER] now to invoke the editor on /etc/exports"
-argument_list|)
-expr_stmt|;
-name|systemExecute
-argument_list|(
-literal|"ee /etc/exports"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1593,13 +1577,24 @@ goto|goto
 name|skip
 goto|;
 block|}
+if|if
+condition|(
 name|Mkdir
 argument_list|(
 literal|"/etc"
 argument_list|,
 name|NULL
 argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to create /etc directory.  Network configuration\n"
+literal|"files will therefore not be written!"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|fp
 operator|=
 name|fopen
@@ -2057,6 +2052,138 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|dist
+decl_stmt|;
+if|if
+condition|(
+name|file_executable
+argument_list|(
+literal|"/usr/X11R6/bin/lndir"
+argument_list|)
+condition|)
+block|{
+name|dist
+operator|=
+literal|"/cdrom/ports"
+expr_stmt|;
+while|while
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+name|dist
+argument_list|)
+condition|)
+block|{
+name|dist
+operator|=
+name|msgGetInput
+argument_list|(
+literal|"/cdrom/ports"
+argument_list|,
+literal|"Unable to locate a ports tree on CDROM.  Please specify the\n"
+literal|"location of the master ports directory you wish to create the\n"
+literal|"link tree to."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dist
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|dist
+condition|)
+block|{
+name|cp
+operator|=
+name|msgGetInput
+argument_list|(
+literal|"/usr/ports"
+argument_list|,
+literal|"Where would you like to create the link tree?"
+literal|"(press [ENTER] for default location)."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+return|return
+name|RET_FAIL
+return|;
+if|if
+condition|(
+name|Mkdir
+argument_list|(
+name|cp
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Unable to make %s directory!"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|msgNotify
+argument_list|(
+literal|"Making link tree from %s to %s area."
+argument_list|,
+name|dist
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vsystem
+argument_list|(
+literal|"lndir %s %s"
+argument_list|,
+name|dist
+argument_list|,
+name|cp
+argument_list|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"The lndir command returned an error status and may not have.\n"
+literal|"successfully generated the link tree.  You may wish to inspect\n"
+literal|"%s carefully for any signs of corruption."
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+return|return
+name|RET_FAIL
+return|;
+block|}
+else|else
+name|msgConfirm
+argument_list|(
+literal|"You are missing the lndir command from /usr/X11R6/bin and\n"
+literal|"cannot run this utility.  You may wish to do this manually\n"
+literal|"later by extracting just lndir from the X distribution and\n"
+literal|"using it to create the link tree."
+argument_list|)
+expr_stmt|;
 return|return
 name|RET_SUCCESS
 return|;

@@ -288,9 +288,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_SRC_ALL
-value|0xFFFF
+name|DIST_SRC_SMAILCF
+value|0x8000
 end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_SRC_ALL
+value|0x7FFF
+end_define
+
+begin_comment
+comment|/* no SMAILCF, it's part of USBIN */
+end_comment
 
 begin_comment
 comment|/* Subtypes for XFree86 distribution */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.30 1995/10/14 19:13:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.31 1995/10/15 04:37:05 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1644,6 +1644,21 @@ name|i
 operator|=
 name|RET_FAIL
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|RET_FAIL
+operator|&&
+name|installFinal
+argument_list|()
+operator|==
+name|RET_FAIL
+condition|)
+name|i
+operator|=
+name|RET_FAIL
+expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -1956,6 +1971,124 @@ argument_list|)
 expr_stmt|;
 return|return
 name|RET_SUCCESS
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Do any final optional hackery */
+end_comment
+
+begin_function
+name|int
+name|installFinal
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+name|RET_SUCCESS
+expr_stmt|;
+if|if
+condition|(
+name|variable_get
+argument_list|(
+literal|"gated"
+argument_list|)
+condition|)
+block|{
+comment|/* Load gated package and maybe even seek to configure or explain it a little */
+block|}
+if|if
+condition|(
+name|variable_get
+argument_list|(
+literal|"anon_ftp"
+argument_list|)
+condition|)
+block|{
+comment|/* Set up anonymous FTP access on this system */
+block|}
+if|if
+condition|(
+name|variable_get
+argument_list|(
+literal|"apache_httpd"
+argument_list|)
+condition|)
+block|{
+comment|/* Load and configure the Apache HTTPD web server */
+block|}
+if|if
+condition|(
+name|variable_get
+argument_list|(
+literal|"samba"
+argument_list|)
+condition|)
+block|{
+comment|/* Load samba package and add to inetd.conf */
+block|}
+if|if
+condition|(
+name|variable_get
+argument_list|(
+literal|"pcnfsd"
+argument_list|)
+condition|)
+block|{
+comment|/* Load and configure pcnfsd */
+block|}
+comment|/* If we're an NFS server, we need an exports file */
+if|if
+condition|(
+name|variable_get
+argument_list|(
+literal|"nfs_server"
+argument_list|)
+operator|&&
+operator|!
+name|file_readable
+argument_list|(
+literal|"/etc/exports"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"You have chosen to be an NFS server but have not yet configured\n"
+literal|"the /etc/exports file.  You must configure this information before\n"
+literal|"other hosts will be able to mount file systems from your machine.\n"
+literal|"Press [ENTER] now to invoke the editor on /etc/exports"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"echo '#The following example exports /usr to 3 machines named after ducks.'> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"echo '#/usr	huey louie dewie'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"echo>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|systemExecute
+argument_list|(
+literal|"ee /etc/exports"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|i
 return|;
 block|}
 end_function

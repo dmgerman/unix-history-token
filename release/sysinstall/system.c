@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.3 1995/09/25 00:52:15 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.4 1995/10/04 07:55:01 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -1191,6 +1191,30 @@ argument_list|)
 expr_stmt|;
 return|return
 name|i
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * This is called from the main menu.  Try to find a copy of Lynx from somewhere  * and fire it up on the first copy of the handbook we can find.  */
+end_comment
+
+begin_function
+name|int
+name|docBrowser
+parameter_list|(
+name|char
+modifier|*
+name|junk
+parameter_list|)
+block|{
+comment|/* Make sure we were started at a reasonable time */
+comment|/* First, make sure we have Lynx */
+comment|/* We don't have lynx, try to add it */
+comment|/* Now try to figure out if there is doc here - if so, offer choice between local and net else just net */
+comment|/* Run lynx on the appropriate doc */
+return|return
+name|RET_SUCCESS
 return|;
 block|}
 end_function
