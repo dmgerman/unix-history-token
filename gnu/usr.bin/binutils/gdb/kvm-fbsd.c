@@ -3234,11 +3234,13 @@ name|NULL
 condition|;
 name|p
 operator|=
+name|LIST_NEXT
+argument_list|(
+operator|&
 name|lp
-operator|.
+argument_list|,
 name|p_list
-operator|.
-name|le_next
+argument_list|)
 control|)
 block|{
 if|if
