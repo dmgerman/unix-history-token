@@ -9753,13 +9753,6 @@ return|;
 comment|/* return FAILURE */
 block|}
 comment|/*  * Flush the TLB on all other CPU's  *  * XXX: Needs to handshake and wait for completion before proceding.  */
-specifier|extern
-name|void
-name|enable_sse
-argument_list|(
-name|void
-argument_list|)
-decl_stmt|;
 name|void
 name|smp_invltlb
 parameter_list|(

@@ -233,20 +233,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-name|void
-name|enable_sse
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
+specifier|static
 name|int
 name|hw_instruction_sse
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

@@ -1022,6 +1022,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_cpu_procinfo
+value|cpu_procinfo
+end_define
+
+begin_define
+define|#
+directive|define
 name|_cpu_id
 value|cpu_id
 end_define
