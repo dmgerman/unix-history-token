@@ -10,30 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -46,13 +22,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -65,18 +59,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -108,6 +90,38 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* Tunnel interface configuration stuff */
@@ -152,6 +166,19 @@ end_decl_stmt
 begin_comment
 comment|/* tunnel descriptor */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -959,7 +986,8 @@ literal|"d:s:t:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -1026,17 +1054,8 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: nos_tun -t<tun_name> -s<source_addr> -d<dest_addr><target_addr>\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|target
@@ -1470,6 +1489,27 @@ expr_stmt|;
 block|}
 block|}
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: nos_tun -t<tun_name> -s<source_addr> -d<dest_addr><target_addr>\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
