@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkpasswd.c	4.4 (Berkeley) 84/05/17"
+literal|"@(#)mkpasswd.c	4.5 (Berkeley) 84/10/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,7 +203,7 @@ argument_list|)
 expr_stmt|;
 name|dp
 operator|=
-name|ndbmopen
+name|dbm_open
 argument_list|(
 name|argv
 index|[
@@ -247,12 +247,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|dp
-operator|->
-name|db_maxbno
-operator|=
-literal|0
-expr_stmt|;
 name|setpwfile
 argument_list|(
 name|argv
@@ -416,7 +410,9 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-name|dbmstore
+if|if
+condition|(
+name|dbm_store
 argument_list|(
 name|dp
 argument_list|,
@@ -424,9 +420,30 @@ name|key
 argument_list|,
 name|content
 argument_list|,
-name|DB_INSERT
+name|DBM_INSERT
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mkpasswd: "
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+literal|"dbm_store failed"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|key
 operator|.
 name|dptr
@@ -449,7 +466,9 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
-name|dbmstore
+if|if
+condition|(
+name|dbm_store
 argument_list|(
 name|dp
 argument_list|,
@@ -457,9 +476,30 @@ name|key
 argument_list|,
 name|content
 argument_list|,
-name|DB_INSERT
+name|DBM_INSERT
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mkpasswd: "
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+literal|"dbm_store failed"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|entries
 operator|++
 expr_stmt|;
@@ -478,6 +518,11 @@ operator|-
 name|buf
 expr_stmt|;
 block|}
+name|dbm_close
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%d password entries, maximum length %d\n"
