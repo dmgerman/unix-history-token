@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.1.4.2 1997/05/14 01:35:27 tegge Exp $	*/
+comment|/*	$Id: bootp_subr.c,v 1.1.4.3 1997/08/15 13:31:16 tegge Exp $	*/
 end_comment
 
 begin_comment
@@ -148,12 +148,12 @@ end_include
 begin_define
 define|#
 directive|define
-name|MIN_REPLY_HDR
-value|16
+name|BOOTP_MIN_LEN
+value|300
 end_define
 
 begin_comment
-comment|/* xid, dir, astat, errno */
+comment|/* Minimum size of bootp udp packet */
 end_comment
 
 begin_comment
@@ -1992,12 +1992,12 @@ name|auio
 operator|.
 name|uio_resid
 expr_stmt|;
-comment|/* Does the reply contain at least a header? */
+comment|/* Do we have the required number of bytes ? */
 if|if
 condition|(
 name|len
 operator|<
-name|MIN_REPLY_HDR
+name|BOOTP_MIN_LEN
 condition|)
 continue|continue;
 comment|/* Is it the right reply? */
