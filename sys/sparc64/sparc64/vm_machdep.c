@@ -1734,7 +1734,7 @@ name|flags
 operator|&
 name|SFB_NOWAIT
 condition|)
-goto|goto break;
+break|break;
 name|sf_buf_alloc_want
 operator|++
 expr_stmt|;
