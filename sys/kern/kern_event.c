@@ -872,6 +872,10 @@ operator|&
 name|timer_filtops
 block|,
 comment|/* EVFILT_TIMER */
+operator|&
+name|file_filtops
+block|,
+comment|/* EVFILT_NETDEV */
 block|}
 decl_stmt|;
 end_decl_stmt
