@@ -2908,8 +2908,30 @@ if|if
 condition|(
 name|hostname
 condition|)
+block|{
 name|syslog
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"%d LOGIN FAILURE%s FROM %s"
+argument_list|,
+name|failures
+argument_list|,
+name|failures
+operator|>
+literal|1
+condition|?
+literal|"S"
+else|:
+literal|""
+argument_list|,
+name|hostname
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_AUTHPRIV
+operator||
 name|LOG_NOTICE
 argument_list|,
 literal|"%d LOGIN FAILURE%s FROM %s, %s"
@@ -2929,9 +2951,32 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|syslog
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"%d LOGIN FAILURE%s ON %s"
+argument_list|,
+name|failures
+argument_list|,
+name|failures
+operator|>
+literal|1
+condition|?
+literal|"S"
+else|:
+literal|""
+argument_list|,
+name|tty
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_AUTHPRIV
+operator||
 name|LOG_NOTICE
 argument_list|,
 literal|"%d LOGIN FAILURE%s ON %s, %s"
@@ -2951,6 +2996,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 undef|#
 directive|undef
