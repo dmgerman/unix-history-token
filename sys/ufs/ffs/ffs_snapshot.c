@@ -2980,7 +2980,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: suspended %d.%03ld sec, redo %ld of %d\n"
+literal|"%s: suspended %ld.%03ld sec, redo %ld of %d\n"
 argument_list|,
 name|vp
 operator|->
@@ -2990,6 +2990,9 @@ name|mnt_stat
 operator|.
 name|f_mntonname
 argument_list|,
+operator|(
+name|long
+operator|)
 name|endtime
 operator|.
 name|tv_sec

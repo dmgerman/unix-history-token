@@ -1064,7 +1064,7 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"WARNING: clock %s %d days"
+literal|"WARNING: clock %s %ld days"
 argument_list|,
 name|ts
 operator|.
