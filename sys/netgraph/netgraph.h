@@ -986,6 +986,21 @@ define|\
 value|do {								\ 		(error) = ng_send_data((hook), (m), (a));		\ 		(m) = NULL;						\ 		(a) = NULL;						\ 	} while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NG_SEND_DATA_ONLY
+parameter_list|(
+name|error
+parameter_list|,
+name|hook
+parameter_list|,
+name|m
+parameter_list|)
+define|\
+value|do {								\ 		(error) = ng_send_data((hook), (m), NULL);		\ 		(m) = NULL;						\ 	} while (0)
+end_define
+
 begin_comment
 comment|/* Send  queued data packet with meta-data */
 end_comment
