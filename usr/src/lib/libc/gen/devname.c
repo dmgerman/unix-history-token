@@ -88,7 +88,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|char
+name|mode_t
 name|type
 decl_stmt|;
 block|}
@@ -140,6 +140,9 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
+name|mode_t
+name|type
+decl_stmt|;
 block|{
 name|struct
 name|devs
@@ -190,7 +193,7 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
-name|int
+name|mode_t
 name|specialtype
 decl_stmt|;
 if|if
@@ -261,7 +264,7 @@ name|S_IFCHR
 case|:
 name|specialtype
 operator|=
-literal|1
+name|S_IFCHR
 expr_stmt|;
 break|break;
 case|case
@@ -269,7 +272,7 @@ name|S_IFBLK
 case|:
 name|specialtype
 operator|=
-literal|0
+name|S_IFBLK
 expr_stmt|;
 break|break;
 default|default:
