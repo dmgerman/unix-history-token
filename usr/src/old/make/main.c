@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.2 (Berkeley) 82/04/20"
+literal|"@(#)main.c	4.3 (Berkeley) 82/10/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,6 +275,21 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|options
+index|[
+literal|26
+operator|+
+literal|1
+index|]
+init|=
+block|{
+literal|'-'
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -332,6 +347,14 @@ name|int
 name|intrupt
 parameter_list|()
 function_decl|;
+name|char
+modifier|*
+name|op
+init|=
+name|options
+operator|+
+literal|1
+decl_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -517,6 +540,13 @@ condition|;
 operator|++
 name|j
 control|)
+block|{
+operator|*
+name|op
+operator|++
+operator|=
+name|c
+expr_stmt|;
 switch|switch
 condition|(
 name|c
@@ -605,6 +635,10 @@ break|break;
 case|case
 literal|'f'
 case|:
+name|op
+operator|--
+expr_stmt|;
+comment|/* don't pass this one */
 if|if
 condition|(
 name|i
@@ -672,6 +706,7 @@ name|onechar
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|argv
 index|[
 name|i
@@ -680,6 +715,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+operator|*
+name|op
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|setvar
+argument_list|(
+literal|"MFLAGS"
+argument_list|,
+name|options
+argument_list|)
+expr_stmt|;
+comment|/* MFLAGS=options to make */
 if|if
 condition|(
 operator|!
