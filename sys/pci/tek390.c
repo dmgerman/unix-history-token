@@ -12,6 +12,22 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Imported into FreeBSD source repository, and updated to compile under  */
+end_comment
+
+begin_comment
+comment|/* FreeBSD-3.0-DEVELOPMENT, by Stefan Esser<se@FreeBSD.Org>, 1996-12-17  */
+end_comment
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
 comment|/* #define REL_2_1_0 */
 end_comment
 
@@ -127,12 +143,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/devconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pci/pcivar.h>
 end_include
 
@@ -163,7 +173,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tek390.h"
+file|"pci/tek390.h"
 end_include
 
 begin_define
@@ -737,6 +747,16 @@ name|DC390_initSRB
 parameter_list|(
 name|PSRB
 name|psrb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|DC390_linkSRB
+parameter_list|(
+name|PACB
+name|pACB
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3954,7 +3974,7 @@ end_function
 begin_include
 include|#
 directive|include
-file|"scsiiom.c"
+file|"pci/scsiiom.c"
 end_include
 
 begin_comment
