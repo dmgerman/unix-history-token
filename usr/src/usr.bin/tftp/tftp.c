@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tftp.c	4.1	82/08/16	*/
+comment|/*	tftp.c	4.2	82/08/17	*/
 end_comment
 
 begin_comment
@@ -242,6 +242,10 @@ name|name
 argument_list|)
 operator|-
 literal|4
+expr_stmt|;
+name|timeout
+operator|=
+literal|0
 expr_stmt|;
 name|sigset
 argument_list|(
@@ -655,6 +659,10 @@ name|RRQ
 argument_list|,
 name|name
 argument_list|)
+expr_stmt|;
+name|timeout
+operator|=
+literal|0
 expr_stmt|;
 name|sigset
 argument_list|(
