@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_object.h	7.3 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_object.h	7.4 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -41,6 +41,14 @@ name|queue_chain_t
 name|object_list
 decl_stmt|;
 comment|/* list of all objects */
+name|u_short
+name|flags
+decl_stmt|;
+comment|/* see below */
+name|u_short
+name|paging_in_progress
+decl_stmt|;
+comment|/* Paging (in or out) so 						    don't collapse or destroy */
 name|simple_lock_data_t
 name|Lock
 decl_stmt|;
@@ -70,10 +78,6 @@ name|vm_pager_t
 name|pager
 decl_stmt|;
 comment|/* Where to get data */
-name|boolean_t
-name|pager_ready
-decl_stmt|;
-comment|/* Have pager fields been filled? */
 name|vm_offset_t
 name|paging_offset
 decl_stmt|;
@@ -88,25 +92,6 @@ name|vm_offset_t
 name|shadow_offset
 decl_stmt|;
 comment|/* Offset in shadow */
-name|unsigned
-name|int
-name|paging_in_progress
-range|:
-literal|16
-decl_stmt|,
-comment|/* Paging (in or out) - don't 						   collapse or destroy */
-comment|/* boolean_t */
-name|can_persist
-range|:
-literal|1
-decl_stmt|,
-comment|/* allow to persist */
-comment|/* boolean_t */
-name|internal
-range|:
-literal|1
-decl_stmt|;
-comment|/* internally created object */
 name|queue_chain_t
 name|cached_list
 decl_stmt|;
@@ -114,6 +99,43 @@ comment|/* for persistence */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_CANPERSIST
+value|0x0001
+end_define
+
+begin_comment
+comment|/* allow to persist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_INTERNAL
+value|0x0002
+end_define
+
+begin_comment
+comment|/* internally created object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_ACTIVE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* used to mark active objects */
+end_comment
 
 begin_typedef
 typedef|typedef
