@@ -237,7 +237,13 @@ literal|'\0'
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DefinitionBlock (     \"acpi_dsdt.aml\",	//Output filename     \"DSDT\",		//Signature     0x%x,		//DSDT Revision     \"%s\",		//OEMID     \"%s\",		//TABLE ID     0x%x		//OEM Revision\n)\n"
+literal|"DefinitionBlock (\n"
+literal|"    \"acpi_dsdt.aml\",	//Output filename\n"
+literal|"    \"DSDT\",		//Signature\n"
+literal|"    0x%x,		//DSDT Revision\n"
+literal|"    \"%s\",		//OEMID\n"
+literal|"    \"%s\",		//TABLE ID\n"
+literal|"    0x%x		//OEM Revision\n)\n"
 argument_list|,
 name|dsdt_header
 operator|.
