@@ -297,6 +297,17 @@ name|HANDLE_SYSV_PRAGMA
 end_define
 
 begin_comment
+comment|/* FreeBSD ELF using our home-grown crtbegin.o/crtend.o does not support the    DWARF2 unwinding mechanisms.  Once `make world' bootstraping problems with    the EGCS crtstuff.c is overcome, we will switch to the non-sjlj-exceptions     type exception machanism.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_UNWIND_INFO
+value|0
+end_define
+
+begin_comment
 comment|/* Do not use ``thunks'' to implement C++ vtables.  This method still has    fatal bugs.  Also, GCC 3.0 will have a new C++ ABI that may not even    support `thunks'.  */
 end_comment
 
