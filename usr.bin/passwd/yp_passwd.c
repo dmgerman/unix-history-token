@@ -240,6 +240,12 @@ literal|1
 operator|)
 return|;
 block|}
+name|pw
+operator|->
+name|pw_change
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Initialize password information */
 if|if
 condition|(
