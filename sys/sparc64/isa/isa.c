@@ -1115,7 +1115,7 @@ name|limit
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * This inlines a modified resource_list_alloc(); this is needed 	 * because the resources need to have offsets added to them, whcih 	 * cannot be done beforehand without patching the resource list entires 	 * (which is ugly). 	 */
+comment|/* 	 * This inlines a modified resource_list_alloc(); this is needed 	 * because the resources need to have offsets added to them, which 	 * cannot be done beforehand without patching the resource list entries 	 * (which is ugly). 	 */
 if|if
 condition|(
 name|passthrough
