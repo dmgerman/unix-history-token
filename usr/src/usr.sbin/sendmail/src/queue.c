@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.34 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.35 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.34 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.35 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1275,6 +1275,45 @@ end_for
 begin_comment
 comment|/* 	**  Clean up. 	*/
 end_comment
+
+begin_expr_stmt
+name|fflush
+argument_list|(
+name|tfp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|tfp
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|newid
+condition|)
+name|syserr
+argument_list|(
+literal|"!552 Error writing control file %s"
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+else|else
+name|syserr
+argument_list|(
+literal|"!452 Error writing control file %s"
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+block|}
+end_if
 
 begin_if
 if|if
