@@ -18,6 +18,16 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_comment
+comment|/* Linux requires this for off_t */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<inttypes.h>
 end_include
 
