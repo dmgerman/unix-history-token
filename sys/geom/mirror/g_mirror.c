@@ -5093,11 +5093,6 @@ argument_list|,
 literal|"Synchronization request finished."
 argument_list|)
 expr_stmt|;
-name|g_destroy_bio
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|disk
 operator|->
 name|d_sync
@@ -5112,15 +5107,18 @@ name|bp
 operator|->
 name|bio_length
 expr_stmt|;
+name|g_destroy_bio
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|bp
+name|disk
 operator|->
-name|bio_offset
-operator|+
-name|bp
-operator|->
-name|bio_length
+name|d_sync
+operator|.
+name|ds_offset_done
 operator|==
 name|sc
 operator|->
