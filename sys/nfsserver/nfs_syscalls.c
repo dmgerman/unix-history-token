@@ -415,8 +415,6 @@ specifier|static
 name|int
 name|nfssvc_nfsd
 parameter_list|(
-name|caddr_t
-parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -709,10 +707,6 @@ name|error
 operator|=
 name|nfssvc_nfsd
 argument_list|(
-name|uap
-operator|->
-name|argp
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -1166,9 +1160,6 @@ specifier|static
 name|int
 name|nfssvc_nfsd
 parameter_list|(
-name|caddr_t
-name|argp
-parameter_list|,
 name|struct
 name|thread
 modifier|*
