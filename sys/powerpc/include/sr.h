@@ -82,13 +82,20 @@ begin_define
 define|#
 directive|define
 name|USER_SR
-value|13
+value|12
 end_define
 
 begin_define
 define|#
 directive|define
 name|KERNEL_SR
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL2_SR
 value|14
 end_define
 
@@ -104,6 +111,13 @@ define|#
 directive|define
 name|KERNEL_SEGMENT
 value|(0xfffff0 + KERNEL_SR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL2_SEGMENT
+value|(0xfffff0 + KERNEL2_SR)
 end_define
 
 begin_define

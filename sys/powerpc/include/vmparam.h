@@ -229,7 +229,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|(VM_MIN_KERNEL_ADDRESS + SEGMENT_LENGTH - 1)
+value|(VM_MIN_KERNEL_ADDRESS + 2*SEGMENT_LENGTH - 1)
 end_define
 
 begin_define
