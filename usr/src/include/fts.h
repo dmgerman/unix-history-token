@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.20 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -170,6 +170,10 @@ name|int
 name|fts_errno
 decl_stmt|;
 comment|/* errno for this node */
+name|int
+name|fts_symfd
+decl_stmt|;
+comment|/* fd for symlink */
 name|u_short
 name|fts_pathlen
 decl_stmt|;
@@ -271,6 +275,20 @@ name|u_short
 name|fts_info
 decl_stmt|;
 comment|/* user flags for FTSENT structure */
+define|#
+directive|define
+name|FTS_DONTCHDIR
+value|0x01
+comment|/* don't chdir .. to the parent */
+define|#
+directive|define
+name|FTS_SYMFOLLOW
+value|0x01
+comment|/* followed a symlink to get here */
+name|u_short
+name|fts_flags
+decl_stmt|;
+comment|/* private flags for FTSENT structure */
 define|#
 directive|define
 name|FTS_AGAIN
