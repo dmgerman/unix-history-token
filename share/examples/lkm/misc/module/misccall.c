@@ -38,10 +38,6 @@ operator|,
 name|void
 operator|*
 name|uap
-operator|,
-name|int
-name|retval
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -58,8 +54,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -69,10 +63,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-name|retval
-index|[]
 decl_stmt|;
 block|{
 comment|/* 	 * Our new system call simply prints a message; it takes no 	 * arguments. 	 */

@@ -62,10 +62,6 @@ operator|,
 name|void
 operator|*
 name|uap
-operator|,
-name|int
-name|retval
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
