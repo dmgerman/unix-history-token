@@ -3536,7 +3536,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait for available vnodes. 	 */
-while|while
+if|if
 condition|(
 name|numvnodes
 operator|>
@@ -3576,6 +3576,17 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|numvnodes
+operator|>
+name|desiredvnodes
+condition|)
+return|return
+operator|(
+name|ENFILE
+operator|)
+return|;
 block|}
 name|numvnodes
 operator|++
