@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1899,6 +1905,8 @@ name|crc
 decl_stmt|;
 name|crc
 operator|=
+name|htole32
+argument_list|(
 name|crc32
 argument_list|(
 name|c
@@ -1910,6 +1918,7 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bcopy
