@@ -2500,14 +2500,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_mtx
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
