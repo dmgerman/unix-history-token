@@ -12,7 +12,7 @@ name|_sccsid
 operator|:
 operator|.
 name|asciz
-literal|"@(#)doprnt.c	5.2 (Berkeley) %G%"
+literal|"@(#)doprnt.c	5.3 (Berkeley) %G%"
 operator|.
 name|text
 endif|#
