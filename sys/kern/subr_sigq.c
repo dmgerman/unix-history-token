@@ -119,20 +119,7 @@ name|M_KSIGINFO
 argument_list|,
 name|M_ZERO
 operator||
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|ksi
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"ksiginfo_alloc(%d): allocation failed."
-operator|,
-name|signo
-operator|)
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -142,6 +129,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|panic
+argument_list|(
+literal|"Unable to allocate kernel signal info structure."
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
