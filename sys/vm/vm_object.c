@@ -1710,6 +1710,19 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+comment|/* 					 * More likely than not the thread 					 * holding robject's lock has lower 					 * priority than the current thread. 					 * Let the lower priority thread run. 					 */
+name|tsleep
+argument_list|(
+operator|&
+name|proc0
+argument_list|,
+name|PVM
+argument_list|,
+literal|"vmo_de"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 if|if
