@@ -1234,6 +1234,8 @@ decl_stmt|,
 name|m1
 decl_stmt|,
 name|m2
+decl_stmt|,
+name|s
 decl_stmt|;
 name|u_int32_t
 name|data
@@ -1264,8 +1266,6 @@ decl_stmt|;
 name|bus_size_t
 name|lim
 decl_stmt|;
-name|ISP_LOCKVAL_DECL
-expr_stmt|;
 comment|/* 	 * Figure out if we're supposed to skip this one. 	 */
 name|unit
 operator|=
@@ -1717,7 +1717,6 @@ index|]
 operator|=
 name|DMA_REGS_OFF
 expr_stmt|;
-comment|/*  	 * GCC! 	 */
 name|mdvp
 operator|=
 operator|&
@@ -2178,10 +2177,10 @@ endif|#
 directive|endif
 block|}
 comment|/* 	 * 	 */
-name|ISP_LOCK
-argument_list|(
-name|isp
-argument_list|)
+name|s
+operator|=
+name|splbio
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Make sure that SERR, PERR, WRITE INVALIDATE and BUSMASTER 	 * are set. 	 */
 name|cmd
@@ -2325,9 +2324,9 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|ISP_UNLOCK
+name|splx
 argument_list|(
-name|isp
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -2771,10 +2770,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ISP_LOCK
-argument_list|(
-name|isp
-argument_list|)
+name|s
+operator|=
+name|splbio
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2807,9 +2806,9 @@ name|ih
 argument_list|)
 condition|)
 block|{
-name|ISP_UNLOCK
+name|splx
 argument_list|(
-name|isp
+name|s
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -2837,9 +2836,9 @@ operator|!=
 name|ISP_RESETSTATE
 condition|)
 block|{
-name|ISP_UNLOCK
+name|splx
 argument_list|(
-name|isp
+name|s
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2874,9 +2873,9 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-name|ISP_UNLOCK
+name|splx
 argument_list|(
-name|isp
+name|s
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2912,9 +2911,9 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-name|ISP_UNLOCK
+name|splx
 argument_list|(
-name|isp
+name|s
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2922,9 +2921,9 @@ name|bad
 goto|;
 block|}
 block|}
-name|ISP_UNLOCK
+name|splx
 argument_list|(
-name|isp
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXXX: Here is where we might unload the f/w module 	 * XXXX: (or decrease the reference count to it). 	 */
@@ -5116,9 +5115,10 @@ name|pci
 operator|->
 name|dmaps
 index|[
+name|isp_handle_index
+argument_list|(
 name|handle
-operator|-
-literal|1
+argument_list|)
 index|]
 expr_stmt|;
 if|if
@@ -6158,9 +6158,10 @@ name|pci
 operator|->
 name|dmaps
 index|[
+name|isp_handle_index
+argument_list|(
 name|handle
-operator|-
-literal|1
+argument_list|)
 index|]
 expr_stmt|;
 if|if
@@ -6973,11 +6974,12 @@ name|pci
 operator|->
 name|dmaps
 index|[
+name|isp_handle_index
+argument_list|(
 name|rq
 operator|->
 name|req_handle
-operator|-
-literal|1
+argument_list|)
 index|]
 expr_stmt|;
 if|if
@@ -7771,11 +7773,12 @@ name|pci
 operator|->
 name|dmaps
 index|[
+name|isp_handle_index
+argument_list|(
 name|rq
 operator|->
 name|req_handle
-operator|-
-literal|1
+argument_list|)
 index|]
 expr_stmt|;
 name|s
@@ -8202,30 +8205,12 @@ name|pci
 operator|->
 name|dmaps
 index|[
+name|isp_handle_index
+argument_list|(
 name|handle
-operator|-
-literal|1
+argument_list|)
 index|]
 decl_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|handle
-operator|>
-literal|0
-operator|&&
-name|handle
-operator|<=
-name|isp
-operator|->
-name|isp_maxcmds
-operator|)
-argument_list|,
-operator|(
-literal|"bad handle in isp_pci_dmateardonw"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8301,6 +8286,12 @@ argument_list|,
 name|HCCR
 argument_list|,
 name|PCI_HCCR_CMD_BIOS
+argument_list|)
+expr_stmt|;
+comment|/* and enable interrupts */
+name|ENABLE_INTS
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 block|}
