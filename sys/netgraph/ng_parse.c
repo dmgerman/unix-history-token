@@ -5687,6 +5687,12 @@ name|blen
 expr_stmt|;
 name|done
 label|:
+if|if
+condition|(
+name|foff
+operator|!=
+name|NULL
+condition|)
 name|FREE
 argument_list|(
 name|foff
