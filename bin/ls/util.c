@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.14 1998/04/24 12:43:26 des Exp $"
+literal|"$Id: util.c,v 1.15 1998/04/24 20:15:43 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,6 +198,10 @@ if|if
 condition|(
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 operator|++
