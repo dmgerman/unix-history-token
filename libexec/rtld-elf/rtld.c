@@ -928,6 +928,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|bool
+name|libmap_disable
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disable libmap */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
 name|trust
 decl_stmt|;
 end_decl_stmt
@@ -1481,6 +1492,15 @@ operator|==
 name|getgid
 argument_list|()
 expr_stmt|;
+name|libmap_disable
+operator|=
+name|getenv
+argument_list|(
+literal|"LD_LIBMAP_DISABLE"
+argument_list|)
+operator|!=
+name|NULL
+expr_stmt|;
 name|ld_bind_now
 operator|=
 name|getenv
@@ -1892,6 +1912,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|WITH_LIBMAP
+if|if
+condition|(
+operator|!
+name|libmap_disable
+condition|)
 name|lm_init
 argument_list|()
 expr_stmt|;
@@ -3868,6 +3893,8 @@ directive|ifdef
 name|WITH_LIBMAP
 if|if
 condition|(
+name|libmap_disable
+operator|||
 operator|(
 name|name
 operator|=
@@ -6541,6 +6568,11 @@ comment|/* No need to remove the items from the list, since we are exiting. */
 ifdef|#
 directive|ifdef
 name|WITH_LIBMAP
+if|if
+condition|(
+operator|!
+name|libmap_disable
+condition|)
 name|lm_fini
 argument_list|()
 expr_stmt|;
