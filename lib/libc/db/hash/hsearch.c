@@ -158,10 +158,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|int
-operator|)
 name|dbp
+operator|!=
+name|NULL
 operator|)
 return|;
 block|}
