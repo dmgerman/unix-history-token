@@ -82,7 +82,7 @@ value|_IOW('J', 4, int)
 end_define
 
 begin_comment
-comment|/* set offset on X-axis */
+comment|/* set offset on Y-axis */
 end_comment
 
 begin_define
