@@ -898,6 +898,21 @@ comment|/* XXX 4(ATM_PH) + 3(LLC) + 5(SNAP) */
 break|break;
 endif|#
 directive|endif
+case|case
+name|DLT_PPP
+case|:
+name|sockp
+operator|->
+name|sa_family
+operator|=
+name|AF_UNSPEC
+expr_stmt|;
+name|hlen
+operator|=
+literal|4
+expr_stmt|;
+comment|/* This should match PPP_HDRLEN */
+break|break;
 default|default:
 return|return
 operator|(
