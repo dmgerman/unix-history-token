@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.45 (Berkeley) %G%"
+literal|"@(#)headers.c	8.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3721,7 +3721,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		h -- the header to put. **		e -- envelope to use. **		flags -- to modify the behaviour. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		h -- the header to put. **		e -- envelope to use. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -3759,8 +3759,6 @@ argument_list|,
 name|h
 argument_list|,
 name|e
-argument_list|,
-name|flags
 argument_list|)
 specifier|register
 name|MCI
@@ -3782,12 +3780,6 @@ specifier|register
 name|ENVELOPE
 modifier|*
 name|e
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|flags
 decl_stmt|;
 end_decl_stmt
 
@@ -4008,42 +4000,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* suppress Content-Type: if we are not including the body */
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|PF_DELETEMIMEHDRS
-argument_list|,
-name|flags
-argument_list|)
-operator|&&
-name|bitset
-argument_list|(
-name|H_CTYPE
-argument_list|,
-name|h
-operator|->
-name|h_flags
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|34
-argument_list|,
-literal|11
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|" (skipped (content-type))\n"
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* suppress Content-Transfer-Encoding: if we are MIMEing */
 if|if
 condition|(
@@ -4056,7 +4012,6 @@ operator|->
 name|h_flags
 argument_list|)
 operator|&&
-operator|(
 name|bitset
 argument_list|(
 name|MCIF_CVT8TO7
@@ -4065,14 +4020,6 @@ name|mci
 operator|->
 name|mci_flags
 argument_list|)
-operator|||
-name|bitset
-argument_list|(
-name|PF_DELETEMIMEHDRS
-argument_list|,
-name|flags
-argument_list|)
-operator|)
 condition|)
 block|{
 if|if

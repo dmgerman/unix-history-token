@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.82 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.83 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.82		%G%"
+literal|"@(#)sendmail.h	8.83		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -732,9 +732,19 @@ decl_stmt|;
 comment|/* pathname of the mailer to use */
 name|char
 modifier|*
-name|m_mtstype
+name|m_mtatype
 decl_stmt|;
-comment|/* type of this MTS */
+comment|/* type of this MTA */
+name|char
+modifier|*
+name|m_addrtype
+decl_stmt|;
+comment|/* type for addresses */
+name|char
+modifier|*
+name|m_diagtype
+decl_stmt|;
+comment|/* type for diagnostics */
 name|BITMAP
 name|m_flags
 decl_stmt|;
@@ -2065,11 +2075,6 @@ modifier|*
 name|e_envid
 decl_stmt|;
 comment|/* envelope id from MAIL FROM: line */
-name|char
-modifier|*
-name|e_omts
-decl_stmt|;
-comment|/* OMTS parameter from MAIL FROM: */
 name|time_t
 name|e_dtime
 decl_stmt|;

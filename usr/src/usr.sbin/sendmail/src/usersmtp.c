@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.33 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.34 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.33 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.34 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1448,32 +1448,6 @@ name|e_envid
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|e
-operator|->
-name|e_omts
-operator|!=
-name|NULL
-condition|)
-block|{
-name|strcat
-argument_list|(
-name|optbuf
-argument_list|,
-literal|" OMTS="
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|optbuf
-argument_list|,
-name|e
-operator|->
-name|e_omts
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/* 	**  Send the HOPS command. 	**	This is non-standard and may give an "unknown command". 	**		This is not an error. 	**	It can give a "bad hop count" error if the hop 	**		count is exceeded. 	*/
 comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
@@ -2648,8 +2622,6 @@ operator|->
 name|e_header
 argument_list|,
 name|e
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 call|(
@@ -2664,8 +2636,6 @@ argument_list|,
 name|e
 argument_list|,
 name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Cleanup after sending message. 	*/

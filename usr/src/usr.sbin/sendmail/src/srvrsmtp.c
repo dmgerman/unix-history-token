@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.52 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.53 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.52 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.53 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1916,43 +1916,6 @@ block|}
 name|e
 operator|->
 name|e_envid
-operator|=
-name|newstr
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|strcasecmp
-argument_list|(
-name|kp
-argument_list|,
-literal|"omts"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|vp
-operator|==
-name|NULL
-condition|)
-block|{
-name|usrerr
-argument_list|(
-literal|"501 OMTS requires a value"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-name|e
-operator|->
-name|e_omts
 operator|=
 name|newstr
 argument_list|(
