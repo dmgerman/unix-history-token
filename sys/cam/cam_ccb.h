@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Data structures and definitions for CAM Control Blocks (CCBs).  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_ccb.h,v 1.3 1998/12/10 04:05:49 gibbs Exp $  */
+comment|/*  * Data structures and definitions for CAM Control Blocks (CCBs).  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_ccb.h,v 1.4 1999/03/05 23:13:20 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -349,38 +349,85 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+comment|/* Function code flags are bits greater than 0xff */
+name|XPT_FC_QUEUED
+init|=
+literal|0x100
+block|,
+comment|/* Non-immediate function code */
+name|XPT_FC_USER_CCB
+init|=
+literal|0x200
+block|,
+name|XPT_FC_XPT_ONLY
+init|=
+literal|0x400
+block|,
+comment|/* Only for the transport layer device */
 comment|/* Common function commands: 0x00->0x0F */
 name|XPT_NOOP
+init|=
+literal|0x00
 block|,
 comment|/* Execute Nothing */
 name|XPT_SCSI_IO
+init|=
+literal|0x01
+operator||
+name|XPT_FC_QUEUED
 block|,
 comment|/* Execute the requested I/O operation */
 name|XPT_GDEV_TYPE
+init|=
+literal|0x02
 block|,
 comment|/* Get type information for specified device */
 name|XPT_GDEVLIST
+init|=
+literal|0x03
 block|,
 comment|/* Get a list of peripheral devices */
 name|XPT_PATH_INQ
+init|=
+literal|0x04
 block|,
 comment|/* Path routing inquiry */
 name|XPT_REL_SIMQ
+init|=
+literal|0x05
 block|,
 comment|/* Release a frozen SIM queue */
 name|XPT_SASYNC_CB
+init|=
+literal|0x06
 block|,
 comment|/* Set Asynchronous Callback Parameters */
 name|XPT_SDEV_TYPE
+init|=
+literal|0x07
 block|,
 comment|/* Set device type information */
 name|XPT_SCAN_BUS
+init|=
+literal|0x08
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
+operator||
+name|XPT_FC_XPT_ONLY
 block|,
 comment|/* (Re)Scan the SCSI Bus */
 name|XPT_DEV_MATCH
+init|=
+literal|0x09
+operator||
+name|XPT_FC_XPT_ONLY
 block|,
 comment|/* Get EDT entries matching the given pattern */
 name|XPT_DEBUG
+init|=
+literal|0x0a
 block|,
 comment|/* Turn on debugging for a bus, target or lun */
 comment|/* SCSI Control Functions: 0x10->0x1F */
@@ -390,33 +437,63 @@ literal|0x10
 block|,
 comment|/* Abort the specified CCB */
 name|XPT_RESET_BUS
+init|=
+literal|0x11
+operator||
+name|XPT_FC_XPT_ONLY
 block|,
 comment|/* Reset the specified SCSI bus */
 name|XPT_RESET_DEV
+init|=
+literal|0x12
 block|,
 comment|/* Bus Device Reset the specified SCSI device */
 name|XPT_TERM_IO
+init|=
+literal|0x13
 block|,
 comment|/* Terminate the I/O process */
 name|XPT_SCAN_LUN
+init|=
+literal|0x14
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
+operator||
+name|XPT_FC_XPT_ONLY
 block|,
 comment|/* Scan Logical Unit */
 name|XPT_GET_TRAN_SETTINGS
+init|=
+literal|0x15
 block|,
 comment|/* 				 * Get default/user transfer settings 				 * for the target 				 */
 name|XPT_SET_TRAN_SETTINGS
+init|=
+literal|0x16
 block|,
 comment|/* 				 * Set transfer rate/width 				 * negotiation settings 				 */
 name|XPT_CALC_GEOMETRY
+init|=
+literal|0x17
 block|,
 comment|/* 				 * Calculate the geometry parameters for 				 * a device give the sector size and 				 * volume size. 				 */
 comment|/* HBA engine commands 0x20->0x2F */
 name|XPT_ENG_INQ
 init|=
 literal|0x20
+operator||
+name|XPT_FC_XPT_ONLY
 block|,
 comment|/* HBA engine feature inquiry */
 name|XPT_ENG_EXEC
+init|=
+literal|0x21
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_XPT_ONLY
 block|,
 comment|/* HBA execute engine request */
 comment|/* Target mode commands: 0x30->0x3F */
@@ -426,18 +503,40 @@ literal|0x30
 block|,
 comment|/* Enable LUN as a target */
 name|XPT_TARGET_IO
+init|=
+literal|0x31
+operator||
+name|XPT_FC_QUEUED
 block|,
 comment|/* Execute target I/O request */
 name|XPT_ACCEPT_TARGET_IO
+init|=
+literal|0x32
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
 block|,
 comment|/* Accept Host Target Mode CDB */
 name|XPT_CONT_TARGET_IO
+init|=
+literal|0x33
+operator||
+name|XPT_FC_QUEUED
 block|,
 comment|/* Continue Host Target I/O Connection */
 name|XPT_IMMED_NOTIFY
+init|=
+literal|0x34
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
 block|,
 comment|/* Notify Host Target driver of event */
 name|XPT_NOTIFY_ACK
+init|=
+literal|0x35
 block|,
 comment|/* Acknowledgement of event */
 comment|/* Vendor Unique codes: 0x80->0x8F */
@@ -452,52 +551,52 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|XPT_OPCODE_GROUP_MASK
+name|XPT_FC_GROUP_MASK
 value|0xF0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XPT_OPCODE_GROUP
+name|XPT_FC_GROUP
 parameter_list|(
 name|op
 parameter_list|)
-value|((op)& XPT_OPCODE_GROUP_MASK)
+value|((op)& XPT_FC_GROUP_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XPT_OPCODE_GROUP_COMMON
+name|XPT_FC_GROUP_COMMON
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|XPT_OPCODE_GROUP_SCSI_CONTROL
+name|XPT_FC_GROUP_SCSI_CONTROL
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|XPT_OPCODE_GROUP_HBA_ENGINE
+name|XPT_FC_GROUP_HBA_ENGINE
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|XPT_OPCODE_GROUP_TMODE
+name|XPT_FC_GROUP_TMODE
 value|0x30
 end_define
 
 begin_define
 define|#
 directive|define
-name|XPT_OPCODE_GROUP_VENDOR_UNIQUE
+name|XPT_FC_GROUP_VENDOR_UNIQUE
 value|0x80
 end_define
 
@@ -764,11 +863,11 @@ name|int
 name|held
 decl_stmt|;
 comment|/* 				 * CCBs held by peripheral drivers 				 * for this device 				 */
-name|u_int8_t
+name|int
 name|maxtags
 decl_stmt|;
 comment|/* 				 * Boundary conditions for number of 				 * tagged operations 				 */
-name|u_int8_t
+name|int
 name|mintags
 decl_stmt|;
 block|}
@@ -1076,6 +1175,22 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|DEV_RESULT_NOFLAG
+init|=
+literal|0x00
+block|,
+name|DEV_RESULT_UNCONFIGURED
+init|=
+literal|0x01
+block|}
+name|dev_result_flags
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|device_match_result
@@ -1092,6 +1207,9 @@ decl_stmt|;
 name|struct
 name|scsi_inquiry_data
 name|inq_data
+decl_stmt|;
+name|dev_result_flags
+name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -1331,7 +1449,7 @@ begin_define
 define|#
 directive|define
 name|CAM_VERSION
-value|0x10
+value|0x11
 end_define
 
 begin_comment
@@ -1538,6 +1656,10 @@ name|u_int32_t
 name|bus_id
 decl_stmt|;
 comment|/* Bus ID for SIM */
+name|u_int32_t
+name|base_transfer_speed
+decl_stmt|;
+comment|/* Base bus speed in KB/sec */
 block|}
 struct|;
 end_struct

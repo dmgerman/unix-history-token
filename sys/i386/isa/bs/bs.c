@@ -1158,6 +1158,12 @@ argument_list|(
 name|sim
 argument_list|)
 expr_stmt|;
+name|cpi
+operator|->
+name|base_transfer_speed
+operator|=
+literal|3300
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|cpi

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 Justin T. Gibbs.  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_cd.c,v 1.16 1999/04/07 22:57:54 gibbs Exp $  */
+comment|/*  * Copyright (c) 1997 Justin T. Gibbs.  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_cd.c,v 1.17 1999/04/19 21:26:17 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -328,6 +328,7 @@ decl_stmt|;
 name|cd_state
 name|state
 decl_stmt|;
+specifier|volatile
 name|cd_flags
 name|flags
 decl_stmt|;
@@ -1325,6 +1326,7 @@ name|struct
 name|callout_handle
 name|long_handle
 decl_stmt|;
+specifier|volatile
 name|cd_changer_flags
 name|flags
 decl_stmt|;
@@ -4428,6 +4430,20 @@ operator|)
 operator|==
 literal|0
 operator|)
+operator|&&
+operator|(
+operator|(
+name|softc
+operator|->
+name|changer
+operator|->
+name|flags
+operator|&
+name|CHANGER_SHORT_TMOUT_SCHED
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|softc
@@ -5305,15 +5321,9 @@ comment|/* 		 * This should work the first time this device is woken up, 		 * bu
 while|while
 condition|(
 operator|(
-operator|(
-operator|(
-specifier|volatile
-name|cd_flags
-operator|)
 name|softc
 operator|->
 name|flags
-operator|)
 operator|&
 name|CD_FLAG_ACTIVE
 operator|)
@@ -5377,17 +5387,11 @@ if|if
 condition|(
 operator|(
 operator|(
-operator|(
-operator|(
-specifier|volatile
-name|cd_changer_flags
-operator|)
 name|softc
 operator|->
 name|changer
 operator|->
 name|flags
-operator|)
 operator|&
 name|CHANGER_TIMEOUT_SCHED
 operator|)
@@ -5397,19 +5401,27 @@ operator|)
 operator|&&
 operator|(
 operator|(
-operator|(
-operator|(
-specifier|volatile
-name|cd_changer_flags
-operator|)
 name|softc
 operator|->
 name|changer
 operator|->
 name|flags
-operator|)
 operator|&
 name|CHANGER_NEED_TIMEOUT
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|softc
+operator|->
+name|changer
+operator|->
+name|flags
+operator|&
+name|CHANGER_SHORT_TMOUT_SCHED
 operator|)
 operator|==
 literal|0
@@ -6906,7 +6918,7 @@ name|ascq
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 				 * With CDROM devices, we expect 0x3a 				 * (Medium not present) errors, since not 				 * everyone leaves a CD in the drive.  Some 				 * broken Philips and HP WORM drives return 				 * 0x04,0x00 (logical unit not ready, cause 				 * not reportable), so we accept any "not 				 * ready" type errors as well.  If the error 				 * is anything else, though, we shouldn't 				 * attach. 				 */
+comment|/* 				 * Attach to anything that claims to be a 				 * CDROM or WORM device, as long as it 				 * doesn't return a "Logical unit not 				 * supported" (0x25) error. 				 */
 if|if
 condition|(
 operator|(
@@ -6914,17 +6926,9 @@ name|have_sense
 operator|)
 operator|&&
 operator|(
-operator|(
 name|asc
-operator|==
-literal|0x3a
-operator|)
-operator|||
-operator|(
-name|asc
-operator|==
-literal|0x04
-operator|)
+operator|!=
+literal|0x25
 operator|)
 operator|&&
 operator|(

@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.21 1998/12/22 00:52:27 eivind Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.22 1998/12/22 20:21:12 eivind Exp $"
 end_empty
 
 begin_define
@@ -4545,6 +4545,12 @@ name|cam_sim_bus
 argument_list|(
 name|sim
 argument_list|)
+expr_stmt|;
+name|cpi
+operator|->
+name|base_transfer_speed
+operator|=
+literal|3300
 expr_stmt|;
 name|strncpy
 argument_list|(
