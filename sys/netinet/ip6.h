@@ -605,25 +605,11 @@ name|u_int8_t
 name|ip6r0_segleft
 decl_stmt|;
 comment|/* segments left */
-name|u_int8_t
+name|u_int32_t
 name|ip6r0_reserved
 decl_stmt|;
 comment|/* reserved field */
-name|u_int8_t
-name|ip6r0_slmap
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* strict/loose bit map */
-name|struct
-name|in6_addr
-name|ip6r0_addr
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* up to 23 addresses */
+comment|/* followed by up to 127 struct in6_addr */
 block|}
 name|__attribute__
 argument_list|(
