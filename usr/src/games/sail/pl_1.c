@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_1.c	1.10 83/10/10"
+literal|"@(#)pl_1.c	1.11 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,6 +486,12 @@ name|foreachship
 argument_list|(
 argument|sp
 argument_list|)
+if|if
+condition|(
+name|sp
+operator|!=
+name|ms
+condition|)
 name|eyeball
 argument_list|(
 name|sp
@@ -578,9 +584,6 @@ name|dont_adjust
 expr_stmt|;
 break|break;
 block|}
-name|signalflags
-argument_list|()
-expr_stmt|;
 name|lost
 argument_list|()
 expr_stmt|;
