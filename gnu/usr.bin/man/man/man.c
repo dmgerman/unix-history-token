@@ -483,9 +483,6 @@ modifier|*
 name|short_locale
 decl_stmt|,
 modifier|*
-name|locale_opts
-decl_stmt|,
-modifier|*
 name|locale_nroff
 decl_stmt|;
 end_decl_stmt
@@ -536,7 +533,7 @@ block|,
 block|{
 name|NULL
 block|,
-name|NULL
+literal|" -Tascii"
 block|}
 block|}
 decl_stmt|;
@@ -1998,16 +1995,14 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
+break|break;
+block|}
 name|locale_nroff
 operator|=
 name|pltable
 operator|->
 name|nroff
 expr_stmt|;
-break|break;
-block|}
-block|}
 block|}
 block|}
 endif|#
@@ -4123,13 +4118,7 @@ literal|"%s%s"
 argument_list|,
 name|NEQN
 argument_list|,
-name|locale_opts
-operator|==
-name|NULL
-condition|?
-literal|" -Tascii"
-else|:
-name|locale_opts
+name|locale_nroff
 argument_list|)
 expr_stmt|;
 name|add_directive
@@ -4391,13 +4380,7 @@ literal|"%s%s"
 argument_list|,
 name|NROFF
 argument_list|,
-name|locale_opts
-operator|==
-name|NULL
-condition|?
-literal|" -Tascii"
-else|:
-name|locale_opts
+name|locale_nroff
 argument_list|)
 expr_stmt|;
 name|add_directive
@@ -6533,10 +6516,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|locale_opts
-operator|=
-name|locale_nroff
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
@@ -6618,10 +6597,6 @@ name|glob
 argument_list|)
 expr_stmt|;
 block|}
-name|locale_opts
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -6733,10 +6708,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|locale_opts
-operator|=
-name|locale_nroff
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
@@ -6820,10 +6791,6 @@ name|glob
 argument_list|)
 expr_stmt|;
 block|}
-name|locale_opts
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 if|if
 condition|(
