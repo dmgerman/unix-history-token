@@ -36,6 +36,13 @@ name|BROOKTREE_848_ID
 value|0x0350109E
 end_define
 
+begin_define
+define|#
+directive|define
+name|BROOKTREE
+value|849_ID                        0x0351109E
+end_define
+
 begin_typedef
 typedef|typedef
 specifier|volatile
@@ -1384,6 +1391,10 @@ decl_stmt|;
 name|u_char
 name|afc
 decl_stmt|;
+name|u_char
+name|radio_mode
+decl_stmt|;
+comment|/* current mode of the radio mode */
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BT848 1.26 Driver for Brooktree's Bt848 based cards.    The Brooktree  BT848 Driver driver is based upon Mark Tinguely and    Jim Lowe's driver for the Matrox Meteor PCI card . The     Philips SAA 7116 and SAA 7196 are very different chipsets than    the BT848. For starters, the BT848 is a one chipset solution and    it incorporates a RISC engine to control the DMA transfers --    that is it the actual dma process is control by a program which    resides in the hosts memory also the register definitions between    the Philips chipsets and the Bt848 are very different.     The original copyright notice by Mark and Jim is included mostly    to honor their fantastic work in the Matrox Meteor driver!        Enjoy,       Amancio   */
+comment|/* BT848 1.27 Driver for Brooktree's Bt848 based cards.    The Brooktree  BT848 Driver driver is based upon Mark Tinguely and    Jim Lowe's driver for the Matrox Meteor PCI card . The     Philips SAA 7116 and SAA 7196 are very different chipsets than    the BT848. For starters, the BT848 is a one chipset solution and    it incorporates a RISC engine to control the DMA transfers --    that is it the actual dma process is control by a program which    resides in the hosts memory also the register definitions between    the Philips chipsets and the Bt848 are very different.     The original copyright notice by Mark and Jim is included mostly    to honor their fantastic work in the Matrox Meteor driver!        Enjoy,       Amancio   */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * 1. Redistributions of source code must retain the   * Copyright (c
 end_comment
 
 begin_comment
-comment|/*		Change History: 1.0		1/24/97	   First Alpha release  1.1		2/20/97	   Added video ioctl so we can do PCI To PCI 			   data transfers. This is for capturing data 			   directly to a vga frame buffer which has 			   a linear frame buffer. Minor code clean-up.  1.3		2/23/97	   Fixed system lock-up reported by  			   Randall Hopper<rhh@ct.picker.com>. This 			   problem seems somehow to be exhibited only 			   in his system. I changed the setting of 			   INT_MASK for CAP_CONTINUOUS to be exactly 			   the same as CAP_SINGLE apparently setting 			   bit 23 cleared the system lock up.  			   version 1.1 of the driver has been reported 			   to work with STB's WinTv, Hauppage's Wincast/Tv 			   and last but not least with the Intel Smart 			   Video Recorder.  1.4		3/9/97	   fsmp@freefall.org 			   Merged code to support tuners on STB and WinCast 			   cards. 			   Modifications to the contrast and chroma ioctls. 			   Textual cleanup.  1.5             3/15/97    fsmp@freefall.org                 	   new bt848 specific versions of hue/bright/                            contrast/satu/satv.                            Amancio's patch to fix "screen freeze" problem.  1.6             3/19/97    fsmp@freefall.org 			   new table-driven frequency lookup. 			   removed disable_intr()/enable_intr() calls from i2c. 			   misc. cleanup.  1.7             3/19/97    fsmp@freefall.org 			   added audio support submitted by: 				Michael Petry<petry@netwolf.NetMasters.com>  1.8             3/20/97    fsmp@freefall.org 			   extended audio support. 			   card auto-detection. 			   major cleanup, order of routines, declarations, etc.  1.9             3/22/97    fsmp@freefall.org 			   merged in Amancio's minor unit for tuner control 			   mods. 			   misc. cleanup, especially in the _intr routine. 			   made AUDIO_SUPPORT mainline code.  1.10            3/23/97    fsmp@freefall.org 			   added polled hardware i2c routines, 			   removed all existing software i2c routines. 			   created software i2cProbe() routine. 			   Randall Hopper's fixes of BT848_GHUE& BT848_GBRIG. 			   eeprom support.  1.11            3/24/97    fsmp@freefall.org 			   Louis Mamakos's new bt848 struct.  1.12		3/25/97    fsmp@freefall.org 			   japanese freq table from Naohiro Shichijo. 			   new table structs for tuner lookups. 			   major scrub for "magic numbers".  1.13		3/28/97    fsmp@freefall.org 			   1st PAL support. 			   MAGIC_[1-4] demarcates magic #s needing PAL work. 			   AFC code submitted by Richard Tobin<richard@cogsci.ed.ac.uk>.  1.14		3/29/97    richard@cogsci.ed.ac.uk 			   PAL support: magic numbers moved into 			   format_params structure. 			   Revised AFC interface. 			   fixed DMA_PROG_ALLOC size misdefinition.  1.15		4/18/97	   John-Mark Gurney<gurney_j@resnet.uoregon.edu>                            Added [SR]RGBMASKs ioctl for byte swapping.  1.16		4/20/97	   Randall Hopper<rhh@ct.picker.com>                            Generalized RGBMASK ioctls for general pixel 			   format setting [SG]ACTPIXFMT, and added query API 			   to return driver-supported pix fmts GSUPPIXFMT.  1.17		4/21/97	   hasty@rah.star-gate.com                            Clipping support added.  1.18		4/23/97	   Clean up after failed CAP_SINGLEs where bt                             interrupt isn't delivered, and fixed fixing  			   CAP_SINGLEs that for ODD_ONLY fields. 1.19            9/8/97     improved yuv support , cleaned up weurope                            channel table, incorporated cleanup work from                            Luigi, fixed pci interface bug due to a                            change in the pci interface which disables                            interrupts from a PCI device by default,                            Added Luigi's, ioctl's BT848_SLNOTCH,                             BT848_GLNOTCH (set luma notch and get luma not) 1.20            10/5/97    Keith Sklower<sklower@CS.Berkeley.EDU> submitted                            a patch to fix compilation of the BSDI's PCI                            interface.                             Hideyuki Suzuki<hideyuki@sat.t.u-tokyo.ac.jp>                            Submitted a patch for Japanese cable channels                            Joao Carlos Mendes Luis jonny@gta.ufrj.br                            Submitted general ioctl to set video broadcast                            formats (PAL, NTSC, etc..) previously we depended                            on the Bt848 auto video detect feature. 1.21            10/24/97   Randall Hopper<rhh@ct.picker.com>                            Fix temporal decimation, disable it when                            doing CAP_SINGLEs, and in dual-field capture, don't                            capture fields for different frames 1.22            11/08/97   Randall Hopper<rhh@ct.picker.com>                            Fixes for packed 24bpp - FIFO alignment 1.23            11/17/97   Amancio<hasty@star-gate.com>                            Added yuv support mpeg encoding  1.24            12/27/97   Jonathan Hanna<pangolin@rogers.wave.ca>                            Patch to support Philips FR1236MK2 tuner 1.25            02/02/98   Takeshi Ohashi<ohashi@atohasi.mickey.ai.kyutech.ac.jp> submitted                            code to support bktr_read .                            Flemming Jacobsen<fj@schizo.dk.tfs.com>                            submitted code to support  radio available with in                            some bt848 based cards;additionally, wrote code to                            correctly recognized his bt848 card.                            Roger Hardiman<roger@cs.strath.ac.uk> submitted                             various fixes to smooth out the microcode and made                             all modes consistent. 1.26                       Moved Luigi's I2CWR ioctl from the video_ioctl                            section to the tuner_ioctl section                            Changed Major device from 79 to 92 and reserved                            our Major device number -- hasty@star-gate.com */
+comment|/*		Change History: 1.0		1/24/97	   First Alpha release  1.1		2/20/97	   Added video ioctl so we can do PCI To PCI 			   data transfers. This is for capturing data 			   directly to a vga frame buffer which has 			   a linear frame buffer. Minor code clean-up.  1.3		2/23/97	   Fixed system lock-up reported by  			   Randall Hopper<rhh@ct.picker.com>. This 			   problem seems somehow to be exhibited only 			   in his system. I changed the setting of 			   INT_MASK for CAP_CONTINUOUS to be exactly 			   the same as CAP_SINGLE apparently setting 			   bit 23 cleared the system lock up.  			   version 1.1 of the driver has been reported 			   to work with STB's WinTv, Hauppage's Wincast/Tv 			   and last but not least with the Intel Smart 			   Video Recorder.  1.4		3/9/97	   fsmp@freefall.org 			   Merged code to support tuners on STB and WinCast 			   cards. 			   Modifications to the contrast and chroma ioctls. 			   Textual cleanup.  1.5             3/15/97    fsmp@freefall.org                 	   new bt848 specific versions of hue/bright/                            contrast/satu/satv.                            Amancio's patch to fix "screen freeze" problem.  1.6             3/19/97    fsmp@freefall.org 			   new table-driven frequency lookup. 			   removed disable_intr()/enable_intr() calls from i2c. 			   misc. cleanup.  1.7             3/19/97    fsmp@freefall.org 			   added audio support submitted by: 				Michael Petry<petry@netwolf.NetMasters.com>  1.8             3/20/97    fsmp@freefall.org 			   extended audio support. 			   card auto-detection. 			   major cleanup, order of routines, declarations, etc.  1.9             3/22/97    fsmp@freefall.org 			   merged in Amancio's minor unit for tuner control 			   mods. 			   misc. cleanup, especially in the _intr routine. 			   made AUDIO_SUPPORT mainline code.  1.10            3/23/97    fsmp@freefall.org 			   added polled hardware i2c routines, 			   removed all existing software i2c routines. 			   created software i2cProbe() routine. 			   Randall Hopper's fixes of BT848_GHUE& BT848_GBRIG. 			   eeprom support.  1.11            3/24/97    fsmp@freefall.org 			   Louis Mamakos's new bt848 struct.  1.12		3/25/97    fsmp@freefall.org 			   japanese freq table from Naohiro Shichijo. 			   new table structs for tuner lookups. 			   major scrub for "magic numbers".  1.13		3/28/97    fsmp@freefall.org 			   1st PAL support. 			   MAGIC_[1-4] demarcates magic #s needing PAL work. 			   AFC code submitted by Richard Tobin<richard@cogsci.ed.ac.uk>.  1.14		3/29/97    richard@cogsci.ed.ac.uk 			   PAL support: magic numbers moved into 			   format_params structure. 			   Revised AFC interface. 			   fixed DMA_PROG_ALLOC size misdefinition.  1.15		4/18/97	   John-Mark Gurney<gurney_j@resnet.uoregon.edu>                            Added [SR]RGBMASKs ioctl for byte swapping.  1.16		4/20/97	   Randall Hopper<rhh@ct.picker.com>                            Generalized RGBMASK ioctls for general pixel 			   format setting [SG]ACTPIXFMT, and added query API 			   to return driver-supported pix fmts GSUPPIXFMT.  1.17		4/21/97	   hasty@rah.star-gate.com                            Clipping support added.  1.18		4/23/97	   Clean up after failed CAP_SINGLEs where bt                             interrupt isn't delivered, and fixed fixing  			   CAP_SINGLEs that for ODD_ONLY fields. 1.19            9/8/97     improved yuv support , cleaned up weurope                            channel table, incorporated cleanup work from                            Luigi, fixed pci interface bug due to a                            change in the pci interface which disables                            interrupts from a PCI device by default,                            Added Luigi's, ioctl's BT848_SLNOTCH,                             BT848_GLNOTCH (set luma notch and get luma not) 1.20            10/5/97    Keith Sklower<sklower@CS.Berkeley.EDU> submitted                            a patch to fix compilation of the BSDI's PCI                            interface.                             Hideyuki Suzuki<hideyuki@sat.t.u-tokyo.ac.jp>                            Submitted a patch for Japanese cable channels                            Joao Carlos Mendes Luis jonny@gta.ufrj.br                            Submitted general ioctl to set video broadcast                            formats (PAL, NTSC, etc..) previously we depended                            on the Bt848 auto video detect feature. 1.21            10/24/97   Randall Hopper<rhh@ct.picker.com>                            Fix temporal decimation, disable it when                            doing CAP_SINGLEs, and in dual-field capture, don't                            capture fields for different frames 1.22            11/08/97   Randall Hopper<rhh@ct.picker.com>                            Fixes for packed 24bpp - FIFO alignment 1.23            11/17/97   Amancio<hasty@star-gate.com>                            Added yuv support mpeg encoding  1.24            12/27/97   Jonathan Hanna<pangolin@rogers.wave.ca>                            Patch to support Philips FR1236MK2 tuner 1.25            02/02/98   Takeshi Ohashi<ohashi@atohasi.mickey.ai.kyutech.ac.jp> submitted                            code to support bktr_read .                            Flemming Jacobsen<fj@schizo.dk.tfs.com>                            submitted code to support  radio available with in                            some bt848 based cards;additionally, wrote code to                            correctly recognized his bt848 card.                            Roger Hardiman<roger@cs.strath.ac.uk> submitted                             various fixes to smooth out the microcode and made                             all modes consistent. 1.26                       Moved Luigi's I2CWR ioctl from the video_ioctl                            section to the tuner_ioctl section                            Changed Major device from 79 to 92 and reserved                            our Major device number -- hasty@star-gate.com 1.27                       Last batch of patches for radio support from                            Flemming Jacobsen<fj@trw.nl>.                            Added B849 PCI ID submitted by:                             Tomi Vainio<tomppa@fidata.fi> */
 end_comment
 
 begin_define
@@ -790,10 +790,18 @@ expr_stmt|;
 if|if
 condition|(
 name|id
-operator|!=
+operator|==
 name|BROOKTREE_848_ID
+operator|||
+name|id
+operator|==
+name|BROOKTREE_849_ID
 condition|)
 block|{
+return|return
+literal|1
+return|;
+block|}
 name|aprint_debug
 argument_list|(
 literal|"bktr_pci_match got %x\n"
@@ -803,10 +811,6 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
-return|;
-block|}
-return|return
-literal|1
 return|;
 block|}
 end_function
@@ -2433,26 +2437,6 @@ end_define
 begin_comment
 comment|/*  * misc. support routines.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|CARDTYPE
-name|cards
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|TUNER
-name|tuners
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -5118,6 +5102,14 @@ operator|->
 name|tflags
 operator||=
 name|TUNER_OPEN
+expr_stmt|;
+name|bktr
+operator|->
+name|tuner
+operator|.
+name|radio_mode
+operator|=
+literal|0
 expr_stmt|;
 comment|/* enable drivers on the GPIO port that control the MUXes */
 name|bktr
@@ -9626,16 +9618,66 @@ operator|)
 return|;
 break|break;
 comment|/* Ioctl's for running the tuner device in radio mode		*/
-if|#
-directive|if
-literal|0
-block|case RADIO_SETMODE:
-comment|/* XXX  Todo: implement me ...		*/
-block|break; 	case RADIO_GETFREQ;
-comment|/* XXX  Todo: implement me ...		*/
-block|break;
-endif|#
-directive|endif
+case|case
+name|RADIO_GETMODE
+case|:
+operator|*
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|arg
+operator|=
+name|bktr
+operator|->
+name|tuner
+operator|.
+name|radio_mode
+expr_stmt|;
+break|break;
+case|case
+name|RADIO_SETMODE
+case|:
+name|bktr
+operator|->
+name|tuner
+operator|.
+name|radio_mode
+operator|=
+operator|*
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+break|break;
+case|case
+name|RADIO_GETFREQ
+case|:
+operator|*
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+name|arg
+operator|=
+operator|(
+name|bktr
+operator|->
+name|tuner
+operator|.
+name|frequency
+operator|+
+literal|407
+operator|)
+operator|*
+literal|5
+expr_stmt|;
+break|break;
 case|case
 name|RADIO_SETFREQ
 case|:
@@ -17211,6 +17253,7 @@ comment|/*  * the data for each type of card  *  * Note:  *   these entried MUST
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|CARDTYPE
@@ -17535,6 +17578,7 @@ comment|/** struct TUNER { 	char*		name; 	u_char		type; 	u_char		pllAddr; 	u_cha
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|TUNER
@@ -17784,12 +17828,11 @@ literal|0x90
 block|,
 literal|0x30
 block|,
-literal|0xa5
+literal|0xa4
 block|}
 block|}
 block|,
 comment|/* the band-switch values */
-comment|/* Radio: (for FM1216) 						** 0xa4 sets radiomode 						**    bit0 - AFC 						**    bit1 - Mono 						**    bit3 - Mute */
 comment|/* PHILIPS_SECAM */
 block|{
 literal|"Philips SECAM"
@@ -17809,7 +17852,7 @@ name|TSA552x_SCONTROL
 block|,
 name|TSA552x_SCONTROL
 block|,
-literal|0x00
+name|TSA552x_RADIO
 block|}
 block|,
 block|{
@@ -17826,7 +17869,7 @@ literal|0x90
 block|,
 literal|0x30
 block|,
-literal|0x00
+literal|0xa4
 block|}
 block|}
 block|,
@@ -20009,6 +20052,20 @@ literal|1
 operator|)
 return|;
 comment|/* supported modes.	*/
+if|if
+condition|(
+name|N
+operator|==
+literal|3
+condition|)
+name|band
+operator||=
+name|bktr
+operator|->
+name|tuner
+operator|.
+name|radio_mode
+expr_stmt|;
 comment|/* 	 * N = 16 * { fRF(pc) + fIF(pc) } 	 * where: 	 *  pc is picture carrier, fRF& fIF are in mHz 	 * 	 * frequency was passed in as mHz * 16 	 */
 if|#
 directive|if
@@ -20676,12 +20733,25 @@ block|{
 case|case
 name|AUDIO_TUNER
 case|:
+ifdef|#
+directive|ifdef
+name|BKTR_REVERSEMUTE
+name|bktr
+operator|->
+name|audio_mux_select
+operator|=
+literal|3
+expr_stmt|;
+else|#
+directive|else
 name|bktr
 operator|->
 name|audio_mux_select
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|AUDIO_EXTERN
@@ -20767,10 +20837,21 @@ name|audio_mute_state
 operator|==
 name|TRUE
 condition|)
+ifdef|#
+directive|ifdef
+name|BKTR_REVERSEMUTE
+name|idx
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 name|idx
 operator|=
 literal|3
 expr_stmt|;
+endif|#
+directive|endif
 else|else
 name|idx
 operator|=
