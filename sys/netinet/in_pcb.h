@@ -39,16 +39,6 @@ directive|include
 file|<net/route.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
-end_include
-
-begin_comment
-comment|/* for IPSEC */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -70,6 +60,12 @@ end_define
 begin_comment
 comment|/* for KAME src sync over BSD*'s */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|inpcbpolicy
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * Common structure pcb for internet protocol implementation.  * Here are stored pointers to local and foreign host table  * entries, local and foreign socket numbers, and pointers  * up (to a socket structure) and down (to a protocol-specific)  * control block.  */
