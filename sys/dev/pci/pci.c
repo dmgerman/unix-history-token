@@ -2009,6 +2009,23 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* Sanity check */
+if|if
+condition|(
+name|nextptr
+operator|>
+literal|255
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"illegal PCI extended capability offset %d\n"
+argument_list|,
+name|nextptr
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Find the next entry */
 name|ptr
 operator|=
