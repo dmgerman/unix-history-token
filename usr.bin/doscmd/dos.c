@@ -2591,7 +2591,7 @@ name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
-name|R_DL
+name|R_DX
 argument_list|)
 expr_stmt|;
 comment|/* capacity of buffer */
