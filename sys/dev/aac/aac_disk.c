@@ -909,15 +909,15 @@ operator|)
 return|;
 block|}
 block|}
-name|aac_alloc_sync_fib
-argument_list|(
-name|sc
-argument_list|,
-operator|&
+comment|/* Skip aac_alloc_sync_fib().  We don't want to mess with sleep locks */
 name|fib
-argument_list|,
-name|AAC_SYNC_LOCK_FORCE
-argument_list|)
+operator|=
+operator|&
+name|sc
+operator|->
+name|aac_common
+operator|->
+name|ac_sync_fib
 expr_stmt|;
 name|bw
 operator|=

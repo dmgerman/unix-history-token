@@ -2428,8 +2428,6 @@ name|sc
 argument_list|,
 operator|&
 name|fib
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|vmi
@@ -2665,8 +2663,6 @@ name|sc
 argument_list|,
 operator|&
 name|fib
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|vmi
