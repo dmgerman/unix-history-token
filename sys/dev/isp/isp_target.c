@@ -1909,8 +1909,6 @@ operator|.
 name|ct_scsi_status
 operator|=
 name|sts
-operator|&
-literal|0xff
 expr_stmt|;
 name|cto
 operator|->
@@ -1964,16 +1962,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|sts
-operator|&
-literal|0xff
-operator|)
 operator|==
 name|SCSI_CHECK
 operator|&&
 operator|(
-name|sts
+name|code
 operator|&
 name|ECMD_SVALID
 operator|)
