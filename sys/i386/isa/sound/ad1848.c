@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/ad1848.c  *  * The low level driver for the AD1848/CS4248 codec chip which  * is used for example in the MS Sound System.  *  * The CS4231 which is used in the GUS MAX and some other cards is  * upwards compatible with AD1848 and this driver is able to drive it.  *  * Copyright by Hannu Savolainen 1994  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ad1848.c,v 1.2 1994/10/01 02:16:28 swallace Exp $  */
+comment|/*  * sound/ad1848.c  *  * The low level driver for the AD1848/CS4248 codec chip which  * is used for example in the MS Sound System.  *  * The CS4231 which is used in the GUS MAX and some other cards is  * upwards compatible with AD1848 and this driver is able to drive it.  *  * Copyright by Hannu Savolainen 1994  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_define
@@ -211,11 +211,13 @@ specifier|static
 name|int
 name|ad_format_mask
 index|[
-literal|2
+literal|3
 comment|/*devc->mode*/
 index|]
 init|=
 block|{
+literal|0
+block|,
 name|AFMT_U8
 operator||
 name|AFMT_S16_LE
@@ -921,7 +923,7 @@ name|devc
 operator|->
 name|irq
 argument_list|,
-name|ad1848_interrupt
+name|adintr
 argument_list|)
 operator|)
 operator|<
@@ -1090,7 +1092,7 @@ name|int
 name|arg
 parameter_list|)
 block|{
-comment|/*  * The sampling speed is encoded in the least significant nible of I8. The  * LSB selects the clock source (0=24.576 MHz, 1=16.9344 Mhz) and other  * three bits select the divisor (indirectly):  *  * The available speeds are in the following table. Keep the speeds in  * the increasing order.  */
+comment|/*  * The sampling speed is encoded in the least significant nibble of I8. The  * LSB selects the clock source (0=24.576 MHz, 1=16.9344 Mhz) and other  * three bits select the divisor (indirectly):  *  * The available speeds are in the following table. Keep the speeds in  * the increasing order.  */
 typedef|typedef
 struct|struct
 block|{
@@ -2630,7 +2632,7 @@ argument_list|,
 name|fs
 argument_list|)
 expr_stmt|;
-comment|/*    * Write to I8 starts resyncronization. Wait until it completes.    */
+comment|/*    * Write to I8 starts resynchronization. Wait until it completes.    */
 name|timeout
 operator|=
 literal|10000
@@ -2697,7 +2699,7 @@ argument_list|,
 name|fs
 argument_list|)
 expr_stmt|;
-comment|/*    * Write to I28 starts resyncronization. Wait until it completes.    */
+comment|/*    * Write to I28 starts resynchronization. Wait until it completes.    */
 name|timeout
 operator|=
 literal|10000
@@ -2826,7 +2828,7 @@ parameter_list|)
 block|{
 define|#
 directive|define
-name|SDDB
+name|AUDIO_DDB
 parameter_list|(
 name|x
 parameter_list|)
@@ -2934,7 +2936,7 @@ literal|0x00
 condition|)
 comment|/* Not a AD1884 */
 block|{
-name|SDDB
+name|AUDIO_DDB
 argument_list|(
 name|printk
 argument_list|(
@@ -2995,7 +2997,7 @@ operator|!=
 literal|0x45
 condition|)
 block|{
-name|SDDB
+name|AUDIO_DDB
 argument_list|(
 name|printk
 argument_list|(
@@ -3058,7 +3060,7 @@ operator|!=
 literal|0xaa
 condition|)
 block|{
-name|SDDB
+name|AUDIO_DDB
 argument_list|(
 name|printk
 argument_list|(
@@ -3122,7 +3124,7 @@ literal|0x0f
 operator|)
 condition|)
 block|{
-name|SDDB
+name|AUDIO_DDB
 argument_list|(
 name|printk
 argument_list|(
@@ -3188,7 +3190,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|SDDB
+name|AUDIO_DDB
 argument_list|(
 name|printk
 argument_list|(
@@ -3316,7 +3318,7 @@ literal|0xaa
 condition|)
 comment|/* Rotten bits? */
 block|{
-name|SDDB
+name|AUDIO_DDB
 argument_list|(
 name|printk
 argument_list|(
@@ -3699,7 +3701,7 @@ end_function
 
 begin_function
 name|void
-name|ad1848_interrupt
+name|adintr
 parameter_list|(
 name|int
 name|irq

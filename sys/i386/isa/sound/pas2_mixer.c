@@ -6,7 +6,7 @@ name|_PAS2_MIXER_C_
 end_define
 
 begin_comment
-comment|/*  * sound/pas2_mixer.c  *  * Mixer routines for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pas2_mixer.c,v 1.6 1994/08/02 07:40:24 davidg Exp $  */
+comment|/*  * sound/pas2_mixer.c  *  * Mixer routines for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -186,6 +186,7 @@ name|div
 operator|/
 literal|100
 decl_stmt|;
+comment|/*    * The Revision D cards have a problem with their MVA508 interface. The    * kludge-o-rama fix is to make a 16-bit quantity with identical LSB and    * MSBs out of the output byte and to do a 16-bit out to the mixer port -    * 1. We don't need to do this because the call to pas_write more than    * compensates for the timing problems.    */
 if|if
 condition|(
 name|bits
@@ -214,8 +215,8 @@ operator|==
 name|P_M_MV508_TREBLE
 condition|)
 block|{
-comment|/* 				 * Bass and trebble are mono devices 				 */
-name|mix_write
+comment|/* 				 * Bass and treble are mono devices 				 */
+name|pas_write
 argument_list|(
 name|P_M_MV508_ADDRESS
 operator||
@@ -224,7 +225,7 @@ argument_list|,
 name|PARALLEL_MIXER
 argument_list|)
 expr_stmt|;
-name|mix_write
+name|pas_write
 argument_list|(
 name|left
 argument_list|,
@@ -238,7 +239,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|mix_write
+name|pas_write
 argument_list|(
 name|P_M_MV508_ADDRESS
 operator||
@@ -249,14 +250,14 @@ argument_list|,
 name|PARALLEL_MIXER
 argument_list|)
 expr_stmt|;
-name|mix_write
+name|pas_write
 argument_list|(
 name|left
 argument_list|,
 name|PARALLEL_MIXER
 argument_list|)
 expr_stmt|;
-name|mix_write
+name|pas_write
 argument_list|(
 name|P_M_MV508_ADDRESS
 operator||
@@ -267,7 +268,7 @@ argument_list|,
 name|PARALLEL_MIXER
 argument_list|)
 expr_stmt|;
-name|mix_write
+name|pas_write
 argument_list|(
 name|right
 argument_list|,
@@ -297,7 +298,7 @@ name|int
 name|new_mode
 parameter_list|)
 block|{
-name|mix_write
+name|pas_write
 argument_list|(
 name|P_M_MV508_ADDRESS
 operator||
@@ -306,7 +307,7 @@ argument_list|,
 name|PARALLEL_MIXER
 argument_list|)
 expr_stmt|;
-name|mix_write
+name|pas_write
 argument_list|(
 name|new_mode
 argument_list|,
@@ -871,52 +872,6 @@ end_function
 begin_comment
 comment|/*****/
 end_comment
-
-begin_function
-specifier|static
-name|int
-name|getmixer
-parameter_list|(
-name|int
-name|dev
-parameter_list|,
-name|int
-name|chn
-parameter_list|)
-block|{
-if|if
-condition|(
-name|chn
-operator|==
-name|P_M_MV508_RIGHT
-condition|)
-block|{
-return|return
-operator|(
-name|levels
-index|[
-name|dev
-index|]
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0x7f
-return|;
-block|}
-else|else
-block|{
-return|return
-name|levels
-index|[
-name|dev
-index|]
-operator|&
-literal|0x7f
-return|;
-block|}
-block|}
-end_function
 
 begin_function
 specifier|static

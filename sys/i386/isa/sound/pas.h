@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pas.h,v 1.5 1994/10/01 02:16:54 swallace Exp $  */
-end_comment
-
-begin_comment
 comment|/* 																*/
 end_comment
 
@@ -647,7 +643,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* R	FM		1=sterero, 0=mono FM chip			*/
+comment|/* R	FM		1=stereo, 0=mono FM chip			*/
 end_comment
 
 begin_define
@@ -1001,17 +997,6 @@ end_define
 
 begin_comment
 comment|/* R W 	PCM		1=enable, 0=disable sample buffer counter	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIP_REV
-value|0xFF88
-end_define
-
-begin_comment
-comment|/* R	Control		0=PAS, 1=PAS+, 2=CDPC, 3=PAS16C, 4=PAS16D	*/
 end_comment
 
 begin_define

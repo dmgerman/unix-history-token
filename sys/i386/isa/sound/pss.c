@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Marc.Hoffman@analog.com     This is a pss driver.     it is based on Greg.Yukna@analog.com @file{host} for DOG     Unfortunately I can't distribute the ld file needed to    make the pss card to emulate the SB stuff.     I have provided a simple interface to the PSS unlike the    DOG version.  to download a new algorithim just cat it to    /dev/pss 14,9.     You really need to rebuild this with the synth.ld file     get the<synth>.ld from your dos directory maybe    voyetra\dsp001.ld     ld2inc< synth.ld> synth-ld.h    (make config does the same).     rebuild     Okay if you blow things away no problem just     main(){ioctl(open("/dev/pss"),SNDCTL_PSS_RESET)};     and everything will be okay.     At first I was going to wory about applications that were using    the sound stuff and disallow the use of /dev/pss.  But for    now I figured it doesn't matter.     And if you change algos all the other applications running die off    due to DMA problems.  Yeah just pull the plug and watch em die.     If the registers get hosed    main(){ioctl(open("/dev/pss"),SNDCTL_PSS_SETUP_REGISTERS)};     Probably everything else can be done via mmap     Oh if you want to develope code for the ADSP-21xx or Program the    1848 just send me mail and I will hook you up.                 marc.hoffman@analog.com   * $Id: $  */
+comment|/* Marc.Hoffman@analog.com     This is a pss driver.     it is based on Greg.Yukna@analog.com @file{host} for DOG     Unfortunately I can't distribute the ld file needed to    make the pss card to emulate the SB stuff.     I have provided a simple interface to the PSS unlike the    DOG version.  to download a new algorithm just cat it to    /dev/pss 14,9.     You really need to rebuild this with the synth.ld file     get the<synth>.ld from your dos directory maybe    voyetra\dsp001.ld     ld2inc< synth.ld> synth-ld.h    (make config does the same).     rebuild     Okay if you blow things away no problem just     main(){ioctl(open("/dev/pss"),SNDCTL_PSS_RESET)};     and everything will be okay.     At first I was going to worry about applications that were using    the sound stuff and disallow the use of /dev/pss.  But for    now I figured it doesn't matter.     And if you change algos all the other applications running die off    due to DMA problems.  Yeah just pull the plug and watch em die.     If the registers get hosed    main(){ioctl(open("/dev/pss"),SNDCTL_PSS_SETUP_REGISTERS)};     Probably everything else can be done via mmap     Oh if you want to develop code for the ADSP-21xx or Program the    1848 just send me mail and I will hook you up.                 marc.hoffman@analog.com     */
 end_comment
 
 begin_include
@@ -367,7 +367,7 @@ argument_list|()
 operator|+
 literal|10
 expr_stmt|;
-comment|/* The timeout is 0.1 secods */
+comment|/* The timeout is 0.1 seconds */
 comment|/*    * Note! the i<5000000 is an emergency exit. The dsp_command() is sometimes    * called while interrupts are disabled. This means that the timer is    * disabled also. However the timeout situation is a abnormal condition.    * Normally the DSP should be ready to accept commands after just couple of    * loops.    */
 for|for
 control|(
@@ -472,7 +472,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*_____ pss_checkint          This function tests an interrupt number to see if 	 it is availible. It takes the interrupt button 	 as it's argument and returns TRUE if the interrupt 	 is ok. */
+comment|/*_____ pss_checkint          This function tests an interrupt number to see if 	 it is available. It takes the interrupt button 	 as it's argument and returns TRUE if the interrupt 	 is ok. */
 end_comment
 
 begin_function
@@ -712,7 +712,7 @@ break|break;
 default|default:
 name|printk
 argument_list|(
-literal|"unknown interupt selected. %d\n"
+literal|"unknown interrupt selected. %d\n"
 argument_list|,
 name|intNum
 argument_list|)
@@ -1053,7 +1053,7 @@ break|break;
 default|default:
 name|printk
 argument_list|(
-literal|"pss_setint unkown int\n"
+literal|"pss_setint unknown int\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2559,7 +2559,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The following is a simple device driver for the pss.    All I really care about is comunication to and from the pss.     The ability to reinitialize the<synth.ld>  This will be    default when release is choosen.     SNDCTL_PSS_DOWNLOAD:     Okay we need to creat new minor numbers for the    DOWNLOAD functionality.     14,0x19 -- /dev/pssld where a read operation would output the                          current ld to user space                          where a write operation would effectively 			 download a new ld.     14,0x09 -- /dev/psecho  would open up a comunication path to the                          esc614 asic.  Given the ability to send 			 messages to the asic and recive messages too.  			 All messages would get read and written in the 			 same manner.  It would be up to the application 			 and the ld to maintain a relationship 			 of what the messages mean. 			 			 for this device we need to implement select. */
+comment|/* The following is a simple device driver for the pss.    All I really care about is communication to and from the pss.     The ability to reinitialize the<synth.ld>  This will be    default when release is chosen.     SNDCTL_PSS_DOWNLOAD:     Okay we need to creat new minor numbers for the    DOWNLOAD functionality.     14,0x19 -- /dev/pssld where a read operation would output the                          current ld to user space                          where a write operation would effectively 			 download a new ld.     14,0x09 -- /dev/psecho  would open up a communication path to the                          esc614 asic.  Given the ability to send 			 messages to the asic and receive messages too.  			 All messages would get read and written in the 			 same manner.  It would be up to the application 			 and the ld to maintain a relationship 			 of what the messages mean. 			 			 for this device we need to implement select. */
 end_comment
 
 begin_define
@@ -3044,7 +3044,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is going to be used to implement    waiting on messages sent from the DSP and to the    DSP when comunication is used via the pss directly.     We need to find out if the pss can generate a diffrent    interupt other than the one it has been setup for.     This way we can carry on a conversation with the pss    on a seprate chanel.  This would be usefull for debugging. */
+comment|/* This is going to be used to implement    waiting on messages sent from the DSP and to the    DSP when communication is used via the pss directly.     We need to find out if the pss can generate a different    interrupt other than the one it has been setup for.     This way we can carry on a conversation with the pss    on a separate channel.  This would be useful for debugging. */
 end_comment
 
 begin_macro

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sound_config.h  *  * A driver for Soundcards, misc configuration parameters.  *  *   * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: sound_config.h,v 1.5 1994/08/02 07:40:53 davidg Exp $  */
+comment|/* sound_config.h  *  * A driver for Soundcards, misc configuration parameters.  *  *   * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -125,28 +125,11 @@ directive|ifdef
 name|EXCLUDE_SEQUENCER
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXCLUDE_MIDI
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|EXCLUDE_MIDI
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXCLUDE_YM3812
-end_ifndef
 
 begin_define
 define|#
@@ -154,27 +137,11 @@ directive|define
 name|EXCLUDE_YM3812
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXCLUDE_OPL3
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|EXCLUDE_OPL3
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -436,60 +403,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|GUS16_BASE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|GUS16_BASE
-value|0x530
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GUS16_IRQ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|GUS16_IRQ
-value|7
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GUS16_DMA
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|GUS16_DMA
-value|3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|MPU_BASE
 end_ifndef
 
@@ -588,6 +501,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MAX_REALTIME_FACTOR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX_REALTIME_FACTOR
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MSS_BASE
 end_ifndef
 
@@ -631,25 +562,7 @@ begin_define
 define|#
 directive|define
 name|MSS_DMA
-value|3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAX_REALTIME_FACTOR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAX_REALTIME_FACTOR
-value|4
+value|1
 end_define
 
 begin_endif
@@ -853,7 +766,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* /dev/sequecer, level 2 interface */
+comment|/* /dev/sequencer, level 2 interface */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb16_dsp.c  *  * The low level driver for the SoundBlaster DSP chip.  *  * (C) 1993 J. Schubert (jsb@sth.ruhr-uni-bochum.de)  *  * based on SB-driver by (C) Hannu Savolainen  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: sb16_dsp.c,v 1.7 1994/09/27 17:58:24 davidg Exp $  */
+comment|/*  * sound/sb16_dsp.c  *  * The low level driver for the SoundBlaster DSP chip.  *  * (C) 1993 J. Schubert (jsb@sth.ruhr-uni-bochum.de)  *  * based on SB-driver by (C) Hannu Savolainen  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_define
@@ -67,12 +67,6 @@ operator|!
 name|defined
 argument_list|(
 name|EXCLUDE_AUDIO
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_SBPRO
 argument_list|)
 end_if
 
@@ -362,6 +356,15 @@ begin_function_decl
 specifier|static
 name|void
 name|dsp_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sb_reset_dsp
 parameter_list|(
 name|void
 parameter_list|)
@@ -1945,20 +1948,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|printk
-argument_list|(
-literal|"snd6:<%s>"
-argument_list|,
-name|sb16_dsp_operations
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|printk
 argument_list|(
 literal|"<%s>"
@@ -1968,8 +1957,6 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|num_audiodevs
@@ -1999,9 +1986,6 @@ name|hw_config
 operator|->
 name|dma
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_AUTODMA
 name|audio_devs
 index|[
 name|my_dev
@@ -2011,29 +1995,6 @@ name|buffcount
 operator|=
 literal|1
 expr_stmt|;
-else|#
-directive|else
-name|audio_devs
-index|[
-name|my_dev
-index|]
-operator|->
-name|flags
-operator|&=
-operator|~
-name|DMA_AUTOMODE
-expr_stmt|;
-name|audio_devs
-index|[
-name|my_dev
-index|]
-operator|->
-name|buffcount
-operator|=
-name|DSP_BUFFCOUNT
-expr_stmt|;
-endif|#
-directive|endif
 name|audio_devs
 index|[
 name|my_dev

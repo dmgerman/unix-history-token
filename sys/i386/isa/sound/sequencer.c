@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sequencer.c  *  * The sequencer personality manager.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: sequencer.c,v 1.6 1994/08/02 07:40:49 davidg Exp $  */
+comment|/*  * sound/sequencer.c  *  * The sequencer personality manager.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_define
@@ -96,7 +96,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The seq_mode gives the operating mode of the sequencer:  *      1 = level1 (the default)  *      2 = level2 (extended capabilites)  */
+comment|/*  * The seq_mode gives the operating mode of the sequencer:  *      1 = level1 (the default)  *      2 = level2 (extended capabilities)  */
 end_comment
 
 begin_define
@@ -2057,6 +2057,7 @@ name|seq_mode
 operator|==
 name|SEQ_2
 condition|)
+block|{
 if|if
 condition|(
 name|synth_devs
@@ -2097,6 +2098,7 @@ operator|=
 literal|64
 expr_stmt|;
 block|}
+block|}
 switch|switch
 condition|(
 name|cmd
@@ -2110,6 +2112,10 @@ condition|(
 name|note
 operator|>
 literal|127
+operator|&&
+name|note
+operator|!=
+literal|255
 condition|)
 return|return;
 if|if
@@ -7214,6 +7220,7 @@ end_function
 
 begin_function
 name|int
+comment|/* sequencer_select (int dev, struct fileinfo *file, int sel_type, select_table * wait) -SMP */
 name|sequencer_select
 parameter_list|(
 name|int
@@ -7227,7 +7234,7 @@ parameter_list|,
 name|int
 name|sel_type
 parameter_list|,
-name|select_table
+name|void
 modifier|*
 name|wait
 parameter_list|)
