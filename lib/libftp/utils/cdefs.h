@@ -60,10 +60,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * The __CONCAT macro is used to concatenate parts of symbol names, e.g.  * with "#define OLD(foo) __CONCAT(old,foo)", OLD(foo) produces oldfoo.  * The __CONCAT macro is a bit tricky -- make sure you don't put spaces  * in between its arguments.  __CONCAT can also concatenate double-quoted  * strings produced by the __STRING macro, but this only works with ANSI C.  */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -78,49 +74,7 @@ argument_list|(
 name|__cplusplus
 argument_list|)
 operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__CONCAT
-argument_list|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|protos
-parameter_list|)
-value|protos
-end_define
-
-begin_comment
-comment|/* full-blown ANSI C */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__CONCAT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|x ## y
-end_define
-
-begin_define
-define|#
-directive|define
-name|__STRING
-parameter_list|(
-name|x
-parameter_list|)
-value|#x
-end_define
 
 begin_define
 define|#

@@ -1033,8 +1033,7 @@ name|pid
 decl_stmt|,
 name|_pid
 decl_stmt|;
-name|union
-name|wait
+name|int
 name|status
 decl_stmt|;
 if|if
