@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: date.c,v 1.25 1998/05/13 07:31:39 charnier Exp $"
+literal|"$Id: date.c,v 1.26 1998/10/03 16:29:59 alex Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1258,7 +1258,7 @@ argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: date [-nu] [-d dst] [-r seconds] [-t west] "
-literal|"[-v[+|-]val[ymwdHM]] ... "
+literal|"[-v[+|-]val[ymwdHMS]] ... "
 argument_list|,
 literal|"            [-f fmt date | [[[[yy]mm]dd]HH]MM[.ss]] [+format]"
 argument_list|)
