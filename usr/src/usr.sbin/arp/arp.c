@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arp.c	5.3 (Berkeley) %G%"
+literal|"@(#)arp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,6 +213,8 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|set
 argument_list|(
 name|argc
@@ -224,6 +226,11 @@ name|argv
 index|[
 literal|2
 index|]
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|exit
@@ -284,12 +291,19 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|file
 argument_list|(
 name|argv
 index|[
 literal|2
 index|]
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|exit
@@ -355,6 +369,9 @@ name|args
 index|[
 literal|5
 index|]
+decl_stmt|;
+name|int
+name|retval
 decl_stmt|;
 if|if
 condition|(
@@ -457,6 +474,10 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|retval
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -477,7 +498,7 @@ name|sscanf
 argument_list|(
 name|line
 argument_list|,
-literal|"%s %s %s %s"
+literal|"%s %s %s %s %s"
 argument_list|,
 name|arg
 index|[
@@ -498,6 +519,11 @@ name|arg
 index|[
 literal|3
 index|]
+argument_list|,
+name|arg
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -516,14 +542,24 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
 name|set
 argument_list|(
 name|i
 argument_list|,
 name|args
 argument_list|)
+condition|)
+name|retval
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|fclose
@@ -531,6 +567,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 block|}
 end_block
 
@@ -679,7 +720,11 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 name|bcopy
 argument_list|(
@@ -728,7 +773,11 @@ argument_list|,
 name|ea
 argument_list|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|ar
 operator|.
 name|arp_flags
@@ -877,6 +926,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1548,6 +1602,10 @@ name|bynumber
 init|=
 literal|0
 decl_stmt|;
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
 name|nlist
 argument_list|(
 name|kernel
@@ -2139,7 +2197,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       arp -s hostname ether_addr [temp] [pub]\n"
+literal|"       arp -s hostname ether_addr [temp] [pub] [trail]\n"
 argument_list|)
 expr_stmt|;
 name|printf
