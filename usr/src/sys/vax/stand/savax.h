@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	savax.h	6.1	83/07/29	*/
+comment|/*	savax.h	6.2	84/08/07	*/
 end_comment
 
 begin_comment
@@ -21,6 +21,13 @@ begin_define
 define|#
 directive|define
 name|MAXNMBA
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXNUBA
 value|4
 end_define
 
