@@ -1008,12 +1008,6 @@ name|IS_SCSI
 argument_list|(
 name|isp
 argument_list|)
-operator|||
-name|isp
-operator|->
-name|isp_role
-operator|==
-name|ISP_ROLE_NONE
 condition|)
 return|return
 operator|(
