@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1992  * Copyright (c) 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_usrreq.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1992  * Copyright (c) 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_usrreq.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1105,7 +1105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_long
 name|cmd
 decl_stmt|;
 end_decl_stmt
