@@ -1,721 +1,137 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.7	87/01/11	*/
+comment|/*	vdreg.h	1.8	87/02/18	*/
 end_comment
 
 begin_comment
-comment|/*  * VDDC (Versabus Direct Disk Controller) definitions.  */
+comment|/*  * Versabus VDDC/SMDE disk controller definitions.  */
 end_comment
 
 begin_comment
-comment|/*  * DCB Command Codes  */
+comment|/*  * Controller communications block.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RD
-value|0x80
-end_define
+begin_struct
+struct|struct
+name|vddevice
+block|{
+name|u_long
+name|vdcdr
+decl_stmt|;
+comment|/* controller device register */
+name|u_long
+name|vdreset
+decl_stmt|;
+comment|/* controller reset register */
+name|u_long
+name|vdcsr
+decl_stmt|;
+comment|/* control-status register */
+name|long
+name|vdrstclr
+decl_stmt|;
+comment|/* reset clear register */
+name|u_short
+name|vdstatus
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* per-drive status register */
+name|u_short
+name|vdicf_status
+decl_stmt|;
+comment|/* status change interupt control format */
+name|u_short
+name|vdicf_done
+decl_stmt|;
+comment|/* interrupt complete control format */
+name|u_short
+name|vdicf_error
+decl_stmt|;
+comment|/* interrupt error control format */
+name|u_short
+name|vdicf_success
+decl_stmt|;
+comment|/* interrupt success control format */
+name|u_short
+name|vdtcf_mdcb
+decl_stmt|;
+comment|/* mdcb transfer control format */
+name|u_short
+name|vdtcf_dcb
+decl_stmt|;
+comment|/* dcb transfer control format */
+name|u_short
+name|vdtcf_trail
+decl_stmt|;
+comment|/* trail transfer control format */
+name|u_short
+name|vdtcf_data
+decl_stmt|;
+comment|/* data transfer control format */
+name|u_long
+name|vdccf
+decl_stmt|;
+comment|/* controller configuration flags */
+name|u_long
+name|vdsecsize
+decl_stmt|;
+comment|/* sector size */
+name|u_short
+name|vdfill0
+decl_stmt|;
+name|u_char
+name|vdcylskew
+decl_stmt|;
+comment|/* cylinder to cylinder skew factor */
+name|u_char
+name|vdtrackskew
+decl_stmt|;
+comment|/* track to track skew factor */
+name|u_long
+name|vdfill1
+decl_stmt|;
+name|u_long
+name|vddfr
+decl_stmt|;
+comment|/* diagnostic flag register */
+name|u_long
+name|vddda
+decl_stmt|;
+comment|/* diagnostic dump address */
+block|}
+struct|;
+end_struct
 
 begin_comment
-comment|/* Read Data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTR
-value|0xc0
-end_define
-
-begin_comment
-comment|/* Full Track Read */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RAS
-value|0x90
-end_define
-
-begin_comment
-comment|/* Read and Scatter */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RD_RAW
-value|0x600
-end_define
-
-begin_comment
-comment|/* Read unformatted disk sector */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMP
-value|0xa0
-end_define
-
-begin_comment
-comment|/* Compare */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTC
-value|0xe0
-end_define
-
-begin_comment
-comment|/* Full Track Compare */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RHDE
-value|0x180
-end_define
-
-begin_comment
-comment|/* Read Header, Data& ECC (not used) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WD
-value|0x00
-end_define
-
-begin_comment
-comment|/* Write Data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTW
-value|0x40
-end_define
-
-begin_comment
-comment|/* Full Track Write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WTC
-value|0x20
-end_define
-
-begin_comment
-comment|/* Write Then Compare */
+comment|/* controller types */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FTWTC
-value|0x60
+name|VDTYPE_VDDC
+value|1
 end_define
 
 begin_comment
-comment|/* Full Track Write Then Compare */
+comment|/* old vddc controller (smd only) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GAW
-value|0x10
+name|VDTYPE_SMDE
+value|2
 end_define
 
 begin_comment
-comment|/* Gather and Write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WDE
-value|0x100
-end_define
-
-begin_comment
-comment|/* Write Data& ECC (not used) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FSECT
-value|0x900
-end_define
-
-begin_comment
-comment|/* Format Sector */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GWC
-value|0x30
-end_define
-
-begin_comment
-comment|/* Gather Write& Compare */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VDSTART
-value|0x800
-end_define
-
-begin_comment
-comment|/* Start drives */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VDRELEASE
-value|0xa00
-end_define
-
-begin_comment
-comment|/* Stop drives */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEEK
-value|0xb00
-end_define
-
-begin_comment
-comment|/* Seek */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INIT
-value|0xc00
-end_define
-
-begin_comment
-comment|/* Initialize VDDC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIAG
-value|0xd00
-end_define
-
-begin_comment
-comment|/* Diagnose (self-test) VDDC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RSTCFG
-value|0xe00
-end_define
-
-begin_comment
-comment|/* Reset/Configure VDDC/DDI/Drive(s) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VDSTATUS
-value|0xf00
-end_define
-
-begin_comment
-comment|/* VDDC Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ABORT
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* ABORT active i/o */
+comment|/* new smde controller (smd-e) */
 end_comment
 
 begin_comment
-comment|/*  * Error/status codes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HCRCERR
-value|0x1
-end_define
-
-begin_comment
-comment|/* Header CRC Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HCMPERR
-value|0x2
-end_define
-
-begin_comment
-comment|/* Header Compare Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WPTERR
-value|0x4
-end_define
-
-begin_comment
-comment|/* Write Protect Error/Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTLRERR
-value|0x8
-end_define
-
-begin_comment
-comment|/* Controller Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSEEKERR
-value|0x10
-end_define
-
-begin_comment
-comment|/* Disk Seek Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UCDATERR
-value|0x20
-end_define
-
-begin_comment
-comment|/* Uncorrectable Data Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOTCYLERR
-value|0x40
-end_define
-
-begin_comment
-comment|/* Not on Cylinder Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRVNRDY
-value|0x80
-end_define
-
-begin_comment
-comment|/* Drive Not Ready Error/Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ALTACC
-value|0x100
-end_define
-
-begin_comment
-comment|/* Alternate (track) accessed Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEEKSTRT
-value|0x200
-end_define
-
-begin_comment
-comment|/* Seek Started Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INVDADR
-value|0x400
-end_define
-
-begin_comment
-comment|/* Invalid Disk Address Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DNEMEM
-value|0x800
-end_define
-
-begin_comment
-comment|/* Non-Existant Memory Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PARERR
-value|0x1000
-end_define
-
-begin_comment
-comment|/* Memory Parity Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DCOMPERR
-value|0x2000
-end_define
-
-begin_comment
-comment|/* Data Compare Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDIRDY
-value|0x4000
-end_define
-
-begin_comment
-comment|/* DDI Ready Error/Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OPABRT
-value|0x8000
-end_define
-
-begin_comment
-comment|/* Operator Abort (Host) Error/Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSERLY
-value|0x10000
-end_define
-
-begin_comment
-comment|/* Data Strobe Early */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSLATE
-value|0x20000
-end_define
-
-begin_comment
-comment|/* Data Strobe Late */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TOPLUS
-value|0x40000
-end_define
-
-begin_comment
-comment|/* Track Offset Plus */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TOMNUS
-value|0x80000
-end_define
-
-begin_comment
-comment|/* Track Offset Minus */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPDCRT
-value|0x100000
-end_define
-
-begin_comment
-comment|/* Cntlr Performed Data Correction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HRDERR
-value|0x200000
-end_define
-
-begin_comment
-comment|/* Hard Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFTERR
-value|0x400000
-end_define
-
-begin_comment
-comment|/* Soft Error (retry succesful) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ANYERR
-value|0x800000
-end_define
-
-begin_comment
-comment|/* Any Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INVCMD
-value|0x1000000
-end_define
-
-begin_comment
-comment|/* Programmer error */
-end_comment
-
-begin_comment
-comment|/*  * DCB status codes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DCBABT
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* DCB Aborted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DCBUSC
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* DCB Unsuccesfully Completed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DCBCMP
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* DCB Complete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DCBSTR
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* DCB Started */
-end_comment
-
-begin_comment
-comment|/* hard error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HTYPES
-define|\
-value|(HCRCERR|HCMPERR|WPTERR|CTLRERR|DSEEKERR|UCDATERR|NOTCYLERR|DRVNRDY|\      INVDADR|DNEMEM|PARERR|DCOMPERR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERRS
-value|0x3FFF
-end_define
-
-begin_comment
-comment|/* retryable errors */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CANRETRY
-define|\
-value|(CTLRERR|DSEEKERR|NOTCYLERR|DCOMPERR|UCDATERR|PARERR|DNEMEM|HCRCERR|HCMPERR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERRBITS
-value|"\20\1HCRC\2HCMP\3WPT\4CTLR\5DSEEK\6UCDATA\7NOTCYL\10DRVNRDY\ \11ALTACC\12SEEKSTRT\13INVDADR\14DNEMEM\15PAR\16DCOMP\17DDIRDY\20OPABRT\ \21DSERLY\22DSLATE\23TOPLUS\24TOPMNUS\25CPDCRT\26HRDERR\27SFTERR\30ANYERR\ \31INVCMD\35ABORTED\36FAIL\37COMPLETE\40STARTED"
-end_define
-
-begin_comment
-comment|/*  * MDCB status codes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTLRBSY
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* Cntlr Busy */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTCCDE
-value|0x60000000
-end_define
-
-begin_comment
-comment|/* Interrupt Cause Code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DCBINT
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* DCB Interrupt Flag */
-end_comment
-
-begin_comment
-comment|/*  * VDDC interrupt modes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOINT
-value|0x0
-end_define
-
-begin_comment
-comment|/* No Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTERR
-value|0x2
-end_define
-
-begin_comment
-comment|/* Interrupt on Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTSUC
-value|0x1
-end_define
-
-begin_comment
-comment|/* Interrupt on Success */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTDONE
-value|0x3
-end_define
-
-begin_comment
-comment|/* Interrupt on Error or Success */
-end_comment
-
-begin_comment
-comment|/*  * Constrol status definitions.  */
+comment|/*  * Controller status definitions.  */
 end_comment
 
 begin_define
@@ -726,7 +142,7 @@ value|0xf
 end_define
 
 begin_comment
-comment|/* Status Change Source (drive number) */
+comment|/* status change source (drive number) */
 end_comment
 
 begin_define
@@ -737,7 +153,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Error on Last Command */
+comment|/* error on last command */
 end_comment
 
 begin_define
@@ -748,7 +164,7 @@ value|0x60
 end_define
 
 begin_comment
-comment|/* Interupt Cause Code */
+comment|/* interupt cause code */
 end_comment
 
 begin_define
@@ -759,7 +175,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/* No interupt */
+comment|/* no interupt */
 end_comment
 
 begin_define
@@ -770,7 +186,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* No interupt */
+comment|/* no interupt */
 end_comment
 
 begin_define
@@ -781,7 +197,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* No interupt */
+comment|/* no interupt */
 end_comment
 
 begin_define
@@ -792,7 +208,7 @@ value|0x60
 end_define
 
 begin_comment
-comment|/* No interupt */
+comment|/* no interupt */
 end_comment
 
 begin_define
@@ -803,7 +219,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* Go bit (controller working) */
+comment|/* go bit (controller busy) */
 end_comment
 
 begin_define
@@ -814,7 +230,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/* Buss Error */
+comment|/* buss error */
 end_comment
 
 begin_define
@@ -825,7 +241,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* Board O.K. */
+comment|/* board ok */
 end_comment
 
 begin_define
@@ -836,7 +252,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* System fail */
+comment|/* system fail */
 end_comment
 
 begin_define
@@ -847,11 +263,11 @@ value|0xff000000
 end_define
 
 begin_comment
-comment|/* Last Error Code */
+comment|/* last error code */
 end_comment
 
 begin_comment
-comment|/* Status word bit assignments */
+comment|/*  * Drive status definitions.  */
 end_comment
 
 begin_define
@@ -862,7 +278,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* Unit Ready */
+comment|/* unit ready */
 end_comment
 
 begin_define
@@ -873,7 +289,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* On Cylinder */
+comment|/* on cylinder */
 end_comment
 
 begin_define
@@ -884,7 +300,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* Seek Error */
+comment|/* seek error */
 end_comment
 
 begin_define
@@ -895,7 +311,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* Drive Fault */
+comment|/* drive fault */
 end_comment
 
 begin_define
@@ -906,7 +322,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Write Protected */
+comment|/* write protected */
 end_comment
 
 begin_define
@@ -917,11 +333,11 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* Unit Selected */
+comment|/* unit selected */
 end_comment
 
 begin_comment
-comment|/* Interupt Control Field bit assignments */
+comment|/*  * Interupt Control Field definitions.  */
 end_comment
 
 begin_define
@@ -932,7 +348,7 @@ value|0x7
 end_define
 
 begin_comment
-comment|/* Interupt Priority Level */
+comment|/* interupt priority level */
 end_comment
 
 begin_define
@@ -943,7 +359,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* Interupt ENable */
+comment|/* interupt enable */
 end_comment
 
 begin_define
@@ -954,11 +370,11 @@ value|0xff00
 end_define
 
 begin_comment
-comment|/* Interupt Vector */
+comment|/* interupt vector */
 end_comment
 
 begin_comment
-comment|/* Transfer Control Format bit assignments */
+comment|/*  * Transfer Control Format definitions.  */
 end_comment
 
 begin_define
@@ -1028,7 +444,7 @@ comment|/* Block Transfer Enable */
 end_comment
 
 begin_comment
-comment|/* Controller Configuration Flags bit assignments */
+comment|/*  * Controller Configuration Flags.  */
 end_comment
 
 begin_define
@@ -1039,7 +455,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* Sectors per Track Selectable */
+comment|/* sectors per track selectable */
 end_comment
 
 begin_define
@@ -1050,7 +466,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* Enable Auto Vector */
+comment|/* enable auto vector */
 end_comment
 
 begin_define
@@ -1061,7 +477,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* Enable Reset Register */
+comment|/* enable reset register */
 end_comment
 
 begin_define
@@ -1072,7 +488,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* Disable Error Recovery */
+comment|/* disable error recovery */
 end_comment
 
 begin_define
@@ -1083,7 +499,7 @@ value|0x60
 end_define
 
 begin_comment
-comment|/* XMD transfer mode (buss size) */
+comment|/* xmd transfer mode (bus size) */
 end_comment
 
 begin_define
@@ -1094,7 +510,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/*   Do only 8 bit transfers */
+comment|/*   do only 8 bit transfers */
 end_comment
 
 begin_define
@@ -1105,7 +521,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/*   Do only 16 bit transfers */
+comment|/*   do only 16 bit transfers */
 end_comment
 
 begin_define
@@ -1116,7 +532,7 @@ value|0x60
 end_define
 
 begin_comment
-comment|/*   Do only 32 bit transfers */
+comment|/*   do only 32 bit transfers */
 end_comment
 
 begin_define
@@ -1127,7 +543,7 @@ value|0x300
 end_define
 
 begin_comment
-comment|/* Burst SiZe */
+comment|/* burst size */
 end_comment
 
 begin_define
@@ -1182,7 +598,7 @@ value|0x400
 end_define
 
 begin_comment
-comment|/* Cylinder / track Skew ENable (for format) */
+comment|/* cylinder/track skew enable (for format) */
 end_comment
 
 begin_define
@@ -1193,7 +609,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* ENable Parity */
+comment|/* enable parity */
 end_comment
 
 begin_define
@@ -1204,7 +620,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* Enable Parity Errors */
+comment|/* enable parity errors */
 end_comment
 
 begin_define
@@ -1215,7 +631,7 @@ value|0x10000
 end_define
 
 begin_comment
-comment|/* Error Detection Enable */
+comment|/* error detection enable */
 end_comment
 
 begin_define
@@ -1226,7 +642,7 @@ value|0x20000
 end_define
 
 begin_comment
-comment|/* Error Correction Enable */
+comment|/* error correction enable */
 end_comment
 
 begin_comment
@@ -1241,7 +657,7 @@ value|0x7f
 end_define
 
 begin_comment
-comment|/* Dump count mask */
+comment|/* dump count mask */
 end_comment
 
 begin_define
@@ -1252,7 +668,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* Dump Write / Read flag */
+comment|/* dump write/read flag */
 end_comment
 
 begin_define
@@ -1263,7 +679,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/* Auto Rebuild Enable */
+comment|/* auto rebuild enable */
 end_comment
 
 begin_define
@@ -1274,7 +690,7 @@ value|0x200
 end_define
 
 begin_comment
-comment|/* Call ENable flag */
+comment|/* call enable flag */
 end_comment
 
 begin_define
@@ -1285,125 +701,7 @@ value|0xAA550000
 end_define
 
 begin_comment
-comment|/* Reset KEY */
-end_comment
-
-begin_comment
-comment|/* Sector Header bit assignments */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VDMF
-value|0x8000
-end_define
-
-begin_comment
-comment|/* Manufacturer Fault 1=good sector */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VDUF
-value|0x4000
-end_define
-
-begin_comment
-comment|/* User Fault 1=good sector */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VDALT
-value|0x2000
-end_define
-
-begin_comment
-comment|/* Alternate Sector 1=alternate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VDWPT
-value|0x1000
-end_define
-
-begin_comment
-comment|/* Write Protect 1=Read Only Sector */
-end_comment
-
-begin_comment
-comment|/* DCB Bit assignments */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INT_IC
-value|0x3
-end_define
-
-begin_comment
-comment|/* Interupt Control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IC_NOI
-value|0x0
-end_define
-
-begin_comment
-comment|/*   NO Interupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IC_IOD
-value|0x1
-end_define
-
-begin_comment
-comment|/*   Interupt On Done */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IC_IOE
-value|0x2
-end_define
-
-begin_comment
-comment|/*   Interupt On Error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IC_IOS
-value|0x3
-end_define
-
-begin_comment
-comment|/*   Interupt On Success */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INT_PBA
-value|0x4
-end_define
-
-begin_comment
-comment|/* Proceed before ACK */
+comment|/* reset enable key */
 end_comment
 
 begin_comment
@@ -1413,13 +711,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VDDC_RESET
+name|VDRESET
 parameter_list|(
-name|addr
+name|a
 parameter_list|,
-name|type
+name|t
 parameter_list|)
-value|{ \ 	if (type == SMD_ECTLR) { \ 		(addr)->diag_flags = DIA_KEY|DIA_CEN; \ 		(addr)->cdr_mdcb_ptr = (fmt_mdcb *)0xffffffff; \ 		DELAY(5000000); \ 	} else { \ 		(addr)->cdr_reset = 0x0; \ 		DELAY(1500000); \ 	} \ }
+value|{ \ 	if ((t) == VDTYPE_SMDE) { \ 		((struct vddevice *)(a))->vddfr = DIA_KEY|DIA_CEN; \ 		((struct vddevice *)(a))->vdcdr = (u_long)0xffffffff; \ 		DELAY(5000000); \ 	} else { \ 		((struct vddevice *)(a))->vdreset = 0; \ 		DELAY(1500000); \ 	} \ }
 end_define
 
 begin_comment
@@ -1429,32 +727,70 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VDDC_ABORT
+name|VDABORT
 parameter_list|(
 name|a
 parameter_list|,
-name|type
+name|t
 parameter_list|)
-value|{ \ 	if ((type) == SMDCTLR) { \ 		movow(a, (ABORT& 0xffff0000)>> 16) ; \ 		movow((int)(a)+2, ABORT& 0xffff); \ 	} else \ 		(a)->cdr_mdcb_ptr = (fmt_mdcb *)ABORT; \ 	DELAY(1000000); \ }
+value|{ \ 	if ((t) == VDTYPE_VDDC) { \ 		movow((a), (VDOP_ABORT&0xffff0000)>>16) ; \ 		movow((int)(a)+2, VDOP_ABORT&0xffff); \ 	} else \ 		((struct vddevice *)(a))->vdcdr = (u_long)VDOP_ABORT; \ 	DELAY(1000000); \ }
 end_define
 
 begin_comment
-comment|/*  * Start i/o on controller.  */
+comment|/*  * Start a command.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VDDC_ATTENTION
+name|VDGO
 parameter_list|(
-name|ctlr
+name|a
 parameter_list|,
-name|mdcbadr
+name|mdcb
 parameter_list|,
-name|type
+name|t
 parameter_list|)
-value|{\ 	if (type == SMDCTLR) { \ 		movow(ctlr, ((int)mdcbadr& 0xffff0000)>> 16) ; \ 		movow((int)(ctlr)+2, (int)mdcbadr& 0xffff); \ 	} else \ 		(ctlr)->cdr_mdcb_ptr = mdcbadr; \ }
+value|{\ 	if ((t) == VDTYPE_VDDC) { \ 		movow((a), ((int)(mdcb)&0xffff0000)>>16) ; \ 		movow((int)((a))+2, (int)(mdcb)&0xffff); \ 	} else \ 		((struct vddevice *)(a))->vdcdr = (mdcb); \ }
 end_define
+
+begin_comment
+comment|/*  * MDCB layout.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mdcb
+block|{
+name|struct
+name|dcb
+modifier|*
+name|mdcb_head
+decl_stmt|;
+comment|/* first dcb in list */
+name|struct
+name|dcb
+modifier|*
+name|mdcb_busy
+decl_stmt|;
+comment|/* dcb being processed */
+name|struct
+name|dcb
+modifier|*
+name|mdcb_intr
+decl_stmt|;
+comment|/* dcb causing interrupt */
+name|long
+name|mdcb_status
+decl_stmt|;
+comment|/* status of dcb in mdcb_busy */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * DCB definitions.  */
+end_comment
 
 begin_comment
 comment|/*  * A disk address.  */
@@ -1464,58 +800,20 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|char
+name|u_char
 name|track
 decl_stmt|;
 comment|/* all 8 bits */
-name|char
+name|u_char
 name|sector
 decl_stmt|;
 comment|/* all 8  bits */
-name|short
+name|u_short
 name|cylinder
 decl_stmt|;
 comment|/* low order 12 bits */
 block|}
 name|dskadr
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Sector formats.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-union|union
-block|{
-struct|struct
-block|{
-name|dskadr
-name|hdr_addr
-decl_stmt|;
-name|short
-name|smd_crc
-decl_stmt|;
-block|}
-name|smd
-struct|;
-struct|struct
-block|{
-name|dskadr
-name|physical
-decl_stmt|;
-name|dskadr
-name|logical
-decl_stmt|;
-name|long
-name|smd_e_crc
-decl_stmt|;
-block|}
-name|smd_e
-struct|;
-block|}
-name|fmt_hdr
 typedef|;
 end_typedef
 
@@ -1663,13 +961,12 @@ begin_comment
 comment|/*  * DCB layout.  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
-name|fmtdcb
+name|dcb
 block|{
 name|struct
-name|fmtdcb
+name|dcb
 modifier|*
 name|nxtdcb
 decl_stmt|;
@@ -1757,1166 +1054,822 @@ block|}
 name|trail
 union|;
 block|}
-name|fmt_dcb
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
-comment|/*  * MDCB layout.  */
+comment|/*  * DCB command codes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_RD
+value|0x80
+end_define
+
+begin_comment
+comment|/* read data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_FTR
+value|0xc0
+end_define
+
+begin_comment
+comment|/* full track read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_RAS
+value|0x90
+end_define
+
+begin_comment
+comment|/* read and scatter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_RDRAW
+value|0x600
+end_define
+
+begin_comment
+comment|/* read unformatted disk sector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_CMP
+value|0xa0
+end_define
+
+begin_comment
+comment|/* compare */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_FTC
+value|0xe0
+end_define
+
+begin_comment
+comment|/* full track compare */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_RHDE
+value|0x180
+end_define
+
+begin_comment
+comment|/* read header, data& ecc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_WD
+value|0x00
+end_define
+
+begin_comment
+comment|/* write data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_FTW
+value|0x40
+end_define
+
+begin_comment
+comment|/* full track write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_WTC
+value|0x20
+end_define
+
+begin_comment
+comment|/* write then compare */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_FTWTC
+value|0x60
+end_define
+
+begin_comment
+comment|/* full track write then compare */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_GAW
+value|0x10
+end_define
+
+begin_comment
+comment|/* gather and write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_WDE
+value|0x100
+end_define
+
+begin_comment
+comment|/* write data& ecc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_FSECT
+value|0x900
+end_define
+
+begin_comment
+comment|/* format sector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_GWC
+value|0x30
+end_define
+
+begin_comment
+comment|/* gather write& compare */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_START
+value|0x800
+end_define
+
+begin_comment
+comment|/* start drives */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_RELEASE
+value|0xa00
+end_define
+
+begin_comment
+comment|/* stop drives */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_SEEK
+value|0xb00
+end_define
+
+begin_comment
+comment|/* seek */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_INIT
+value|0xc00
+end_define
+
+begin_comment
+comment|/* initialize controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_DIAG
+value|0xd00
+end_define
+
+begin_comment
+comment|/* diagnose (self-test) controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_CONFIG
+value|0xe00
+end_define
+
+begin_comment
+comment|/* reset& configure drive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_STATUS
+value|0xf00
+end_define
+
+begin_comment
+comment|/* get drive status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_ABORT
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* abort current command */
+end_comment
+
+begin_comment
+comment|/*  * DCB status definitions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_HCRC
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* header crc error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_HCE
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* header compare error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_WPT
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* drive write protected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_CHE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* controller hardware error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_SKI
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* seek incomplete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_UDE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* uncorrectable data error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_OCYL
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* off cylinder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_NRDY
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* drive not ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_ATA
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* alternate track accessed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_SKS
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* seek started */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_IVA
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* invalid disk address error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_NEM
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* non-existant memory error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_DPE
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* memory data parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_DCE
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* data compare error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_DDI
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* ddi ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_OAB
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* operation aborted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_DSE
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* data strobe early */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_DSL
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* data strobe late */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_TOP
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* track offset plus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_TOM
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* track offset minus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_CCD
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* controller corrected data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_HARD
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* hard error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_SOFT
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* soft error (retry succesful) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_ERR
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* composite error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_IVC
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* invalid command error */
+end_comment
+
+begin_comment
+comment|/* bits 24-27 unused */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_BSY
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* controller busy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_ICC
+value|0x60000000
+end_define
+
+begin_comment
+comment|/* interrupt cause code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_INT
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* interrupt generated for this dcb */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDERRBITS
+value|"\20\1HCRC\2HCE\3WPT\4CHE\5DSKI\6UDE\7OCYL\10NRDY\ \11ATA\12SKS\13IVA\14NEM\15DPE\16DCE\17DDI\20OAB\21DSE\22DSL\23TOP\24TOM\ \25CCD\26HARD\27SOFT\30ERR\31IVC\35ABORTED\36FAIL\37COMPLETE\40STARTED"
+end_define
+
+begin_comment
+comment|/* drive related errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDERR_DRIVE
+value|(DCBS_SKI|DCBS_OCYL|DCBS_NRDY|DCBS_IVA)
+end_define
+
+begin_comment
+comment|/* controller related errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDERR_CTLR
+value|(DCBS_CHE|DCBS_OAB|DCBS_IVC|DCBS_NEM)
+end_define
+
+begin_comment
+comment|/* potentially recoverable errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDERR_SOFT
+define|\
+value|(VDERR_DRIVE|VDERR_CTLR|DCBS_DCE|DCBS_DPE|DCBS_HCRC|DCBS_HCE)
+end_define
+
+begin_comment
+comment|/* uncorrected data errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDERR_HARD
+value|(VDERR_SOFT|DCBS_WPT|DCBS_UDE)
+end_define
+
+begin_comment
+comment|/*  * DCB status codes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_ABORT
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* dcb aborted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_FAIL
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* dcb unsuccesfully completed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_DONE
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* dcb complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBS_START
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* dcb started */
+end_comment
+
+begin_comment
+comment|/*  * DCB interrupt control.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBINT_NONE
+value|0x0
+end_define
+
+begin_comment
+comment|/* don't interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBINT_ERR
+value|0x2
+end_define
+
+begin_comment
+comment|/* interrupt on error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBINT_SUC
+value|0x1
+end_define
+
+begin_comment
+comment|/* interrupt on success */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCBINT_DONE
+value|(DCBINT_ERR|DCBINT_SUC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCBINT_PBA
+value|0x4
+end_define
+
+begin_comment
+comment|/* proceed before acknowledge */
+end_comment
+
+begin_comment
+comment|/*  * Sector formats.  */
 end_comment
 
 begin_typedef
 typedef|typedef
+union|union
+block|{
 struct|struct
 block|{
-name|fmt_dcb
-modifier|*
-name|firstdcb
+name|dskadr
+name|hdr_addr
 decl_stmt|;
-comment|/* first dcb in chain */
-name|fmt_dcb
-modifier|*
-name|procdcb
+name|short
+name|smd_crc
 decl_stmt|;
-comment|/* dcb being processed */
-name|fmt_dcb
-modifier|*
-name|intdcb
-decl_stmt|;
-comment|/* dcb causing interrupt */
-name|long
-name|vddcstat
-decl_stmt|;
-comment|/* VDDC status */
 block|}
-name|fmt_mdcb
+name|smd
+struct|;
+struct|struct
+block|{
+name|dskadr
+name|physical
+decl_stmt|;
+name|dskadr
+name|logical
+decl_stmt|;
+name|long
+name|smd_e_crc
+decl_stmt|;
+block|}
+name|smd_e
+struct|;
+block|}
+name|fmt_hdr
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Control-status communications block.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|fmt_mdcb
-modifier|*
-name|cdr_mdcb_ptr
-decl_stmt|;
-comment|/* controller's mdcb */
-name|u_long
-name|cdr_reset
-decl_stmt|;
-comment|/* controller reset register */
-name|u_long
-name|cdr_csr
-decl_stmt|;
-comment|/* control/status register */
-name|long
-name|cdr_reserved
-decl_stmt|;
-comment|/* reserved */
-name|u_short
-name|cdr_status
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* per-drive status register */
-name|u_short
-name|stat_chng
-decl_stmt|;
-comment|/* status change interupt register */
-name|u_short
-name|done_icf
-decl_stmt|;
-comment|/* interupt-complete register */
-name|u_short
-name|error_icf
-decl_stmt|;
-comment|/* error-interupt register */
-name|u_short
-name|success_icf
-decl_stmt|;
-comment|/* success-interupt register */
-name|u_short
-name|mdcb_tcf
-decl_stmt|;
-comment|/* mdcb transfer control register */
-name|u_short
-name|dcb_tcf
-decl_stmt|;
-comment|/* dcb transfer control register */
-name|u_short
-name|trail_tcf
-decl_stmt|;
-comment|/* trail transfer control register */
-name|u_short
-name|data_tcf
-decl_stmt|;
-comment|/* data transfer control register */
-name|u_long
-name|cdr_ccf
-decl_stmt|;
-comment|/* controller configuration flags */
-name|u_long
-name|sec_size
-decl_stmt|;
-comment|/* drive sector size */
-name|u_short
-name|cdr_unused0
-decl_stmt|;
-name|u_char
-name|cyl_skew
-decl_stmt|;
-comment|/* cylinder to cylinder skew factor */
-name|u_char
-name|trk_skew
-decl_stmt|;
-comment|/* track to track skew factor */
-name|u_long
-name|cdr_unused1
-decl_stmt|;
-name|u_long
-name|diag_flags
-decl_stmt|;
-comment|/* diagnostic flag register */
-name|u_long
-name|diag_dump
-decl_stmt|;
-comment|/* pointer for diagnostic addresses */
-block|}
-name|cdr
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* controller types */
+comment|/* Sector Header bit assignments */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UNKNOWN
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SMDCTLR
-value|1
+name|VDMF
+value|0x8000
 end_define
 
 begin_comment
-comment|/* smd interface */
+comment|/* Manufacturer Fault 1=good sector */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SMD_ECTLR
-value|2
+name|VDUF
+value|0x4000
 end_define
 
 begin_comment
-comment|/* extended-smd interface */
-end_comment
-
-begin_comment
-comment|/* drive types */
+comment|/* User Fault 1=good sector */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XSD
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUJ
-value|1
+name|VDALT
+value|0x2000
 end_define
 
 begin_comment
-comment|/* Fujitsu 160 */
+comment|/* Alternate Sector 1=alternate */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XFD
-value|2
+name|VDWPT
+value|0x1000
 end_define
 
 begin_comment
-comment|/* CDC 340Mb Winchester */
+comment|/* Write Protect 1=Read Only Sector */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SMD
-value|3
-end_define
-
-begin_comment
-comment|/* CDC 9766 or equivalent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FSD
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|EGL
-value|5
-end_define
-
-begin_comment
-comment|/* Fujitsu Eagle */
-end_comment
-
-begin_comment
-comment|/*  * Drive logical partitions.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|long
-name|par_start
-decl_stmt|;
-comment|/* starting sector # */
-name|long
-name|par_len
-decl_stmt|;
-comment|/* size in sectors */
-block|}
-name|par_tab
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|int
-name|secsize
-decl_stmt|;
-comment|/* bytes/sector */
-name|int
-name|nsec
-decl_stmt|;
-comment|/* sectors/track */
-name|int
-name|ntrak
-decl_stmt|;
-comment|/* tracks/cylinder */
-name|int
-name|ncyl
-decl_stmt|;
-comment|/* # cylinders */
-name|int
-name|nslip
-decl_stmt|;
-comment|/* # slip sectors */
-name|int
-name|rpm
-decl_stmt|;
-comment|/* revolutions/minute */
-name|int
-name|nbits
-decl_stmt|;
-comment|/* bits/track */
-name|char
-modifier|*
-name|type_name
-decl_stmt|;
-comment|/* drive name */
-name|char
-modifier|*
-name|type_descrip
-decl_stmt|;
-comment|/* drive description */
-name|long
-name|fmt_pat
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* patterns to be used for formatting */
-name|par_tab
-name|partition
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* partition tables */
-block|}
-name|fs_tab
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* physical information for known disk drives.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VDGENDATA
-end_ifdef
-
-begin_decl_stmt
-name|long
-name|vddcaddr
-index|[]
-init|=
-block|{
-literal|0xffff2000
-block|,
-literal|0xffff2100
-block|,
-literal|0xffff2200
-block|,
-literal|0xffff2300
-block|,
-literal|0xffff2400
-block|,
-literal|0xffff2500
-block|,
-literal|0xffff2600
-block|,
-literal|0xffff2700
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|fs_tab
-name|vdst
-index|[]
-init|=
-block|{
-block|{
-literal|512
-block|,
-literal|48
-block|,
-literal|24
-block|,
-literal|711
-block|,
-literal|0
-block|,
-literal|3600
-block|,
-literal|30240
-block|,
-literal|"CDC xsd"
-block|,
-literal|"515 Mb Control Data Winchester drive"
-block|,
-block|{
-literal|0x0264c993
-block|,
-literal|0x04c99326
-block|,
-literal|0x0993264c
-block|,
-literal|0x13264c98
-block|,
-literal|0x264c9930
-block|,
-literal|0x4c993260
-block|,
-literal|0x993264c0
-block|,
-literal|0x3264c980
-block|,
-literal|0x64c99300
-block|,
-literal|0xc9932600
-block|,
-literal|0x93264c00
-block|,
-literal|0x264c9800
-block|,
-literal|0x4c993000
-block|,
-literal|0x99326000
-block|,
-literal|0x3264c000
-block|,
-literal|0x54c98000
-block|}
-block|,
-block|{
-block|{
-literal|0
-block|,
-literal|30528
-block|}
-block|,
-comment|/* a cyl   0 - 52 */
-block|{
-literal|30528
-block|,
-literal|30528
-block|}
-block|,
-comment|/* b cyl  53 - 105 */
-block|{
-literal|61056
-block|,
-literal|345600
-block|}
-block|,
-comment|/* c cyl 106 - 705 */
-block|{
-literal|118656
-block|,
-literal|288000
-block|}
-block|,
-comment|/* d cyl 206 - 705 */
-block|{
-literal|176256
-block|,
-literal|230400
-block|}
-block|,
-comment|/* e cyl 306 - 705 */
-block|{
-literal|233856
-block|,
-literal|172800
-block|}
-block|,
-comment|/* f cyl 406 - 705 */
-block|{
-literal|291456
-block|,
-literal|115200
-block|}
-block|,
-comment|/* g cyl 506 - 705 */
-block|{
-literal|349056
-block|,
-literal|57600
-block|}
-block|}
-comment|/* h cyl 606 - 705 */
-block|}
-block|,
-block|{
-literal|512
-block|,
-literal|44
-block|,
-literal|20
-block|,
-literal|842
-block|,
-literal|0
-block|,
-literal|3961
-block|,
-literal|27720
-block|,
-literal|"eagle"
-block|,
-literal|"474 Mb Fujitsu Eagle drive"
-block|,
-block|{
-literal|0x0264c993
-block|,
-literal|0x04c99326
-block|,
-literal|0x0993264c
-block|,
-literal|0x13264c98
-block|,
-literal|0x264c9930
-block|,
-literal|0x4c993260
-block|,
-literal|0x993264c0
-block|,
-literal|0x3264c980
-block|,
-literal|0x64c99300
-block|,
-literal|0xc9932600
-block|,
-literal|0x93264c00
-block|,
-literal|0x264c9800
-block|,
-literal|0x4c993000
-block|,
-literal|0x99326000
-block|,
-literal|0x3264c000
-block|,
-literal|0x54c98000
-block|}
-block|,
-block|{
-block|{
-literal|0
-block|,
-literal|26400
-block|}
-block|,
-comment|/* egl0a cyl   0 - 59 */
-block|{
-literal|26400
-block|,
-literal|33000
-block|}
-block|,
-comment|/* egl0b cyl  60 - 134 */
-block|{
-literal|59400
-block|,
-literal|308880
-block|}
-block|,
-comment|/* egl0c cyl 135 - 836 */
-block|{
-literal|368280
-block|,
-literal|2640
-block|}
-block|,
-comment|/* egl0d cyl 837 - 842 */
-block|{
-literal|0
-block|,
-literal|368280
-block|}
-block|,
-comment|/* egl0e cyl 0 - 836 */
-block|{
-literal|0
-block|,
-literal|370920
-block|}
-block|,
-comment|/* egl0f cyl 0 - 842 */
-block|{
-literal|59400
-block|,
-literal|155320
-block|}
-block|,
-comment|/* egl0g cyl 135 - 487 */
-block|{
-literal|214720
-block|,
-literal|153560
-block|}
-block|}
-comment|/* egl0h cyl 488 - 836 */
-block|}
-block|,
-block|{
-literal|512
-block|,
-literal|64
-block|,
-literal|10
-block|,
-literal|823
-block|,
-literal|0
-block|,
-literal|3600
-block|,
-literal|40960
-block|,
-literal|"fuji 360"
-block|,
-comment|/* 360 Mb Fujitsu */
-literal|"360 Mb Fujitsu Winchester drive"
-block|,
-block|{
-literal|0x0264c993
-block|,
-literal|0x04c99326
-block|,
-literal|0x0993264c
-block|,
-literal|0x13264c98
-block|,
-literal|0x264c9930
-block|,
-literal|0x4c993260
-block|,
-literal|0x993264c0
-block|,
-literal|0x3264c980
-block|,
-literal|0x64c99300
-block|,
-literal|0xc9932600
-block|,
-literal|0x93264c00
-block|,
-literal|0x264c9800
-block|,
-literal|0x4c993000
-block|,
-literal|0x99326000
-block|,
-literal|0x3264c000
-block|,
-literal|0x54c98000
-block|}
-block|,
-block|{
-block|{
-literal|0
-block|,
-literal|19200
-block|}
-block|,
-comment|/* fuj0a cyl   0 - 59 */
-block|{
-literal|19200
-block|,
-literal|24000
-block|}
-block|,
-comment|/* fuj0b cyl  60 - 134 */
-block|{
-literal|43200
-block|,
-literal|218560
-block|}
-block|,
-comment|/* fuj0c cyl 135 - 817 */
-block|{
-literal|79680
-block|,
-literal|182080
-block|}
-block|,
-comment|/* fuj0d cyl 249 - 817 */
-block|{
-literal|116160
-block|,
-literal|145600
-block|}
-block|,
-comment|/* fuj0e cyl 363 - 817 */
-block|{
-literal|152640
-block|,
-literal|109120
-block|}
-block|,
-comment|/* fuj0f cyl 477 - 817 */
-block|{
-literal|189120
-block|,
-literal|72640
-block|}
-block|,
-comment|/* fuj0g cyl 591 - 817 */
-block|{
-literal|225600
-block|,
-literal|36160
-block|}
-block|}
-comment|/* fug0h cyl 705 - 817 */
-block|}
-block|,
-block|{
-literal|512
-block|,
-literal|32
-block|,
-literal|24
-block|,
-literal|711
-block|,
-literal|0
-block|,
-literal|3600
-block|,
-literal|20160
-block|,
-literal|"CDC xfd"
-block|,
-comment|/* 340 Mb FSD */
-literal|"340 Mb Control Data Winchester drive"
-block|,
-block|{
-literal|0x0d9b366c
-block|,
-literal|0x1b366cd8
-block|,
-literal|0x366cd9b0
-block|,
-literal|0x6cd9b360
-block|,
-literal|0xd9b366c0
-block|,
-literal|0xb366cd80
-block|,
-literal|0x66cd9b00
-block|,
-literal|0xcd9b3600
-block|,
-literal|0x9b366300
-block|,
-literal|0x366cd800
-block|,
-literal|0x6cd9b000
-block|,
-literal|0xd9b36000
-block|,
-literal|0xb366c000
-block|,
-literal|0x66cd8000
-block|,
-literal|0xcd9b0000
-block|,
-literal|0x9b360000
-block|}
-block|,
-ifdef|#
-directive|ifdef
-name|cci1
-name|.21
-block|{
-block|{
-literal|0
-block|,
-literal|20352
-block|}
-block|,
-comment|/* a cyl   0 - 52 */
-block|{
-literal|20352
-block|,
-literal|20352
-block|}
-block|,
-comment|/* b cyl  53 - 105 */
-block|{
-literal|40704
-block|,
-literal|230400
-block|}
-block|,
-comment|/* c cyl 106 - 705 */
-block|{
-literal|79104
-block|,
-literal|192000
-block|}
-block|,
-comment|/* d cyl 206 - 705 */
-block|{
-literal|117504
-block|,
-literal|153600
-block|}
-block|,
-comment|/* e cyl 306 - 705 */
-block|{
-literal|155904
-block|,
-literal|115200
-block|}
-block|,
-comment|/* f cyl 406 - 705 */
-block|{
-literal|194304
-block|,
-literal|76800
-block|}
-block|,
-comment|/* g cyl 506 - 705 */
-block|{
-literal|232704
-block|,
-literal|38400
-block|}
-block|}
-comment|/* h cyl 606 - 705 */
-else|#
-directive|else
-block|{
-block|{
-literal|0
-block|,
-literal|20352
-block|}
-block|,
-comment|/* a cyl   0 - 52 */
-block|{
-literal|20352
-block|,
-literal|20352
-block|}
-block|,
-comment|/* b cyl  53 - 105 */
-block|{
-literal|40704
-block|,
-literal|230400
-block|}
-block|,
-comment|/* c cyl 106 - 705 */
-block|{
-literal|0
-block|,
-literal|40704
-block|}
-block|,
-comment|/* d cyl 709 - 710 (a& b) */
-block|{
-literal|0
-block|,
-literal|271104
-block|}
-block|,
-comment|/* e cyl   0 - 705 */
-block|{
-literal|20352
-block|,
-literal|250752
-block|}
-block|,
-comment|/* f cyl  53 - 705 (b& c) */
-block|{
-literal|40704
-block|,
-literal|115200
-block|}
-block|,
-comment|/* g cyl 106 - 405 (1/2 of c) */
-block|{
-literal|155904
-block|,
-literal|115200
-block|}
-block|}
-comment|/* h cyl 406 - 705 (1/2 of c) */
-endif|#
-directive|endif
-block|}
-block|,
-block|{
-literal|512
-block|,
-literal|32
-block|,
-literal|19
-block|,
-literal|823
-block|,
-literal|0
-block|,
-literal|3600
-block|,
-literal|20160
-block|,
-literal|"9766"
-block|,
-comment|/* 300 Mb SMD */
-literal|"300 Mb Control Data 9766 removable media drive"
-block|,
-block|{
-literal|0x0d9b366c
-block|,
-literal|0x1b366cd8
-block|,
-literal|0x366cd9b0
-block|,
-literal|0x6cd9b360
-block|,
-literal|0xd9b366c0
-block|,
-literal|0xb366cd80
-block|,
-literal|0x66cd9b00
-block|,
-literal|0xcd9b3600
-block|,
-literal|0x9b366300
-block|,
-literal|0x366cd800
-block|,
-literal|0x6cd9b000
-block|,
-literal|0xd9b36000
-block|,
-literal|0xb366c000
-block|,
-literal|0x66cd8000
-block|,
-literal|0xcd9b0000
-block|,
-literal|0x9b360000
-block|}
-block|,
-block|{
-block|{
-literal|0
-block|,
-literal|20064
-block|}
-block|,
-comment|/* a cyl   0-65 */
-block|{
-literal|20064
-block|,
-literal|13680
-block|}
-block|,
-comment|/* b cyl  66-110 */
-block|{
-literal|33744
-block|,
-literal|214928
-block|}
-block|,
-comment|/* c cyl 111-817 */
-block|{
-literal|69616
-block|,
-literal|179056
-block|}
-block|,
-comment|/* d cyl 229 - 817 */
-block|{
-literal|105488
-block|,
-literal|143184
-block|}
-block|,
-comment|/* e cyl 347 - 817 */
-block|{
-literal|141360
-block|,
-literal|107312
-block|}
-block|,
-comment|/* f cyl 465 - 817 */
-block|{
-literal|177232
-block|,
-literal|71440
-block|}
-block|,
-comment|/* g cyl 583 - 817 */
-block|{
-literal|213104
-block|,
-literal|35568
-block|}
-block|}
-comment|/* h cyl 701 - 817 */
-block|}
-block|,
-block|{
-literal|512
-block|,
-literal|32
-block|,
-literal|10
-block|,
-literal|823
-block|,
-literal|0
-block|,
-literal|3600
-block|,
-literal|20160
-block|,
-literal|"fsd"
-block|,
-comment|/* 160 Mb FSD */
-literal|"160 Mb Winchester drive"
-block|,
-block|{
-literal|0x0d9b366c
-block|,
-literal|0x1b366cd8
-block|,
-literal|0x366cd9b0
-block|,
-literal|0x6cd9b360
-block|,
-literal|0xd9b366c0
-block|,
-literal|0xb366cd80
-block|,
-literal|0x66cd9b00
-block|,
-literal|0xcd9b3600
-block|,
-literal|0x9b366300
-block|,
-literal|0x366cd800
-block|,
-literal|0x6cd9b000
-block|,
-literal|0xd9b36000
-block|,
-literal|0xb366c000
-block|,
-literal|0x66cd8000
-block|,
-literal|0xcd9b0000
-block|,
-literal|0x9b360000
-block|}
-block|,
-block|{
-block|{
-literal|0
-block|,
-literal|9600
-block|}
-block|,
-comment|/* a cyl   0 -  59 */
-block|{
-literal|9600
-block|,
-literal|12000
-block|}
-block|,
-comment|/* b cyl  60 - 134 */
-block|{
-literal|21600
-block|,
-literal|109280
-block|}
-block|,
-comment|/* c cyl 135 - 817 */
-block|{
-literal|39840
-block|,
-literal|91040
-block|}
-block|,
-comment|/* d cyl 249 - 817 */
-block|{
-literal|58080
-block|,
-literal|72800
-block|}
-block|,
-comment|/* e cyl 363 - 817 */
-block|{
-literal|76320
-block|,
-literal|54560
-block|}
-block|,
-comment|/* f cyl 477 - 817 */
-block|{
-literal|94560
-block|,
-literal|36320
-block|}
-block|,
-comment|/* g cyl 591 - 817 */
-block|{
-literal|112800
-block|,
-literal|18080
-block|}
-block|}
-comment|/* h cyl 705 - 817 */
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nvddrv
-init|=
-operator|(
-sizeof|sizeof
-argument_list|(
-name|vdst
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|fs_tab
-argument_list|)
-operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STANDALONE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|vddcaddr
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|fs_tab
-name|vdst
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nvddrv
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
