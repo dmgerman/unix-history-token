@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ehci.c,v 1.89 2004/12/03 08:51:31 augustss Exp $ */
+comment|/*	$NetBSD: ehci.c,v 1.91 2005/02/27 00:27:51 perry Exp $ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * USB Enhanced Host Controller Driver, a.k.a. USB 2.0 controller.  *
 end_comment
 
 begin_comment
-comment|/*  * TODO:  * 1) hold off explorations by companion controllers until ehci has started.  *  * 2) The EHCI driver lacks support for interrupt isochronous transfers, so  *    devices using them don't work.  *    Interrupt transfers are not difficult, it's just not done.   *  * 3) The meaty part to implement is the support for USB 2.0 hubs.  *    They are quite complicated since the need to be able to do  *    "transaction translation", i.e., converting to/from USB 2 and USB 1.  *    So the hub driver needs to handle and schedule these things, to  *    assign place in frame where different devices get to go. See chapter  *    on hubs in USB 2.0 for details.   *  * 4) command failures are not recovered correctly */
+comment|/*  * TODO:  * 1) The EHCI driver lacks support for isochronous transfers, so  *    devices using them don't work.  *  * 2) Interrupt transfer scheduling does not manage the time available  *    in each frame, so it is possible for the transfers to overrun  *    the end of the frame.  *  * 3) Command failures are not recovered correctly.  */
 end_comment
 
 begin_include
@@ -4119,7 +4119,7 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * If there are left over TDs we need to update the toggle. 	 * The default pipe doesn't need it since control transfers 	 * start the toggle at 0 every time. 	 */
+comment|/* 	 * If there are left over TDs we need to update the toggle. 	 * The default pipe doesn't need it since control transfers 	 * start the toggle at 0 every time. 	 */
 if|if
 condition|(
 name|sqtd
@@ -4168,7 +4168,7 @@ name|nstatus
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * For a short transfer we need to update the toggle for the missing 	 * packets within the qTD. 	 */
+comment|/* 	 * For a short transfer we need to update the toggle for the missing 	 * packets within the qTD. 	 */
 name|pkts_left
 operator|=
 name|EHCI_QTD_GET_BYTES
@@ -12531,7 +12531,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USB_USE_SOFTINTR */
-comment|/* 	 * Step 4: Remove any vestiges of the xfer from the hardware. 	 * The complication here is that the hardware may have executed 	 * into or even beyond the xfer we're trying to abort.  	 * So as we're scanning the TDs of this xfer we check if 	 * the hardware points to any of them. 	 * 	 * first we need to see if there are any transfers  	 * on this queue before the xfer we are aborting.. we need 	 * to update any pointers that point to us to point past 	 * the aborting xfer.  (If there is something past us). 	 * Hardware and software. 	 */
+comment|/* 	 * Step 4: Remove any vestiges of the xfer from the hardware. 	 * The complication here is that the hardware may have executed 	 * into or even beyond the xfer we're trying to abort. 	 * So as we're scanning the TDs of this xfer we check if 	 * the hardware points to any of them. 	 * 	 * first we need to see if there are any transfers 	 * on this queue before the xfer we are aborting.. we need 	 * to update any pointers that point to us to point past 	 * the aborting xfer.  (If there is something past us). 	 * Hardware and software. 	 */
 name|cur
 operator|=
 name|EHCI_LINK_ADDR
@@ -12695,7 +12695,7 @@ operator|!
 name|hit
 condition|)
 block|{
-comment|/*  		 * Now reinitialise the QH to point to the next qTD 		 * (if there is one). We only need to do this if 		 * it was previously pointing to us.  		 * XXX Not quite sure what to do about the data toggle. 		 */
+comment|/* 		 * Now reinitialise the QH to point to the next qTD 		 * (if there is one). We only need to do this if 		 * it was previously pointing to us. 		 * XXX Not quite sure what to do about the data toggle. 		 */
 name|sqtd
 operator|=
 name|exfer
