@@ -4821,7 +4821,7 @@ name|tp
 operator|->
 name|iss
 operator|=
-name|tcp_rndiss_next
+name|tcp_new_isn
 argument_list|()
 expr_stmt|;
 block|}
@@ -6436,7 +6436,7 @@ condition|)
 block|{
 name|iss
 operator|=
-name|tcp_rndiss_next
+name|tcp_new_isn
 argument_list|()
 expr_stmt|;
 name|tp
