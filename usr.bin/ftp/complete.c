@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: complete.c,v 1.1 1997/06/25 08:56:36 msmith Exp $ */
+comment|/*	$Id: complete.c,v 1.2 1997/06/27 09:30:04 ache Exp $ */
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: complete.c,v 1.1 1997/06/25 08:56:36 msmith Exp $"
+literal|"$Id: complete.c,v 1.2 1997/06/27 09:30:04 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,7 +117,7 @@ begin_block
 block|{
 return|return
 operator|(
-name|strcmp
+name|strcoll
 argument_list|(
 operator|*
 operator|(

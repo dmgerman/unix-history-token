@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.c,v 1.13 1997/06/25 08:56:42 msmith Exp $ */
+comment|/*	$Id: main.c,v 1.14 1997/06/27 09:30:13 ache Exp $ */
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.13 1997/06/25 08:56:42 msmith Exp $"
+literal|"$Id: main.c,v 1.14 1997/06/27 09:30:13 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,7 +203,7 @@ name|void
 operator|)
 name|setlocale
 argument_list|(
-name|LC_CTYPE
+name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
