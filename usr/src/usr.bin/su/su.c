@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.22 (Berkeley) %G%"
+literal|"@(#)su.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -462,7 +462,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get current login name and shell. 	 * This code assumes the trustable (system call) 	 * version of getlogin (the old one was easily confused). 	 */
+comment|/* get current login name and shell */
 name|ruid
 operator|=
 name|getuid
@@ -489,53 +489,13 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|username
-condition|)
-name|syslog
-argument_list|(
-name|LOG_AUTH
-operator||
-name|LOG_ERR
-argument_list|,
-literal|"su attempt by unknown user %s (uid %d) to %s%s"
-argument_list|,
-name|username
-argument_list|,
+operator|||
+name|pwd
+operator|->
+name|pw_uid
+operator|!=
 name|ruid
-argument_list|,
-name|user
-argument_list|,
-name|ontty
-argument_list|()
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* 		 * The following will happen regularly from cron, etc. 		 * unless such things do a setlogin(). 		 */
-else|else
-name|syslog
-argument_list|(
-name|LOG_AUTH
-operator||
-name|LOG_ERR
-argument_list|,
-literal|"su attempt with null login name (uid %d) to %s%s"
-argument_list|,
-name|ruid
-argument_list|,
-name|user
-argument_list|,
-name|ontty
-argument_list|()
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+condition|)
 name|pwd
 operator|=
 name|getpwuid
@@ -572,7 +532,6 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|asme
