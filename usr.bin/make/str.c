@@ -734,7 +734,11 @@ operator|=
 literal|'\t'
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
+break|break;
+default|default:
 break|break;
 block|}
 if|if

@@ -2653,6 +2653,8 @@ operator|)
 expr_stmt|;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 name|error

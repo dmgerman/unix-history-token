@@ -527,10 +527,6 @@ name|int
 name|argc
 decl_stmt|;
 comment|/* Number of arguments in av or 0 if not 				 * dynamically allocated */
-name|Boolean
-name|local
-decl_stmt|;
-comment|/* TRUE if command should be executed 				 * locally */
 name|int
 name|internal
 decl_stmt|;
@@ -1012,10 +1008,6 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-name|local
-operator|=
-name|TRUE
-expr_stmt|;
 comment|/*      * Fork and execute the single command. If the fork fails, we abort.      */
 name|cpid
 operator|=
@@ -1040,11 +1032,6 @@ condition|(
 name|cpid
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|local
 condition|)
 block|{
 name|execvp
@@ -1123,23 +1110,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-operator|(
-name|void
-operator|)
-name|execv
-argument_list|(
-name|av
-index|[
-literal|0
-index|]
-argument_list|,
-name|av
-argument_list|)
-expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|1

@@ -1055,6 +1055,8 @@ goto|goto
 name|next
 goto|;
 block|}
+default|default:
+break|break;
 block|}
 if|if
 condition|(

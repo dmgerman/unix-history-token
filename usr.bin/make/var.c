@@ -5588,6 +5588,8 @@ operator|(
 literal|"$(.MEMBER)"
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* 	     * Error 	     */
@@ -6081,6 +6083,8 @@ operator|)
 return|;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 block|}
@@ -6171,6 +6175,8 @@ name|dynamic
 operator|=
 name|TRUE
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 block|}
@@ -7966,6 +7972,8 @@ operator||=
 name|VAR_SUB_ONE
 expr_stmt|;
 continue|continue;
+default|default:
+break|break;
 block|}
 break|break;
 block|}

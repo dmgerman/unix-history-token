@@ -6284,7 +6284,7 @@ name|c
 operator|==
 literal|'\t'
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|c
@@ -6769,6 +6769,8 @@ name|TRUE
 expr_stmt|;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 comment|/* 	     * Copy in the previous character and save this one in lastc. 	     */
 name|Buf_AddByte
@@ -7056,6 +7058,8 @@ name|ParseReadLine
 argument_list|()
 expr_stmt|;
 block|}
+break|break;
+default|default:
 break|break;
 block|}
 block|}

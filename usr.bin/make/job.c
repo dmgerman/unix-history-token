@@ -3260,6 +3260,8 @@ operator|=
 name|FALSE
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 else|else

@@ -1194,6 +1194,23 @@ block|{
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|s2
+operator|==
+name|NULL
+condition|)
+block|{
+name|DEBUGF
+argument_list|(
+name|SUFF
+argument_list|,
+operator|(
+literal|"inserting an empty list?..."
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|Lst_Close
 argument_list|(
 name|l
@@ -7956,6 +7973,8 @@ argument_list|(
 literal|"LIBRARY"
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 name|fputc
