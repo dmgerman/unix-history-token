@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/_types.h>
 end_include
 
 begin_define
@@ -47,12 +47,29 @@ begin_comment
 comment|/*  * Data types.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_SA_FAMILY_T_
+end_ifdef
+
 begin_typedef
 typedef|typedef
-name|u_char
+name|_BSD_SA_FAMILY_T_
 name|sa_family_t
 typedef|;
 end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_SA_FAMILY_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

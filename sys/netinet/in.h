@@ -1407,6 +1407,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_SA_FAMILY_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_SA_FAMILY_T_
+name|sa_family_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_SA_FAMILY_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Internet address (a structure for historical reasons)  */
 end_comment

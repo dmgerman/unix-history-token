@@ -37,6 +37,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_BSD_SA_FAMILY_T_
+value|__uint8_t
+end_define
+
+begin_define
+define|#
+directive|define
 name|_BSD_UID_T_
 value|__uint32_t
 end_define
