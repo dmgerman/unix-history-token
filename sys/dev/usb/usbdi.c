@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.100 2002/05/19 06:24:33 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.101 2002/06/01 23:51:04 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -3854,8 +3854,6 @@ operator|&
 name|pipe
 operator|->
 name|queue
-argument_list|,
-name|xfer
 argument_list|,
 name|next
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.125 2002/05/28 12:42:38 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.126 2002/06/01 23:51:03 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -4841,8 +4841,6 @@ operator|&
 name|sc
 operator|->
 name|sc_free_xfers
-argument_list|,
-name|xfer
 argument_list|,
 name|next
 argument_list|)

@@ -1878,22 +1878,11 @@ begin_comment
 comment|/* conversion from one type of queue to the other */
 end_comment
 
-begin_comment
-comment|/* XXX In FreeBSD SIMPLEQ_REMOVE_HEAD only removes the head element.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SIMPLEQ_REMOVE_HEAD
-parameter_list|(
-name|h
-parameter_list|,
-name|e
-parameter_list|,
-name|f
-parameter_list|)
-value|do {				\ 		if ( (e) != SIMPLEQ_FIRST((h)) )			\ 			panic("Removing other than first element");	\ 		STAILQ_REMOVE_HEAD(h, f);				\ } while (0)
+value|STAILQ_REMOVE_HEAD
 end_define
 
 begin_define

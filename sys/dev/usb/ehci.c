@@ -4745,8 +4745,6 @@ name|sc
 operator|->
 name|sc_free_xfers
 argument_list|,
-name|xfer
-argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
