@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	6.7	85/05/27	*/
+comment|/*	uipc_syscalls.c	6.8	85/06/02	*/
 end_comment
 
 begin_include
@@ -320,6 +320,8 @@ argument_list|,
 name|uap
 operator|->
 name|namelen
+argument_list|,
+name|MT_SONAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -1033,6 +1035,8 @@ argument_list|,
 name|uap
 operator|->
 name|namelen
+argument_list|,
+name|MT_SONAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -2271,6 +2275,8 @@ argument_list|,
 name|mp
 operator|->
 name|msg_namelen
+argument_list|,
+name|MT_SONAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -2309,6 +2315,8 @@ argument_list|,
 name|mp
 operator|->
 name|msg_accrightslen
+argument_list|,
+name|MT_RIGHTS
 argument_list|)
 expr_stmt|;
 if|if
@@ -4741,6 +4749,8 @@ argument_list|,
 argument|name
 argument_list|,
 argument|namelen
+argument_list|,
+argument|type
 argument_list|)
 end_macro
 
@@ -4762,6 +4772,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|namelen
+decl_stmt|,
+name|type
 decl_stmt|;
 end_decl_stmt
 
@@ -4793,7 +4805,7 @@ name|m_get
 argument_list|(
 name|M_WAIT
 argument_list|,
-name|MT_SONAME
+name|type
 argument_list|)
 expr_stmt|;
 if|if
