@@ -783,7 +783,7 @@ begin_define
 define|#
 directive|define
 name|VMSTATROW
-value|7
+value|6
 end_define
 
 begin_comment
