@@ -128,7 +128,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
-name|name
+name|progname
 decl_stmt|;
 end_decl_stmt
 
@@ -2330,7 +2330,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|name
+name|progname
 argument_list|)
 expr_stmt|;
 if|if
