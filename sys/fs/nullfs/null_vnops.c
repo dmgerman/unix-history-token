@@ -960,11 +960,21 @@ expr_stmt|;
 comment|/* 	 * Rely only on the PDIRUNLOCK flag which should be carefully 	 * tracked by underlying filesystem. 	 */
 if|if
 condition|(
+operator|(
 name|cnp
 operator|->
 name|cn_flags
 operator|&
 name|PDIRUNLOCK
+operator|)
+operator|&&
+name|dvp
+operator|->
+name|v_vnlock
+operator|!=
+name|ldvp
+operator|->
+name|v_vnlock
 condition|)
 name|VOP_UNLOCK
 argument_list|(
