@@ -2657,13 +2657,6 @@ argument_list|,
 name|rev
 argument_list|)
 expr_stmt|;
-name|d
-operator|->
-name|audio_fmt
-operator||=
-name|AFMT_S16_LE
-expr_stmt|;
-comment|/* in fact it is U16_LE */
 break|break ;
 comment|/* XXX */
 block|}
