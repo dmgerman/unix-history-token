@@ -53,6 +53,23 @@ end_endif
 begin_if
 if|#
 directive|if
+name|__amd64__
+end_if
+
+begin_include
+include|#
+directive|include
+file|"amd64.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|__arm__
 end_if
 
