@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ungetc.c	8.1 (Berkeley) %G%"
+literal|"@(#)ungetc.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -470,6 +470,13 @@ name|c
 operator|)
 return|;
 block|}
+name|fp
+operator|->
+name|_flags
+operator|&=
+operator|~
+name|__SEOF
+expr_stmt|;
 comment|/* 	 * If we can handle this by simply backing up, do so, 	 * but never replace the original character. 	 * (This makes sscanf() work when scanning `const' data.) 	 */
 if|if
 condition|(
