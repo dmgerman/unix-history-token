@@ -908,7 +908,7 @@ comment|/*  * Is p an inferior of the current process?  */
 end_comment
 
 begin_function
-name|inT
+name|int
 name|inferior
 parameter_list|(
 name|p
