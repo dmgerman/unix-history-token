@@ -1038,8 +1038,8 @@ argument_list|(
 literal|"You haven't specified any distributions yet.  The upgrade procedure will\n"
 literal|"only upgrade those portions of the system for which a distribution has\n"
 literal|"been selected.  In the next screen, we'll go to the Distributions menu\n"
-literal|"to select those portions of 2.1 you wish to install on top of your 2.0.5\n"
-literal|"system."
+literal|"to select those portions of the new system you wish to install on top of\n"
+literal|"the old."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1052,6 +1052,9 @@ name|MenuDistributions
 argument_list|,
 name|FALSE
 argument_list|)
+operator|||
+operator|!
+name|Dists
 condition|)
 return|return
 name|DITEM_FAILURE
@@ -1062,7 +1065,7 @@ name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* No bin selected?  Not much of an upgrade.. */
+elseif|else
 if|if
 condition|(
 operator|!
@@ -1073,13 +1076,14 @@ name|DIST_BIN
 operator|)
 condition|)
 block|{
+comment|/* No bin selected?  Not much of an upgrade.. */
 if|if
 condition|(
 name|msgYesNo
 argument_list|(
 literal|"You didn't select the bin distribution as one of the distributons to load.\n"
 literal|"This one is pretty vital to a successful upgrade.  Are you SURE you don't\n"
-literal|"want to select the bin distribution?  Chose _No_ to bring up the Distributions\n"
+literal|"want to select the bin distribution?  Chose No to bring up the Distributions\n"
 literal|"menu."
 argument_list|)
 operator|!=
@@ -1124,7 +1128,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mediaDevice
+name|mediaVerify
+argument_list|()
 condition|)
 block|{
 name|msgConfirm
@@ -1150,6 +1155,29 @@ return|return
 name|DITEM_FAILURE
 operator||
 name|DITEM_RECREATE
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Couldn't initialize the media; upgrade aborted.  Please\n"
+literal|"fix whatever the problem is and try again."
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_REDRAW
 return|;
 block|}
 if|if
@@ -1503,16 +1531,45 @@ operator|==
 name|DITEM_FAILURE
 condition|)
 block|{
+name|msgConfirm
+argument_list|(
+literal|"Hmmmm.  We couldn't even extract the bin distribution.  This upgrade\n"
+literal|"should be considered a failure and started from the beginning, sorry!\n"
+literal|"The system will reboot now."
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|systemShutdown
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|extractingBin
 operator|&&
+operator|!
 operator|(
 name|Dists
 operator|&
 name|DIST_BIN
 operator|)
 condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"The extraction process seems to have had some problems, but we got most\n"
+literal|"of the essentials.  We'll treat this as a warning since it may have been\n"
+literal|"only non-essential distributions which failed to load."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|msgConfirm
 argument_list|(
@@ -1530,13 +1587,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|msgConfirm
-argument_list|(
-literal|"The extraction process seems to have had some problems, but we got most\n"
-literal|"of the essentials.  We'll treat this as a warning since it may have been\n"
-literal|"only non-essential distributions which failed to load."
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(

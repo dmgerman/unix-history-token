@@ -3238,33 +3238,16 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-comment|/* First try to initialize the state of things */
+comment|/* paranoia */
 if|if
 condition|(
 operator|!
 name|Dists
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"You haven't selected any distributions to extract."
-argument_list|)
-expr_stmt|;
-return|return
-name|DITEM_FAILURE
-return|;
-block|}
-if|if
-condition|(
+operator|||
 operator|!
 name|mediaVerify
 argument_list|()
-condition|)
-return|return
-name|DITEM_FAILURE
-return|;
-if|if
-condition|(
+operator|||
 operator|!
 name|mediaDevice
 operator|->
@@ -3343,7 +3326,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|DITEM_FAILURE
+name|DITEM_SUCCESS
 operator||
 name|DITEM_RESTORE
 return|;
