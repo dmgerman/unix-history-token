@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.61	83/04/06	*/
+comment|/*	kern_proc.c	4.62	83/05/18	*/
 end_comment
 
 begin_include
@@ -245,10 +245,14 @@ condition|(
 name|len
 operator|>
 name|hostnamelen
+operator|+
+literal|1
 condition|)
 name|len
 operator|=
 name|hostnamelen
+operator|+
+literal|1
 expr_stmt|;
 name|u
 operator|.
@@ -339,8 +343,6 @@ operator|=
 name|uap
 operator|->
 name|len
-operator|+
-literal|1
 expr_stmt|;
 name|u
 operator|.
@@ -364,9 +366,7 @@ argument_list|)
 expr_stmt|;
 name|hostname
 index|[
-name|uap
-operator|->
-name|len
+name|hostnamelen
 index|]
 operator|=
 literal|0
@@ -3339,8 +3339,9 @@ directive|ifdef
 name|sun
 name|ctxfree
 argument_list|(
-operator|&
 name|u
+operator|.
+name|u_procp
 argument_list|)
 expr_stmt|;
 endif|#
