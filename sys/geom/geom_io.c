@@ -378,7 +378,7 @@ sizeof|sizeof
 expr|*
 name|bp
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -461,6 +461,13 @@ operator|=
 name|g_new_bio
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|bp2
+operator|!=
+name|NULL
+condition|)
+block|{
 name|bp2
 operator|->
 name|bio_linkage
@@ -507,6 +514,7 @@ name|bp
 operator|->
 name|bio_attribute
 expr_stmt|;
+block|}
 name|g_trace
 argument_list|(
 name|G_T_BIO
