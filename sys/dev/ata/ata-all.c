@@ -1718,10 +1718,18 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Busmastering DMA not supported\n"
+literal|"Busmastering DMA not configured\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Busmastering DMA not supported\n"
+argument_list|)
+expr_stmt|;
 comment|/* do extra chipset specific setups */
 switch|switch
 condition|(
@@ -2117,6 +2125,30 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+literal|0x10001042
+case|:
+comment|/* RZ 100? known bad, no DMA */
+case|case
+literal|0x10011042
+case|:
+case|case
+literal|0x06401095
+case|:
+comment|/* CMD 640 known bad, no DMA */
+name|sc
+operator|->
+name|bmio
+operator|=
+literal|0x0
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Busmastering DMA disabled\n"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * the Cypress chip is a mess, it contains two ATA functions, but       * both channels are visible on the first one.      * simply ignore the second function for now, as the right      * solution (ignoring the second channel on the first function)      * doesn't work with the crappy ATA interrupt setup on the alpha.      */
 if|if
@@ -2534,7 +2566,9 @@ name|bmio_2
 return|;
 block|}
 block|}
-break|break;
+return|return
+literal|0
+return|;
 default|default:
 return|return
 literal|0
