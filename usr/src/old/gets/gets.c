@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gets.c	4.1 (Berkeley) %G%"
+literal|"@(#)gets.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,13 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|setbuf
+argument_list|(
+name|stdin
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gets
