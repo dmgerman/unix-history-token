@@ -92,10 +92,12 @@ comment|/* number of codes */
 name|uInt
 operator|,
 comment|/* number of "simple" codes */
+specifier|const
 name|uIntf
 operator|*
 operator|,
 comment|/* list of base values for non-simple codes */
+specifier|const
 name|uIntf
 operator|*
 operator|,
@@ -149,6 +151,7 @@ end_comment
 
 begin_decl_stmt
 name|local
+specifier|const
 name|uInt
 name|cplens
 index|[
@@ -223,11 +226,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* actually lengths - 2; also see note #13 above about 258 */
+comment|/* see note #13 above about 258 */
 end_comment
 
 begin_decl_stmt
 name|local
+specifier|const
 name|uInt
 name|cplext
 index|[
@@ -294,19 +298,20 @@ literal|5
 block|,
 literal|0
 block|,
-literal|192
+literal|112
 block|,
-literal|192
+literal|112
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 192==invalid */
+comment|/* 112==invalid */
 end_comment
 
 begin_decl_stmt
 name|local
+specifier|const
 name|uInt
 name|cpdist
 index|[
@@ -380,6 +385,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|local
+specifier|const
 name|uInt
 name|cpdext
 index|[
@@ -532,11 +538,13 @@ name|uInt
 name|s
 decl_stmt|;
 comment|/* number of simple-valued codes (0..s-1) */
+specifier|const
 name|uIntf
 modifier|*
 name|d
 decl_stmt|;
 comment|/* list of base values for non-simple codes */
+specifier|const
 name|uIntf
 modifier|*
 name|e
@@ -558,7 +566,7 @@ name|z_streamp
 name|zs
 decl_stmt|;
 comment|/* for zalloc function */
-comment|/* Given a list of code lengths and a maximum table size, make a set of    tables to decode that set of codes.  Return Z_OK on success, Z_BUF_ERROR    if the given code set is incomplete (the tables are still built in this    case), Z_DATA_ERROR if the input is invalid (all zero length codes or an    over-subscribed set of lengths), or Z_MEM_ERROR if not enough memory. */
+comment|/* Given a list of code lengths and a maximum table size, make a set of    tables to decode that set of codes.  Return Z_OK on success, Z_BUF_ERROR    if the given code set is incomplete (the tables are still built in this    case), Z_DATA_ERROR if the input is invalid (an over-subscribed set of    lengths), or Z_MEM_ERROR if not enough memory. */
 block|{
 name|uInt
 name|a
@@ -967,6 +975,14 @@ operator|<
 name|n
 condition|)
 do|;
+name|n
+operator|=
+name|x
+index|[
+name|g
+index|]
+expr_stmt|;
+comment|/* set n to length of v */
 comment|/* Generate the Huffman codes and for each, make the table entries */
 name|x
 index|[
@@ -1633,6 +1649,11 @@ condition|(
 name|r
 operator|==
 name|Z_BUF_ERROR
+operator|||
+operator|*
+name|bb
+operator|==
+literal|0
 condition|)
 block|{
 name|inflate_trees_free
@@ -1730,9 +1751,6 @@ name|int
 name|r
 decl_stmt|;
 comment|/* build literal/length tree */
-if|if
-condition|(
-operator|(
 name|r
 operator|=
 name|huft_build
@@ -1753,9 +1771,17 @@ name|bl
 argument_list|,
 name|z
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|r
 operator|!=
 name|Z_OK
+operator|||
+operator|*
+name|bl
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -1778,8 +1804,8 @@ elseif|else
 if|if
 condition|(
 name|r
-operator|==
-name|Z_BUF_ERROR
+operator|!=
+name|Z_MEM_ERROR
 condition|)
 block|{
 name|inflate_trees_free
@@ -1810,9 +1836,6 @@ name|r
 return|;
 block|}
 comment|/* build distance tree */
-if|if
-condition|(
-operator|(
 name|r
 operator|=
 name|huft_build
@@ -1835,9 +1858,23 @@ name|bd
 argument_list|,
 name|z
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|r
 operator|!=
 name|Z_OK
+operator|||
+operator|(
+operator|*
+name|bd
+operator|==
+literal|0
+operator|&&
+name|nl
+operator|>
+literal|257
+operator|)
 condition|)
 block|{
 if|if
@@ -1854,7 +1891,7 @@ operator|(
 name|char
 operator|*
 operator|)
-literal|"oversubscribed literal/length tree"
+literal|"oversubscribed distance tree"
 expr_stmt|;
 elseif|else
 if|if
@@ -1890,7 +1927,30 @@ operator|(
 name|char
 operator|*
 operator|)
-literal|"incomplete literal/length tree"
+literal|"incomplete distance tree"
+expr_stmt|;
+name|r
+operator|=
+name|Z_DATA_ERROR
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|r
+operator|!=
+name|Z_MEM_ERROR
+condition|)
+block|{
+name|z
+operator|->
+name|msg
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|"empty distance tree with lengths"
 expr_stmt|;
 name|r
 operator|=
