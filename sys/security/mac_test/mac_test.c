@@ -4868,7 +4868,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
