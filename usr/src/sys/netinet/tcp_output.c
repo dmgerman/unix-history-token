@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -300,6 +300,15 @@ operator|->
 name|snd_cwnd
 argument_list|)
 expr_stmt|;
+name|flags
+operator|=
+name|tcp_outflags
+index|[
+name|tp
+operator|->
+name|t_state
+index|]
+expr_stmt|;
 comment|/* 	 * If in persist timeout with window of 0, send 1 byte. 	 * Otherwise, if window is small but nonzero 	 * and timer expired, we will send what we can 	 * and go to transmit state. 	 */
 if|if
 condition|(
@@ -314,10 +323,28 @@ name|win
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* 			 * If we still have some data to send, then 			 * clear the FIN bit.  Usually this would 			 * happen below when it realizes that we 			 * aren't sending all the data.  However, 			 * if we have exactly 1 byte of unset data, 			 * then it won't clear the FIN bit below, 			 * and if we are in persist state, we wind 			 * up sending the packet without recording 			 * that we sent the FIN bit. 			 * 			 * We can't just blindly clear the FIN bit, 			 * because if we don't have any more data 			 * to send then the probe will be the FIN 			 * itself. 			 */
+if|if
+condition|(
+name|off
+operator|<
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_cc
+condition|)
+name|flags
+operator|&=
+operator|~
+name|TH_FIN
+expr_stmt|;
 name|win
 operator|=
 literal|1
 expr_stmt|;
+block|}
 else|else
 block|{
 name|tp
@@ -337,15 +364,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|flags
-operator|=
-name|tcp_outflags
-index|[
-name|tp
-operator|->
-name|t_state
-index|]
-expr_stmt|;
 name|len
 operator|=
 name|min
