@@ -1328,6 +1328,10 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+name|lookforinterfaces
+operator|=
+literal|0
+expr_stmt|;
 name|nets
 operator|=
 literal|0
@@ -1382,6 +1386,8 @@ argument_list|(
 literal|"read"
 argument_list|)
 expr_stmt|;
+name|lookforinterfaces
+operator|=
 name|performnlist
 operator|=
 literal|1
@@ -1407,7 +1413,8 @@ literal|0
 condition|)
 block|{
 name|lookforinterfaces
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 name|skip
 label|:
