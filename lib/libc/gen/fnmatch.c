@@ -342,6 +342,12 @@ name|FNM_PATHNAME
 condition|)
 return|return
 operator|(
+operator|(
+name|flags
+operator|&
+name|FNM_LEADING_DIR
+operator|)
+operator|||
 name|strchr
 argument_list|(
 name|string
