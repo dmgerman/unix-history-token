@@ -967,10 +967,6 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-name|name
-operator|=
-name|rname
-expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -992,7 +988,7 @@ name|mntpt
 operator|=
 name|getmntname
 argument_list|(
-name|name
+name|rname
 argument_list|,
 name|MNTFROM
 argument_list|,
@@ -1036,6 +1032,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|name
+operator|=
+name|rname
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1080,6 +1080,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|name
+operator|=
+name|rname
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1092,10 +1096,6 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-name|mntpt
-operator|=
-name|name
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1103,7 +1103,7 @@ name|name
 operator|=
 name|getmntname
 argument_list|(
-name|mntpt
+name|rname
 argument_list|,
 name|MNTFROM
 argument_list|,
@@ -1119,7 +1119,7 @@ name|warnx
 argument_list|(
 literal|"%s: not currently mounted"
 argument_list|,
-name|mntpt
+name|name
 argument_list|)
 expr_stmt|;
 return|return
@@ -1128,6 +1128,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|mntpt
+operator|=
+name|rname
+expr_stmt|;
 block|}
 else|else
 block|{
