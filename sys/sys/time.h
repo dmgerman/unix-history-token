@@ -203,6 +203,7 @@ name|bintime
 modifier|*
 name|bt
 parameter_list|,
+specifier|const
 name|struct
 name|bintime
 modifier|*
@@ -261,6 +262,7 @@ name|bintime
 modifier|*
 name|bt
 parameter_list|,
+specifier|const
 name|struct
 name|bintime
 modifier|*
@@ -318,6 +320,7 @@ name|__inline
 name|void
 name|bintime2timespec
 parameter_list|(
+specifier|const
 name|struct
 name|bintime
 modifier|*
@@ -370,6 +373,7 @@ name|__inline
 name|void
 name|timespec2bintime
 parameter_list|(
+specifier|const
 name|struct
 name|timespec
 modifier|*
@@ -412,6 +416,7 @@ name|__inline
 name|void
 name|bintime2timeval
 parameter_list|(
+specifier|const
 name|struct
 name|bintime
 modifier|*
@@ -464,6 +469,7 @@ name|__inline
 name|void
 name|timeval2bintime
 parameter_list|(
+specifier|const
 name|struct
 name|timeval
 modifier|*
