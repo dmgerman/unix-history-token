@@ -2486,9 +2486,9 @@ operator|*
 name|rule
 operator|!=
 name|NULL
-operator|&&
-name|fw_one_pass
+comment|/*&& fw_one_pass*/
 condition|)
+comment|/* HACK! need to obey fw_one_pass */
 return|return
 literal|1
 return|;
