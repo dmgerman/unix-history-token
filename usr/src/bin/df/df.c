@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)df.c	4.9 (Berkeley) %G%"
+literal|"@(#)df.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -305,7 +305,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|fsp
@@ -315,8 +314,6 @@ argument_list|,
 name|FSTAB_RW
 argument_list|)
 operator|&&
-operator|!
-operator|(
 name|strcmp
 argument_list|(
 name|fsp
@@ -325,7 +322,6 @@ name|fs_type
 argument_list|,
 name|FSTAB_RO
 argument_list|)
-operator|)
 condition|)
 continue|continue;
 if|if
