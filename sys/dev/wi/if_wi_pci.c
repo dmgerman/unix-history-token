@@ -284,7 +284,7 @@ literal|0x1100
 block|,
 name|WI_BUS_PCI_PLX
 block|,
-literal|"PRISM2STA PCI WaveLAN/IEEE 802.11"
+literal|"PRISM2STA PCI WaveLAN"
 block|}
 block|,
 block|{
@@ -294,7 +294,7 @@ literal|0x4100
 block|,
 name|WI_BUS_PCI_PLX
 block|,
-literal|"Netgear MA301 PCI IEEE 802.11b"
+literal|"Netgear MA301 PCI"
 block|}
 block|,
 block|{
@@ -304,7 +304,7 @@ literal|0x1101
 block|,
 name|WI_BUS_PCI_PLX
 block|,
-literal|"GLPRISM2 PCI WaveLAN/IEEE 802.11"
+literal|"GLPRISM2 PCI WaveLAN"
 block|}
 block|,
 block|{
@@ -314,7 +314,7 @@ literal|0x1102
 block|,
 name|WI_BUS_PCI_PLX
 block|,
-literal|"Linksys WDT11 PCI IEEE 802.11b"
+literal|"Linksys WDT11 PCI"
 block|}
 block|,
 block|{
@@ -324,7 +324,7 @@ literal|0x3873
 block|,
 name|WI_BUS_PCI_NATIVE
 block|,
-literal|"Linksys WMP11 PCI Prism2.5"
+literal|"Intersil Prism2.5 PCI"
 block|}
 block|,
 block|{
@@ -334,7 +334,7 @@ literal|0x7770
 block|,
 name|WI_BUS_PCI_PLX
 block|,
-literal|"3Com Airconnect IEEE 802.11b"
+literal|"3Com Airconnect"
 block|}
 block|,
 block|{
@@ -344,7 +344,7 @@ literal|0x1023
 block|,
 name|WI_BUS_PCI_PLX
 block|,
-literal|"Siemens SpeedStream IEEE 802.11b"
+literal|"Siemens SpeedStream"
 block|}
 block|,
 block|{
