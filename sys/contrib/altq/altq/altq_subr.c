@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$KAME: altq_subr.c,v 1.21 2003/11/06 06:32:53 kjc Exp $	*/
 end_comment
 
@@ -711,6 +715,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* read if_snd unlocked */
 if|if
 condition|(
 name|type
@@ -869,6 +874,11 @@ end_function_decl
 
 begin_block
 block|{
+name|IFQ_LOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -877,9 +887,16 @@ argument_list|(
 name|ifq
 argument_list|)
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 ifdef|#
 directive|ifdef
 name|ALTQ3_COMPAT
@@ -898,9 +915,16 @@ argument_list|(
 name|ifq
 argument_list|)
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 name|EBUSY
 return|;
+block|}
 if|if
 condition|(
 name|ALTQ_IS_ATTACHED
@@ -908,9 +932,16 @@ argument_list|(
 name|ifq
 argument_list|)
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 name|EEXIST
 return|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -981,6 +1012,11 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -999,6 +1035,11 @@ modifier|*
 name|ifq
 decl_stmt|;
 block|{
+name|IFQ_LOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1007,9 +1048,16 @@ argument_list|(
 name|ifq
 argument_list|)
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 if|if
 condition|(
 name|ALTQ_IS_ENABLED
@@ -1017,9 +1065,16 @@ argument_list|(
 name|ifq
 argument_list|)
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 name|EBUSY
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1028,11 +1083,18 @@ argument_list|(
 name|ifq
 argument_list|)
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 ifdef|#
 directive|ifdef
 name|ALTQ3_COMPAT
@@ -1098,6 +1160,11 @@ name|altq_flags
 operator|&=
 name|ALTQF_CANTCHANGE
 expr_stmt|;
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1119,6 +1186,11 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|IFQ_LOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1127,9 +1199,16 @@ argument_list|(
 name|ifq
 argument_list|)
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 if|if
 condition|(
 name|ALTQ_IS_ENABLED
@@ -1137,9 +1216,16 @@ argument_list|(
 name|ifq
 argument_list|)
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 ifdef|#
 directive|ifdef
 name|__NetBSD__
@@ -1157,7 +1243,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|IFQ_PURGE
+name|IFQ_PURGE_NOLOCK
 argument_list|(
 name|ifq
 argument_list|)
@@ -1196,6 +1282,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1217,6 +1308,11 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|IFQ_LOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1225,9 +1321,16 @@ argument_list|(
 name|ifq
 argument_list|)
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 ifdef|#
 directive|ifdef
 name|__NetBSD__
@@ -1245,7 +1348,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|IFQ_PURGE
+name|IFQ_PURGE_NOLOCK
 argument_list|(
 name|ifq
 argument_list|)
@@ -1273,6 +1376,11 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
 argument_list|)
 expr_stmt|;
 return|return
@@ -1409,6 +1517,11 @@ decl_stmt|;
 name|u_int64_t
 name|now
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 name|tbr
 operator|=
 name|ifq
@@ -1553,7 +1666,7 @@ name|op
 operator|==
 name|ALTDQ_POLL
 condition|)
-name|IF_POLL
+name|_IF_POLL
 argument_list|(
 name|ifq
 argument_list|,
@@ -1561,7 +1674,7 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 name|ifq
 argument_list|,
@@ -1663,6 +1776,11 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|IFQ_LOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|profile
@@ -1685,11 +1803,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
+block|}
 name|ifq
 operator|->
 name|altq_tbr
@@ -1703,12 +1828,22 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|tbr
@@ -1734,11 +1869,19 @@ name|tbr
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* can not happen */
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 name|bzero
 argument_list|(
 name|tbr
@@ -1824,6 +1967,11 @@ name|tbr_lastop
 operator|=
 name|ALTDQ_REMOVE
 expr_stmt|;
+name|IFQ_LOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 name|otbr
 operator|=
 name|ifq
@@ -1881,6 +2029,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1890,7 +2043,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * tbr_timeout goes through the interface list, and kicks the drivers  * if necessary.  */
+comment|/*  * tbr_timeout goes through the interface list, and kicks the drivers  * if necessary.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -1936,6 +2089,23 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500000
+operator|)
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|ifp
@@ -1958,6 +2128,7 @@ name|if_list
 argument_list|)
 control|)
 block|{
+comment|/* read from if_snd unlocked */
 if|if
 condition|(
 operator|!
@@ -2001,6 +2172,23 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500000
+operator|)
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
@@ -2106,6 +2294,11 @@ name|tb_regulator
 modifier|*
 name|tbr
 decl_stmt|;
+name|IFQ_LOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2167,6 +2360,11 @@ name|tbr_depth
 argument_list|)
 expr_stmt|;
 block|}
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2176,7 +2374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * attach a discipline to the interface.  if one already exists, it is  * overridden.  */
+comment|/*  * attach a discipline to the interface.  if one already exists, it is  * overridden.  * Locking is done in the discipline specific attach functions. Basically  * they call back to altq_attach which takes care of the attach and locking.  */
 end_comment
 
 begin_function
@@ -2314,6 +2512,7 @@ name|EINVAL
 operator|)
 return|;
 comment|/* if this discipline is no longer referenced, just return */
+comment|/* read unlocked from if_snd */
 if|if
 condition|(
 name|a
@@ -2354,6 +2553,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* read unlocked from if_snd, _disable and _detach take care */
 if|if
 condition|(
 name|ALTQ_IS_ENABLED
@@ -2404,7 +2604,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * add a discipline or a queue  */
+comment|/*  * add a discipline or a queue  * Locking is done in the discipline specific functions with regards to  * malloc with WAITOK, also it is not yet clear which lock to use.  */
 end_comment
 
 begin_function
@@ -2531,7 +2731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * remove a discipline or a queue  */
+comment|/*  * remove a discipline or a queue  * It is yet unclear what lock to use to protect this operation, the  * discipline specific functions will determine and grab it  */
 end_comment
 
 begin_function
@@ -2638,7 +2838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * add a queue to the discipline  */
+comment|/*  * add a queue to the discipline  * It is yet unclear what lock to use to protect this operation, the  * discipline specific functions will determine and grab it  */
 end_comment
 
 begin_function
@@ -2726,7 +2926,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * remove a queue from the discipline  */
+comment|/*  * remove a queue from the discipline  * It is yet unclear what lock to use to protect this operation, the  * discipline specific functions will determine and grab it  */
 end_comment
 
 begin_function
@@ -2814,7 +3014,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * get queue statistics  */
+comment|/*  * get queue statistics  * Locking is done in the discipline specific functions with regards to  * copyout operations, also it is not yet clear which lock to use.  */
 end_comment
 
 begin_function

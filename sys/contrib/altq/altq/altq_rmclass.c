@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$KAME: altq_rmclass.c,v 1.18 2003/11/06 06:32:53 kjc Exp $	*/
 end_comment
 
@@ -1127,6 +1131,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|IFQ_LOCK
+argument_list|(
+name|ifd
+operator|->
+name|ifq_
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1261,6 +1272,13 @@ name|ifd
 argument_list|)
 expr_stmt|;
 block|}
+name|IFQ_UNLOCK
+argument_list|(
+name|ifd
+operator|->
+name|ifq_
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1342,6 +1360,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|IFQ_LOCK
+argument_list|(
+name|ifd
+operator|->
+name|ifq_
+argument_list|)
+expr_stmt|;
 name|cl
 operator|->
 name|allotment_
@@ -1531,6 +1556,13 @@ name|ifd
 argument_list|)
 expr_stmt|;
 block|}
+name|IFQ_UNLOCK
+argument_list|(
+name|ifd
+operator|->
+name|ifq_
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -2120,6 +2152,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|IFQ_LOCK
+argument_list|(
+name|ifd
+operator|->
+name|ifq_
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Free packets in the packet queue. 	 * XXX - this may not be a desired behavior.  Packets should be 	 *		re-queued. 	 */
 name|rmc_dropall
 argument_list|(
@@ -2409,6 +2448,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|IFQ_UNLOCK
+argument_list|(
+name|ifd
+operator|->
+name|ifq_
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -6250,6 +6296,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|IFQ_LOCK
+argument_list|(
+name|ifd
+operator|->
+name|ifq_
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cl
@@ -6314,6 +6367,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IFQ_UNLOCK
+argument_list|(
+name|ifd
+operator|->
+name|ifq_
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$KAME: altq_cbq.c,v 1.19 2003/09/17 14:23:25 kjc Exp $	*/
 end_comment
 
@@ -988,6 +992,11 @@ name|ifq
 operator|->
 name|altq_disc
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|req
@@ -2444,6 +2453,11 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 comment|/* grab class set by classifier */
 if|if
 condition|(
@@ -2470,6 +2484,18 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|501113
+operator|)
 name|printf
 argument_list|(
 literal|"altq: packet for %s does not have pkthdr\n"
@@ -2731,6 +2757,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 name|rmc_dequeue_next
@@ -2805,6 +2836,11 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2861,6 +2897,12 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -2871,6 +2913,12 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|IFQ_LOCK
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4835,6 +4883,18 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|501113
+operator|)
 name|sprintf
 argument_list|(
 name|iface

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$KAME: altq_rio.c,v 1.17 2003/07/10 12:07:49 kjc Exp $	*/
 end_comment
 
@@ -3400,6 +3404,11 @@ name|ifq
 operator|->
 name|altq_disc
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|req
@@ -3486,6 +3495,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rio_addq
@@ -3564,6 +3578,11 @@ name|m
 init|=
 name|NULL
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|op

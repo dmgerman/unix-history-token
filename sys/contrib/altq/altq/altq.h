@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$KAME: altq.h,v 1.10 2003/07/10 12:07:47 kjc Exp $	*/
 end_comment
 
@@ -22,7 +26,7 @@ end_define
 begin_if
 if|#
 directive|if
-literal|1
+literal|0
 end_if
 
 begin_comment

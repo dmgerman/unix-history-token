@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$KAME: altq_cdnr.c,v 1.14 2003/09/05 22:40:36 itojun Exp $	*/
 end_comment
 
@@ -187,11 +191,22 @@ directive|include
 file|<altq/altq.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALTQ3_COMPAT
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<altq/altq_conf.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$KAME: altq_hfsc.c,v 1.24 2003/12/05 05:40:46 kjc Exp $	*/
 end_comment
 
@@ -2031,6 +2035,11 @@ name|ifq
 operator|->
 name|altq_disc
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|req
@@ -2925,6 +2934,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|IFQ_LOCK
+argument_list|(
+name|hif
+operator|->
+name|hif_ifq
+argument_list|)
+expr_stmt|;
 name|hif
 operator|->
 name|hif_classes
@@ -3002,6 +3018,13 @@ operator|==
 name|HFSC_MAX_CLASSES
 condition|)
 block|{
+name|IFQ_UNLOCK
+argument_list|(
+name|hif
+operator|->
+name|hif_ifq
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -3084,6 +3107,13 @@ name|cl
 expr_stmt|;
 block|}
 block|}
+name|IFQ_UNLOCK
+argument_list|(
+name|hif
+operator|->
+name|hif_ifq
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -3306,6 +3336,15 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|IFQ_LOCK
+argument_list|(
+name|cl
+operator|->
+name|cl_hif
+operator|->
+name|hif_ifq
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ALTQ3_COMPAT
@@ -3473,6 +3512,15 @@ operator|->
 name|hif_classes
 operator|--
 expr_stmt|;
+name|IFQ_UNLOCK
+argument_list|(
+name|cl
+operator|->
+name|cl_hif
+operator|->
+name|hif_ifq
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -3541,6 +3589,15 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|IFQ_LOCK
+argument_list|(
+name|cl
+operator|->
+name|cl_hif
+operator|->
+name|hif_ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cl
@@ -3576,6 +3633,15 @@ operator|->
 name|hif_defaultclass
 operator|=
 name|NULL
+expr_stmt|;
+name|IFQ_UNLOCK
+argument_list|(
+name|cl
+operator|->
+name|cl_hif
+operator|->
+name|hif_ifq
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3788,6 +3854,11 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 comment|/* grab class set by classifier */
 if|if
 condition|(
@@ -3814,6 +3885,18 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|501113
+operator|)
 name|printf
 argument_list|(
 literal|"altq: packet for %s does not have pkthdr\n"
@@ -4125,6 +4208,11 @@ decl_stmt|;
 name|u_int64_t
 name|cur_time
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hif
@@ -9015,6 +9103,15 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|IFQ_LOCK
+argument_list|(
+name|cl
+operator|->
+name|cl_hif
+operator|->
+name|hif_ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rsc
@@ -9425,6 +9522,15 @@ argument_list|)
 expr_stmt|;
 comment|/* is this enough? */
 block|}
+name|IFQ_UNLOCK
+argument_list|(
+name|cl
+operator|->
+name|cl_hif
+operator|->
+name|hif_ifq
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s

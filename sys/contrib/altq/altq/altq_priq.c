@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$KAME: altq_priq.c,v 1.11 2003/09/17 14:23:25 kjc Exp $	*/
 end_comment
 
@@ -172,11 +176,22 @@ directive|include
 file|<altq/altq.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALTQ3_COMPAT
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<altq/altq_conf.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1356,6 +1371,11 @@ name|ifq
 operator|->
 name|altq_disc
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|req
@@ -1562,6 +1582,15 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|IFQ_LOCK
+argument_list|(
+name|cl
+operator|->
+name|cl_pif
+operator|->
+name|pif_ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1575,6 +1604,15 @@ condition|)
 name|priq_purgeq
 argument_list|(
 name|cl
+argument_list|)
+expr_stmt|;
+name|IFQ_UNLOCK
+argument_list|(
+name|cl
+operator|->
+name|cl_pif
+operator|->
+name|pif_ifq
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2154,6 +2192,15 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|IFQ_LOCK
+argument_list|(
+name|cl
+operator|->
+name|cl_pif
+operator|->
+name|pif_ifq
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ALTQ3_CLFIER_COMPAT
@@ -2266,6 +2313,15 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+name|IFQ_UNLOCK
+argument_list|(
+name|cl
+operator|->
+name|cl_pif
+operator|->
+name|pif_ifq
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -2403,6 +2459,11 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 comment|/* grab class set by classifier */
 if|if
 condition|(
@@ -2429,6 +2490,18 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|501113
+operator|)
 name|printf
 argument_list|(
 literal|"altq: packet for %s does not have pkthdr\n"
@@ -2695,6 +2768,11 @@ decl_stmt|;
 name|int
 name|pri
 decl_stmt|;
+name|IFQ_LOCK_ASSERT
+argument_list|(
+name|ifq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|IFQ_IS_EMPTY
