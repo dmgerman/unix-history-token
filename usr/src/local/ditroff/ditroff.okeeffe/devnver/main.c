@@ -1,7 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * dver: VAX Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  *  *		Jaap Akkerhuis  *			added Versatec80 support  *			removed Berkeley specific stuff (like nstips)  *			by #ifdef BERK, allthough a lot of things are  *			around (like polygon and gremlin...)  *  *		Carol Orange  *			Changed to make the versatec a Harris typesetter  *			look-alike.  */
+comment|/*  *  * dver: VAX Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  *  *		Jaap Akkerhuis  *			added Versatec80 support  *			removed Berkeley specific stuff (like nstips)  *			by #ifdef BERK, allthough a lot of things are  *			around (like polygon and gremlin...)  *  *		Carol Orange and Denise Draper  *			Changed to make the versatec a Harris typesetter  *			look-alike.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINT
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ndver80	1.2 (CWI) 87/07/10"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************      output language from troff:     all numbers are character strings  #..\n	comment sn	size in points fn	font as number from 1 to n cx	ascii character x Cxyz	funny char \(xyz. terminated by white space Hn	go to absolute horizontal position n Vn	go to absolute vertical position n (down is positive) hn	go n units horizontally (relative) vn	ditto vertically nnc	move right nn, then print c (exactly 2 digits!) 		(this wart is an optimization that shrinks output file size 		 about 35% and run-time about 15% while preserving ascii-ness) pn	new page begins (number n) -- set v to 0 P	spread ends -- output it. (Put in by vsort). nb a	end of line (information only -- no action needed) 	b = space before line, a = after w	paddable word space -- no action needed  Dt ..\n	draw operation 't': 	Dl x y .	line from here by x,y (drawing char .) 	Dc d		circle of diameter d with left side here 	De x y		ellipse of axes x,y with left side here 	Da x y r	arc counter-clockwise by x,y of radius r 	D~ x y x y ...	B-spline curve by x,y then x,y ... 			vectors, with extents from miny to maxy (no border)  x ..\n	device control functions:      x i	init      x T s	name of device is s      x r n h v	resolution is n/inch h = min horizontal motion, v = min vert      x p	pause (can restart)      x s	stop -- done for ever      x t	generate trailer      x f n s	font position n contains font s      x H n	set character height to n      x S n	set slant to N  	Subcommands like "i" are often spelled out like "init".  *******************************************************************************/
@@ -25,7 +46,7 @@ name|char
 modifier|*
 name|devname
 init|=
-literal|"nver"
+literal|"har"
 decl_stmt|;
 end_decl_stmt
 

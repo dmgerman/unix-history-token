@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/********************************************************************  *  * Harris - Emulator specific font stuff: bitmap files.  *  *******************************************************************/
+comment|/********************************************************************  *  * Harris - Emulator specific font stuff: bitmap files.  *  * @(#)font2.c	1.2 (CWI) 87/07/10  *  *******************************************************************/
 end_comment
 
 begin_include
@@ -104,8 +104,11 @@ modifier|*
 name|ch
 index|[
 literal|128
+operator|+
+literal|1
 index|]
 decl_stmt|;
+comment|/* we start at index 1 */
 name|struct
 name|fontadmin
 modifier|*
@@ -1256,10 +1259,10 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
-operator|<
+operator|<=
 literal|128
 condition|;
 name|i

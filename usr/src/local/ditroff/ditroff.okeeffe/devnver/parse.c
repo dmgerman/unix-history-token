@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*************************************************************************  *  * Code to parse the ditroff output language and take the appropriate  * action.  *  * For a description of the ditroff language, see the comment in main.c.  *  ************************************************************************/
+comment|/*************************************************************************  *  * @(#)parse.c	1.2 (CWI) 87/07/10  *  * Code to parse the ditroff output language and take the appropriate  * action.  *  * For a description of the ditroff language, see the comment in main.c.  *  ************************************************************************/
 end_comment
 
 begin_include
@@ -62,18 +62,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|private
+specifier|extern
 name|char
 modifier|*
-name|inname
-init|=
-literal|"nver"
+name|devname
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* input was prepared for this dev */
-end_comment
 
 begin_expr_stmt
 name|conv
@@ -1013,9 +1007,27 @@ name|fp
 argument_list|,
 literal|"%s"
 argument_list|,
-name|inname
+name|str
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+name|devname
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* tell lpd to abort this file */
 break|break;
 block|}
 while|while
