@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.144 1998/01/22 17:29:51 dyson Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.145 1998/01/24 02:01:20 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -2921,6 +2921,34 @@ name|bp
 operator|->
 name|b_flags
 operator|&
+operator|(
+name|B_INVAL
+operator||
+name|B_RELBUF
+operator|)
+condition|)
+name|vfs_vmio_release
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_VMIO
+condition|)
+block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&&
 operator|(
 name|B_INVAL
 operator||
