@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.15 1995/11/04 14:43:30 bde Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.16 1995/11/05 04:50:55 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -183,6 +183,11 @@ name|AHC_RUNNING
 init|=
 literal|0x02
 block|,
+name|AHC_USEDEFAULTS
+init|=
+literal|0x04
+block|,
+comment|/* 					 * For cards without an seeprom 					 * or a BIOS to initialize the chip's 					 * SRAM, we use the default chip and 					 * target settings. 					 */
 name|AHC_EXTSCB
 init|=
 literal|0x10
@@ -199,7 +204,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 26 bytes of the structure are valid for the hardware, the rest used  * for driver level bookeeping.  The "__attribute ((packed))" tags ensure that  * gcc does not attempt to pad the long ints in the structure to word  * boundaries since the first 26 bytes of this structure must have the correct  * offsets for the hardware to find them.  The driver is further optimized  * so that we only have to download the first 19 bytes since as long  * as we always use S/G, the last fields should be zero anyway.  */
+comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 26 bytes of the structure need to be transfered to the card during  * normal operation.  The remaining fields (next_waiting and host_scb) are  * initialized the first time an SCB is allocated in get_scb().  The fields  * starting at byte 32 are used for kernel level bookeeping.    */
 end_comment
 
 begin_struct
@@ -207,89 +212,56 @@ struct|struct
 name|scb
 block|{
 comment|/* ------------    Begin hardware supported fields    ---------------- */
-comment|/*1*/
+comment|/*0*/
 name|u_char
 name|control
 decl_stmt|;
-define|#
-directive|define
-name|SCB_NEEDWDTR
-value|0x80
-comment|/* Initiate Wide Negotiation */
-define|#
-directive|define
-name|SCB_DISCENB
-value|0x40
-comment|/* Disconnection Enable */
-define|#
-directive|define
-name|SCB_TE
-value|0x20
-comment|/* Tag enable */
-define|#
-directive|define
-name|SCB_NEEDSDTR
-value|0x10
-comment|/* Initiate Sync Negotiation */
-define|#
-directive|define
-name|SCB_NEEDDMA
-value|0x08
-comment|/* Refresh SCB from host ram */
-define|#
-directive|define
-name|SCB_DIS
-value|0x04
-define|#
-directive|define
-name|SCB_TAG_TYPE
-value|0x03
-define|#
-directive|define
-name|SIMPLE_QUEUE
-value|0x00
-define|#
-directive|define
-name|HEAD_QUEUE
-value|0x01
-define|#
-directive|define
-name|OR_QUEUE
-value|0x02
-comment|/*2*/
+comment|/*1*/
 name|u_char
 name|target_channel_lun
 decl_stmt|;
 comment|/* 4/1/3 bits */
+comment|/*2*/
+name|u_char
+name|target_status
+decl_stmt|;
 comment|/*3*/
 name|u_char
 name|SG_segment_count
 decl_stmt|;
-comment|/*7*/
+comment|/*4*/
 name|physaddr
 name|SG_list_pointer
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
 decl_stmt|;
-comment|/*11*/
-name|physaddr
-name|cmdpointer
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+comment|/*8*/
+name|u_char
+name|residual_SG_segment_count
+decl_stmt|;
+comment|/*9*/
+name|u_char
+name|residual_data_count
+index|[
+literal|3
+index|]
 decl_stmt|;
 comment|/*12*/
+name|physaddr
+name|data
+decl_stmt|;
+comment|/*16*/
+name|u_long
+name|datalen
+decl_stmt|;
+comment|/* Really only three bits, but its 					 * faster to treat it as a long on 					 * a quad boundary. 					 */
+comment|/*20*/
+name|physaddr
+name|cmdpointer
+decl_stmt|;
+comment|/*24*/
 name|u_char
 name|cmdlen
 decl_stmt|;
-comment|/*14*/
+comment|/*25*/
 name|u_char
 name|RESERVED
 index|[
@@ -297,75 +269,24 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* must be zero */
-comment|/*15*/
-name|u_char
-name|target_status
-decl_stmt|;
-comment|/*18*/
-name|u_char
-name|residual_data_count
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/*19*/
-name|u_char
-name|residual_SG_segment_count
-decl_stmt|;
-comment|/*23*/
-name|physaddr
-name|data
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
-decl_stmt|;
-comment|/*26*/
-name|u_char
-name|datalen
-index|[
-literal|3
-index|]
-decl_stmt|;
 define|#
 directive|define
-name|SCB_DOWN_SIZE
+name|SCB_PIO_TRANSFER_SIZE
 value|26
-comment|/* amount to actually download */
-define|#
-directive|define
-name|SCB_UP_SIZE
-value|26
-comment|/* 					 * amount we need to upload to perform 					 * a request sense. 					 */
-comment|/*30*/
-name|physaddr
-name|host_scb
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
-decl_stmt|;
-comment|/*31*/
+comment|/* 					 * amount we need to upload/download 					 * via rep in/outsb to perform 					 * a request sense.  The second 					 * RESERVED byte is initialized to 					 * 0 in get_scb(). 					 */
+comment|/*27*/
 name|u_char
 name|next_waiting
 decl_stmt|;
 comment|/* Used to thread SCBs awaiting 					 * selection 					 */
+comment|/*28*/
+name|physaddr
+name|host_scb
+decl_stmt|;
 define|#
 directive|define
-name|SCB_LIST_NULL
-value|0xff
-comment|/* SCB list equivelent to NULL */
-if|#
-directive|if
-literal|0
-comment|/* 	 *  No real point in transferring this to the 	 *  SCB registers. 	*/
-block|unsigned char RESERVED[1];
-endif|#
-directive|endif
+name|SCB_HARDWARE_SIZE
+value|32
 comment|/*-----------------end of hardware supported fields----------------*/
 name|struct
 name|scb
@@ -581,8 +502,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|AHC_DEBUG
+name|AHC_SHOWSCBCNT
+value|0x0020
 end_define
+
+begin_comment
+comment|/* #define AHC_DEBUG */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -705,8 +631,9 @@ name|ahc_init
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ahc_data
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -718,8 +645,9 @@ name|ahc_attach
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ahc_data
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
