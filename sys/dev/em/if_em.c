@@ -7980,12 +7980,15 @@ block|{
 name|printf
 argument_list|(
 literal|"em%d: em_dma_malloc: bus_dmammem_alloc failed; "
-literal|"size %u, error %u\n"
+literal|"size %ju, error %d\n"
 argument_list|,
 name|adapter
 operator|->
 name|unit
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|size
 argument_list|,
 name|r
