@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.36 1997/05/03 21:19:53 joerg Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.37 1997/07/14 04:53:52 julian Exp $  */
 end_comment
 
 begin_include
@@ -1009,6 +1009,13 @@ name|devnmp
 operator|->
 name|nextlink
 operator|)
+expr_stmt|;
+operator|*
+name|devnmp
+operator|->
+name|prevlinkp
+operator|=
+name|devnmp
 expr_stmt|;
 name|dnp
 operator|->
@@ -2062,8 +2069,6 @@ init|;
 name|adnp
 operator|!=
 name|pdnp
-operator|->
-name|nextsibling
 condition|;
 name|adnp
 operator|=
@@ -2083,7 +2088,7 @@ name|child
 operator|->
 name|name
 argument_list|,
-name|pdnp
+name|adnp
 argument_list|,
 name|type
 argument_list|,
