@@ -1,10 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984 by Sun Microsystems, Inc.  *  *	@(#)portmap.c	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1990 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* @(#)portmap.c	2.3 88/08/11 4.0 RPCSRC */
+comment|/* not lint */
 end_comment
 
 begin_ifndef
@@ -19,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)portmap.c 1.32 87/08/06 Copyr 1984 Sun Micro"
+literal|"@(#)portmap.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +47,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/* @(#)portmap.c	2.3 88/08/11 4.0 RPCSRC static char sccsid[] = "@(#)portmap.c 1.32 87/08/06 Copyr 1984 Sun Micro"; */
+end_comment
 
 begin_comment
 comment|/*  * portmap.c, Implements the program,version to port number mapping for  * rpc.  */
