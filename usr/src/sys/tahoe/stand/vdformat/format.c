@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	1.5 (Berkeley/CCI) %G%"
+literal|"@(#)format.c	1.6 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -923,6 +923,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dcb
+operator|.
+name|operrsta
+operator|&
+name|DCBS_HARD
+condition|)
+name|vd_error
+argument_list|(
+literal|"format"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kill_processes

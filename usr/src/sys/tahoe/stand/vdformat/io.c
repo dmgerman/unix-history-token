@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	1.5 (Berkeley/CCI) %G%"
+literal|"@(#)io.c	1.6 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,59 +1395,7 @@ name|d_trackskew
 expr_stmt|;
 comment|/* 		addr->vdsecsize = lab->d_secsize/sizeof(short); */
 block|}
-name|printf
-argument_list|(
-literal|"devsel %x, ncyl %d, ntrk %d, nsec %d, slip %d, cylskew %d, trackskew %d, secsize %d\n"
-argument_list|,
-name|dcb
-operator|.
-name|devselect
-argument_list|,
-name|dcb
-operator|.
-name|trail
-operator|.
-name|rstrail
-operator|.
-name|ncyl
-argument_list|,
-name|dcb
-operator|.
-name|trail
-operator|.
-name|rstrail
-operator|.
-name|nsurfaces
-argument_list|,
-name|dcb
-operator|.
-name|trail
-operator|.
-name|rstrail
-operator|.
-name|nsectors
-argument_list|,
-name|dcb
-operator|.
-name|trail
-operator|.
-name|rstrail
-operator|.
-name|slip_sec
-argument_list|,
-name|lab
-operator|->
-name|d_cylskew
-argument_list|,
-name|lab
-operator|->
-name|d_trackskew
-argument_list|,
-name|lab
-operator|->
-name|d_secsize
-argument_list|)
-expr_stmt|;
+comment|/* printf("devsel %x, ncyl %d, ntrk %d, nsec %d, slip %d, cylskew %d, trackskew %d, secsize %d\n", dcb.devselect, dcb.trail.rstrail.ncyl, dcb.trail.rstrail.nsurfaces, dcb.trail.rstrail.nsectors, dcb.trail.rstrail.slip_sec, lab->d_cylskew, lab->d_trackskew, lab->d_secsize); */
 name|mdcb
 operator|.
 name|mdcb_head
@@ -1718,7 +1666,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* ** 	data_ok checks an error status word for bit patterns **  associated with error conditions from the VDDC controller.  If a hardware **  error is present then the problem is reported on the console and the program **  is halted.  If a data error is present the a zero is returned. **  If everything is OK then a 1 is returned. */
+comment|/* ** 	data_ok checks an error status word for bit patterns **  associated with error conditions from the VDDC controller.  If a hardware **  error is present then the problem is reported on the console. **  If a data error is present the a zero is returned. **  If everything is OK then a 1 is returned. */
 end_comment
 
 begin_macro
@@ -1743,158 +1691,14 @@ operator|&
 name|HARD_ERROR
 condition|)
 block|{
-if|if
-condition|(
-name|status
-operator|&
-name|DCBS_NRDY
-condition|)
-name|printf
+name|vd_error
 argument_list|(
-literal|"\nDrive is not ready!"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|DCBS_IVA
-condition|)
-name|printf
-argument_list|(
-literal|"\nInvalid disk address issued!"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|DCBS_NEM
-condition|)
-name|printf
-argument_list|(
-literal|"\nNon-existent memory error!"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|DCBS_DPE
-condition|)
-name|printf
-argument_list|(
-literal|"\nMain memory parity error!"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|DCBS_OAB
-condition|)
-name|printf
-argument_list|(
-literal|"\nCPU aborted operation!"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|DCBS_WPT
-condition|)
-name|printf
-argument_list|(
-literal|"\nDrive is write protected!"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|DCBS_SKI
-condition|)
-name|printf
-argument_list|(
-literal|"\nDisk seek error!"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|DCBS_CHE
-condition|)
-name|printf
-argument_list|(
-literal|"\nController hardware error!"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"\nNot on cylinder error!"
+literal|"data transfer"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   Status = 0x%lx"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|C_INFO
-operator|->
-name|type
-operator|==
-name|VDTYPE_SMDE
-condition|)
-name|printf
-argument_list|(
-literal|"  Error code =  0x%x"
-argument_list|,
-name|dcb
-operator|.
-name|err_code
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"cylinder = %d, track = %d,"
-argument_list|,
-name|dcb
-operator|.
-name|err_cyl
-argument_list|,
-name|dcb
-operator|.
-name|err_trk
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" sector = %d, op = 0x%x\n"
-argument_list|,
-name|dcb
-operator|.
-name|err_sec
+literal|"  op = 0x%x\n"
 argument_list|,
 name|dcb
 operator|.
@@ -1928,6 +1732,92 @@ operator|)
 operator|)
 argument_list|)
 return|;
+block|}
+end_block
+
+begin_macro
+name|vd_error
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|status
+init|=
+name|dcb
+operator|.
+name|operrsta
+decl_stmt|;
+name|print
+argument_list|(
+literal|"error at sector %d (cyl %d trk %d sect %d),\n"
+argument_list|,
+name|to_sector
+argument_list|(
+name|cur
+operator|.
+name|daddr
+argument_list|)
+argument_list|,
+name|dcb
+operator|.
+name|err_cyl
+operator|&
+literal|0xfff
+argument_list|,
+name|dcb
+operator|.
+name|err_trk
+argument_list|,
+name|dcb
+operator|.
+name|err_sec
+argument_list|)
+expr_stmt|;
+name|print
+argument_list|(
+literal|"  status=%b"
+argument_list|,
+name|dcb
+operator|.
+name|operrsta
+argument_list|,
+name|VDERRBITS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|C_INFO
+operator|->
+name|type
+operator|==
+name|VDTYPE_SMDE
+condition|)
+name|printf
+argument_list|(
+literal|", ecode=0x%x"
+argument_list|,
+name|dcb
+operator|.
+name|err_code
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
