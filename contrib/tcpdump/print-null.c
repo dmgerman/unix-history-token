@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.41 2001/07/05 18:54:15 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.41.4.1 2002/06/01 23:51:15 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,30 +59,6 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|rtentry
-struct_decl|;
-end_struct_decl
 
 begin_include
 include|#

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.29 2001/07/04 21:36:15 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.29.4.1 2002/05/07 18:30:19 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2758,9 +2758,58 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|18
+case|:
+comment|/* Old DR-Priority */
+if|if
+condition|(
+name|olen
+operator|==
+literal|4
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" (OLD-DR-Priority: %d)"
+argument_list|,
+name|EXTRACT_32BITS
+argument_list|(
+operator|&
+name|bp
+index|[
+literal|4
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+goto|goto
+name|unknown
+goto|;
+break|break;
+case|case
 literal|19
 case|:
 comment|/* DR-Priority */
+if|if
+condition|(
+name|olen
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" (OLD-bidir-capable)"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 operator|(
 name|void
 operator|)
@@ -2927,6 +2976,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|unknown
+label|:
 if|if
 condition|(
 name|vflag
