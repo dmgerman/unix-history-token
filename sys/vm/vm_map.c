@@ -102,6 +102,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -342,6 +354,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|old_msync
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|old_msync
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|old_msync
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use old (insecure) msync behavior"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -8263,7 +8303,11 @@ name|offidxstart
 argument_list|,
 name|offidxend
 argument_list|,
+name|old_msync
+condition|?
 name|FALSE
+else|:
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
