@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)icheck.c	1.17 (Berkeley) %G%"
+literal|"@(#)icheck.c	1.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2612,6 +2612,22 @@ name|i
 operator|++
 control|)
 block|{
+name|cgrp
+operator|.
+name|cg_cs
+operator|.
+name|cs_nifree
+operator|++
+expr_stmt|;
+name|clrbit
+argument_list|(
+name|cgrp
+operator|.
+name|cg_iused
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|dp
 operator|=
 operator|&
@@ -2620,13 +2636,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|dp
-operator|==
-name|NULL
-condition|)
-continue|continue;
 if|if
 condition|(
 operator|(
@@ -2659,6 +2668,13 @@ operator|.
 name|cs_ndir
 operator|++
 expr_stmt|;
+name|cgrp
+operator|.
+name|cg_cs
+operator|.
+name|cs_nifree
+operator|--
+expr_stmt|;
 name|setbit
 argument_list|(
 name|cgrp
@@ -2670,22 +2686,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|cgrp
-operator|.
-name|cg_cs
-operator|.
-name|cs_nifree
-operator|++
-expr_stmt|;
-name|clrbit
-argument_list|(
-name|cgrp
-operator|.
-name|cg_iused
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 block|}
 while|while
 condition|(
