@@ -29,7 +29,6 @@ name|dlopen
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|,
@@ -49,7 +48,6 @@ operator|(
 name|void
 operator|*
 operator|,
-specifier|const
 name|char
 operator|*
 operator|)
