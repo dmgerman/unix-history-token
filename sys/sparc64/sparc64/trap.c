@@ -688,6 +688,7 @@ expr_stmt|;
 name|thread_exit
 argument_list|()
 expr_stmt|;
+comment|/* XXXKSE need proc lock? */
 comment|/* NOTREACHED */
 block|}
 block|}

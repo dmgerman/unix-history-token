@@ -1012,15 +1012,16 @@ name|td
 operator|)
 condition|)
 block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* check if thisis really needed */
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|)
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|thread_exit
