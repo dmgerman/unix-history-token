@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)announce.c	8.2 (Berkeley) 1/7/94"
+literal|"@(#)announce.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,13 +73,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -97,19 +115,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
+file|<vis.h>
 end_include
 
 begin_decl_stmt
@@ -257,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|N_CHARS
-value|120
+value|256
 end_define
 
 begin_comment
@@ -361,8 +367,7 @@ modifier|*
 name|lptr
 decl_stmt|,
 modifier|*
-name|ttymsg
-argument_list|()
+name|vis_user
 decl_stmt|;
 name|int
 name|i
@@ -401,12 +406,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line_buf
 index|[
 name|i
 index|]
+argument_list|,
+name|N_CHARS
 argument_list|,
 literal|" "
 argument_list|)
@@ -442,12 +449,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line_buf
 index|[
 name|i
 index|]
+argument_list|,
+name|N_CHARS
 argument_list|,
 literal|"Message from Talk_Daemon@%s at %d:%02d ..."
 argument_list|,
@@ -490,21 +499,48 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
+name|vis_user
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|request
+operator|->
+name|l_name
+argument_list|)
+operator|*
+literal|4
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strvis
+argument_list|(
+name|vis_user
+argument_list|,
+name|request
+operator|->
+name|l_name
+argument_list|,
+name|VIS_CSTYLE
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line_buf
 index|[
 name|i
 index|]
+argument_list|,
+name|N_CHARS
 argument_list|,
 literal|"talk: connection requested by %s@%s"
 argument_list|,
-name|request
-operator|->
-name|l_name
+name|vis_user
 argument_list|,
 name|remote_machine
 argument_list|)
@@ -540,18 +576,18 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line_buf
 index|[
 name|i
 index|]
+argument_list|,
+name|N_CHARS
 argument_list|,
 literal|"talk: respond with:  talk %s@%s"
 argument_list|,
-name|request
-operator|->
-name|l_name
+name|vis_user
 argument_list|,
 name|remote_machine
 argument_list|)
@@ -587,12 +623,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line_buf
 index|[
 name|i
 index|]
+argument_list|,
+name|N_CHARS
 argument_list|,
 literal|" "
 argument_list|)
