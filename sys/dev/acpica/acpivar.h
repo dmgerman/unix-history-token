@@ -1148,13 +1148,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|resource
-modifier|*
+name|int
 name|acpi_bus_alloc_gas
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
+modifier|*
+name|type
 parameter_list|,
 name|int
 modifier|*
@@ -1163,6 +1165,12 @@ parameter_list|,
 name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|gas
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+modifier|*
+name|res
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1960,6 +1968,10 @@ name|res
 parameter_list|,
 name|int
 name|idx
+parameter_list|,
+name|int
+modifier|*
+name|type
 parameter_list|,
 name|int
 modifier|*
