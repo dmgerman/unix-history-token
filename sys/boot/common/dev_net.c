@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	  * $Id$  * From: $NetBSD: dev_net.c,v 1.12 1997/12/10 20:38:37 gwr Exp $  */
+comment|/*	  * $Id: dev_net.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  * From: $NetBSD: dev_net.c,v 1.12 1997/12/10 20:38:37 gwr Exp $  */
 end_comment
 
 begin_comment
@@ -404,8 +404,9 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/*      * On SRM boots opening the device the first time takes ages      * I don't see the point of doing this every time you load a file      */
-comment|/* netdev_opens--; */
+name|netdev_opens
+operator|--
+expr_stmt|;
 comment|/* Not last close? */
 if|if
 condition|(

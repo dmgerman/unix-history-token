@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * Copyright (c) 1998 Doug Rabson<dfr@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * Copyright (c) 1998 Doug Rabson<dfr@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.1.1.1 1998/08/21 03:17:42 msmith Exp $  */
 end_comment
 
 begin_include
@@ -296,7 +296,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|">> %s, Revision %s\n"
+literal|"%s, Revision %s\n"
 argument_list|,
 name|bootprog_name
 argument_list|,
@@ -305,7 +305,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|">> (%s, %s)\n"
+literal|"(%s, %s)\n"
 argument_list|,
 name|bootprog_maker
 argument_list|,
@@ -314,7 +314,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|">> Memory: %ld k\n"
+literal|"Memory: %ld k\n"
 argument_list|,
 name|memsize
 argument_list|()
@@ -467,12 +467,39 @@ name|arch_getdev
 operator|=
 name|alpha_getdev
 expr_stmt|;
+comment|/*      * SRM firmware takes *ages* to open the disk device.  We hold it      * open until the closeall() when we exec the kernel.  Note that      * we must close it eventually since otherwise the firmware leaves      * the ncr hardware in a broken state (at least it does on my EB164).      */
+name|open
+argument_list|(
+literal|"/"
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
 comment|/*      * XXX should these be in the MI source?      */
 name|source
 argument_list|(
 literal|"/boot/boot.config"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|autoboot
+argument_list|(
+literal|10
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* try to boot automatically */
+name|printf
+argument_list|(
+literal|"\nType '?' for a list of commands, 'help' for more detailed help.\n"
+argument_list|)
+expr_stmt|;
+comment|/* setenv("prompt", "$currdev>", 1); */
 name|interact
 argument_list|()
 expr_stmt|;
