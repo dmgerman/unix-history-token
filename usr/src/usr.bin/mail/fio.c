@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	1.7 %G%"
+literal|"@(#)fio.c	1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1445,6 +1445,30 @@ condition|;
 name|mp
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flag
+operator|&
+name|MNEW
+condition|)
+block|{
+name|mp
+operator|->
+name|m_flag
+operator|&=
+operator|~
+name|MNEW
+expr_stmt|;
+name|mp
+operator|->
+name|m_flag
+operator||=
+name|MSTATUS
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mp
@@ -1455,6 +1479,8 @@ operator|(
 name|MODIFY
 operator||
 name|MDELETED
+operator||
+name|MSTATUS
 operator|)
 condition|)
 block|{
@@ -1462,6 +1488,7 @@ name|gotcha
 operator|++
 expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
