@@ -1799,6 +1799,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+empty_stmt|;
 block|}
 if|if
 condition|(
