@@ -113,6 +113,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/elf.h>
 end_include
 
@@ -332,7 +338,8 @@ decl_stmt|,
 name|fd
 decl_stmt|,
 name|sflag
-decl_stmt|,
+decl_stmt|;
+name|uid_t
 name|uid
 decl_stmt|;
 name|char

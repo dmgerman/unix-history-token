@@ -124,35 +124,6 @@ directive|include
 file|"finger.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|lflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX finger.h? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|Tflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX finger.h? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|sa_family_t
-name|family
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -205,12 +176,10 @@ begin_function
 name|void
 name|netfinger
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error

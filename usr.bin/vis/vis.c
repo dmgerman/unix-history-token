@@ -145,18 +145,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -388,7 +384,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -423,12 +421,10 @@ begin_function
 name|void
 name|process
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -443,7 +439,6 @@ index|[]
 init|=
 literal|"\0"
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -453,7 +448,6 @@ operator|+
 literal|1
 decl_stmt|;
 comment|/* so *(cp-1) starts out != '\n' */
-specifier|register
 name|int
 name|c
 decl_stmt|,

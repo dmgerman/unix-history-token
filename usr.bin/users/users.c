@@ -148,18 +148,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|namebuf
 modifier|*
@@ -442,7 +438,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -466,21 +464,16 @@ begin_function
 name|int
 name|scmp
 parameter_list|(
-name|p
-parameter_list|,
-name|q
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|p
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|q
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -495,7 +488,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

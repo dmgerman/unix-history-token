@@ -87,14 +87,17 @@ parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
+name|__unused
 decl_stmt|;
 name|int
 name|fd
+name|__unused
 decl_stmt|;
 name|struct
 name|kinfo_proc
 modifier|*
 name|ki
+name|__unused
 decl_stmt|;
 block|{
 comment|/* Don't need to fix anything for this architecture. */

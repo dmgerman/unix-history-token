@@ -117,18 +117,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|extern
 name|char
@@ -136,7 +132,6 @@ modifier|*
 modifier|*
 name|environ
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -145,7 +140,6 @@ modifier|*
 modifier|*
 name|ep
 decl_stmt|;
-specifier|register
 name|size_t
 name|len
 decl_stmt|;
@@ -316,7 +310,9 @@ end_function
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void

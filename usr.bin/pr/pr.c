@@ -394,6 +394,7 @@ comment|/* page width with multiple col output */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|timefrmt
@@ -765,6 +766,7 @@ name|FILE
 modifier|*
 name|inf
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -1358,6 +1360,7 @@ name|char
 modifier|*
 name|ohbuf
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -2540,6 +2543,7 @@ name|char
 modifier|*
 name|ohbuf
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -3097,6 +3101,7 @@ name|char
 modifier|*
 name|ohbuf
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -4741,9 +4746,10 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -5412,6 +5418,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname

@@ -186,6 +186,18 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|FU
+modifier|*
+name|endfu
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* format at end-of-data */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|blocksize
 decl_stmt|;
@@ -193,6 +205,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* data block size */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|exitval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* final exit value */
 end_comment
 
 begin_decl_stmt

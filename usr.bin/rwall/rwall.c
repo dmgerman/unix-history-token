@@ -702,6 +702,9 @@ argument_list|,
 name|fp
 argument_list|)
 operator|!=
+operator|(
+name|u_int
+operator|)
 name|mbufsize
 condition|)
 name|err
