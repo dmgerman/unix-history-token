@@ -5137,9 +5137,9 @@ operator|(
 name|u_int
 operator|)
 name|size
+argument_list|)
 operator|>
 name|MLEN
-argument_list|)
 condition|)
 name|m
 operator|=
