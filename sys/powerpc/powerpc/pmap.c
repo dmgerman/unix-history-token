@@ -292,7 +292,7 @@ begin_define
 define|#
 directive|define
 name|PVO_PTEGIDX_MASK
-value|0x0007
+value|0x007
 end_define
 
 begin_comment
@@ -303,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|PVO_PTEGIDX_VALID
-value|0x0008
+value|0x008
 end_define
 
 begin_comment
@@ -314,7 +314,7 @@ begin_define
 define|#
 directive|define
 name|PVO_WIRED
-value|0x0010
+value|0x010
 end_define
 
 begin_comment
@@ -325,7 +325,7 @@ begin_define
 define|#
 directive|define
 name|PVO_MANAGED
-value|0x0020
+value|0x020
 end_define
 
 begin_comment
@@ -336,7 +336,7 @@ begin_define
 define|#
 directive|define
 name|PVO_EXECUTABLE
-value|0x0040
+value|0x040
 end_define
 
 begin_comment
@@ -347,11 +347,22 @@ begin_define
 define|#
 directive|define
 name|PVO_BOOTSTRAP
-value|0x0080
+value|0x080
 end_define
 
 begin_comment
 comment|/* PVO entry allocated during 						   bootstrap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_FAKE
+value|0x100
+end_define
+
+begin_comment
+comment|/* fictitious phys page */
 end_comment
 
 begin_define
@@ -372,6 +383,16 @@ parameter_list|(
 name|pvo
 parameter_list|)
 value|((pvo)->pvo_vaddr& PVO_EXECUTABLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PVO_ISFAKE
+parameter_list|(
+name|pvo
+parameter_list|)
+value|((pvo)->pvo_vaddr& PVO_FAKE)
 end_define
 
 begin_define
@@ -4559,12 +4580,44 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+comment|/* XXX change the pvo head for fake pages */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+operator|)
+operator|==
+name|PG_FICTITIOUS
+condition|)
+name|pvo_head
+operator|=
+operator|&
+name|pmap_pvo_kunmanaged
+expr_stmt|;
 comment|/* 	 * If this is a managed page, and it's the first reference to the page, 	 * clear the execness of the page.  Otherwise fetch the execness. 	 */
 if|if
 condition|(
+operator|(
 name|pg
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 if|if
@@ -4684,13 +4737,15 @@ name|pte_lo
 operator||=
 name|PTE_BR
 expr_stmt|;
-name|pvo_flags
-operator||=
-operator|(
+if|if
+condition|(
 name|prot
 operator|&
 name|VM_PROT_EXECUTE
-operator|)
+condition|)
+name|pvo_flags
+operator||=
+name|PVO_EXECUTABLE
 expr_stmt|;
 if|if
 condition|(
@@ -4699,6 +4754,22 @@ condition|)
 name|pvo_flags
 operator||=
 name|PVO_WIRED
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+operator|)
+operator|!=
+literal|0
+condition|)
+name|pvo_flags
+operator||=
+name|PVO_FAKE
 expr_stmt|;
 name|error
 operator|=
@@ -8154,6 +8225,18 @@ name|pvo_vaddr
 operator||=
 name|PVO_BOOTSTRAP
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|PVO_FAKE
+condition|)
+name|pvo
+operator|->
+name|pvo_vaddr
+operator||=
+name|PVO_FAKE
+expr_stmt|;
 name|pmap_pte_create
 argument_list|(
 operator|&
@@ -8368,10 +8451,18 @@ expr_stmt|;
 comment|/* 	 * Save the REF/CHG bits into their cache if the page is managed. 	 */
 if|if
 condition|(
+operator|(
 name|pvo
 operator|->
 name|pvo_vaddr
 operator|&
+operator|(
+name|PVO_MANAGED
+operator||
+name|PVO_FAKE
+operator|)
+operator|)
+operator|==
 name|PVO_MANAGED
 condition|)
 block|{
