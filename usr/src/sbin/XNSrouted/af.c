@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	5.6 (Berkeley) %G%"
+literal|"@(#)af.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,20 +76,17 @@ argument_list|()
 decl_stmt|,
 name|xnnet_portmatch
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+decl_stmt|,
 name|xnnet_checkhost
 argument_list|()
-operator|,
+decl_stmt|,
 name|xnnet_ishost
 argument_list|()
-operator|,
+decl_stmt|,
 name|xnnet_canon
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
