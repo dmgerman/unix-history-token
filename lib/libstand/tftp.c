@@ -1099,9 +1099,9 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__sparc64__
+ifndef|#
+directive|ifndef
+name|__i386__
 if|if
 condition|(
 name|strcmp

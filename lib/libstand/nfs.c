@@ -1832,9 +1832,9 @@ name|ENXIO
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|__sparc64__
+ifndef|#
+directive|ifndef
+name|__i386__
 if|if
 condition|(
 name|strcmp
