@@ -1270,7 +1270,7 @@ name|ISONE
 parameter_list|(
 name|z
 parameter_list|)
-value|(ISICON(z)&& z->constblock.const.ci==1)
+value|(ISICON(z)&& z->constblock.constant.ci==1)
 end_define
 
 begin_define
