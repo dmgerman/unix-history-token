@@ -2806,7 +2806,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ipfw6 [options]\n"
+literal|"usage: ip6fw [options]\n"
 literal|"    flush\n"
 literal|"    add [number] rule\n"
 literal|"    delete number ...\n"
