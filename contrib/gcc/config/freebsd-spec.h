@@ -143,7 +143,7 @@ value|"\   %{!shared:crtend.o%s} \   %{shared:crtendS.o%s} \   crtn.o%s "
 end_define
 
 begin_comment
-comment|/* Provide a LIB_SPEC appropriate for FreeBSD as configured and as    required by the user-land thread model.  Before __FreeBSD_version    500016, select the appropriate libc, depending on whether we're    doing profiling or need threads support.  At __FreeBSD_version    500016 and later, when threads support is requested include both    -lc and -lc_r instead of only -lc_r.  To make matters interesting,    we can't actually use __FreeBSD_version provided by<osreldate.h>    directly since it breaks cross-compiling.  As a final twist, make    it a hard error if -pthread is provided on the command line and gcc    was configured with --disable-threads (this will help avoid bug    reports from users complaining about threading when they    misconfigured the gcc bootstrap but are later consulting FreeBSD    manual pages that refer to the mythical -pthread option).  */
+comment|/* Provide a LIB_SPEC appropriate for FreeBSD as configured and as    required by the user-land thread model.  Before __FreeBSD_version    500016, select the appropriate libc, depending on whether we're    doing profiling or need threads support.  At __FreeBSD_version    500016 and later, threads libraries can be linked with libc.    Because of this, and because different (not multiple) threading    libraries may be selected in the link option, the -pthread option    is no longer supported.  To make matters interesting, we can't    actually use __FreeBSD_version provided by<osreldate.h> directly    since it breaks cross-compiling.  As a final twist, make it a hard    error if -pthread is provided on the command line and gcc was    configured with --disable-threads (this will help avoid bug reports    from users complaining about threading when they misconfigured the    gcc bootstrap but are later consulting FreeBSD manual pages that    refer to the mythical -pthread option).  */
 end_comment
 
 begin_comment
@@ -186,7 +186,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_LIB_SPEC
-value|"							\   %{!shared:								\     %{!pg: %{pthread:-lc_r} -lc}					\     %{pg:  %{pthread:-lc_r_p} -lc_p}					\   }"
+value|"							\   %{pthread: %eThe -pthread option is deprecated.}			\   %{!shared:								\     %{!pg: -lc}								\     %{pg: -lc_p}							\   }"
 end_define
 
 begin_else
