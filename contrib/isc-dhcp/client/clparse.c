@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: clparse.c,v 1.13.2.1 1998/06/25 21:11:27 mellon Exp $ Copyright (c) 1997 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: clparse.c,v 1.13.2.2 1998/07/10 23:17:00 mellon Exp $ Copyright (c) 1997 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,16 +303,10 @@ argument_list|,
 literal|"r"
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|error
-argument_list|(
-literal|"Can't open %s: %m"
-argument_list|,
-name|path_dhclient_conf
-argument_list|)
-expr_stmt|;
+block|{
 do|do
 block|{
 name|token
@@ -364,6 +358,12 @@ name|cfile
 argument_list|)
 expr_stmt|;
 comment|/* Clear the peek buffer */
+name|fclose
+argument_list|(
+name|cfile
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Set up state and config structures for clients that don't 	   have per-interface configuration declarations. */
 name|config
 operator|=
