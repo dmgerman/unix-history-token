@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printsym.c	5.4 (Berkeley) %G%"
+literal|"@(#)printsym.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: printsym.c,v 1.5 84/12/26 10:41:28 linton Exp $"
+literal|"$Header: printsym.c,v 1.4 87/04/15 00:23:35 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,9 +166,11 @@ literal|"variable"
 block|,
 literal|"array"
 block|,
-literal|"@dynarray"
+literal|"array"
 block|,
-literal|"@subarray"
+literal|"dynarray"
+block|,
+literal|"subarray"
 block|,
 literal|"fileptr"
 block|,
@@ -947,6 +949,9 @@ case|case
 name|ARRAY
 case|:
 case|case
+name|OPENARRAY
+case|:
+case|case
 name|DYNARRAY
 case|:
 case|case
@@ -1720,6 +1725,12 @@ condition|(
 name|s
 operator|->
 name|block
+operator|!=
+name|nil
+name|and
+name|s
+operator|->
+name|block
 operator|->
 name|name
 operator|!=
@@ -1778,18 +1789,19 @@ case|:
 case|case
 name|REF
 case|:
-if|if
+switch|switch
 condition|(
 name|s
 operator|->
-name|level
-operator|>=
-literal|3
+name|storage
 condition|)
 block|{
+case|case
+name|INREG
+case|:
 name|printf
 argument_list|(
-literal|"address\t0x%x\n"
+literal|"reg\t%d\n"
 argument_list|,
 name|s
 operator|->
@@ -1798,9 +1810,10 @@ operator|.
 name|offset
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+name|STK
+case|:
 name|printf
 argument_list|(
 literal|"offset\t%d\n"
@@ -1812,6 +1825,22 @@ operator|.
 name|offset
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|EXT
+case|:
+name|printf
+argument_list|(
+literal|"address\t0x%x\n"
+argument_list|,
+name|s
+operator|->
+name|symvalue
+operator|.
+name|offset
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|printf
 argument_list|(
@@ -2551,6 +2580,20 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IRIS
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%lg"
+argument_list|,
+name|r
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sprintf
 argument_list|(
 name|buf
@@ -2560,6 +2603,8 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|buf
