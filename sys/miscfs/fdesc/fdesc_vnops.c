@@ -1071,6 +1071,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * !!!! READ THIS !!!!  * the proper way to handle this sort of thing is to do proper exclusion,  * so that adding new filetypes works properly at runtime  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1410,15 +1414,7 @@ operator|=
 name|VNOVAL
 expr_stmt|;
 break|break;
-case|case
-name|DTYPE_PIPE
-case|:
-case|case
-name|DTYPE_SOCKET
-case|:
-case|case
-name|DTYPE_KQUEUE
-case|:
+default|default:
 name|error
 operator|=
 name|fo_stat
@@ -1445,13 +1441,20 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
+comment|/* XXX Fake it! */
 if|if
 condition|(
 name|fp
 operator|->
 name|f_type
-operator|==
-name|DTYPE_KQUEUE
+operator|!=
+name|DTYPE_PIPE
+operator|&&
+name|fp
+operator|->
+name|f_type
+operator|!=
+name|DTYPE_SOCKET
 condition|)
 name|vap
 operator|->
@@ -1538,20 +1541,14 @@ name|stb
 operator|.
 name|st_blksize
 expr_stmt|;
-comment|/* 				 * XXX Sockets and kqueues don't have any 				 * mtime/atime/ctime data. 				 */
+comment|/* 				 * XXX Only pipes have any mtime/atime/ctime data. 				 */
 if|if
 condition|(
 name|fp
 operator|->
 name|f_type
-operator|==
-name|DTYPE_SOCKET
-operator|||
-name|fp
-operator|->
-name|f_type
-operator|==
-name|DTYPE_KQUEUE
+operator|!=
+name|DTYPE_PIPE
 condition|)
 block|{
 name|nanotime
@@ -1620,13 +1617,6 @@ operator|.
 name|st_gid
 expr_stmt|;
 block|}
-break|break;
-default|default:
-name|panic
-argument_list|(
-literal|"fdesc_getattr: Unknown fp->f_type encountered"
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 break|break;
@@ -1802,15 +1792,7 @@ name|a_p
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|DTYPE_SOCKET
-case|:
-case|case
-name|DTYPE_PIPE
-case|:
-case|case
-name|DTYPE_KQUEUE
-case|:
+default|default:
 if|if
 condition|(
 name|vap
@@ -1827,12 +1809,6 @@ else|else
 name|error
 operator|=
 literal|0
-expr_stmt|;
-break|break;
-default|default:
-name|error
-operator|=
-name|EBADF
 expr_stmt|;
 break|break;
 block|}
