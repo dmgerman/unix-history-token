@@ -1,15 +1,61 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copryight 1997 Sean Eric Fagan  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Sean Eric Fagan  * 4. Neither the name of the author may be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copryight 1997 Sean Eric Fagan  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Sean Eric Fagan  * 4. Neither the name of the author may be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_comment
 comment|/*  * The main module for truss.  Suprisingly simple, but, then, the other  * files handle the bulk of the work.  And, of course, the kernel has to  * do a lot of the work :).  */
 end_comment
 
-begin_comment
-comment|/*  * $Id: main.c,v 1.5 1997/12/13 03:13:47 sef Exp $  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_include
 include|#
@@ -27,30 +73,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
@@ -173,13 +195,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|prog
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|Procfd
 decl_stmt|;
@@ -211,10 +226,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:  %s [-o<file>] [-S] { [-p<pid> ] | "
-literal|"[<command><args>] }\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|prog
+literal|"usage: truss [-S] [-o file] -p pid"
+argument_list|,
+literal|"       truss [-S] [-o file] command [args]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -426,6 +442,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -437,9 +454,6 @@ modifier|*
 name|av
 parameter_list|)
 block|{
-name|int
-name|mask
-decl_stmt|;
 name|int
 name|c
 decl_stmt|;
@@ -455,32 +469,22 @@ name|struct
 name|procfs_status
 name|pfs
 decl_stmt|;
-name|char
-name|etype
-index|[
-literal|25
-index|]
-decl_stmt|;
 name|struct
 name|ex_types
 modifier|*
 name|funcs
 decl_stmt|;
 name|int
-name|fd
-decl_stmt|;
-name|int
 name|in_exec
 init|=
 literal|0
 decl_stmt|;
-name|prog
-operator|=
-name|av
-index|[
-literal|0
-index|]
-expr_stmt|;
+name|char
+modifier|*
+name|fname
+init|=
+name|NULL
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -520,42 +524,10 @@ case|case
 literal|'o'
 case|:
 comment|/* Specified output file */
-if|if
-condition|(
-operator|(
-name|outfile
+name|fname
 operator|=
-name|fopen
-argument_list|(
 name|optarg
-argument_list|,
-literal|"w"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:  cannot open %s\n"
-argument_list|,
-name|av
-index|[
-literal|0
-index|]
-argument_list|,
-name|optarg
-argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'S'
@@ -605,6 +577,39 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|fname
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Use output file */
+if|if
+condition|(
+operator|(
+name|outfile
+operator|=
+name|fopen
+argument_list|(
+name|fname
+argument_list|,
+literal|"w"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"cannot open %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*    * If truss starts the process itself, it will ignore some signals --    * they should be passed off to the process, which may or may not    * exit.  If, however, we are examining an already-running process,    * then we restore the event mask on these same signals.    */
 if|if
 condition|(
@@ -738,7 +743,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"PIOCWAIT top of loop"
 argument_list|)
@@ -866,7 +871,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"PIOCCONT"
 argument_list|)
