@@ -753,12 +753,6 @@ parameter_list|)
 value|mtx_unlock(&(inp)->inp_mtx)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET6
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -768,26 +762,6 @@ name|inp
 parameter_list|)
 value|do {					\ 	mtx_assert(&(inp)->inp_mtx, MA_OWNED);				\ 	NET_ASSERT_GIANT();						\ } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INP_LOCK_ASSERT
-parameter_list|(
-name|inp
-parameter_list|)
-value|do {					\ 	NET_ASSERT_GIANT();						\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -842,12 +816,6 @@ parameter_list|)
 value|mtx_unlock(&(ipi)->ipi_mtx)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET6
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -867,36 +835,6 @@ name|ipi
 parameter_list|)
 value|do {				\ 	mtx_assert(&(ipi)->ipi_mtx, MA_OWNED);				\ 	NET_ASSERT_GIANT();						\ } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INP_INFO_RLOCK_ASSERT
-parameter_list|(
-name|ipi
-parameter_list|)
-value|do {				\ 	NET_ASSERT_GIANT();						\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INP_INFO_WLOCK_ASSERT
-parameter_list|(
-name|ipi
-parameter_list|)
-value|do {				\ 	NET_ASSERT_GIANT();						\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
