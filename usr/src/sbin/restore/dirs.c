@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.20 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,6 +520,12 @@ literal|0
 expr_stmt|;
 name|nulldir
 operator|.
+name|d_type
+operator|=
+name|DT_DIR
+expr_stmt|;
+name|nulldir
+operator|.
 name|d_namlen
 operator|=
 literal|1
@@ -542,6 +548,8 @@ name|d_reclen
 operator|=
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 operator|&
 name|nulldir
 argument_list|)
@@ -1421,10 +1429,6 @@ name|loc
 decl_stmt|,
 name|i
 decl_stmt|;
-specifier|extern
-name|int
-name|Bcvt
-decl_stmt|;
 if|if
 condition|(
 name|cvtflag
@@ -1515,6 +1519,11 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|oldinofmt
+condition|)
+block|{
+if|if
+condition|(
 name|Bcvt
 condition|)
 block|{
@@ -1529,6 +1538,27 @@ operator|)
 name|dp
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|Bcvt
+condition|)
+block|{
+name|swabst
+argument_list|(
+literal|"ls"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|dp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|i
 operator|=
@@ -1568,6 +1598,8 @@ name|d_reclen
 operator|<
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 name|dp
 argument_list|)
 operator|||
@@ -1612,6 +1644,8 @@ name|d_reclen
 operator|<
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 name|dp
 argument_list|)
 condition|)
@@ -1627,6 +1661,8 @@ name|d_reclen
 argument_list|,
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 name|dp
 argument_list|)
 argument_list|)
@@ -1747,6 +1783,8 @@ name|d_reclen
 operator|=
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 name|dp
 argument_list|)
 expr_stmt|;
@@ -1945,6 +1983,12 @@ name|odp
 operator|->
 name|d_ino
 expr_stmt|;
+name|ndp
+operator|->
+name|d_type
+operator|=
+name|DT_UNKNOWN
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1978,6 +2022,8 @@ name|d_reclen
 operator|=
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 name|ndp
 argument_list|)
 expr_stmt|;
