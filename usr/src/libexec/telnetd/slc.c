@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slc.c	5.3 (Berkeley) %G%"
+literal|"@(#)slc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,11 +46,13 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|char
 modifier|*
 name|def_slcbuf
 init|=
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -80,6 +82,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|char
 modifier|*
 name|slcptr
@@ -92,6 +95,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|char
 name|slcbuf
 index|[
@@ -567,6 +571,7 @@ argument_list|(
 name|bufp
 argument_list|)
 specifier|register
+name|unsigned
 name|char
 operator|*
 operator|*
@@ -1598,6 +1603,7 @@ condition|(
 name|def_slcbuf
 operator|==
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -1610,6 +1616,11 @@ name|len
 expr_stmt|;
 name|def_slcbuf
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -1623,6 +1634,7 @@ condition|(
 name|def_slcbuf
 operator|==
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -1689,6 +1701,7 @@ expr_stmt|;
 name|def_slcbuf
 operator|=
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)

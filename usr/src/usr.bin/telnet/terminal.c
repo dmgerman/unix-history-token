@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	1.20 (Berkeley) %G%"
+literal|"@(#)terminal.c	1.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,11 +101,11 @@ end_ifdef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VDISCARD
+name|VFLUSHO
 end_ifndef
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|termFlushChar
 decl_stmt|;
 end_decl_stmt
@@ -122,7 +122,7 @@ name|VLNEXT
 end_ifndef
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|termLiteralNextChar
 decl_stmt|;
 end_decl_stmt
@@ -139,7 +139,7 @@ name|VSUSP
 end_ifndef
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|termSuspChar
 decl_stmt|;
 end_decl_stmt
@@ -156,7 +156,7 @@ name|VWERASE
 end_ifndef
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|termWerasChar
 decl_stmt|;
 end_decl_stmt
@@ -173,7 +173,7 @@ name|VREPRINT
 end_ifndef
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|termRprntChar
 decl_stmt|;
 end_decl_stmt
@@ -190,7 +190,7 @@ name|VSTART
 end_ifndef
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|termStartChar
 decl_stmt|;
 end_decl_stmt
@@ -207,7 +207,7 @@ name|VSTOP
 end_ifndef
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|termStopChar
 decl_stmt|;
 end_decl_stmt
@@ -224,7 +224,7 @@ name|VEOL
 end_ifndef
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|termForw1Char
 decl_stmt|;
 end_decl_stmt
@@ -241,7 +241,7 @@ name|VEOL2
 end_ifndef
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|termForw2Char
 decl_stmt|;
 end_decl_stmt
@@ -257,7 +257,7 @@ directive|else
 end_else
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|termForw2Char
 decl_stmt|;
 end_decl_stmt

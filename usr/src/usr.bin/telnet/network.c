@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)network.c	1.14 (Berkeley) %G%"
+literal|"@(#)network.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,6 +270,7 @@ operator|)
 name|quit
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 if|if
 condition|(
@@ -419,6 +420,9 @@ argument_list|(
 name|hostname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|NetClose
 argument_list|(
 name|net

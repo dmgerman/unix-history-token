@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ext.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ext.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,37 +10,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
-name|hisopts
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|myopts
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|hiswants
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|mywants
+name|options
 index|[
 literal|256
 index|]
@@ -172,6 +142,58 @@ end_decl_stmt
 
 begin_comment
 comment|/* current flow control state */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTICS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|diagnostic
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* telnet diagnostic capabilities */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DIAGNOSTICS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFTPDAEMON
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bftpd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* behave as bftp daemon */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BFTPDAEMON */
 end_comment
 
 begin_decl_stmt
@@ -341,6 +363,33 @@ begin_comment
 comment|/* we are in TELNET SYNCH mode */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTICS
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|printoption
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|printdata
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The following are some clocks used to decide how to interpret  * the relationship between various variables.  */
 end_comment
@@ -368,6 +417,12 @@ comment|/* ttype subopt is received */
 name|tspeedsubopt
 decl_stmt|,
 comment|/* tspeed subopt is received */
+name|environsubopt
+decl_stmt|,
+comment|/* environ subopt is received */
+name|xdisplocsubopt
+decl_stmt|,
+comment|/* xdisploc subopt is received */
 name|baseline
 decl_stmt|,
 comment|/* time started to do timed action */

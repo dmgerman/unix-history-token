@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ring.c	1.12 (Berkeley) %G%"
+literal|"@(#)ring.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,11 +67,22 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FILIO_H
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -968,6 +979,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*  * Move data from the "consume" portion of the ring buffer  */
 end_comment
@@ -1043,6 +1060,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	1.20 (Berkeley) %G%"
+literal|"@(#)tn3270.c	1.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -601,6 +601,9 @@ name|void
 name|outputPurge
 parameter_list|()
 block|{
+operator|(
+name|void
+operator|)
 name|ttyflush
 argument_list|(
 literal|1
@@ -679,6 +682,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(unix) */
+operator|(
+name|void
+operator|)
 name|ttyflush
 argument_list|(
 literal|0
@@ -741,6 +747,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(unix) */
+operator|(
+name|void
+operator|)
 name|ttyflush
 argument_list|(
 literal|0
@@ -874,6 +883,9 @@ sizeof|sizeof
 name|Ibuf
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|telrcv
 argument_list|()
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)externs.h	1.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)externs.h	1.25 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -65,11 +65,33 @@ directive|include
 file|<setjmp.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FILIO_H
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/filio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -123,10 +145,35 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NO_CC_T
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|USE_TERMIO
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|USE_TERMIO
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -134,6 +181,24 @@ name|char
 name|cc_t
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|cc_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -285,9 +350,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|cc_t
-name|echoc
-decl_stmt|,
-comment|/* Toggle local echoing */
 name|escape
 decl_stmt|;
 end_decl_stmt
@@ -296,9 +358,30 @@ begin_comment
 comment|/* Escape to command mode */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KLUDGELINEMODE
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
-name|unsigned
+name|cc_t
+name|echoc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Toggle local echoing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|prompt
@@ -954,7 +1037,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|cc_t
 name|termForw2Char
 decl_stmt|;
 end_decl_stmt
@@ -1113,7 +1196,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|cc_t
 name|termSuspChar
 decl_stmt|;
 end_decl_stmt
@@ -1135,15 +1218,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|VFLUSHO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|VDISCARD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|VFLUSHO
+value|VDISCARD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VDISCARD
+name|VFLUSHO
 end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|cc_t
 name|termFlushChar
 decl_stmt|;
 end_decl_stmt
@@ -1157,7 +1267,7 @@ begin_define
 define|#
 directive|define
 name|termFlushChar
-value|new_tc.c_cc[VDISCARD]
+value|new_tc.c_cc[VFLUSHO]
 end_define
 
 begin_endif
@@ -1173,7 +1283,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|cc_t
 name|termWerasChar
 decl_stmt|;
 end_decl_stmt
@@ -1203,7 +1313,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|cc_t
 name|termRprntChar
 decl_stmt|;
 end_decl_stmt
@@ -1233,7 +1343,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|cc_t
 name|termLiteralNextChar
 decl_stmt|;
 end_decl_stmt
@@ -1263,7 +1373,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|cc_t
 name|termStartChar
 decl_stmt|;
 end_decl_stmt
@@ -1293,7 +1403,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|cc_t
 name|termStopChar
 decl_stmt|;
 end_decl_stmt
@@ -1323,7 +1433,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|cc_t
 name|termForw1Char
 decl_stmt|;
 end_decl_stmt
@@ -1353,7 +1463,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|cc_t
 name|termForw2Char
 decl_stmt|;
 end_decl_stmt
