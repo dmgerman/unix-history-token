@@ -702,6 +702,10 @@ define|#
 directive|define
 name|G_PF_WITHER
 value|0x2
+define|#
+directive|define
+name|G_PF_ORPHAN
+value|0x4
 block|}
 struct|;
 end_struct
