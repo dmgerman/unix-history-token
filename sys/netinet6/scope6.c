@@ -78,7 +78,7 @@ file|<netinet6/scope6_var.h>
 end_include
 
 begin_comment
-comment|/*  * The scope6_lock protects both the global sid default stored in  * sid_default below, but also per-interface sid data.  */
+comment|/*  * The scope6_lock protects the global sid default stored in  * sid_default below.  */
 end_comment
 
 begin_decl_stmt
@@ -176,12 +176,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|struct
 name|scope6_id
 modifier|*
@@ -265,11 +259,6 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|sid
 return|;
@@ -319,8 +308,6 @@ decl_stmt|;
 block|{
 name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
 name|int
 name|error
@@ -332,29 +319,40 @@ name|scope6_id
 modifier|*
 name|sid
 init|=
+name|NULL
+decl_stmt|;
+name|IF_AFDATA_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|sid
+operator|=
 name|SID
 argument_list|(
 name|ifp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|sid
 condition|)
+block|{
 comment|/* paranoid? */
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 comment|/* 	 * XXX: We need more consistency checks of the relationship among 	 * scopes (e.g. an organization should be larger than a site). 	 */
 comment|/* 	 * TODO(XXX): after setting, we should reflect the changes to 	 * interface addresses, routing table entries, PCB entries... 	 */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|SCOPE6_LOCK
 argument_list|()
 expr_stmt|;
@@ -415,10 +413,13 @@ operator|->
 name|if_index
 condition|)
 block|{
-name|splx
+name|IF_AFDATA_UNLOCK
 argument_list|(
-name|s
+name|ifp
 argument_list|)
+expr_stmt|;
+name|SCOPE6_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -443,10 +444,13 @@ name|if_index
 condition|)
 block|{
 comment|/* 				 * XXX: theoretically, there should be no 				 * relationship between link IDs and interface 				 * IDs, but we check the consistency for 				 * safety in later use. 				 */
-name|splx
+name|IF_AFDATA_UNLOCK
 argument_list|(
-name|s
+name|ifp
 argument_list|)
+expr_stmt|;
+name|SCOPE6_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -474,9 +478,9 @@ block|}
 name|SCOPE6_UNLOCK
 argument_list|()
 expr_stmt|;
-name|splx
+name|IF_AFDATA_UNLOCK
 argument_list|(
-name|s
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -506,6 +510,12 @@ modifier|*
 name|idlist
 decl_stmt|;
 block|{
+comment|/* We only need to lock the interface's afdata for SID() to work. */
+name|IF_AFDATA_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|struct
 name|scope6_id
 modifier|*
@@ -522,12 +532,19 @@ name|sid
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* paranoid? */
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|SCOPE6_LOCK
 argument_list|()
 expr_stmt|;
@@ -539,6 +556,11 @@ name|sid
 expr_stmt|;
 name|SCOPE6_UNLOCK
 argument_list|()
+expr_stmt|;
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -779,11 +801,20 @@ name|scope6_id
 modifier|*
 name|sid
 init|=
+name|NULL
+decl_stmt|;
+name|IF_AFDATA_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|sid
+operator|=
 name|SID
 argument_list|(
 name|ifp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -838,12 +869,19 @@ operator|&
 name|IFF_LOOPBACK
 operator|)
 condition|)
+block|{
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 else|else
 block|{
 operator|*
@@ -852,6 +890,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* there's no ambiguity */
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -944,6 +987,11 @@ name|ret_id
 operator|=
 name|zoneid
 expr_stmt|;
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -965,7 +1013,7 @@ name|ifp
 decl_stmt|;
 comment|/* note that this might be NULL */
 block|{
-comment|/* 	 * Currently, this function just set the default "interfaces" 	 * and "links" according to the given interface. 	 * We might eventually have to separate the notion of "link" from 	 * "interface" and provide a user interface to set the default. 	 */
+comment|/* 	 * Currently, this function just sets the default "interfaces" 	 * and "links" according to the given interface. 	 * We might eventually have to separate the notion of "link" from 	 * "interface" and provide a user interface to set the default. 	 */
 name|SCOPE6_LOCK
 argument_list|()
 expr_stmt|;
