@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	1.1 (Berkeley) %G%"
+literal|"@(#)command.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -932,12 +932,17 @@ name|rdc
 argument_list|()
 expr_stmt|;
 name|IF
+argument_list|(
 name|regptr
-init|=
+operator|=
 name|getreg
 argument_list|(
-argument|savc
+name|savc
 argument_list|)
+argument_list|)
+operator|!=
+operator|-
+literal|1
 name|THEN
 name|IF
 name|kcore
@@ -950,7 +955,7 @@ operator|)
 name|regptr
 operator|=
 name|dot
-decl_stmt|;
+expr_stmt|;
 name|ELSE
 argument_list|*
 operator|(

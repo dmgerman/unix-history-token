@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	1.1	86/02/25	*/
+comment|/*	defs.h	1.2	86/07/25	*/
 end_comment
 
 begin_comment
@@ -473,7 +473,7 @@ begin_define
 define|#
 directive|define
 name|MAXLIN
-value|128
+value|256
 end_define
 
 begin_define
