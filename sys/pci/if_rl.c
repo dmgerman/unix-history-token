@@ -3382,6 +3382,9 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 comment|/* 	 * Handle power management nonsense. 	 */
 if|if
 condition|(
@@ -3490,6 +3493,8 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Map control/status registers. 	 */
 name|pci_enable_busmaster
 argument_list|(

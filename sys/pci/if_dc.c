@@ -601,6 +601,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -610,6 +616,11 @@ name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -7749,6 +7760,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -7877,6 +7894,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -8836,12 +8858,17 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 comment|/* 	 * Handle power management nonsense. 	 */
 name|dc_acpi
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Map control/status registers. 	 */
 name|pci_enable_busmaster
 argument_list|(
@@ -16255,11 +16282,16 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|dc_acpi
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* better way to do this? */
 for|for
 control|(

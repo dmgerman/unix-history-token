@@ -5567,6 +5567,9 @@ name|xl_flags
 operator||=
 name|XL_FLAG_PHYOK
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 comment|/* 	 * If this is a 3c905B, we have to check one extra thing. 	 * The 905B supports power management and may be placed in 	 * a low-power mode (D3 mode), typically by certain operating 	 * systems which shall not be named. The PCI BIOS is supposed 	 * to reset the NIC and bring it out of low-power mode, but 	 * some do not. Consequently, we have to see if this chip 	 * supports power management, and if so, make sure it's not 	 * in low-power mode. If power management is available, the 	 * capid byte will be 0x01. 	 * 	 * I _think_ that what actually happens is that the chip 	 * loses its PCI configuration during the transition from 	 * D3 back to D0; this means that it should be possible for 	 * us to save the PCI iobase, membase and IRQ, put the chip 	 * back in the D0 state, then restore the PCI config ourselves. 	 */
 if|if
 condition|(
@@ -5675,6 +5678,8 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Map control/status registers. 	 */
 name|pci_enable_busmaster
 argument_list|(
