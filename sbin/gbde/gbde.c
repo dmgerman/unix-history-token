@@ -2287,14 +2287,31 @@ name|ob
 operator|=
 name|b
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
 operator|*
 name|oa
 operator|>
 operator|*
 name|ob
-operator|)
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+operator|*
+name|oa
+operator|<
+operator|*
+name|ob
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|0
 return|;
 block|}
 end_function
@@ -3716,7 +3733,7 @@ block|{
 name|usage
 argument_list|(
 name|GBDEMOD
-literal|": Kernel module not available"
+literal|": Kernel module not available\n"
 argument_list|)
 expr_stmt|;
 block|}
