@@ -886,7 +886,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-5.5s %5.5s %-11.11s %-17.17s %8.8s %5.5s"
+literal|"%-5.5s %5.5s %-13.13s %-17.17s %8.8s %5.5s"
 argument_list|,
 literal|"Name"
 argument_list|,
@@ -1249,7 +1249,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-11.11s "
+literal|"%-13.13s "
 argument_list|,
 literal|"none"
 argument_list|)
@@ -1445,7 +1445,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"%-11.11s "
+literal|"%-13.13s "
 argument_list|,
 name|netname
 argument_list|(
@@ -1504,7 +1504,7 @@ name|sa
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-11.11s "
+literal|"%-13.13s "
 argument_list|,
 name|netname6
 argument_list|(
@@ -1625,7 +1625,7 @@ expr_stmt|;
 comment|/*				printf("ipx:%-8s ", netname(net, 0L)); */
 name|printf
 argument_list|(
-literal|"%-15s "
+literal|"%-17s "
 argument_list|,
 name|ipx_phost
 argument_list|(
@@ -1657,7 +1657,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-9.9s  "
+literal|"%-11.11s  "
 argument_list|,
 name|atalk_print
 argument_list|(
@@ -1730,14 +1730,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ns:%-8s "
+literal|"ns:%-10s "
 argument_list|,
 name|netnum
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-15s "
+literal|"%-17s "
 argument_list|,
 name|ns_phost
 argument_list|(
@@ -1808,7 +1808,7 @@ name|m
 operator|=
 name|printf
 argument_list|(
-literal|"%-11.11s "
+literal|"%-13.13s "
 argument_list|,
 name|linknum
 argument_list|)
@@ -1907,7 +1907,7 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|=
-literal|30
+literal|32
 operator|-
 name|m
 expr_stmt|;
