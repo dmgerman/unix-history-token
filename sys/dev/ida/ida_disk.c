@@ -1025,11 +1025,7 @@ name|dsk
 operator|->
 name|si_iosize_max
 operator|=
-literal|256
-operator|*
-name|drv
-operator|->
-name|secsize
+name|DFLTPHYS
 expr_stmt|;
 comment|/* XXX guess? */
 name|disks_registered
