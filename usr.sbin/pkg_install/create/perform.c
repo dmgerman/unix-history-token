@@ -477,26 +477,6 @@ name|tail
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Add the origin if asked, at the top */
-if|if
-condition|(
-name|Origin
-condition|)
-name|add_plist
-argument_list|(
-operator|&
-name|plist
-argument_list|,
-name|PLIST_COMMENT
-argument_list|,
-name|strconcat
-argument_list|(
-literal|"ORIGIN:"
-argument_list|,
-name|Origin
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Stick the dependencies, if any, at the top */
 if|if
 condition|(
@@ -766,6 +746,21 @@ argument_list|,
 name|PLIST_CWD
 argument_list|,
 name|Prefix
+argument_list|)
+expr_stmt|;
+comment|/* Add the origin if asked, at the top */
+if|if
+condition|(
+name|Origin
+condition|)
+name|add_plist_top
+argument_list|(
+operator|&
+name|plist
+argument_list|,
+name|PLIST_ORIGIN
+argument_list|,
+name|Origin
 argument_list|)
 expr_stmt|;
 comment|/*      * Run down the list and see if we've named it, if not stick in a name      * at the top.      */
