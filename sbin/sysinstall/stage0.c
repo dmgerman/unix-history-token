@@ -64,21 +64,12 @@ literal|"4. Fixit"
 block|,
 literal|"Repair existing installation (`fixit' mode)."
 block|,
-literal|"5. Exit"
+literal|"5. Quit"
 block|,
-literal|"Exit to shell."
+literal|"Don't do anything, just reboot."
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|bailout
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -109,8 +100,16 @@ name|selection
 argument_list|)
 condition|)
 block|{
-name|bailout
+name|dialog_clear
 argument_list|()
+expr_stmt|;
+name|end_dialog
+argument_list|()
+expr_stmt|;
+name|reboot
+argument_list|(
+name|RB_AUTOBOOT
+argument_list|)
 expr_stmt|;
 block|}
 switch|switch
@@ -227,31 +226,21 @@ break|break;
 case|case
 literal|5
 case|:
-name|bailout
-argument_list|()
-expr_stmt|;
-break|break;
-comment|/* hope not! :) */
-block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|bailout
-parameter_list|()
-block|{
+comment|/* Be neat.. */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|end_dialog
 argument_list|()
 expr_stmt|;
-name|exit
+name|reboot
 argument_list|(
-literal|0
+name|RB_AUTOBOOT
 argument_list|)
 expr_stmt|;
+break|break;
+comment|/* hope not! :) */
+block|}
 block|}
 end_function
 
