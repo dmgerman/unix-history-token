@@ -2863,6 +2863,15 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Remove address from ifindex_table[] and maybe decrement if_index. 	 * Clean up all addresses. 	 */
+name|ifnet_byindex
+argument_list|(
+name|ifp
+operator|->
+name|if_index
+argument_list|)
+operator|=
+name|NULL
+expr_stmt|;
 name|ifaddr_byindex
 argument_list|(
 name|ifp
