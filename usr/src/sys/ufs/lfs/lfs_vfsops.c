@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.53 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.54 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -155,6 +155,18 @@ name|ufs_vptofh
 block|,
 name|ufs_init
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Flag to allow forcible unmounting.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|doforce
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -2121,6 +2133,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|doforce
+operator|||
 name|mp
 operator|==
 name|rootfs
@@ -3172,6 +3187,14 @@ condition|)
 goto|goto
 name|loop
 goto|;
+if|if
+condition|(
+name|VOP_ISLOCKED
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+continue|continue;
 name|ip
 operator|=
 name|VTOI
