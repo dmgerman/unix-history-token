@@ -2023,9 +2023,7 @@ begin_macro
 unit|void
 name|pmap_init
 argument_list|(
-argument|vm_offset_t phys_start
-argument_list|,
-argument|vm_offset_t phys_end
+argument|void
 argument_list|)
 end_macro
 

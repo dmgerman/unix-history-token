@@ -229,9 +229,7 @@ begin_function_decl
 name|void
 name|pmap_init
 parameter_list|(
-name|vm_paddr_t
-parameter_list|,
-name|vm_paddr_t
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1935,15 +1935,8 @@ begin_function
 name|void
 name|pmap_init
 parameter_list|(
-name|phys_start
-parameter_list|,
-name|phys_end
+name|void
 parameter_list|)
-name|vm_offset_t
-name|phys_start
-decl_stmt|,
-name|phys_end
-decl_stmt|;
 block|{
 name|int
 name|i

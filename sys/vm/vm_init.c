@@ -211,11 +211,7 @@ name|virtual_end
 argument_list|)
 expr_stmt|;
 name|pmap_init
-argument_list|(
-name|avail_start
-argument_list|,
-name|avail_end
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|vm_pager_init
 argument_list|()
