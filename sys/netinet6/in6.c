@@ -3599,6 +3599,12 @@ name|ia6t_preferred
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * make sure to initialize ND6 information.  this is to 		 * workaround issues with interfaces with IPv6 addresses, 		 * which have never brought # up.  we are assuming that it is 		 * safe to nd6_ifattach multiple times. 		 */
+name|nd6_ifattach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Perform DAD, if needed. 		 * XXX It may be of use, if we can administratively 		 * disable DAD. 		 */
 switch|switch
 condition|(
