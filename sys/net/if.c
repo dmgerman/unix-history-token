@@ -2018,13 +2018,6 @@ name|ifp
 operator|->
 name|if_addrlen
 expr_stmt|;
-define|#
-directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-value|(1 + (((a) - 1) | (sizeof(long) - 1)))
 if|if
 condition|(
 name|socksize
@@ -2045,14 +2038,16 @@ argument_list|)
 expr_stmt|;
 name|socksize
 operator|=
-name|ROUNDUP
+name|roundup2
 argument_list|(
 name|socksize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|ROUNDUP
 name|ifasize
 operator|=
 sizeof|sizeof
