@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.15 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.16 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.15 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.16 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -886,6 +886,11 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* save for logging */
+name|CurHostAddr
+operator|=
+name|addr
+expr_stmt|;
 if|if
 condition|(
 name|usesecureport
@@ -1205,11 +1210,6 @@ argument_list|)
 argument_list|,
 literal|"r"
 argument_list|)
-expr_stmt|;
-comment|/* save for logging */
-name|CurHostAddr
-operator|=
-name|addr
 expr_stmt|;
 return|return
 operator|(
