@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -249,6 +255,33 @@ begin_comment
 comment|/* mask of priorities to be logged */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|pthread_mutex_t
+name|syslog_mutex
+init|=
+name|PTHREAD_MUTEX_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|THREAD_LOCK
+parameter_list|()
+define|\
+value|do { 								\ 		if (__isthreaded) _pthread_mutex_lock(&syslog_mutex);	\ 	} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_UNLOCK
+parameter_list|()
+define|\
+value|do {								\ 		if (__isthreaded) _pthread_mutex_unlock(&syslog_mutex);	\ 	} while(0)
+end_define
+
 begin_function_decl
 specifier|static
 name|void
@@ -276,6 +309,22 @@ end_function_decl
 begin_comment
 comment|/* (re)connect to syslogd */
 end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|openlog_unlocked
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_enum
 enum|enum
@@ -517,6 +566,11 @@ name|timbuf
 index|[
 literal|26
 index|]
+decl_stmt|,
+name|errstr
+index|[
+literal|64
+index|]
 decl_stmt|;
 name|FILE
 modifier|*
@@ -566,6 +620,9 @@ operator||
 name|LOG_FACMASK
 expr_stmt|;
 block|}
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* Check priority against setlogmask values. */
 if|if
 condition|(
@@ -582,7 +639,12 @@ operator|&
 name|LogMask
 operator|)
 condition|)
+block|{
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 name|saved_errno
 operator|=
 name|errno
@@ -634,7 +696,12 @@ name|fp
 operator|==
 name|NULL
 condition|)
+block|{
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 comment|/* Build the message. */
 operator|(
 name|void
@@ -826,6 +893,9 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * Substitute error message for %m.  Be careful not to 		 * molest an escaped percent "%%m".  We want to pass it 		 * on untouched as the format is later parsed by vfprintf. 		 */
@@ -860,12 +930,21 @@ block|{
 operator|++
 name|fmt
 expr_stmt|;
-name|fputs
-argument_list|(
-name|strerror
+name|strerror_r
 argument_list|(
 name|saved_errno
+argument_list|,
+name|errstr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errstr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+name|errstr
 argument_list|,
 name|fmt_fp
 argument_list|)
@@ -1066,7 +1145,7 @@ condition|(
 operator|!
 name|opened
 condition|)
-name|openlog
+name|openlog_unlocked
 argument_list|(
 name|LogTag
 argument_list|,
@@ -1133,7 +1212,12 @@ argument_list|)
 operator|>=
 literal|0
 condition|)
+block|{
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|status
@@ -1151,7 +1235,12 @@ condition|)
 do|;
 block|}
 else|else
+block|{
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * Output the message to the console; try not to block 	 * as a blocking console should not stop other processes. 	 * Make sure the error reported is the one from the syslogd failure. 	 */
 if|if
 condition|(
@@ -1256,8 +1345,15 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Should be called with mutex acquired */
+end_comment
 
 begin_function
 specifier|static
@@ -1292,6 +1388,10 @@ expr_stmt|;
 comment|/* retry connect */
 block|}
 end_function
+
+begin_comment
+comment|/* Should be called with mutex acquired */
+end_comment
 
 begin_function
 specifier|static
@@ -1547,8 +1647,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|openlog
+name|openlog_unlocked
 parameter_list|(
 name|ident
 parameter_list|,
@@ -1620,9 +1721,51 @@ end_function
 
 begin_function
 name|void
+name|openlog
+parameter_list|(
+name|ident
+parameter_list|,
+name|logstat
+parameter_list|,
+name|logfac
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|ident
+decl_stmt|;
+name|int
+name|logstat
+decl_stmt|,
+name|logfac
+decl_stmt|;
+block|{
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
+name|openlog_unlocked
+argument_list|(
+name|ident
+argument_list|,
+name|logstat
+argument_list|,
+name|logfac
+argument_list|)
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|closelog
 parameter_list|()
 block|{
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1644,6 +1787,9 @@ name|status
 operator|=
 name|NOCONN
 expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1664,6 +1810,9 @@ block|{
 name|int
 name|omask
 decl_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|omask
 operator|=
 name|LogMask
@@ -1677,6 +1826,9 @@ condition|)
 name|LogMask
 operator|=
 name|pmask
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
