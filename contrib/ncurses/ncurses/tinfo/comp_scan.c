@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
 comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -26,13 +30,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<term_entry.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<tic.h>
 end_include
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: comp_scan.c,v 1.34 1998/11/01 00:56:39 tom Exp $"
+literal|"$Id: comp_scan.c,v 1.44 2000/06/10 21:59:21 tom Exp $"
 argument_list|)
 end_macro
 
@@ -60,6 +70,8 @@ end_define
 begin_decl_stmt
 name|int
 name|_nc_syntax
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +82,8 @@ end_comment
 begin_decl_stmt
 name|long
 name|_nc_curr_file_pos
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +94,8 @@ end_comment
 begin_decl_stmt
 name|long
 name|_nc_comment_start
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -90,6 +106,8 @@ end_comment
 begin_decl_stmt
 name|long
 name|_nc_comment_end
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -100,12 +118,29 @@ end_comment
 begin_decl_stmt
 name|long
 name|_nc_start_line
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* start line of current entry */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|token
+name|_nc_curr_token
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*****************************************************************************  *  * Token-grabbing machinery  *  *****************************************************************************/
@@ -434,6 +469,14 @@ condition|(
 name|ch
 operator|==
 literal|'.'
+ifdef|#
+directive|ifdef
+name|NCURSES_EXT_FUNCS
+operator|&&
+operator|!
+name|_nc_disable_period
+endif|#
+directive|endif
 condition|)
 block|{
 name|dot_flag
@@ -490,6 +533,20 @@ name|isalnum
 argument_list|(
 name|ch
 argument_list|)
+ifdef|#
+directive|ifdef
+name|NCURSES_EXT_FUNCS
+operator|&&
+operator|!
+operator|(
+name|ch
+operator|==
+literal|'.'
+operator|&&
+name|_nc_disable_period
+operator|)
+endif|#
+directive|endif
 operator|&&
 operator|!
 name|strchr
@@ -509,11 +566,8 @@ literal|"Illegal character (expected alphanumeric or %s) - %s"
 argument_list|,
 name|terminfo_punct
 argument_list|,
-name|_tracechar
+name|unctrl
 argument_list|(
-operator|(
-name|chtype
-operator|)
 name|ch
 argument_list|)
 argument_list|)
@@ -626,7 +680,7 @@ name|separator
 operator|=
 literal|','
 expr_stmt|;
-comment|/* 				 * Fall-through here is not an accident. 				 * The idea is that if we see a comma, we 				 * figure this is terminfo unless we 				 * subsequently run into a colon -- but 				 * we don't stop looking for that colon until 				 * hitting a newline.  This allows commas to 				 * be embedded in description fields of 				 * either syntax. 				 */
+comment|/* 		     * Fall-through here is not an accident. 		     * The idea is that if we see a comma, we 		     * figure this is terminfo unless we 		     * subsequently run into a colon -- but 		     * we don't stop looking for that colon until 		     * hitting a newline.  This allows commas to 		     * be embedded in description fields of 		     * either syntax. 		     */
 comment|/* FALLTHRU */
 block|}
 else|else
@@ -658,7 +712,7 @@ operator|==
 name|ERR
 condition|)
 block|{
-comment|/* 			     * Grrr...what we ought to do here is barf, 			     * complaining that the entry is malformed. 			     * But because a couple of name fields in the 			     * 8.2 termcap file end with |\, we just have 			     * to assume it's termcap syntax. 			     */
+comment|/* 		 * Grrr...what we ought to do here is barf, 		 * complaining that the entry is malformed. 		 * But because a couple of name fields in the 		 * 8.2 termcap file end with |\, we just have 		 * to assume it's termcap syntax. 		 */
 name|_nc_syntax
 operator|=
 name|SYN_TERMCAP
@@ -705,7 +759,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/* 			 * This is the soonest we have the terminal name 			 * fetched.  Set up for following warning messages. 			 */
+comment|/* 	     * This is the soonest we have the terminal name 	     * fetched.  Set up for following warning messages. 	     */
 name|ptr
 operator|=
 name|strchr
@@ -754,7 +808,7 @@ name|ptr
 operator|=
 name|ch
 expr_stmt|;
-comment|/* 			 * Compute the boundary between the aliases and the 			 * description field for syntax-checking purposes. 			 */
+comment|/* 	     * Compute the boundary between the aliases and the 	     * description field for syntax-checking purposes. 	     */
 name|desc
 operator|=
 name|strrchr
@@ -822,7 +876,7 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Whitespace in a name field other than the long name 			 * can confuse rdist and some termcap tools.  Slashes 			 * are a no-no.  Other special characters can be 			 * dangerous due to shell expansion. 			 */
+comment|/* 	     * Whitespace in a name field other than the long name 	     * can confuse rdist and some termcap tools.  Slashes 	     * are a no-no.  Other special characters can be 	     * dangerous due to shell expansion. 	     */
 for|for
 control|(
 name|ptr
@@ -1025,11 +1079,8 @@ literal|"Missing separator after `%s', have %s"
 argument_list|,
 name|buffer
 argument_list|,
-name|_tracechar
+name|unctrl
 argument_list|(
-operator|(
-name|chtype
-operator|)
 name|ch
 argument_list|)
 argument_list|)
@@ -1161,6 +1212,13 @@ operator|=
 name|_nc_trans_string
 argument_list|(
 name|ptr
+argument_list|,
+name|buffer
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1209,11 +1267,8 @@ name|_nc_warning
 argument_list|(
 literal|"Illegal character - %s"
 argument_list|,
-name|_tracechar
+name|unctrl
 argument_list|(
-operator|(
-name|chtype
-operator|)
 name|ch
 argument_list|)
 argument_list|)
@@ -1246,17 +1301,13 @@ expr_stmt|;
 if|if
 condition|(
 name|_nc_tracing
-operator|&
-name|TRACE_IEVENT
+operator|>=
+name|DEBUG_LEVEL
+argument_list|(
+literal|7
+argument_list|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Token: "
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -1265,11 +1316,9 @@ block|{
 case|case
 name|BOOLEAN
 case|:
-name|fprintf
+name|_tracef
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Boolean; name='%s'\n"
+literal|"Token: Boolean; name='%s'"
 argument_list|,
 name|_nc_curr_token
 operator|.
@@ -1280,11 +1329,9 @@ break|break;
 case|case
 name|NUMBER
 case|:
-name|fprintf
+name|_tracef
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Number;  name='%s', value=%d\n"
+literal|"Token: Number;  name='%s', value=%d"
 argument_list|,
 name|_nc_curr_token
 operator|.
@@ -1299,11 +1346,9 @@ break|break;
 case|case
 name|STRING
 case|:
-name|fprintf
+name|_tracef
 argument_list|(
-name|stderr
-argument_list|,
-literal|"String;  name='%s', value=%s\n"
+literal|"Token: String;  name='%s', value=%s"
 argument_list|,
 name|_nc_curr_token
 operator|.
@@ -1321,11 +1366,9 @@ break|break;
 case|case
 name|CANCEL
 case|:
-name|fprintf
+name|_tracef
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cancel; name='%s'\n"
+literal|"Token: Cancel; name='%s'"
 argument_list|,
 name|_nc_curr_token
 operator|.
@@ -1336,11 +1379,9 @@ break|break;
 case|case
 name|NAMES
 case|:
-name|fprintf
+name|_tracef
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Names; value='%s'\n"
+literal|"Token: Names; value='%s'"
 argument_list|,
 name|_nc_curr_token
 operator|.
@@ -1351,11 +1392,9 @@ break|break;
 case|case
 name|EOF
 case|:
-name|fprintf
+name|_tracef
 argument_list|(
-name|stderr
-argument_list|,
-literal|"End of file\n"
+literal|"Token: End of file"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1415,6 +1454,10 @@ parameter_list|(
 name|char
 modifier|*
 name|ptr
+parameter_list|,
+name|char
+modifier|*
+name|last
 parameter_list|)
 block|{
 name|int
@@ -1442,6 +1485,11 @@ name|ignored
 init|=
 name|FALSE
 decl_stmt|;
+name|bool
+name|long_warning
+init|=
+name|FALSE
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -1463,6 +1511,17 @@ operator|!=
 name|EOF
 condition|)
 block|{
+if|if
+condition|(
+name|ptr
+operator|==
+operator|(
+name|last
+operator|-
+literal|1
+operator|)
+condition|)
+break|break;
 if|if
 condition|(
 operator|(
@@ -1525,12 +1584,8 @@ name|_nc_warning
 argument_list|(
 literal|"Illegal ^ character - %s"
 argument_list|,
-name|_tracechar
+name|unctrl
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|ch
 argument_list|)
 argument_list|)
@@ -1550,6 +1605,15 @@ operator|++
 operator|)
 operator|=
 literal|'\177'
+expr_stmt|;
+if|if
+condition|(
+name|_nc_tracing
+condition|)
+name|_nc_warning
+argument_list|(
+literal|"Allow ^? as synonym for \\177"
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1898,12 +1962,8 @@ name|_nc_warning
 argument_list|(
 literal|"Illegal character %s in \\ sequence"
 argument_list|,
-name|_tracechar
+name|unctrl
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|ch
 argument_list|)
 argument_list|)
@@ -1982,12 +2042,21 @@ condition|(
 name|count
 operator|>
 name|MAXCAPLEN
+operator|&&
+operator|!
+name|long_warning
 condition|)
+block|{
 name|_nc_warning
 argument_list|(
 literal|"Very long string found.  Missing separator?"
 argument_list|)
 expr_stmt|;
+name|long_warning
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 block|}
 comment|/* end while */
 operator|*

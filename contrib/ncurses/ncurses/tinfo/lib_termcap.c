@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_termcap.c,v 1.29 1999/09/05 01:06:43 tom Exp $"
+literal|"$Id: lib_termcap.c,v 1.36 2000/02/13 01:01:26 tom Exp $"
 argument_list|)
 end_macro
 
@@ -56,6 +56,8 @@ begin_decl_stmt
 name|char
 modifier|*
 name|UP
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +65,8 @@ begin_decl_stmt
 name|char
 modifier|*
 name|BC
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -225,7 +229,6 @@ include|#
 directive|include
 file|<capdefaults.c>
 comment|/* LINT_PREPRO #endif*/
-block|}
 ifdef|#
 directive|ifdef
 name|FREEBSD_NATIVE
@@ -250,6 +253,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 name|returnCode
 argument_list|(
 name|errcode
@@ -456,10 +460,11 @@ name|i
 index|]
 argument_list|)
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+name|returnCode
+argument_list|(
+name|ABSENT_NUMERIC
+argument_list|)
+expr_stmt|;
 name|returnCode
 argument_list|(
 name|tp
@@ -475,7 +480,7 @@ block|}
 block|}
 name|returnCode
 argument_list|(
-name|ERR
+name|ABSENT_NUMERIC
 argument_list|)
 expr_stmt|;
 block|}
@@ -557,15 +562,6 @@ argument_list|,
 name|strcodes
 argument_list|)
 decl_stmt|;
-name|T
-argument_list|(
-operator|(
-literal|"trying %s"
-operator|,
-name|capname
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -579,8 +575,10 @@ literal|2
 argument_list|)
 condition|)
 block|{
-name|T
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"found match : %s"
 operator|,
@@ -596,7 +594,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* setupterm forces cancelled strings to null */
+comment|/* setupterm forces canceled strings to null */
 if|if
 condition|(
 name|area
