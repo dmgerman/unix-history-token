@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parser1.c	3.2 83/11/22"
+literal|"@(#)parser1.c	3.3 83/11/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -1064,7 +1064,11 @@ condition|)
 block|{
 name|p_error
 argument_list|(
-literal|"Too many arguments."
+literal|"%s: Too many arguments."
+argument_list|,
+name|c
+operator|->
+name|lc_name
 argument_list|)
 expr_stmt|;
 name|p_varfree
@@ -1242,7 +1246,11 @@ condition|)
 block|{
 name|p_error
 argument_list|(
-literal|"%s: Unknown argument."
+literal|"%s: Unknown argument \"%s\"."
+argument_list|,
+name|c
+operator|->
+name|lc_name
 argument_list|,
 name|tmp
 argument_list|)
@@ -1288,7 +1296,11 @@ condition|)
 block|{
 name|p_error
 argument_list|(
-literal|"Argument %d (%s) multiply specified."
+literal|"%s: Argument %d (%s) duplicated."
+argument_list|,
+name|c
+operator|->
+name|lc_name
 argument_list|,
 name|ap
 operator|-
@@ -1312,6 +1324,18 @@ name|flag
 operator|=
 literal|0
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|t
+operator|.
+name|v_type
+operator|==
+name|V_ERR
+condition|)
+block|{
+comment|/* do nothing */
 block|}
 elseif|else
 if|if
@@ -1343,7 +1367,11 @@ condition|)
 block|{
 name|p_error
 argument_list|(
-literal|"Argument %d (%s) type mismatch."
+literal|"%s: Argument %d (%s) type mismatch."
+argument_list|,
+name|c
+operator|->
+name|lc_name
 argument_list|,
 name|ap
 operator|-
@@ -1389,6 +1417,34 @@ name|s_gettok
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|p_erred
+argument_list|()
+condition|)
+name|flag
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|token
+operator|!=
+name|T_RP
+operator|&&
+name|token
+operator|!=
+name|T_EOL
+operator|&&
+name|token
+operator|!=
+name|T_EOF
+condition|)
+name|flag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* look ahead a bit */
 if|if
 condition|(
 name|flag
