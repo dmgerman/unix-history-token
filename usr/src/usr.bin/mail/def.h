@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	def.h	2.13	83/08/11	*/
+comment|/*	def.h	2.14	85/01/09	*/
 end_comment
 
 begin_include
@@ -1165,16 +1165,6 @@ parameter_list|,
 name|a
 parameter_list|)
 value|signal(s, a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<< ((s) - 1))
 end_define
 
 begin_define
