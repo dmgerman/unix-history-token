@@ -246,7 +246,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: atrun.c,v 1.1 1994/05/10 18:23:08 kernel Exp $"
+literal|"$Id: atrun.c,v 1.2 1995/04/12 02:52:15 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1079,6 +1079,10 @@ argument_list|,
 literal|"-F"
 argument_list|,
 literal|"Atrun Service"
+argument_list|,
+literal|"-odi"
+argument_list|,
+literal|"-oem"
 argument_list|,
 name|mailname
 argument_list|,
