@@ -1029,7 +1029,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|TCP_MAXRXTSHIFT
+name|SYNCACHE_MAXREXMTS
 condition|;
 name|i
 operator|++
