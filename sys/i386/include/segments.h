@@ -785,20 +785,6 @@ begin_comment
 comment|/*  * Size of IDT table  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|APIC_IO
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -807,32 +793,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* we use them all */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NIDT
-value|129
-end_define
-
-begin_comment
-comment|/* 32 reserved, 16 h/w, 0 s/w, linux's 0x80 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP || APIC_IO */
+comment|/* 32 reserved, 0x80 syscall, most are h/w */
 end_comment
 
 begin_define
@@ -1057,6 +1018,17 @@ end_define
 
 begin_comment
 comment|/* #XF: SIMD Floating-Point Exception */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_IO_INTS
+value|NRSVIDT
+end_define
+
+begin_comment
+comment|/* Base of IDT entries for I/O interrupts. */
 end_comment
 
 begin_define
