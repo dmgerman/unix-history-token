@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.126 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.127 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3327,7 +3327,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	Andrew Pam<avatar@aus.xanadu.com> **	John Kennedy<warlock@csuchico.edu> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[03/02/94 @ 05:34 PM (Wednesday)] **	sendmail 8.6.6.b9	named 4.9.2-931205-p1	db-1.73 **	gcc 2.5.8		libc.so.4.5.19 **	slackware 1.1.2		linux 0.99.15 */
+comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Andrew Pam<avatar@aus.xanadu.com> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[12/14/94 @ 11:38:41 PM (Wednesday)] **	sendmail 8.7.a.5	named 4.9.3-beta12-p1	db-1.85 **	gcc 2.6.2		libc.so.4.6.20 **	slackware 2.1.0		linux 1.1.70 */
 end_comment
 
 begin_ifdef
@@ -3440,6 +3440,31 @@ end_define
 begin_comment
 comment|/* use<sys/vfs.h> statfs() impl */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/var/run/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|TZ_TYPE
+value|TZ_TNAME
+end_define
 
 begin_include
 include|#
