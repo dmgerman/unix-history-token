@@ -160,6 +160,7 @@ comment|/* NIS v1 */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|yp_procs
@@ -700,6 +701,7 @@ name|tmp
 decl_stmt|;
 endif|#
 directive|endif
+specifier|const
 name|char
 modifier|*
 name|yp_procedure
@@ -738,10 +740,18 @@ argument_list|)
 argument_list|,
 literal|"#%lu/#%lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|rqstp
 operator|->
 name|rq_prog
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|rqstp
 operator|->
 name|rq_proc
