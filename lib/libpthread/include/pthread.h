@@ -45,10 +45,6 @@ directive|include
 file|<pthread/util.h>
 end_include
 
-begin_comment
-comment|/* #include<pthread/stdio.h> Because I'm a moron -- proven */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -56,7 +52,17 @@ file|<errno.h>
 end_include
 
 begin_comment
-comment|/* More includes, that need size_t or NULL */
+comment|/* More includes */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<pthread/pthread_once.h>
+end_include
+
+begin_comment
+comment|/* More includes, that need size_t */
 end_comment
 
 begin_include
@@ -83,10 +89,21 @@ name|PS_FDR_WAIT
 block|,
 name|PS_FDW_WAIT
 block|,
+name|PS_SLEEP_WAIT
+block|,
+name|PS_JOIN
+block|,
 name|PS_DEAD
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|PF_DETACHED
+value|0x00000001
+end_define
 
 begin_struct
 struct|struct
@@ -96,11 +113,6 @@ name|struct
 name|machdep_pthread
 name|machdep_data
 decl_stmt|;
-name|struct
-name|pthread_queue
-modifier|*
-name|queue
-decl_stmt|;
 name|enum
 name|pthread_state
 name|state
@@ -108,33 +120,59 @@ decl_stmt|;
 name|pthread_attr_t
 name|attr
 decl_stmt|;
-comment|/* 	 * Thread implementations are just multiple queue type implemenations, 	 * Below are the various link lists currently necessary 	 * It is possible for a thread to be on multiple, or even all the 	 * queues at once, much care must be taken during queue manipulation. 	 */
+comment|/* Other flags */
+name|int
+name|flags
+decl_stmt|;
+comment|/* Time until timeout */
+name|int
+name|time_sec
+decl_stmt|;
+name|int
+name|time_usec
+decl_stmt|;
+comment|/* Join queue for waiting threads */
+name|struct
+name|pthread_queue
+name|join_queue
+decl_stmt|;
+comment|/* Queue thread is waiting on, (mutexes, cond. etc.) */
+name|struct
+name|pthread_queue
+modifier|*
+name|queue
+decl_stmt|;
+comment|/* 	 * Thread implementations are just multiple queue type implemenations, 	 * Below are the various link lists currently necessary 	 * It is possible for a thread to be on multiple, or even all the 	 * queues at once, much care must be taken during queue manipulation. 	 *      * The pthread structure must be locked before you can even look at 	 * the link lists. 	 */
 name|struct
 name|pthread
 modifier|*
 name|pll
 decl_stmt|;
 comment|/* ALL threads, in any state */
-comment|/* struct pthread		*rll;		/* Current run queue, before resced */
+comment|/* struct pthread		*rll;		 Current run queue, before resced */
+name|struct
+name|pthread
+modifier|*
+name|sll
+decl_stmt|;
+comment|/* For sleeping threads */
 name|struct
 name|pthread
 modifier|*
 name|next
 decl_stmt|;
 comment|/* Standard for mutexes, etc ... */
-name|struct
-name|pthread
-modifier|*
-name|s_next
-decl_stmt|;
-comment|/* For sleeping threads */
-comment|/* struct pthread			*fd_next;	/* For kernel fd operations */
+comment|/* struct pthread			*fd_next;	 For kernel fd operations */
 name|int
 name|fd
 decl_stmt|;
 comment|/* Used when thread waiting on fd */
 name|semaphore
 name|lock
+decl_stmt|;
+name|void
+modifier|*
+name|ret
 decl_stmt|;
 name|int
 name|error
@@ -214,6 +252,18 @@ end_comment
 
 begin_decl_stmt
 name|__BEGIN_DECLS
+name|void
+name|pthread_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|pthread_create
 name|__P
@@ -277,6 +327,34 @@ argument_list|(
 operator|(
 name|pthread_t
 operator|,
+name|pthread_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pthread_join
+name|__P
+argument_list|(
+operator|(
+name|pthread_t
+operator|,
+name|void
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pthread_detach
+name|__P
+argument_list|(
+operator|(
 name|pthread_t
 operator|)
 argument_list|)

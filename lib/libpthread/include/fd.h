@@ -93,6 +93,13 @@ name|readv
 function_decl|)
 parameter_list|()
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|seek
+function_decl|)
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 end_struct
