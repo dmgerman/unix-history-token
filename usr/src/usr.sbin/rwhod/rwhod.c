@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.24 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,13 +202,6 @@ value|(3 * 60)
 end_define
 
 begin_decl_stmt
-name|struct
-name|sockaddr_in
-name|sin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|myname
 index|[
@@ -232,7 +225,9 @@ block|{
 literal|"_boottime"
 block|}
 block|,
+block|{
 literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -313,7 +308,7 @@ begin_define
 define|#
 directive|define
 name|WHDRSIZE
-value|(sizeof (mywd) - sizeof (mywd.wd_we))
+value|(sizeof(mywd) - sizeof(mywd.wd_we))
 end_define
 
 begin_decl_stmt
@@ -420,7 +415,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|sendto
+name|Sendto
 name|__P
 argument_list|(
 operator|(
@@ -441,6 +436,13 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|sendto
+value|Sendto
+end_define
 
 begin_endif
 endif|#
@@ -485,6 +487,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+name|struct
+name|sockaddr_in
+name|sin
 decl_stmt|;
 if|if
 condition|(
@@ -771,6 +777,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|memset
+argument_list|(
+operator|&
+name|sin
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sin
 operator|.
 name|sin_family
@@ -1648,20 +1667,20 @@ literal|0
 index|]
 condition|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
+name|we
+operator|->
+name|we_utmp
+operator|.
+name|out_line
+argument_list|,
 name|utmp
 index|[
 name|i
 index|]
 operator|.
 name|ut_line
-argument_list|,
-name|we
-operator|->
-name|we_utmp
-operator|.
-name|out_line
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1674,20 +1693,20 @@ name|ut_line
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+name|we
+operator|->
+name|we_utmp
+operator|.
+name|out_name
+argument_list|,
 name|utmp
 index|[
 name|i
 index|]
 operator|.
 name|ut_name
-argument_list|,
-name|we
-operator|->
-name|we_utmp
-operator|.
-name|out_name
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2279,11 +2298,13 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|rtinfo
 operator|->
 name|rti_info
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2541,6 +2562,11 @@ name|buf
 operator|+
 name|needed
 expr_stmt|;
+name|sdl
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* XXX just to keep gcc -Wall happy */
 for|for
 control|(
 name|next
@@ -2735,7 +2761,7 @@ name|n_next
 control|)
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 name|sdl
 operator|->
@@ -2813,13 +2839,11 @@ argument_list|(
 literal|"malloc of neighbor structure"
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|np
+argument_list|,
+literal|0
 argument_list|,
 name|len
 argument_list|)
@@ -2879,14 +2903,8 @@ name|neighbors
 operator|=
 name|np
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|dstaddr
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -2895,20 +2913,26 @@ name|np
 operator|->
 name|n_addr
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|dstaddr
+argument_list|,
 name|np
 operator|->
 name|n_addrlen
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|sdl
-operator|->
-name|sdl_data
-argument_list|,
 name|np
 operator|->
 name|n_name
+argument_list|,
+name|sdl
+operator|->
+name|sdl_data
 argument_list|,
 name|sdl
 operator|->
@@ -2937,7 +2961,7 @@ end_ifdef
 
 begin_function
 name|void
-name|sendto
+name|Sendto
 parameter_list|(
 name|s
 parameter_list|,
