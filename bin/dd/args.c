@@ -1798,6 +1798,7 @@ name|int
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
 block|}
 if|if
 condition|(

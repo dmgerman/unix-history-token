@@ -32,6 +32,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -66,6 +72,7 @@ block|{
 name|int
 name|val
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1065,7 +1072,7 @@ name|mk
 parameter_list|)
 block|{
 name|int
-name|mdays
+name|lmdays
 decl_stmt|;
 switch|switch
 condition|(
@@ -1080,7 +1087,7 @@ condition|(
 name|val
 condition|)
 block|{
-name|mdays
+name|lmdays
 operator|=
 name|daysinmonth
 argument_list|(
@@ -1091,7 +1098,7 @@ if|if
 condition|(
 name|val
 operator|>
-name|mdays
+name|lmdays
 operator|-
 name|t
 operator|->
@@ -1100,7 +1107,7 @@ condition|)
 block|{
 name|val
 operator|-=
-name|mdays
+name|lmdays
 operator|-
 name|t
 operator|->
@@ -2093,7 +2100,7 @@ name|char
 modifier|*
 name|arg
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int

@@ -81,22 +81,6 @@ name|off_t
 name|offset
 decl_stmt|;
 comment|/* # of blocks to skip */
-name|u_quad_t
-name|f_stats
-decl_stmt|;
-comment|/* # of full blocks processed */
-name|u_quad_t
-name|p_stats
-decl_stmt|;
-comment|/* # of partial blocks processed */
-name|u_quad_t
-name|s_stats
-decl_stmt|;
-comment|/* # of odd swab blocks */
-name|u_quad_t
-name|t_stats
-decl_stmt|;
-comment|/* # of truncations */
 block|}
 name|IO
 typedef|;

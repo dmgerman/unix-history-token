@@ -94,6 +94,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -119,12 +131,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<locale.h>
 end_include
 
 begin_include
@@ -209,22 +215,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|logwtmp
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|main
@@ -252,10 +242,12 @@ name|jflag
 decl_stmt|,
 name|nflag
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|format
-decl_stmt|,
+decl_stmt|;
+name|char
 name|buf
 index|[
 literal|1024
