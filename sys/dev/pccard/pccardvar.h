@@ -1217,5 +1217,15 @@ parameter_list|)
 value|(struct pccard_softc *) device_get_softc(d)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCCARD_IVAR
+parameter_list|(
+name|d
+parameter_list|)
+value|(struct pccard_ivar *) device_get_ivars(d)
+end_define
+
 end_unit
 
