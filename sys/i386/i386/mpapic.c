@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.31 1998/05/17 17:32:10 tegge Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.32 1998/09/06 22:41:40 tegge Exp $  */
 end_comment
 
 begin_include
@@ -1089,11 +1089,18 @@ name|intcontrol
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * EISA IRQ's are identical to ISA irq's, regardless of 		 * whether they are edge or level since they go through 		 * the level/polarity converter gadget. 		 */
+comment|/* Use ELCR settings to determine level or edge mode */
 name|level
 operator|=
-literal|0
+operator|(
+name|intcontrol
+operator|>>
+name|eirq
+operator|)
+operator|&
+literal|1
 expr_stmt|;
+comment|/* 		 * Note that on older Neptune chipset based systems, any 		 * pci interrupts often show up here and in the ELCR as well 		 * as level sensitive interrupts attributed to the EISA bus. 		 */
 if|if
 condition|(
 name|level
@@ -1168,12 +1175,6 @@ parameter_list|)
 block|{
 name|int
 name|id
-decl_stmt|;
-name|int
-name|eirq
-decl_stmt|;
-name|int
-name|pol
 decl_stmt|;
 switch|switch
 condition|(
@@ -1259,68 +1260,7 @@ return|return;
 case|case
 name|EISA
 case|:
-name|eirq
-operator|=
-name|apic_src_bus_irq
-argument_list|(
-name|apic
-argument_list|,
-name|pin
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|eirq
-operator|<
-literal|0
-operator|||
-name|eirq
-operator|>
-literal|15
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"EISA POL: IRQ %d??\n"
-argument_list|,
-name|eirq
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-comment|/* XXX EISA IRQ's are identical to ISA irq's, regardless of 		 * whether they are edge or level since they go through the 		 * level/polarity converter gadget. */
-if|if
-condition|(
-name|level
-operator|==
-literal|1
-condition|)
-comment|/* XXX Always false */
-name|pol
-operator|=
-literal|0
-expr_stmt|;
-comment|/* if level, active low */
-else|else
-name|pol
-operator|=
-literal|1
-expr_stmt|;
-comment|/* if edge, high edge */
-if|if
-condition|(
-name|pol
-operator|==
-literal|0
-condition|)
-operator|*
-name|flags
-operator||=
-name|IOART_INTALO
-expr_stmt|;
-else|else
+comment|/* polarity converter always gives active high */
 operator|*
 name|flags
 operator|&=
