@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	1.3 %G%"
+literal|"@(#)cmd1.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -608,7 +608,31 @@ name|mp
 operator|->
 name|m_flag
 operator|&
+operator|(
 name|MREAD
+operator||
+name|MNEW
+operator|)
+operator|)
+operator|==
+name|MNEW
+condition|)
+name|dispc
+operator|=
+literal|'N'
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|m_flag
+operator|&
+operator|(
+name|MREAD
+operator||
+name|MNEW
+operator|)
 operator|)
 operator|==
 literal|0
@@ -616,18 +640,6 @@ condition|)
 name|dispc
 operator|=
 literal|'U'
-expr_stmt|;
-if|if
-condition|(
-name|mp
-operator|->
-name|m_flag
-operator|&
-name|MNEW
-condition|)
-name|dispc
-operator|=
-literal|'N'
 expr_stmt|;
 name|parse
 argument_list|(
@@ -1570,12 +1582,6 @@ name|ip
 operator|++
 control|)
 block|{
-name|touch
-argument_list|(
-operator|*
-name|ip
-argument_list|)
-expr_stmt|;
 name|dot
 operator|=
 operator|&
@@ -1586,6 +1592,12 @@ name|ip
 operator|-
 literal|1
 index|]
+expr_stmt|;
+name|dot
+operator|->
+name|m_flag
+operator||=
+name|MTOUCH
 expr_stmt|;
 name|dot
 operator|->
