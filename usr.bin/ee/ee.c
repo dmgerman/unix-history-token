@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ee.c,v 1.9 1998/01/12 07:51:07 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"@(#) ee, version 1.3  $Revision: 1.8 $"
+literal|"@(#) ee, version 1.3  $Revision: 1.9 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -23495,7 +23495,7 @@ name|catopen
 argument_list|(
 literal|"ee"
 argument_list|,
-literal|0
+name|NL_CAT_LOCALE
 argument_list|)
 expr_stmt|;
 endif|#
