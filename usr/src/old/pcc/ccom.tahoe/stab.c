@@ -8,10 +8,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)stab.c	1.3 (Berkeley) %G%"
+literal|"@(#)stab.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1711,6 +1711,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|i
+operator|==
+name|NILINDEX
+operator|&&
+name|ISARY
+argument_list|(
+name|t
+argument_list|)
+condition|)
+block|{
+name|i
+operator|=
+name|p
+operator|->
+name|dimoff
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|t
 operator|==
 name|basictype
@@ -2430,6 +2449,13 @@ operator|+
 literal|3
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|NILINDEX
+operator|&&
+operator|(
 name|p
 operator|=
 operator|&
@@ -2437,10 +2463,7 @@ name|stab
 index|[
 name|i
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|p
+operator|)
 operator|->
 name|sname
 operator|!=
