@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namei.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vnode.h"
 end_include
 
@@ -68,25 +74,6 @@ include|#
 directive|include
 file|"tty.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|vn_read
-argument_list|()
-decl_stmt|,
-name|vn_write
-argument_list|()
-decl_stmt|,
-name|vn_ioctl
-argument_list|()
-decl_stmt|,
-name|vn_select
-argument_list|()
-decl_stmt|,
-name|vn_close
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -263,6 +250,8 @@ argument_list|(
 name|ndp
 argument_list|,
 name|vap
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -424,6 +413,8 @@ argument_list|,
 name|VREAD
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -479,6 +470,8 @@ argument_list|,
 name|VWRITE
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 operator|)
 condition|)
@@ -516,6 +509,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -536,6 +531,8 @@ argument_list|,
 name|fmode
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -675,6 +672,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|aresid
+argument_list|,
+name|p
 argument_list|)
 expr|enum
 name|uio_rw
@@ -733,6 +732,14 @@ begin_decl_stmt
 name|int
 modifier|*
 name|aresid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -812,6 +819,12 @@ operator|.
 name|uio_rw
 operator|=
 name|rw
+expr_stmt|;
+name|auio
+operator|.
+name|uio_procp
+operator|=
+name|p
 expr_stmt|;
 if|if
 condition|(
@@ -1192,6 +1205,8 @@ argument_list|(
 argument|vp
 argument_list|,
 argument|sb
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1212,20 +1227,20 @@ name|sb
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
 name|vattr
 name|vattr
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
 specifier|register
 name|struct
 name|vattr
@@ -1254,6 +1269,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1507,6 +1524,8 @@ argument_list|,
 argument|com
 argument_list|,
 argument|data
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1530,6 +1549,14 @@ name|data
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -1549,14 +1576,6 @@ operator|->
 name|f_data
 operator|)
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
 name|struct
 name|vattr
 name|vattr
@@ -1598,6 +1617,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -1676,6 +1697,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1722,6 +1745,8 @@ argument_list|(
 argument|fp
 argument_list|,
 argument|which
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1739,16 +1764,16 @@ name|which
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 return|return
 operator|(
 name|VOP_SELECT
@@ -1773,6 +1798,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -1787,6 +1814,8 @@ begin_expr_stmt
 name|vn_close
 argument_list|(
 name|fp
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -1795,6 +1824,14 @@ operator|*
 name|fp
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1840,6 +1877,8 @@ argument_list|,
 name|fp
 operator|->
 name|f_cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vrele
