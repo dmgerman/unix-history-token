@@ -9271,15 +9271,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INTRO_USERCONFIG
-argument_list|)
-end_if
-
 begin_function_decl
 specifier|static
 name|int
@@ -9290,11 +9281,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -9621,12 +9607,6 @@ name|NULL
 block|}
 block|,
 comment|/* help		*/
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INTRO_USERCONFIG
-argument_list|)
 block|{
 literal|"intro"
 block|,
@@ -9636,8 +9616,6 @@ name|NULL
 block|}
 block|,
 comment|/* intro screen	*/
-endif|#
-directive|endif
 block|{
 literal|"iom"
 block|,
@@ -11937,15 +11915,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|INTRO_USERCONFIG
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|VISUAL_USERCONFIG
 argument_list|)
 end_if
@@ -12523,11 +12492,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
