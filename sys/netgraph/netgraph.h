@@ -833,6 +833,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|meta_p
+name|ng_copy_meta
+parameter_list|(
+name|meta_p
+name|meta
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ng_destroy_hook
 parameter_list|(
