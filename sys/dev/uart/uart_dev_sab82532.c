@@ -2251,6 +2251,7 @@ argument_list|)
 expr_stmt|;
 name|pvr
 operator|=
+operator|~
 name|uart_getreg
 argument_list|(
 name|bas
@@ -2284,7 +2285,6 @@ break|break;
 block|}
 name|SIGCHG
 argument_list|(
-operator|~
 name|pvr
 argument_list|,
 name|sig
