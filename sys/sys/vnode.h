@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_label.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -59,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<sys/acl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mac.h>
 end_include
 
 begin_include

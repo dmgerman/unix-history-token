@@ -16,13 +16,13 @@ name|_SYS_UCRED_H_
 end_define
 
 begin_comment
-comment|/*  * XXXMAC: Recursively include mac.h due to an API assumption that it  * it is sufficient to include types.h and ucred.h to have a defined  * struct ucred.  This should be changed so that struct ucred is not  * exported to userland via _KERNEL.  */
+comment|/*  * XXXMAC: this recursive include could be #ifdef _KERNEL if struct  * ucred could also be #ifdef _KERNEL.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
+file|<sys/_label.h>
 end_include
 
 begin_comment

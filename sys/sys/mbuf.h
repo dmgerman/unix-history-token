@@ -15,14 +15,10 @@ directive|define
 name|_SYS_MBUF_H_
 end_define
 
-begin_comment
-comment|/*  * XXXMAC: Possibly this recursive include is a bad idea, but a lot  * of code exists that assumes it is sufficient to include just mbuf.h  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
+file|<sys/_label.h>
 end_include
 
 begin_comment

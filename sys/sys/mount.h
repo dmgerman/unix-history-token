@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ucred.h>
 end_include
 
@@ -48,6 +42,12 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/_label.h>
+end_include
 
 begin_include
 include|#
