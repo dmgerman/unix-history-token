@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.16 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2515,13 +2515,13 @@ name|expand
 argument_list|(
 literal|"\201n"
 argument_list|,
-name|buf
+name|nbuf
 argument_list|,
 operator|&
-name|buf
+name|nbuf
 index|[
 sizeof|sizeof
-name|buf
+name|nbuf
 index|]
 argument_list|,
 name|e
