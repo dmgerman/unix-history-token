@@ -39,12 +39,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_PD672X
+name|PCIC_PD6722
 value|3
 end_define
 
 begin_comment
-comment|/* Cirrus logic 672x */
+comment|/* Cirrus logic PD6722 */
 end_comment
 
 begin_define
@@ -55,7 +55,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Cirrus logic 6710 */
+comment|/* Cirrus logic PD6710 */
 end_comment
 
 begin_define
@@ -144,6 +144,28 @@ end_define
 
 begin_comment
 comment|/* Intel i82365sl-DF step */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PD6729
+value|13
+end_define
+
+begin_comment
+comment|/* Cirrus Logic PD6729 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PD673X
+value|14
+end_define
+
+begin_comment
+comment|/* Cirrus Logic PD673x */
 end_comment
 
 begin_comment
@@ -338,7 +360,7 @@ value|0x16
 end_define
 
 begin_comment
-comment|/* PD672x: Misc control register 1 per slot */
+comment|/* PD67xx: Misc control register 1 per slot */
 end_comment
 
 begin_define
@@ -360,7 +382,7 @@ value|0x1e
 end_define
 
 begin_comment
-comment|/* PD672x: Misc control register 2 per chip */
+comment|/* PD67xx: Misc control register 2 per chip */
 end_comment
 
 begin_define
@@ -372,6 +394,28 @@ end_define
 
 begin_comment
 comment|/* PD67xx: Chip I/D */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_EXT_IND
+value|0x2e
+end_define
+
+begin_comment
+comment|/* PD67xx: Extended Index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_EXTENDED
+value|0x2f
+end_define
+
+begin_comment
+comment|/* PD67xx: Extended register */
 end_comment
 
 begin_define
@@ -1357,6 +1401,53 @@ end_define
 begin_comment
 comment|/* Single/dual socket version */
 end_comment
+
+begin_comment
+comment|/* Cirrus Logic: Extended Registers (PCIC_EXT_IND) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_EXT_DATA
+value|0x0a
+end_define
+
+begin_comment
+comment|/* External Data */
+end_comment
+
+begin_comment
+comment|/* EXT_DATA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_VS1A
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_VS2A
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_VS1B
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_VS2B
+value|0x08
+end_define
 
 begin_comment
 comment|/* Vadem: Card Voltage Select register (PCIC_CVSR) */

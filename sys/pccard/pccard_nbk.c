@@ -547,6 +547,14 @@ name|retval
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|flags
+init|=
+name|device_get_flags
+argument_list|(
+name|child
+argument_list|)
+decl_stmt|;
 name|retval
 operator|+=
 name|bus_print_child_header
@@ -618,6 +626,21 @@ argument_list|,
 name|PCCARD_NDRQ
 argument_list|,
 literal|"%ld"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|!=
+literal|0
+condition|)
+name|retval
+operator|+=
+name|printf
+argument_list|(
+literal|" flags 0x%x"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|retval
