@@ -3205,11 +3205,6 @@ expr_stmt|;
 goto|goto
 name|err
 goto|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 block|}
 if|if
 condition|(
@@ -5274,7 +5269,6 @@ literal|0
 operator|)
 return|;
 comment|/* power NEVER changed */
-break|break;
 block|}
 switch|switch
 condition|(
