@@ -12586,6 +12586,10 @@ name|md
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Let's check if device already exists. 	 */
+name|sc
+operator|=
+name|NULL
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|gp
