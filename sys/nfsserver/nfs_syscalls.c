@@ -1460,7 +1460,7 @@ if|if
 condition|(
 name|slp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|nfsd_head_flag
 operator|&=
@@ -3013,7 +3013,7 @@ argument_list|)
 init|;
 name|slp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|slp
 operator|=

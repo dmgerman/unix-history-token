@@ -1856,6 +1856,8 @@ name|slp
 operator|->
 name|ns_rec
 argument_list|)
+operator|!=
+name|NULL
 operator|&&
 name|waitflag
 operator|==
@@ -2233,6 +2235,8 @@ name|slp
 operator|->
 name|ns_rec
 argument_list|)
+operator|!=
+name|NULL
 operator|||
 operator|(
 name|slp
@@ -3028,7 +3032,6 @@ operator|)
 operator|==
 literal|0
 operator|||
-operator|!
 name|STAILQ_FIRST
 argument_list|(
 operator|&
@@ -3036,6 +3039,8 @@ name|slp
 operator|->
 name|ns_rec
 argument_list|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
