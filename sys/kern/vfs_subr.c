@@ -5704,13 +5704,14 @@ expr_stmt|;
 comment|/* XXX REMOVE ME */
 if|if
 condition|(
-operator|!
 name|TAILQ_NEXT
 argument_list|(
 name|bp
 argument_list|,
 name|b_vnbufs
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|panic
