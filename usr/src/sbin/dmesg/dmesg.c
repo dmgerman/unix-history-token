@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	5.5 (Berkeley) %G%"
+literal|"@(#)dmesg.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,25 +32,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -69,6 +57,24 @@ begin_include
 include|#
 directive|include
 file|<sys/msgbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -198,7 +204,7 @@ name|of
 operator|=
 name|open
 argument_list|(
-literal|"/usr/adm/msgbuf"
+name|_PATH_MSGBUF
 argument_list|,
 name|O_RDWR
 operator||
@@ -215,7 +221,7 @@ literal|0
 condition|)
 name|done
 argument_list|(
-literal|"Can't open /usr/adm/msgbuf\n"
+literal|"Can't open msgbuf file\n"
 argument_list|)
 expr_stmt|;
 name|read
@@ -260,7 +266,7 @@ index|[
 literal|2
 index|]
 else|:
-literal|"/vmunix"
+name|_PATH_VMUNIX
 argument_list|,
 name|nl
 argument_list|)
@@ -298,7 +304,7 @@ index|[
 literal|1
 index|]
 else|:
-literal|"/dev/kmem"
+name|_PATH_KMEM
 operator|)
 argument_list|,
 literal|0
