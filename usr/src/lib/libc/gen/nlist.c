@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.9 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +134,7 @@ operator|)
 return|;
 name|n
 operator|=
-name|_fdnlist
+name|__fdnlist
 argument_list|(
 name|fd
 argument_list|,
