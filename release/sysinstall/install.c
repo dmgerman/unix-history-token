@@ -1210,10 +1210,6 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -1264,64 +1260,6 @@ condition|)
 return|return
 name|RET_FAIL
 return|;
-comment|/* If this is set, we have a power installation setup here.. */
-name|cp
-operator|=
-name|variable_get
-argument_list|(
-name|VAR_DIST_SETS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-condition|)
-block|{
-comment|/* These *ALL* have to be set at once.  Like I said - power installation setup */
-if|if
-condition|(
-name|sscanf
-argument_list|(
-name|cp
-argument_list|,
-literal|"%x %x %x %x %x %x"
-argument_list|,
-operator|&
-name|Dists
-argument_list|,
-operator|&
-name|DESDists
-argument_list|,
-operator|&
-name|SrcDists
-argument_list|,
-operator|&
-name|XF86Dists
-argument_list|,
-operator|&
-name|XF86ServerDists
-argument_list|,
-operator|&
-name|XF86FontDists
-argument_list|)
-operator|!=
-literal|6
-condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"Warning:  A %s variable was configured which did not set all\n"
-literal|"distributions explicitly.  Some distributions will default to\n"
-literal|"unselected as a result."
-argument_list|,
-name|VAR_DIST_SETS
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 operator|!
