@@ -228,17 +228,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* Global defs. */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|nfsrvstats
-name|nfsrvstats
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define

@@ -542,7 +542,7 @@ operator|*
 name|tl
 operator|++
 operator|=
-name|rpc_reply
+name|nfsrv_rpc_reply
 expr_stmt|;
 if|if
 condition|(
@@ -561,7 +561,7 @@ operator|*
 name|tl
 operator|++
 operator|=
-name|rpc_msgdenied
+name|nfsrv_rpc_msgdenied
 expr_stmt|;
 if|if
 condition|(
@@ -574,7 +574,7 @@ operator|*
 name|tl
 operator|++
 operator|=
-name|rpc_autherr
+name|nfsrv_rpc_autherr
 expr_stmt|;
 operator|*
 name|tl
@@ -604,7 +604,7 @@ operator|*
 name|tl
 operator|++
 operator|=
-name|rpc_mismatch
+name|nfsrv_rpc_mismatch
 expr_stmt|;
 operator|*
 name|tl
@@ -631,7 +631,7 @@ operator|*
 name|tl
 operator|++
 operator|=
-name|rpc_msgaccepted
+name|nfsrv_rpc_msgaccepted
 expr_stmt|;
 comment|/* 		 * Send a RPCAUTH_NULL verifier - no Kerberos. 		 */
 operator|*
@@ -1093,7 +1093,7 @@ operator|*
 name|tl
 operator|++
 operator|!=
-name|rpc_call
+name|nfsrv_rpc_call
 condition|)
 block|{
 name|m_freem
@@ -1139,7 +1139,7 @@ operator|*
 name|tl
 operator|++
 operator|!=
-name|rpc_vers
+name|nfsrv_rpc_vers
 condition|)
 block|{
 name|nd
@@ -1165,7 +1165,7 @@ condition|(
 operator|*
 name|tl
 operator|!=
-name|nfs_prog
+name|nfsrv_nfs_prog
 condition|)
 block|{
 name|nd
@@ -1330,7 +1330,7 @@ name|nd
 operator|->
 name|nd_procnum
 operator|=
-name|nfsv3_procid
+name|nfsrv_nfsv3_procid
 index|[
 name|nd
 operator|->
@@ -1382,7 +1382,7 @@ if|if
 condition|(
 name|auth_type
 operator|==
-name|rpc_auth_unix
+name|nfsrv_rpc_auth_unix
 condition|)
 block|{
 name|len
@@ -3578,7 +3578,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-name|nfs_ticks
+name|nfsrv_ticks
 argument_list|)
 expr_stmt|;
 block|}

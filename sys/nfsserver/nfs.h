@@ -497,7 +497,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|nfs_ticks
+name|nfsrv_ticks
 decl_stmt|;
 end_decl_stmt
 
@@ -522,39 +522,39 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|u_int32_t
-name|nfs_false
+name|nfsrv_nfs_false
 decl_stmt|,
-name|nfs_true
+name|nfsrv_nfs_true
 decl_stmt|,
-name|nfs_xdrneg1
+name|nfsrv_nfs_xdrneg1
 decl_stmt|,
-name|nfs_prog
+name|nfsrv_nfs_prog
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|u_int32_t
-name|rpc_reply
+name|nfsrv_rpc_reply
 decl_stmt|,
-name|rpc_msgdenied
+name|nfsrv_rpc_msgdenied
 decl_stmt|,
-name|rpc_mismatch
+name|nfsrv_rpc_mismatch
 decl_stmt|,
-name|rpc_vers
+name|nfsrv_rpc_vers
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|u_int32_t
-name|rpc_auth_unix
+name|nfsrv_rpc_auth_unix
 decl_stmt|,
-name|rpc_msgaccepted
+name|nfsrv_rpc_msgaccepted
 decl_stmt|,
-name|rpc_call
+name|nfsrv_rpc_call
 decl_stmt|,
-name|rpc_autherr
+name|nfsrv_rpc_autherr
 decl_stmt|;
 end_decl_stmt
 
@@ -575,7 +575,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|nfsv3_procid
+name|nfsrv_nfsv3_procid
 index|[
 name|NFS_NPROCS
 index|]
