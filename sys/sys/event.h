@@ -554,6 +554,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|kqueue
+struct_decl|;
+end_struct_decl
+
+begin_expr_stmt
+name|SLIST_HEAD
+argument_list|(
+name|kqlist
+argument_list|,
+name|kqueue
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|knlist
@@ -596,22 +612,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_struct_decl
-struct_decl|struct
-name|kqueue
-struct_decl|;
-end_struct_decl
-
-begin_expr_stmt
-name|SLIST_HEAD
-argument_list|(
-name|kqlist
-argument_list|,
-name|kqueue
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_define
 define|#
