@@ -6341,6 +6341,15 @@ name|secpolicy
 modifier|*
 name|dst
 decl_stmt|;
+if|if
+condition|(
+name|src
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 name|dst
 operator|=
 name|key_newsp
@@ -6350,10 +6359,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|src
-operator|==
-name|NULL
-operator|||
 name|dst
 operator|==
 name|NULL
