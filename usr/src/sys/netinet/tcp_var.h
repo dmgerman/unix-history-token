@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_var.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_var.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -358,7 +358,7 @@ name|snd_ssthresh
 decl_stmt|;
 comment|/* snd_cwnd size threshhold for 					 * for slow start exponential to 					 * linear switch 					 */
 comment|/*  * transmit timing stuff.  See below for scale of srtt and rttvar.  * "Variance" is actually smoothed difference.  */
-name|short
+name|u_short
 name|t_idle
 decl_stmt|;
 comment|/* inactivity time */
@@ -783,6 +783,14 @@ comment|/* times hdr predict ok for data pkts */
 name|u_long
 name|tcps_pcbcachemiss
 decl_stmt|;
+name|u_long
+name|tcps_persistdrop
+decl_stmt|;
+comment|/* timeout in persist state */
+name|u_long
+name|tcps_badsyn
+decl_stmt|;
+comment|/* bogus SYN, e.g. premature ACK */
 block|}
 struct|;
 end_struct
