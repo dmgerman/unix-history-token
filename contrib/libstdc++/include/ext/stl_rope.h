@@ -7667,6 +7667,9 @@ name|_RopeLeaf
 modifier|*
 name|__space
 init|=
+name|typename
+name|_Base
+operator|::
 name|_LAllocator
 argument_list|(
 name|__a
@@ -7716,6 +7719,9 @@ name|_RopeConcatenation
 modifier|*
 name|__space
 init|=
+name|typename
+name|_Base
+operator|::
 name|_CAllocator
 argument_list|(
 name|__a
@@ -7770,6 +7776,9 @@ name|_RopeFunction
 modifier|*
 name|__space
 init|=
+name|typename
+name|_Base
+operator|::
 name|_FAllocator
 argument_list|(
 name|__a
@@ -7828,6 +7837,9 @@ name|_RopeSubstring
 modifier|*
 name|__space
 init|=
+name|typename
+name|_Base
+operator|::
 name|_SAllocator
 argument_list|(
 name|__a

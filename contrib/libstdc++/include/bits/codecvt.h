@@ -1549,7 +1549,7 @@ operator|:
 name|explicit
 name|codecvt_byname
 argument_list|(
-argument|const char* __s
+argument|const char*
 argument_list|,
 argument|size_t __refs =
 literal|0
