@@ -207,17 +207,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FD_NO_CHLINE
-value|0x10
-end_define
-
-begin_comment
-comment|/* drive does not support changeline 				 * aka. unit attention */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|FD_NO_PROBE
 value|0x20
 end_define
@@ -231,7 +220,7 @@ comment|/*  * Things that could conceiveably considered parameters or tweakables
 end_comment
 
 begin_comment
-comment|/*  * Maximal number of bytes in a cylinder.  * This is used for ISADMA bouncebuffer allocation and sets the max  * xfersize we support.  *  * 2.88M format has 2 x 36 x 512.  */
+comment|/*  * Maximal number of bytes in a cylinder.  * This is used for ISADMA bouncebuffer allocation and sets the max  * xfersize we support.  *  * 2.88M format has 2 x 36 x 512, allow for hacked up density.  */
 end_comment
 
 begin_define
@@ -262,10 +251,6 @@ directive|define
 name|FDC_ERRMAX
 value|100
 end_define
-
-begin_comment
-comment|/* do not log more */
-end_comment
 
 begin_comment
 comment|/*  * AutoDensity search lists for each drive type.  */
@@ -609,7 +594,7 @@ comment|/* is cleared by any step pulse to drive */
 end_comment
 
 begin_comment
-comment|/*  * We have two private BIO commands for formatting and sector-id reading  */
+comment|/*  * We have three private BIO commands.  */
 end_comment
 
 begin_define
@@ -2835,7 +2820,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * fdc_intr  *  * Keep calling the state machine until it returns a 0.  */
+comment|/*  * fdc_intr - wake up the worker thread.  */
 end_comment
 
 begin_function
@@ -3325,12 +3310,28 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
+expr_stmt|;
 name|fd
 operator|->
 name|flags
 operator|&=
 operator|~
 name|FD_ISADMA
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Unwedge the controller ? */
@@ -3639,11 +3640,27 @@ argument_list|(
 literal|"New disk in probe\n"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
+expr_stmt|;
 name|fd
 operator|->
 name|flags
 operator||=
 name|FD_NEWDISK
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
 expr_stmt|;
 name|retry_line
 operator|=
@@ -3828,11 +3845,27 @@ argument_list|(
 literal|"Empty in probe\n"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
+expr_stmt|;
 name|fd
 operator|->
 name|flags
 operator||=
 name|FD_EMPTY
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -3848,12 +3881,28 @@ argument_list|(
 literal|"Got disk in probe\n"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
+expr_stmt|;
 name|fd
 operator|->
 name|flags
 operator|&=
 operator|~
 name|FD_EMPTY
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
 expr_stmt|;
 name|retry_line
 operator|=
@@ -3876,6 +3925,14 @@ operator|(
 literal|1
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|st3
@@ -3895,6 +3952,14 @@ name|flags
 operator|&=
 operator|~
 name|FD_WP
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -3949,6 +4014,14 @@ argument_list|(
 literal|"Lost disk\n"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
+expr_stmt|;
 name|fd
 operator|->
 name|flags
@@ -3960,6 +4033,14 @@ operator|->
 name|flags
 operator||=
 name|FD_NEWDISK
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
 expr_stmt|;
 name|g_topology_lock
 argument_list|()
@@ -4656,11 +4737,27 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
+expr_stmt|;
 name|fd
 operator|->
 name|flags
 operator||=
 name|FD_ISADMA
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Do PIO if we have to */
@@ -5089,12 +5186,28 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
+expr_stmt|;
 name|fd
 operator|->
 name|flags
 operator|&=
 operator|~
 name|FD_ISADMA
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -6606,12 +6719,28 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
+expr_stmt|;
 name|fd
 operator|->
 name|flags
 operator|&=
 operator|~
 name|FD_NEWDISK
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
 expr_stmt|;
 block|}
 name|device_busy
@@ -7173,11 +7302,31 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|fd
+operator|->
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
+expr_stmt|;
 name|fd
 operator|->
 name|flags
 operator||=
 name|FD_NEWDISK
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|fd
+operator|->
+name|fdc
+operator|->
+name|fdc_mtx
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
