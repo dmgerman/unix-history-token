@@ -5104,9 +5104,7 @@ name|cred
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 name|bsd_gidset
 operator|=
@@ -6486,9 +6484,7 @@ index|]
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_rgid
 expr_stmt|;
@@ -6524,9 +6520,7 @@ index|]
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_ruid
 expr_stmt|;
