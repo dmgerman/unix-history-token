@@ -4158,6 +4158,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|isa
+argument_list|,
+name|eisab
+argument_list|,
+name|isa_driver
+argument_list|,
+name|isa_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
