@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.3 1994/09/21 03:47:16 wollman Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.4 1994/09/27 20:42:54 phk Exp $ */
 end_comment
 
 begin_comment
@@ -818,7 +818,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"msdosfs_mount(): mp %x, pmp %x, inusemap %x\n"
+literal|"msdosfs_mount(): mp %p, pmp %p, inusemap %p\n"
 argument_list|,
 name|mp
 argument_list|,
@@ -2093,127 +2093,6 @@ operator|&=
 operator|~
 name|SI_MOUNTEDON
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MSDOSFS_DEBUG
-name|printf
-argument_list|(
-literal|"msdosfs_umount(): just before calling VOP_CLOSE()\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"flag %08x, usecount %d, writecount %d, holdcnt %d\n"
-argument_list|,
-name|vp
-operator|->
-name|v_flag
-argument_list|,
-name|vp
-operator|->
-name|v_usecount
-argument_list|,
-name|vp
-operator|->
-name|v_writecount
-argument_list|,
-name|vp
-operator|->
-name|v_holdcnt
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"lastr %d, id %d, mount %08x, op %08x\n"
-argument_list|,
-name|vp
-operator|->
-name|v_lastr
-argument_list|,
-name|vp
-operator|->
-name|v_id
-argument_list|,
-name|vp
-operator|->
-name|v_mount
-argument_list|,
-name|vp
-operator|->
-name|v_op
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"freef %08x, freeb %08x, mountf %08x, mountb %08x\n"
-argument_list|,
-name|vp
-operator|->
-name|v_freef
-argument_list|,
-name|vp
-operator|->
-name|v_freeb
-argument_list|,
-name|vp
-operator|->
-name|v_mountf
-argument_list|,
-name|vp
-operator|->
-name|v_mountb
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"cleanblkhd %08x, dirtyblkhd %08x, numoutput %d, type %d\n"
-argument_list|,
-name|vp
-operator|->
-name|v_cleanblkhd
-argument_list|,
-name|vp
-operator|->
-name|v_dirtyblkhd
-argument_list|,
-name|vp
-operator|->
-name|v_numoutput
-argument_list|,
-name|vp
-operator|->
-name|v_type
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"union %08x, tag %d, data[0] %08x, data[1] %08x\n"
-argument_list|,
-name|vp
-operator|->
-name|v_socket
-argument_list|,
-name|vp
-operator|->
-name|v_tag
-argument_list|,
-name|vp
-operator|->
-name|v_data
-index|[
-literal|0
-index|]
-argument_list|,
-name|vp
-operator|->
-name|v_data
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|VOP_CLOSE
@@ -2353,7 +2232,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"msdosfs_root(); mp %08x, pmp %08x, ndep %08x, vp %08x\n"
+literal|"msdosfs_root(); mp %p, pmp %p, ndep %p, vp %p\n"
 argument_list|,
 name|mp
 argument_list|,
