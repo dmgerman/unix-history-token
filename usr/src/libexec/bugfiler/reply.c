@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reply.c	5.3 (Berkeley) 87/07/20"
+literal|"@(#)reply.c	5.4 (Berkeley) 87/11/23"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* !lint */
+end_comment
 
 begin_include
 include|#
@@ -482,6 +485,20 @@ argument_list|(
 name|pf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|bfr
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|dir
+argument_list|,
+name|ACK_FILE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -489,7 +506,7 @@ name|afd
 operator|=
 name|open
 argument_list|(
-name|ACK_FILE
+name|bfr
 argument_list|,
 name|O_RDONLY
 argument_list|,
