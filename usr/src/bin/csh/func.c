@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c 4.10 83/06/11"
+literal|"@(#)func.c 4.11 84/07/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -4734,6 +4734,26 @@ operator|&
 name|rlim
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|limit
+operator|==
+name|RLIM_INFINITY
+operator|&&
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|rlim
+operator|.
+name|rlim_cur
+operator|=
+name|rlim
+operator|.
+name|rlim_max
+expr_stmt|;
+else|else
 name|rlim
 operator|.
 name|rlim_cur
