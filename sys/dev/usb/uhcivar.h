@@ -119,9 +119,34 @@ decl_stmt|;
 name|int
 name|curframe
 decl_stmt|;
+name|u_int32_t
+name|uhci_xfer_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|UHCI_XFER_ABORTING
+value|0x0001
+end_define
+
+begin_comment
+comment|/* xfer is aborting. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UHCI_XFER_ABORTWAIT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* abort completion is being awaited. */
+end_comment
 
 begin_define
 define|#

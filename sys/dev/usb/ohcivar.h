@@ -454,6 +454,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|OHCI_XFER_ABORTING
+value|0x02
+end_define
+
+begin_comment
+comment|/* xfer is aborting. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OHCI_XFER_ABORTWAIT
+value|0x04
+end_define
+
+begin_comment
+comment|/* abort completion is being awaited. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OXFER
 parameter_list|(
 name|xfer
