@@ -1953,7 +1953,7 @@ directive|define
 name|FLUSH
 parameter_list|()
 value|{ \ 	if (uio.uio_resid&& __sprint(fp,&uio)) \ 		goto error; \ 	uio.uio_iovcnt = 0; \ 	iovp = iov; \ }
-comment|/*          * Get the argument indexed by nextarg.   If the argument table is          * built, use it to get the argument.  If its not, get the next          * argument (and arguments must be gotten sequentially).          */
+comment|/* 	 * Get the argument indexed by nextarg.   If the argument table is 	 * built, use it to get the argument.  If its not, get the next 	 * argument (and arguments must be gotten sequentially). 	 */
 define|#
 directive|define
 name|GETARG
@@ -1961,7 +1961,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|((argtable != NULL) ? *((type*)(&argtable[nextarg++])) : \             (nextarg++, va_arg(ap, type)))
+value|((argtable != NULL) ? *((type*)(&argtable[nextarg++])) : \ 	    (nextarg++, va_arg(ap, type)))
 comment|/* 	 * To extend shorts properly, we need both signed and unsigned 	 * argument extraction methods. 	 */
 define|#
 directive|define
@@ -1991,7 +1991,7 @@ name|UJARG
 parameter_list|()
 define|\
 value|(flags&INTMAXT ? GETARG(uintmax_t) : \ 	    flags&SIZET ? (uintmax_t)GETARG(size_t) : \ 	    flags&PTRDIFFT ? (uintmax_t)GETARG(ptrdiff_t) : \ 	    (uintmax_t)GETARG(unsigned long long))
-comment|/*          * Get * arguments, including the form *nn$.  Preserve the nextarg          * that the argument can be gotten once the type is determined.          */
+comment|/* 	 * Get * arguments, including the form *nn$.  Preserve the nextarg 	 * that the argument can be gotten once the type is determined. 	 */
 define|#
 directive|define
 name|GETASTER
@@ -1999,7 +1999,7 @@ parameter_list|(
 name|val
 parameter_list|)
 define|\
-value|n2 = 0; \         cp = fmt; \         while (is_digit(*cp)) { \                 n2 = 10 * n2 + to_digit(*cp); \                 cp++; \         } \         if (*cp == '$') { \             	int hold = nextarg; \                 if (argtable == NULL) { \                         argtable = statargtable; \                         __find_arguments (fmt0, orgap,&argtable); \                 } \                 nextarg = n2; \                 val = GETARG (int); \                 nextarg = hold; \                 fmt = ++cp; \         } else { \ 		val = GETARG (int); \         }
+value|n2 = 0; \ 	cp = fmt; \ 	while (is_digit(*cp)) { \ 		n2 = 10 * n2 + to_digit(*cp); \ 		cp++; \ 	} \ 	if (*cp == '$') { \ 		int hold = nextarg; \ 		if (argtable == NULL) { \ 			argtable = statargtable; \ 			__find_arguments (fmt0, orgap,&argtable); \ 		} \ 		nextarg = n2; \ 		val = GETARG (int); \ 		nextarg = hold; \ 		fmt = ++cp; \ 	} else { \ 		val = GETARG (int); \ 	}
 name|thousands_sep
 operator|=
 literal|'\0'
