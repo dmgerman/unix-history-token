@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SWAP_PAGER_
+name|_VM_SWAP_PAGER_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SWAP_PAGER_
+name|_VM_SWAP_PAGER_H_
 value|1
 end_define
 
@@ -334,7 +334,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SWAP_PAGER_ */
+comment|/* _VM_SWAP_PAGER_H_ */
 end_comment
 
 end_unit
