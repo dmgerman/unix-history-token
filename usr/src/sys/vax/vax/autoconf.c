@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.32	81/11/07	*/
+comment|/*	autoconf.c	4.33	82/02/08	*/
 end_comment
 
 begin_comment
@@ -1080,25 +1080,21 @@ literal|'?'
 operator|)
 condition|)
 block|{
-name|mbd
-operator|->
-name|mbd_tc
-operator|=
-name|ms
-operator|->
-name|ms_slave
-expr_stmt|;
-name|dt
-operator|=
-name|mbd
-operator|->
-name|mbd_dt
-expr_stmt|;
 if|if
 condition|(
-name|dt
-operator|&
-name|MBDT_SPR
+call|(
+modifier|*
+name|ms
+operator|->
+name|ms_driver
+operator|->
+name|md_slave
+call|)
+argument_list|(
+name|mi
+argument_list|,
+name|ms
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -1143,20 +1139,6 @@ operator|=
 name|mi
 operator|->
 name|mi_unit
-expr_stmt|;
-call|(
-modifier|*
-name|ms
-operator|->
-name|ms_driver
-operator|->
-name|md_slave
-call|)
-argument_list|(
-name|mi
-argument_list|,
-name|ms
-argument_list|)
 expr_stmt|;
 block|}
 block|}
