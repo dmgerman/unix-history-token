@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	2.10 %G%"
+literal|"@(#)fio.c	2.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2049,9 +2049,12 @@ condition|;
 name|i
 operator|++
 control|)
-name|sighold
+comment|/* 		 * This cannot be changed to ``sighold(i)'' because 		 * of a bug in the jobs library.  Sighold does not 		 * record that one is using the new signal mechanisms 		 * so an eventual sigrelse() will fail. 		 */
+name|sigset
 argument_list|(
 name|i
+argument_list|,
+name|SIG_HOLD
 argument_list|)
 expr_stmt|;
 block|}
