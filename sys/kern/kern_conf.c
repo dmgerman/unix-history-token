@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Parts Copyright (c) 1995 Terrence R. Lambert  * Copyright (c) 1995 Julian R. Elischer  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY Julian R. Elischer ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kern_conf.c,v 1.36 1999/05/09 13:00:46 phk Exp $  */
+comment|/*-  * Parts Copyright (c) 1995 Terrence R. Lambert  * Copyright (c) 1995 Julian R. Elischer  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY Julian R. Elischer ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kern_conf.c,v 1.37 1999/05/11 19:54:27 phk Exp $  */
 end_comment
 
 begin_include
@@ -714,6 +714,14 @@ name|dev_t
 name|x
 parameter_list|)
 block|{
+name|u_intptr_t
+name|i
+init|=
+operator|(
+name|u_int
+operator|)
+name|x
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVT_FASCIST
@@ -723,7 +731,7 @@ literal|253
 operator|-
 operator|(
 operator|(
-name|x
+name|i
 operator|>>
 literal|8
 operator|)
@@ -737,7 +745,7 @@ directive|else
 return|return
 operator|(
 operator|(
-name|x
+name|i
 operator|>>
 literal|8
 operator|)
@@ -758,9 +766,17 @@ name|dev_t
 name|x
 parameter_list|)
 block|{
+name|u_intptr_t
+name|i
+init|=
+operator|(
+name|u_int
+operator|)
+name|x
+decl_stmt|;
 return|return
 operator|(
-name|x
+name|i
 operator|&
 literal|0xffff00ff
 operator|)
@@ -784,6 +800,10 @@ directive|ifdef
 name|DEVT_FASCIST
 return|return
 operator|(
+call|(
+name|dev_t
+call|)
+argument_list|(
 operator|(
 operator|(
 literal|253
@@ -795,12 +815,17 @@ literal|8
 operator|)
 operator||
 name|y
+argument_list|)
 operator|)
 return|;
 else|#
 directive|else
 return|return
 operator|(
+call|(
+name|dev_t
+call|)
+argument_list|(
 operator|(
 name|x
 operator|<<
@@ -808,6 +833,7 @@ literal|8
 operator|)
 operator||
 name|y
+argument_list|)
 operator|)
 return|;
 endif|#
