@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.45	82/12/17	*/
+comment|/*	autoconf.c	4.46	83/01/01	*/
 end_comment
 
 begin_comment
@@ -2120,6 +2120,10 @@ name|ud_probe
 call|)
 argument_list|(
 name|reg
+argument_list|,
+name|um
+operator|->
+name|um_ctlr
 argument_list|)
 expr_stmt|;
 if|#
@@ -2633,10 +2637,6 @@ name|ud_probe
 call|)
 argument_list|(
 name|reg
-argument_list|,
-name|um
-operator|->
-name|um_ctlr
 argument_list|)
 expr_stmt|;
 if|#
