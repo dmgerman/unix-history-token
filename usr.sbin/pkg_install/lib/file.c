@@ -463,10 +463,37 @@ modifier|*
 name|to
 parameter_list|)
 block|{
+name|char
+name|cmd
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|;
 if|if
 condition|(
-name|vsystem
+name|fname
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
+name|sprintf
 argument_list|(
+name|cmd
+argument_list|,
+literal|"cp -p -r %s %s"
+argument_list|,
+name|fname
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|cmd
+argument_list|,
 literal|"cp -p -r %s/%s %s"
 argument_list|,
 name|dir
@@ -475,16 +502,19 @@ name|fname
 argument_list|,
 name|to
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vsystem
+argument_list|(
+name|cmd
+argument_list|)
 condition|)
 name|barf
 argument_list|(
-literal|"Couldn't copy %s/%s to %s!"
+literal|"Couldn't perform '%s'"
 argument_list|,
-name|dir
-argument_list|,
-name|fname
-argument_list|,
-name|to
+name|cmd
 argument_list|)
 expr_stmt|;
 block|}
