@@ -199,6 +199,13 @@ name|KMF_NOCOMPLETED
 value|0x02
 end_define
 
+begin_define
+define|#
+directive|define
+name|KMF_DONE
+value|0x04
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

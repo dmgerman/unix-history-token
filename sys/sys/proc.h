@@ -1475,6 +1475,17 @@ begin_comment
 comment|/* Do upcall now, don't wait */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KUF_EXITING
+value|0x00002
+end_define
+
+begin_comment
+comment|/* Upcall structure is exiting */
+end_comment
+
 begin_comment
 comment|/*  * Kernel-scheduled entity group (KSEG).  The scheduler considers each KSEG to  * be an indivisible unit from a time-sharing perspective, though each KSEG may  * contain multiple KSEs.  */
 end_comment
@@ -4446,22 +4457,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|thread_getcontext
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|ucontext_t
-modifier|*
-name|uc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|thread_link
 parameter_list|(
 name|struct
@@ -4501,22 +4496,6 @@ name|struct
 name|kse_upcall
 modifier|*
 name|ku
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|thread_setcontext
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|ucontext_t
-modifier|*
-name|uc
 parameter_list|)
 function_decl|;
 end_function_decl
