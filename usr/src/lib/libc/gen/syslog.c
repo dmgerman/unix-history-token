@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.14 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,20 +108,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIFAC
-parameter_list|(
-name|p
-parameter_list|)
-value|(((p)& LOG_FACMASK)>> 3)
-end_define
-
-begin_comment
-comment|/* XXX should be in<syslog.h> */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IMPORTANT
 value|LOG_ERR
 end_define
@@ -158,6 +144,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* fd for log */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|connected
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* have done connect */
 end_comment
 
 begin_decl_stmt
@@ -323,23 +320,20 @@ condition|(
 operator|(
 name|unsigned
 operator|)
-name|PRIFAC
+name|LOG_FAC
 argument_list|(
 name|pri
 argument_list|)
 operator|>=
 name|LOG_NFACILITIES
 operator|||
-operator|(
 name|LOG_MASK
 argument_list|(
+name|LOG_PRI
+argument_list|(
 name|pri
-operator|&
-name|LOG_PRIMASK
 argument_list|)
-operator|&
-name|LogMask
-operator|)
+argument_list|)
 operator|==
 literal|0
 operator|||
@@ -362,6 +356,9 @@ condition|(
 name|LogFile
 operator|<
 literal|0
+operator|||
+operator|!
+name|connected
 condition|)
 name|openlog
 argument_list|(
@@ -675,7 +672,7 @@ expr_stmt|;
 comment|/* output the message to the local logger */
 if|if
 condition|(
-name|sendto
+name|send
 argument_list|(
 name|LogFile
 argument_list|,
@@ -684,12 +681,6 @@ argument_list|,
 name|c
 argument_list|,
 literal|0
-argument_list|,
-operator|&
-name|SyslogAddr
-argument_list|,
-sizeof|sizeof
-name|SyslogAddr
 argument_list|)
 operator|>=
 literal|0
@@ -917,10 +908,11 @@ expr_stmt|;
 if|if
 condition|(
 name|LogFile
-operator|>=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
-return|return;
+block|{
 name|SyslogAddr
 operator|.
 name|sa_family
@@ -970,6 +962,37 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|LogFile
+operator|!=
+operator|-
+literal|1
+operator|&&
+operator|!
+name|connected
+operator|&&
+name|connect
+argument_list|(
+name|LogFile
+argument_list|,
+operator|&
+name|SyslogAddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|SyslogAddr
+argument_list|)
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|connected
+operator|=
+literal|1
+expr_stmt|;
+block|}
 end_block
 
 begin_comment
@@ -995,6 +1018,10 @@ name|LogFile
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|connected
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_block
