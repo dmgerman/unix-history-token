@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -253,18 +253,39 @@ name|_IO
 end_ifndef
 
 begin_comment
-comment|/*  * Ioctl's have the command encoded in the lower word,  * and the size of any in or out parameters in the upper  * word.  The high 2 bits of the upper word are used  * to encode the in/out status of the parameter; for now  * we restrict parameters to at most 128 bytes.  */
+comment|/*  * Ioctl's have the command encoded in the lower word,  * and the size of any in or out parameters in the upper  * word.  The high 3 bits of the upper word are used  * to encode the in/out status of the parameter.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IOCPARM_MASK
-value|0x7f
+value|0x1fff
 end_define
 
 begin_comment
-comment|/* parameters must be< 128 bytes */
+comment|/* parameter length, at most 13 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOCPARM_LEN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 16)& IOCPARM_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCPARM_MAX
+value|NBPG
+end_define
+
+begin_comment
+comment|/* max size of ioctl, mult. of NBPG */
 end_comment
 
 begin_define
@@ -306,6 +327,17 @@ directive|define
 name|IOC_INOUT
 value|(IOC_IN|IOC_OUT)
 end_define
+
+begin_define
+define|#
+directive|define
+name|IOC_DIRMASK
+value|0xe0000000
+end_define
+
+begin_comment
+comment|/* mask for IN/OUT/VOID */
+end_comment
 
 begin_comment
 comment|/* the 0x20000000 is so we can distinguish new ioctl's from old */
