@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)size.c	4.2 (Berkeley) %G%"
+literal|"@(#)size.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,6 +119,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
 name|fread
 argument_list|(
 operator|(
@@ -137,9 +139,9 @@ literal|1
 argument_list|,
 name|f
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|!=
+literal|1
+operator|||
 name|N_BADMAG
 argument_list|(
 name|buf
