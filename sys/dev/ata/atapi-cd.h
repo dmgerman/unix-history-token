@@ -1122,33 +1122,28 @@ decl_stmt|;
 comment|/* device state flags */
 define|#
 directive|define
-name|F_BOPEN
-value|0x0001
-comment|/* the block device is opened */
-define|#
-directive|define
 name|F_LOCKED
-value|0x0002
+value|0x0001
 comment|/* this unit is locked */
 define|#
 directive|define
 name|F_WRITING
-value|0x0004
+value|0x0002
 comment|/* this unit is writing */
 define|#
 directive|define
 name|F_WRITTEN
-value|0x0008
+value|0x0004
 comment|/* medium has been written to */
 define|#
 directive|define
 name|F_DISK_OPEN
-value|0x0010
+value|0x0008
 comment|/* disk open for writing */
 define|#
 directive|define
 name|F_TRACK_OPEN
-value|0x0020
+value|0x0010
 comment|/* track open for writing */
 name|int32_t
 name|refcnt

@@ -651,6 +651,28 @@ name|ATA_OP_CONTINUES
 value|0x01
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATA_DEV
+parameter_list|(
+name|unit
+parameter_list|)
+value|((unit == ATA_MASTER) ? 0 : 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PARAM
+parameter_list|(
+name|scp
+parameter_list|,
+name|unit
+parameter_list|)
+value|scp->dev_param[ATA_DEV(unit)]
+end_define
+
 begin_comment
 comment|/* busmaster DMA related defines */
 end_comment
@@ -779,6 +801,455 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* ATA/ATAPI device parameter information */
+end_comment
+
+begin_struct
+struct|struct
+name|ata_params
+block|{
+name|u_int8_t
+name|cmdsize
+range|:
+literal|2
+decl_stmt|;
+comment|/* packet command size */
+define|#
+directive|define
+name|ATAPI_PSIZE_12
+value|0
+comment|/* 12 bytes */
+define|#
+directive|define
+name|ATAPI_PSIZE_16
+value|1
+comment|/* 16 bytes */
+name|u_int8_t
+label|:
+literal|3
+expr_stmt|;
+name|u_int8_t
+name|drqtype
+range|:
+literal|2
+decl_stmt|;
+comment|/* DRQ type */
+define|#
+directive|define
+name|ATAPI_DRQT_MPROC
+value|0
+comment|/* cpu    3 ms delay */
+define|#
+directive|define
+name|ATAPI_DRQT_INTR
+value|1
+comment|/* intr  10 ms delay */
+define|#
+directive|define
+name|ATAPI_DRQT_ACCEL
+value|2
+comment|/* accel 50 us delay */
+name|u_int8_t
+name|removable
+range|:
+literal|1
+decl_stmt|;
+comment|/* device is removable */
+name|u_int8_t
+name|device_type
+range|:
+literal|5
+decl_stmt|;
+comment|/* device type */
+define|#
+directive|define
+name|ATAPI_TYPE_DIRECT
+value|0
+comment|/* disk/floppy */
+define|#
+directive|define
+name|ATAPI_TYPE_TAPE
+value|1
+comment|/* streaming tape */
+define|#
+directive|define
+name|ATAPI_TYPE_CDROM
+value|5
+comment|/* CD-ROM device */
+define|#
+directive|define
+name|ATAPI_TYPE_OPTICAL
+value|7
+comment|/* optical disk */
+name|u_int8_t
+label|:
+literal|1
+expr_stmt|;
+name|u_int8_t
+name|proto
+range|:
+literal|2
+decl_stmt|;
+comment|/* command protocol */
+define|#
+directive|define
+name|ATAPI_PROTO_ATAPI
+value|2
+name|u_int16_t
+name|cylinders
+decl_stmt|;
+comment|/* number of cylinders */
+name|int16_t
+name|reserved2
+decl_stmt|;
+name|u_int16_t
+name|heads
+decl_stmt|;
+comment|/* # heads */
+name|int16_t
+name|unfbytespertrk
+decl_stmt|;
+comment|/* # unformatted bytes/track */
+name|int16_t
+name|unfbytes
+decl_stmt|;
+comment|/* # unformatted bytes/sector */
+name|u_int16_t
+name|sectors
+decl_stmt|;
+comment|/* # sectors/track */
+name|int16_t
+name|vendorunique0
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|int8_t
+name|serial
+index|[
+literal|20
+index|]
+decl_stmt|;
+comment|/* serial number */
+name|int16_t
+name|buffertype
+decl_stmt|;
+comment|/* buffer type */
+define|#
+directive|define
+name|ATA_BT_SINGLEPORTSECTOR
+value|1
+comment|/* 1 port, 1 sector buffer */
+define|#
+directive|define
+name|ATA_BT_DUALPORTMULTI
+value|2
+comment|/* 2 port, mult sector buffer */
+define|#
+directive|define
+name|ATA_BT_DUALPORTMULTICACHE
+value|3
+comment|/* above plus track cache */
+name|int16_t
+name|buffersize
+decl_stmt|;
+comment|/* buf size, 512-byte units */
+name|int16_t
+name|necc
+decl_stmt|;
+comment|/* ecc bytes appended */
+name|int8_t
+name|revision
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* firmware revision */
+name|int8_t
+name|model
+index|[
+literal|40
+index|]
+decl_stmt|;
+comment|/* model name */
+name|int8_t
+name|nsecperint
+decl_stmt|;
+comment|/* sectors per interrupt */
+name|int8_t
+name|vendorunique1
+decl_stmt|;
+name|int16_t
+name|usedmovsd
+decl_stmt|;
+comment|/* double word read/write? */
+name|u_int8_t
+name|vendorcap
+decl_stmt|;
+comment|/* vendor capabilities */
+name|u_int8_t
+name|dmaflag
+range|:
+literal|1
+decl_stmt|;
+comment|/* DMA supported - always 1 */
+name|u_int8_t
+name|lbaflag
+range|:
+literal|1
+decl_stmt|;
+comment|/* LBA supported - always 1 */
+name|u_int8_t
+name|iordydis
+range|:
+literal|1
+decl_stmt|;
+comment|/* IORDY may be disabled */
+name|u_int8_t
+name|iordyflag
+range|:
+literal|1
+decl_stmt|;
+comment|/* IORDY supported */
+name|u_int8_t
+label|:
+literal|1
+expr_stmt|;
+name|u_int8_t
+name|stdby_ovlap
+range|:
+literal|1
+decl_stmt|;
+comment|/* standby/overlap supported */
+name|u_int8_t
+label|:
+literal|1
+expr_stmt|;
+name|u_int8_t
+name|idmaflag
+range|:
+literal|1
+decl_stmt|;
+comment|/* interleaved DMA supported */
+name|int16_t
+name|capvalidate
+decl_stmt|;
+comment|/* validation for above */
+name|int8_t
+name|vendorunique3
+decl_stmt|;
+name|int8_t
+name|opiomode
+decl_stmt|;
+comment|/* PIO modes 0-2 */
+name|int8_t
+name|vendorunique4
+decl_stmt|;
+name|int8_t
+name|odmamode
+decl_stmt|;
+comment|/* old DMA modes, not ATA-3 */
+name|int16_t
+name|atavalid
+decl_stmt|;
+comment|/* fields valid */
+define|#
+directive|define
+name|ATA_FLAG_54_58
+value|1
+comment|/* words 54-58 valid */
+define|#
+directive|define
+name|ATA_FLAG_64_70
+value|2
+comment|/* words 64-70 valid */
+define|#
+directive|define
+name|ATA_FLAG_88
+value|4
+comment|/* word 88 valid */
+name|int16_t
+name|currcyls
+decl_stmt|;
+name|int16_t
+name|currheads
+decl_stmt|;
+name|int16_t
+name|currsectors
+decl_stmt|;
+name|int16_t
+name|currsize0
+decl_stmt|;
+name|int16_t
+name|currsize1
+decl_stmt|;
+name|int8_t
+name|currmultsect
+decl_stmt|;
+name|int8_t
+name|multsectvalid
+decl_stmt|;
+name|int32_t
+name|lbasize
+decl_stmt|;
+name|int16_t
+name|sdmamodes
+decl_stmt|;
+comment|/* singleword DMA modes */
+name|int16_t
+name|wdmamodes
+decl_stmt|;
+comment|/* multiword DMA modes */
+name|int16_t
+name|apiomodes
+decl_stmt|;
+comment|/* advanced PIO modes */
+name|u_int16_t
+name|mwdmamin
+decl_stmt|;
+comment|/* min. M/W DMA time/word ns */
+name|u_int16_t
+name|mwdmarec
+decl_stmt|;
+comment|/* rec. M/W DMA time ns */
+name|u_int16_t
+name|pioblind
+decl_stmt|;
+comment|/* min. PIO cycle w/o flow */
+name|u_int16_t
+name|pioiordy
+decl_stmt|;
+comment|/* min. PIO cycle IORDY flow */
+name|int16_t
+name|reserved69
+decl_stmt|;
+name|int16_t
+name|reserved70
+decl_stmt|;
+name|u_int16_t
+name|rlsovlap
+decl_stmt|;
+comment|/* rel time (us) for overlap */
+name|u_int16_t
+name|rlsservice
+decl_stmt|;
+comment|/* rel time (us) for service */
+name|int16_t
+name|reserved73
+decl_stmt|;
+name|int16_t
+name|reserved74
+decl_stmt|;
+name|int16_t
+name|queuelen
+decl_stmt|;
+name|int16_t
+name|reserved76
+decl_stmt|;
+name|int16_t
+name|reserved77
+decl_stmt|;
+name|int16_t
+name|reserved78
+decl_stmt|;
+name|int16_t
+name|reserved79
+decl_stmt|;
+name|int16_t
+name|versmajor
+decl_stmt|;
+name|int16_t
+name|versminor
+decl_stmt|;
+name|int16_t
+name|featsupp1
+decl_stmt|;
+name|int16_t
+name|featsupp2
+decl_stmt|;
+name|int16_t
+name|featsupp3
+decl_stmt|;
+name|int16_t
+name|featenab1
+decl_stmt|;
+name|int16_t
+name|featenab2
+decl_stmt|;
+name|int16_t
+name|featenab3
+decl_stmt|;
+name|int16_t
+name|udmamodes
+decl_stmt|;
+comment|/* UltraDMA modes */
+name|int16_t
+name|erasetime
+decl_stmt|;
+name|int16_t
+name|enherasetime
+decl_stmt|;
+name|int16_t
+name|apmlevel
+decl_stmt|;
+name|int16_t
+name|masterpasswdrev
+decl_stmt|;
+name|u_int16_t
+name|masterhwres
+range|:
+literal|8
+decl_stmt|;
+name|u_int16_t
+name|slavehwres
+range|:
+literal|5
+decl_stmt|;
+name|u_int16_t
+name|cblid
+range|:
+literal|1
+decl_stmt|;
+name|u_int16_t
+name|reserved93_1415
+range|:
+literal|2
+decl_stmt|;
+name|int16_t
+name|reserved94
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|int16_t
+name|rmvstat
+decl_stmt|;
+name|int16_t
+name|securstat
+decl_stmt|;
+name|int16_t
+name|reserved129
+index|[
+literal|30
+index|]
+decl_stmt|;
+name|int16_t
+name|cfapwrmode
+decl_stmt|;
+name|int16_t
+name|reserved161
+index|[
+literal|84
+index|]
+decl_stmt|;
+name|int16_t
+name|integrity
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* structure describing an ATA device */
 end_comment
 
@@ -816,6 +1287,15 @@ name|int32_t
 name|chiptype
 decl_stmt|;
 comment|/* pciid of controller chip */
+name|struct
+name|ata_params
+modifier|*
+name|dev_param
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* ptr to devices params */
 name|void
 modifier|*
 name|dev_softc
@@ -1161,6 +1641,39 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int32_t
+name|ata_pmode
+parameter_list|(
+name|struct
+name|ata_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|ata_wmode
+parameter_list|(
+name|struct
+name|ata_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|ata_umode
+parameter_list|(
+name|struct
+name|ata_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int8_t
 modifier|*
 name|ata_mode2str
@@ -1174,45 +1687,6 @@ begin_function_decl
 name|int8_t
 name|ata_pio2mode
 parameter_list|(
-name|int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|bswap
-parameter_list|(
-name|int8_t
-modifier|*
-parameter_list|,
-name|int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|btrim
-parameter_list|(
-name|int8_t
-modifier|*
-parameter_list|,
-name|int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|bpack
-parameter_list|(
-name|int8_t
-modifier|*
-parameter_list|,
-name|int8_t
-modifier|*
-parameter_list|,
 name|int32_t
 parameter_list|)
 function_decl|;
