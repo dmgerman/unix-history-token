@@ -7638,7 +7638,7 @@ expr|struct
 name|ath_node
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_80211_NODE
 argument_list|,
 name|M_NOWAIT
 operator||
