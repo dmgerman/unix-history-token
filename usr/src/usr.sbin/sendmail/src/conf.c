@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.147 (Berkeley) %G%"
+literal|"@(#)conf.c	8.148 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9923,7 +9923,6 @@ name|sm_gethostbyname
 parameter_list|(
 name|name
 parameter_list|)
-specifier|const
 name|char
 modifier|*
 name|name
@@ -10028,7 +10027,6 @@ name|len
 parameter_list|,
 name|type
 parameter_list|)
-specifier|const
 name|char
 modifier|*
 name|addr
