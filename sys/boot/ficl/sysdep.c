@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************* ** s y s d e p . c ** Forth Inspired Command Language ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 16 Oct 1997 ** Implementations of FICL external interface functions...  ** ** (simple) port to Linux, Skip Carter 26 March 1998 ** *******************************************************************/
+comment|/******************************************************************* ** s y s d e p . c ** Forth Inspired Command Language ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 16 Oct 1997 ** Implementations of FICL external interface functions...  ** *******************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
+file|<stand.h>
 end_include
 
 begin_include

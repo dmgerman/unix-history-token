@@ -10,29 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<stand.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_comment
-comment|/* sprintf */
-end_comment
 
 begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
