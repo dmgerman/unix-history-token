@@ -358,7 +358,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|NFS
+name|NFSCLIENT
 argument_list|)
 operator|&&
 name|defined
