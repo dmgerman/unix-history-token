@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: loran.c,v 1.15 1999/04/11 03:06:06 eivind Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: jail.h,v 1.1 1999/04/28 11:38:03 phk Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -34,11 +34,34 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|KERNEL
-end_ifdef
+end_ifndef
+
+begin_decl_stmt
+name|int
+name|jail
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|jail
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -60,7 +83,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This structure describes a prison.  It is pointed to by all struct   * proc's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  */
+comment|/*  * This structure describes a prison.  It is pointed to by all struct  * proc's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  */
 end_comment
 
 begin_struct
