@@ -13435,8 +13435,14 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
 name|done
 label|:
+endif|#
+directive|endif
+comment|/* DEVICE_POLLING */
 name|DC_UNLOCK
 argument_list|(
 name|sc
