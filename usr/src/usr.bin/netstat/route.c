@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.26 (Berkeley) %G%"
+literal|"@(#)route.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2183,7 +2183,7 @@ operator|->
 name|rt_gateway
 argument_list|)
 argument_list|,
-literal|0
+name|RTF_HOST
 argument_list|,
 name|WID_GW
 argument_list|)
