@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.20 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2838,6 +2838,14 @@ name|pw
 operator|->
 name|pw_gid
 expr_stmt|;
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_flags
+operator||=
+name|QGOODUID
+expr_stmt|;
 comment|/* extract full name from passwd file */
 if|if
 condition|(
@@ -2985,6 +2993,14 @@ operator|.
 name|q_gid
 operator|=
 name|RealGid
+expr_stmt|;
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_flags
+operator||=
+name|QGOODUID
 expr_stmt|;
 block|}
 comment|/* 	**  Rewrite the from person to dispose of possible implicit 	**	links in the net. 	*/
