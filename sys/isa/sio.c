@@ -1775,6 +1775,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|||
+operator|!
 operator|(
 name|inb
 argument_list|(
@@ -1783,10 +1784,8 @@ operator|+
 name|com_iir
 argument_list|)
 operator|&
-name|IIR_IMASK
-operator|)
-operator|!=
 name|IIR_NOPEND
+operator|)
 condition|)
 name|result
 operator|=
@@ -1828,6 +1827,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|||
+operator|!
 operator|(
 name|inb
 argument_list|(
@@ -1836,10 +1836,8 @@ operator|+
 name|com_iir
 argument_list|)
 operator|&
-name|IIR_IMASK
-operator|)
-operator|!=
 name|IIR_NOPEND
+operator|)
 condition|)
 name|result
 operator|=
@@ -3861,6 +3859,18 @@ comment|/* COM_MULTIPORT */
 name|bool_t
 name|possibly_more_intrs
 decl_stmt|;
+name|com
+operator|=
+name|com_addr
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
+name|comintr1
+argument_list|(
+name|com
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Loop until there is no activity on any port.  This is necessary 	 * to get an interrupt edge more than to avoid another interrupt. 	 * If the IRQ signal is just an OR of the IRQ signals from several 	 * devices, then the edge from one may be lost because another is 	 * on. 	 */
 do|do
 block|{
@@ -3894,16 +3904,8 @@ condition|(
 name|com
 operator|!=
 name|NULL
-condition|)
-block|{
-comment|/* 				 * XXX call comintr1() instead of here from 				 * comwakeup().  The interrupt edge problem 				 * only exists for real interrupts. 				 */
-name|comintr1
-argument_list|(
-name|com
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
+operator|!
 operator|(
 name|inb
 argument_list|(
@@ -3912,11 +3914,16 @@ operator|->
 name|int_id_port
 argument_list|)
 operator|&
-name|IIR_IMASK
-operator|)
-operator|!=
 name|IIR_NOPEND
+operator|)
 condition|)
+block|{
+comment|/* 				 * XXX call comintr1() instead of here from 				 * comwakeup().  The interrupt edge problem 				 * only exists for real interrupts. 				 */
+name|comintr1
+argument_list|(
+name|com
+argument_list|)
+expr_stmt|;
 name|possibly_more_intrs
 operator|=
 name|TRUE
@@ -4396,7 +4403,6 @@ directive|ifndef
 name|COM_MULTIPORT
 if|if
 condition|(
-operator|(
 name|inb
 argument_list|(
 name|com
@@ -4404,9 +4410,6 @@ operator|->
 name|int_id_port
 argument_list|)
 operator|&
-name|IIR_IMASK
-operator|)
-operator|==
 name|IIR_NOPEND
 condition|)
 endif|#
