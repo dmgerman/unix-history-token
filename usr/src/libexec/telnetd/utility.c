@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utility.c	5.4 (Berkeley) %G%"
+literal|"@(#)utility.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1419,22 +1419,21 @@ end_decl_stmt
 
 begin_block
 block|{
+name|time_t
+name|t
+decl_stmt|;
 name|char
 modifier|*
+name|fmt
+decl_stmt|,
+modifier|*
 name|slash
-decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_GETTYTAB
-name|char
-name|datebuffer
+decl_stmt|,
+name|db
 index|[
-literal|60
+literal|100
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* NO_GETTYTAB */
 specifier|extern
 name|char
 modifier|*
@@ -1522,26 +1521,54 @@ name|editedhost
 argument_list|)
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|NO_GETTYTAB
 case|case
 literal|'d'
 case|:
-name|get_date
+operator|(
+name|void
+operator|)
+name|time
 argument_list|(
-name|datebuffer
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
+comment|/* SCCS *likes* utility.c... */
+name|fmt
+operator|=
+literal|"%l:% %P on %A, %d %B %Y"
+expr_stmt|;
+name|fmt
+index|[
+literal|4
+index|]
+operator|=
+literal|'M'
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strftime
+argument_list|(
+name|db
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|db
+argument_list|)
+argument_list|,
+name|fmt
+argument_list|,
+operator|&
+name|t
 argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
-name|datebuffer
+name|db
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* NO_GETTYTAB */
 case|case
 literal|'%'
 case|:
