@@ -138,7 +138,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_zone.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/emul.h>
 end_include
 
 begin_include
@@ -214,8 +226,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|syscall
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|tf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
-name|trap_mmu_fault
+name|trap_pfault
 parameter_list|(
 name|struct
 name|thread
@@ -229,33 +254,6 @@ name|tf
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|syscall
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-name|tf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|u_long
-name|trap_mask
-init|=
-literal|0xffffffffffffffffL
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-name|T_INTR
-operator|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -284,19 +282,13 @@ init|=
 block|{
 literal|"reserved"
 block|,
-literal|"power on reset"
-block|,
-literal|"watchdog reset"
-block|,
-literal|"externally initiated reset"
-block|,
-literal|"software initiated reset"
-block|,
-literal|"red state exception"
-block|,
 literal|"instruction access exception"
 block|,
 literal|"instruction access error"
+block|,
+literal|"instruction access protection"
+block|,
+literal|"illtrap instruction"
 block|,
 literal|"illegal instruction"
 block|,
@@ -316,15 +308,47 @@ literal|"data access exception"
 block|,
 literal|"data access error"
 block|,
+literal|"data access protection"
+block|,
 literal|"memory address not aligned"
-block|,
-literal|"lddf memory address not aligned"
-block|,
-literal|"stdf memory address not aligned"
 block|,
 literal|"privileged action"
 block|,
-literal|"interrupt vector"
+literal|"async data error"
+block|,
+literal|"trap instruction 16"
+block|,
+literal|"trap instruction 17"
+block|,
+literal|"trap instruction 18"
+block|,
+literal|"trap instruction 19"
+block|,
+literal|"trap instruction 20"
+block|,
+literal|"trap instruction 21"
+block|,
+literal|"trap instruction 22"
+block|,
+literal|"trap instruction 23"
+block|,
+literal|"trap instruction 24"
+block|,
+literal|"trap instruction 25"
+block|,
+literal|"trap instruction 26"
+block|,
+literal|"trap instruction 27"
+block|,
+literal|"trap instruction 28"
+block|,
+literal|"trap instruction 29"
+block|,
+literal|"trap instruction 30"
+block|,
+literal|"trap instruction 31"
+block|,
+literal|"interrupt"
 block|,
 literal|"physical address watchpoint"
 block|,
@@ -336,8 +360,6 @@ literal|"fast instruction access mmu miss"
 block|,
 literal|"fast data access mmu miss"
 block|,
-literal|"fast data access protection"
-block|,
 literal|"spill"
 block|,
 literal|"fill"
@@ -346,50 +368,22 @@ literal|"fill"
 block|,
 literal|"breakpoint"
 block|,
+literal|"clean window"
+block|,
+literal|"range check"
+block|,
+literal|"fix alignment"
+block|,
+literal|"integer overflow"
+block|,
 literal|"syscall"
 block|,
 literal|"restore physical watchpoint"
 block|,
 literal|"restore virtual watchpoint"
-block|,
-literal|"trap instruction"
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|unaligned_fixup
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
-name|tf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|emulate_insn
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
-name|tf
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -513,11 +507,11 @@ operator|=
 name|type
 expr_stmt|;
 comment|/* XXX */
-name|CTR5
+name|CTR4
 argument_list|(
 name|KTR_TRAP
 argument_list|,
-literal|"trap: %s type=%s (%s) ws=%#lx ow=%#lx"
+literal|"trap: %s type=%s (%s) pil=%#lx"
 argument_list|,
 name|p
 operator|->
@@ -545,12 +539,7 @@ operator|)
 argument_list|,
 name|rdpr
 argument_list|(
-name|wstate
-argument_list|)
-argument_list|,
-name|rdpr
-argument_list|(
-name|otherwin
+name|pil
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -620,6 +609,17 @@ name|sticks
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|type
+operator|&
+operator|~
+name|T_KERNEL
+operator|)
+operator|!=
+name|T_BREAKPOINT
+condition|)
 name|KASSERT
 argument_list|(
 name|cold
@@ -643,7 +643,7 @@ condition|)
 block|{
 comment|/* 	 * User Mode Traps 	 */
 case|case
-name|T_ALIGN
+name|T_MEM_ADDRESS_NOT_ALIGNED
 case|:
 if|if
 condition|(
@@ -673,19 +673,12 @@ block|}
 goto|goto
 name|trapsig
 goto|;
-case|case
-name|T_ALIGN_LDDF
-case|:
-case|case
-name|T_ALIGN_STDF
-case|:
-name|sig
-operator|=
-name|SIGBUS
-expr_stmt|;
-goto|goto
-name|trapsig
-goto|;
+if|#
+directive|if
+literal|0
+block|case T_ALIGN_LDDF: 	case T_ALIGN_STDF: 		sig = SIGBUS; 		goto trapsig;
+endif|#
+directive|endif
 case|case
 name|T_BREAKPOINT
 case|:
@@ -697,7 +690,7 @@ goto|goto
 name|trapsig
 goto|;
 case|case
-name|T_DIVIDE
+name|T_DIVISION_BY_ZERO
 case|:
 name|sig
 operator|=
@@ -723,34 +716,42 @@ name|user
 goto|;
 comment|/* Fallthrough. */
 case|case
-name|T_FP_IEEE
+name|T_FP_EXCEPTION_IEEE_754
 case|:
-name|sig
-operator|=
-name|SIGFPE
-expr_stmt|;
-goto|goto
-name|trapsig
-goto|;
 case|case
-name|T_FP_OTHER
+name|T_FP_EXCEPTION_OTHER
 case|:
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|sig
 operator|=
-name|fp_exception_other
+name|fp_exception
 argument_list|(
 name|td
 argument_list|,
 name|tf
+argument_list|,
+operator|&
+name|ucode
 argument_list|)
 operator|)
 operator|==
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|TF_DONE
 argument_list|(
 name|tf
@@ -760,6 +761,12 @@ goto|goto
 name|user
 goto|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 goto|goto
 name|trapsig
 goto|;
@@ -767,13 +774,13 @@ case|case
 name|T_DATA_ERROR
 case|:
 case|case
-name|T_DATA_EXCPTN
+name|T_DATA_EXCEPTION
 case|:
 case|case
-name|T_INSN_ERROR
+name|T_INSTRUCTION_ERROR
 case|:
 case|case
-name|T_INSN_EXCPTN
+name|T_INSTRUCTION_EXCEPTION
 case|:
 name|sig
 operator|=
@@ -784,17 +791,17 @@ goto|goto
 name|trapsig
 goto|;
 case|case
-name|T_DMMU_MISS
+name|T_DATA_MISS
 case|:
 case|case
-name|T_DMMU_PROT
+name|T_DATA_PROTECTION
 case|:
 case|case
-name|T_IMMU_MISS
+name|T_INSTRUCTION_MISS
 case|:
 name|error
 operator|=
-name|trap_mmu_fault
+name|trap_pfault
 argument_list|(
 name|td
 argument_list|,
@@ -847,7 +854,7 @@ expr_stmt|;
 comment|/* Not reached. */
 block|}
 goto|goto
-name|userout
+name|user
 goto|;
 case|case
 name|T_FILL_RET
@@ -879,17 +886,17 @@ expr_stmt|;
 comment|/* Not reached. */
 block|}
 goto|goto
-name|userout
+name|user
 goto|;
 case|case
-name|T_INSN_ILLEGAL
+name|T_ILLEGAL_INSTRUCTION
 case|:
 if|if
 condition|(
 operator|(
 name|sig
 operator|=
-name|emulate_insn
+name|emul_insn
 argument_list|(
 name|td
 argument_list|,
@@ -913,10 +920,10 @@ goto|goto
 name|trapsig
 goto|;
 case|case
-name|T_PRIV_ACTION
+name|T_PRIVILEGED_ACTION
 case|:
 case|case
-name|T_PRIV_OPCODE
+name|T_PRIVILEGED_OPCODE
 case|:
 name|sig
 operator|=
@@ -926,7 +933,52 @@ goto|goto
 name|trapsig
 goto|;
 case|case
-name|T_SOFT
+name|T_TRAP_INSTRUCTION_16
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_17
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_18
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_19
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_20
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_21
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_22
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_23
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_24
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_25
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_26
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_27
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_28
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_29
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_30
+case|:
+case|case
+name|T_TRAP_INSTRUCTION_31
 case|:
 name|sig
 operator|=
@@ -961,10 +1013,10 @@ expr_stmt|;
 comment|/* Not reached. */
 block|}
 goto|goto
-name|userout
+name|user
 goto|;
 case|case
-name|T_TAG_OVFLW
+name|T_TAG_OFERFLOW
 case|:
 name|sig
 operator|=
@@ -998,23 +1050,23 @@ break|break;
 endif|#
 directive|endif
 case|case
-name|T_DMMU_MISS
+name|T_DATA_MISS
 operator||
 name|T_KERNEL
 case|:
 case|case
-name|T_DMMU_PROT
+name|T_DATA_PROTECTION
 operator||
 name|T_KERNEL
 case|:
 case|case
-name|T_IMMU_MISS
+name|T_INSTRUCTION_MISS
 operator||
 name|T_KERNEL
 case|:
 name|error
 operator|=
-name|trap_mmu_fault
+name|trap_pfault
 argument_list|(
 name|td
 argument_list|,
@@ -1032,7 +1084,7 @@ name|out
 goto|;
 break|break;
 case|case
-name|T_WATCH_PHYS
+name|T_PA_WATCHPOINT
 operator||
 name|T_KERNEL
 case|:
@@ -1151,7 +1203,7 @@ goto|goto
 name|out
 goto|;
 case|case
-name|T_WATCH_VIRT
+name|T_VA_WATCHPOINT
 operator||
 name|T_KERNEL
 case|:
@@ -1236,7 +1288,7 @@ operator|->
 name|tf_tnpc
 operator|)
 operator|=
-literal|0x91d03002
+literal|0x91d03003
 expr_stmt|;
 comment|/* ta %xcc, 2 */
 name|flush
@@ -1459,8 +1511,6 @@ argument_list|,
 name|sticks
 argument_list|)
 expr_stmt|;
-name|userout
-label|:
 name|mtx_assert
 argument_list|(
 operator|&
@@ -1510,8 +1560,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|trap_mmu_fault
+name|trap_pfault
 parameter_list|(
 name|struct
 name|thread
@@ -1525,28 +1576,14 @@ name|tf
 parameter_list|)
 block|{
 name|struct
-name|mmuframe
-modifier|*
-name|mf
-decl_stmt|;
-name|struct
 name|vmspace
 modifier|*
 name|vm
 decl_stmt|;
 name|struct
-name|stte
-modifier|*
-name|stp
-decl_stmt|;
-name|struct
 name|pcb
 modifier|*
 name|pcb
-decl_stmt|;
-name|struct
-name|tte
-name|tte
 decl_stmt|;
 name|struct
 name|proc
@@ -1561,9 +1598,6 @@ name|prot
 decl_stmt|;
 name|u_long
 name|ctx
-decl_stmt|;
-name|pmap_t
-name|pm
 decl_stmt|;
 name|int
 name|flags
@@ -1589,7 +1623,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"trap_dmmu_miss: pcb NULL"
+literal|"trap_pfault: pcb NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1602,7 +1636,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"trap_dmmu_miss: vmspace NULL"
+literal|"trap_pfault: vmspace NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1610,24 +1644,13 @@ name|rv
 operator|=
 name|KERN_SUCCESS
 expr_stmt|;
-name|mf
-operator|=
-operator|(
-expr|struct
-name|mmuframe
-operator|*
-operator|)
-name|tf
-operator|->
-name|tf_arg
-expr_stmt|;
 name|ctx
 operator|=
 name|TLB_TAR_CTX
 argument_list|(
-name|mf
+name|tf
 operator|->
-name|mf_tar
+name|tf_tar
 argument_list|)
 expr_stmt|;
 name|pcb
@@ -1649,20 +1672,16 @@ name|va
 operator|=
 name|TLB_TAR_VA
 argument_list|(
-name|mf
+name|tf
 operator|->
-name|mf_tar
+name|tf_tar
 argument_list|)
-expr_stmt|;
-name|stp
-operator|=
-name|NULL
 expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_TRAP
 argument_list|,
-literal|"trap_mmu_fault: td=%p pm_ctx=%#lx va=%#lx ctx=%#lx"
+literal|"trap_pfault: td=%p pm_ctx=%#lx va=%#lx ctx=%#lx"
 argument_list|,
 name|td
 argument_list|,
@@ -1683,7 +1702,7 @@ if|if
 condition|(
 name|type
 operator|==
-name|T_DMMU_PROT
+name|T_DATA_PROTECTION
 condition|)
 block|{
 name|prot
@@ -1701,7 +1720,7 @@ if|if
 condition|(
 name|type
 operator|==
-name|T_DMMU_MISS
+name|T_DATA_MISS
 condition|)
 name|prot
 operator|=
@@ -1722,96 +1741,21 @@ block|}
 if|if
 condition|(
 name|ctx
-operator|==
+operator|!=
 name|TLB_CTX_KERNEL
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-name|rv
-operator|=
-name|vm_fault
-argument_list|(
-name|kernel_map
-argument_list|,
-name|va
-argument_list|,
-name|prot
-argument_list|,
-name|VM_FAULT_NORMAL
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|rv
-operator|==
-name|KERN_SUCCESS
-condition|)
-block|{
-name|stp
-operator|=
-name|tsb_kvtostte
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
-name|tte
-operator|=
-name|stp
-operator|->
-name|st_tte
-expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|T_IMMU_MISS
-condition|)
-name|tlb_store
-argument_list|(
-name|TLB_DTLB
-operator||
-name|TLB_ITLB
-argument_list|,
-name|va
-argument_list|,
-name|ctx
-argument_list|,
-name|tte
-argument_list|)
-expr_stmt|;
-else|else
-name|tlb_store
-argument_list|(
-name|TLB_DTLB
-argument_list|,
-name|va
-argument_list|,
-name|ctx
-argument_list|,
-name|tte
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
+operator|(
 name|tf
 operator|->
-name|tf_type
+name|tf_tstate
 operator|&
-name|T_KERNEL
+name|TSTATE_PRIV
+operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|td
@@ -1833,54 +1777,26 @@ operator|==
 name|fsbail
 operator|)
 condition|)
-block|{
-name|rv
-operator|=
-name|KERN_FAILURE
-expr_stmt|;
-block|}
-else|else
-block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* 		 * This is a fault on non-kernel virtual memory. 		 */
 name|vm
 operator|=
 name|p
 operator|->
 name|p_vmspace
 expr_stmt|;
-name|pm
-operator|=
-operator|&
-name|vm
-operator|->
-name|vm_pmap
-expr_stmt|;
-name|stp
-operator|=
-name|tsb_stte_lookup
+name|mtx_lock
 argument_list|(
-name|pm
-argument_list|,
-name|va
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|stp
-operator|==
-name|NULL
-operator|||
-name|type
-operator|==
-name|T_DMMU_PROT
-condition|)
-block|{
-comment|/* 			 * Keep the process from being swapped out at this 			 * critical time. 			 */
+comment|/* 		 * Keep swapout from messing with us during this 		 * critical time. 		 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1896,7 +1812,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Grow the stack if necessary.  vm_map_growstack only 			 * fails if the va falls into a growable stack region 			 * and the stack growth fails.  If it succeeds, or the 			 * va was not within a growable stack region, fault in 			 * the user page. 			 */
+comment|/* 		 * Grow the stack if necessary.  vm_map_growstack only 		 * fails if the va falls into a growable stack region 		 * and the stack growth fails.  If it succeeds, or the 		 * va was not within a growable stack region, fault in 		 * the user page. 		 */
 if|if
 condition|(
 name|vm_map_growstack
@@ -1929,7 +1845,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Now the process can be swapped again. 			 */
+comment|/* 		 * Now the process can be swapped again. 		 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1948,113 +1864,40 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|stp
-operator|=
-name|tsb_stte_promote
+comment|/* 		 * This is a fault on kernel virtual memory.  Attempts to access 		 * kernel memory from user mode cause priviledged action traps, 		 * not page fault. 		 */
+name|KASSERT
 argument_list|(
-name|pm
+name|tf
+operator|->
+name|tf_tstate
+operator|&
+name|TSTATE_PRIV
 argument_list|,
-name|va
-argument_list|,
-name|stp
+operator|(
+literal|"trap_pfault: fault on nucleus context from user mode"
+operator|)
 argument_list|)
 expr_stmt|;
-name|stp
-operator|->
-name|st_tte
-operator|.
-name|tte_data
-operator||=
-name|TD_REF
-expr_stmt|;
-switch|switch
-condition|(
-name|type
-condition|)
-block|{
-case|case
-name|T_IMMU_MISS
-case|:
-if|if
-condition|(
-operator|(
-name|stp
-operator|->
-name|st_tte
-operator|.
-name|tte_data
+name|mtx_lock
+argument_list|(
 operator|&
-name|TD_EXEC
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Don't have to worry about process locking or stacks in the 		 * kernel. 		 */
 name|rv
 operator|=
-name|KERN_FAILURE
-expr_stmt|;
-break|break;
-block|}
-name|tlb_store
+name|vm_fault
 argument_list|(
-name|TLB_DTLB
-operator||
-name|TLB_ITLB
+name|kernel_map
 argument_list|,
 name|va
 argument_list|,
-name|ctx
+name|prot
 argument_list|,
-name|stp
-operator|->
-name|st_tte
+name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|T_DMMU_PROT
-case|:
-if|if
-condition|(
-operator|(
-name|stp
-operator|->
-name|st_tte
-operator|.
-name|tte_data
-operator|&
-name|TD_SW
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|rv
-operator|=
-name|KERN_FAILURE
-expr_stmt|;
-break|break;
-block|}
-comment|/* Fallthrough. */
-case|case
-name|T_DMMU_MISS
-case|:
-name|tlb_store
-argument_list|(
-name|TLB_DTLB
-argument_list|,
-name|va
-argument_list|,
-name|ctx
-argument_list|,
-name|stp
-operator|->
-name|st_tte
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 block|}
 name|mtx_unlock
 argument_list|(
@@ -2062,14 +1905,13 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-block|}
 name|CTR3
 argument_list|(
 name|KTR_TRAP
 argument_list|,
-literal|"trap_mmu_fault: return p=%p va=%#lx rv=%d"
+literal|"trap_pfault: return td=%p va=%#lx rv=%d"
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|va
 argument_list|,
@@ -2089,24 +1931,30 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|tf
 operator|->
-name|tf_type
+name|tf_tstate
 operator|&
-name|T_KERNEL
+name|TSTATE_PRIV
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
 condition|(
+name|td
+operator|->
+name|td_intr_nesting_level
+operator|==
+literal|0
+operator|&&
 name|pcb
 operator|->
 name|pcb_onfault
 operator|!=
 name|NULL
-operator|&&
-name|ctx
-operator|!=
-name|TLB_CTX_KERNEL
 condition|)
 block|{
 name|tf
@@ -2139,9 +1987,11 @@ block|}
 block|}
 return|return
 operator|(
+operator|(
 name|rv
 operator|==
 name|KERN_PROTECTION_FAILURE
+operator|)
 condition|?
 name|SIGBUS
 else|:
@@ -2578,8 +2428,6 @@ argument_list|,
 operator|&
 name|args
 index|[
-name|reg
-operator|+
 name|regcnt
 index|]
 argument_list|,
