@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.7 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5139,6 +5139,29 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_shell
+operator|==
+name|NULL
+operator|||
+name|pw
+operator|->
+name|pw_shell
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+name|pw
+operator|->
+name|pw_shell
+operator|=
+literal|"/bin/sh"
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -5164,9 +5187,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|endpwent
-argument_list|()
-expr_stmt|;
 name|endusershell
 argument_list|()
 expr_stmt|;
