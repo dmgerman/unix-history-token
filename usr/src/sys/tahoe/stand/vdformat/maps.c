@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)maps.c	1.5 (Berkeley/CCI) %G%"
+literal|"@(#)maps.c	1.6 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,7 +267,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|blkcmp
+name|bcmp
 argument_list|(
 operator|(
 name|char
@@ -287,7 +287,7 @@ operator|==
 name|true
 condition|)
 block|{
-name|blkcopy
+name|bcopy
 argument_list|(
 operator|(
 name|char
@@ -395,7 +395,7 @@ name|true
 return|;
 block|}
 block|}
-name|blkzero
+name|bzero
 argument_list|(
 name|bad_map
 argument_list|,
@@ -415,7 +415,7 @@ operator|=
 name|MAX_FLAWS
 expr_stmt|;
 block|}
-name|blkcopy
+name|bcopy
 argument_list|(
 operator|(
 name|char
@@ -474,7 +474,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* start with nothing in map */
-name|blkzero
+name|bzero
 argument_list|(
 name|bad_map
 argument_list|,
@@ -1287,7 +1287,7 @@ name|sec
 operator|++
 control|)
 block|{
-name|blkcopy
+name|bcopy
 argument_list|(
 operator|(
 name|char
