@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.10 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.11 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.10 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.11 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,6 +229,7 @@ operator|==
 name|NULL
 operator|)
 expr_stmt|;
+comment|/* if newid, queuename will create a locked qf file in e->lockfp */
 name|strcpy
 argument_list|(
 name|tf
@@ -257,6 +258,7 @@ name|newid
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* if newid, just write the qf file directly (instead of tf file) */
 if|if
 condition|(
 name|newid
@@ -1525,6 +1527,7 @@ operator|!
 name|newid
 condition|)
 block|{
+comment|/* rename (locked) tf to be (locked) qf */
 name|qf
 operator|=
 name|queuename
@@ -1558,6 +1561,7 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
+comment|/* close and unlock old (locked) qf */
 if|if
 condition|(
 name|e
@@ -3760,6 +3764,89 @@ return|return
 name|FALSE
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|lockfile
+argument_list|(
+name|fileno
+argument_list|(
+name|qfp
+argument_list|)
+argument_list|,
+name|qf
+argument_list|,
+name|LOCK_EX
+operator||
+name|LOCK_NB
+argument_list|)
+condition|)
+block|{
+comment|/* being processed by another queuer */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"readqf(%s): locked\n"
+argument_list|,
+name|qf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"%s: locked\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|19
+condition|)
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s: locked"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOG */
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 comment|/* 	**  Check the queue file for plausibility to avoid attacks. 	*/
 if|if
 condition|(
@@ -3867,11 +3954,6 @@ argument_list|,
 name|qf
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|qfp
-argument_list|)
-expr_stmt|;
 name|rename
 argument_list|(
 name|qf
@@ -3884,84 +3966,6 @@ literal|'Q'
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-if|if
-condition|(
-operator|!
-name|lockfile
-argument_list|(
-name|fileno
-argument_list|(
-name|qfp
-argument_list|)
-argument_list|,
-name|qf
-argument_list|,
-name|LOCK_EX
-operator||
-name|LOCK_NB
-argument_list|)
-condition|)
-block|{
-comment|/* being processed by another queuer */
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|40
-argument_list|,
-literal|8
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"readqf(%s): locked\n"
-argument_list|,
-name|qf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Verbose
-condition|)
-name|printf
-argument_list|(
-literal|"%s: locked\n"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|19
-condition|)
-name|syslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"%s: locked"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|qfp
@@ -3998,7 +4002,26 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* save this lock */
+if|if
+condition|(
+name|st
+operator|.
+name|st_nlink
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		**  Race condition -- we got a file just as it was being 		**  unlinked.  Just assume it is zero length. 		*/
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+comment|/* good file -- save this lock */
 name|e
 operator|->
 name|e_lockfp
