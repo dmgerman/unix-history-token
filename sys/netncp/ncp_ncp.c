@@ -934,7 +934,8 @@ decl_stmt|,
 name|sl
 decl_stmt|,
 name|ckslevel
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|ilen
 decl_stmt|;
 name|sl
