@@ -734,6 +734,14 @@ name|logIpfwDenied
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pidName
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -837,6 +845,10 @@ name|logIpfwDenied
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|pidName
+operator|=
+name|PIDFILE
 expr_stmt|;
 name|ParseArgs
 argument_list|(
@@ -1638,7 +1650,7 @@ name|background
 condition|)
 name|unlink
 argument_list|(
-name|PIDFILE
+name|pidName
 argument_list|)
 expr_stmt|;
 return|return
@@ -1672,7 +1684,7 @@ name|pidFile
 operator|=
 name|fopen
 argument_list|(
-name|PIDFILE
+name|pidName
 argument_list|,
 literal|"w"
 argument_list|)
@@ -3447,6 +3459,8 @@ block|,
 name|PunchFW
 block|,
 name|LogIpfwDenied
+block|,
+name|PidFile
 block|}
 enum|;
 end_enum
@@ -3909,6 +3923,22 @@ block|,
 literal|"log_ipfw_denied"
 block|,
 name|NULL
+block|}
+block|,
+block|{
+name|PidFile
+block|,
+literal|0
+block|,
+name|String
+block|,
+literal|"file_name"
+block|,
+literal|"store PID in an alternate file"
+block|,
+literal|"pid_file"
+block|,
+literal|"P"
 block|}
 block|, }
 decl_stmt|;
@@ -4516,6 +4546,17 @@ operator|=
 name|yesNoValue
 expr_stmt|;
 empty_stmt|;
+break|break;
+case|case
+name|PidFile
+case|:
+name|pidName
+operator|=
+name|strdup
+argument_list|(
+name|strValue
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
