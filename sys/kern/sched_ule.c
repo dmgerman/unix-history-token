@@ -1689,7 +1689,7 @@ parameter_list|,
 name|class
 parameter_list|)
 define|\
-value|((ke)->ke_thread->td_pinned == 0&& ((ke)->ke_flags& KEF_BOUND) == 0)
+value|((ke)->ke_pinned == 0&& ((ke)->ke_flags& KEF_BOUND) == 0)
 end_define
 
 begin_else
@@ -1711,7 +1711,7 @@ parameter_list|,
 name|class
 parameter_list|)
 define|\
-value|((class) != PRI_ITHD&& (ke)->ke_thread->td_pinned == 0&&		\     ((ke)->ke_flags& KEF_BOUND) == 0)
+value|((class) != PRI_ITHD&& (ke)->ke_pinned == 0&&		\     ((ke)->ke_flags& KEF_BOUND) == 0)
 end_define
 
 begin_endif
@@ -8337,7 +8337,7 @@ name|curthread
 operator|->
 name|td_sched
 operator|->
-name|td_pinned
+name|ke_pinned
 operator|--
 expr_stmt|;
 block|}
