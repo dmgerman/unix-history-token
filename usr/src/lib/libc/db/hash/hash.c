@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	8.4 (Berkeley) %G%"
+literal|"@(#)hash.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2253,6 +2253,11 @@ argument_list|(
 name|hashp
 operator|->
 name|fp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|hashp
 argument_list|)
 expr_stmt|;
 if|if
