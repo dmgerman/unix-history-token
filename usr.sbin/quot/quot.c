@@ -1576,7 +1576,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"alloc fsize structure"
+literal|"allocate fsize structure"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1802,7 +1802,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"alloc fsize structure"
+literal|"allocate fsize structure"
 argument_list|)
 expr_stmt|;
 name|fp
@@ -2570,7 +2570,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: quot [-acfhknv] [ filesystem ... ]\n"
+literal|"usage: quot [-acfhknv] [filesystem ...]\n"
 argument_list|)
 expr_stmt|;
 endif|#
