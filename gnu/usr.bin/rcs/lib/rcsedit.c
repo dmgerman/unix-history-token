@@ -3758,6 +3758,9 @@ case|:
 case|case
 name|Header
 case|:
+case|case
+name|CVSHeader
+case|:
 if|if
 condition|(
 name|marker
