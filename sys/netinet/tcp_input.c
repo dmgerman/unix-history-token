@@ -4375,7 +4375,7 @@ goto|goto
 name|drop
 goto|;
 block|}
-comment|/* 		 * RFC1122 4.2.3.10, p. 104: discard bcast/mcast SYN 		 * in_broadcast() should never return true on a received 		 * packet with M_BCAST not set.  		 *  		 * Packets with a multicast source address should also  		 * be discarded. 		 */
+comment|/* 		 * RFC1122 4.2.3.10, p. 104: discard bcast/mcast SYN 		 * 		 * Note that it is quite possible to receive unicast 		 * link-layer packets with a broadcast IP address. Use 		 * in_broadcast() to find them. 		 */
 if|if
 condition|(
 name|m
@@ -4459,6 +4459,19 @@ operator|==
 name|htonl
 argument_list|(
 name|INADDR_BROADCAST
+argument_list|)
+operator|||
+name|in_broadcast
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 argument_list|)
 condition|)
 goto|goto
@@ -8813,6 +8826,19 @@ operator|==
 name|htonl
 argument_list|(
 name|INADDR_BROADCAST
+argument_list|)
+operator|||
+name|in_broadcast
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 argument_list|)
 condition|)
 goto|goto
