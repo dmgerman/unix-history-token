@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netdaemon.c	4.2	(Berkeley)	%G%"
+literal|"@(#)netdaemon.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -684,7 +684,7 @@ name|double
 name|drate
 decl_stmt|;
 specifier|register
-name|unsigned
+name|int
 name|uid
 decl_stmt|,
 name|uidBest
@@ -1350,6 +1350,12 @@ return|;
 comment|/* day */
 block|}
 end_block
+
+begin_decl_stmt
+name|int
+name|subs
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|send
@@ -2335,15 +2341,9 @@ operator|==
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|V6
 name|RENICE0
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-endif|V6
 ifdef|#
 directive|ifdef
 name|CCV7
@@ -2420,6 +2420,8 @@ condition|)
 name|error
 argument_list|(
 literal|"pass-thru rcode %d"
+argument_list|,
+name|rcode
 argument_list|)
 expr_stmt|;
 name|debug
@@ -2492,11 +2494,26 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|++
+name|subs
+operator|>
+literal|10
+condition|)
+while|while
+condition|(
 name|wait
 argument_list|(
 operator|&
 name|dummy
 argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+operator|--
+name|subs
 expr_stmt|;
 return|return
 operator|(
@@ -2507,15 +2524,9 @@ comment|/* normal return */
 block|}
 comment|/* this is a child, who will go ahead and execute the command */
 comment|/* running uid=0 at this point */
-ifndef|#
-directive|ifndef
-name|V6
 name|RENICE0
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-endif|V6
 comment|/* nice(0 set back to 0 */
 ifdef|#
 directive|ifdef
@@ -2527,34 +2538,7 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|CCV7
-while|while
-condition|(
-operator|(
-name|pid
-operator|=
-name|fork
-argument_list|()
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pid
-operator|!=
-literal|0
-condition|)
-name|exit
-argument_list|(
-name|EX_OK
-argument_list|)
-expr_stmt|;
+comment|/* 	while((pid = fork()) == -1)sleep(2); 	if(pid != 0)exit(EX_OK); 	*/
 comment|/* child process which forks and waits */
 name|mktemp
 argument_list|(
