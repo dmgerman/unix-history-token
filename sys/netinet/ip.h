@@ -838,20 +838,19 @@ name|in_addr
 name|ippseudo_dst
 decl_stmt|;
 comment|/* destination internet address */
-name|u_int8_t
+name|u_char
 name|ippseudo_pad
 decl_stmt|;
 comment|/* pad, must be zero */
-name|u_int8_t
+name|u_char
 name|ippseudo_p
 decl_stmt|;
 comment|/* protocol */
-name|u_int16_t
+name|u_short
 name|ippseudo_len
 decl_stmt|;
 comment|/* protocol length */
 block|}
-name|__packed
 struct|;
 end_struct
 
