@@ -785,7 +785,7 @@ argument_list|,
 comment|/* filter, filterarg */
 name|MAXBSIZE
 argument_list|,
-name|MLX_NSEG_NEW
+name|MLX_NSEG
 argument_list|,
 comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
