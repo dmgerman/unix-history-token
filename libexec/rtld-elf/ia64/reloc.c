@@ -896,21 +896,6 @@ name|cache
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|cache
-operator|!=
-name|NULL
-condition|)
-name|memset
-argument_list|(
-name|cache
-argument_list|,
-literal|0
-argument_list|,
-name|bytes
-argument_list|)
-expr_stmt|;
 comment|/* 	 * When relocating rtld itself, we need to avoid using malloc. 	 */
 if|if
 condition|(
