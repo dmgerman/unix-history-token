@@ -1765,6 +1765,14 @@ name|fs
 operator|->
 name|fs_maxcluster
 expr_stmt|;
+name|newfs
+operator|->
+name|fs_contigdirs
+operator|=
+name|fs
+operator|->
+name|fs_contigdirs
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|newfs
@@ -1813,6 +1821,39 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
+comment|/* An old fsck may have zeroed these fields, so recheck them. */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_avgfilesize
+operator|<=
+literal|0
+condition|)
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_avgfilesize
+operator|=
+name|AVFILESIZ
+expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_avgfpdir
+operator|<=
+literal|0
+condition|)
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_avgfpdir
+operator|=
+name|AFPDIR
+expr_stmt|;
+comment|/* XXX */
 comment|/* 	 * Step 3: re-read summary information from disk. 	 */
 name|blks
 operator|=
