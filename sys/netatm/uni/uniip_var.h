@@ -1164,13 +1164,16 @@ begin_function_decl
 name|void
 name|uniarp_pdu_print
 parameter_list|(
+specifier|const
 name|struct
 name|ipvcc
 modifier|*
 parameter_list|,
+specifier|const
 name|KBuffer
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
