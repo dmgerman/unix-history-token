@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.69 (Berkeley) %G%"
+literal|"@(#)main.c	8.70 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4018,7 +4018,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" E="
+literal|"L=%d E="
+argument_list|,
+name|m
+operator|->
+name|m_linelimit
 argument_list|)
 expr_stmt|;
 name|xputs
@@ -4026,6 +4030,40 @@ argument_list|(
 name|m
 operator|->
 name|m_eol
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_defcharset
+operator|!=
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|" C=%s"
+argument_list|,
+name|m
+operator|->
+name|m_defcharset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_mtstype
+operator|!=
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|" T=%s"
+argument_list|,
+name|m
+operator|->
+name|m_mtstype
 argument_list|)
 expr_stmt|;
 if|if

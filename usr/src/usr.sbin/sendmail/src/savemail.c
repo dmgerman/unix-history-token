@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.43 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3205,24 +3205,23 @@ name|mci
 argument_list|)
 expr_stmt|;
 comment|/* Received-From: shows where we got this message from */
-name|expand
+if|if
+condition|(
+name|RealHostName
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
 argument_list|(
-literal|"Received-From: \201_"
-argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
-sizeof|sizeof
-name|buf
-operator|-
-literal|1
-index|]
+literal|"Received-From: %s"
 argument_list|,
-name|e
-operator|->
-name|e_parent
+name|RealHostName
 argument_list|)
 expr_stmt|;
 name|putline
@@ -3232,6 +3231,7 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Arrival-Date: -- when it arrived here */
 operator|(
 name|void
@@ -3448,6 +3448,24 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|q
+operator|->
+name|q_fstatus
+operator|!=
+name|NULL
+condition|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+name|q
+operator|->
+name|q_fstatus
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|bitset
 argument_list|(
 name|QBADADDR
@@ -3651,7 +3669,7 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Original-Rcpt: -- passed from on high */
+comment|/* Original-Recipient: -- passed from on high */
 if|if
 condition|(
 name|q
@@ -3668,7 +3686,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Original-Rcpt: %s"
+literal|"Original-Recipient: %s"
 argument_list|,
 name|q
 operator|->
@@ -3683,7 +3701,7 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Final-Rcpt: -- if through alias */
+comment|/* Final-Recipient: -- if through alias */
 if|if
 condition|(
 name|q
@@ -3700,7 +3718,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Final-Rcpt: %s"
+literal|"Final-Recipient: %s"
 argument_list|,
 name|q
 operator|->
@@ -3716,7 +3734,79 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Final-Status: -- same as Status?  XXX */
+if|if
+condition|(
+name|q
+operator|->
+name|q_fstatus
+operator|!=
+name|NULL
+operator|&&
+name|q
+operator|->
+name|q_status
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Final-Status: %s"
+argument_list|,
+name|q
+operator|->
+name|q_fstatus
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Remote-MTS-Type: -- always INET?  XXX */
+if|if
+condition|(
+name|q
+operator|->
+name|q_mailer
+operator|->
+name|m_mtstype
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Remote-MTS-Type: %s"
+argument_list|,
+name|q
+operator|->
+name|q_mailer
+operator|->
+name|m_mtstype
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Remote-MTA: -- who was I talking to? */
 if|if
 condition|(
@@ -3749,8 +3839,77 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Remote-Rcpt: -- same as Final-Rcpt?  XXX */
-comment|/* Remote-Status: -- same as Final-Status?  XXX */
+comment|/* Remote-Recipient: -- same as Final-Recipient?  XXX */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|q
+operator|->
+name|q_user
+argument_list|,
+name|q
+operator|->
+name|q_paddr
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Remote-Recipient: %s"
+argument_list|,
+name|q
+operator|->
+name|q_user
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Remote-Status: -- return code from remote mailer */
+if|if
+condition|(
+name|q
+operator|->
+name|q_rstatus
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Remote-Status: %s"
+argument_list|,
+name|q
+operator|->
+name|q_rstatus
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	**  Output text of original message 	*/

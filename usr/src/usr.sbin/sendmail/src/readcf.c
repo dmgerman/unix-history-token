@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.48 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3194,6 +3194,20 @@ comment|/* default charset */
 name|m
 operator|->
 name|m_defcharset
+operator|=
+name|newstr
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+comment|/* MTS Type */
+name|m
+operator|->
+name|m_mtstype
 operator|=
 name|newstr
 argument_list|(

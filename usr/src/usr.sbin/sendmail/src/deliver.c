@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.113 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.114 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -11115,7 +11115,7 @@ if|if
 condition|(
 name|a
 operator|->
-name|q_status
+name|q_rstatus
 operator|!=
 name|NULL
 condition|)
@@ -11123,7 +11123,7 @@ name|free
 argument_list|(
 name|a
 operator|->
-name|q_status
+name|q_rstatus
 argument_list|)
 expr_stmt|;
 if|if
@@ -11259,7 +11259,7 @@ expr_stmt|;
 block|}
 name|a
 operator|->
-name|q_status
+name|q_rstatus
 operator|=
 name|newstr
 argument_list|(

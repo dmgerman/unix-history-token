@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.57 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,7 @@ value|(QPINGONSUCCESS|QPINGONFAILURE|QPINGONDELAY|QHAS_RET_PARAM|QRET_HDRS)
 end_define
 
 begin_function
+name|int
 name|ADDRESS
 modifier|*
 name|sendto
@@ -876,7 +877,11 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"554 aliasing/forwarding loop broken"
+literal|"554 aliasing/forwarding loop broken (%d aliases deep; %d max"
+argument_list|,
+name|aliaslevel
+argument_list|,
+name|MAXRCRSN
 argument_list|)
 expr_stmt|;
 return|return
