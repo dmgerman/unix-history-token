@@ -213,7 +213,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"couldn't attach pci bus"
+literal|"couldn't attach pci bus\n"
 argument_list|)
 expr_stmt|;
 name|return_VALUE
