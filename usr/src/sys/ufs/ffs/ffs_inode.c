@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -977,6 +977,8 @@ argument_list|,
 name|length
 argument_list|,
 name|flags
+argument_list|,
+name|cred
 argument_list|)
 specifier|register
 expr|struct
@@ -995,6 +997,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 end_decl_stmt
 
@@ -1288,6 +1298,8 @@ argument_list|,
 name|lbn
 argument_list|,
 name|offset
+argument_list|,
+name|cred
 argument_list|,
 operator|&
 name|bp

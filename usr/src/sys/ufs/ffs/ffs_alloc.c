@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -262,6 +262,8 @@ name|bpref
 argument_list|,
 name|size
 argument_list|,
+name|cred
+argument_list|,
 name|bnp
 argument_list|)
 specifier|register
@@ -283,6 +285,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 end_decl_stmt
 
@@ -315,16 +325,6 @@ name|cg
 decl_stmt|,
 name|error
 decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|curproc
-operator|->
-name|p_ucred
-decl_stmt|;
-comment|/* XXX */
 operator|*
 name|bnp
 operator|=
@@ -336,6 +336,9 @@ name|ip
 operator|->
 name|i_fs
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -382,6 +385,20 @@ literal|"ffs_alloc: bad size"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cred
+operator|==
+name|NOCRED
+condition|)
+name|panic
+argument_list|(
+literal|"ffs_alloc: missing credential\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DIAGNOSTIC */
 if|if
 condition|(
 name|size
@@ -630,6 +647,8 @@ name|osize
 argument_list|,
 name|nsize
 argument_list|,
+name|cred
+argument_list|,
 name|bpp
 argument_list|)
 specifier|register
@@ -657,6 +676,14 @@ name|int
 name|osize
 decl_stmt|,
 name|nsize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 end_decl_stmt
 
@@ -697,16 +724,6 @@ name|bprev
 decl_stmt|,
 name|bno
 decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|curproc
-operator|->
-name|p_ucred
-decl_stmt|;
-comment|/* XXX */
 operator|*
 name|bpp
 operator|=
@@ -718,6 +735,9 @@ name|ip
 operator|->
 name|i_fs
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -784,6 +804,20 @@ literal|"ffs_realloccg: bad size"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cred
+operator|==
+name|NOCRED
+condition|)
+name|panic
+argument_list|(
+literal|"ffs_realloccg: missing credential\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DIAGNOSTIC */
 if|if
 condition|(
 name|cred
@@ -4801,16 +4835,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|curproc
-operator|->
-name|p_ucred
-decl_stmt|;
-comment|/* XXX */
 name|fs
 operator|=
 name|ip
@@ -4899,9 +4923,9 @@ name|ffs_fserr
 argument_list|(
 name|fs
 argument_list|,
-name|cred
+name|ip
 operator|->
-name|cr_uid
+name|i_uid
 argument_list|,
 literal|"bad block"
 argument_list|)
