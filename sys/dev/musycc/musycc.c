@@ -1567,13 +1567,6 @@ operator||=
 literal|0x00000000
 expr_stmt|;
 comment|/* !OOFABT */
-if|#
-directive|if
-literal|0
-block|sc->ram->grcd |= 0x00000010;
-comment|/* MSKOOF */
-endif|#
-directive|endif
 name|sc
 operator|->
 name|ram
@@ -1592,13 +1585,6 @@ operator||=
 literal|0x00000400
 expr_stmt|;
 comment|/* POLLTH=1 */
-if|#
-directive|if
-literal|0
-block|sc->ram->grcd |= 0x00008000;
-comment|/* SFALIGN */
-endif|#
-directive|endif
 name|sc
 operator|->
 name|ram
@@ -1623,9 +1609,22 @@ name|ram
 operator|->
 name|pcd
 operator||=
-literal|0x0000000
+literal|1
+operator|<<
+literal|5
 expr_stmt|;
-comment|/* XXX */
+comment|/* TSYNC_EDGE */
+name|sc
+operator|->
+name|ram
+operator|->
+name|pcd
+operator||=
+literal|1
+operator|<<
+literal|9
+expr_stmt|;
+comment|/* TRITX */
 comment|/* Message length descriptor */
 comment|/* XXX: MTU */
 name|sc
@@ -2520,7 +2519,7 @@ index|[
 literal|0x002
 index|]
 operator|=
-literal|0x00
+literal|0x20
 expr_stmt|;
 comment|/* JAT_CR - XXX */
 name|p
@@ -2601,7 +2600,7 @@ index|[
 literal|0x01A
 index|]
 operator|=
-literal|0x15
+literal|0x37
 expr_stmt|;
 comment|/* CMUX - RSBCKI(RSBCKI), TSBCKI(RSBCKI), CLADO(RCKO), TCKI(RCKO) */
 comment|/* I.431/G.775 */
@@ -3170,6 +3169,12 @@ literal|0x80000000
 condition|)
 break|break;
 comment|/* Not our mdesc, done */
+name|md
+operator|->
+name|data
+operator|=
+literal|0
+expr_stmt|;
 name|m
 operator|=
 name|md
@@ -3179,6 +3184,8 @@ expr_stmt|;
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sch
@@ -3196,19 +3203,13 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 name|md
 operator|->
 name|m
 operator|=
 name|NULL
 expr_stmt|;
-name|md
-operator|->
-name|data
-operator|=
-literal|0
-expr_stmt|;
+block|}
 name|md
 operator|->
 name|status
@@ -5834,6 +5835,26 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|md
+operator|->
+name|status
+operator|&
+literal|0x80000000
+operator|)
+operator|!=
+literal|0x00000000
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Out of tx md\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
 operator|++
 name|sch
 operator|->
@@ -5900,6 +5921,16 @@ name|m
 operator|=
 name|m2
 expr_stmt|;
+name|sch
+operator|->
+name|tx_pending
+operator|+=
+name|m2
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
 block|}
 name|u
 operator||=
@@ -5921,16 +5952,6 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
-name|sch
-operator|->
-name|tx_pending
-operator|+=
-name|m2
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
 return|return
 operator|(
 literal|0
