@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	3.3	(Berkeley)	%G%"
+literal|"@(#)interactive.c	3.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1578,6 +1578,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|static
 name|struct
 name|afile
 name|single
