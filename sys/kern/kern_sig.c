@@ -7264,7 +7264,7 @@ operator|==
 literal|0
 condition|)
 return|return
-literal|0
+name|EFBIG
 return|;
 name|name
 operator|=
