@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.195 1999/01/21 09:19:33 dillon Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.196 1999/01/22 08:59:05 dg Exp $  */
 end_comment
 
 begin_comment
@@ -6594,7 +6594,7 @@ literal|"getblk: no buffer offset"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Check that the constituted buffer really deserves for the 		 * B_CACHE bit to be set.  B_VMIO type buffers might not 		 * contain fully valid pages.  Normal (old-style) buffers 		 * should be fully valid.  This might also lead to B_CACHE 		 * getting clear. 		 */
+comment|/* 		 * Check that the constituted buffer really deserves for the 		 * B_CACHE bit to be set.  B_VMIO type buffers might not 		 * contain fully valid pages.  Normal (old-style) buffers 		 * should be fully valid.  This might also lead to B_CACHE 		 * getting clear. 		 * 		 * If B_CACHE is already clear, don't bother checking to see  		 * if we have to clear it again. 		 * 		 * XXX this code should not be necessary unless the B_CACHE 		 * handling is broken elsewhere in the kernel.  We need to 		 * check the cases and then turn the clearing part of this 		 * code into a panic. 		 */
 if|if
 condition|(
 operator|(
@@ -6602,9 +6602,11 @@ name|bp
 operator|->
 name|b_flags
 operator|&
+operator|(
 name|B_VMIO
 operator||
 name|B_CACHE
+operator|)
 operator|)
 operator|==
 operator|(
