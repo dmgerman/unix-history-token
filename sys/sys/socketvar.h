@@ -728,7 +728,7 @@ name|soref
 parameter_list|(
 name|so
 parameter_list|)
-value|do {			\ 				++so->so_count; \ 			} while (0)
+value|do {			\ 				++(so)->so_count; \ 			} while (0)
 end_define
 
 begin_define
@@ -738,7 +738,7 @@ name|sorele
 parameter_list|(
 name|so
 parameter_list|)
-value|do {				\ 				if (so->so_count<= 0)	\ 					panic("sorele");\ 				if (--so->so_count == 0)\ 					sofree(so);	\ 			} while (0)
+value|do {				\ 				if ((so)->so_count<= 0)	\ 					panic("sorele");\ 				if (--(so)->so_count == 0)\ 					sofree(so);	\ 			} while (0)
 end_define
 
 begin_define
@@ -748,7 +748,7 @@ name|sotryfree
 parameter_list|(
 name|so
 parameter_list|)
-value|do {				\ 				if (so->so_count == 0)	\ 					sofree(so);	\ 			} while(0)
+value|do {				\ 				if ((so)->so_count == 0)	\ 					sofree(so);	\ 			} while(0)
 end_define
 
 begin_define
