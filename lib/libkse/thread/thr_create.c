@@ -298,6 +298,10 @@ name|kseg
 init|=
 name|NULL
 decl_stmt|;
+name|void
+modifier|*
+name|p
+decl_stmt|;
 name|kse_critical_t
 name|crit
 decl_stmt|;
@@ -369,6 +373,12 @@ block|}
 else|else
 block|{
 comment|/* Initialize the thread structure: */
+name|p
+operator|=
+name|new_thread
+operator|->
+name|alloc_addr
+expr_stmt|;
 name|memset
 argument_list|(
 name|new_thread
@@ -381,6 +391,12 @@ expr|struct
 name|pthread
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|new_thread
+operator|->
+name|alloc_addr
+operator|=
+name|p
 expr_stmt|;
 comment|/* Check if default thread attributes are required: */
 if|if

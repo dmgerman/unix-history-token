@@ -1172,10 +1172,20 @@ modifier|*
 name|thread
 parameter_list|)
 block|{
+name|void
+modifier|*
+name|p
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 comment|/* Zero the initial thread structure. */
+name|p
+operator|=
+name|thread
+operator|->
+name|alloc_addr
+expr_stmt|;
 name|memset
 argument_list|(
 name|thread
@@ -1188,6 +1198,12 @@ expr|struct
 name|pthread
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|thread
+operator|->
+name|alloc_addr
+operator|=
+name|p
 expr_stmt|;
 comment|/* Setup the thread attributes. */
 name|thread

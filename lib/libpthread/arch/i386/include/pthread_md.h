@@ -107,6 +107,23 @@ parameter_list|)
 value|_thr_setcontext(ucp)
 end_define
 
+begin_define
+define|#
+directive|define
+name|THR_ALIGNBYTES
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_ALIGN
+parameter_list|(
+name|td
+parameter_list|)
+value|(((unsigned)(td) + THR_ALIGNBYTES)& ~THR_ALIGNBYTES)
+end_define
+
 begin_endif
 endif|#
 directive|endif

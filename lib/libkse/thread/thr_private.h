@@ -1574,6 +1574,16 @@ begin_struct
 struct|struct
 name|pthread
 block|{
+comment|/* 	 * Thread mailbox is first so it cal be aligned properly. 	 */
+name|struct
+name|kse_thr_mailbox
+name|tmbx
+decl_stmt|;
+name|void
+modifier|*
+name|alloc_addr
+decl_stmt|;
+comment|/* real address (unaligned) */
 comment|/* 	 * Magic value to help recognize a valid thread structure 	 * from an invalid one: 	 */
 define|#
 directive|define
@@ -1662,11 +1672,6 @@ decl_stmt|;
 name|struct
 name|pthread_attr
 name|attr
-decl_stmt|;
-comment|/* 	 * Thread mailbox. 	 */
-name|struct
-name|kse_thr_mailbox
-name|tmbx
 decl_stmt|;
 name|int
 name|active
