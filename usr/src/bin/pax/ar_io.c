@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar_io.c	1.5 (Berkeley) %G%"
+literal|"@(#)ar_io.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,6 +1361,25 @@ literal|1
 argument|, flcnt, rdcnt, wrcnt); 	(void)fflush(outf); 	flcnt =
 literal|0
 argument|; }
+comment|/*  * ar_drain()  *	drain any archive format independent padding from an archive read  *	from a socket or a pipe. This is to prevent the process on the  *	other side of the pipe from getting a SIGPIPE (pax will stop  *	reading an archive once a format dependent trailer is detected).  */
+if|#
+directive|if
+name|__STDC__
+argument|void ar_drain(void)
+else|#
+directive|else
+argument|void ar_drain()
+endif|#
+directive|endif
+argument|{ 	register int res; 	char drbuf[MAXBLK];
+comment|/* 	 * we only drain from a pipe/socket. Other devices can be closed 	 * without reading up to end of file. We sure hope that pipe is closed 	 * on the other side so we will get an EOF. 	 */
+argument|if ((artyp != ISPIPE) || (lstrval<=
+literal|0
+argument|)) 		return;
+comment|/* 	 * keep reading until pipe is drained 	 */
+argument|while ((res = read(arfd, drbuf, sizeof(drbuf)))>
+literal|0
+argument|) 		; 	lstrval = res; }
 comment|/*  * ar_set_wr()  *	Set up device right before switching from read to write in an append.  *	device dependent code (if required) to do this should be added here.  *	For all archive devices we are already positioned at the place we want  *	to start writing when this routine is called.  * Return:  *	0 if all ready to write, -1 otherwise  */
 if|#
 directive|if
