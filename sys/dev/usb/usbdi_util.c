@@ -35,12 +35,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -54,6 +48,12 @@ argument_list|(
 name|__OpenBSD__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
 
 begin_include
 include|#

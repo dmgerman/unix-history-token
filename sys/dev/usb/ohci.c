@@ -59,6 +59,12 @@ directive|include
 file|<sys/device.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
 begin_elif
 elif|#
 directive|elif
@@ -95,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
 end_include
 
 begin_if

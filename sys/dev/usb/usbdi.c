@@ -23,12 +23,6 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -42,6 +36,12 @@ argument_list|(
 name|__OpenBSD__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
 
 begin_include
 include|#
@@ -70,12 +70,6 @@ directive|include
 file|<sys/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -91,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
 end_include
 
 begin_include

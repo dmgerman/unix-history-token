@@ -65,6 +65,12 @@ directive|include
 file|<sys/kthread.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
 begin_elif
 elif|#
 directive|elif
@@ -113,12 +119,6 @@ begin_include
 include|#
 directive|include
 file|<sys/poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
