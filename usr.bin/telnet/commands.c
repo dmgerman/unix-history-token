@@ -12770,6 +12770,9 @@ name|printf
 argument_list|(
 literal|"%-*s\t%s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|HELPINDENT
 argument_list|,
 name|c

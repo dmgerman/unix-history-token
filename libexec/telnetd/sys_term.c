@@ -4685,7 +4685,7 @@ operator|&
 name|argv
 index|[
 operator|(
-name|int
+name|long
 operator|)
 name|argv
 index|[
@@ -4707,7 +4707,7 @@ operator|*
 operator|)
 operator|(
 call|(
-name|int
+name|long
 call|)
 argument_list|(
 operator|*
@@ -4736,7 +4736,7 @@ argument_list|)
 operator|*
 operator|(
 call|(
-name|int
+name|long
 call|)
 argument_list|(
 operator|*
@@ -4767,7 +4767,7 @@ operator|&
 name|argv
 index|[
 operator|(
-name|int
+name|long
 operator|)
 name|argv
 index|[
