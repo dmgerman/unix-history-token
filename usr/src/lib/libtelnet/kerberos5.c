@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kerberos5.c	5.3 (Berkeley) %G%"
+literal|"@(#)kerberos5.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,14 +277,11 @@ name|Voidptr
 value|krb5_pointer
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|Block
@@ -296,6 +293,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ENCRYPTION */
+end_comment
 
 begin_function
 specifier|static
@@ -614,12 +615,9 @@ decl_stmt|;
 name|int
 name|ap_opts
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|krb5_keyblock
 modifier|*
 name|newkey
@@ -628,6 +626,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|ksum
 operator|.
 name|checksum_type
@@ -1041,21 +1040,20 @@ name|krb5_kdc_default_options
 argument_list|,
 literal|0
 argument_list|,
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 operator|&
 name|newkey
 argument_list|,
 else|#
 directive|else
+comment|/* ENCRYPTION */
 literal|0
 argument_list|,
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|ccache
 argument_list|,
 operator|&
@@ -1090,12 +1088,9 @@ argument_list|(
 name|server
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|newkey
@@ -1183,6 +1178,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 if|if
 condition|(
 name|r
@@ -2281,12 +2277,9 @@ argument_list|(
 name|reply
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|skey
 operator|.
 name|type
@@ -2315,6 +2308,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|mutual_complete
 operator|=
 literal|1

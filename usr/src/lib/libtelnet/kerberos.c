@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kerberos.c	5.3 (Berkeley) %G%"
+literal|"@(#)kerberos.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -407,14 +407,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -449,6 +446,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ENCRYPTION */
+end_comment
 
 begin_function
 specifier|static
@@ -780,9 +781,15 @@ block|{
 name|KTEXT_ST
 name|auth
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
 name|Block
 name|enckey
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* ENCRYPTION */
 name|char
 name|instance
 index|[
@@ -1058,12 +1065,9 @@ literal|0
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 comment|/* 	 * If we are doing mutual authentication, get set up to send 	 * the challenge, and verify it when the response comes back. 	 */
 if|if
 condition|(
@@ -1177,6 +1181,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 if|if
 condition|(
 name|auth_debug_mode
@@ -1251,12 +1256,18 @@ name|int
 name|cnt
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
 name|Session_Key
 name|skey
 decl_stmt|;
 name|Block
 name|datablock
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* ENCRYPTION */
 name|char
 name|realm
 index|[
@@ -1506,6 +1517,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|krb_kntoln
 argument_list|(
 operator|&
@@ -1570,13 +1582,9 @@ break|break;
 case|case
 name|KRB_CHALLENGE
 case|:
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|ENCRYPTION
-argument_list|)
 name|Data
 argument_list|(
 name|ap
@@ -1594,6 +1602,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* ENCRYPTION */
 if|if
 condition|(
 operator|!
@@ -1777,6 +1786,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 break|break;
 default|default:
 if|if
@@ -1833,9 +1843,15 @@ name|int
 name|cnt
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
 name|Session_Key
 name|skey
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* ENCRYPTION */
 if|if
 condition|(
 name|cnt
@@ -1903,13 +1919,9 @@ name|AUTH_HOW_MUTUAL
 condition|)
 block|{
 comment|/* 			 * Send over the encrypted challenge. 		 	 */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|ENCRYPTION
-argument_list|)
 name|Data
 argument_list|(
 name|ap
@@ -1927,6 +1939,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* ENCRYPTION */
 name|Data
 argument_list|(
 name|ap
@@ -1984,6 +1997,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 return|return;
 block|}
 name|auth_finished
@@ -1997,12 +2011,9 @@ return|return;
 case|case
 name|KRB_RESPONSE
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 comment|/* 		 * Verify that the response to the challenge is correct. 		 */
 if|if
 condition|(
@@ -2042,6 +2053,7 @@ condition|)
 block|{
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|printf
 argument_list|(
 literal|"[ Kerberos V4 challenge failed!!! ]\r\n"
@@ -2051,12 +2063,9 @@ name|auth_send_retry
 argument_list|()
 expr_stmt|;
 return|return;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 block|}
 name|printf
 argument_list|(
@@ -2072,6 +2081,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 break|break;
 default|default:
 if|if

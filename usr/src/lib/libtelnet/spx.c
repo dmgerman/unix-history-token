@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spx.c	5.1 (Berkeley) %G%"
+literal|"@(#)spx.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,14 +212,11 @@ begin_comment
 comment|/* Accepted */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -237,6 +234,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ENCRYPTION */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|Schedule
@@ -247,7 +248,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|Block
-name|challange
+name|challenge
 init|=
 block|{
 literal|0
@@ -1969,7 +1970,7 @@ operator|==
 name|AUTH_HOW_MUTUAL
 condition|)
 block|{
-comment|/* 			 * Send over the encrypted challange. 		 	 */
+comment|/* 			 * Send over the encrypted challenge. 		 	 */
 name|input_token
 operator|.
 name|value

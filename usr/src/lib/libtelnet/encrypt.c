@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)encrypt.c	5.3 (Berkeley) %G%"
+literal|"@(#)encrypt.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,14 +32,11 @@ begin_comment
 comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *  * Export of this software from the United States of America is assumed  * to require a specific license from the United States Government.  * It is the responsibility of any person or organization contemplating  * export to obtain such a license before exporting.  *  * WITHIN THAT CONSTRAINT, permission to use, copy, modify, and  * distribute this software and its documentation for any purpose and  * without fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright notice and  * this permission notice appear in supporting documentation, and that  * the name of M.I.T. not be used in advertising or publicity pertaining  * to distribution of the software without specific, written prior  * permission.  M.I.T. makes no representations about the suitability of  * this software for any purpose.  It is provided "as is" without express  * or implied warranty.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -334,12 +331,9 @@ name|encryptions
 index|[]
 init|=
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|DES_ENCRYPTION
-argument_list|)
 block|{
 literal|"DES_CFB64"
 block|,
@@ -390,6 +384,7 @@ block|}
 block|,
 endif|#
 directive|endif
+comment|/* DES_ENCRYPTION */
 block|{
 literal|0
 block|, }
@@ -4460,6 +4455,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ENCRYPTION */
+end_comment
 
 end_unit
 

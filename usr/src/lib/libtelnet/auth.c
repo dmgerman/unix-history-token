@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)auth.c	5.3 (Berkeley) %G%"
+literal|"@(#)auth.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -447,6 +447,7 @@ block|}
 block|,
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 block|{
 name|AUTHTYPE_KERBEROS_V5
 block|,
@@ -497,6 +498,7 @@ block|}
 block|,
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 block|{
 name|AUTHTYPE_KERBEROS_V4
 block|,

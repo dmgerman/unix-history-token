@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.3 (Berkeley) %G%"
+literal|"@(#)misc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,12 +116,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|encrypt_init
 argument_list|(
 name|name
@@ -131,6 +128,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 if|if
 condition|(
 name|UserNameRequested
