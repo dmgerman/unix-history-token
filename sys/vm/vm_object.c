@@ -4964,25 +4964,6 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 * Page does not exist in parent, rename the 			 * page from the backing object to the main object.  			 * 			 * If the page was mapped to a process, it can remain  			 * mapped through the rename. 			 */
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|queue
-operator|-
-name|p
-operator|->
-name|pc
-operator|)
-operator|==
-name|PQ_CACHE
-condition|)
-name|vm_page_deactivate
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|p
