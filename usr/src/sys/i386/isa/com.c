@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)com.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)com.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -443,7 +443,51 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/*if ((inb(dev->id_iobase+com_iir)& 0x38) == 0) 		return(1); printf("base %x val %x ", dev->id_iobase, 	inb(dev->id_iobase+com_iir));*/
+comment|/* force access to id reg */
+name|outb
+argument_list|(
+name|dev
+operator|->
+name|id_iobase
+operator|+
+name|com_cfcr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|dev
+operator|->
+name|id_iobase
+operator|+
+name|com_iir
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|inb
+argument_list|(
+name|dev
+operator|->
+name|id_iobase
+operator|+
+name|com_iir
+argument_list|)
+operator|&
+literal|0x38
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 literal|1
@@ -583,8 +627,14 @@ directive|ifdef
 name|KGDB
 if|if
 condition|(
-literal|1
-comment|/*kgdb_dev == makedev(commajor, unit)*/
+name|kgdb_dev
+operator|==
+name|makedev
+argument_list|(
+name|commajor
+argument_list|,
+name|unit
+argument_list|)
 condition|)
 block|{
 if|if
@@ -3119,11 +3169,6 @@ block|{
 name|int
 name|unit
 decl_stmt|;
-specifier|extern
-name|int
-name|comopen
-parameter_list|()
-function_decl|;
 comment|/* locate the major number */
 for|for
 control|(
