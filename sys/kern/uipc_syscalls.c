@@ -1307,6 +1307,11 @@ condition|)
 goto|goto
 name|gotnoname
 goto|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
