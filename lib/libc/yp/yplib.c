@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.1 1994/08/07 23:04:55 wollman Exp $"
+literal|"$Id: yplib.c,v 1.2 1995/03/21 00:48:55 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1865,6 +1865,21 @@ name|outvallen
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Sanity check: no null keys allowed! */
+if|if
+condition|(
+name|inkey
+operator|==
+name|NULL
+operator|||
+operator|*
+name|inkey
+operator|==
+literal|'\0'
+condition|)
+return|return
+name|YPERR_KEY
+return|;
 name|again
 label|:
 if|if
@@ -2663,6 +2678,21 @@ name|outvallen
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Sanity check: no null keys allowed! */
+if|if
+condition|(
+name|inkey
+operator|==
+name|NULL
+operator|||
+operator|*
+name|inkey
+operator|==
+literal|'\0'
+condition|)
+return|return
+name|YPERR_KEY
+return|;
 name|again
 label|:
 if|if
