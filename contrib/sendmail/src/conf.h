@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.496.4.43 2001/05/20 22:29:59 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.496.4.54 2001/07/31 22:30:24 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -3087,6 +3087,17 @@ begin_comment
 comment|/* use sa_sigaction field */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASSTRERROR
+value|1
+end_define
+
+begin_comment
+comment|/* has strerror(3) */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -5762,6 +5773,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HASSETREUID
+value|0
+end_define
+
+begin_comment
+comment|/* BSD-OS has broken setreuid(2) emulation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HASSETSID
 value|1
 end_define
@@ -5790,6 +5812,17 @@ end_define
 
 begin_comment
 comment|/* has fchmod(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFCHOWN
+value|1
+end_define
+
+begin_comment
+comment|/* has fchown(2) syscall */
 end_comment
 
 begin_define
@@ -6033,6 +6066,43 @@ end_endif
 
 begin_comment
 comment|/* defined(_BSDI_VERSION)&& _BSDI_VERSION>= 199701 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_BSDI_VERSION
+argument_list|)
+operator|&&
+name|_BSDI_VERSION
+operator|>=
+literal|199910
+end_if
+
+begin_comment
+comment|/* on 4.x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASURANDOMDEV
+value|1
+end_define
+
+begin_comment
+comment|/* has /dev/urandom(4) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(_BSDI_VERSION)&& _BSDI_VERSION>= 199910 */
 end_comment
 
 begin_endif
@@ -11241,6 +11311,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|HASFCHOWN
+value|1
+end_define
+
+begin_comment
+comment|/* has fchown(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HASSETSID
 value|1
 end_define
@@ -15979,6 +16060,28 @@ end_endif
 
 begin_comment
 comment|/* ! S_IWOTH */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_ACCMODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_ACCMODE
+value|(O_RDONLY|O_WRONLY|O_RDWR)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! O_ACCMODE */
 end_comment
 
 begin_comment
