@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.3 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1448,6 +1448,9 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|domainp
 operator|=
 name|index
@@ -1458,7 +1461,19 @@ literal|'.'
 argument_list|)
 operator|+
 literal|1
-expr_stmt|;
+operator|)
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+literal|1
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|cp
 operator|=
 name|domainp
