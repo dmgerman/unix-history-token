@@ -686,21 +686,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_function_decl
+name|int
+name|wcswidth
+parameter_list|(
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/* XXX: not implemented */
-end_comment
-
-begin_endif
-unit|int	wcswidth(const wchar_t *, size_t); int	wcwidth(wchar_t);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|int
+name|wcwidth
+parameter_list|(
+name|wchar_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
