@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) 6/7/93"
+literal|"@(#)main.c	8.3 (Berkeley) 7/13/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -581,7 +581,7 @@ end_comment
 begin_expr_stmt
 name|DtableSize
 operator|=
-name|getdtablesize
+name|getdtsize
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -924,6 +924,21 @@ expr_stmt|;
 end_if
 
 begin_comment
+comment|/* our real uid will have to be root -- we will trash this later */
+end_comment
+
+begin_expr_stmt
+name|setuid
+argument_list|(
+operator|(
+name|uid_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Handle any non-getoptable constructions. */
 end_comment
 
@@ -946,17 +961,25 @@ name|FALSE
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__osf__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX3
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvx"
+value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvX:x"
 end_define
 
 begin_else
@@ -968,7 +991,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtv"
+value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvX:"
 end_define
 
 begin_endif
@@ -1036,8 +1059,7 @@ name|void
 operator|)
 name|setgid
 argument_list|(
-name|getrgid
-argument_list|()
+name|RealGid
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1045,8 +1067,7 @@ name|void
 operator|)
 name|setuid
 argument_list|(
-name|getruid
-argument_list|()
+name|RealUid
 argument_list|)
 expr_stmt|;
 name|safecf
@@ -1901,8 +1922,7 @@ directive|ifdef
 name|DAEMON
 if|if
 condition|(
-name|getuid
-argument_list|()
+name|RealUid
 operator|!=
 literal|0
 condition|)
@@ -2041,8 +2061,7 @@ case|:
 comment|/* select configuration file (already done) */
 if|if
 condition|(
-name|getuid
-argument_list|()
+name|RealUid
 operator|!=
 literal|0
 condition|)
@@ -2408,6 +2427,64 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+literal|'X'
+case|:
+comment|/* traffic log file */
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
+expr_stmt|;
+name|TrafficLogFile
+operator|=
+name|fopen
+argument_list|(
+name|optarg
+argument_list|,
+literal|"a"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TrafficLogFile
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"cannot open %s"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+ifdef|#
+directive|ifdef
+name|HASSETVBUF
+name|setvbuf
+argument_list|(
+name|TrafficLogFile
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+name|BUFSIZ
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|setlinebuf
+argument_list|(
+name|TrafficLogFile
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
 comment|/* compatibility flags */
 case|case
 literal|'c'
@@ -2494,13 +2571,21 @@ break|break;
 endif|#
 directive|endif
 comment|/* DBM */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__osf__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX3
+argument_list|)
 case|case
 literal|'x'
 case|:
-comment|/* random flag that DEC OSF/1 mailx passes */
+comment|/* random flag that OSF/1& AIX mailx passes */
 break|break;
 endif|#
 directive|endif
@@ -2657,8 +2742,7 @@ if|if
 condition|(
 name|queuemode
 operator|&&
-name|getuid
-argument_list|()
+name|RealUid
 operator|!=
 literal|0
 condition|)
@@ -2693,8 +2777,7 @@ name|stbuf
 operator|.
 name|st_uid
 operator|!=
-name|getuid
-argument_list|()
+name|RealUid
 condition|)
 block|{
 comment|/* nope, really a botch */
@@ -2739,8 +2822,7 @@ name|void
 operator|)
 name|setgid
 argument_list|(
-name|getgid
-argument_list|()
+name|RealGid
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2748,8 +2830,7 @@ name|void
 operator|)
 name|setuid
 argument_list|(
-name|getuid
-argument_list|()
+name|RealUid
 argument_list|)
 expr_stmt|;
 comment|/* freeze the configuration */
@@ -2841,6 +2922,21 @@ name|FALSE
 argument_list|,
 name|CurEnv
 argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|ConfigLevel
+operator|<
+literal|3
+condition|)
+block|{
+name|UseErrorsTo
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 end_if
@@ -3043,10 +3139,9 @@ argument_list|,
 name|QueueDir
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+name|ExitStat
+operator|=
 name|EX_SOFTWARE
-argument_list|)
 expr_stmt|;
 block|}
 end_if
@@ -3061,12 +3156,23 @@ condition|(
 name|ExitStat
 operator|!=
 name|EX_OK
+operator|&&
+name|OpMode
+operator|!=
+name|MD_TEST
 condition|)
+block|{
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|ExitStat
 argument_list|)
 expr_stmt|;
+block|}
 end_if
 
 begin_comment
@@ -3093,6 +3199,11 @@ argument_list|)
 expr_stmt|;
 name|printqueue
 argument_list|()
+expr_stmt|;
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
@@ -3122,6 +3233,11 @@ argument_list|(
 name|TRUE
 argument_list|,
 name|CurEnv
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|RealUid
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4422,18 +4538,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* post statistics */
-end_comment
-
-begin_expr_stmt
-name|poststats
-argument_list|(
-name|StatFile
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4506,6 +4610,18 @@ name|EX_OK
 expr_stmt|;
 end_if
 
+begin_comment
+comment|/* reset uid for process accounting */
+end_comment
+
+begin_expr_stmt
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|exit
 argument_list|(
@@ -4547,6 +4663,12 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* reset uid for process accounting */
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_OK

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.1 (Berkeley) 6/7/93"
+literal|"@(#)clock.c	8.2 (Berkeley) 7/13/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,6 +432,14 @@ init|=
 name|getpid
 argument_list|()
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SIG_UNBLOCK
+name|sigset_t
+name|ss
+decl_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -561,6 +569,36 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|SIG_UNBLOCK
+comment|/* unblock SIGALRM signal */
+name|sigemptyset
+argument_list|(
+operator|&
+name|ss
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|ss
+argument_list|,
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+name|sigprocmask
+argument_list|(
+name|SIG_UNBLOCK
+argument_list|,
+operator|&
+name|ss
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
 name|SIGVTALRM
 comment|/* reset 4.2bsd signal mask to allow future alarms */
 operator|(
@@ -583,6 +621,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SIGVTALRM */
+endif|#
+directive|endif
+comment|/* SIG_UNBLOCK */
 name|f
 operator|=
 name|ev

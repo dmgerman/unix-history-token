@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.1 (Berkeley) 6/7/93"
+literal|"@(#)headers.c	8.2 (Berkeley) 7/11/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,6 +406,36 @@ condition|)
 block|{
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|31
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"comparing header from (%s) against default (%s or %s)\n"
+argument_list|,
+name|fvalue
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_user
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|e
 operator|->
 name|e_from
@@ -414,6 +444,7 @@ name|q_paddr
 operator|!=
 name|NULL
 operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|fvalue
@@ -426,6 +457,20 @@ name|q_paddr
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|fvalue
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_user
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 return|return
 operator|(

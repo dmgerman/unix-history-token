@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.1 (Berkeley) 6/7/93"
+literal|"@(#)savemail.c	8.3 (Berkeley) 7/13/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -2009,6 +2009,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* mark statistics */
+end_comment
+
+begin_expr_stmt
+name|markstats
+argument_list|(
+name|ee
+argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* actually deliver the error message */
 end_comment
 
@@ -2376,6 +2394,8 @@ condition|(
 name|bitset
 argument_list|(
 name|QBADADDR
+operator||
+name|QREPORT
 argument_list|,
 name|q
 operator|->
@@ -2390,7 +2410,7 @@ condition|)
 block|{
 name|putline
 argument_list|(
-literal|"   ----- The following addresses failed -----"
+literal|"   ----- The following addresses had delivery problems -----"
 argument_list|,
 name|fp
 argument_list|,
@@ -2410,25 +2430,56 @@ name|q_alias
 operator|!=
 name|NULL
 condition|)
-name|putline
+name|strcpy
 argument_list|(
+name|buf
+argument_list|,
 name|q
 operator|->
 name|q_alias
 operator|->
 name|q_paddr
-argument_list|,
-name|fp
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
 else|else
-name|putline
+name|strcpy
 argument_list|(
+name|buf
+argument_list|,
 name|q
 operator|->
 name|q_paddr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"  (hard error -- address deleted)"
+argument_list|)
+expr_stmt|;
+else|else
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"  (temporary failure -- will retry)"
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
 argument_list|,
 name|fp
 argument_list|,

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.1 (Berkeley) 6/7/93 (with daemon mode)"
+literal|"@(#)daemon.c	8.2 (Berkeley) 7/13/93 (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.1 (Berkeley) 6/7/93 (without daemon mode)"
+literal|"@(#)daemon.c	8.2 (Berkeley) 7/13/93 (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,6 +277,24 @@ goto|goto
 name|severe
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|_SCO_unix_
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|sp
+operator|->
+name|s_port
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|DaemonAddr
 operator|.
 name|sin
@@ -287,6 +305,8 @@ name|sp
 operator|->
 name|s_port
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	**  Try to actually open the connection. 	*/
 if|if
@@ -1459,6 +1479,25 @@ name|v
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+ifdef|#
+directive|ifdef
+name|_SCO_unix_
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|sp
+operator|->
+name|s_port
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|DaemonAddr
 operator|.
 name|sin
@@ -1469,6 +1508,9 @@ name|sp
 operator|->
 name|s_port
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 break|break;
 endif|#
@@ -2010,12 +2052,28 @@ name|EX_OSERR
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|_SCO_unix_
+name|port
+operator|=
+name|htons
+argument_list|(
+name|sp
+operator|->
+name|s_port
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|port
 operator|=
 name|sp
 operator|->
 name|s_port
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 switch|switch
 condition|(
@@ -2997,6 +3055,25 @@ name|sp
 operator|!=
 name|NULL
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|_SCO_unix_
+name|fa
+operator|.
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|sp
+operator|->
+name|s_port
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fa
 operator|.
 name|sin
@@ -3007,6 +3084,9 @@ name|sp
 operator|->
 name|s_port
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 else|else
 name|fa
 operator|.

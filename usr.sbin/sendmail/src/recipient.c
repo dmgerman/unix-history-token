@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.1 (Berkeley) 6/27/93"
+literal|"@(#)recipient.c	8.3 (Berkeley) 7/13/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -1111,8 +1111,9 @@ name|safefile
 argument_list|(
 name|buf
 argument_list|,
-name|getruid
-argument_list|()
+name|RealUid
+argument_list|,
+name|TRUE
 argument_list|,
 name|S_IWRITE
 operator||
@@ -2000,13 +2001,11 @@ operator|)
 return|;
 name|euid
 operator|=
-name|getruid
-argument_list|()
+name|RealUid
 expr_stmt|;
 name|egid
 operator|=
-name|getrgid
-argument_list|()
+name|RealGid
 expr_stmt|;
 if|if
 condition|(
@@ -2334,6 +2333,8 @@ argument_list|(
 name|fname
 argument_list|,
 name|uid
+argument_list|,
+name|forwarding
 argument_list|,
 name|S_IREAD
 argument_list|)

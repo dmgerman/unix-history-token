@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stats.c	8.1 (Berkeley) 6/7/93"
+literal|"@(#)stats.c	8.2 (Berkeley) 7/11/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,18 @@ name|statistics
 name|Stat
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|GotStats
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set when we have stats to merge */
+end_comment
 
 begin_define
 define|#
@@ -186,6 +198,10 @@ name|e_msgsize
 argument_list|)
 expr_stmt|;
 block|}
+name|GotStats
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 end_block
 
@@ -230,6 +246,9 @@ condition|(
 name|sfile
 operator|==
 name|NULL
+operator|||
+operator|!
+name|GotStats
 condition|)
 return|return;
 operator|(
@@ -439,6 +458,20 @@ name|close
 argument_list|(
 name|fd
 argument_list|)
+expr_stmt|;
+comment|/* clear the structure to avoid future disappointment */
+name|bzero
+argument_list|(
+operator|&
+name|Stat
+argument_list|,
+sizeof|sizeof
+name|stat
+argument_list|)
+expr_stmt|;
+name|GotStats
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
 end_block

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.1 (Berkeley) 6/7/93"
+literal|"@(#)readcf.c	8.2 (Berkeley) 7/13/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -3548,8 +3548,7 @@ condition|(
 operator|!
 name|safe
 operator|&&
-name|getuid
-argument_list|()
+name|RealUid
 operator|==
 literal|0
 condition|)
@@ -3611,8 +3610,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getuid
-argument_list|()
+name|RealUid
 operator|!=
 name|geteuid
 argument_list|()
@@ -3637,8 +3635,7 @@ name|void
 operator|)
 name|setgid
 argument_list|(
-name|getgid
-argument_list|()
+name|RealGid
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3646,8 +3643,7 @@ name|void
 operator|)
 name|setuid
 argument_list|(
-name|getuid
-argument_list|()
+name|RealUid
 argument_list|)
 expr_stmt|;
 block|}
