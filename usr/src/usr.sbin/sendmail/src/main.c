@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.65 (Berkeley) %G%"
+literal|"@(#)main.c	6.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -514,6 +514,15 @@ specifier|extern
 name|char
 modifier|*
 name|getauthinfo
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|macvalue
 parameter_list|()
 function_decl|;
 end_function_decl
