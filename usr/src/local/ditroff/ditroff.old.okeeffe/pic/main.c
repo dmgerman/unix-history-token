@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c	(Berkeley)	1.6	83/12/19	*/
+comment|/* main.c	(Berkeley)	1.7	83/12/19	*/
 end_comment
 
 begin_include
@@ -27,9 +27,11 @@ directive|include
 file|"dev.h"
 end_include
 
-begin_empty
-empty|#idndef DEVDIR
-end_empty
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEVDIR
+end_ifndef
 
 begin_define
 define|#
