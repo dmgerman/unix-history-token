@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ed.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"el.h"
 end_include
 
@@ -475,14 +469,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|cxdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|eddriver
 decl_stmt|;
 end_decl_stmt
 
@@ -940,20 +926,6 @@ block|{
 comment|/* Sensitive TTY */
 comment|/* Sensitive BIO */
 comment|/* Sensitive NET */
-if|#
-directive|if
-name|NED
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_NET
-block|,
-operator|&
-name|eddriver
-block|}
-block|,
-endif|#
-directive|endif
 if|#
 directive|if
 name|NFE
