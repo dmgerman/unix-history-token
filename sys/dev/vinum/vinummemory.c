@@ -460,7 +460,7 @@ name|total_malloced
 operator|+=
 name|size
 expr_stmt|;
-name|getmicrotime
+name|microtime
 argument_list|(
 operator|&
 name|malloced
@@ -679,7 +679,7 @@ name|f
 operator|++
 expr_stmt|;
 comment|/* skip the / */
-name|getmicrotime
+name|microtime
 argument_list|(
 operator|&
 name|freeinfo
