@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_isa.h"
 end_include
 
@@ -207,6 +213,23 @@ include|#
 directive|include
 file|<machine/vm86.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ELAN
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/elan_mmcr.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2020,6 +2043,24 @@ expr_stmt|;
 comment|/* Reset. */
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|CPU_ELAN
+if|if
+condition|(
+name|elan_mmcr
+operator|!=
+name|NULL
+condition|)
+comment|/* SYS_RST */
+name|elan_mmcr
+operator|->
+name|RESCFG
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Attempt to do a CPU reset via the keyboard controller, 	 * do not turn of the GateA20, as any machine that fails 	 * to do the reset here would then end up in no man's land. 	 */
 if|#
 directive|if
