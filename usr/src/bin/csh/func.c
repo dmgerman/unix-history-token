@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c 4.2 %G%"
+literal|"@(#)func.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3891,6 +3891,14 @@ block|,
 name|LIM_CORE
 block|,
 literal|"coredumpsize"
+block|,
+literal|1024
+block|,
+literal|"kbytes"
+block|,
+name|LIM_MAXRSS
+block|,
+literal|"memoryuse"
 block|,
 literal|1024
 block|,
