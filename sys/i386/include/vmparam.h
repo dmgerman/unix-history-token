@@ -215,7 +215,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SHMAXPGS
+name|SHMMAXPGS
 end_ifndef
 
 begin_define
