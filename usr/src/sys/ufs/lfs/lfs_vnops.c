@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	6.17	85/03/19	*/
+comment|/*	lfs_vnops.c	6.18	85/05/22	*/
 end_comment
 
 begin_include
@@ -2443,7 +2443,7 @@ name|u
 operator|.
 name|u_error
 operator|=
-name|ENXIO
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|out
@@ -2554,6 +2554,10 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|u
+operator|.
+name|u_error
+operator|=
 name|chmod1
 argument_list|(
 name|ip
@@ -2663,6 +2667,10 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
 name|chmod1
 argument_list|(
 name|ip
@@ -2708,6 +2716,19 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|ip
+operator|->
+name|i_fs
+operator|->
+name|fs_ronly
+condition|)
+return|return
+operator|(
+name|EROFS
+operator|)
+return|;
 name|ip
 operator|->
 name|i_mode
@@ -2722,6 +2743,18 @@ operator|.
 name|u_uid
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+operator|)
+operator|!=
+name|IFDIR
+condition|)
 name|mode
 operator|&=
 operator|~
@@ -2780,6 +2813,11 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -3024,6 +3062,19 @@ name|change
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|ip
+operator|->
+name|i_fs
+operator|->
+name|fs_ronly
+condition|)
+return|return
+operator|(
+name|EROFS
+operator|)
+return|;
 if|if
 condition|(
 name|uid
@@ -3279,6 +3330,28 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_fs
+operator|->
+name|fs_ronly
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|EROFS
+expr_stmt|;
+name|iput
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|u
 operator|.
 name|u_error
