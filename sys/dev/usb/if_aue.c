@@ -581,7 +581,7 @@ block|,
 name|USB_PRODUCT_ELECOM_LDUSBTX1
 block|}
 block|,
-literal|0
+name|LSYS
 block|}
 block|,
 block|{
@@ -601,7 +601,7 @@ block|,
 name|USB_PRODUCT_ELECOM_LDUSBTX3
 block|}
 block|,
-name|PII
+name|LSYS
 block|}
 block|,
 block|{
