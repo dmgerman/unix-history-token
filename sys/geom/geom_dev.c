@@ -1189,13 +1189,6 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|error
 operator|!=
 literal|0
 operator|&&
@@ -1223,7 +1216,6 @@ expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 name|mtx_lock
 argument_list|(
