@@ -2141,7 +2141,6 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
 name|sc
 operator|->
 name|tz_zone
@@ -2153,9 +2152,7 @@ index|]
 operator|!=
 operator|-
 literal|1
-operator|)
 operator|&&
-operator|(
 name|temp
 operator|>=
 name|sc
@@ -2166,7 +2163,6 @@ name|ac
 index|[
 name|i
 index|]
-operator|)
 condition|)
 block|{
 name|newactive
@@ -2215,14 +2211,6 @@ index|[
 name|i
 index|]
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|getnanotime
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|tz_cooling_started
 argument_list|)
 expr_stmt|;
 block|}
@@ -2493,6 +2481,14 @@ operator|->
 name|tz_active
 operator|=
 name|newactive
+expr_stmt|;
+name|getnanotime
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|tz_cooling_started
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* XXX (de)activate any passive cooling that may be required. */

@@ -451,7 +451,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Quirk flags. */
+comment|/*  * Quirk flags.  *  * ACPI_Q_BROKEN: Disables all ACPI support.  * ACPI_Q_TIMER: Disables support for the ACPI timer.  * ACPI_Q_MADT_IRQ0: Specifies that ISA IRQ 0 is wired up to pin 0 of the  *	first APIC and that the MADT should force that by ignoring the PC-AT  *	compatible flag and ignoring overrides that redirect IRQ 0 to pin 2.  */
 end_comment
 
 begin_decl_stmt
@@ -475,10 +475,6 @@ name|ACPI_Q_BROKEN
 value|(1<< 0)
 end_define
 
-begin_comment
-comment|/* Disable ACPI completely. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -486,9 +482,12 @@ name|ACPI_Q_TIMER
 value|(1<< 1)
 end_define
 
-begin_comment
-comment|/* Disable ACPI timer. */
-end_comment
+begin_define
+define|#
+directive|define
+name|ACPI_Q_MADT_IRQ0
+value|(1<< 2)
+end_define
 
 begin_comment
 comment|/*  * Note that the low ivar values are reserved to provide  * interface compatibility with ISA drivers which can also  * attach to ACPI.  */
@@ -1148,13 +1147,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|resource
-modifier|*
+name|int
 name|acpi_bus_alloc_gas
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
+modifier|*
+name|type
 parameter_list|,
 name|int
 modifier|*
@@ -1163,6 +1164,12 @@ parameter_list|,
 name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|gas
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+modifier|*
+name|res
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1960,6 +1967,10 @@ name|res
 parameter_list|,
 name|int
 name|idx
+parameter_list|,
+name|int
+modifier|*
+name|type
 parameter_list|,
 name|int
 modifier|*
