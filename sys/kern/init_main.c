@@ -2311,7 +2311,17 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|error
