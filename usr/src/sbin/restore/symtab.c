@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.11	(Berkeley)	83/05/14"
+literal|"@(#)symtab.c	3.12	(Berkeley)	83/05/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -1099,6 +1099,9 @@ name|entry
 modifier|*
 name|np
 decl_stmt|;
+name|ino_t
+name|inum
+decl_stmt|;
 if|if
 condition|(
 name|ep
@@ -1192,11 +1195,15 @@ operator|==
 name|ep
 condition|)
 block|{
-name|deleteino
-argument_list|(
+name|inum
+operator|=
 name|ep
 operator|->
 name|e_ino
+expr_stmt|;
+name|deleteino
+argument_list|(
+name|inum
 argument_list|)
 expr_stmt|;
 if|if
@@ -1209,9 +1216,7 @@ name|NIL
 condition|)
 name|addino
 argument_list|(
-name|ep
-operator|->
-name|e_ino
+name|inum
 argument_list|,
 name|ep
 operator|->
