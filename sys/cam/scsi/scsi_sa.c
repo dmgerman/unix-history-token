@@ -8189,11 +8189,9 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-literal|0
+name|CAM_RETRY_SELTO
 argument_list|,
 name|SF_NO_PRINT
-operator||
-name|SF_RETRY_SELTO
 operator||
 name|SF_RETRY_UA
 argument_list|,
@@ -8266,13 +8264,11 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-literal|0
+name|CAM_RETRY_SELTO
 argument_list|,
 name|SF_NO_PRINT
 operator||
 name|SF_RETRY_UA
-operator||
-name|SF_RETRY_SELTO
 argument_list|,
 operator|&
 name|softc
@@ -8326,7 +8322,7 @@ name|softc
 operator|->
 name|scsi_rev
 operator|>=
-name|SCSI_REV_3
+name|SCSI_REV_SPC
 condition|)
 block|{
 name|softc

@@ -3087,8 +3087,15 @@ end_function
 begin_define
 define|#
 directive|define
+name|SES_CFLAGS
+value|CAM_RETRY_SELTO
+end_define
+
+begin_define
+define|#
+directive|define
 name|SES_FLAGS
-value|SF_NO_PRINT | SF_RETRY_SELTO | SF_RETRY_UA
+value|SF_NO_PRINT | SF_RETRY_UA
 end_define
 
 begin_function
@@ -3254,7 +3261,7 @@ name|ccb
 argument_list|,
 name|seserror
 argument_list|,
-literal|0
+name|SES_CFLAGS
 argument_list|,
 name|SES_FLAGS
 argument_list|,

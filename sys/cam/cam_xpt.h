@@ -176,6 +176,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|xpt_path_string
+parameter_list|(
+name|struct
+name|cam_path
+modifier|*
+name|path
+parameter_list|,
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|size_t
+name|str_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|path_id_t
 name|xpt_path_path_id
 parameter_list|(

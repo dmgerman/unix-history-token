@@ -70,11 +70,9 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * API functions  */
-end_comment
-
 begin_function_decl
+name|__BEGIN_DECLS
+comment|/*  * API functions  */
 name|int
 name|sbuf_new
 parameter_list|(
@@ -132,6 +130,7 @@ name|sbuf
 modifier|*
 name|s
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -148,6 +147,7 @@ name|sbuf
 modifier|*
 name|s
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -248,6 +248,10 @@ name|s
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

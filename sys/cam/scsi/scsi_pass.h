@@ -28,6 +28,10 @@ directive|include
 file|<cam/cam_ccb.h>
 end_include
 
+begin_comment
+comment|/*  * Convert to using a pointer to a ccb in the next major version.  * This should allow us to avoid an extra copy of the CCB data.  */
+end_comment
+
 begin_define
 define|#
 directive|define

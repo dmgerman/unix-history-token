@@ -34,6 +34,27 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CAM_NEW_TRAN_CODE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CAM_NEW_TRAN_CODE */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -526,8 +547,6 @@ init|=
 literal|0x21
 operator||
 name|XPT_FC_DEV_QUEUED
-operator||
-name|XPT_FC_XPT_ONLY
 block|,
 comment|/* HBA execute engine request */
 comment|/* Target mode commands: 0x30->0x3F */
@@ -655,6 +674,101 @@ parameter_list|)
 define|\
 value|(((ccb)->ccb_h.func_code& XPT_FC_QUEUED) != 0)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CAM_NEW_TRAN_CODE
+end_ifdef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|PROTO_UNKNOWN
+block|,
+name|PROTO_UNSPECIFIED
+block|,
+name|PROTO_SCSI
+block|,
+comment|/* Small Computer System Interface */
+name|PROTO_ATA
+block|,
+comment|/* AT Attachment */
+name|PROTO_ATAPI
+block|,
+comment|/* AT Attachment Packetized Interface */
+block|}
+name|cam_proto
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|XPORT_UNKNOWN
+block|,
+name|XPORT_UNSPECIFIED
+block|,
+name|XPORT_SPI
+block|,
+comment|/* SCSI Parallel Interface */
+name|XPORT_FC
+block|,
+comment|/* Fiber Channel */
+name|XPORT_SSA
+block|,
+comment|/* Serial Storage Architecture */
+name|XPORT_USB
+block|,
+comment|/* Universal Serial Bus */
+name|XPORT_PPB
+block|,
+comment|/* Parallel Port Bus */
+name|XPORT_ATA
+comment|/* AT Attachment */
+block|}
+name|cam_xport
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|PROTO_VERSION_UNKNOWN
+value|(UINT_MAX - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_VERSION_UNSPECIFIED
+value|UINT_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|XPORT_VERSION_UNKNOWN
+value|(UINT_MAX - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XPORT_VERSION_UNSPECIFIED
+value|UINT_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CAM_NEW_TRAN_CODE */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -893,7 +1007,7 @@ literal|252
 index|]
 decl_stmt|;
 name|u_int8_t
-name|inq_len
+name|reserved
 decl_stmt|;
 name|u_int8_t
 name|serial_num_len
@@ -1641,8 +1755,34 @@ name|pi_miscflag
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CAM_NEW_TRAN_CODE
+end_ifdef
+
 begin_comment
 comment|/* Path Inquiry CCB */
+end_comment
+
+begin_struct
+struct|struct
+name|ccb_pathinq_settings_spi
+block|{
+name|u_int8_t
+name|ppr_options
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CAM_NEW_TRAN_CODE */
 end_comment
 
 begin_struct
@@ -1733,6 +1873,33 @@ name|u_int32_t
 name|base_transfer_speed
 decl_stmt|;
 comment|/* Base bus speed in KB/sec */
+ifdef|#
+directive|ifdef
+name|CAM_NEW_TRAN_CODE
+name|cam_proto
+name|protocol
+decl_stmt|;
+name|u_int
+name|protocol_version
+decl_stmt|;
+name|cam_xport
+name|transport
+decl_stmt|;
+name|u_int
+name|transport_version
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|ccb_pathinq_settings_spi
+name|spi
+decl_stmt|;
+block|}
+name|xport_specific
+union|;
+endif|#
+directive|endif
+comment|/* CAM_NEW_TRAN_CODE */
 block|}
 struct|;
 end_struct
@@ -2196,6 +2363,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CAM_NEW_TRAN_CODE
+end_ifndef
+
 begin_comment
 comment|/* Get/Set transfer rate/width/disconnection/tag queueing settings */
 end_comment
@@ -2263,6 +2436,172 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CAM_NEW_TRAN_CODE */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTS_TYPE_CURRENT_SETTINGS
+block|,
+name|CTS_TYPE_USER_SETTINGS
+block|}
+name|cts_type
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|ccb_trans_settings_scsi
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+define|#
+directive|define
+name|CTS_SCSI_VALID_TQ
+value|0x01
+name|u_int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|CTS_SCSI_FLAGS_TAG_ENB
+value|0x01
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ccb_trans_settings_spi
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+define|#
+directive|define
+name|CTS_SPI_VALID_SYNC_RATE
+value|0x01
+define|#
+directive|define
+name|CTS_SPI_VALID_SYNC_OFFSET
+value|0x02
+define|#
+directive|define
+name|CTS_SPI_VALID_BUS_WIDTH
+value|0x04
+define|#
+directive|define
+name|CTS_SPI_VALID_DISC
+value|0x08
+define|#
+directive|define
+name|CTS_SPI_VALID_PPR_OPTIONS
+value|0x10
+name|u_int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|CTS_SPI_FLAGS_DISC_ENB
+value|0x01
+define|#
+directive|define
+name|CTS_SPI_FLAGS_TAG_ENB
+value|0x02
+name|u_int
+name|sync_period
+decl_stmt|;
+name|u_int
+name|sync_offset
+decl_stmt|;
+name|u_int
+name|bus_width
+decl_stmt|;
+name|u_int
+name|ppr_options
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Get/Set transfer rate/width/disconnection/tag queueing settings */
+end_comment
+
+begin_struct
+struct|struct
+name|ccb_trans_settings
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+name|cts_type
+name|type
+decl_stmt|;
+comment|/* Current or User settings */
+name|cam_proto
+name|protocol
+decl_stmt|;
+name|u_int
+name|protocol_version
+decl_stmt|;
+name|cam_xport
+name|transport
+decl_stmt|;
+name|u_int
+name|transport_version
+decl_stmt|;
+union|union
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+name|struct
+name|ccb_trans_settings_scsi
+name|scsi
+decl_stmt|;
+block|}
+name|proto_specific
+union|;
+union|union
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+name|struct
+name|ccb_trans_settings_spi
+name|spi
+decl_stmt|;
+block|}
+name|xport_specific
+union|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CAM_NEW_TRAN_CODE */
+end_comment
 
 begin_comment
 comment|/*  * Calculate the geometry parameters for a device  * give the block size and volume size in blocks.  */

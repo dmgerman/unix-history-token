@@ -261,16 +261,11 @@ init|=
 literal|0x040000
 block|,
 comment|/* Send a Test Unit Ready command to the 				 * device, then retry the original command. 				 */
-name|SS_MANUAL
+name|SS_REQSENSE
 init|=
 literal|0x050000
 block|,
-comment|/*  				 * This error must be handled manually, 				 * i.e. the code must look at the asc and  				 * ascq values and determine the proper 				 * course of action. 				 */
-name|SS_TURSTART
-init|=
-literal|0x060000
-block|,
-comment|/* 				 * Send a Test Unit Ready command to the 				 * device, and if that fails, send a start  				 * unit. 				 */
+comment|/* Send a RequestSense command to the 				 * device, then retry the original command. 				 */
 name|SS_MASK
 init|=
 literal|0xff0000
@@ -301,7 +296,7 @@ name|SSQ_RANGE
 init|=
 literal|0x0400
 block|,
-comment|/* 					    * Yes, this is a hack.  Basically, 					    * if this flag is set then it 					    * represents an ascq range.  The 					    * "correct" way to implement the 					    * ranges might be to add a special 					    * field to the sense code table, 					    * but that would take up a lot of 					    * additional space.  This solution 					    * isn't as elegant, but is more  					    * space efficient. 					    */
+comment|/* 					    * This table entry represents the 					    * end of a range of ASCQs that 					    * have identical error actions 					    * and text. 					    */
 name|SSQ_PRINT_SENSE
 init|=
 literal|0x0800
@@ -326,36 +321,36 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* The default error action */
+comment|/* The default, retyable, error action */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SS_DEF
+name|SS_RDEF
 value|SS_RETRY|SSQ_DECREMENT_COUNT|SSQ_PRINT_SENSE|EIO
 end_define
 
 begin_comment
-comment|/* Default error action, without an error return value */
+comment|/* The retyable, error action, with table specified error code */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SS_NEDEF
+name|SS_RET
 value|SS_RETRY|SSQ_DECREMENT_COUNT|SSQ_PRINT_SENSE
 end_define
 
 begin_comment
-comment|/* Default error action, without sense printing or an error return value */
+comment|/* Fatal error action, with table specified error code */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SS_NEPDEF
-value|SS_RETRY|SSQ_DECREMENT_COUNT
+name|SS_FATAL
+value|SS_FAIL|SSQ_PRINT_SENSE
 end_define
 
 begin_struct
@@ -1650,12 +1645,12 @@ define|#
 directive|define
 name|SID_QUAL_LU_CONNECTED
 value|0x00
-comment|/* The specified peripheral device 					 * type is currently connected to 					 * logical unit.  If the target cannot 					 * determine whether or not a physical 					 * device is currently connected, it 					 * shall also use this peripheral 					 * qualifier when returning the INQUIRY 					 * data.  This peripheral qualifier 					 * does not mean that the device is 					 * ready for access by the initiator. 					 */
+comment|/* 					 * The specified peripheral device 					 * type is currently connected to 					 * logical unit.  If the target cannot 					 * determine whether or not a physical 					 * device is currently connected, it 					 * shall also use this peripheral 					 * qualifier when returning the INQUIRY 					 * data.  This peripheral qualifier 					 * does not mean that the device is 					 * ready for access by the initiator. 					 */
 define|#
 directive|define
 name|SID_QUAL_LU_OFFLINE
 value|0x01
-comment|/* The target is capable of supporting 					 * the specified peripheral device type 					 * on this logical unit; however, the 					 * physical device is not currently 					 * connected to this logical unit. 					 */
+comment|/* 					 * The target is capable of supporting 					 * the specified peripheral device type 					 * on this logical unit; however, the 					 * physical device is not currently 					 * connected to this logical unit. 					 */
 define|#
 directive|define
 name|SID_QUAL_RSVD
@@ -1664,7 +1659,7 @@ define|#
 directive|define
 name|SID_QUAL_BAD_LU
 value|0x03
-comment|/* The target is not capable of 					 * supporting a physical device on 					 * this logical unit. For this 					 * peripheral qualifier the peripheral 					 * device type shall be set to 1Fh to 					 * provide compatibility with previous 					 * versions of SCSI. All other 					 * peripheral device type values are 					 * reserved for this peripheral 					 * qualifier. 					 */
+comment|/* 					 * The target is not capable of 					 * supporting a physical device on 					 * this logical unit. For this 					 * peripheral qualifier the peripheral 					 * device type shall be set to 1Fh to 					 * provide compatibility with previous 					 * versions of SCSI. All other 					 * peripheral device type values are 					 * reserved for this peripheral 					 * qualifier. 					 */
 define|#
 directive|define
 name|SID_QUAL_IS_VENDOR_UNIQUE
@@ -1710,7 +1705,7 @@ name|SCSI_REV_2
 value|2
 define|#
 directive|define
-name|SCSI_REV_3
+name|SCSI_REV_SPC
 value|3
 define|#
 directive|define
@@ -1837,6 +1832,10 @@ define|#
 directive|define
 name|SID_SPI_CLOCK_DT_ST
 value|0x0C
+define|#
+directive|define
+name|SID_SPI_MASK
+value|0x0F
 name|u_int8_t
 name|spi3data
 decl_stmt|;
@@ -2345,11 +2344,29 @@ name|SCSI_STATUS_CMD_TERMINATED
 value|0x22
 end_define
 
+begin_comment
+comment|/* Obsolete in SAM-2 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SCSI_STATUS_QUEUE_FULL
 value|0x28
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_STATUS_ACA_ACTIVE
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_STATUS_TASK_ABORTED
+value|0x40
 end_define
 
 begin_struct
@@ -2436,12 +2453,39 @@ name|scsi_inquiry_pattern
 name|inq_pat
 decl_stmt|;
 name|int
+name|num_sense_keys
+decl_stmt|;
+name|int
 name|num_ascs
+decl_stmt|;
+name|struct
+name|sense_key_table_entry
+modifier|*
+name|sense_key_info
 decl_stmt|;
 name|struct
 name|asc_table_entry
 modifier|*
 name|asc_info
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sense_key_table_entry
+block|{
+name|u_int8_t
+name|sense_key
+decl_stmt|;
+name|u_int32_t
+name|action
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|desc
 decl_stmt|;
 block|}
 struct|;
@@ -2460,20 +2504,11 @@ decl_stmt|;
 name|u_int32_t
 name|action
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SCSI_NO_SENSE_STRINGS
-argument_list|)
 specifier|const
 name|char
 modifier|*
 name|desc
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -2516,6 +2551,22 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|SSS_FLAG_NONE
+init|=
+literal|0x00
+block|,
+name|SSS_FLAG_PRINT_COMMAND
+init|=
+literal|0x01
+block|}
+name|scsi_sense_string_flags
+typedef|;
+end_typedef
 
 begin_struct_decl
 struct_decl|struct
@@ -2562,13 +2613,20 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|__BEGIN_DECLS
-specifier|const
-name|char
-modifier|*
+name|void
 name|scsi_sense_desc
 parameter_list|(
+name|int
+name|sense_key
+parameter_list|,
 name|int
 name|asc
 parameter_list|,
@@ -2579,6 +2637,18 @@ name|struct
 name|scsi_inquiry_data
 modifier|*
 name|inq_data
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|sense_key_desc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|asc_desc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2587,16 +2657,32 @@ begin_function_decl
 name|scsi_sense_action
 name|scsi_error_action
 parameter_list|(
-name|int
-name|asc
-parameter_list|,
-name|int
-name|ascq
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
 parameter_list|,
 name|struct
 name|scsi_inquiry_data
 modifier|*
 name|inq_data
+parameter_list|,
+name|u_int32_t
+name|sense_flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|scsi_status_string
+parameter_list|(
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2606,6 +2692,63 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_function_decl
+name|int
+name|scsi_command_string
+parameter_list|(
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|scsi_sense_sbuf
+parameter_list|(
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|,
+name|scsi_sense_string_flags
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|scsi_sense_string
+parameter_list|(
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+parameter_list|,
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|int
+name|str_len
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -2653,6 +2796,57 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_function_decl
+name|int
+name|scsi_command_string
+parameter_list|(
+name|struct
+name|cam_device
+modifier|*
+name|device
+parameter_list|,
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|scsi_sense_sbuf
+parameter_list|(
+name|struct
+name|cam_device
+modifier|*
+name|device
+parameter_list|,
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|,
+name|scsi_sense_string_flags
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|char
@@ -2775,17 +2969,6 @@ directive|define
 name|SF_PRINT_ALWAYS
 value|0x08
 end_define
-
-begin_define
-define|#
-directive|define
-name|SF_RETRY_SELTO
-value|0x10
-end_define
-
-begin_comment
-comment|/* Retry selection timeouts */
-end_comment
 
 begin_function_decl
 specifier|const

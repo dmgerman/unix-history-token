@@ -131,7 +131,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Printf delay value (to prevent scrolling */
+comment|/* Printf delay value (to prevent scrolling) */
 end_comment
 
 begin_decl_stmt

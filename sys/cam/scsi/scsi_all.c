@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of Utility functions for all SCSI device types.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Implementation of Utility functions for all SCSI device types.  *  * Copyright (c) 1997, 1998, 1999 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -27,6 +27,12 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/libkern.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -42,6 +48,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -77,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<cam/scsi/scsi_all.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sbuf.h>
 end_include
 
 begin_ifndef
@@ -166,48 +184,74 @@ begin_comment
 comment|/* !_KERNEL */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
+name|int
+name|ascentrycomp
+parameter_list|(
 specifier|const
-name|char
+name|void
 modifier|*
-name|scsi_sense_key_text
-index|[]
-init|=
-block|{
-literal|"NO SENSE"
-block|,
-literal|"RECOVERED ERROR"
-block|,
-literal|"NOT READY"
-block|,
-literal|"MEDIUM ERROR"
-block|,
-literal|"HARDWARE FAILURE"
-block|,
-literal|"ILLEGAL REQUEST"
-block|,
-literal|"UNIT ATTENTION"
-block|,
-literal|"DATA PROTECT"
-block|,
-literal|"BLANK CHECK"
-block|,
-literal|"Vendor Specific"
-block|,
-literal|"COPY ABORTED"
-block|,
-literal|"ABORTED COMMAND"
-block|,
-literal|"EQUAL"
-block|,
-literal|"VOLUME OVERFLOW"
-block|,
-literal|"MISCOMPARE"
-block|,
-literal|"RESERVED"
-block|}
-decl_stmt|;
-end_decl_stmt
+name|key
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|member
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|senseentrycomp
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|member
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|fetchtableentries
+parameter_list|(
+name|int
+name|sense_key
+parameter_list|,
+name|int
+name|asc
+parameter_list|,
+name|int
+name|ascq
+parameter_list|,
+name|struct
+name|scsi_inquiry_data
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|sense_key_table_entry
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|asc_table_entry
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -310,10 +354,6 @@ name|ALL
 value|0xFFF
 end_define
 
-begin_comment
-comment|/*  * WARNING:  You must update the num_ops field below for this quirk table   * entry if you add more entries.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -355,9 +395,17 @@ block|,
 literal|"*"
 block|}
 block|,
-literal|1
+sizeof|sizeof
+argument_list|(
+name|plextor_cd_ops
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|op_table_entry
+argument_list|)
 block|,
-comment|/* number of vendor-specific opcodes for this entry */
 name|plextor_cd_ops
 block|}
 block|}
@@ -2568,6 +2616,16 @@ else|#
 directive|else
 end_else
 
+begin_decl_stmt
+specifier|const
+name|char
+name|empty_string
+index|[]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -2582,7 +2640,7 @@ parameter_list|,
 name|desc
 parameter_list|)
 define|\
-value|asc, ascq, action
+value|asc, ascq, action, empty_string
 end_define
 
 begin_endif
@@ -2601,9 +2659,168 @@ literal|"QUANTUM"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * WARNING:  You must update the num_ascs field below for this quirk table   * entry if you add more entries.  */
-end_comment
+begin_decl_stmt
+specifier|const
+name|struct
+name|sense_key_table_entry
+name|sense_key_table
+index|[]
+init|=
+block|{
+block|{
+name|SSD_KEY_NO_SENSE
+block|,
+name|SS_NOP
+block|,
+literal|"NO SENSE"
+block|}
+block|,
+block|{
+name|SSD_KEY_RECOVERED_ERROR
+block|,
+name|SS_NOP
+operator||
+name|SSQ_PRINT_SENSE
+block|,
+literal|"RECOVERED ERROR"
+block|}
+block|,
+block|{
+name|SSD_KEY_NOT_READY
+block|,
+name|SS_TUR
+operator||
+name|SSQ_MANY
+operator||
+name|SSQ_DECREMENT_COUNT
+operator||
+name|EBUSY
+block|,
+literal|"NOT READY"
+block|}
+block|,
+block|{
+name|SSD_KEY_MEDIUM_ERROR
+block|,
+name|SS_RDEF
+block|,
+literal|"MEDIUM ERROR"
+block|}
+block|,
+block|{
+name|SSD_KEY_HARDWARE_ERROR
+block|,
+name|SS_RDEF
+block|,
+literal|"HARDWARE FAILURE"
+block|}
+block|,
+block|{
+name|SSD_KEY_ILLEGAL_REQUEST
+block|,
+name|SS_FATAL
+operator||
+name|EINVAL
+block|,
+literal|"ILLEGAL REQUEST"
+block|}
+block|,
+block|{
+name|SSD_KEY_UNIT_ATTENTION
+block|,
+name|SS_FATAL
+operator||
+name|ENXIO
+block|,
+literal|"UNIT ATTENTION"
+block|}
+block|,
+block|{
+name|SSD_KEY_Vendor_Specific
+block|,
+name|SS_FATAL
+operator||
+name|EIO
+block|,
+literal|"Vendor Specific"
+block|}
+block|,
+block|{
+name|SSD_KEY_COPY_ABORTED
+block|,
+name|SS_FATAL
+operator||
+name|EIO
+block|,
+literal|"COPY ABORTED"
+block|}
+block|,
+block|{
+name|SSD_KEY_ABORTED_COMMAND
+block|,
+name|SS_RDEF
+block|,
+literal|"ABORTED COMMAND"
+block|}
+block|,
+block|{
+name|SSD_KEY_EQUAL
+block|,
+name|SS_NOP
+block|,
+literal|"EQUAL"
+block|}
+block|,
+block|{
+name|SSD_KEY_VOLUME_OVERFLOW
+block|,
+name|SS_FATAL
+operator||
+name|EIO
+block|,
+literal|"VOLUME OVERFLOW"
+block|}
+block|,
+block|{
+name|SSD_KEY_MISCOMPARE
+block|,
+name|SS_NOP
+block|,
+literal|"MISCOMPARE"
+block|}
+block|,
+block|{
+name|SSD_KEY_RESERVED
+block|,
+name|SS_FATAL
+operator||
+name|EIO
+block|,
+literal|"RESERVED"
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|sense_key_table_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|sense_key_table
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|sense_key_table
+index|[
+literal|0
+index|]
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2633,7 +2850,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|scsi_sense_quirk_entry
-name|asc_quirk_table
+name|sense_quirk_table
 index|[]
 init|=
 block|{
@@ -2651,9 +2868,23 @@ block|,
 literal|"*"
 block|}
 block|,
-literal|1
+comment|/*num_sense_keys*/
+literal|0
 block|,
-comment|/* number of vendor-specific sense codes for this entry */
+sizeof|sizeof
+argument_list|(
+name|quantum_fireball_entries
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|asc_table_entry
+argument_list|)
+block|,
+comment|/*sense key entries*/
+name|NULL
+block|,
 name|quantum_fireball_entries
 block|}
 block|}
@@ -2661,10 +2892,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
+name|int
+name|sense_quirk_table_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|sense_quirk_table
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|sense_quirk_table
+index|[
+literal|0
+index|]
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|asc_table_entry
-name|asc_text
+name|asc_table
 index|[]
 init|=
 block|{
@@ -2677,7 +2928,7 @@ literal|0x00
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEPDEF
+argument|SS_NOP
 argument_list|,
 literal|"No additional sense information"
 argument_list|)
@@ -2691,7 +2942,7 @@ literal|0x00
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Filemark detected"
 argument_list|)
@@ -2705,7 +2956,7 @@ literal|0x00
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"End-of-partition/medium detected"
 argument_list|)
@@ -2719,7 +2970,7 @@ literal|0x00
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Setmark detected"
 argument_list|)
@@ -2733,7 +2984,7 @@ literal|0x00
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Beginning-of-partition/medium detected"
 argument_list|)
@@ -2747,7 +2998,7 @@ literal|0x00
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"End-of-data detected"
 argument_list|)
@@ -2761,7 +3012,7 @@ literal|0x00
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"I/O process terminated"
 argument_list|)
@@ -2775,7 +3026,7 @@ literal|0x00
 argument_list|,
 literal|0x11
 argument_list|,
-argument|SS_NEDEF|EBUSY
+argument|SS_FATAL|EBUSY
 argument_list|,
 literal|"Audio play operation in progress"
 argument_list|)
@@ -2789,7 +3040,7 @@ literal|0x00
 argument_list|,
 literal|0x12
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP
 argument_list|,
 literal|"Audio play operation paused"
 argument_list|)
@@ -2803,7 +3054,7 @@ literal|0x00
 argument_list|,
 literal|0x13
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP
 argument_list|,
 literal|"Audio play operation successfully completed"
 argument_list|)
@@ -2817,7 +3068,7 @@ literal|0x00
 argument_list|,
 literal|0x14
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Audio play operation stopped due to error"
 argument_list|)
@@ -2831,7 +3082,7 @@ literal|0x00
 argument_list|,
 literal|0x15
 argument_list|,
-argument|SS_DEF
+argument|SS_NOP
 argument_list|,
 literal|"No current audio status to return"
 argument_list|)
@@ -2845,7 +3096,7 @@ literal|0x00
 argument_list|,
 literal|0x16
 argument_list|,
-argument|SS_NEDEF|EBUSY
+argument|SS_FATAL|EBUSY
 argument_list|,
 literal|"Operation in progress"
 argument_list|)
@@ -2859,7 +3110,7 @@ literal|0x00
 argument_list|,
 literal|0x17
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cleaning requested"
 argument_list|)
@@ -2873,7 +3124,7 @@ literal|0x01
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"No index/sector signal"
 argument_list|)
@@ -2887,7 +3138,7 @@ literal|0x02
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"No seek complete"
 argument_list|)
@@ -2901,7 +3152,7 @@ literal|0x03
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Peripheral device write fault"
 argument_list|)
@@ -2915,7 +3166,7 @@ literal|0x03
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"No write current"
 argument_list|)
@@ -2929,7 +3180,7 @@ literal|0x03
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Excessive write errors"
 argument_list|)
@@ -2985,7 +3236,7 @@ literal|0x04
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_NEDEF|ENXIO
+argument|SS_FATAL|ENXIO
 argument_list|,
 literal|"Logical unit not ready, manual intervention required"
 argument_list|)
@@ -2999,7 +3250,7 @@ literal|0x04
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_NEDEF|EBUSY
+argument|SS_FATAL|EBUSY
 argument_list|,
 literal|"Logical unit not ready, format in progress"
 argument_list|)
@@ -3013,7 +3264,7 @@ literal|0x04
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_NEDEF|EBUSY
+argument|SS_FATAL|EBUSY
 argument_list|,
 literal|"Logical unit not ready, rebuild in progress"
 argument_list|)
@@ -3027,7 +3278,7 @@ literal|0x04
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_NEDEF|EBUSY
+argument|SS_FATAL|EBUSY
 argument_list|,
 literal|"Logical unit not ready, recalculation in progress"
 argument_list|)
@@ -3041,7 +3292,7 @@ literal|0x04
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_NEDEF|EBUSY
+argument|SS_FATAL|EBUSY
 argument_list|,
 literal|"Logical unit not ready, operation in progress"
 argument_list|)
@@ -3055,7 +3306,7 @@ literal|0x04
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_NEDEF|EBUSY
+argument|SS_FATAL|EBUSY
 argument_list|,
 literal|"Logical unit not ready, long write in progress"
 argument_list|)
@@ -3069,7 +3320,7 @@ literal|0x05
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Logical unit does not respond to selection"
 argument_list|)
@@ -3083,7 +3334,7 @@ literal|0x06
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"No reference position found"
 argument_list|)
@@ -3097,7 +3348,7 @@ literal|0x07
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Multiple peripheral devices selected"
 argument_list|)
@@ -3111,7 +3362,7 @@ literal|0x08
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Logical unit communication failure"
 argument_list|)
@@ -3125,7 +3376,7 @@ literal|0x08
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Logical unit communication time-out"
 argument_list|)
@@ -3139,7 +3390,7 @@ literal|0x08
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Logical unit communication parity error"
 argument_list|)
@@ -3153,7 +3404,7 @@ literal|0x08
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Logical unit communication crc error (ultra-dma/32)"
 argument_list|)
@@ -3167,7 +3418,7 @@ literal|0x09
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Track following error"
 argument_list|)
@@ -3181,7 +3432,7 @@ literal|0x09
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Tracking servo failure"
 argument_list|)
@@ -3195,7 +3446,7 @@ literal|0x09
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Focus servo failure"
 argument_list|)
@@ -3209,7 +3460,7 @@ literal|0x09
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Spindle servo failure"
 argument_list|)
@@ -3223,7 +3474,7 @@ literal|0x09
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Head select fault"
 argument_list|)
@@ -3237,7 +3488,7 @@ literal|0x0A
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF|ENOSPC
+argument|SS_FATAL|ENOSPC
 argument_list|,
 literal|"Error log overflow"
 argument_list|)
@@ -3251,7 +3502,7 @@ literal|0x0B
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Warning"
 argument_list|)
@@ -3265,7 +3516,7 @@ literal|0x0B
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Specified temperature exceeded"
 argument_list|)
@@ -3279,7 +3530,7 @@ literal|0x0B
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Enclosure degraded"
 argument_list|)
@@ -3293,7 +3544,7 @@ literal|0x0C
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Write error"
 argument_list|)
@@ -3307,7 +3558,7 @@ literal|0x0C
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Write error - recovered with auto reallocation"
 argument_list|)
@@ -3321,7 +3572,7 @@ literal|0x0C
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Write error - auto reallocation failed"
 argument_list|)
@@ -3335,7 +3586,7 @@ literal|0x0C
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Write error - recommend reassignment"
 argument_list|)
@@ -3349,7 +3600,7 @@ literal|0x0C
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_NEPDEF
+argument|SS_RDEF
 argument_list|,
 literal|"Compression check miscompare error"
 argument_list|)
@@ -3363,7 +3614,7 @@ literal|0x0C
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Data expansion occurred during compression"
 argument_list|)
@@ -3377,7 +3628,7 @@ literal|0x0C
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Block not compressible"
 argument_list|)
@@ -3391,7 +3642,7 @@ literal|0x0C
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Write error - recovery needed"
 argument_list|)
@@ -3405,7 +3656,7 @@ literal|0x0C
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Write error - recovery failed"
 argument_list|)
@@ -3419,7 +3670,7 @@ literal|0x0C
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Write error - loss of streaming"
 argument_list|)
@@ -3433,7 +3684,7 @@ literal|0x0C
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Write error - padding blocks added"
 argument_list|)
@@ -3447,7 +3698,7 @@ literal|0x10
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"ID CRC or ECC error"
 argument_list|)
@@ -3461,7 +3712,7 @@ literal|0x11
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Unrecovered read error"
 argument_list|)
@@ -3475,7 +3726,7 @@ literal|0x11
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Read retries exhausted"
 argument_list|)
@@ -3489,7 +3740,7 @@ literal|0x11
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Error too long to correct"
 argument_list|)
@@ -3503,7 +3754,7 @@ literal|0x11
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Multiple read errors"
 argument_list|)
@@ -3517,7 +3768,7 @@ literal|0x11
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Unrecovered read error - auto reallocate failed"
 argument_list|)
@@ -3531,7 +3782,7 @@ literal|0x11
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"L-EC uncorrectable error"
 argument_list|)
@@ -3545,7 +3796,7 @@ literal|0x11
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"CIRC unrecovered error"
 argument_list|)
@@ -3559,7 +3810,7 @@ literal|0x11
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Data re-synchronization error"
 argument_list|)
@@ -3573,7 +3824,7 @@ literal|0x11
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Incomplete block read"
 argument_list|)
@@ -3587,7 +3838,7 @@ literal|0x11
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"No gap found"
 argument_list|)
@@ -3601,7 +3852,7 @@ literal|0x11
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Miscorrected error"
 argument_list|)
@@ -3615,7 +3866,7 @@ literal|0x11
 argument_list|,
 literal|0x0B
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Unrecovered read error - recommend reassignment"
 argument_list|)
@@ -3629,7 +3880,7 @@ literal|0x11
 argument_list|,
 literal|0x0C
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Unrecovered read error - recommend rewrite the data"
 argument_list|)
@@ -3643,7 +3894,7 @@ literal|0x11
 argument_list|,
 literal|0x0D
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"De-compression CRC error"
 argument_list|)
@@ -3657,7 +3908,7 @@ literal|0x11
 argument_list|,
 literal|0x0E
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cannot decompress using declared algorithm"
 argument_list|)
@@ -3671,7 +3922,7 @@ literal|0x11
 argument_list|,
 literal|0x0F
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Error reading UPC/EAN number"
 argument_list|)
@@ -3685,7 +3936,7 @@ literal|0x11
 argument_list|,
 literal|0x10
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Error reading ISRC number"
 argument_list|)
@@ -3699,7 +3950,7 @@ literal|0x11
 argument_list|,
 literal|0x11
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Read error - loss of streaming"
 argument_list|)
@@ -3713,7 +3964,7 @@ literal|0x12
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Address mark not found for id field"
 argument_list|)
@@ -3727,7 +3978,7 @@ literal|0x13
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Address mark not found for data field"
 argument_list|)
@@ -3741,7 +3992,7 @@ literal|0x14
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Recorded entity not found"
 argument_list|)
@@ -3755,7 +4006,7 @@ literal|0x14
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Record not found"
 argument_list|)
@@ -3769,7 +4020,7 @@ literal|0x14
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Filemark or setmark not found"
 argument_list|)
@@ -3783,7 +4034,7 @@ literal|0x14
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"End-of-data not found"
 argument_list|)
@@ -3797,7 +4048,7 @@ literal|0x14
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Block sequence error"
 argument_list|)
@@ -3811,7 +4062,7 @@ literal|0x14
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Record not found - recommend reassignment"
 argument_list|)
@@ -3825,7 +4076,7 @@ literal|0x14
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Record not found - data auto-reallocated"
 argument_list|)
@@ -3839,7 +4090,7 @@ literal|0x15
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Random positioning error"
 argument_list|)
@@ -3853,7 +4104,7 @@ literal|0x15
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Mechanical positioning error"
 argument_list|)
@@ -3867,7 +4118,7 @@ literal|0x15
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Positioning error detected by read of medium"
 argument_list|)
@@ -3881,7 +4132,7 @@ literal|0x16
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Data synchronization mark error"
 argument_list|)
@@ -3895,7 +4146,7 @@ literal|0x16
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Data sync error - data rewritten"
 argument_list|)
@@ -3909,7 +4160,7 @@ literal|0x16
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Data sync error - recommend rewrite"
 argument_list|)
@@ -3923,7 +4174,7 @@ literal|0x16
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Data sync error - data auto-reallocated"
 argument_list|)
@@ -3937,7 +4188,7 @@ literal|0x16
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Data sync error - recommend reassignment"
 argument_list|)
@@ -3951,7 +4202,7 @@ literal|0x17
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with no error correction applied"
 argument_list|)
@@ -3965,7 +4216,7 @@ literal|0x17
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with retries"
 argument_list|)
@@ -3979,7 +4230,7 @@ literal|0x17
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with positive head offset"
 argument_list|)
@@ -3993,7 +4244,7 @@ literal|0x17
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with negative head offset"
 argument_list|)
@@ -4007,7 +4258,7 @@ literal|0x17
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with retries and/or CIRC applied"
 argument_list|)
@@ -4021,7 +4272,7 @@ literal|0x17
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data using previous sector id"
 argument_list|)
@@ -4035,7 +4286,7 @@ literal|0x17
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data without ECC - data auto-reallocated"
 argument_list|)
@@ -4049,7 +4300,7 @@ literal|0x17
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data without ECC - recommend reassignment"
 argument_list|)
@@ -4063,7 +4314,7 @@ literal|0x17
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data without ECC - recommend rewrite"
 argument_list|)
@@ -4077,7 +4328,7 @@ literal|0x17
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data without ECC - data rewritten"
 argument_list|)
@@ -4091,7 +4342,7 @@ literal|0x18
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with error correction applied"
 argument_list|)
@@ -4105,7 +4356,7 @@ literal|0x18
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with error corr.& retries applied"
 argument_list|)
@@ -4119,7 +4370,7 @@ literal|0x18
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data - data auto-reallocated"
 argument_list|)
@@ -4133,7 +4384,7 @@ literal|0x18
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with CIRC"
 argument_list|)
@@ -4147,7 +4398,7 @@ literal|0x18
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with L-EC"
 argument_list|)
@@ -4161,7 +4412,7 @@ literal|0x18
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data - recommend reassignment"
 argument_list|)
@@ -4175,7 +4426,7 @@ literal|0x18
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data - recommend rewrite"
 argument_list|)
@@ -4189,7 +4440,7 @@ literal|0x18
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered data with ECC - data rewritten"
 argument_list|)
@@ -4203,7 +4454,7 @@ literal|0x19
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Defect list error"
 argument_list|)
@@ -4217,7 +4468,7 @@ literal|0x19
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Defect list not available"
 argument_list|)
@@ -4231,7 +4482,7 @@ literal|0x19
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Defect list error in primary list"
 argument_list|)
@@ -4245,7 +4496,7 @@ literal|0x19
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Defect list error in grown list"
 argument_list|)
@@ -4259,7 +4510,7 @@ literal|0x1A
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Parameter list length error"
 argument_list|)
@@ -4273,7 +4524,7 @@ literal|0x1B
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Synchronous data transfer error"
 argument_list|)
@@ -4287,7 +4538,7 @@ literal|0x1C
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Defect list not found"
 argument_list|)
@@ -4301,7 +4552,7 @@ literal|0x1C
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Primary defect list not found"
 argument_list|)
@@ -4315,7 +4566,7 @@ literal|0x1C
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Grown defect list not found"
 argument_list|)
@@ -4329,7 +4580,7 @@ literal|0x1D
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEPDEF
+argument|SS_FATAL
 argument_list|,
 literal|"Miscompare during verify operation"
 argument_list|)
@@ -4343,7 +4594,7 @@ literal|0x1E
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Recovered id with ecc correction"
 argument_list|)
@@ -4357,7 +4608,7 @@ literal|0x1F
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Partial defect list transfer"
 argument_list|)
@@ -4371,7 +4622,7 @@ literal|0x20
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_FATAL|EINVAL
 argument_list|,
 literal|"Invalid command operation code"
 argument_list|)
@@ -4385,7 +4636,7 @@ literal|0x21
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_FATAL|EINVAL
 argument_list|,
 literal|"Logical block address out of range"
 argument_list|)
@@ -4399,7 +4650,7 @@ literal|0x21
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_FATAL|EINVAL
 argument_list|,
 literal|"Invalid element address"
 argument_list|)
@@ -4413,7 +4664,7 @@ literal|0x22
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_FATAL|EINVAL
 argument_list|,
 literal|"Illegal function"
 argument_list|)
@@ -4428,7 +4679,7 @@ literal|0x24
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF|EINVAL
+argument|SS_FATAL|EINVAL
 argument_list|,
 literal|"Invalid field in CDB"
 argument_list|)
@@ -4442,7 +4693,7 @@ literal|0x25
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF|ENXIO
+argument|SS_FATAL|ENXIO
 argument_list|,
 literal|"Logical unit not supported"
 argument_list|)
@@ -4456,7 +4707,7 @@ literal|0x26
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF|EINVAL
+argument|SS_FATAL|EINVAL
 argument_list|,
 literal|"Invalid field in parameter list"
 argument_list|)
@@ -4470,7 +4721,7 @@ literal|0x26
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NEDEF|EINVAL
+argument|SS_FATAL|EINVAL
 argument_list|,
 literal|"Parameter not supported"
 argument_list|)
@@ -4484,7 +4735,7 @@ literal|0x26
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_NEDEF|EINVAL
+argument|SS_FATAL|EINVAL
 argument_list|,
 literal|"Parameter value invalid"
 argument_list|)
@@ -4498,7 +4749,7 @@ literal|0x26
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_FATAL|EINVAL
 argument_list|,
 literal|"Threshold parameters not supported"
 argument_list|)
@@ -4512,7 +4763,7 @@ literal|0x26
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_FATAL|EINVAL
 argument_list|,
 literal|"Invalid release of active persistent reservation"
 argument_list|)
@@ -4526,7 +4777,7 @@ literal|0x27
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF|EACCES
+argument|SS_FATAL|EACCES
 argument_list|,
 literal|"Write protected"
 argument_list|)
@@ -4540,7 +4791,7 @@ literal|0x27
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NEDEF|EACCES
+argument|SS_FATAL|EACCES
 argument_list|,
 literal|"Hardware write protected"
 argument_list|)
@@ -4554,7 +4805,7 @@ literal|0x27
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_NEDEF|EACCES
+argument|SS_FATAL|EACCES
 argument_list|,
 literal|"Logical unit software write protected"
 argument_list|)
@@ -4568,7 +4819,7 @@ literal|0x27
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_NEDEF|EACCES
+argument|SS_FATAL|EACCES
 argument_list|,
 literal|"Associated write protect"
 argument_list|)
@@ -4582,7 +4833,7 @@ literal|0x27
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_NEDEF|EACCES
+argument|SS_FATAL|EACCES
 argument_list|,
 literal|"Persistent write protect"
 argument_list|)
@@ -4596,7 +4847,7 @@ literal|0x27
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_NEDEF|EACCES
+argument|SS_FATAL|EACCES
 argument_list|,
 literal|"Permanent write protect"
 argument_list|)
@@ -4610,13 +4861,13 @@ literal|0x28
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF|ENXIO
+argument|SS_FATAL|ENXIO
 argument_list|,
 literal|"Not ready to ready change, medium may have changed"
 argument_list|)
 block|}
 block|,
-comment|/* DT  WR OM    */
+comment|/* DTLPWRSOMCAE */
 block|{
 name|SST
 argument_list|(
@@ -4624,12 +4875,13 @@ literal|0x28
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_FATAL|ENXIO
 argument_list|,
 literal|"Import or export element accessed"
 argument_list|)
 block|}
 block|,
+comment|/*  * XXX JGibbs - All of these should use the same errno, but I don't think  * ENXIO is the correct choice.  Should we borrow from the networking  * errnos?  ECONNRESET anyone?  */
 comment|/* DTLPWRSOMCAE */
 block|{
 name|SST
@@ -4638,7 +4890,7 @@ literal|0x29
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF|ENXIO
+argument|SS_FATAL|ENXIO
 argument_list|,
 literal|"Power on, reset, or bus device reset occurred"
 argument_list|)
@@ -4652,7 +4904,7 @@ literal|0x29
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Power on occurred"
 argument_list|)
@@ -4666,7 +4918,7 @@ literal|0x29
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Scsi bus reset occurred"
 argument_list|)
@@ -4680,7 +4932,7 @@ literal|0x29
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Bus device reset function occurred"
 argument_list|)
@@ -4694,7 +4946,7 @@ literal|0x29
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Device internal reset"
 argument_list|)
@@ -4708,7 +4960,7 @@ literal|0x29
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Transceiver mode changed to single-ended"
 argument_list|)
@@ -4722,7 +4974,7 @@ literal|0x29
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Transceiver mode changed to LVD"
 argument_list|)
@@ -4736,7 +4988,7 @@ literal|0x2A
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Parameters changed"
 argument_list|)
@@ -4750,7 +5002,7 @@ literal|0x2A
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Mode parameters changed"
 argument_list|)
@@ -4764,7 +5016,7 @@ literal|0x2A
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Log parameters changed"
 argument_list|)
@@ -4778,7 +5030,7 @@ literal|0x2A
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Reservations preempted"
 argument_list|)
@@ -4792,7 +5044,7 @@ literal|0x2B
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Copy cannot execute since host cannot disconnect"
 argument_list|)
@@ -4806,7 +5058,7 @@ literal|0x2C
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Command sequence error"
 argument_list|)
@@ -4820,7 +5072,7 @@ literal|0x2C
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Too many windows specified"
 argument_list|)
@@ -4834,7 +5086,7 @@ literal|0x2C
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Invalid combination of windows specified"
 argument_list|)
@@ -4848,7 +5100,7 @@ literal|0x2C
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Current program area is not empty"
 argument_list|)
@@ -4862,7 +5114,7 @@ literal|0x2C
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Current program area is empty"
 argument_list|)
@@ -4876,7 +5128,7 @@ literal|0x2D
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Overwrite error on update in place"
 argument_list|)
@@ -4890,7 +5142,7 @@ literal|0x2F
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Commands cleared by another initiator"
 argument_list|)
@@ -4904,7 +5156,7 @@ literal|0x30
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Incompatible medium installed"
 argument_list|)
@@ -4918,7 +5170,7 @@ literal|0x30
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cannot read medium - unknown format"
 argument_list|)
@@ -4932,7 +5184,7 @@ literal|0x30
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cannot read medium - incompatible format"
 argument_list|)
@@ -4946,7 +5198,7 @@ literal|0x30
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cleaning cartridge installed"
 argument_list|)
@@ -4960,7 +5212,7 @@ literal|0x30
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cannot write medium - unknown format"
 argument_list|)
@@ -4974,7 +5226,7 @@ literal|0x30
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cannot write medium - incompatible format"
 argument_list|)
@@ -4988,7 +5240,7 @@ literal|0x30
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cannot format medium - incompatible medium"
 argument_list|)
@@ -5002,7 +5254,7 @@ literal|0x30
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cleaning failure"
 argument_list|)
@@ -5016,7 +5268,7 @@ literal|0x30
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cannot write - application code mismatch"
 argument_list|)
@@ -5030,7 +5282,7 @@ literal|0x30
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Current session not fixated for append"
 argument_list|)
@@ -5044,7 +5296,7 @@ literal|0x31
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Medium format corrupted"
 argument_list|)
@@ -5058,7 +5310,7 @@ literal|0x31
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Format command failed"
 argument_list|)
@@ -5072,7 +5324,7 @@ literal|0x32
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"No defect spare location available"
 argument_list|)
@@ -5086,7 +5338,7 @@ literal|0x32
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Defect list update failure"
 argument_list|)
@@ -5100,7 +5352,7 @@ literal|0x33
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Tape length error"
 argument_list|)
@@ -5114,7 +5366,7 @@ literal|0x34
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Enclosure failure"
 argument_list|)
@@ -5128,7 +5380,7 @@ literal|0x35
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Enclosure services failure"
 argument_list|)
@@ -5142,7 +5394,7 @@ literal|0x35
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Unsupported enclosure function"
 argument_list|)
@@ -5156,7 +5408,7 @@ literal|0x35
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Enclosure services unavailable"
 argument_list|)
@@ -5170,7 +5422,7 @@ literal|0x35
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Enclosure services transfer failure"
 argument_list|)
@@ -5184,7 +5436,7 @@ literal|0x35
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Enclosure services transfer refused"
 argument_list|)
@@ -5198,7 +5450,7 @@ literal|0x36
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Ribbon, ink, or toner failure"
 argument_list|)
@@ -5212,7 +5464,7 @@ literal|0x37
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Rounded parameter"
 argument_list|)
@@ -5226,7 +5478,7 @@ literal|0x39
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Saving parameters not supported"
 argument_list|)
@@ -5240,7 +5492,7 @@ literal|0x3A
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_NEDEF|ENXIO
+argument|SS_FATAL|ENXIO
 argument_list|,
 literal|"Medium not present"
 argument_list|)
@@ -5254,7 +5506,7 @@ literal|0x3A
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NEDEF|ENXIO
+argument|SS_FATAL|ENXIO
 argument_list|,
 literal|"Medium not present - tray closed"
 argument_list|)
@@ -5268,7 +5520,7 @@ literal|0x3A
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_NEDEF|ENXIO
+argument|SS_FATAL|ENXIO
 argument_list|,
 literal|"Medium not present - tray open"
 argument_list|)
@@ -5282,7 +5534,7 @@ literal|0x3B
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Sequential positioning error"
 argument_list|)
@@ -5296,7 +5548,7 @@ literal|0x3B
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Tape position error at beginning-of-medium"
 argument_list|)
@@ -5310,7 +5562,7 @@ literal|0x3B
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Tape position error at end-of-medium"
 argument_list|)
@@ -5324,7 +5576,7 @@ literal|0x3B
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Tape or electronic vertical forms unit not ready"
 argument_list|)
@@ -5338,7 +5590,7 @@ literal|0x3B
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Slew failure"
 argument_list|)
@@ -5352,7 +5604,7 @@ literal|0x3B
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Paper jam"
 argument_list|)
@@ -5366,7 +5618,7 @@ literal|0x3B
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Failed to sense top-of-form"
 argument_list|)
@@ -5380,7 +5632,7 @@ literal|0x3B
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Failed to sense bottom-of-form"
 argument_list|)
@@ -5394,7 +5646,7 @@ literal|0x3B
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Reposition error"
 argument_list|)
@@ -5408,7 +5660,7 @@ literal|0x3B
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Read past end of medium"
 argument_list|)
@@ -5422,7 +5674,7 @@ literal|0x3B
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Read past beginning of medium"
 argument_list|)
@@ -5436,7 +5688,7 @@ literal|0x3B
 argument_list|,
 literal|0x0B
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Position past end of medium"
 argument_list|)
@@ -5450,7 +5702,7 @@ literal|0x3B
 argument_list|,
 literal|0x0C
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Position past beginning of medium"
 argument_list|)
@@ -5464,7 +5716,7 @@ literal|0x3B
 argument_list|,
 literal|0x0D
 argument_list|,
-argument|SS_NEDEF|ENOSPC
+argument|SS_FATAL|ENOSPC
 argument_list|,
 literal|"Medium destination element full"
 argument_list|)
@@ -5478,7 +5730,7 @@ literal|0x3B
 argument_list|,
 literal|0x0E
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Medium source element empty"
 argument_list|)
@@ -5492,7 +5744,7 @@ literal|0x3B
 argument_list|,
 literal|0x0F
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"End of medium reached"
 argument_list|)
@@ -5506,7 +5758,7 @@ literal|0x3B
 argument_list|,
 literal|0x11
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Medium magazine not accessible"
 argument_list|)
@@ -5520,7 +5772,7 @@ literal|0x3B
 argument_list|,
 literal|0x12
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Medium magazine removed"
 argument_list|)
@@ -5534,7 +5786,7 @@ literal|0x3B
 argument_list|,
 literal|0x13
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Medium magazine inserted"
 argument_list|)
@@ -5548,7 +5800,7 @@ literal|0x3B
 argument_list|,
 literal|0x14
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Medium magazine locked"
 argument_list|)
@@ -5562,7 +5814,7 @@ literal|0x3B
 argument_list|,
 literal|0x15
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Medium magazine unlocked"
 argument_list|)
@@ -5576,7 +5828,7 @@ literal|0x3D
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Invalid bits in identify message"
 argument_list|)
@@ -5590,7 +5842,7 @@ literal|0x3E
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Logical unit has not self-configured yet"
 argument_list|)
@@ -5604,7 +5856,7 @@ literal|0x3E
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Logical unit failure"
 argument_list|)
@@ -5618,7 +5870,7 @@ literal|0x3E
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Timeout on logical unit"
 argument_list|)
@@ -5632,7 +5884,7 @@ literal|0x3F
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Target operating conditions have changed"
 argument_list|)
@@ -5646,7 +5898,7 @@ literal|0x3F
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Microcode has been changed"
 argument_list|)
@@ -5660,7 +5912,7 @@ literal|0x3F
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Changed operating definition"
 argument_list|)
@@ -5674,7 +5926,7 @@ literal|0x3F
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Inquiry data has changed"
 argument_list|)
@@ -5688,7 +5940,7 @@ literal|0x3F
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Component device attached"
 argument_list|)
@@ -5702,7 +5954,7 @@ literal|0x3F
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Device identifier changed"
 argument_list|)
@@ -5716,7 +5968,7 @@ literal|0x3F
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Redundancy group created or modified"
 argument_list|)
@@ -5730,7 +5982,7 @@ literal|0x3F
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Redundancy group deleted"
 argument_list|)
@@ -5744,7 +5996,7 @@ literal|0x3F
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Spare created or modified"
 argument_list|)
@@ -5758,7 +6010,7 @@ literal|0x3F
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Spare deleted"
 argument_list|)
@@ -5772,7 +6024,7 @@ literal|0x3F
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Volume set created or modified"
 argument_list|)
@@ -5786,7 +6038,7 @@ literal|0x3F
 argument_list|,
 literal|0x0B
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Volume set deleted"
 argument_list|)
@@ -5800,7 +6052,7 @@ literal|0x3F
 argument_list|,
 literal|0x0C
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Volume set deassigned"
 argument_list|)
@@ -5814,7 +6066,7 @@ literal|0x3F
 argument_list|,
 literal|0x0D
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Volume set reassigned"
 argument_list|)
@@ -5828,7 +6080,7 @@ literal|0x40
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Ram failure"
 argument_list|)
@@ -5843,7 +6095,7 @@ literal|0x40
 argument_list|,
 literal|0x80
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Diagnostic failure: ASCQ = Component ID"
 argument_list|)
@@ -5857,7 +6109,7 @@ literal|0x40
 argument_list|,
 literal|0xFF
 argument_list|,
-argument|SS_DEF|SSQ_RANGE
+argument|SS_RDEF|SSQ_RANGE
 argument_list|,
 argument|NULL
 argument_list|)
@@ -5872,7 +6124,7 @@ literal|0x41
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Data path failure"
 argument_list|)
@@ -5887,7 +6139,7 @@ literal|0x42
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Power-on or self-test failure"
 argument_list|)
@@ -5902,7 +6154,7 @@ literal|0x43
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Message error"
 argument_list|)
@@ -5916,7 +6168,7 @@ literal|0x44
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Internal target failure"
 argument_list|)
@@ -5930,7 +6182,7 @@ literal|0x45
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Select or reselect failure"
 argument_list|)
@@ -5944,7 +6196,7 @@ literal|0x46
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Unsuccessful soft reset"
 argument_list|)
@@ -5958,7 +6210,7 @@ literal|0x47
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"SCSI parity error"
 argument_list|)
@@ -5972,7 +6224,7 @@ literal|0x48
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Initiator detected error message received"
 argument_list|)
@@ -5986,7 +6238,7 @@ literal|0x49
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Invalid message error"
 argument_list|)
@@ -6000,7 +6252,7 @@ literal|0x4A
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Command phase error"
 argument_list|)
@@ -6014,7 +6266,7 @@ literal|0x4B
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Data phase error"
 argument_list|)
@@ -6028,7 +6280,7 @@ literal|0x4C
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Logical unit failed self-configuration"
 argument_list|)
@@ -6042,7 +6294,7 @@ literal|0x4D
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Tagged overlapped commands: ASCQ = Queue tag ID"
 argument_list|)
@@ -6056,7 +6308,7 @@ literal|0x4D
 argument_list|,
 literal|0xFF
 argument_list|,
-argument|SS_DEF|SSQ_RANGE
+argument|SS_RDEF|SSQ_RANGE
 argument_list|,
 argument|NULL
 argument_list|)
@@ -6071,7 +6323,7 @@ literal|0x4E
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Overlapped commands attempted"
 argument_list|)
@@ -6085,7 +6337,7 @@ literal|0x50
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Write append error"
 argument_list|)
@@ -6099,7 +6351,7 @@ literal|0x50
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Write append position error"
 argument_list|)
@@ -6113,7 +6365,7 @@ literal|0x50
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Position error related to timing"
 argument_list|)
@@ -6127,7 +6379,7 @@ literal|0x51
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Erase failure"
 argument_list|)
@@ -6141,7 +6393,7 @@ literal|0x52
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Cartridge fault"
 argument_list|)
@@ -6155,7 +6407,7 @@ literal|0x53
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Media load or eject failed"
 argument_list|)
@@ -6169,7 +6421,7 @@ literal|0x53
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Unload tape failure"
 argument_list|)
@@ -6183,7 +6435,7 @@ literal|0x53
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Medium removal prevented"
 argument_list|)
@@ -6197,7 +6449,7 @@ literal|0x54
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Scsi to host system interface failure"
 argument_list|)
@@ -6211,7 +6463,7 @@ literal|0x55
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"System resource failure"
 argument_list|)
@@ -6225,7 +6477,7 @@ literal|0x55
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NEDEF|ENOSPC
+argument|SS_FATAL|ENOSPC
 argument_list|,
 literal|"System buffer full"
 argument_list|)
@@ -6239,7 +6491,7 @@ literal|0x57
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Unable to recover table-of-contents"
 argument_list|)
@@ -6253,7 +6505,7 @@ literal|0x58
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Generation does not exist"
 argument_list|)
@@ -6267,7 +6519,7 @@ literal|0x59
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Updated block read"
 argument_list|)
@@ -6281,7 +6533,7 @@ literal|0x5A
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Operator request or state change input"
 argument_list|)
@@ -6295,7 +6547,7 @@ literal|0x5A
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Operator medium removal request"
 argument_list|)
@@ -6309,7 +6561,7 @@ literal|0x5A
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Operator selected write protect"
 argument_list|)
@@ -6323,7 +6575,7 @@ literal|0x5A
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Operator selected write permit"
 argument_list|)
@@ -6337,7 +6589,7 @@ literal|0x5B
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Log exception"
 argument_list|)
@@ -6351,7 +6603,7 @@ literal|0x5B
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Threshold condition met"
 argument_list|)
@@ -6365,7 +6617,7 @@ literal|0x5B
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Log counter at maximum"
 argument_list|)
@@ -6379,7 +6631,7 @@ literal|0x5B
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Log list codes exhausted"
 argument_list|)
@@ -6393,7 +6645,7 @@ literal|0x5C
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"RPL status change"
 argument_list|)
@@ -6407,7 +6659,7 @@ literal|0x5C
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NEDEF
+argument|SS_NOP|SSQ_PRINT_SENSE
 argument_list|,
 literal|"Spindles synchronized"
 argument_list|)
@@ -6421,7 +6673,7 @@ literal|0x5C
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Spindles not synchronized"
 argument_list|)
@@ -6435,7 +6687,7 @@ literal|0x5D
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Failure prediction threshold exceeded"
 argument_list|)
@@ -6449,7 +6701,7 @@ literal|0x5D
 argument_list|,
 literal|0xFF
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Failure prediction threshold exceeded (false)"
 argument_list|)
@@ -6463,7 +6715,7 @@ literal|0x5E
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Low power condition on"
 argument_list|)
@@ -6477,7 +6729,7 @@ literal|0x5E
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Idle condition activated by timer"
 argument_list|)
@@ -6491,7 +6743,7 @@ literal|0x5E
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Standby condition activated by timer"
 argument_list|)
@@ -6505,7 +6757,7 @@ literal|0x5E
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Idle condition activated by command"
 argument_list|)
@@ -6519,7 +6771,7 @@ literal|0x5E
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Standby condition activated by command"
 argument_list|)
@@ -6533,7 +6785,7 @@ literal|0x60
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Lamp failure"
 argument_list|)
@@ -6547,7 +6799,7 @@ literal|0x61
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Video acquisition error"
 argument_list|)
@@ -6561,7 +6813,7 @@ literal|0x61
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Unable to acquire video"
 argument_list|)
@@ -6575,7 +6827,7 @@ literal|0x61
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Out of focus"
 argument_list|)
@@ -6589,7 +6841,7 @@ literal|0x62
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Scan head positioning error"
 argument_list|)
@@ -6603,7 +6855,7 @@ literal|0x63
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"End of user area encountered on this track"
 argument_list|)
@@ -6617,7 +6869,7 @@ literal|0x63
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_NEDEF|ENOSPC
+argument|SS_FATAL|ENOSPC
 argument_list|,
 literal|"Packet does not fit in available space"
 argument_list|)
@@ -6631,7 +6883,7 @@ literal|0x64
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Illegal mode for this track"
 argument_list|)
@@ -6645,7 +6897,7 @@ literal|0x64
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Invalid packet size"
 argument_list|)
@@ -6659,7 +6911,7 @@ literal|0x65
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Voltage fault"
 argument_list|)
@@ -6673,7 +6925,7 @@ literal|0x66
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Automatic document feeder cover up"
 argument_list|)
@@ -6687,7 +6939,7 @@ literal|0x66
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Automatic document feeder lift up"
 argument_list|)
@@ -6701,7 +6953,7 @@ literal|0x66
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Document jam in automatic document feeder"
 argument_list|)
@@ -6715,7 +6967,7 @@ literal|0x66
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Document miss feed automatic in document feeder"
 argument_list|)
@@ -6729,7 +6981,7 @@ literal|0x67
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Configuration failure"
 argument_list|)
@@ -6743,7 +6995,7 @@ literal|0x67
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Configuration of incapable logical units failed"
 argument_list|)
@@ -6757,7 +7009,7 @@ literal|0x67
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Add logical unit failed"
 argument_list|)
@@ -6771,7 +7023,7 @@ literal|0x67
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Modification of logical unit failed"
 argument_list|)
@@ -6785,7 +7037,7 @@ literal|0x67
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Exchange of logical unit failed"
 argument_list|)
@@ -6799,7 +7051,7 @@ literal|0x67
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Remove of logical unit failed"
 argument_list|)
@@ -6813,7 +7065,7 @@ literal|0x67
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Attachment of logical unit failed"
 argument_list|)
@@ -6827,7 +7079,7 @@ literal|0x67
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Creation of logical unit failed"
 argument_list|)
@@ -6841,7 +7093,7 @@ literal|0x68
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Logical unit not configured"
 argument_list|)
@@ -6855,7 +7107,7 @@ literal|0x69
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Data loss on logical unit"
 argument_list|)
@@ -6869,7 +7121,7 @@ literal|0x69
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Multiple logical unit failures"
 argument_list|)
@@ -6883,7 +7135,7 @@ literal|0x69
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Parity/data mismatch"
 argument_list|)
@@ -6897,7 +7149,7 @@ literal|0x6A
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Informational, refer to log"
 argument_list|)
@@ -6911,7 +7163,7 @@ literal|0x6B
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"State change has occurred"
 argument_list|)
@@ -6925,7 +7177,7 @@ literal|0x6B
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Redundancy level got better"
 argument_list|)
@@ -6939,7 +7191,7 @@ literal|0x6B
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Redundancy level got worse"
 argument_list|)
@@ -6953,7 +7205,7 @@ literal|0x6C
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Rebuild failure occurred"
 argument_list|)
@@ -6967,7 +7219,7 @@ literal|0x6D
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Recalculate failure occurred"
 argument_list|)
@@ -6981,7 +7233,7 @@ literal|0x6E
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Command to logical unit failed"
 argument_list|)
@@ -6995,7 +7247,7 @@ literal|0x70
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Decompression exception short: ASCQ = Algorithm ID"
 argument_list|)
@@ -7009,7 +7261,7 @@ literal|0x70
 argument_list|,
 literal|0xFF
 argument_list|,
-argument|SS_DEF|SSQ_RANGE
+argument|SS_RDEF|SSQ_RANGE
 argument_list|,
 argument|NULL
 argument_list|)
@@ -7024,7 +7276,7 @@ literal|0x71
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Decompression exception long: ASCQ = Algorithm ID"
 argument_list|)
@@ -7038,7 +7290,7 @@ literal|0x71
 argument_list|,
 literal|0xFF
 argument_list|,
-argument|SS_DEF|SSQ_RANGE
+argument|SS_RDEF|SSQ_RANGE
 argument_list|,
 argument|NULL
 argument_list|)
@@ -7053,7 +7305,7 @@ literal|0x72
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Session fixation error"
 argument_list|)
@@ -7067,7 +7319,7 @@ literal|0x72
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Session fixation error writing lead-in"
 argument_list|)
@@ -7081,7 +7333,7 @@ literal|0x72
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Session fixation error writing lead-out"
 argument_list|)
@@ -7095,7 +7347,7 @@ literal|0x72
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Session fixation error - incomplete track in session"
 argument_list|)
@@ -7109,7 +7361,7 @@ literal|0x72
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Empty or partially written reserved track"
 argument_list|)
@@ -7123,7 +7375,7 @@ literal|0x73
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"CD control error"
 argument_list|)
@@ -7137,7 +7389,7 @@ literal|0x73
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Power calibration area almost full"
 argument_list|)
@@ -7151,7 +7403,7 @@ literal|0x73
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_NEDEF|ENOSPC
+argument|SS_FATAL|ENOSPC
 argument_list|,
 literal|"Power calibration area is full"
 argument_list|)
@@ -7165,7 +7417,7 @@ literal|0x73
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Power calibration area error"
 argument_list|)
@@ -7179,7 +7431,7 @@ literal|0x73
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"Program memory area update failure"
 argument_list|)
@@ -7193,7 +7445,7 @@ literal|0x73
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_DEF
+argument|SS_RDEF
 argument_list|,
 literal|"program memory area is full"
 argument_list|)
@@ -7202,22 +7454,287 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
+begin_decl_stmt
+specifier|const
+name|int
+name|asc_table_size
+init|=
+sizeof|sizeof
 argument_list|(
-name|SCSI_NO_SENSE_STRINGS
+name|asc_table
 argument_list|)
-end_if
+operator|/
+sizeof|sizeof
+argument_list|(
+name|asc_table
+index|[
+literal|0
+index|]
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|asc_key
+block|{
+name|int
+name|asc
+decl_stmt|;
+name|int
+name|ascq
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_function
-specifier|const
-name|char
-modifier|*
-name|scsi_sense_desc
+specifier|static
+name|int
+name|ascentrycomp
 parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|member
+parameter_list|)
+block|{
+name|int
+name|asc
+decl_stmt|;
+name|int
+name|ascq
+decl_stmt|;
+specifier|const
+name|struct
+name|asc_table_entry
+modifier|*
+name|table_entry
+decl_stmt|;
+name|asc
+operator|=
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|asc_key
+operator|*
+operator|)
+name|key
+operator|)
+operator|->
+name|asc
+expr_stmt|;
+name|ascq
+operator|=
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|asc_key
+operator|*
+operator|)
+name|key
+operator|)
+operator|->
+name|ascq
+expr_stmt|;
+name|table_entry
+operator|=
+operator|(
+specifier|const
+expr|struct
+name|asc_table_entry
+operator|*
+operator|)
+name|member
+expr_stmt|;
+if|if
+condition|(
+name|asc
+operator|>=
+name|table_entry
+operator|->
+name|asc
+condition|)
+block|{
+if|if
+condition|(
+name|asc
+operator|>
+name|table_entry
+operator|->
+name|asc
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|ascq
+operator|<=
+name|table_entry
+operator|->
+name|ascq
+condition|)
+block|{
+comment|/* Check for ranges */
+if|if
+condition|(
+name|ascq
+operator|==
+name|table_entry
+operator|->
+name|ascq
+operator|||
+operator|(
+operator|(
+name|table_entry
+operator|->
+name|action
+operator|&
+name|SSQ_RANGE
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|ascq
+operator|>=
+operator|(
+name|table_entry
+operator|-
+literal|1
+operator|)
+operator|->
+name|ascq
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|senseentrycomp
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|member
+parameter_list|)
+block|{
+name|int
+name|sense_key
+decl_stmt|;
+specifier|const
+name|struct
+name|sense_key_table_entry
+modifier|*
+name|table_entry
+decl_stmt|;
+name|sense_key
+operator|=
+operator|*
+operator|(
+operator|(
+specifier|const
+name|int
+operator|*
+operator|)
+name|key
+operator|)
+expr_stmt|;
+name|table_entry
+operator|=
+operator|(
+specifier|const
+expr|struct
+name|sense_key_table_entry
+operator|*
+operator|)
+name|member
+expr_stmt|;
+if|if
+condition|(
+name|sense_key
+operator|>=
+name|table_entry
+operator|->
+name|sense_key
+condition|)
+block|{
+if|if
+condition|(
+name|sense_key
+operator|==
+name|table_entry
+operator|->
+name|sense_key
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|fetchtableentries
+parameter_list|(
+name|int
+name|sense_key
+parameter_list|,
 name|int
 name|asc
 parameter_list|,
@@ -7228,44 +7745,89 @@ name|struct
 name|scsi_inquiry_data
 modifier|*
 name|inq_data
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-name|caddr_t
-name|match
-decl_stmt|;
+parameter_list|,
+specifier|const
+name|struct
+name|sense_key_table_entry
+modifier|*
+modifier|*
+name|sense_entry
+parameter_list|,
+specifier|const
 name|struct
 name|asc_table_entry
 modifier|*
-name|table
+modifier|*
+name|asc_entry
+parameter_list|)
+block|{
+name|caddr_t
+name|match
+decl_stmt|;
+specifier|const
+name|struct
+name|asc_table_entry
+modifier|*
+name|asc_tables
+index|[
+literal|2
+index|]
+decl_stmt|;
+specifier|const
+name|struct
+name|sense_key_table_entry
+modifier|*
+name|sense_tables
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|asc_key
+name|asc_ascq
+decl_stmt|;
+name|size_t
+name|asc_tables_size
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|size_t
+name|sense_tables_size
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|int
-name|table_size
-index|[
-literal|2
-index|]
+name|num_asc_tables
 decl_stmt|;
 name|int
-name|num_tables
+name|num_sense_tables
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* Default to failure */
+operator|*
+name|sense_entry
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|asc_entry
+operator|=
+name|NULL
+expr_stmt|;
+name|match
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|inq_data
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 name|match
 operator|=
 name|cam_quirkmatch
@@ -7278,23 +7840,14 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|asc_quirk_table
+name|sense_quirk_table
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|asc_quirk_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
-name|asc_quirk_table
-argument_list|)
+name|sense_quirk_table_size
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|asc_quirk_table
+name|sense_quirk_table
 argument_list|)
 argument_list|,
 name|scsi_inquiry_match
@@ -7307,114 +7860,144 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|table
-index|[
-literal|0
-index|]
+name|struct
+name|scsi_sense_quirk_entry
+modifier|*
+name|quirk
+decl_stmt|;
+name|quirk
 operator|=
-operator|(
 operator|(
 expr|struct
 name|scsi_sense_quirk_entry
 operator|*
 operator|)
 name|match
-operator|)
+expr_stmt|;
+name|asc_tables
+index|[
+literal|0
+index|]
+operator|=
+name|quirk
 operator|->
 name|asc_info
 expr_stmt|;
-name|table_size
+name|asc_tables_size
 index|[
 literal|0
 index|]
 operator|=
-operator|(
-operator|(
-expr|struct
-name|scsi_sense_quirk_entry
-operator|*
-operator|)
-name|match
-operator|)
+name|quirk
 operator|->
 name|num_ascs
 expr_stmt|;
-name|table
+name|asc_tables
 index|[
 literal|1
 index|]
 operator|=
-name|asc_text
+name|asc_table
 expr_stmt|;
-name|table_size
+name|asc_tables_size
 index|[
 literal|1
 index|]
 operator|=
-sizeof|sizeof
-argument_list|(
-name|asc_text
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|asc_text
+name|asc_table_size
+expr_stmt|;
+name|num_asc_tables
+operator|=
+literal|2
+expr_stmt|;
+name|sense_tables
 index|[
 literal|0
 index|]
-argument_list|)
+operator|=
+name|quirk
+operator|->
+name|sense_key_info
 expr_stmt|;
-name|num_tables
+name|sense_tables_size
+index|[
+literal|0
+index|]
+operator|=
+name|quirk
+operator|->
+name|num_sense_keys
+expr_stmt|;
+name|sense_tables
+index|[
+literal|1
+index|]
+operator|=
+name|sense_key_table
+expr_stmt|;
+name|sense_tables_size
+index|[
+literal|1
+index|]
+operator|=
+name|sense_key_table_size
+expr_stmt|;
+name|num_sense_tables
 operator|=
 literal|2
 expr_stmt|;
 block|}
 else|else
 block|{
-name|table
+name|asc_tables
 index|[
 literal|0
 index|]
 operator|=
-name|asc_text
+name|asc_table
 expr_stmt|;
-name|table_size
+name|asc_tables_size
 index|[
 literal|0
 index|]
 operator|=
-sizeof|sizeof
-argument_list|(
-name|asc_text
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|asc_text
+name|asc_table_size
+expr_stmt|;
+name|num_asc_tables
+operator|=
+literal|1
+expr_stmt|;
+name|sense_tables
 index|[
 literal|0
 index|]
-argument_list|)
+operator|=
+name|sense_key_table
 expr_stmt|;
-name|num_tables
+name|sense_tables_size
+index|[
+literal|0
+index|]
+operator|=
+name|sense_key_table_size
+expr_stmt|;
+name|num_sense_tables
 operator|=
 literal|1
 expr_stmt|;
 block|}
-for|for
-control|(
-name|j
+name|asc_ascq
+operator|.
+name|asc
 operator|=
-literal|0
-init|;
-name|j
-operator|<
-name|num_tables
-condition|;
-name|j
-operator|++
-control|)
-block|{
+name|asc
+expr_stmt|;
+name|asc_ascq
+operator|.
+name|ascq
+operator|=
+name|ascq
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -7423,168 +8006,134 @@ literal|0
 init|;
 name|i
 operator|<
-name|table_size
-index|[
-name|j
-index|]
+name|num_asc_tables
 condition|;
 name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
-name|asc
-operator|==
-name|asc
-condition|)
-block|{
-comment|/* Check for ranges */
-if|if
-condition|(
-operator|(
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
-name|action
+name|void
+modifier|*
+name|found_entry
+decl_stmt|;
+name|found_entry
+operator|=
+name|bsearch
+argument_list|(
 operator|&
-name|SSQ_RANGE
-operator|)
-operator|!=
-literal|0
+name|asc_ascq
+argument_list|,
+name|asc_tables
+index|[
+name|i
+index|]
+argument_list|,
+name|asc_tables_size
+index|[
+name|i
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+operator|*
+name|asc_tables
+argument_list|)
+argument_list|,
+name|ascentrycomp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|found_entry
 condition|)
 block|{
-if|if
-condition|(
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
-name|ascq
-operator|>=
-name|ascq
-operator|&&
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|.
-name|ascq
-operator|<=
-name|ascq
-condition|)
-return|return
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|.
-name|desc
-return|;
-continue|continue;
-block|}
-if|if
-condition|(
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
-name|ascq
-operator|==
-name|ascq
-condition|)
-return|return
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
-name|desc
-return|;
+operator|*
+name|asc_entry
+operator|=
+operator|(
+expr|struct
+name|asc_table_entry
+operator|*
+operator|)
+name|found_entry
+expr_stmt|;
+break|break;
 block|}
 block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|num_sense_tables
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|void
+modifier|*
+name|found_entry
+decl_stmt|;
+name|found_entry
+operator|=
+name|bsearch
+argument_list|(
+operator|&
+name|sense_key
+argument_list|,
+name|sense_tables
+index|[
+name|i
+index|]
+argument_list|,
+name|sense_tables_size
+index|[
+name|i
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+operator|*
+name|sense_tables
+argument_list|)
+argument_list|,
+name|senseentrycomp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|found_entry
+condition|)
+block|{
+operator|*
+name|sense_entry
+operator|=
+operator|(
+expr|struct
+name|sense_key_table_entry
+operator|*
+operator|)
+name|found_entry
+expr_stmt|;
+break|break;
 block|}
-if|if
-condition|(
-name|asc
-operator|>=
-literal|0x80
-operator|&&
-name|asc
-operator|<=
-literal|0xff
-condition|)
-return|return
-literal|"Vendor Specific ASC"
-return|;
-if|if
-condition|(
-name|ascq
-operator|>=
-literal|0x80
-operator|&&
-name|ascq
-operator|<=
-literal|0xff
-condition|)
-return|return
-literal|"Vendor Specific ASCQ"
-return|;
-return|return
-literal|"Reserved ASC/ASCQ pair"
-return|;
+block|}
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SCSI_NO_SENSE_STRINGS */
-end_comment
-
 begin_function
-specifier|const
-name|char
-modifier|*
+name|void
 name|scsi_sense_desc
 parameter_list|(
+name|int
+name|sense_key
+parameter_list|,
 name|int
 name|asc
 parameter_list|,
@@ -7595,389 +8144,385 @@ name|struct
 name|scsi_inquiry_data
 modifier|*
 name|inq_data
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|sense_key_desc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|asc_desc
 parameter_list|)
 block|{
-return|return
-operator|(
-literal|""
-operator|)
-return|;
+specifier|const
+name|struct
+name|asc_table_entry
+modifier|*
+name|asc_entry
+decl_stmt|;
+specifier|const
+name|struct
+name|sense_key_table_entry
+modifier|*
+name|sense_entry
+decl_stmt|;
+name|fetchtableentries
+argument_list|(
+name|sense_key
+argument_list|,
+name|asc
+argument_list|,
+name|ascq
+argument_list|,
+name|inq_data
+argument_list|,
+operator|&
+name|sense_entry
+argument_list|,
+operator|&
+name|asc_entry
+argument_list|)
+expr_stmt|;
+operator|*
+name|sense_key_desc
+operator|=
+name|sense_entry
+operator|->
+name|desc
+expr_stmt|;
+if|if
+condition|(
+name|asc_entry
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|asc_desc
+operator|=
+name|asc_entry
+operator|->
+name|desc
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|asc
+operator|>=
+literal|0x80
+operator|&&
+name|asc
+operator|<=
+literal|0xff
+condition|)
+operator|*
+name|asc_desc
+operator|=
+literal|"Vendor Specific ASC"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ascq
+operator|>=
+literal|0x80
+operator|&&
+name|ascq
+operator|<=
+literal|0xff
+condition|)
+operator|*
+name|asc_desc
+operator|=
+literal|"Vendor Specific ASCQ"
+expr_stmt|;
+else|else
+operator|*
+name|asc_desc
+operator|=
+literal|"Reserved ASC/ASCQ pair"
+expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Given a particular failed CCB and its device type information, return  * the appropriate action from either the sense code quirk table or the  * sense code table.  */
+comment|/*  * Given sense and device type information, return the appropriate action.  * If we do not understand the specific error as identified by the ASC/ASCQ  * pair, fall back on the more generic actions derived from the sense key.  */
 end_comment
 
 begin_function
 name|scsi_sense_action
 name|scsi_error_action
 parameter_list|(
-name|int
-name|asc
-parameter_list|,
-name|int
-name|ascq
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
 parameter_list|,
 name|struct
 name|scsi_inquiry_data
 modifier|*
 name|inq_data
+parameter_list|,
+name|u_int32_t
+name|sense_flags
 parameter_list|)
 block|{
-name|caddr_t
-name|match
-decl_stmt|;
+specifier|const
 name|struct
 name|asc_table_entry
 modifier|*
-name|table
-index|[
-literal|2
-index|]
+name|asc_entry
+decl_stmt|;
+specifier|const
+name|struct
+name|sense_key_table_entry
+modifier|*
+name|sense_entry
 decl_stmt|;
 name|int
-name|table_size
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|int
-name|num_tables
-decl_stmt|;
-name|int
-name|i
+name|error_code
 decl_stmt|,
-name|j
+name|sense_key
+decl_stmt|,
+name|asc
+decl_stmt|,
+name|ascq
 decl_stmt|;
-comment|/* 	 * If we don't have inquiry data, we can't match against any quirk 	 * entries. 	 */
-if|if
-condition|(
-name|inq_data
-operator|!=
-name|NULL
-condition|)
-block|{
-name|match
-operator|=
-name|cam_quirkmatch
+name|scsi_sense_action
+name|action
+decl_stmt|;
+name|scsi_extract_sense
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|inq_data
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|asc_quirk_table
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|asc_quirk_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
-name|asc_quirk_table
-argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|asc_quirk_table
-argument_list|)
-argument_list|,
-name|scsi_inquiry_match
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|match
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|match
-operator|!=
-name|NULL
-condition|)
-block|{
-name|table
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-operator|(
-expr|struct
-name|scsi_sense_quirk_entry
-operator|*
-operator|)
-name|match
-operator|)
+operator|&
+name|csio
 operator|->
-name|asc_info
-expr_stmt|;
-name|table_size
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-operator|(
-expr|struct
-name|scsi_sense_quirk_entry
-operator|*
-operator|)
-name|match
-operator|)
-operator|->
-name|num_ascs
-expr_stmt|;
-name|table
-index|[
-literal|1
-index|]
-operator|=
-name|asc_text
-expr_stmt|;
-name|table_size
-index|[
-literal|1
-index|]
-operator|=
-sizeof|sizeof
-argument_list|(
-name|asc_text
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|asc_text
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|num_tables
-operator|=
-literal|2
-expr_stmt|;
-block|}
-else|else
-block|{
-name|table
-index|[
-literal|0
-index|]
-operator|=
-name|asc_text
-expr_stmt|;
-name|table_size
-index|[
-literal|0
-index|]
-operator|=
-sizeof|sizeof
-argument_list|(
-name|asc_text
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|asc_text
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|num_tables
-operator|=
-literal|1
-expr_stmt|;
-block|}
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-name|num_tables
-condition|;
-name|j
-operator|++
-control|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|table_size
-index|[
-name|j
-index|]
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
+name|sense_data
+argument_list|,
+operator|&
+name|error_code
+argument_list|,
+operator|&
+name|sense_key
+argument_list|,
+operator|&
 name|asc
+argument_list|,
+operator|&
+name|ascq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error_code
 operator|==
-name|asc
+name|SSD_DEFERRED_ERROR
 condition|)
 block|{
-comment|/* Check for ranges */
+comment|/* 		 * XXX dufault@FreeBSD.org 		 * This error doesn't relate to the command associated 		 * with this request sense.  A deferred error is an error 		 * for a command that has already returned GOOD status 		 * (see SCSI2 8.2.14.2). 		 * 		 * By my reading of that section, it looks like the current 		 * command has been cancelled, we should now clean things up 		 * (hopefully recovering any lost data) and then retry the 		 * current command.  There are two easy choices, both wrong: 		 * 		 * 1. Drop through (like we had been doing), thus treating 		 *    this as if the error were for the current command and 		 *    return and stop the current command. 		 *  		 * 2. Issue a retry (like I made it do) thus hopefully 		 *    recovering the current transfer, and ignoring the 		 *    fact that we've dropped a command. 		 * 		 * These should probably be handled in a device specific 		 * sense handler or punted back up to a user mode daemon 		 */
+name|action
+operator|=
+name|SS_RETRY
+operator||
+name|SSQ_DECREMENT_COUNT
+operator||
+name|SSQ_PRINT_SENSE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fetchtableentries
+argument_list|(
+name|sense_key
+argument_list|,
+name|asc
+argument_list|,
+name|ascq
+argument_list|,
+name|inq_data
+argument_list|,
+operator|&
+name|sense_entry
+argument_list|,
+operator|&
+name|asc_entry
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Override the 'No additional Sense' entry (0,0) 		 * with the error action of the sense key. 		 */
+if|if
+condition|(
+name|asc_entry
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|asc
+operator|!=
+literal|0
+operator|||
+name|ascq
+operator|!=
+literal|0
+operator|)
+condition|)
+name|action
+operator|=
+name|asc_entry
+operator|->
+name|action
+expr_stmt|;
+else|else
+name|action
+operator|=
+name|sense_entry
+operator|->
+name|action
+expr_stmt|;
+if|if
+condition|(
+name|sense_key
+operator|==
+name|SSD_KEY_RECOVERED_ERROR
+condition|)
+block|{
+comment|/* 			 * The action succeeded but the device wants 			 * the user to know that some recovery action 			 * was required. 			 */
+name|action
+operator|&=
+operator|~
+operator|(
+name|SS_MASK
+operator||
+name|SSQ_MASK
+operator||
+name|SS_ERRMASK
+operator|)
+expr_stmt|;
+name|action
+operator||=
+name|SS_NOP
+operator||
+name|SSQ_PRINT_SENSE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sense_key
+operator|==
+name|SSD_KEY_ILLEGAL_REQUEST
+condition|)
+block|{
 if|if
 condition|(
 operator|(
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
+name|sense_flags
+operator|&
+name|SF_QUIET_IR
+operator|)
+operator|!=
+literal|0
+condition|)
+name|action
+operator|&=
+operator|~
+name|SSQ_PRINT_SENSE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sense_key
+operator|==
+name|SSD_KEY_UNIT_ATTENTION
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sense_flags
+operator|&
+name|SF_RETRY_UA
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
 name|action
 operator|&
-name|SSQ_RANGE
+name|SS_MASK
+operator|)
+operator|==
+name|SS_FAIL
+condition|)
+block|{
+name|action
+operator|&=
+operator|~
+operator|(
+name|SS_MASK
+operator||
+name|SSQ_MASK
+operator|)
+expr_stmt|;
+name|action
+operator||=
+name|SS_RETRY
+operator||
+name|SSQ_DECREMENT_COUNT
+operator||
+name|SSQ_PRINT_SENSE
+expr_stmt|;
+block|}
+block|}
+block|}
+ifdef|#
+directive|ifdef
+name|KERNEL
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|sense_flags
+operator||=
+name|SF_PRINT_ALWAYS
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+operator|(
+name|sense_flags
+operator|&
+name|SF_PRINT_ALWAYS
 operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
-name|ascq
-operator|>=
-name|ascq
-operator|&&
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|.
-name|ascq
-operator|<=
-name|ascq
-condition|)
-return|return
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
 name|action
-return|;
-continue|continue;
-block|}
-comment|/* 				 * Check to see if we have a match.  If the 				 * current ascq in the table is greater 				 * than our ascq, and there aren't any more 				 * tables to search, just return the 				 * default action. 				 */
-if|if
-condition|(
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
-name|ascq
-operator|==
-name|ascq
-condition|)
-return|return
-operator|(
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
-name|action
-operator|)
-return|;
+operator||=
+name|SSQ_PRINT_SENSE
+expr_stmt|;
 elseif|else
 if|if
 condition|(
 operator|(
-name|j
-operator|==
-operator|(
-name|num_tables
-operator|-
-literal|1
+name|sense_flags
+operator|&
+name|SF_NO_PRINT
 operator|)
-operator|)
-operator|&&
-operator|(
-name|table
-index|[
-name|j
-index|]
-index|[
-name|i
-index|]
-operator|.
-name|ascq
-operator|>
-name|ascq
-operator|)
+operator|!=
+literal|0
 condition|)
+name|action
+operator|&=
+operator|~
+name|SSQ_PRINT_SENSE
+expr_stmt|;
 return|return
 operator|(
-name|SS_DEF
-operator|)
-return|;
-block|}
-block|}
-block|}
-comment|/*  	 * If we get to this point, it's most likely a vendor specific 	 * ASC and we don't have a quirk entry for it.  Oh well, we just 	 * tell the error handling code to take the default action. 	 */
-return|return
-operator|(
-name|SS_DEF
+name|action
 operator|)
 return|;
 block|}
@@ -8136,12 +8681,142 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * scsi_sense_print will decode the sense data into human  * readable form.  Sense handlers can use this to generate  * a report.  */
-end_comment
+begin_function
+specifier|const
+name|char
+modifier|*
+name|scsi_status_string
+parameter_list|(
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|csio
+operator|->
+name|scsi_status
+condition|)
+block|{
+case|case
+name|SCSI_STATUS_OK
+case|:
+return|return
+operator|(
+literal|"OK"
+operator|)
+return|;
+case|case
+name|SCSI_STATUS_CHECK_COND
+case|:
+return|return
+operator|(
+literal|"Check Condition"
+operator|)
+return|;
+case|case
+name|SCSI_STATUS_BUSY
+case|:
+return|return
+operator|(
+literal|"Busy"
+operator|)
+return|;
+case|case
+name|SCSI_STATUS_INTERMED
+case|:
+return|return
+operator|(
+literal|"Intermediate"
+operator|)
+return|;
+case|case
+name|SCSI_STATUS_INTERMED_COND_MET
+case|:
+return|return
+operator|(
+literal|"Intermediate-Condition Met"
+operator|)
+return|;
+case|case
+name|SCSI_STATUS_RESERV_CONFLICT
+case|:
+return|return
+operator|(
+literal|"Reservation Conflict"
+operator|)
+return|;
+case|case
+name|SCSI_STATUS_CMD_TERMINATED
+case|:
+return|return
+operator|(
+literal|"Command Terminated"
+operator|)
+return|;
+case|case
+name|SCSI_STATUS_QUEUE_FULL
+case|:
+return|return
+operator|(
+literal|"Queue Full"
+operator|)
+return|;
+case|case
+name|SCSI_STATUS_ACA_ACTIVE
+case|:
+return|return
+operator|(
+literal|"ACA Active"
+operator|)
+return|;
+case|case
+name|SCSI_STATUS_TASK_ABORTED
+case|:
+return|return
+operator|(
+literal|"Task Aborted"
+operator|)
+return|;
+default|default:
+block|{
+specifier|static
+name|char
+name|unkstr
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|unkstr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|unkstr
+argument_list|)
+argument_list|,
+literal|"Unknown %#x"
+argument_list|,
+name|csio
+operator|->
+name|scsi_status
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|unkstr
+operator|)
+return|;
+block|}
+block|}
+block|}
+end_function
 
 begin_comment
-comment|/*  * Because scsi_sense_print() utilizes transport layer functions, it will  * only work in the kernel.  */
+comment|/*  * scsi_command_string() returns 0 for success and -1 for failure.  */
 end_comment
 
 begin_ifdef
@@ -8150,73 +8825,75 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_function
-name|void
-name|scsi_sense_print
-parameter_list|(
-name|struct
+begin_decl_stmt
+name|int
+name|scsi_command_string
+argument_list|(
+expr|struct
 name|ccb_scsiio
-modifier|*
+operator|*
 name|csio
-parameter_list|)
+argument_list|,
+expr|struct
+name|sbuf
+operator|*
+name|sb
+argument_list|)
+else|#
+directive|else
+comment|/* !_KERNEL */
+name|int
+name|scsi_command_string
+argument_list|(
+expr|struct
+name|cam_device
+operator|*
+name|device
+argument_list|,
+expr|struct
+name|ccb_scsiio
+operator|*
+name|csio
+argument_list|,
+expr|struct
+name|sbuf
+operator|*
+name|sb
+argument_list|)
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
 block|{
 name|struct
-name|scsi_sense_data
+name|scsi_inquiry_data
 modifier|*
-name|sense
+name|inq_data
 decl_stmt|;
-name|u_int32_t
-name|info
+name|char
+name|cdb_str
+index|[
+operator|(
+name|SCSI_MAX_CDBLEN
+operator|*
+literal|3
+operator|)
+operator|+
+literal|1
+index|]
 decl_stmt|;
-name|int
-name|error_code
-decl_stmt|;
-name|int
-name|sense_key
-decl_stmt|;
-name|int
-name|asc
-decl_stmt|,
-name|ascq
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
 name|struct
 name|ccb_getdev
 name|cgd
 decl_stmt|;
-name|u_int8_t
-name|command_print
-decl_stmt|;
-name|sense
-operator|=
-operator|&
-name|csio
-operator|->
-name|sense_data
-expr_stmt|;
-comment|/* 	 * If the CDB is a physical address, we can't deal with it.. 	 */
-if|if
-condition|(
-operator|(
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|&
-name|CAM_CDB_PHYS
-operator|)
-operator|!=
-literal|0
-condition|)
-name|command_print
-operator|=
-literal|0
-expr_stmt|;
-else|else
-name|command_print
-operator|=
-literal|1
-expr_stmt|;
+endif|#
+directive|endif
+comment|/* _KERNEL */
+ifdef|#
+directive|ifdef
+name|_KERNEL
 comment|/* 	 * Get the device information. 	 */
 name|xpt_setup_ccb
 argument_list|(
@@ -8273,34 +8950,26 @@ name|device
 operator|=
 name|T_DIRECT
 expr_stmt|;
-if|if
-condition|(
-name|command_print
-operator|!=
-literal|0
-condition|)
-block|{
-name|char
-name|cdb_str
-index|[
-operator|(
-name|SCSI_MAX_CDBLEN
-operator|*
-literal|3
-operator|)
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|xpt_print_path
-argument_list|(
-name|csio
-operator|->
-name|ccb_h
+name|inq_data
+operator|=
+operator|&
+name|cgd
 operator|.
-name|path
-argument_list|)
+name|inq_data
 expr_stmt|;
+else|#
+directive|else
+comment|/* !_KERNEL */
+name|inq_data
+operator|=
+operator|&
+name|device
+operator|->
+name|inq_data
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
 if|if
 condition|(
 operator|(
@@ -8316,9 +8985,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|sbuf_printf
 argument_list|(
-literal|"%s. CDB: %s\n"
+name|sb
+argument_list|,
+literal|"%s. CDB: %s"
 argument_list|,
 name|scsi_op_desc
 argument_list|(
@@ -8331,9 +9002,6 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|&
-name|cgd
-operator|.
 name|inq_data
 argument_list|)
 argument_list|,
@@ -8357,9 +9025,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|sbuf_printf
 argument_list|(
-literal|"%s. CDB: %s\n"
+name|sb
+argument_list|,
+literal|"%s. CDB: %s"
 argument_list|,
 name|scsi_op_desc
 argument_list|(
@@ -8372,9 +9042,6 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|&
-name|cgd
-operator|.
 name|inq_data
 argument_list|)
 argument_list|,
@@ -8396,517 +9063,89 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * If the sense data is a physical pointer, forget it. 	 */
-if|if
-condition|(
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|&
-name|CAM_SENSE_PTR
-condition|)
-block|{
-if|if
-condition|(
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|&
-name|CAM_SENSE_PHYS
-condition|)
-return|return;
-else|else
-block|{
-comment|/*  			 * XXX KDM this is stupid, but casting the 			 * structure doesn't work... 			 */
-name|bcopy
-argument_list|(
-operator|&
-name|csio
-operator|->
-name|sense_data
-argument_list|,
-name|sense
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|scsi_sense_data
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* 		 * If the physical sense flag is set, but the sense pointer 		 * is not also set, we assume that the user is an idiot and 		 * return.  (Well, okay, it could be that somehow, the 		 * entire csio is physical, but we would have probably core 		 * dumped on one of the bogus pointer deferences above 		 * already.) 		 */
-if|if
-condition|(
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|&
-name|CAM_SENSE_PHYS
-condition|)
-return|return;
-else|else
-name|sense
-operator|=
-operator|&
-name|csio
-operator|->
-name|sense_data
-expr_stmt|;
-block|}
-name|xpt_print_path
-argument_list|(
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
-name|error_code
-operator|=
-name|sense
-operator|->
-name|error_code
-operator|&
-name|SSD_ERRCODE
-expr_stmt|;
-name|sense_key
-operator|=
-name|sense
-operator|->
-name|flags
-operator|&
-name|SSD_KEY
-expr_stmt|;
-switch|switch
-condition|(
-name|error_code
-condition|)
-block|{
-case|case
-name|SSD_DEFERRED_ERROR
-case|:
-name|printf
-argument_list|(
-literal|"Deferred Error: "
-argument_list|)
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
-name|SSD_CURRENT_ERROR
-case|:
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|scsi_sense_key_text
-index|[
-name|sense_key
-index|]
-argument_list|)
-expr_stmt|;
-name|info
-operator|=
-name|scsi_4btoul
-argument_list|(
-name|sense
-operator|->
-name|info
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sense
-operator|->
-name|error_code
-operator|&
-name|SSD_ERRCODE_VALID
-condition|)
-block|{
-switch|switch
-condition|(
-name|sense_key
-condition|)
-block|{
-case|case
-name|SSD_KEY_NOT_READY
-case|:
-case|case
-name|SSD_KEY_ILLEGAL_REQUEST
-case|:
-case|case
-name|SSD_KEY_UNIT_ATTENTION
-case|:
-case|case
-name|SSD_KEY_DATA_PROTECT
-case|:
-break|break;
-case|case
-name|SSD_KEY_BLANK_CHECK
-case|:
-name|printf
-argument_list|(
-literal|" req sz: %d (decimal)"
-argument_list|,
-name|info
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-if|if
-condition|(
-name|info
-condition|)
-block|{
-if|if
-condition|(
-name|sense
-operator|->
-name|flags
-operator|&
-name|SSD_ILI
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" ILI (length mismatch):"
-literal|" %d"
-argument_list|,
-name|info
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|" info:%x"
-argument_list|,
-name|info
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|info
-condition|)
-name|printf
-argument_list|(
-literal|" info?:%x"
-argument_list|,
-name|info
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sense
-operator|->
-name|extra_len
-operator|>=
-literal|4
-condition|)
-block|{
-if|if
-condition|(
-name|bcmp
-argument_list|(
-name|sense
-operator|->
-name|cmd_spec_info
-argument_list|,
-literal|"\0\0\0\0"
-argument_list|,
-literal|4
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" csi:%x,%x,%x,%x"
-argument_list|,
-name|sense
-operator|->
-name|cmd_spec_info
-index|[
-literal|0
-index|]
-argument_list|,
-name|sense
-operator|->
-name|cmd_spec_info
-index|[
-literal|1
-index|]
-argument_list|,
-name|sense
-operator|->
-name|cmd_spec_info
-index|[
-literal|2
-index|]
-argument_list|,
-name|sense
-operator|->
-name|cmd_spec_info
-index|[
-literal|3
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|asc
-operator|=
+return|return
 operator|(
-name|sense
-operator|->
-name|extra_len
-operator|>=
-literal|5
+literal|0
 operator|)
-condition|?
-name|sense
-operator|->
-name|add_sense_code
-else|:
-literal|0
-expr_stmt|;
-name|ascq
-operator|=
-operator|(
-name|sense
-operator|->
-name|extra_len
-operator|>=
-literal|6
-operator|)
-condition|?
-name|sense
-operator|->
-name|add_sense_code_qual
-else|:
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|asc
-operator|||
-name|ascq
-condition|)
-block|{
-specifier|const
-name|char
-modifier|*
-name|desc
-init|=
-name|scsi_sense_desc
-argument_list|(
-name|asc
-argument_list|,
-name|ascq
-argument_list|,
-operator|&
-name|cgd
-operator|.
-name|inq_data
-argument_list|)
-decl_stmt|;
-name|printf
-argument_list|(
-literal|" asc:%x,%x\n"
-argument_list|,
-name|asc
-argument_list|,
-name|ascq
-argument_list|)
-expr_stmt|;
-name|xpt_print_path
-argument_list|(
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|desc
-argument_list|)
-expr_stmt|;
+return|;
 block|}
-if|if
-condition|(
-name|sense
-operator|->
-name|extra_len
-operator|>=
-literal|7
-operator|&&
-name|sense
-operator|->
-name|fru
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" field replaceable unit: %x"
-argument_list|,
-name|sense
-operator|->
-name|fru
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
-name|sense
-operator|->
-name|extra_len
-operator|>=
-literal|10
-operator|)
-operator|&&
-operator|(
-name|sense
-operator|->
-name|sense_key_spec
-index|[
-literal|0
-index|]
-operator|&
-name|SSD_SCS_VALID
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" sks:%x,%x"
-argument_list|,
-name|sense
-operator|->
-name|sense_key_spec
-index|[
-literal|0
-index|]
-argument_list|,
-name|scsi_2btoul
-argument_list|(
-operator|&
-name|sense
-operator|->
-name|sense_key_spec
-index|[
-literal|1
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"error code %d"
-argument_list|,
-name|sense
-operator|->
-name|error_code
-operator|&
-name|SSD_ERRCODE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sense
-operator|->
-name|error_code
-operator|&
-name|SSD_ERRCODE_VALID
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" at block no. %d (decimal)"
-argument_list|,
-name|info
-operator|=
-name|scsi_4btoul
-argument_list|(
-name|sense
-operator|->
-name|info
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
+end_decl_stmt
 
 begin_comment
-comment|/* !_KERNEL */
+comment|/*  * scsi_sense_sbuf() returns 0 for success and -1 for failure.  */
 end_comment
 
-begin_function
-name|char
-modifier|*
-name|scsi_sense_string
-parameter_list|(
-name|struct
-name|cam_device
-modifier|*
-name|device
-parameter_list|,
-name|struct
-name|ccb_scsiio
-modifier|*
-name|csio
-parameter_list|,
-name|char
-modifier|*
-name|str
-parameter_list|,
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
 name|int
-name|str_len
-parameter_list|)
+name|scsi_sense_sbuf
+argument_list|(
+expr|struct
+name|ccb_scsiio
+operator|*
+name|csio
+argument_list|,
+expr|struct
+name|sbuf
+operator|*
+name|sb
+argument_list|,
+name|scsi_sense_string_flags
+name|flags
+argument_list|)
+else|#
+directive|else
+comment|/* !_KERNEL */
+name|int
+name|scsi_sense_sbuf
+argument_list|(
+expr|struct
+name|cam_device
+operator|*
+name|device
+argument_list|,
+expr|struct
+name|ccb_scsiio
+operator|*
+name|csio
+argument_list|,
+expr|struct
+name|sbuf
+operator|*
+name|sb
+argument_list|,
+name|scsi_sense_string_flags
+name|flags
+argument_list|)
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
 block|{
 name|struct
 name|scsi_sense_data
 modifier|*
 name|sense
 decl_stmt|;
+name|struct
+name|scsi_inquiry_data
+modifier|*
+name|inq_data
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|struct
+name|ccb_getdev
+name|cgd
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _KERNEL */
 name|u_int32_t
 name|info
 decl_stmt|;
@@ -8921,45 +9160,32 @@ name|asc
 decl_stmt|,
 name|ascq
 decl_stmt|;
-name|u_int8_t
-name|command_print
-decl_stmt|;
 name|char
 name|path_str
 index|[
 literal|64
 index|]
 decl_stmt|;
-name|char
-name|tmpstr
-index|[
-literal|2048
-index|]
-decl_stmt|;
-name|int
-name|tmpstrlen
-init|=
-literal|2048
-decl_stmt|;
-name|int
-name|cur_len
-init|=
-literal|0
-decl_stmt|,
-name|tmplen
-init|=
-literal|0
-decl_stmt|,
-name|retlen
-decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_KERNEL
 if|if
 condition|(
-operator|(
 name|device
 operator|==
 name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
 operator|)
-operator|||
+return|;
+endif|#
+directive|endif
+comment|/* !_KERNEL */
+if|if
+condition|(
 operator|(
 name|csio
 operator|==
@@ -8967,25 +9193,15 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|str
+name|sb
 operator|==
 name|NULL
 operator|)
 condition|)
 return|return
 operator|(
-name|NULL
-operator|)
-return|;
-if|if
-condition|(
-name|str_len
-operator|<=
-literal|0
-condition|)
-return|return
-operator|(
-name|NULL
+operator|-
+literal|1
 operator|)
 return|;
 comment|/* 	 * If the CDB is a physical address, we can't deal with it.. 	 */
@@ -9003,252 +9219,170 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|command_print
-operator|=
-literal|0
+name|flags
+operator|&=
+operator|~
+name|SSS_FLAG_PRINT_COMMAND
 expr_stmt|;
-else|else
-name|command_print
-operator|=
-literal|1
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|xpt_path_string
+argument_list|(
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+name|path_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path_str
+argument_list|)
+argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* !_KERNEL */
 name|cam_path_string
 argument_list|(
 name|device
 argument_list|,
 name|path_str
 argument_list|,
-literal|64
+sizeof|sizeof
+argument_list|(
+name|path_str
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|str
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
+ifdef|#
+directive|ifdef
+name|_KERNEL
+comment|/* 	 * Get the device information. 	 */
+name|xpt_setup_ccb
+argument_list|(
+operator|&
+name|cgd
+operator|.
+name|ccb_h
+argument_list|,
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+comment|/*priority*/
+literal|1
+argument_list|)
 expr_stmt|;
+name|cgd
+operator|.
+name|ccb_h
+operator|.
+name|func_code
+operator|=
+name|XPT_GDEV_TYPE
+expr_stmt|;
+name|xpt_action
+argument_list|(
+operator|(
+expr|union
+name|ccb
+operator|*
+operator|)
+operator|&
+name|cgd
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If the device is unconfigured, just pretend that it is a hard 	 * drive.  scsi_op_desc() needs this. 	 */
+if|if
+condition|(
+name|cgd
+operator|.
+name|ccb_h
+operator|.
+name|status
+operator|==
+name|CAM_DEV_NOT_THERE
+condition|)
+name|cgd
+operator|.
+name|inq_data
+operator|.
+name|device
+operator|=
+name|T_DIRECT
+expr_stmt|;
+name|inq_data
+operator|=
+operator|&
+name|cgd
+operator|.
+name|inq_data
+expr_stmt|;
+else|#
+directive|else
+comment|/* !_KERNEL */
+name|inq_data
+operator|=
+operator|&
+name|device
+operator|->
+name|inq_data
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
 name|sense
 operator|=
 name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|command_print
-operator|!=
-literal|0
+name|flags
+operator|&
+name|SSS_FLAG_PRINT_COMMAND
 condition|)
 block|{
-name|char
-name|cdb_str
-index|[
-operator|(
-name|SCSI_MAX_CDBLEN
-operator|*
-literal|3
-operator|)
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_cat
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
-argument_list|,
-literal|"%s"
+name|sb
 argument_list|,
 name|path_str
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|scsi_command_string
 argument_list|(
-name|str
+name|csio
 argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
+name|sb
 argument_list|)
 expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|&
-name|CAM_CDB_POINTER
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|retlen
-operator|=
-name|snprintf
+else|#
+directive|else
+comment|/* !_KERNEL */
+name|scsi_command_string
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
-argument_list|,
-literal|"%s. CDB: %s\n"
-argument_list|,
-name|scsi_op_desc
-argument_list|(
-name|csio
-operator|->
-name|cdb_io
-operator|.
-name|cdb_ptr
-index|[
-literal|0
-index|]
-argument_list|,
-operator|&
 name|device
-operator|->
-name|inq_data
-argument_list|)
 argument_list|,
-name|scsi_cdb_string
-argument_list|(
 name|csio
-operator|->
-name|cdb_io
-operator|.
-name|cdb_ptr
 argument_list|,
-name|cdb_str
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cdb_str
-argument_list|)
-argument_list|)
+name|sb
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|retlen
-operator|=
-name|snprintf
-argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
-argument_list|,
-literal|"%s. CDB: %s\n"
-argument_list|,
-name|scsi_op_desc
-argument_list|(
-name|csio
-operator|->
-name|cdb_io
-operator|.
-name|cdb_bytes
-index|[
-literal|0
-index|]
-argument_list|,
-operator|&
-name|device
-operator|->
-name|inq_data
-argument_list|)
-argument_list|,
-name|scsi_cdb_string
-argument_list|(
-name|csio
-operator|->
-name|cdb_io
-operator|.
-name|cdb_bytes
-argument_list|,
-name|cdb_str
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cdb_str
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
 block|}
 comment|/* 	 * If the sense data is a physical pointer, forget it. 	 */
 if|if
@@ -9274,12 +9408,13 @@ name|CAM_SENSE_PHYS
 condition|)
 return|return
 operator|(
-name|NULL
+operator|-
+literal|1
 operator|)
 return|;
 else|else
 block|{
-comment|/*  			 * XXX KDM this is stupid, but casting the 			 * structure doesn't work... 			 */
+comment|/*  			 * bcopy the pointer to avoid unaligned access 			 * errors on finicky architectures.  We don't 			 * ensure that the sense data is pointer aligned. 			 */
 name|bcopy
 argument_list|(
 operator|&
@@ -9314,7 +9449,8 @@ name|CAM_SENSE_PHYS
 condition|)
 return|return
 operator|(
-name|NULL
+operator|-
+literal|1
 operator|)
 return|;
 else|else
@@ -9326,57 +9462,12 @@ operator|->
 name|sense_data
 expr_stmt|;
 block|}
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_cat
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
-argument_list|,
-literal|"%s"
+name|sb
 argument_list|,
 name|path_str
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|error_code
 operator|=
@@ -9402,114 +9493,83 @@ block|{
 case|case
 name|SSD_DEFERRED_ERROR
 case|:
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|"Deferred Error: "
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 name|SSD_CURRENT_ERROR
 case|:
-name|retlen
+block|{
+specifier|const
+name|char
+modifier|*
+name|sense_key_desc
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|asc_desc
+decl_stmt|;
+name|asc
 operator|=
-name|snprintf
-argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
-argument_list|,
-literal|"%s"
-argument_list|,
-name|scsi_sense_key_text
-index|[
-name|sense_key
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
+name|sense
+operator|->
+name|extra_len
+operator|>=
+literal|5
 operator|)
-operator|<
+condition|?
+name|sense
+operator|->
+name|add_sense_code
+else|:
 literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
+expr_stmt|;
+name|ascq
+operator|=
+operator|(
+name|sense
+operator|->
+name|extra_len
+operator|>=
+literal|6
+operator|)
+condition|?
+name|sense
+operator|->
+name|add_sense_code_qual
+else|:
+literal|0
+expr_stmt|;
+name|scsi_sense_desc
 argument_list|(
-name|str
+name|sense_key
 argument_list|,
-name|tmpstr
+name|asc
 argument_list|,
-name|tmplen
+name|ascq
+argument_list|,
+name|inq_data
+argument_list|,
+operator|&
+name|sense_key_desc
+argument_list|,
+operator|&
+name|asc_desc
 argument_list|)
 expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
+name|sbuf_cat
+argument_list|(
+name|sb
+argument_list|,
+name|sense_key_desc
+argument_list|)
 expr_stmt|;
 name|info
 operator|=
@@ -9550,57 +9610,14 @@ break|break;
 case|case
 name|SSD_KEY_BLANK_CHECK
 case|:
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|" req sz: %d (decimal)"
 argument_list|,
 name|info
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 break|break;
 default|default:
@@ -9618,13 +9635,9 @@ operator|&
 name|SSD_ILI
 condition|)
 block|{
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|" ILI (length "
 literal|"mismatch): %d"
@@ -9635,13 +9648,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|" info:%x"
 argument_list|,
@@ -9649,45 +9658,6 @@ name|info
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -9697,57 +9667,14 @@ condition|(
 name|info
 condition|)
 block|{
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|" info?:%x"
 argument_list|,
 name|info
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 block|}
 if|if
@@ -9773,13 +9700,9 @@ literal|4
 argument_list|)
 condition|)
 block|{
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|" csi:%x,%x,%x,%x"
 argument_list|,
@@ -9812,79 +9735,8 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 block|}
 block|}
-name|asc
-operator|=
-operator|(
-name|sense
-operator|->
-name|extra_len
-operator|>=
-literal|5
-operator|)
-condition|?
-name|sense
-operator|->
-name|add_sense_code
-else|:
-literal|0
-expr_stmt|;
-name|ascq
-operator|=
-operator|(
-name|sense
-operator|->
-name|extra_len
-operator|>=
-literal|6
-operator|)
-condition|?
-name|sense
-operator|->
-name|add_sense_code_qual
-else|:
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|asc
@@ -9892,30 +9744,9 @@ operator|||
 name|ascq
 condition|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|desc
-init|=
-name|scsi_sense_desc
+name|sbuf_printf
 argument_list|(
-name|asc
-argument_list|,
-name|ascq
-argument_list|,
-operator|&
-name|device
-operator|->
-name|inq_data
-argument_list|)
-decl_stmt|;
-name|retlen
-operator|=
-name|snprintf
-argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|" asc:%x,%x\n%s%s"
 argument_list|,
@@ -9925,47 +9756,8 @@ name|ascq
 argument_list|,
 name|path_str
 argument_list|,
-name|desc
+name|asc_desc
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 block|}
 if|if
@@ -9981,13 +9773,9 @@ operator|->
 name|fru
 condition|)
 block|{
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|" field replaceable unit: %x"
 argument_list|,
@@ -9995,45 +9783,6 @@ name|sense
 operator|->
 name|fru
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
 expr_stmt|;
 block|}
 if|if
@@ -10060,15 +9809,146 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|retlen
+switch|switch
+condition|(
+name|sense_key
+condition|)
+block|{
+case|case
+name|SSD_KEY_ILLEGAL_REQUEST
+case|:
+block|{
+name|int
+name|bad_command
+decl_stmt|;
+name|char
+name|tmpstr2
+index|[
+literal|40
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|sense
+operator|->
+name|sense_key_spec
+index|[
+literal|0
+index|]
+operator|&
+literal|0x40
+condition|)
+name|bad_command
 operator|=
+literal|1
+expr_stmt|;
+else|else
+name|bad_command
+operator|=
+literal|0
+expr_stmt|;
+name|tmpstr2
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* Bit pointer is valid */
+if|if
+condition|(
+name|sense
+operator|->
+name|sense_key_spec
+index|[
+literal|0
+index|]
+operator|&
+literal|0x08
+condition|)
 name|snprintf
 argument_list|(
-name|tmpstr
+name|tmpstr2
 argument_list|,
-name|tmpstrlen
+sizeof|sizeof
+argument_list|(
+name|tmpstr2
+argument_list|)
 argument_list|,
-literal|" sks:%x,%x"
+literal|"bit %d"
+argument_list|,
+name|sense
+operator|->
+name|sense_key_spec
+index|[
+literal|0
+index|]
+operator|&
+literal|0x7
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|": %s byte %d %s is invalid"
+argument_list|,
+name|bad_command
+condition|?
+literal|"Command"
+else|:
+literal|"Data"
+argument_list|,
+name|scsi_2btoul
+argument_list|(
+operator|&
+name|sense
+operator|->
+name|sense_key_spec
+index|[
+literal|1
+index|]
+argument_list|)
+argument_list|,
+name|tmpstr2
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|SSD_KEY_RECOVERED_ERROR
+case|:
+case|case
+name|SSD_KEY_HARDWARE_ERROR
+case|:
+case|case
+name|SSD_KEY_MEDIUM_ERROR
+case|:
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|" actual retry count: %d"
+argument_list|,
+name|scsi_2btoul
+argument_list|(
+operator|&
+name|sense
+operator|->
+name|sense_key_spec
+index|[
+literal|1
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|" sks:%#x,%#x"
 argument_list|,
 name|sense
 operator|->
@@ -10089,55 +9969,15 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
+break|break;
+block|}
 block|}
 break|break;
+block|}
 default|default:
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|"error code %d"
 argument_list|,
@@ -10150,45 +9990,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
 name|sense
 operator|->
 name|error_code
@@ -10196,13 +9997,9 @@ operator|&
 name|SSD_ERRCODE_VALID
 condition|)
 block|{
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|" at block no. %d (decimal)"
 argument_list|,
@@ -10216,106 +10013,218 @@ name|info
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 block|}
 block|}
-name|retlen
-operator|=
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|tmpstr
-argument_list|,
-name|tmpstrlen
+name|sb
 argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmplen
-operator|=
-name|str_len
-operator|-
-name|cur_len
-operator|-
-literal|1
-operator|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|sst_bailout
-goto|;
-name|strncat
-argument_list|(
-name|str
-argument_list|,
-name|tmpstr
-argument_list|,
-name|tmplen
-argument_list|)
-expr_stmt|;
-name|cur_len
-operator|+=
-name|retlen
-expr_stmt|;
-name|str
-index|[
-name|str_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|sst_bailout
-label|:
 return|return
 operator|(
-name|str
+literal|0
 operator|)
 return|;
 block|}
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|scsi_sense_string
+argument_list|(
+expr|struct
+name|ccb_scsiio
+operator|*
+name|csio
+argument_list|,
+name|char
+operator|*
+name|str
+argument_list|,
+name|int
+name|str_len
+argument_list|)
+else|#
+directive|else
+comment|/* !_KERNEL */
+name|char
+modifier|*
+name|scsi_sense_string
+argument_list|(
+expr|struct
+name|cam_device
+operator|*
+name|device
+argument_list|,
+expr|struct
+name|ccb_scsiio
+operator|*
+name|csio
+argument_list|,
+name|char
+operator|*
+name|str
+argument_list|,
+name|int
+name|str_len
+argument_list|)
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
+block|{
+name|struct
+name|sbuf
+name|sb
+decl_stmt|;
+name|sbuf_new
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+name|str
+argument_list|,
+name|str_len
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|scsi_sense_sbuf
+argument_list|(
+name|csio
+argument_list|,
+operator|&
+name|sb
+argument_list|,
+name|SSS_FLAG_PRINT_COMMAND
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* !_KERNEL */
+name|scsi_sense_sbuf
+argument_list|(
+name|device
+argument_list|,
+name|csio
+argument_list|,
+operator|&
+name|sb
+argument_list|,
+name|SSS_FLAG_PRINT_COMMAND
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
+name|sbuf_finish
+argument_list|(
+operator|&
+name|sb
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|sbuf_data
+argument_list|(
+operator|&
+name|sb
+argument_list|)
+operator|)
+return|;
+block|}
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function
+name|void
+name|scsi_sense_print
+parameter_list|(
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+parameter_list|)
+block|{
+name|struct
+name|sbuf
+name|sb
+decl_stmt|;
+name|char
+name|str
+index|[
+literal|512
+index|]
+decl_stmt|;
+name|sbuf_new
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+name|str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|scsi_sense_sbuf
+argument_list|(
+name|csio
+argument_list|,
+operator|&
+name|sb
+argument_list|,
+name|SSS_FLAG_PRINT_COMMAND
+argument_list|)
+expr_stmt|;
+name|sbuf_finish
+argument_list|(
+operator|&
+name|sb
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|sbuf_data
+argument_list|(
+operator|&
+name|sb
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_function
 name|void
@@ -10336,10 +10245,14 @@ modifier|*
 name|ofile
 parameter_list|)
 block|{
+name|struct
+name|sbuf
+name|sb
+decl_stmt|;
 name|char
 name|str
 index|[
-literal|2048
+literal|512
 index|]
 decl_stmt|;
 if|if
@@ -10363,21 +10276,49 @@ name|NULL
 operator|)
 condition|)
 return|return;
+name|sbuf_new
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+name|str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|scsi_sense_sbuf
+argument_list|(
+name|device
+argument_list|,
+name|csio
+argument_list|,
+operator|&
+name|sb
+argument_list|,
+name|SSS_FLAG_PRINT_COMMAND
+argument_list|)
+expr_stmt|;
+name|sbuf_finish
+argument_list|(
+operator|&
+name|sb
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
 literal|"%s"
 argument_list|,
-name|scsi_sense_string
+name|sbuf_data
 argument_list|(
-name|device
-argument_list|,
-name|csio
-argument_list|,
-name|str
-argument_list|,
-literal|2048
+operator|&
+name|sb
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10392,663 +10333,6 @@ end_endif
 begin_comment
 comment|/* _KERNEL/!_KERNEL */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|scsi_interpret_sense
-argument_list|(
-expr|union
-name|ccb
-operator|*
-name|ccb
-argument_list|,
-name|u_int32_t
-name|sense_flags
-argument_list|,
-name|u_int32_t
-operator|*
-name|relsim_flags
-argument_list|,
-name|u_int32_t
-operator|*
-name|openings
-argument_list|,
-name|u_int32_t
-operator|*
-name|timeout
-argument_list|,
-name|scsi_sense_action
-name|error_action
-argument_list|)
-else|#
-directive|else
-name|int
-name|scsi_interpret_sense
-argument_list|(
-expr|struct
-name|cam_device
-operator|*
-name|device
-argument_list|,
-expr|union
-name|ccb
-operator|*
-name|ccb
-argument_list|,
-name|u_int32_t
-name|sense_flags
-argument_list|,
-name|u_int32_t
-operator|*
-name|relsim_flags
-argument_list|,
-name|u_int32_t
-operator|*
-name|openings
-argument_list|,
-name|u_int32_t
-operator|*
-name|timeout
-argument_list|,
-name|scsi_sense_action
-name|error_action
-argument_list|)
-endif|#
-directive|endif
-block|{
-name|struct
-name|scsi_sense_data
-modifier|*
-name|sense
-decl_stmt|;
-name|int
-name|error_code
-decl_stmt|,
-name|sense_key
-decl_stmt|,
-name|asc
-decl_stmt|,
-name|ascq
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|int
-name|print_sense
-decl_stmt|;
-name|struct
-name|ccb_scsiio
-modifier|*
-name|csio
-decl_stmt|;
-name|int
-name|retry
-decl_stmt|;
-name|csio
-operator|=
-operator|&
-name|ccb
-operator|->
-name|csio
-expr_stmt|;
-name|sense
-operator|=
-operator|&
-name|csio
-operator|->
-name|sense_data
-expr_stmt|;
-name|scsi_extract_sense
-argument_list|(
-name|sense
-argument_list|,
-operator|&
-name|error_code
-argument_list|,
-operator|&
-name|sense_key
-argument_list|,
-operator|&
-name|asc
-argument_list|,
-operator|&
-name|ascq
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|sense_flags
-operator||=
-name|SF_PRINT_ALWAYS
-expr_stmt|;
-name|print_sense
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|sense_flags
-operator|&
-name|SF_NO_PRINT
-operator|)
-operator|==
-literal|0
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-operator|(
-name|sense_flags
-operator|&
-name|SF_NO_PRINT
-operator|)
-operator|==
-literal|0
-condition|)
-endif|#
-directive|endif
-name|print_sense
-operator|=
-name|TRUE
-expr_stmt|;
-else|else
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-switch|switch
-condition|(
-name|error_code
-condition|)
-block|{
-case|case
-name|SSD_DEFERRED_ERROR
-case|:
-block|{
-comment|/* 		 * XXX dufault@FreeBSD.org 		 * This error doesn't relate to the command associated 		 * with this request sense.  A deferred error is an error 		 * for a command that has already returned GOOD status 		 * (see 8.2.14.2). 		 * 		 * By my reading of that section, it looks like the current 		 * command has been cancelled, we should now clean things up 		 * (hopefully recovering any lost data) and then retry the 		 * current command.  There are two easy choices, both wrong: 		 * 		 * 1. Drop through (like we had been doing), thus treating 		 *    this as if the error were for the current command and 		 *    return and stop the current command. 		 *  		 * 2. Issue a retry (like I made it do) thus hopefully 		 *    recovering the current transfer, and ignoring the 		 *    fact that we've dropped a command. 		 * 		 * These should probably be handled in a device specific 		 * sense handler or punted back up to a user mode daemon 		 */
-comment|/* decrement the number of retries */
-name|retry
-operator|=
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|>
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|retry
-condition|)
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|--
-expr_stmt|;
-name|error
-operator|=
-name|ERESTART
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|SSD_CURRENT_ERROR
-case|:
-block|{
-switch|switch
-condition|(
-name|sense_key
-condition|)
-block|{
-case|case
-name|SSD_KEY_NO_SENSE
-case|:
-comment|/* Why were we called then? Well don't bail now */
-comment|/* FALLTHROUGH */
-case|case
-name|SSD_KEY_EQUAL
-case|:
-comment|/* These should be filtered by the peripheral drivers */
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
-name|SSD_KEY_MISCOMPARE
-case|:
-comment|/* decrement the number of retries */
-name|retry
-operator|=
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|>
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|retry
-condition|)
-block|{
-name|error
-operator|=
-name|ERESTART
-expr_stmt|;
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|--
-expr_stmt|;
-block|}
-else|else
-block|{
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-block|}
-case|case
-name|SSD_KEY_RECOVERED_ERROR
-case|:
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* not an error */
-break|break;
-case|case
-name|SSD_KEY_ILLEGAL_REQUEST
-case|:
-if|if
-condition|(
-operator|(
-operator|(
-name|sense_flags
-operator|&
-name|SF_QUIET_IR
-operator|)
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-operator|(
-name|sense_flags
-operator|&
-name|SF_PRINT_ALWAYS
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-break|break;
-case|case
-name|SSD_KEY_NOT_READY
-case|:
-case|case
-name|SSD_KEY_DATA_PROTECT
-case|:
-case|case
-name|SSD_KEY_VOLUME_OVERFLOW
-case|:
-case|case
-name|SSD_KEY_BLANK_CHECK
-case|:
-comment|/* should be filtered out by 					     peripheral drivers */
-name|retry
-operator|=
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|>
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|retry
-condition|)
-block|{
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|--
-expr_stmt|;
-name|error
-operator|=
-name|ERESTART
-expr_stmt|;
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|(
-operator|(
-name|error_action
-operator|&
-name|SSQ_PRINT_SENSE
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-operator|(
-name|sense_flags
-operator|&
-name|SF_PRINT_ALWAYS
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-name|error
-operator|=
-name|error_action
-operator|&
-name|SS_ERRMASK
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|SSD_KEY_UNIT_ATTENTION
-case|:
-comment|/* 			 * This should also be filtered out by 			 * peripheral drivers since each has a different 			 * concept of what it means to invalidate the media. 			 */
-if|if
-condition|(
-operator|(
-name|sense_flags
-operator|&
-name|SF_RETRY_UA
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* don't decrement retry count */
-name|error
-operator|=
-name|ERESTART
-expr_stmt|;
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* decrement the number of retries */
-name|retry
-operator|=
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|>
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|retry
-condition|)
-block|{
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|--
-expr_stmt|;
-name|error
-operator|=
-name|ERESTART
-expr_stmt|;
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|(
-operator|(
-name|error_action
-operator|&
-name|SSQ_PRINT_SENSE
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-operator|(
-name|sense_flags
-operator|&
-name|SF_PRINT_ALWAYS
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-name|error
-operator|=
-name|error_action
-operator|&
-name|SS_ERRMASK
-expr_stmt|;
-block|}
-block|}
-break|break;
-case|case
-name|SSD_KEY_ABORTED_COMMAND
-case|:
-default|default:
-comment|/* decrement the number of retries */
-name|retry
-operator|=
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|>
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|retry
-condition|)
-block|{
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|--
-expr_stmt|;
-name|error
-operator|=
-name|ERESTART
-expr_stmt|;
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|(
-operator|(
-name|error_action
-operator|&
-name|SSQ_PRINT_SENSE
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-operator|(
-name|sense_flags
-operator|&
-name|SF_PRINT_ALWAYS
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-name|error
-operator|=
-name|error_action
-operator|&
-name|SS_ERRMASK
-expr_stmt|;
-block|}
-comment|/* 			 * Make sure ABORTED COMMAND errors get 			 * printed as they're indicative of marginal 			 * SCSI busses that people should address. 			 */
-if|if
-condition|(
-name|sense_key
-operator|==
-name|SSD_KEY_ABORTED_COMMAND
-condition|)
-name|print_sense
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-break|break;
-block|}
-default|default:
-comment|/* decrement the number of retries */
-name|retry
-operator|=
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|>
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|retry
-condition|)
-block|{
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|retry_count
-operator|--
-expr_stmt|;
-name|error
-operator|=
-name|ERESTART
-expr_stmt|;
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
-else|else
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|print_sense
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|_KERNEL
-name|scsi_sense_print
-argument_list|(
-name|csio
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|scsi_sense_print
-argument_list|(
-name|device
-argument_list|,
-name|csio
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-end_decl_stmt
 
 begin_comment
 comment|/*  * This function currently requires at least 36 bytes, or  * SHORT_INQUIRY_LENGTH, worth of data to function properly.  If this  * function needs more or less data in the future, another length should be  * defined in scsi_all.h to indicate the minimum amount of data necessary  * for this routine to function properly.  */
@@ -13511,7 +12795,7 @@ name|scsi_cmd
 operator|->
 name|how
 operator||=
-name|SSS_START
+name|SS_START
 expr_stmt|;
 comment|/* it takes a lot of power to start a drive */
 name|extra_flags
