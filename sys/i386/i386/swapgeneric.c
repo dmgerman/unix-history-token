@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -210,45 +216,6 @@ decl_stmt|,
 name|dmmax
 decl_stmt|,
 name|dmtext
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS
-end_ifdef
-
-begin_extern
-extern|extern int (*mountroot
-end_extern
-
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nfs_mountroot
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -616,14 +583,17 @@ goto|goto
 name|retry
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|NFS
+comment|/* XXX */
 if|if
 condition|(
-name|mountroot
+name|strcmp
+argument_list|(
+name|mountrootfsname
+argument_list|,
+literal|"nfs"
+argument_list|)
 operator|==
-name|nfs_mountroot
+literal|0
 condition|)
 block|{
 comment|/* 		 * The NFS code in nfs_vfsops.c handles root and swap 		 * for us if we're booting diskless. This is just to 		 * make swapconf() happy. 		 */
@@ -634,8 +604,6 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 name|unit
 operator|=
 literal|0
