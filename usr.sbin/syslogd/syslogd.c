@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.12.2.10 1998/03/01 11:09:02 jraynard Exp $"
+literal|"$Id: syslogd.c,v 1.12.2.11 1998/03/09 13:56:07 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,12 +157,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/msgbuf.h>
 end_include
 
 begin_include
@@ -1409,7 +1403,7 @@ name|hname
 decl_stmt|,
 name|line
 index|[
-name|MSG_BSIZE
+name|MAXLINE
 operator|+
 literal|1
 index|]
@@ -2274,10 +2268,7 @@ name|fklog
 argument_list|,
 name|line
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|line
-argument_list|)
+name|MAXLINE
 operator|-
 literal|1
 argument_list|)
