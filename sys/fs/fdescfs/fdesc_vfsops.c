@@ -265,7 +265,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-literal|"fdesc"
+literal|"fdescfs"
 argument_list|,
 name|mp
 operator|->
@@ -275,7 +275,7 @@ name|f_mntfromname
 argument_list|,
 sizeof|sizeof
 argument_list|(
-literal|"fdesc"
+literal|"fdescfs"
 argument_list|)
 argument_list|)
 expr_stmt|;
