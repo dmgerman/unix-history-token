@@ -1,6 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  *  *  *  * Card state machine:  * -------------------  *  * This is the state engine which drives the card "as such" which in reality  * means the MUSYCC chip.  *  *  State	Description  *  *  IDLE	The card is in this state when no channels are configured.  *		This is the state we leave the card in after _attach()  *  *  INIT	The card is being initialized  *  *  RUNNING	The card is running  *  *  FAULT	The card is hosed and being reset  *  *      ------------------  *     /                  \  *    v                    |  *  IDLE ---> INIT ---> RUNNING  *                       ^   |  *                       |   |  *                       |   v  *                       FAULT  *  */
+comment|/*-  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Card state machine:  * -------------------  *  * This is the state engine which drives the card "as such" which in reality  * means the MUSYCC chip.  *  *  State	Description  *  *  IDLE	The card is in this state when no channels are configured.  *		This is the state we leave the card in after _attach()  *  *  INIT	The card is being initialized  *  *  RUNNING	The card is running  *  *  FAULT	The card is hosed and being reset  *  *      ------------------  *     /                  \  *    v                    |  *  IDLE ---> INIT ---> RUNNING  *                       ^   |  *                       |   |  *                       |   v  *                       FAULT  */
 end_comment
 
 begin_include

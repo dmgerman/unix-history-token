@@ -17,19 +17,17 @@ literal|"Version  3(42) 10-May-2003"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_decl_stmt
+begin_expr_stmt
+operator|*
+operator|/
 specifier|static
 name|char
 name|MATCDCOPYRIGHT
 index|[]
-init|=
+operator|=
 literal|"Matsushita CD-ROM driver, Copr. 1994,1995,2002,2003 Frank Durda IV"
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	Fixed Defines - Change these values only if you are positive that 	you know what you are doing.  Values meant to be changed are in the 	file "dev/matcd/options.h". ---------------------------------------------------------------------------*/
@@ -232,6 +230,20 @@ end_define
 begin_comment
 comment|/*	Flags in the if_state array */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#

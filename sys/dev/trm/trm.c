@@ -3,6 +3,20 @@ begin_comment
 comment|/*  *      O.S   : FreeBSD CAM  *	FILE NAME  : trm.c					        *	     BY    : C.L. Huang 	(ching@tekram.com.tw)  *                   Erich Chen     (erich@tekram.com.tw)  *      Description: Device Driver for Tekram SCSI adapters  *                   DC395U/UW/F ,DC315/U(TRM-S1040)  *                   DC395U2D/U2W(TRM-S2080)  *                   PCI SCSI Bus Master Host Adapter	  *                   (SCSI chip set used Tekram ASIC TRM-S1040,TRM-S2080)  *(C)Copyright 1995-2001 Tekram Technology Co.,Ltd.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  *	HISTORY:					  *						  *	REV#	DATE	NAME    	DESCRIPTION	  *  1.05   05/01/1999  ERICH CHEN  First released for 3.x.x (CAM)  *  1.06   07/29/1999  ERICH CHEN  Modify for NEW PCI  *  1.07   12/12/1999  ERICH CHEN  Modify for 3.3.x ,DCB no free  *  1.08   06/12/2000  ERICH CHEN  Modify for 4.x.x   *  1.09   11/03/2000  ERICH CHEN  Modify for 4.1.R ,new sim  *  1.10   10/10/2001  Oscar Feng  Fixed CAM rescan hang up bug.	  *  1.11   10/13/2001  Oscar Feng  Fixed wrong Async speed display bug.	  */
 end_comment

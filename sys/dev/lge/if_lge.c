@@ -3,6 +3,20 @@ begin_comment
 comment|/*  * Copyright (c) 2001 Wind River Systems  * Copyright (c) 1997, 1998, 1999, 2000, 2001  *	Bill Paul<william.paul@windriver.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Level 1 LXT1001 gigabit ethernet driver for FreeBSD. Public  * documentation not available, but ask me nicely.  *  * The Level 1 chip is used on some D-Link, SMC and Addtron NICs.  * It's a 64-bit PCI part that supports TCP/IP checksum offload,  * VLAN tagging/insertion, GMII and TBI (1000baseX) ports. There  * are three supported methods for data transfer between host and  * NIC: programmed I/O, traditional scatter/gather DMA and Packet  * Propulsion Technology (tm) DMA. The latter mechanism is a form  * of double buffer DMA where the packet data is copied to a  * pre-allocated DMA buffer who's physical address has been loaded  * into a table at device initialization time. The rationale is that  * the virtual to physical address translation needed for normal  * scatter/gather DMA is more expensive than the data copy needed  * for double buffering. This may be true in Windows NT and the like,  * but it isn't true for us, at least on the x86 arch. This driver  * uses the scatter/gather I/O method for both TX and RX.  *  * The LXT1001 only supports TCP/IP checksum offload on receive.  * Also, the VLAN tagging is done using a 16-entry table which allows  * the chip to perform hardware filtering based on VLAN tags. Sadly,  * our vlan support doesn't currently play well with this kind of  * hardware support.  *  * Special thanks to:  * - Jeff James at Intel, for arranging to have the LXT1001 manual  *   released (at long last)  * - Beny Chen at D-Link, for actually sending it to me  * - Brad Short and Keith Alexis at SMC, for sending me sample  *   SMC9462SX and SMC9462TX adapters for testing  * - Paul Saab at Y!, for not killing me (though it remains to be seen  *   if in fact he did me much of a favor)  */
 end_comment

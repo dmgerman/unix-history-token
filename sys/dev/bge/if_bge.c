@@ -3,6 +3,20 @@ begin_comment
 comment|/*  * Copyright (c) 2001 Wind River Systems  * Copyright (c) 1997, 1998, 1999, 2001  *	Bill Paul<wpaul@windriver.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Broadcom BCM570x family gigabit ethernet driver for FreeBSD.  *  * The Broadcom BCM5700 is based on technology originally developed by  * Alteon Networks as part of the Tigon I and Tigon II gigabit ethernet  * MAC chips. The BCM5700, sometimes refered to as the Tigon III, has  * two on-board MIPS R4000 CPUs and can have as much as 16MB of external  * SSRAM. The BCM5700 supports TCP, UDP and IP checksum offload, jumbo  * frames, highly configurable RX filtering, and 16 RX and TX queues  * (which, along with RX filter rules, can be used for QOS applications).  * Other features, such as TCP segmentation, may be available as part  * of value-added firmware updates. Unlike the Tigon I and Tigon II,  * firmware images can be stored in hardware and need not be compiled  * into the driver.  *  * The BCM5700 supports the PCI v2.2 and PCI-X v1.0 standards, and will  * function in a 32-bit/64-bit 33/66Mhz bus, or a 64-bit/133Mhz bus.  *   * The BCM5701 is a single-chip solution incorporating both the BCM5700  * MAC and a BCM5401 10/100/1000 PHY. Unlike the BCM5700, the BCM5701  * does not support external SSRAM.  *  * Broadcom also produces a variation of the BCM5700 under the "Altima"  * brand name, which is functionally similar but lacks PCI-X support.  *  * Without external SSRAM, you can only have at most 4 TX rings,  * and the use of the mini RX ring is disabled. This seems to imply  * that these features are simply not available on the BCM5701. As a  * result, this driver does not implement any support for the mini RX  * ring.  */
 end_comment

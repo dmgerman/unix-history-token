@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Downloadable microcode for Second Generation  * Advanced Systems Inc. SCSI controllers  *  * $FreeBSD$  *  * Obtained from:  * advansys.c - Linux Host Driver for AdvanSys SCSI Adapters  *  * Copyright (c) 1995-1999 Advanced System Products, Inc.  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that redistributions of source  * code retain the above copyright notice and this comment without  * modification.  *  */
+comment|/*  * Downloadable microcode for Second Generation  * Advanced Systems Inc. SCSI controllers  *  *  * Obtained from:  * advansys.c - Linux Host Driver for AdvanSys SCSI Adapters  *  * Copyright (c) 1995-1999 Advanced System Products, Inc.  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that redistributions of source  * code retain the above copyright notice and this comment without  * modification.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

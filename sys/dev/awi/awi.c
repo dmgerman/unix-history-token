@@ -4,23 +4,29 @@ comment|/*	$NetBSD: awi.c,v 1.26 2000/07/21 04:48:55 onoe Exp $	*/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*-  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Bill Sommerfeld  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * Driver for AMD 802.11 firmware.  * Uses am79c930 chip driver to talk to firmware running on the am79c930.  *  * More-or-less a generic ethernet-like if driver, with 802.11 gorp added.  */
+comment|/*  * Driver for AMD 802.11 PCnetMobile firmware.  * Uses am79c930 chip driver to talk to firmware running on the am79c930.  * More-or-less a generic ethernet-like if driver, with 802.11 gorp added.  *  * The initial version of the driver was written by  * Bill Sommerfeld<sommerfeld@netbsd.org>.  * Then the driver module completely rewritten to support cards with DS phy  * and to support adhoc mode by Atsushi Onoe<onoe@netbsd.org>  */
 end_comment
 
 begin_comment
 comment|/*  * todo:  *	- flush tx queue on resynch.  *	- clear oactive on "down".  *	- rewrite copy-into-mbuf code  *	- mgmt state machine gets stuck retransmitting assoc requests.  *	- multicast filter.  *	- fix device reset so it's more likely to work  *	- show status goo through ifmedia.  *  * more todo:  *	- deal with more 802.11 frames.  *		- send reassoc request  *		- deal with reassoc response  *		- send/deal with disassociation  *	- deal with "full" access points (no room for me).  *	- power save mode  *  * later:  *	- SSID preferences  *	- need ioctls for poking at the MIBs  *	- implement ad-hoc mode (including bss creation).  *	- decide when to do "ad hoc" vs. infrastructure mode (IFF_LINK flags?)  *		(focus on inf. mode since that will be needed for ietf)  *	- deal with DH vs. FH versions of the card  *	- deal with faster cards (2mb/s)  *	- ?WEP goo (mmm, rc4) (it looks not particularly useful).  *	- ifmedia revision.  *	- common 802.11 mibish things.  *	- common 802.11 media layer.  */
-end_comment
-
-begin_comment
-comment|/*  * Driver for AMD 802.11 PCnetMobile firmware.  * Uses am79c930 chip driver to talk to firmware running on the am79c930.  *  * The initial version of the driver was written by  * Bill Sommerfeld<sommerfeld@netbsd.org>.  * Then the driver module completely rewritten to support cards with DS phy  * and to support adhoc mode by Atsushi Onoe<onoe@netbsd.org>  */
 end_comment
 
 begin_include

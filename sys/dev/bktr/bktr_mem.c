@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * This is prt of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman.  *  * bktr_mem : This kernel module allows us to keep our allocated  *            contiguous memory for the video buffer, DMA programs and VBI data  *            while the main bktr driver is unloaded and reloaded.  *            This avoids the problem of trying to allocate contiguous each  *            time the bktr driver is loaded.  */

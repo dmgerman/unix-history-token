@@ -4,12 +4,22 @@ comment|/*	$NetBSD: uhci.c,v 1.160 2002/05/28 12:42:39 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.162 2002/07/11 21:14:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.163 2002/09/27 15:37:36 provos Exp $  *	$NetBSD: uhci.c,v 1.164 2002/09/29 21:13:01 augustss Exp $  *	$NetBSD: uhci.c,v 1.165 2002/12/31 02:04:49 dsainty Exp $  *	$NetBSD: uhci.c,v 1.166 2002/12/31 02:21:31 dsainty Exp $  *	$NetBSD: uhci.c,v 1.167 2003/01/01 16:25:59 augustss Exp $  *	$NetBSD: uhci.c,v 1.168 2003/02/08 03:32:51 ichiro Exp $  *	$NetBSD: uhci.c,v 1.169 2003/02/16 23:15:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.170 2003/02/19 01:35:04 augustss Exp $  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
