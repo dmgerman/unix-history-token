@@ -988,12 +988,6 @@ name|tc_frequency
 operator|=
 name|acpi_timer_frequency
 expr_stmt|;
-name|tc_update
-argument_list|(
-operator|&
-name|acpi_timer_timecounter
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(

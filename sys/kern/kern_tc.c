@@ -1096,24 +1096,6 @@ end_function
 
 begin_function
 name|void
-name|tc_update
-parameter_list|(
-name|struct
-name|timecounter
-modifier|*
-name|tc
-parameter_list|)
-block|{
-name|tco_setscales
-argument_list|(
-name|tc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|tc_init
 parameter_list|(
 name|struct

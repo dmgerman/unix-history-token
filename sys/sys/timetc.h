@@ -171,18 +171,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|tc_update
-parameter_list|(
-name|struct
-name|timecounter
-modifier|*
-name|tc
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

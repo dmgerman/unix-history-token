@@ -201,12 +201,6 @@ name|tc_frequency
 operator|=
 name|piix_freq
 expr_stmt|;
-name|tc_update
-argument_list|(
-operator|&
-name|piix_timecounter
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(

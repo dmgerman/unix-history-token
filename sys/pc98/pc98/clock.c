@@ -6152,12 +6152,6 @@ name|tc_frequency
 operator|=
 name|freq
 expr_stmt|;
-name|tc_update
-argument_list|(
-operator|&
-name|i8254_timecounter
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -6266,12 +6260,6 @@ operator|.
 name|tc_frequency
 operator|=
 name|tsc_freq
-expr_stmt|;
-name|tc_update
-argument_list|(
-operator|&
-name|tsc_timecounter
-argument_list|)
 expr_stmt|;
 block|}
 return|return
