@@ -607,7 +607,7 @@ literal|0600
 argument_list|,
 literal|"tun%d"
 argument_list|,
-name|lminor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -658,7 +658,7 @@ name|ifp
 operator|->
 name|if_unit
 operator|=
-name|lminor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

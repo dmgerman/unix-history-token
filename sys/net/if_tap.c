@@ -837,7 +837,7 @@ name|VMNET
 expr_stmt|;
 name|unit
 operator|=
-name|lminor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -859,7 +859,7 @@ name|TAP
 expr_stmt|;
 name|unit
 operator|=
-name|lminor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

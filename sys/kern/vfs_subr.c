@@ -7918,7 +7918,9 @@ argument_list|(
 operator|&
 name|vp
 operator|->
-name|v_hashchain
+name|v_rdev
+operator|->
+name|si_hlist
 argument_list|,
 name|vp
 argument_list|,
@@ -8171,7 +8173,7 @@ name|SLIST_FOREACH
 argument_list|(
 argument|vq
 argument_list|,
-argument|&vp->v_hashchain
+argument|&vp->v_rdev->si_hlist
 argument_list|,
 argument|v_specnext
 argument_list|)

@@ -67,6 +67,11 @@ directive|define
 name|SI_NAMED
 value|0x0004
 comment|/* make_dev{_alias} has been called */
+define|#
+directive|define
+name|SI_CHEAPCLONE
+value|0x0008
+comment|/* can be removed_dev'ed when vnode reclaims */
 name|struct
 name|timespec
 name|si_atime
@@ -218,13 +223,6 @@ end_define
 begin_comment
 comment|/*  * Exported shorthand  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|v_hashchain
-value|v_rdev->si_hlist
-end_define
 
 begin_define
 define|#
@@ -1319,12 +1317,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|lminor
+name|dev2unit
 name|__P
 argument_list|(
 operator|(
 name|dev_t
 name|dev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|unit2minor
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
 operator|)
 argument_list|)
 decl_stmt|;

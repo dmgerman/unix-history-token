@@ -556,9 +556,9 @@ name|pts_cdevsw
 argument_list|,
 name|n
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
@@ -589,9 +589,9 @@ name|ptc_cdevsw
 argument_list|,
 name|n
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
