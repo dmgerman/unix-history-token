@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the 93C46 serial EEPROM that is used to store BIOS  * settings for the aic7xxx based adaptec SCSI controllers.  It can  * also be used for 93C26 and 93C06 serial EEPROMS.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *      $Id: 93cx6.h,v 1.2 1995/09/05 23:52:00 gibbs Exp $  */
+comment|/*  * Interface to the 93C46 serial EEPROM that is used to store BIOS  * settings for the aic7xxx based adaptec SCSI controllers.  It can  * also be used for 93C26 and 93C06 serial EEPROMS.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *      $Id: 93cx6.h,v 1.1.2.3 1996/06/08 07:10:44 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -40,8 +40,13 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|u_long
+name|u_int32_t
 name|sd_iobase
+decl_stmt|;
+specifier|volatile
+name|u_int8_t
+modifier|*
+name|sd_maddr
 decl_stmt|;
 elif|#
 directive|elif
@@ -102,7 +107,8 @@ name|SEEPROM_INB
 parameter_list|(
 name|sd
 parameter_list|)
-value|inb(sd->sd_iobase)
+define|\
+value|(((sd)->sd_maddr != NULL) ?		\ 		*((sd)->sd_maddr) :		\ 		inb((sd)->sd_iobase))
 end_define
 
 begin_define
@@ -114,7 +120,8 @@ name|sd
 parameter_list|,
 name|value
 parameter_list|)
-value|outb(sd->sd_iobase, value)
+define|\
+value|(((sd)->sd_maddr != NULL) ?		\ 		*((sd)->sd_maddr) = (value) :	\ 		outb((sd)->sd_iobase, (value)))
 end_define
 
 begin_elif
@@ -182,7 +189,7 @@ operator|,
 name|u_int
 name|start_addr
 operator|,
-name|int
+name|u_int
 name|count
 operator|)
 argument_list|)

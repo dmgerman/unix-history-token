@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.28 1996/05/30 07:19:59 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.28.2.2 1996/10/06 01:31:25 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -138,24 +138,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|inb((ahc)->baseport+(port))
-end_define
-
-begin_define
-define|#
-directive|define
-name|AHC_INSB
-parameter_list|(
-name|ahc
-parameter_list|,
-name|port
-parameter_list|,
-name|valp
-parameter_list|,
-name|size
-parameter_list|)
-define|\
-value|insb((ahc)->baseport+(port), valp, size)
+value|(((ahc)->maddr != NULL) ?		\ 		((ahc)->maddr[port]) :		\ 		inb((ahc)->baseport+(port)))
 end_define
 
 begin_define
@@ -170,7 +153,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|outb((ahc)->baseport+(port), val)
+value|(((ahc)->maddr != NULL) ?			\ 		((ahc)->maddr[port] = (val)) :		\ 		outb((ahc)->baseport+(port), val))
 end_define
 
 begin_define
@@ -188,23 +171,6 @@ name|size
 parameter_list|)
 define|\
 value|outsb((ahc)->baseport+(port), valp, size)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AHC_OUTSL
-parameter_list|(
-name|ahc
-parameter_list|,
-name|port
-parameter_list|,
-name|valp
-parameter_list|,
-name|size
-parameter_list|)
-define|\
-value|outsl((ahc)->baseport+(port), valp, size)
 end_define
 
 begin_elif
@@ -227,23 +193,6 @@ name|port
 parameter_list|)
 define|\
 value|bus_io_read_1((ahc)->sc_bc, (ahc)->sc_ioh, port)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AHC_INSB
-parameter_list|(
-name|ahc
-parameter_list|,
-name|port
-parameter_list|,
-name|valp
-parameter_list|,
-name|size
-parameter_list|)
-define|\
-value|bus_io_read_multi_1((ahc)->sc_bc, (ahc)->sc_ioh, port, valp, size)
 end_define
 
 begin_define
@@ -276,23 +225,6 @@ name|size
 parameter_list|)
 define|\
 value|bus_io_write_multi_1((ahc)->sc_bc, (ahc)->sc_ioh, port, valp, size)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AHC_OUTSL
-parameter_list|(
-name|ahc
-parameter_list|,
-name|port
-parameter_list|,
-name|valp
-parameter_list|,
-name|size
-parameter_list|)
-define|\
-value|bus_io_write_multi_4((ahc)->sc_bc, (ahc)->sc_ioh, port, valp, size)
 end_define
 
 begin_endif
@@ -559,29 +491,28 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 28 bytes of the structure need to be transfered to the card during  * normal operation.  The fields starting at byte 28 are used for kernel level  * bookkeeping.    */
+comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  The SCB  * consists of a "hardware SCB" mirroring the fields availible on the card  * and additional information the kernel stores for each transaction.  */
 end_comment
 
 begin_struct
 struct|struct
-name|scb
+name|hardware_scb
 block|{
-comment|/* ------------    Begin hardware supported fields    ---------------- */
 comment|/*0*/
-name|u_char
+name|u_int8_t
 name|control
 decl_stmt|;
 comment|/*1*/
-name|u_char
+name|u_int8_t
 name|tcl
 decl_stmt|;
 comment|/* 4/1/3 bits */
 comment|/*2*/
-name|u_char
+name|u_int8_t
 name|status
 decl_stmt|;
 comment|/*3*/
-name|u_char
+name|u_int8_t
 name|SG_segment_count
 decl_stmt|;
 comment|/*4*/
@@ -589,11 +520,11 @@ name|physaddr
 name|SG_list_pointer
 decl_stmt|;
 comment|/*8*/
-name|u_char
+name|u_int8_t
 name|residual_SG_segment_count
 decl_stmt|;
 comment|/*9*/
-name|u_char
+name|u_int8_t
 name|residual_data_count
 index|[
 literal|3
@@ -613,11 +544,11 @@ name|physaddr
 name|cmdpointer
 decl_stmt|;
 comment|/*24*/
-name|u_char
+name|u_int8_t
 name|cmdlen
 decl_stmt|;
 comment|/*25*/
-name|u_char
+name|u_int8_t
 name|tag
 decl_stmt|;
 comment|/* Index into our kernel SCB array. 					 * Also used as the tag for tagged I/O 					 */
@@ -627,15 +558,32 @@ name|SCB_PIO_TRANSFER_SIZE
 value|26
 comment|/* amount we need to upload/download 					 * via PIO to initialize a transaction. 					 */
 comment|/*26*/
-name|u_char
+name|u_int8_t
 name|next
 decl_stmt|;
 comment|/* Used for threading SCBs in the 					 * "Waiting for Selection" and 					 * "Disconnected SCB" lists down 					 * in the sequencer. 					 */
 comment|/*27*/
-name|u_char
+name|u_int8_t
 name|prev
 decl_stmt|;
-comment|/*-----------------end of hardware supported fields----------------*/
+comment|/*28*/
+name|u_int32_t
+name|pad
+decl_stmt|;
+comment|/* 					 * Unused by the kernel, but we require 					 * the padding so that the array of 					 * hardware SCBs is alligned on 32 byte 					 * boundaries so the sequencer can 					 * index them easily. 					 */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|scb
+block|{
+name|struct
+name|hardware_scb
+modifier|*
+name|hscb
+decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
 argument|scb
@@ -652,28 +600,20 @@ comment|/* the scsi_xfer for this cmd */
 name|scb_flag
 name|flags
 decl_stmt|;
-name|u_char
-name|position
-decl_stmt|;
-comment|/* Position in card's scbarray */
 name|struct
 name|ahc_dma_seg
+modifier|*
 name|ahc_dma
-index|[
-name|AHC_NSEG
-index|]
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
 decl_stmt|;
+comment|/* Pointer to SG segments */
 name|struct
 name|scsi_sense
 name|sense_cmd
 decl_stmt|;
-comment|/* SCSI command block */
+name|u_int8_t
+name|position
+decl_stmt|;
+comment|/* Position in card's scbarray */
 block|}
 struct|;
 end_struct
@@ -725,11 +665,22 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|u_long
+name|u_int32_t
 name|baseport
 decl_stmt|;
 endif|#
 directive|endif
+specifier|volatile
+name|u_int8_t
+modifier|*
+name|maddr
+decl_stmt|;
+name|struct
+name|hardware_scb
+modifier|*
+name|hscbs
+decl_stmt|;
+comment|/* Array of hardware SCBs */
 name|struct
 name|scb
 modifier|*
@@ -738,16 +689,7 @@ index|[
 name|AHC_SCB_MAX
 index|]
 decl_stmt|;
-comment|/* Mirror boards scbarray */
-name|struct
-name|scb
-modifier|*
-name|pagedout_ntscbs
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/*  					  * Paged out, non-tagged scbs 					  * indexed by target. 					  */
+comment|/* Array of kernel SCBs */
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -755,15 +697,7 @@ argument|scb
 argument_list|)
 name|free_scbs
 expr_stmt|;
-comment|/* 					 * SCBs assigned to free slots 					 * on the card. (no paging required) 					 */
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|scb
-argument_list|)
-name|page_scbs
-expr_stmt|;
-comment|/* 					 * SCBs that will require paging 					 * before use (no assigned slot) 					 */
+comment|/* 					 * Pool of SCBs ready to be assigned 					 * commands to execute. 					 */
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -771,15 +705,7 @@ argument|scb
 argument_list|)
 name|waiting_scbs
 expr_stmt|;
-comment|/* 					 * SCBs waiting to be paged in 					 * and started. 					 */
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|scb
-argument_list|)
-name|assigned_scbs
-expr_stmt|;
-comment|/* 					 * SCBs that were waiting but have 					 * now been assigned a slot by 					 * ahc_free_scb. 					 */
+comment|/* 					 * SCBs waiting ready to go but 					 * waiting for space in the QINFIFO. 					 */
 name|struct
 name|scsi_link
 name|sc_link
@@ -789,74 +715,83 @@ name|scsi_link
 name|sc_link_b
 decl_stmt|;
 comment|/* Second bus for Twin channel cards */
-name|u_short
+name|u_int16_t
 name|needsdtr_orig
 decl_stmt|;
 comment|/* Targets we initiate sync neg with */
-name|u_short
+name|u_int16_t
 name|needwdtr_orig
 decl_stmt|;
 comment|/* Targets we initiate wide neg with */
-name|u_short
+name|u_int16_t
 name|needsdtr
 decl_stmt|;
 comment|/* Current list of negotiated targets */
-name|u_short
+name|u_int16_t
 name|needwdtr
 decl_stmt|;
 comment|/* Current list of negotiated targets */
-name|u_short
+name|u_int16_t
 name|sdtrpending
 decl_stmt|;
 comment|/* Pending SDTR to these targets */
-name|u_short
+name|u_int16_t
 name|wdtrpending
 decl_stmt|;
 comment|/* Pending WDTR to these targets */
-name|u_short
+name|u_int16_t
 name|tagenable
 decl_stmt|;
-comment|/* Targets that can handle tagqueing */
-name|u_short
+comment|/* Targets that can handle tags */
+name|u_int16_t
 name|orderedtag
 decl_stmt|;
 comment|/* Targets to use ordered tag on */
-name|u_short
+name|u_int16_t
 name|discenable
 decl_stmt|;
 comment|/* Targets allowed to disconnect */
-name|u_char
+name|u_int8_t
 name|our_id
 decl_stmt|;
 comment|/* our scsi id */
-name|u_char
+name|u_int8_t
 name|our_id_b
 decl_stmt|;
 comment|/* B channel scsi id */
-name|u_char
+name|u_int8_t
 name|numscbs
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|activescbs
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|maxhscbs
 decl_stmt|;
 comment|/* Number of SCBs on the card */
-name|u_char
+name|u_int8_t
 name|maxscbs
 decl_stmt|;
 comment|/* 					 * Max SCBs we allocate total including 					 * any that will force us to page SCBs 					 */
-name|u_char
+name|u_int8_t
 name|qcntmask
 decl_stmt|;
-name|u_char
+comment|/* 					 * Mask of valid registers in the 					 * Q*CNT registers. 					 */
+name|u_int8_t
+name|qfullcount
+decl_stmt|;
+comment|/* 					 * The maximum number of entries 					 * storable in the Q*FIFOs. 					 */
+name|u_int8_t
+name|curqincnt
+decl_stmt|;
+comment|/* 					 * The current value we "think" the 					 * QINCNT has.  The reason it is 					 * "think" is that this is a cached 					 * value that is only updated when 					 * curqincount == qfullcount to reduce 					 * the amount of accesses made to the 					 * card. 					 */
+name|u_int8_t
 name|unpause
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|pause
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|in_timeout
 decl_stmt|;
 block|}
@@ -966,7 +901,7 @@ name|ahc_reset
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 name|iobase
 operator|)
 argument_list|)
@@ -984,8 +919,11 @@ operator|(
 name|int
 name|unit
 operator|,
-name|u_long
+name|u_int32_t
 name|io_base
+operator|,
+name|vm_offset_t
+name|maddr
 operator|,
 name|ahc_type
 name|type

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface for the 93C46/26/06 serial eeprom parts.  *  * Copyright (c) 1995 Daniel M. Eischen  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Daniel M. Eischen.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *      $Id: 93cx6.c,v 1.4 1995/11/20 12:14:02 phk Exp $  */
+comment|/*  * Interface for the 93C46/26/06 serial eeprom parts.  *  * Copyright (c) 1995 Daniel M. Eischen  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Daniel M. Eischen.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *      $Id: 93cx6.c,v 1.5 1996/05/30 07:19:54 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -156,7 +156,7 @@ argument_list|)
 name|u_int
 name|start_addr
 decl_stmt|;
-name|int
+name|u_int
 name|count
 decl_stmt|;
 elif|#
@@ -178,7 +178,8 @@ name|int
 name|i
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|k
 init|=
 literal|0
