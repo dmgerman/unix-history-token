@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/mb86960.h>
+file|<dev/fe/mb86960.h>
 end_include
 
 begin_include

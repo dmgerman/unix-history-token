@@ -130,7 +130,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/mb86960.h>
+file|<dev/fe/mb86960.h>
 end_include
 
 begin_include
@@ -625,6 +625,9 @@ specifier|const
 modifier|*
 name|p
 decl_stmt|;
+name|int8_t
+name|bits
+decl_stmt|;
 for|for
 control|(
 name|p
@@ -641,9 +644,8 @@ name|p
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|(
+name|bits
+operator|=
 name|fe_inb
 argument_list|(
 name|sc
@@ -652,6 +654,30 @@ name|p
 operator|->
 name|port
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"port %d, mask %x, bits %x read %x\n"
+argument_list|,
+name|p
+operator|->
+name|port
+argument_list|,
+name|p
+operator|->
+name|mask
+argument_list|,
+name|p
+operator|->
+name|bits
+argument_list|,
+name|bits
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bits
 operator|&
 name|p
 operator|->
