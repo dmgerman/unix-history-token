@@ -5061,11 +5061,6 @@ name|int
 name|ip_len
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"+++ send reject\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|code
