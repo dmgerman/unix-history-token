@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Mark Tinguely and Jim Lowe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Mark Tinguely and Jim Lowe  * 4. The name of the author may not be used to endorse or promote products   *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $Id: brktree_reg.h,v 1.24 1999/01/23 11:28:16 roger Exp $  */
+comment|/*  * Copyright (c) 1995 Mark Tinguely and Jim Lowe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Mark Tinguely and Jim Lowe  * 4. The name of the author may not be used to endorse or promote products   *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $Id: brktree_reg.h,v 1.25 1999/02/08 11:55:30 roger Exp $  */
 end_comment
 
 begin_ifndef
@@ -1655,6 +1655,12 @@ comment|/* Iform XTSEL value */
 name|int
 name|iform_xtsel
 decl_stmt|;
+comment|/* VBI number of lines per field, and number of samples per line */
+name|int
+name|vbi_num_lines
+decl_stmt|,
+name|vbi_num_samples
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1754,6 +1760,26 @@ name|int
 name|alloc_pages
 decl_stmt|;
 comment|/* number of pages in bigbuf */
+name|vm_offset_t
+name|vbidata
+decl_stmt|;
+comment|/* RISC program puts VBI data from the current frame here */
+name|vm_offset_t
+name|vbibuffer
+decl_stmt|;
+comment|/* Circular buffer holding VBI data for the user */
+name|int
+name|vbiinsert
+decl_stmt|;
+comment|/* Position for next write into circular buffer */
+name|int
+name|vbistart
+decl_stmt|;
+comment|/* Position of last read from circular buffer */
+name|int
+name|vbisize
+decl_stmt|;
+comment|/* Number of bytes in the circular buffer */
 name|struct
 name|proc
 modifier|*
@@ -2056,6 +2082,7 @@ value|0x80000000
 name|u_char
 name|tflags
 decl_stmt|;
+comment|/* Tuner flags (/dev/tuner) */
 define|#
 directive|define
 name|TUNER_INITALIZED
@@ -2064,6 +2091,22 @@ define|#
 directive|define
 name|TUNER_OPEN
 value|0x00000002
+name|u_char
+name|vbiflags
+decl_stmt|;
+comment|/* VBI flags (/dev/vbi) */
+define|#
+directive|define
+name|VBI_INITALIZED
+value|0x00000001
+define|#
+directive|define
+name|VBI_OPEN
+value|0x00000002
+define|#
+directive|define
+name|VBI_CAPTURE
+value|0x00000004
 name|u_short
 name|fps
 decl_stmt|;
