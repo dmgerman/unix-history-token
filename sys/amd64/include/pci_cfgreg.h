@@ -203,5 +203,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|pci_probe_route_table
+parameter_list|(
+name|int
+name|bus
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
