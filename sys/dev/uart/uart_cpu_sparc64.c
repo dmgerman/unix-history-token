@@ -763,6 +763,19 @@ name|bst
 argument_list|)
 expr_stmt|;
 comment|/* Get the line settings. */
+if|if
+condition|(
+name|devtype
+operator|==
+name|UART_DEV_KEYBOARD
+condition|)
+name|di
+operator|->
+name|baudrate
+operator|=
+literal|1200
+expr_stmt|;
+else|else
 name|di
 operator|->
 name|baudrate
