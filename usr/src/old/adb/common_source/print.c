@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.2 (Berkeley) %G%"
+literal|"@(#)print.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -367,11 +367,7 @@ index|[
 literal|9
 index|]
 operator|=
-name|gavecount
-condition|?
 name|ecount
-else|:
-literal|1
 expr_stmt|;
 block|}
 else|else
