@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.19	82/01/24	*/
+comment|/*	tty.c	4.20	82/01/25	*/
 end_comment
 
 begin_comment
@@ -624,8 +624,13 @@ operator|->
 name|t_state
 operator|&
 name|TS_CARR_ON
+operator|&&
+name|tp
+operator|->
+name|t_oproc
 condition|)
 block|{
+comment|/* kludge for pty */
 call|(
 modifier|*
 name|tp
@@ -1049,7 +1054,12 @@ operator|)
 operator|)
 operator|==
 literal|0
+operator|&&
+name|tp
+operator|->
+name|t_oproc
 condition|)
+comment|/* kludge for pty */
 call|(
 modifier|*
 name|tp
