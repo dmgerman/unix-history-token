@@ -4,7 +4,7 @@ comment|/* Because this code is derived from the 4.3BSD compress source:  *  *  
 end_comment
 
 begin_comment
-comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * $Id: bsd-comp.c,v 1.11 1995/07/04 03:35:11 paulus Exp $  */
+comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * $Id: bsd_comp.c,v 1.1.2.1 1995/10/31 20:07:32 peter Exp $  */
 end_comment
 
 begin_include
@@ -65,7 +65,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<net/ppp-comp.h>
+file|<net/ppp_comp.h>
 end_include
 
 begin_if
