@@ -390,6 +390,16 @@ name|CONFIG_AUDIO
 argument_list|)
 end_if
 
+begin_function_decl
+name|void
+name|dsp_speaker
+parameter_list|(
+name|char
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Common code for the midi and pcm functions  */
 end_comment

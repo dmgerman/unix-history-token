@@ -229,7 +229,8 @@ specifier|static
 name|void
 name|poll_uart6850
 parameter_list|(
-name|u_long
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 function_decl|;
@@ -336,7 +337,8 @@ specifier|static
 name|void
 name|poll_uart6850
 parameter_list|(
-name|u_long
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 block|{
@@ -369,9 +371,6 @@ argument_list|()
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|poll_uart6850
 argument_list|,
 literal|0
@@ -379,7 +378,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 comment|/* Come back later */
 name|splx
 argument_list|(
