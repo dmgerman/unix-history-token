@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exp.c	5.3 (Berkeley) %G%"
+literal|"@(#)exp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1268,14 +1268,14 @@ if|if
 condition|(
 name|op
 operator|&&
-name|any
+name|index
 argument_list|(
+literal|"<>"
+argument_list|,
 name|op
 index|[
 literal|0
 index|]
-argument_list|,
-literal|"<>"
 argument_list|)
 operator|&&
 name|op
@@ -2286,14 +2286,14 @@ name|cp
 operator|==
 literal|'-'
 operator|&&
-name|any
+name|index
 argument_list|(
+literal|"erwxfdzo"
+argument_list|,
 name|cp
 index|[
 literal|1
 index|]
-argument_list|,
-literal|"erwxfdzo"
 argument_list|)
 condition|)
 block|{
