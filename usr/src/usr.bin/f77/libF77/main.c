@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.14	%G%"
+literal|"@(#)main.c	2.15	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,6 +483,48 @@ decl_stmt|;
 comment|/* print error message, then flush buffers */
 if|if
 condition|(
+name|s
+operator|==
+name|SIGHUP
+operator|||
+name|s
+operator|==
+name|SIGINT
+operator|||
+name|s
+operator|==
+name|SIGQUIT
+condition|)
+name|signal
+argument_list|(
+name|s
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+comment|/* don't allow it again */
+else|else
+name|signal
+argument_list|(
+name|s
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+comment|/* shouldn't happen again, but ... */
+if|#
+directive|if
+name|vax
+name|sigsetmask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* don't block */
+endif|#
+directive|endif
+if|if
+condition|(
 name|act
 operator|->
 name|mesg
@@ -657,11 +699,6 @@ argument_list|(
 name|SIGILL
 argument_list|,
 name|SIG_DFL
-argument_list|)
-expr_stmt|;
-name|sigsetmask
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 else|#
