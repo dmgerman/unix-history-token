@@ -505,7 +505,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"fowarding service denied\r\n"
+literal|"forwarding service denied\r\n"
 argument_list|)
 expr_stmt|;
 name|exit
