@@ -1239,7 +1239,7 @@ name|_net_inet
 argument_list|,
 name|IPPROTO_DIVERT
 argument_list|,
-name|div
+name|divert
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
