@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.12 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.13 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.12 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.13 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,21 +626,34 @@ comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another 
 end_comment
 
 begin_expr_stmt
-unit|makeconnection
-operator|(
-name|host
-operator|,
-name|port
-operator|,
-name|outfile
-operator|,
-name|infile
-operator|)
-name|char
-operator|*
-name|host
+unit|int
+name|h_errno
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*this will go away when code implemented*/
+end_comment
+
+begin_macro
+name|makeconnection
+argument_list|(
+argument|host
+argument_list|,
+argument|port
+argument_list|,
+argument|outfile
+argument_list|,
+argument|infile
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|host
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|u_short
@@ -671,6 +684,14 @@ name|int
 name|s
 decl_stmt|;
 comment|/* 	**  Set up the address for the mailer. 	**	Accept "[a.b.c.d]" syntax for host name. 	*/
+name|h_errno
+operator|=
+literal|0
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|host
@@ -774,9 +795,20 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|hp
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|errno
 operator|==
 name|ETIMEDOUT
+operator|||
+name|h_errno
+operator|==
+name|TRY_AGAIN
 condition|)
 block|{
 name|CurEnv
@@ -792,17 +824,26 @@ name|EX_TEMPFAIL
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
-name|hp
+name|h_errno
 operator|==
-name|NULL
+name|NO_ADDRESS
 condition|)
+empty_stmt|;
+comment|/*look for mail forwarder records*/
+endif|#
+directive|endif
+endif|notdef
 return|return
 operator|(
 name|EX_NOHOST
 operator|)
 return|;
+block|}
 name|bcopy
 argument_list|(
 name|hp
