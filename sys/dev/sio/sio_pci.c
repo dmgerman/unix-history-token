@@ -301,6 +301,14 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x432214e4
+block|,
+literal|"Broadcom 802.11g/GPRS CardBus (Serial)"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x01c0135c
 block|,
 literal|"Quatech SSCLP-200/300"
