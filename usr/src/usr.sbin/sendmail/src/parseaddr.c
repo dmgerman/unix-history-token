@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.8 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,6 +420,60 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* 	**  Save addr if we are going to have to. 	** 	**	We have to do this early because there is a chance that 	**	the map lookups in the rewriting rules could clobber 	**	static memory somewhere. 	*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|RF_COPYPADDR
+argument_list|,
+name|flags
+argument_list|)
+operator|&&
+name|addr
+operator|!=
+name|NULL
+condition|)
+block|{
+name|char
+name|savec
+init|=
+operator|*
+operator|*
+name|delimptr
+decl_stmt|;
+if|if
+condition|(
+name|savec
+operator|!=
+literal|'\0'
+condition|)
+operator|*
+operator|*
+name|delimptr
+operator|=
+literal|'\0'
+expr_stmt|;
+name|addr
+operator|=
+name|newstr
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|savec
+operator|!=
+literal|'\0'
+condition|)
+operator|*
+operator|*
+name|delimptr
+operator|=
+name|savec
+expr_stmt|;
+block|}
 comment|/* 	**  Apply rewriting rules. 	**	Ruleset 0 does basic parsing.  It must resolve. 	*/
 name|queueup
 operator|=
@@ -481,9 +535,6 @@ argument_list|,
 name|flags
 argument_list|,
 name|addr
-argument_list|,
-operator|*
-name|delimptr
 argument_list|)
 expr_stmt|;
 if|if
@@ -654,7 +705,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ALLOCADDR -- do local allocations of address on demand. ** **	Also lowercases the host name if requested. ** **	Parameters: **		a -- the address to reallocate. **		flags -- the copy flag (see RF_ definitions in sendmail.h **			for a description). **		paddr -- the printname of the address. **		delimptr -- a pointer to the address delimiter.  Must be set. ** **	Returns: **		none. ** **	Side Effects: **		Copies portions of a into local buffers as requested. */
+comment|/* **  ALLOCADDR -- do local allocations of address on demand. ** **	Also lowercases the host name if requested. ** **	Parameters: **		a -- the address to reallocate. **		flags -- the copy flag (see RF_ definitions in sendmail.h **			for a description). **		paddr -- the printname of the address. ** **	Returns: **		none. ** **	Side Effects: **		Copies portions of a into local buffers as requested. */
 end_comment
 
 begin_expr_stmt
@@ -665,8 +716,6 @@ argument_list|,
 name|flags
 argument_list|,
 name|paddr
-argument_list|,
-name|delimptr
 argument_list|)
 specifier|register
 name|ADDRESS
@@ -685,13 +734,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|paddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|delimptr
 decl_stmt|;
 end_decl_stmt
 
@@ -715,59 +757,6 @@ argument_list|,
 name|paddr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|RF_COPYPADDR
-argument_list|,
-name|flags
-argument_list|)
-operator|&&
-name|paddr
-operator|!=
-name|NULL
-condition|)
-block|{
-name|char
-name|savec
-init|=
-operator|*
-name|delimptr
-decl_stmt|;
-if|if
-condition|(
-name|savec
-operator|!=
-literal|'\0'
-condition|)
-operator|*
-name|delimptr
-operator|=
-literal|'\0'
-expr_stmt|;
-name|a
-operator|->
-name|q_paddr
-operator|=
-name|newstr
-argument_list|(
-name|paddr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|savec
-operator|!=
-literal|'\0'
-condition|)
-operator|*
-name|delimptr
-operator|=
-name|savec
-expr_stmt|;
-block|}
-else|else
 name|a
 operator|->
 name|q_paddr
@@ -7496,8 +7485,6 @@ argument_list|,
 name|RF_COPYALL
 argument_list|,
 name|NULL
-argument_list|,
-name|delimptr
 argument_list|)
 expr_stmt|;
 operator|(
