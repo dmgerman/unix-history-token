@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.17 (Berkeley) %G%"
+literal|"@(#)login.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,7 +338,7 @@ begin_decl_stmt
 name|int
 name|timeout
 init|=
-literal|60
+literal|300
 decl_stmt|;
 end_decl_stmt
 
