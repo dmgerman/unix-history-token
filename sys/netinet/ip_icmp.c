@@ -2849,7 +2849,7 @@ name|ip
 operator|->
 name|ip_src
 expr_stmt|;
-comment|/* 	 * If the incoming packet was addressed directly to us, 	 * use dst as the src for the reply.  Otherwise (broadcast 	 * or anonymous), use the address which corresponds 	 * to the incoming interface. 	 */
+comment|/* 	 * Source selection for ICMP replies: 	 * 	 * If the incoming packet was addressed directly to one of our 	 * own addresses, use dst as the src for the reply. 	 */
 name|LIST_FOREACH
 argument_list|(
 argument|ia
@@ -2876,6 +2876,7 @@ condition|)
 goto|goto
 name|match
 goto|;
+comment|/* 	 * If the incoming packet was addressed to one of our broadcast 	 * addresses, use the first non-broadcast address which corresponds 	 * to the incoming interface. 	 */
 if|if
 condition|(
 name|m
@@ -2947,6 +2948,7 @@ name|match
 goto|;
 block|}
 block|}
+comment|/*  	 * If the packet was transiting through us, use the address of 	 * the interface that is the closest to the packet source. 	 * When we don't have a route back to the packet source, stop here 	 * and drop the packet. 	 */
 name|ia
 operator|=
 name|ip_rtaddr
@@ -2956,7 +2958,6 @@ operator|->
 name|ip_dst
 argument_list|)
 expr_stmt|;
-comment|/* We need a route to do anything useful. */
 if|if
 condition|(
 name|ia
