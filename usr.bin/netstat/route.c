@@ -3374,6 +3374,9 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
+case|case
+name|IFT_L2VLAN
+case|:
 if|if
 condition|(
 name|sdl
