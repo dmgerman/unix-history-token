@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)zopen.c	8.1 (Berkeley) %G%"
+literal|"@(#)zopen.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1335,6 +1335,9 @@ name|s_zstate
 modifier|*
 name|zs
 decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
 name|zs
 operator|=
 name|cookie
@@ -1363,17 +1366,17 @@ operator|-
 literal|1
 condition|)
 block|{
-name|free
-argument_list|(
-name|zs
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|zs
 argument_list|)
 expr_stmt|;
 return|return
@@ -1403,17 +1406,17 @@ operator|-
 literal|1
 condition|)
 block|{
-name|free
-argument_list|(
-name|zs
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|zs
 argument_list|)
 expr_stmt|;
 return|return
@@ -1424,13 +1427,8 @@ operator|)
 return|;
 block|}
 block|}
-name|free
-argument_list|(
-name|zs
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|rval
+operator|=
 name|fclose
 argument_list|(
 name|fp
@@ -1442,6 +1440,15 @@ operator|-
 literal|1
 else|:
 literal|0
+expr_stmt|;
+name|free
+argument_list|(
+name|zs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|rval
 operator|)
 return|;
 block|}
