@@ -2478,6 +2478,10 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+if|if
+condition|(
+name|str
+condition|)
 name|write
 argument_list|(
 name|fd
