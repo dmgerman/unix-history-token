@@ -1274,6 +1274,12 @@ operator||
 name|ATA_R_REQUEUE
 operator|)
 expr_stmt|;
+name|request
+operator|->
+name|donecount
+operator|=
+literal|0
+expr_stmt|;
 name|ATA_DEBUG_RQ
 argument_list|(
 name|request
