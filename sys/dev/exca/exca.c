@@ -1010,7 +1010,7 @@ argument_list|(
 name|res
 argument_list|)
 operator|>>
-name|EXCA_CARDMEM_ADDRX_SHIFT
+name|EXCA_MEMREG_WIN_SHIFT
 operator|)
 operator|&
 literal|0xff
