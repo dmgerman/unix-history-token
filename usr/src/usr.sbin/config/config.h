@@ -1,16 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	config.h	1.10	82/10/25	*/
+comment|/*	config.h	1.11	83/05/18	*/
 end_comment
 
 begin_comment
 comment|/*  * Config.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|NODEV
+value|((dev_t)-1)
+end_define
+
 begin_struct
 struct|struct
 name|file_list
 block|{
+name|struct
+name|file_list
+modifier|*
+name|f_next
+decl_stmt|;
 name|char
 modifier|*
 name|f_fn
@@ -20,15 +38,63 @@ name|int
 name|f_type
 decl_stmt|;
 comment|/* see below */
-name|struct
-name|file_list
-modifier|*
-name|f_next
-decl_stmt|;
 name|char
 modifier|*
 name|f_needs
 decl_stmt|;
+comment|/* 	 * Random values: 	 *	swap space parameters for swap areas 	 *	root device, etc. for system specifications 	 */
+union|union
+block|{
+struct|struct
+block|{
+comment|/* when swap specification */
+name|dev_t
+name|fuw_swapdev
+decl_stmt|;
+name|int
+name|fuw_swapsize
+decl_stmt|;
+block|}
+name|fuw
+struct|;
+struct|struct
+block|{
+comment|/* when system specification */
+name|dev_t
+name|fus_rootdev
+decl_stmt|;
+name|dev_t
+name|fus_argdev
+decl_stmt|;
+name|dev_t
+name|fus_dumpdev
+decl_stmt|;
+block|}
+name|fus
+struct|;
+block|}
+name|fun
+union|;
+define|#
+directive|define
+name|f_swapdev
+value|fun.fuw.fuw_swapdev
+define|#
+directive|define
+name|f_swapsize
+value|fun.fuw.fuw_swapsize
+define|#
+directive|define
+name|f_rootdev
+value|fun.fus.fus_rootdev
+define|#
+directive|define
+name|f_argdev
+value|fun.fus.fus_argdev
+define|#
+directive|define
+name|f_dumpdev
+value|fun.fus.fus_dumpdev
 block|}
 struct|;
 end_struct
@@ -59,6 +125,20 @@ define|#
 directive|define
 name|PROFILING
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSTEMSPEC
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWAPSPEC
+value|6
 end_define
 
 begin_struct
@@ -400,6 +480,21 @@ name|dtab
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|dev_t
+name|nametodev
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|devtoname
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|char
 name|errbuf
@@ -424,6 +519,7 @@ decl_stmt|,
 modifier|*
 name|conf_list
 decl_stmt|,
+modifier|*
 modifier|*
 name|confp
 decl_stmt|;

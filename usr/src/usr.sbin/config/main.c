@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	1.8	82/12/09	*/
+comment|/*	main.c	1.9	83/05/18	*/
 end_comment
 
 begin_include
@@ -136,6 +136,11 @@ name|dtab
 operator|=
 name|NULL
 expr_stmt|;
+name|confp
+operator|=
+operator|&
+name|conf_list
+expr_stmt|;
 if|if
 condition|(
 name|yyparse
@@ -190,6 +195,10 @@ name|headers
 argument_list|()
 expr_stmt|;
 comment|/* make a lot of .h files */
+name|swapconf
+argument_list|()
+expr_stmt|;
+comment|/* swap config files */
 name|printf
 argument_list|(
 literal|"Don't forget to run \"make depend\"\n"
