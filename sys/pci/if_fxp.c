@@ -2251,6 +2251,35 @@ operator|(
 literal|"Intel EtherExpress Pro 10/100B Ethernet"
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+operator|(
+name|device_id
+operator|&
+literal|0xffff
+operator|)
+operator|==
+name|FXP_VENDORID_INTEL
+operator|)
+operator|&&
+operator|(
+operator|(
+name|device_id
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xffff
+operator|)
+operator|==
+name|FXP_DEVICEID_i82559
+condition|)
+return|return
+operator|(
+literal|"Intel InBusiness 10/100 Ethernet"
+operator|)
+return|;
 return|return
 name|NULL
 return|;
