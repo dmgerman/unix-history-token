@@ -165,7 +165,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ns_ifaddr
 modifier|*
