@@ -11,7 +11,18 @@ value|23
 end_define
 
 begin_comment
-comment|/* Connect request [client->server] */
+comment|/* Connect [client->server] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXCH_DISASSOCIATE
+value|39
+end_define
+
+begin_comment
+comment|/* Disconnect [client->server] */
 end_comment
 
 begin_define
@@ -22,7 +33,7 @@ value|44
 end_define
 
 begin_comment
-comment|/* Send auth (password) [server->client] */
+comment|/* Send password [server->client] */
 end_comment
 
 begin_comment
@@ -52,7 +63,7 @@ value|78
 end_define
 
 begin_comment
-comment|/* You are now connected [server->client] */
+comment|/* Connected [server->client] */
 end_comment
 
 begin_define
@@ -93,7 +104,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* I need client storage [server->client] */
+comment|/* Send storage [server->client] */
 end_comment
 
 begin_comment
@@ -108,7 +119,7 @@ value|49
 end_define
 
 begin_comment
-comment|/* Here is some storage [BOTH WAYS] */
+comment|/* Here is storage [BOTH WAYS] */
 end_comment
 
 begin_comment
