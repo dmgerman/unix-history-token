@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.h	6.1	83/07/29	*/
+comment|/*	in.h	6.2	84/04/12	*/
 end_comment
 
 begin_comment
@@ -431,6 +431,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IN_CLASSA_MAX
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
 name|IN_CLASSB
 parameter_list|(
 name|i
@@ -457,6 +464,13 @@ define|#
 directive|define
 name|IN_CLASSB_HOST
 value|0x0000ffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSB_MAX
+value|65536
 end_define
 
 begin_define
@@ -495,6 +509,90 @@ define|#
 directive|define
 name|INADDR_ANY
 value|0x00000000
+end_define
+
+begin_comment
+comment|/*  * Macros for subnetworks.  A subnet is distinguished by  * 	(1) the network number is a `local' network number, and  *	(2) the most significant bit of the host part is set.  * Such addresses include one additional byte in the network number,  * and use one less byte in the host part (i.e., a subnet of a Class A  * network uses the rules for Class B net/host number extraction,  * a Class B subnet is dealt with as if it were a Class C net).  * Subnets of Class C nets are not supported.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBNETSHIFT
+value|8
+end_define
+
+begin_comment
+comment|/* used to get main net number from subnet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_SUBNETA
+parameter_list|(
+name|i
+parameter_list|)
+value|((((long)(i))&0x80800000)==0x00800000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSA_SUBNET
+value|0xffff0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSA_SUBNSHIFT
+value|(IN_CLASSA_NSHIFT - SUBNETSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSA_SUBHOST
+value|0x0000ffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_SUBNETB
+parameter_list|(
+name|i
+parameter_list|)
+value|((((long)(i))&0xc0008000)==0x80008000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSB_SUBNET
+value|0xffffff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSB_SUBNSHIFT
+value|(IN_CLASSB_NSHIFT - SUBNETSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSA_SUBHOST
+value|0x0000ffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSB_SUBHOST
+value|0x000000ff
 end_define
 
 begin_comment
