@@ -5449,7 +5449,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Synopsis: Program multicast filter honoring IFF_ALLMULTI and IFF_PROMISC  * flags. (Note, that setting PROMISC bit in EPIC's RXCON will only touch  * individual frames, multicast filter must be manually programmed)  *  * Note: EPIC must be in idle state.  */
+comment|/*  * Synopsis: Program multicast filter honoring IFF_ALLMULTI and IFF_PROMISC  * flags (note that setting PROMISC bit in EPIC's RXCON will only touch  * individual frames, multicast filter must be manually programmed).  *  * Note: EPIC must be in idle state.  */
 end_comment
 
 begin_function
