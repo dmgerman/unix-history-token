@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1346,7 +1346,7 @@ name|len
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Set retransmit timer if not currently set, 		 * and not doing a keep-alive probe. 		 * Initial value for retransmit timer is tcp_beta*tp->t_srtt. 		 * Initialize shift counter which is used for exponential 		 * backoff of retransmit time. 		 */
+comment|/* 		 * Set retransmit timer if not currently set, 		 * and not doing an ack or a keep-alive probe. 		 * Initial value for retransmit timer is tcp_beta*tp->t_srtt. 		 * Initialize shift counter which is used for exponential 		 * backoff of retransmit time. 		 */
 if|if
 condition|(
 name|tp
@@ -1393,7 +1393,6 @@ name|t_rxtshift
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|tp
 operator|->
 name|t_timer
@@ -1404,8 +1403,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
-block|{
+block|}
+elseif|else
 if|if
 condition|(
 name|SEQ_GT
@@ -1431,7 +1430,6 @@ name|snd_nxt
 operator|+
 name|len
 expr_stmt|;
-block|}
 comment|/* 	 * Trace. 	 */
 if|if
 condition|(
