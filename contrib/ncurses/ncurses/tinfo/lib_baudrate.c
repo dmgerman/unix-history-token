@@ -440,21 +440,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
+begin_function
+name|int
 name|_nc_baudrate
-argument_list|(
-argument|int OSpeed
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|OSpeed
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -548,23 +540,15 @@ name|result
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
+begin_function
+name|int
 name|_nc_ospeed
-argument_list|(
-argument|int BaudRate
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|BaudRate
+parameter_list|)
 block|{
 name|int
 name|result
@@ -629,23 +613,14 @@ name|result
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
+begin_function
+name|int
 name|baudrate
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|result
@@ -797,7 +772,7 @@ name|result
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
