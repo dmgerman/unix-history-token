@@ -60,7 +60,7 @@ union|;
 end_union
 
 begin_comment
-comment|/*  * Format of an IP firewall descriptor  *  * fw_src, fw_dst, fw_smsk, fw_dmsk are always stored in network byte order.  * fw_flg and fw_n*p are stored in host byte order (of course).  * Port numbers are stored in HOST byte order.  * Warning: setsockopt() will fail if sizeof(struct ip_fw)> MLEN (108)  */
+comment|/*  * Format of an IP firewall descriptor  *  * fw_src, fw_dst, fw_smsk, fw_dmsk are always stored in network byte order.  * fw_flg and fw_n*p are stored in host byte order (of course).  * Port numbers are stored in HOST byte order.  */
 end_comment
 
 begin_struct
