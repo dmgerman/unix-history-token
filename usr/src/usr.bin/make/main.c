@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.14 (Berkeley) %G%"
+literal|"@(#)main.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1311,19 +1311,7 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize various variables. 	 *	.PMAKE gets how we were executed. 	 *	MAKE also gets this name, for compatibility 	 *	.MAKEFLAGS gets set to the empty string just in case. 	 *	MFLAGS also gets initialized empty, for compatibility. 	 */
-name|Var_Set
-argument_list|(
-literal|".PMAKE"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Initialize various variables. 	 *	MAKE also gets this name, for compatibility 	 *	.MAKEFLAGS gets set to the empty string just in case. 	 *	MFLAGS also gets initialized empty, for compatibility. 	 */
 name|Var_Set
 argument_list|(
 literal|"MAKE"
@@ -1363,7 +1351,7 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First snag any flags out of the PMAKE environment variable. 	 * (Note this is *not* MAKEFLAGS since /bin/make uses that and it's 	 * in a different format). 	 */
+comment|/* 	 * First snag any flags out of the MAKE environment variable. 	 * (Note this is *not* MAKEFLAGS since /bin/make uses that and it's 	 * in a different format). 	 */
 ifdef|#
 directive|ifdef
 name|POSIX
@@ -1381,7 +1369,7 @@ name|Main_ParseArgLine
 argument_list|(
 name|getenv
 argument_list|(
-literal|"PMAKE"
+literal|"MAKE"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1582,7 +1570,7 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-comment|/* Install all the flags into the PMAKE envariable. */
+comment|/* Install all the flags into the MAKE envariable. */
 ifdef|#
 directive|ifdef
 name|POSIX
@@ -1602,7 +1590,7 @@ else|#
 directive|else
 name|setenv
 argument_list|(
-literal|"PMAKE"
+literal|"MAKE"
 argument_list|,
 name|Var_Value
 argument_list|(

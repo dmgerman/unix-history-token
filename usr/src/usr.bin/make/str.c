@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.6 (Berkeley) %G%"
+literal|"@(#)str.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,7 +205,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*-  * brk_string --  *	Fracture a string into an array of words (as delineated by tabs or  *	spaces) taking quotation marks into account.  Leading tabs/spaces  *	are ignored.  *  * returns --  *	Pointer to the array of pointers to the words.  To make life easier,  *	the first word is always the value of the .PMAKE variable.  */
+comment|/*-  * brk_string --  *	Fracture a string into an array of words (as delineated by tabs or  *	spaces) taking quotation marks into account.  Leading tabs/spaces  *	are ignored.  *  * returns --  *	Pointer to the array of pointers to the words.  To make life easier,  *	the first word is always the value of the .MAKE variable.  */
 end_comment
 
 begin_function
@@ -301,7 +301,7 @@ index|]
 operator|=
 name|Var_Value
 argument_list|(
-literal|".PMAKE"
+literal|".MAKE"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|)
