@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.83	83/06/19	*/
+comment|/*	machdep.c	4.84	83/07/09	*/
 end_comment
 
 begin_include
@@ -2318,12 +2318,23 @@ name|VAX730
 case|case
 name|VAX_730
 case|:
+block|{
+specifier|register
+name|int
+name|mcreg
+init|=
+name|mcr
+operator|->
+name|mc_reg
+index|[
+literal|1
+index|]
+decl_stmt|;
 if|if
 condition|(
-name|M730_ERR
-argument_list|(
-name|mcr
-argument_list|)
+name|mcreg
+operator|&
+name|M730_CRD
 condition|)
 block|{
 name|struct
@@ -2370,6 +2381,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+block|}
 endif|#
 directive|endif
 block|}
