@@ -65,10 +65,6 @@ name|uint64_t
 name|pcb_onfault
 decl_stmt|;
 comment|/* for copy faults */
-name|uint64_t
-name|pcb_accessaddr
-decl_stmt|;
-comment|/* for [fs]uswintr */
 if|#
 directive|if
 name|IA32
