@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.11 (Berkeley) %G%"
+literal|"@(#)main.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/inode.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fs.h>
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/fs.h>
 end_include
 
 begin_include
@@ -601,7 +613,7 @@ name|errexit
 argument_list|(
 literal|"Can't open checklist file: %s\n"
 argument_list|,
-name|FSTAB
+name|_PATH_FSTAB
 argument_list|)
 expr_stmt|;
 while|while

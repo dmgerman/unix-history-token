@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.13 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,19 +46,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/inode.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fs.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<ufs/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/dir.h>
 end_include
 
 begin_include

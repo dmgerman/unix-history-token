@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass3.c	5.2 (Berkeley) %G%"
+literal|"@(#)pass3.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,13 +34,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/inode.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fs.h>
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/fs.h>
 end_include
 
 begin_include
