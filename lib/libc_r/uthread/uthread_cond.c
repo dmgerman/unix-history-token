@@ -1631,9 +1631,9 @@ name|cond
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* 		 * Defer signals to protect the scheduling queues 		 * from access by the signal handler: 		 */
@@ -1821,9 +1821,9 @@ name|cond
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* 		 * Defer signals to protect the scheduling queues 		 * from access by the signal handler: 		 */
