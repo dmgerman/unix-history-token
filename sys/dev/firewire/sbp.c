@@ -2940,7 +2940,7 @@ name|reg
 operator|->
 name|val
 operator|&
-literal|0xf0000
+literal|0xff0000
 operator|)
 operator|>>
 literal|16

@@ -1112,22 +1112,11 @@ name|DMA_PROG_ALLOC
 value|(8 * PAGE_SIZE)
 end_define
 
-begin_comment
-comment|/* #define NDB 1024 */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|NDB
 value|FWMAXQUEUE
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDVDB
-value|(DVBUF * NDB)
 end_define
 
 begin_define
@@ -2160,7 +2149,9 @@ name|fc
 operator|.
 name|dev
 argument_list|,
-literal|"fwphy_rddata: loop=%d, retry=%d\n"
+literal|"fwphy_rddata: 0x%x loop=%d, retry=%d\n"
+argument_list|,
+name|addr
 argument_list|,
 name|i
 argument_list|,
@@ -2424,7 +2415,80 @@ name|EINVAL
 expr_stmt|;
 block|}
 break|break;
+comment|/* Read/Write Phy registers */
+define|#
+directive|define
+name|OHCI_MAX_PHY_REG
+value|0xf
+case|case
+name|FWOHCI_RDPHYREG
+case|:
+if|if
+condition|(
+name|reg
+operator|->
+name|addr
+operator|<=
+name|OHCI_MAX_PHY_REG
+condition|)
+name|reg
+operator|->
+name|data
+operator|=
+name|fwphy_rddata
+argument_list|(
+name|fc
+argument_list|,
+name|reg
+operator|->
+name|addr
+argument_list|)
+expr_stmt|;
+else|else
+name|err
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+case|case
+name|FWOHCI_WRPHYREG
+case|:
+if|if
+condition|(
+name|reg
+operator|->
+name|addr
+operator|<=
+name|OHCI_MAX_PHY_REG
+condition|)
+name|reg
+operator|->
+name|data
+operator|=
+name|fwphy_wrdata
+argument_list|(
+name|fc
+argument_list|,
+name|reg
+operator|->
+name|addr
+argument_list|,
+name|reg
+operator|->
+name|data
+argument_list|)
+expr_stmt|;
+else|else
+name|err
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
 default|default:
+name|err
+operator|=
+name|EINVAL
+expr_stmt|;
 break|break;
 block|}
 return|return
@@ -5154,6 +5218,11 @@ name|fwohcidb
 modifier|*
 name|db
 decl_stmt|;
+specifier|volatile
+name|u_int32_t
+modifier|*
+name|ld
+decl_stmt|;
 name|struct
 name|tcode_info
 modifier|*
@@ -5350,6 +5419,40 @@ name|info
 operator|->
 name|hdr_len
 expr_stmt|;
+name|ld
+operator|=
+operator|&
+name|ohcifp
+operator|->
+name|mode
+operator|.
+name|ld
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|ld
+index|[
+literal|0
+index|]
+operator|=
+name|ld
+index|[
+literal|1
+index|]
+operator|=
+name|ld
+index|[
+literal|2
+index|]
+operator|=
+name|ld
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -5364,11 +5467,6 @@ name|i
 operator|+=
 literal|4
 control|)
-block|{
-name|ohcifp
-operator|->
-name|mode
-operator|.
 name|ld
 index|[
 name|i
@@ -5387,7 +5485,6 @@ operator|/
 literal|4
 index|]
 expr_stmt|;
-block|}
 name|ohcifp
 operator|->
 name|mode
@@ -5399,6 +5496,8 @@ operator|=
 name|xfer
 operator|->
 name|spd
+operator|&
+literal|0x7
 expr_stmt|;
 if|if
 condition|(
@@ -5440,10 +5539,6 @@ name|hdr_len
 operator|=
 literal|12
 expr_stmt|;
-name|ohcifp
-operator|->
-name|mode
-operator|.
 name|ld
 index|[
 literal|1
@@ -5458,10 +5553,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|ohcifp
-operator|->
-name|mode
-operator|.
 name|ld
 index|[
 literal|2
@@ -5571,6 +5662,19 @@ name|db
 operator|.
 name|desc
 operator|.
+name|addr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|FWOHCI_DMA_WRITE
+argument_list|(
+name|db
+operator|->
+name|db
+operator|.
+name|desc
+operator|.
 name|res
 argument_list|,
 literal|0
@@ -5652,19 +5756,11 @@ operator|++
 control|)
 name|FWOHCI_DMA_WRITE
 argument_list|(
-name|ohcifp
-operator|->
-name|mode
-operator|.
 name|ld
 index|[
 name|i
 index|]
 argument_list|,
-name|ohcifp
-operator|->
-name|mode
-operator|.
 name|ld
 index|[
 name|i
@@ -6535,8 +6631,18 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-literal|0
-block|dump_db(sc, ch);
+literal|1
+if|if
+condition|(
+name|firewire_debug
+condition|)
+name|dump_db
+argument_list|(
+name|sc
+argument_list|,
+name|ch
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -12726,6 +12832,19 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|firewire_debug
+condition|)
+name|dump_db
+argument_list|(
+name|sc
+argument_list|,
+name|ITX_CH
+operator|+
+name|dmach
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -12795,6 +12914,7 @@ operator|)
 operator|->
 name|db
 expr_stmt|;
+comment|/* timestamp */
 name|count
 operator|=
 name|FWOHCI_DMA_READ
@@ -14183,10 +14303,12 @@ argument|].db.immed; 		ohcifp->mode.ld[
 literal|0
 argument|] = fp->mode.ld[
 literal|0
-argument|]; 		ohcifp->mode.stream.len = fp->mode.stream.len; 		ohcifp->mode.stream.chtag = chtag; 		ohcifp->mode.stream.tcode =
-literal|0xa
-argument|; 		ohcifp->mode.stream.spd =
+argument|]; 		ohcifp->mode.common.spd =
 literal|0
+argument|&
+literal|0x7
+argument|; 		ohcifp->mode.stream.len = fp->mode.stream.len; 		ohcifp->mode.stream.chtag = chtag; 		ohcifp->mode.stream.tcode =
+literal|0xa
 argument|;
 if|#
 directive|if
@@ -14265,6 +14387,16 @@ literal|0
 argument|].db.desc.cmd, 		OHCI_OUTPUT_MORE | OHCI_KEY_ST2 |
 literal|8
 argument|); 	FWOHCI_DMA_WRITE(db[
+literal|0
+argument|].db.desc.addr,
+literal|0
+argument|); 	bzero((void *)(uintptr_t)(volatile void *)&db[
+literal|1
+argument|].db.immed[
+literal|0
+argument|], sizeof(db[
+literal|1
+argument|].db.immed)); 	FWOHCI_DMA_WRITE(db[
 literal|2
 argument|].db.desc.addr, 	fwdma_bus_addr(it->buf, poffset) + sizeof(u_int32_t));  	FWOHCI_DMA_WRITE(db[
 literal|2
