@@ -1,21 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx_pci.c#72 $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx_pci.c#78 $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -49,6 +35,20 @@ end_else
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<dev/aic7xxx/aic7xxx_osm.h>
 end_include
 
@@ -68,28 +68,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|AHC_PCI_IOADDR
-value|PCIR_BAR(0)
-end_define
-
-begin_comment
-comment|/* I/O Address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AHC_PCI_MEMADDR
-value|PCIR_BAR(1)
-end_define
-
-begin_comment
-comment|/* Mem I/O Address */
-end_comment
 
 begin_function
 specifier|static
@@ -553,6 +531,13 @@ define|#
 directive|define
 name|ID_AHA_19160B
 value|0x0081900562A19005ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AHA_2915_30LP
+value|0x0082900502109005ull
 end_define
 
 begin_define
@@ -1517,6 +1502,16 @@ block|,
 name|ID_ALL_MASK
 block|,
 literal|"Adaptec aic7892 Ultra160 SCSI adapter (ARO)"
+block|,
+name|ahc_aic7892_setup
+block|}
+block|,
+block|{
+name|ID_AHA_2915_30LP
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 2915/30LP Ultra160 SCSI adapter"
 block|,
 name|ahc_aic7892_setup
 block|}
@@ -2496,7 +2491,7 @@ name|ahc_pci_identity
 modifier|*
 name|ahc_find_pci_device
 parameter_list|(
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 parameter_list|)
 block|{
@@ -2525,7 +2520,7 @@ name|i
 decl_stmt|;
 name|vendor
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -2537,7 +2532,7 @@ argument_list|)
 expr_stmt|;
 name|device
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -2549,7 +2544,7 @@ argument_list|)
 expr_stmt|;
 name|subvendor
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -2561,7 +2556,7 @@ argument_list|)
 expr_stmt|;
 name|subdevice
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -2587,7 +2582,7 @@ expr_stmt|;
 comment|/* 	 * If the second function is not hooked up, ignore it. 	 * Unfortunately, not all MB vendors implement the 	 * subdevice ID as per the Adaptec spec, so do our best 	 * to sanity check it prior to accepting the subdevice 	 * ID as valid. 	 */
 if|if
 condition|(
-name|ahc_get_pci_function
+name|aic_get_pci_function
 argument_list|(
 name|pci
 argument_list|)
@@ -2763,11 +2758,11 @@ name|entry
 operator|->
 name|name
 expr_stmt|;
-name|ahc_power_state_change
+name|aic_power_state_change
 argument_list|(
 name|ahc
 argument_list|,
-name|AHC_POWER_STATE_D0
+name|AIC_POWER_STATE_D0
 argument_list|)
 expr_stmt|;
 name|error
@@ -2798,7 +2793,7 @@ argument_list|)
 expr_stmt|;
 name|devconfig
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -2848,7 +2843,7 @@ name|devconfig
 operator||=
 name|PCIERRGENDIS
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -2865,7 +2860,7 @@ expr_stmt|;
 comment|/* Ensure busmastering is enabled */
 name|command
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -2881,7 +2876,7 @@ name|command
 operator||=
 name|PCIM_CMD_BUSMASTEREN
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -3240,7 +3235,7 @@ name|ahc
 operator|->
 name|pci_cachesize
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -3279,7 +3274,7 @@ operator|==
 literal|4
 condition|)
 block|{
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -3319,7 +3314,7 @@ name|devconfig
 decl_stmt|;
 name|devconfig
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -3539,7 +3534,7 @@ name|pci_softc
 operator|.
 name|devconfig
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -3559,7 +3554,7 @@ name|pci_softc
 operator|.
 name|command
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -3579,7 +3574,7 @@ name|pci_softc
 operator|.
 name|csize_lattime
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -3870,7 +3865,7 @@ name|AHC_CHIPID_MASK
 expr_stmt|;
 name|devconfig
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -4022,7 +4017,7 @@ name|ahc
 argument_list|,
 name|SCBBADDR
 argument_list|,
-name|ahc_get_pci_function
+name|aic_get_pci_function
 argument_list|(
 name|ahc
 operator|->
@@ -4050,7 +4045,7 @@ name|AHC_LSCBS_ENABLED
 expr_stmt|;
 name|devconfig
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -4184,7 +4179,7 @@ operator|&=
 operator|~
 name|EXTSCBPEN
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -4650,7 +4645,7 @@ expr_stmt|;
 comment|/* 	 * Enable PCI error interrupt status, but suppress NMIs 	 * generated by SERR raised due to target aborts. 	 */
 name|cmd
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -4662,7 +4657,7 @@ comment|/*bytes*/
 literal|2
 argument_list|)
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -4698,6 +4693,25 @@ condition|)
 goto|goto
 name|fail
 goto|;
+if|if
+condition|(
+operator|(
+name|hcntrl
+operator|&
+name|CHIPRST
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * The chip has not been initialized since 		 * PCI/EISA/VLB bus reset.  Don't trust 		 * "left over BIOS data". 		 */
+name|ahc
+operator|->
+name|flags
+operator||=
+name|AHC_NO_BIOS_INIT
+expr_stmt|;
+block|}
 comment|/* 	 * Next create a situation where write combining 	 * or read prefetching could be initiated by the 	 * CPU or host bridge.  Our device does not support 	 * either, so look for data corruption and/or flagged 	 * PCI errors.  First pause without causing another 	 * chip reset. 	 */
 name|hcntrl
 operator|&=
@@ -4728,7 +4742,7 @@ empty_stmt|;
 comment|/* Clear any PCI errors that occurred before our driver attached. */
 name|status1
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -4742,7 +4756,7 @@ comment|/*bytes*/
 literal|1
 argument_list|)
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -4810,7 +4824,7 @@ name|fail
 goto|;
 name|status1
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -4846,7 +4860,7 @@ label|:
 comment|/* Silently clear any latched errors. */
 name|status1
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -4860,7 +4874,7 @@ comment|/*bytes*/
 literal|1
 argument_list|)
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -4896,7 +4910,7 @@ operator||
 name|FAILDIS
 argument_list|)
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -5175,6 +5189,21 @@ argument_list|(
 operator|&
 name|sd
 argument_list|)
+expr_stmt|;
+comment|/* Remember the SEEPROM type for later */
+if|if
+condition|(
+name|sd
+operator|.
+name|sd_chip
+operator|==
+name|C56_66
+condition|)
+name|ahc
+operator|->
+name|flags
+operator||=
+name|AHC_LARGE_SEEPROM
 expr_stmt|;
 block|}
 if|if
@@ -6063,7 +6092,7 @@ decl_stmt|;
 comment|/* Honor the STPWLEVEL settings */
 name|devconfig
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -6096,7 +6125,7 @@ name|devconfig
 operator||=
 name|STPWLEVEL
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -7338,7 +7367,7 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-name|ahc_delay
+name|aic_delay
 argument_list|(
 literal|500
 argument_list|)
@@ -7357,7 +7386,7 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-name|ahc_delay
+name|aic_delay
 argument_list|(
 literal|500
 argument_list|)
@@ -7502,7 +7531,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|ahc_delay
+name|aic_delay
 argument_list|(
 literal|1000
 argument_list|)
@@ -7898,7 +7927,7 @@ condition|)
 return|return;
 name|status1
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahc
 operator|->
@@ -8055,7 +8084,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Clear latched errors. */
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -8426,15 +8455,15 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_power_state_change
+name|aic_power_state_change
 argument_list|(
 name|ahc
 argument_list|,
-name|AHC_POWER_STATE_D0
+name|AIC_POWER_STATE_D0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We assume that the OS has restored our register 	 * mappings, etc.  Just update the config space registers 	 * that the OS doesn't know about and rely on our chip 	 * reset handler to handle the rest. 	 */
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -8454,7 +8483,7 @@ operator|.
 name|devconfig
 argument_list|)
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -8474,7 +8503,7 @@ operator|.
 name|command
 argument_list|)
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahc
 operator|->
@@ -8592,7 +8621,7 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|uint8_t
@@ -8634,7 +8663,7 @@ name|AHC_PCI_MWI_BUG
 expr_stmt|;
 name|rev
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -8681,7 +8710,7 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|uint8_t
@@ -8723,7 +8752,7 @@ name|AHC_PCI_MWI_BUG
 expr_stmt|;
 name|rev
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -8995,7 +9024,7 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|uint8_t
@@ -9033,7 +9062,7 @@ name|AHC_TMODE_WIDEODD_BUG
 expr_stmt|;
 name|rev
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -9205,7 +9234,7 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|uint8_t
@@ -9243,7 +9272,7 @@ name|AHC_NEWEEPROM_FMT
 expr_stmt|;
 name|rev
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -9347,7 +9376,7 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|uint8_t
@@ -9363,7 +9392,7 @@ name|ahc
 operator|->
 name|channel
 operator|=
-name|ahc_get_pci_function
+name|aic_get_pci_function
 argument_list|(
 name|pci
 argument_list|)
@@ -9377,7 +9406,7 @@ expr_stmt|;
 comment|/* 	 * The 'C' revision of the aic7895 has a few additional features. 	 */
 name|rev
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -9427,7 +9456,7 @@ expr_stmt|;
 comment|/* 		 * The BIOS disables the use of MWI transactions 		 * since it does not have the MWI bug work around 		 * we have.  Disabling MWI reduces performance, so 		 * turn it on again. 		 */
 name|command
 operator|=
-name|ahc_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -9441,7 +9470,7 @@ name|command
 operator||=
 name|PCIM_CMD_MWRICEN
 expr_stmt|;
-name|ahc_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|pci
 argument_list|,
@@ -9476,11 +9505,11 @@ directive|if
 literal|0
 block|uint32_t devconfig;
 comment|/* 	 * Cachesize must also be zero due to stray DAC 	 * problem when sitting behind some bridges. 	 */
-block|ahc_pci_write_config(pci, CSIZE_LATTIME, 0,
+block|aic_pci_write_config(pci, CSIZE_LATTIME, 0,
 comment|/*bytes*/
-block|1); 	devconfig = ahc_pci_read_config(pci, DEVCONFIG,
+block|1); 	devconfig = aic_pci_read_config(pci, DEVCONFIG,
 comment|/*bytes*/
-block|1); 	devconfig |= MRDCEN; 	ahc_pci_write_config(pci, DEVCONFIG, devconfig,
+block|1); 	devconfig |= MRDCEN; 	aic_pci_write_config(pci, DEVCONFIG, devconfig,
 comment|/*bytes*/
 block|1);
 endif|#
@@ -9516,7 +9545,7 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|pci
@@ -9529,7 +9558,7 @@ name|ahc
 operator|->
 name|channel
 operator|=
-name|ahc_get_pci_function
+name|aic_get_pci_function
 argument_list|(
 name|pci
 argument_list|)
@@ -9589,7 +9618,7 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|pci
@@ -9602,7 +9631,7 @@ name|ahc
 operator|->
 name|channel
 operator|=
-name|ahc_get_pci_function
+name|aic_get_pci_function
 argument_list|(
 name|pci
 argument_list|)
@@ -9732,7 +9761,7 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|pci
@@ -9743,7 +9772,7 @@ name|dev_softc
 expr_stmt|;
 switch|switch
 condition|(
-name|ahc_get_pci_slot
+name|aic_get_pci_slot
 argument_list|(
 name|pci
 argument_list|)
@@ -9775,7 +9804,7 @@ argument_list|(
 literal|"adapter at unexpected slot %d\n"
 literal|"unable to map to a channel\n"
 argument_list|,
-name|ahc_get_pci_slot
+name|aic_get_pci_slot
 argument_list|(
 name|pci
 argument_list|)
@@ -9807,7 +9836,7 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|pci
@@ -9818,7 +9847,7 @@ name|dev_softc
 expr_stmt|;
 switch|switch
 condition|(
-name|ahc_get_pci_slot
+name|aic_get_pci_slot
 argument_list|(
 name|pci
 argument_list|)
@@ -9860,7 +9889,7 @@ argument_list|(
 literal|"adapter at unexpected slot %d\n"
 literal|"unable to map to a channel\n"
 argument_list|,
-name|ahc_get_pci_slot
+name|aic_get_pci_slot
 argument_list|(
 name|pci
 argument_list|)
@@ -9899,7 +9928,7 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|ahc_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|pci
@@ -9910,7 +9939,7 @@ name|dev_softc
 expr_stmt|;
 switch|switch
 condition|(
-name|ahc_get_pci_slot
+name|aic_get_pci_slot
 argument_list|(
 name|pci
 argument_list|)
@@ -9962,7 +9991,7 @@ argument_list|(
 literal|"adapter at unexpected slot %d\n"
 literal|"unable to map to a channel\n"
 argument_list|,
-name|ahc_get_pci_slot
+name|aic_get_pci_slot
 argument_list|(
 name|pci
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_inline.h#51 $  *  * $FreeBSD$  */
+comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_inline.h#55 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1119,7 +1119,7 @@ name|sg
 operator|->
 name|addr
 operator|=
-name|ahd_htole64
+name|aic_htole64
 argument_list|(
 name|addr
 argument_list|)
@@ -1128,7 +1128,7 @@ name|sg
 operator|->
 name|len
 operator|=
-name|ahd_htole32
+name|aic_htole32
 argument_list|(
 name|len
 operator||
@@ -1169,7 +1169,7 @@ name|sg
 operator|->
 name|addr
 operator|=
-name|ahd_htole32
+name|aic_htole32
 argument_list|(
 name|addr
 operator|&
@@ -1180,7 +1180,7 @@ name|sg
 operator|->
 name|len
 operator|=
-name|ahd_htole32
+name|aic_htole32
 argument_list|(
 name|len
 operator||
@@ -1271,7 +1271,7 @@ else|else
 block|{
 if|if
 condition|(
-name|ahd_get_transfer_length
+name|aic_get_transfer_length
 argument_list|(
 name|scb
 argument_list|)
@@ -1330,7 +1330,7 @@ name|cdb_plus_saddr
 operator|.
 name|sense_addr
 operator|=
-name|ahd_htole32
+name|aic_htole32
 argument_list|(
 name|scb
 operator|->
@@ -1477,7 +1477,7 @@ name|high_addr
 decl_stmt|;
 name|high_addr
 operator|=
-name|ahd_le32toh
+name|aic_le32toh
 argument_list|(
 name|sg
 operator|->
@@ -1492,7 +1492,7 @@ name|hscb
 operator|->
 name|dataptr
 operator||=
-name|ahd_htole64
+name|aic_htole64
 argument_list|(
 name|high_addr
 operator|<<
@@ -1518,7 +1518,7 @@ name|hscb
 operator|->
 name|sgptr
 operator|=
-name|ahd_htole32
+name|aic_htole32
 argument_list|(
 name|scb
 operator|->
@@ -1553,7 +1553,7 @@ name|hscb
 operator|->
 name|sgptr
 operator|=
-name|ahd_htole32
+name|aic_htole32
 argument_list|(
 name|SG_LIST_NULL
 argument_list|)
@@ -1905,7 +1905,7 @@ name|int
 name|op
 parameter_list|)
 block|{
-name|ahd_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahd
 argument_list|,
@@ -1980,7 +1980,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|ahd_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahd
 argument_list|,
@@ -2042,7 +2042,7 @@ name|int
 name|op
 parameter_list|)
 block|{
-name|ahd_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahd
 argument_list|,
@@ -2642,7 +2642,7 @@ name|sgptr
 decl_stmt|;
 name|sgptr
 operator|=
-name|ahd_le32toh
+name|aic_le32toh
 argument_list|(
 name|scb
 operator|->
@@ -2705,7 +2705,7 @@ name|sgptr
 decl_stmt|;
 name|sgptr
 operator|=
-name|ahd_le32toh
+name|aic_le32toh
 argument_list|(
 name|scb
 operator|->
@@ -2826,6 +2826,7 @@ name|u_int
 name|port
 parameter_list|)
 block|{
+comment|/* 	 * Read high byte first as some registers increment 	 * or have other side effects when the low byte is 	 * read. 	 */
 return|return
 operator|(
 operator|(
@@ -2870,6 +2871,7 @@ name|u_int
 name|value
 parameter_list|)
 block|{
+comment|/* 	 * Write low byte first to accomodate registers 	 * such as PRGMCNT where the order maters. 	 */
 name|ahd_outb
 argument_list|(
 name|ahd
@@ -4109,6 +4111,11 @@ name|hardware_scb
 modifier|*
 name|q_hscb
 decl_stmt|;
+name|struct
+name|map_node
+modifier|*
+name|q_hscb_map
+decl_stmt|;
 name|uint32_t
 name|saved_hscb_busaddr
 decl_stmt|;
@@ -4118,6 +4125,12 @@ operator|=
 name|ahd
 operator|->
 name|next_queued_hscb
+expr_stmt|;
+name|q_hscb_map
+operator|=
+name|ahd
+operator|->
+name|next_queued_hscb_map
 expr_stmt|;
 name|saved_hscb_busaddr
 operator|=
@@ -4167,11 +4180,25 @@ name|scb
 operator|->
 name|hscb
 expr_stmt|;
+name|ahd
+operator|->
+name|next_queued_hscb_map
+operator|=
+name|scb
+operator|->
+name|hscb_map
+expr_stmt|;
 name|scb
 operator|->
 name|hscb
 operator|=
 name|q_hscb
+expr_stmt|;
+name|scb
+operator|->
+name|hscb_map
+operator|=
+name|q_hscb_map
 expr_stmt|;
 comment|/* Now define the mapping from tag to SCB in the scbindex */
 name|ahd
@@ -4323,7 +4350,7 @@ name|host_dataptr
 decl_stmt|;
 name|host_dataptr
 operator|=
-name|ahd_le64toh
+name|aic_le64toh
 argument_list|(
 name|scb
 operator|->
@@ -4346,7 +4373,7 @@ argument_list|(
 name|scb
 argument_list|)
 argument_list|,
-name|ahd_le32toh
+name|aic_le32toh
 argument_list|(
 name|scb
 operator|->
@@ -4377,7 +4404,7 @@ operator|&
 literal|0xFFFFFFFF
 argument_list|)
 argument_list|,
-name|ahd_le32toh
+name|aic_le32toh
 argument_list|(
 name|scb
 operator|->
@@ -4539,7 +4566,7 @@ name|int
 name|op
 parameter_list|)
 block|{
-name|ahd_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahd
 argument_list|,
@@ -4549,13 +4576,15 @@ name|shared_data_dmat
 argument_list|,
 name|ahd
 operator|->
-name|shared_data_dmamap
+name|shared_data_map
+operator|.
+name|dmamap
 argument_list|,
 comment|/*offset*/
 literal|0
 argument_list|,
 comment|/*len*/
-name|AHC_SCB_MAX
+name|AHD_SCB_MAX
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4599,7 +4628,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ahd_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahd
 argument_list|,
@@ -4609,7 +4638,9 @@ name|shared_data_dmat
 argument_list|,
 name|ahd
 operator|->
-name|shared_data_dmamap
+name|shared_data_map
+operator|.
+name|dmamap
 argument_list|,
 name|ahd_targetcmd_offset
 argument_list|(
@@ -4672,7 +4703,7 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
-name|ahd_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahd
 argument_list|,
@@ -4682,7 +4713,9 @@ name|shared_data_dmat
 argument_list|,
 name|ahd
 operator|->
-name|shared_data_dmamap
+name|shared_data_map
+operator|.
+name|dmamap
 argument_list|,
 comment|/*offset*/
 name|ahd
@@ -4744,7 +4777,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ahd_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahd
 argument_list|,
@@ -4754,7 +4787,9 @@ name|shared_data_dmat
 argument_list|,
 name|ahd
 operator|->
-name|shared_data_dmamap
+name|shared_data_map
+operator|.
+name|dmamap
 argument_list|,
 name|ahd_targetcmd_offset
 argument_list|(

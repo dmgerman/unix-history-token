@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx_inline.h#43 $  *  * $FreeBSD$  */
+comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx_inline.h#47 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -645,7 +645,7 @@ name|int
 name|op
 parameter_list|)
 block|{
-name|ahc_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahc
 argument_list|,
@@ -724,7 +724,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|ahc_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahc
 argument_list|,
@@ -1151,7 +1151,7 @@ name|sgptr
 decl_stmt|;
 name|sgptr
 operator|=
-name|ahc_le32toh
+name|aic_le32toh
 argument_list|(
 name|scb
 operator|->
@@ -1927,7 +1927,7 @@ name|scb
 operator|->
 name|flags
 operator|=
-name|SCB_FREE
+name|SCB_FLAG_NONE
 expr_stmt|;
 name|hscb
 operator|->
@@ -1952,7 +1952,7 @@ name|sle
 argument_list|)
 expr_stmt|;
 comment|/* Notify the OSM that a resource is now available. */
-name|ahc_platform_scb_free
+name|aic_platform_scb_free
 argument_list|(
 name|ahc
 argument_list|,
@@ -2093,7 +2093,7 @@ name|shared_data
 operator|.
 name|cdb_ptr
 operator|=
-name|ahc_htole32
+name|aic_htole32
 argument_list|(
 name|ahc_hscb_busaddr
 argument_list|(
@@ -2240,7 +2240,7 @@ name|LID
 expr_stmt|;
 if|if
 condition|(
-name|ahc_get_transfer_length
+name|aic_get_transfer_length
 argument_list|(
 name|scb
 argument_list|)
@@ -2536,7 +2536,7 @@ name|int
 name|op
 parameter_list|)
 block|{
-name|ahc_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahc
 argument_list|,
@@ -2591,7 +2591,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ahc_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahc
 argument_list|,
@@ -2664,7 +2664,7 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
-name|ahc_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahc
 argument_list|,
@@ -2730,7 +2730,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ahc_dmamap_sync
+name|aic_dmamap_sync
 argument_list|(
 name|ahc
 argument_list|,
@@ -2885,7 +2885,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|AHC_PCI_CONFIG
+name|AIC_PCI_CONFIG
 operator|>
 literal|0
 if|if

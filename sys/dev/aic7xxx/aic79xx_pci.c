@@ -1,21 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *	aic7901 and aic7902 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_pci.c#80 $  */
+comment|/*  * Product specific probe and attach routines for:  *	aic7901 and aic7902 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_pci.c#84 $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -39,6 +25,20 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -181,20 +181,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ID_AHA_29320
-value|0x8012900500429005ull
-end_define
-
-begin_define
-define|#
-directive|define
-name|ID_AHA_29320B
-value|0x8013900500439005ull
-end_define
-
-begin_define
-define|#
-directive|define
 name|ID_AHA_29320LP
 value|0x8014900500449005ull
 end_define
@@ -218,6 +204,20 @@ define|#
 directive|define
 name|ID_AHA_39320
 value|0x8010900500409005ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AHA_29320
+value|0x8012900500429005ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AHA_29320B
+value|0x8013900500439005ull
 end_define
 
 begin_define
@@ -491,26 +491,6 @@ block|}
 block|,
 comment|/* aic7901A based controllers */
 block|{
-name|ID_AHA_29320
-block|,
-name|ID_ALL_MASK
-block|,
-literal|"Adaptec 29320 Ultra320 SCSI adapter"
-block|,
-name|ahd_aic7901A_setup
-block|}
-block|,
-block|{
-name|ID_AHA_29320B
-block|,
-name|ID_ALL_MASK
-block|,
-literal|"Adaptec 29320B Ultra320 SCSI adapter"
-block|,
-name|ahd_aic7901A_setup
-block|}
-block|,
-block|{
 name|ID_AHA_29320LP
 block|,
 name|ID_ALL_MASK
@@ -521,6 +501,26 @@ name|ahd_aic7901A_setup
 block|}
 block|,
 comment|/* aic7902 based controllers */
+block|{
+name|ID_AHA_29320
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 29320 Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7902_setup
+block|}
+block|,
+block|{
+name|ID_AHA_29320B
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 29320B Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7902_setup
+block|}
+block|,
 block|{
 name|ID_AHA_39320
 block|,
@@ -587,26 +587,6 @@ block|,
 name|ID_ALL_MASK
 block|,
 literal|"Adaptec (HP OEM) 39320D Ultra320 SCSI adapter"
-block|,
-name|ahd_aic7902_setup
-block|}
-block|,
-block|{
-name|ID_AHA_29320
-block|,
-name|ID_ALL_MASK
-block|,
-literal|"Adaptec 29320 Ultra320 SCSI adapter"
-block|,
-name|ahd_aic7902_setup
-block|}
-block|,
-block|{
-name|ID_AHA_29320B
-block|,
-name|ID_ALL_MASK
-block|,
-literal|"Adaptec 29320B Ultra320 SCSI adapter"
 block|,
 name|ahd_aic7902_setup
 block|}
@@ -900,7 +880,7 @@ name|ahd_pci_identity
 modifier|*
 name|ahd_find_pci_device
 parameter_list|(
-name|ahd_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 parameter_list|)
 block|{
@@ -929,7 +909,7 @@ name|i
 decl_stmt|;
 name|vendor
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -941,7 +921,7 @@ argument_list|)
 expr_stmt|;
 name|device
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -953,7 +933,7 @@ argument_list|)
 expr_stmt|;
 name|subvendor
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -965,7 +945,7 @@ argument_list|)
 expr_stmt|;
 name|subdevice
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -1104,7 +1084,7 @@ expr_stmt|;
 comment|/* 	 * Record if this is an HP board. 	 */
 name|subvendor
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -1150,7 +1130,7 @@ operator|)
 return|;
 name|devconfig
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -1209,11 +1189,11 @@ name|devconfig
 argument_list|)
 index|]
 expr_stmt|;
-name|ahd_power_state_change
+name|aic_power_state_change
 argument_list|(
 name|ahd
 argument_list|,
-name|AHD_POWER_STATE_D0
+name|AIC_POWER_STATE_D0
 argument_list|)
 expr_stmt|;
 name|error
@@ -1271,7 +1251,7 @@ argument_list|)
 expr_stmt|;
 name|devconfig
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -1287,7 +1267,7 @@ name|devconfig
 operator||=
 name|DACEN
 expr_stmt|;
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahd
 operator|->
@@ -1305,7 +1285,7 @@ block|}
 comment|/* Ensure busmastering is enabled */
 name|command
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -1321,7 +1301,7 @@ name|command
 operator||=
 name|PCIM_CMD_BUSMASTEREN
 expr_stmt|;
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahd
 operator|->
@@ -1384,7 +1364,7 @@ name|ahd
 operator|->
 name|pci_cachesize
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -1532,7 +1512,7 @@ expr_stmt|;
 comment|/* 	 * Enable PCI error interrupt status, but suppress NMIs 	 * generated by SERR raised due to target aborts. 	 */
 name|cmd
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -1544,7 +1524,7 @@ comment|/*bytes*/
 literal|2
 argument_list|)
 expr_stmt|;
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahd
 operator|->
@@ -1637,7 +1617,7 @@ argument_list|)
 expr_stmt|;
 name|pci_status1
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -1651,7 +1631,7 @@ comment|/*bytes*/
 literal|1
 argument_list|)
 expr_stmt|;
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahd
 operator|->
@@ -1820,7 +1800,7 @@ argument_list|)
 expr_stmt|;
 name|pci_status1
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -1834,7 +1814,7 @@ comment|/*bytes*/
 literal|1
 argument_list|)
 expr_stmt|;
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahd
 operator|->
@@ -1871,7 +1851,7 @@ operator||
 name|FAILDIS
 argument_list|)
 expr_stmt|;
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahd
 operator|->
@@ -2626,7 +2606,7 @@ name|devconfig
 decl_stmt|;
 name|devconfig
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -2683,7 +2663,7 @@ else|:
 literal|"off"
 argument_list|)
 expr_stmt|;
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahd
 operator|->
@@ -2927,6 +2907,13 @@ argument_list|)
 operator|&
 operator|~
 name|STPWEN
+expr_stmt|;
+name|ahd
+operator|->
+name|flags
+operator|&=
+operator|~
+name|AHD_TERM_ENB_A
 expr_stmt|;
 if|if
 condition|(
@@ -3494,7 +3481,7 @@ block|}
 block|}
 name|pci_status1
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -3508,7 +3495,7 @@ comment|/*bytes*/
 literal|1
 argument_list|)
 expr_stmt|;
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahd
 operator|->
@@ -3598,7 +3585,7 @@ decl_stmt|;
 comment|/* 	 * Check for splits in all modes.  Modes 0 and 1 	 * additionally have SG engine splits to look at. 	 */
 name|pcix_status
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|ahd
 operator|->
@@ -3890,7 +3877,7 @@ block|}
 block|}
 block|}
 comment|/* 	 * Clear PCI-X status bits. 	 */
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|ahd
 operator|->
@@ -4036,7 +4023,7 @@ modifier|*
 name|ahd
 parameter_list|)
 block|{
-name|ahd_dev_softc_t
+name|aic_dev_softc_t
 name|pci
 decl_stmt|;
 name|u_int
@@ -4050,7 +4037,7 @@ name|dev_softc
 expr_stmt|;
 name|rev
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -4079,7 +4066,7 @@ argument_list|,
 name|rev
 argument_list|)
 expr_stmt|;
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|pci
 argument_list|,
@@ -4101,7 +4088,7 @@ name|ahd
 operator|->
 name|channel
 operator|=
-name|ahd_get_pci_function
+name|aic_get_pci_function
 argument_list|(
 name|pci
 argument_list|)
@@ -4204,6 +4191,8 @@ operator||
 name|AHD_NEW_IOCELL_OPTS
 operator||
 name|AHD_NEW_DFCNTRL_OPTS
+operator||
+name|AHD_FAST_CDB_DELIVERY
 expr_stmt|;
 name|ahd
 operator|->
@@ -4259,7 +4248,7 @@ expr_stmt|;
 comment|/* 		 * Set the PREQDIS bit for H2B which disables some workaround 		 * that doesn't work on regular PCI busses. 		 * XXX - Find out exactly what this does from the hardware 		 * 	 folks! 		 */
 name|devconfig1
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
@@ -4269,7 +4258,7 @@ comment|/*bytes*/
 literal|1
 argument_list|)
 expr_stmt|;
-name|ahd_pci_write_config
+name|aic_pci_write_config
 argument_list|(
 name|pci
 argument_list|,
@@ -4285,7 +4274,7 @@ argument_list|)
 expr_stmt|;
 name|devconfig1
 operator|=
-name|ahd_pci_read_config
+name|aic_pci_read_config
 argument_list|(
 name|pci
 argument_list|,
