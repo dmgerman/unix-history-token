@@ -75,6 +75,28 @@ name|NULL
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|back_color_erase
+condition|)
+block|{
+name|T
+argument_list|(
+operator|(
+literal|"back_color_erase, turning attributes off"
+operator|)
+argument_list|)
+expr_stmt|;
+name|vidattr
+argument_list|(
+name|curscr
+operator|->
+name|_attrs
+operator|=
+name|A_NORMAL
+argument_list|)
+expr_stmt|;
+block|}
 name|putp
 argument_list|(
 name|delete_line
@@ -213,10 +235,6 @@ name|temp
 operator|++
 operator|=
 literal|' '
-operator||
-name|win
-operator|->
-name|_attrs
 expr_stmt|;
 return|return
 name|OK
