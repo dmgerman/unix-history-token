@@ -143,6 +143,7 @@ name|an_getval
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -161,6 +162,7 @@ name|an_setval
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -256,6 +258,7 @@ name|an_dumpstatus
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -270,6 +273,7 @@ name|an_dumpstats
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -284,6 +288,7 @@ name|an_dumpconfig
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -298,6 +303,7 @@ name|an_dumpcaps
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -312,6 +318,7 @@ name|an_dumpssid
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -326,6 +333,7 @@ name|an_dumpap
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -340,6 +348,7 @@ name|an_setconfig
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -359,6 +368,7 @@ name|an_setssid
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -378,6 +388,7 @@ name|an_setap
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -397,6 +408,7 @@ name|an_setspeed
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -416,6 +428,7 @@ name|an_readkeyinfo
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -436,6 +449,7 @@ name|an_zerocache
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -450,6 +464,7 @@ name|an_readcache
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -461,6 +476,75 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|an_hex2int
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|an_str2key
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+expr|struct
+name|an_ltv_key
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|an_setkeys
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|an_enable_tx_key
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -753,6 +837,7 @@ name|iface
 parameter_list|,
 name|areq
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -875,6 +960,7 @@ name|iface
 parameter_list|,
 name|areq
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -1288,6 +1374,7 @@ name|an_dumpstatus
 parameter_list|(
 name|iface
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -1729,6 +1816,7 @@ name|an_dumpcaps
 parameter_list|(
 name|iface
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -2279,6 +2367,7 @@ name|an_dumpstats
 parameter_list|(
 name|iface
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -3017,6 +3106,7 @@ name|an_dumpap
 parameter_list|(
 name|iface
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -3156,6 +3246,7 @@ name|an_dumpssid
 parameter_list|(
 name|iface
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -3253,6 +3344,7 @@ name|an_dumpconfig
 parameter_list|(
 name|iface
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -3269,7 +3361,7 @@ name|areq
 decl_stmt|;
 name|unsigned
 name|char
-name|div
+name|diversity
 decl_stmt|;
 name|areq
 operator|.
@@ -4298,7 +4390,7 @@ argument_list|(
 literal|"\nRX Diversity:\t\t\t\t[ "
 argument_list|)
 expr_stmt|;
-name|div
+name|diversity
 operator|=
 name|cfg
 operator|->
@@ -4308,7 +4400,7 @@ literal|0xFF
 expr_stmt|;
 if|if
 condition|(
-name|div
+name|diversity
 operator|==
 name|AN_DIVERSITY_ANTENNA_1_ONLY
 condition|)
@@ -4320,7 +4412,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|div
+name|diversity
 operator|==
 name|AN_DIVERSITY_ANTENNA_2_ONLY
 condition|)
@@ -4332,7 +4424,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|div
+name|diversity
 operator|==
 name|AN_DIVERSITY_ANTENNA_1_AND_2
 condition|)
@@ -4351,7 +4443,7 @@ argument_list|(
 literal|"\nTX Diversity:\t\t\t\t[ "
 argument_list|)
 expr_stmt|;
-name|div
+name|diversity
 operator|=
 operator|(
 name|cfg
@@ -4365,7 +4457,7 @@ literal|0xFF
 expr_stmt|;
 if|if
 condition|(
-name|div
+name|diversity
 operator|==
 name|AN_DIVERSITY_ANTENNA_1_ONLY
 condition|)
@@ -4377,7 +4469,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|div
+name|diversity
 operator|==
 name|AN_DIVERSITY_ANTENNA_2_ONLY
 condition|)
@@ -4389,7 +4481,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|div
+name|diversity
 operator|==
 name|AN_DIVERSITY_ANTENNA_1_AND_2
 condition|)
@@ -4787,6 +4879,7 @@ name|act
 parameter_list|,
 name|arg
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -5402,12 +5495,14 @@ name|act
 parameter_list|,
 name|arg
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
 decl_stmt|;
 name|int
 name|act
+name|__unused
 decl_stmt|;
 name|void
 modifier|*
@@ -5601,6 +5696,7 @@ name|act
 parameter_list|,
 name|arg
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -5858,6 +5954,7 @@ name|act
 parameter_list|,
 name|arg
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -6103,6 +6200,7 @@ name|an_zerocache
 parameter_list|(
 name|iface
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -6158,6 +6256,7 @@ name|an_readcache
 parameter_list|(
 name|iface
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -6594,12 +6693,21 @@ name|i
 operator|=
 literal|2
 init|;
-name|i
-operator|<
-name|strlen
-argument_list|(
 name|s
-argument_list|)
+index|[
+name|i
+index|]
+operator|!=
+literal|'\0'
+operator|&&
+name|s
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|!=
+literal|'\0'
 condition|;
 name|i
 operator|+=
@@ -6636,6 +6744,22 @@ name|n
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|s
+index|[
+name|i
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"hex strings must be of even length"
+argument_list|)
+expr_stmt|;
 name|k
 operator|->
 name|klen
@@ -6685,6 +6809,7 @@ name|key
 parameter_list|,
 name|keytype
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -6927,6 +7052,7 @@ name|an_readkeyinfo
 parameter_list|(
 name|iface
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -7123,6 +7249,7 @@ name|iface
 parameter_list|,
 name|arg
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|iface
@@ -7289,6 +7416,7 @@ name|act
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|iface
