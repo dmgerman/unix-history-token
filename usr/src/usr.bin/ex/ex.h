@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex.h	7.5	%G%  */
+comment|/* sccs id:	@(#)ex.h	7.6	%G%  */
 end_comment
 
 begin_ifdef
@@ -657,7 +657,7 @@ name|var
 name|char
 name|genbuf
 index|[
-name|LBSIZE
+name|MAXBSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1163,6 +1163,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Suppresses multiple "No writes" in !cmd */
+end_comment
+
+begin_decl_stmt
+name|var
+name|long
+name|bsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Block size for disk i/o */
 end_comment
 
 begin_comment

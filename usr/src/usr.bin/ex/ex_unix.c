@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_unix.c	7.2	%G%"
+literal|"@(#)ex_unix.c	7.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1031,6 +1031,10 @@ init|=
 name|lineDOL
 argument_list|()
 decl_stmt|;
+name|struct
+name|stat
+name|statb
+decl_stmt|;
 name|mode
 operator|++
 expr_stmt|;
@@ -1215,6 +1219,41 @@ name|addr2
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|io
+argument_list|,
+operator|&
+name|statb
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|bsize
+operator|=
+name|LBSIZE
+expr_stmt|;
+else|else
+block|{
+name|bsize
+operator|=
+name|statb
+operator|.
+name|st_blksize
+expr_stmt|;
+if|if
+condition|(
+name|bsize
+operator|<=
+literal|0
+condition|)
+name|bsize
+operator|=
+name|LBSIZE
+expr_stmt|;
+block|}
 name|ignore
 argument_list|(
 name|append
