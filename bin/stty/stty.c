@@ -363,12 +363,7 @@ literal|0
 condition|)
 name|warn
 argument_list|(
-literal|"TIOCGWINSZ: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"TIOCGWINSZ"
 argument_list|)
 expr_stmt|;
 name|checkredirect
