@@ -7883,7 +7883,7 @@ name|LOG_SECURITY
 operator||
 name|LOG_NOTICE
 argument_list|,
-literal|" 			    ipfw: All logging counts cleared.\n"
+literal|"ipfw: All logging counts cleared.\n"
 argument_list|)
 expr_stmt|;
 block|}
