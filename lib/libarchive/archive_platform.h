@@ -97,6 +97,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_LCHOWN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_STRERROR_R
 value|1
 end_define
@@ -346,6 +353,20 @@ define|#
 directive|define
 name|ARCHIVE_ERRNO_MISC
 value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXT2FS_EXT2_FS_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_LCHOWN
+value|1
 end_define
 
 begin_define

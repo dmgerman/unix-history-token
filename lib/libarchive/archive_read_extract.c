@@ -109,7 +109,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 end_ifdef
 
 begin_include
@@ -3970,6 +3970,9 @@ operator|(
 name|ARCHIVE_OK
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|HAVE_LCHOWN
 if|if
 condition|(
 name|lchown
@@ -3984,6 +3987,35 @@ argument_list|,
 name|gid
 argument_list|)
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+operator|!
+name|S_ISLNK
+argument_list|(
+name|archive_entry_mode
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
+operator|&&
+name|chown
+argument_list|(
+name|archive_entry_pathname
+argument_list|(
+name|entry
+argument_list|)
+argument_list|,
+name|uid
+argument_list|,
+name|gid
+argument_list|)
+operator|!=
+literal|0
+condition|)
+endif|#
+directive|endif
 block|{
 name|archive_set_error
 argument_list|(
@@ -4433,12 +4465,12 @@ name|ARCHIVE_WARN
 operator|)
 return|;
 block|}
-block|}
-else|else
-block|{
 ifdef|#
 directive|ifdef
 name|HAVE_LCHMOD
+block|}
+else|else
+block|{
 comment|/* 		 * If lchmod() isn't supported, it's no big deal. 		 * Permissions on symlinks are actually ignored on 		 * most platforms. 		 */
 if|if
 condition|(
@@ -4695,7 +4727,7 @@ name|ret
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
 name|int
 name|fd
 decl_stmt|;
@@ -4817,12 +4849,12 @@ operator|->
 name|st
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* Linux has flags too, but no chflags syscall */
+else|#
+directive|else
 ifdef|#
 directive|ifdef
-name|LINUX
+name|linux
+comment|/* Linux has flags too, but no chflags syscall */
 comment|/* 	 * Linux has no define for the flags that are only settable 	 * by the root user... 	 */
 define|#
 directive|define
@@ -5001,6 +5033,10 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* linux */
+endif|#
+directive|endif
+comment|/* HAVE_CHFLAGS */
 return|return
 operator|(
 name|ret

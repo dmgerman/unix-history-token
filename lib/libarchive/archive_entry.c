@@ -62,7 +62,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LINUX
+name|HAVE_EXT2FS_EXT2_FS_H
 end_ifdef
 
 begin_include
