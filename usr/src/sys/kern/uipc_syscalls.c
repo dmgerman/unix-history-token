@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.25 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -7131,6 +7131,12 @@ begin_block
 block|{
 specifier|register
 name|struct
+name|sockaddr
+modifier|*
+name|sa
+decl_stmt|;
+specifier|register
+name|struct
 name|mbuf
 modifier|*
 name|m
@@ -7236,6 +7242,7 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 operator|*
 name|mp
 operator|=
@@ -7248,12 +7255,8 @@ operator|==
 name|MT_SONAME
 condition|)
 block|{
-specifier|register
-name|struct
-name|sockaddr
-modifier|*
 name|sa
-init|=
+operator|=
 name|mtod
 argument_list|(
 name|m
@@ -7262,7 +7265,7 @@ expr|struct
 name|sockaddr
 operator|*
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -7303,6 +7306,7 @@ name|sa_len
 operator|=
 name|buflen
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
