@@ -4821,14 +4821,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|snd_recover
-operator|=
-name|tp
-operator|->
-name|snd_una
-expr_stmt|;
 comment|/* 		 * Initialization of the tcpcb for transaction; 		 *   set SND.WND = SEG.WND, 		 *   initialize CCsend and CCrecv. 		 */
 name|tp
 operator|->

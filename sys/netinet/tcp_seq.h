@@ -184,7 +184,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|(tp)->snd_una = (tp)->snd_nxt = (tp)->snd_max = (tp)->snd_up = \ 	    (tp)->iss
+value|(tp)->snd_una = (tp)->snd_nxt = (tp)->snd_max = (tp)->snd_up = \ 	    (tp)->snd_recover = (tp)->iss
 end_define
 
 begin_define
