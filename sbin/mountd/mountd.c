@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.23 1997/08/29 19:22:28 guido Exp $"
+literal|"$Id: mountd.c,v 1.24 1997/09/12 16:25:24 jlemon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1346,6 +1346,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|log
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|opt_flags
 decl_stmt|;
 end_decl_stmt
@@ -1581,7 +1589,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"2dnr"
+literal|"2dnrl"
 argument_list|)
 operator|)
 operator|!=
@@ -1629,12 +1637,20 @@ else|:
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'l'
+case|:
+name|log
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 default|default:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: mountd [-d] [-r] [-n] [export_file]\n"
+literal|"Usage: mountd [-d] [-r] [-n] [-l] [export_file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2152,6 +2168,10 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+name|struct
+name|in_addr
+name|saddrin
+decl_stmt|;
 name|u_long
 name|saddr
 decl_stmt|;
@@ -2206,6 +2226,14 @@ operator|.
 name|sin_addr
 operator|.
 name|s_addr
+expr_stmt|;
+name|saddrin
+operator|=
+name|transp
+operator|->
+name|xp_raddr
+operator|.
+name|sin_addr
 expr_stmt|;
 name|sport
 operator|=
@@ -2272,6 +2300,18 @@ operator|&&
 name|resvport_only
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"mount request from %s from unprivileged port"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|svcerr_weakauth
 argument_list|(
 name|transp
@@ -2292,6 +2332,18 @@ name|rpcpath
 argument_list|)
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"undecodable mount request from %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|svcerr_decode
 argument_list|(
 name|transp
@@ -2360,6 +2412,20 @@ literal|"/"
 argument_list|)
 expr_stmt|;
 comment|/* Just in case realpath doesn't */
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"mount request from %s for non existant path %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
+argument_list|,
+name|dirpath
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|debug
@@ -2697,11 +2763,7 @@ name|add_mlist
 argument_list|(
 name|inet_ntoa
 argument_list|(
-name|transp
-operator|->
-name|xp_raddr
-operator|.
-name|sin_addr
+name|saddrin
 argument_list|)
 argument_list|,
 name|dirpath
@@ -2718,12 +2780,46 @@ argument_list|,
 literal|"Mount successfull.\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|log
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"mount request succeeded from %s for %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
+argument_list|,
+name|dirpath
+argument_list|)
+expr_stmt|;
 block|}
 else|else
+block|{
 name|bad
 operator|=
 name|EACCES
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"mount request denied from %s for %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
+argument_list|,
+name|dirpath
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|bad
@@ -2785,6 +2881,25 @@ argument_list|,
 literal|"Can't send reply"
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|log
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"dump request succeeded from %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
+argument_list|,
+name|dirpath
+argument_list|)
+expr_stmt|;
 return|return;
 case|case
 name|RPCMNT_UMOUNT
@@ -2798,6 +2913,18 @@ operator|&&
 name|resvport_only
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"umount request from %s from unprivileged port"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|svcerr_weakauth
 argument_list|(
 name|transp
@@ -2818,6 +2945,18 @@ name|dirpath
 argument_list|)
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"undecodable umount request from %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|svcerr_decode
 argument_list|(
 name|transp
@@ -2882,11 +3021,25 @@ name|del_mlist
 argument_list|(
 name|inet_ntoa
 argument_list|(
-name|transp
-operator|->
-name|xp_raddr
-operator|.
-name|sin_addr
+name|saddrin
+argument_list|)
+argument_list|,
+name|dirpath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|log
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"umount request succeeded from %s for %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
 argument_list|)
 argument_list|,
 name|dirpath
@@ -2905,6 +3058,18 @@ operator|&&
 name|resvport_only
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"umountall request from %s from unprivileged port"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|svcerr_weakauth
 argument_list|(
 name|transp
@@ -2973,11 +3138,7 @@ name|del_mlist
 argument_list|(
 name|inet_ntoa
 argument_list|(
-name|transp
-operator|->
-name|xp_raddr
-operator|.
-name|sin_addr
+name|saddrin
 argument_list|)
 argument_list|,
 operator|(
@@ -2985,6 +3146,22 @@ name|char
 operator|*
 operator|)
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|log
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"umountall request succeeded from %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3011,6 +3188,22 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"Can't send reply"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|log
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"export request succeeded from %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
