@@ -9,11 +9,23 @@ directive|define
 name|_KERNEL
 end_define
 
+begin_define
+define|#
+directive|define
+name|KLD_MODULE
+end_define
+
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|KLD_MODULE
+end_undef
 
 begin_undef
 undef|#
