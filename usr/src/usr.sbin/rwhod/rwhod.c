@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.27 (Berkeley) 84/10/23"
+literal|"@(#)rwhod.c	4.28 (Berkeley) 85/02/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,17 @@ directive|define
 name|AL_INTERVAL
 value|(3 * 60)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAXTTYS
+value|256
+end_define
+
+begin_comment
+comment|/* Max # of utmp entries examined */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -1274,7 +1285,7 @@ name|struct
 name|utmp
 name|utmp
 index|[
-literal|100
+name|MAXTTYS
 index|]
 decl_stmt|;
 end_decl_stmt
