@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkioconf.c	2.2	82/10/24	*/
+comment|/*	mkioconf.c	2.3	82/10/24	*/
 end_comment
 
 begin_include
@@ -754,7 +754,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Now spew forth the uba_minfo structure 	 */
 name|fprintf
 argument_list|(
 name|fp
@@ -971,7 +970,7 @@ argument_list|,
 literal|"\t0\n};\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now we go for the uba_device stuff 	 */
+comment|/* unibus devices */
 name|fprintf
 argument_list|(
 name|fp
