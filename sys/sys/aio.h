@@ -163,10 +163,6 @@ name|privatemodes
 decl_stmt|;
 name|void
 modifier|*
-name|userinfo
-decl_stmt|;
-name|void
-modifier|*
 name|kernelinfo
 decl_stmt|;
 block|}
