@@ -164,6 +164,40 @@ name|devfs_generation
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|devfs_attemptoverflow
+parameter_list|(
+name|int
+name|insist
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|devfs_dirent
+modifier|*
+name|devfs_find
+parameter_list|(
+name|struct
+name|devfs_dirent
+modifier|*
+name|dd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|namelen
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -581,6 +615,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|devfs_attemptoverflow
 parameter_list|(
@@ -779,6 +814,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|devfs_dirent
 modifier|*

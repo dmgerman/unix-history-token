@@ -3395,6 +3395,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|vop_t
 modifier|*
 modifier|*
@@ -3620,6 +3621,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|vop_t
 modifier|*
 modifier|*
