@@ -7197,6 +7197,11 @@ name|sig
 argument_list|)
 condition|)
 continue|continue;
+name|signotify
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 		 * Decide whether the signal should be returned. 		 * Return the signal's number, or fall through 		 * to clear it from the pending mask. 		 */
 switch|switch
