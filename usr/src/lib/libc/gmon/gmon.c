@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gmon.c	5.15 (Berkeley) %G%"
+literal|"@(#)gmon.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,12 +57,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -74,11 +68,6 @@ include|#
 directive|include
 file|<fcntl.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -137,28 +126,45 @@ parameter_list|)
 value|write(2, s, sizeof(s))
 end_define
 
-begin_macro
-name|monstartup
+begin_decl_stmt
+name|void
+name|moncontrol
+name|__P
 argument_list|(
-argument|lowpc
-argument_list|,
-argument|highpc
+operator|(
+name|int
+operator|)
 argument_list|)
-end_macro
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|hertz
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|monstartup
+parameter_list|(
+name|lowpc
+parameter_list|,
+name|highpc
+parameter_list|)
 name|u_long
 name|lowpc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 name|highpc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -547,14 +553,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|_mcleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|fd
@@ -599,9 +603,13 @@ name|mib
 index|[
 literal|2
 index|]
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|size
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|int
 name|log
 decl_stmt|,
@@ -613,6 +621,8 @@ index|[
 literal|200
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|p
@@ -720,9 +730,15 @@ argument_list|)
 expr_stmt|;
 name|fd
 operator|=
-name|creat
+name|open
 argument_list|(
 literal|"gmon.out"
+argument_list|,
+name|O_CREAT
+operator||
+name|O_TRUNC
+operator||
+name|O_WRONLY
 argument_list|,
 literal|0666
 argument_list|)
@@ -1065,26 +1081,21 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Control profiling  *	profiling is what mcount checks to see if  *	all the data structures are ready.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|moncontrol
-argument_list|(
-argument|mode
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mode
+parameter_list|)
 name|int
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|gmonparam
@@ -1157,18 +1168,17 @@ name|GMON_PROF_OFF
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * discover the tick frequency of the machine  * if something goes wrong, we return 0, an impossible hertz.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|hertz
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|itimerval
@@ -1253,7 +1263,7 @@ name|tv_usec
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
