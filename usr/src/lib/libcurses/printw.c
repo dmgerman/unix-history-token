@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printw.c	8.1 (Berkeley) %G%"
+literal|"@(#)printw.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,11 +34,11 @@ directive|include
 file|<curses.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -92,8 +92,8 @@ end_comment
 
 begin_function
 name|int
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|printw
 parameter_list|(
@@ -126,8 +126,8 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
@@ -175,8 +175,8 @@ end_comment
 
 begin_function
 name|int
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|wprintw
 parameter_list|(
@@ -268,8 +268,8 @@ end_comment
 
 begin_function
 name|int
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|mvprintw
 parameter_list|(
@@ -320,8 +320,8 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
@@ -381,8 +381,8 @@ end_function
 
 begin_function
 name|int
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|mvwprintw
 parameter_list|(
@@ -445,8 +445,8 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
