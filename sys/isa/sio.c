@@ -2627,18 +2627,33 @@ block|}
 block|,
 comment|/* PNP0511 */
 block|{
+literal|0x30207256
+block|,
+name|NULL
+block|}
+block|,
+comment|/* USR2030 */
+block|{
 literal|0x31307256
 block|,
-literal|"USR3031"
+name|NULL
 block|}
 block|,
 comment|/* USR3031 */
 block|{
-literal|0x8024b04e
+literal|0x8020b04e
 block|,
-literal|"SupraExpress 56i Sp V.90"
+name|NULL
 block|}
 block|,
+comment|/* SUP2080 */
+block|{
+literal|0x8024b04e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* SUP2480 */
 block|{
 literal|0
 block|}
