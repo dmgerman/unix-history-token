@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	3.1	%H%	*/
+comment|/*	ioctl.h	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ name|t_suspc
 decl_stmt|;
 comment|/* stop process signal */
 name|char
-name|t_dstopc
+name|t_dsuspc
 decl_stmt|;
 comment|/* delayed stop process signal */
 name|char
@@ -173,7 +173,7 @@ value|0100
 end_define
 
 begin_comment
-comment|/* send stop for background tty output */
+comment|/* send stop for any background tty output */
 end_comment
 
 begin_define
