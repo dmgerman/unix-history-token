@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumprmt.c	5.3 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,10 +318,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* broken */
 name|size
 operator|=
 name|ntrec
@@ -357,9 +353,6 @@ name|size
 operator|-=
 name|TP_BSIZE
 expr_stmt|;
-endif|#
-directive|endif
-endif|notdef
 block|}
 end_block
 
