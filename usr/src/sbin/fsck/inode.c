@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.23 (Berkeley) %G%"
+literal|"@(#)inode.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,9 @@ name|remsize
 decl_stmt|,
 name|sizepb
 decl_stmt|;
+name|mode_t
+name|mode
+decl_stmt|;
 if|if
 condition|(
 name|idesc
@@ -168,27 +171,37 @@ name|dp
 operator|->
 name|di_size
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|mode
+operator|=
 name|dp
 operator|->
 name|di_mode
 operator|&
 name|IFMT
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|mode
 operator|==
 name|IFBLK
 operator|||
-operator|(
-name|dp
-operator|->
-name|di_mode
-operator|&
-name|IFMT
-operator|)
+name|mode
 operator|==
 name|IFCHR
+operator|||
+operator|(
+name|mode
+operator|==
+name|IFLNK
+operator|&&
+name|dp
+operator|->
+name|di_size
+operator|<
+name|sblock
+operator|.
+name|fs_maxsymlinklen
+operator|)
 condition|)
 return|return
 operator|(
