@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * program to initialize the database,  reports error if database file  * already exists.  *  *	from: kdb_init.c,v 4.0 89/01/24 21:50:45 jtkohl Exp $  *	$Id: kdb_init.c,v 1.4 1995/07/18 16:37:35 mark Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * program to initialize the database,  reports error if database file  * already exists.  *  *	from: kdb_init.c,v 4.0 89/01/24 21:50:45 jtkohl Exp $  *	$Id$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: kdb_init.c,v 1.4 1995/07/18 16:37:35 mark Exp $";
+unit|static char rcsid[] = "$Id$";
 endif|#
 directive|endif
 endif|lint
@@ -447,6 +447,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|des_init_random_number_generator
+argument_list|(
+name|master_key
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|add_principal
@@ -656,7 +661,7 @@ literal|127
 expr_stmt|;
 else|#
 directive|else
-name|random_key
+name|des_new_random_key
 argument_list|(
 name|new_key
 argument_list|)

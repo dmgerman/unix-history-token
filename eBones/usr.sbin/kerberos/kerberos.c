@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kerberos.c,v 4.19 89/11/01 17:18:07 qjb Exp $  *	$Id: kerberos.c,v 1.5 1995/09/17 00:39:00 gibbs Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kerberos.c,v 4.19 89/11/01 17:18:07 qjb Exp $  *	$Id$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: kerberos.c,v 1.5 1995/09/17 00:39:00 gibbs Exp $";
+unit|static char rcsid[] = "$Id$";
 endif|#
 directive|endif
 endif|lint
@@ -1362,6 +1362,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|des_init_random_number_generator
+argument_list|(
+name|master_key
+argument_list|)
+expr_stmt|;
 name|master_key_version
 operator|=
 operator|(
@@ -2129,7 +2134,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|random_key
+name|des_new_random_key
 argument_list|(
 name|session_key
 argument_list|)
@@ -2907,7 +2912,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|random_key
+name|des_new_random_key
 argument_list|(
 name|session_key
 argument_list|)

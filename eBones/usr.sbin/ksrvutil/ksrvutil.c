@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid_ksrvutil_c[] = "BonesHeader: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/ksrvutil.c,v 4.1 89/09/26 09:33:49 jtkohl Exp "; static const char rcsid[] = 	"$Id: ksrvutil.c,v 1.1 1995/07/18 16:40:11 mark Exp $";
+unit|static char rcsid_ksrvutil_c[] = "BonesHeader: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/ksrvutil.c,v 4.1 89/09/26 09:33:49 jtkohl Exp "; static const char rcsid[] = 	"$Id$";
 endif|#
 directive|endif
 endif|lint
@@ -2884,6 +2884,9 @@ name|status
 init|=
 name|KADM_SUCCESS
 decl_stmt|;
+name|CREDENTIALS
+name|c
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2905,6 +2908,26 @@ argument_list|,
 literal|1
 argument_list|,
 name|keyfile
+argument_list|)
+operator|)
+operator|==
+name|KSUCCESS
+operator|)
+operator|&&
+operator|(
+operator|(
+name|status
+operator|=
+name|krb_get_cred
+argument_list|(
+name|PWSERV_NAME
+argument_list|,
+name|KADM_SINST
+argument_list|,
+name|srealm
+argument_list|,
+operator|&
+name|c
 argument_list|)
 operator|)
 operator|==
@@ -2960,7 +2983,17 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* NOENCRYPTION */
-name|des_random_key
+name|des_init_random_number_generator
+argument_list|(
+name|c
+operator|.
+name|session
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|des_new_random_key
 argument_list|(
 name|new_key
 argument_list|)
