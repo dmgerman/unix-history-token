@@ -4600,14 +4600,29 @@ condition|)
 block|{
 asm|__asm __volatile("mov	ar.rsc=0;;");
 asm|__asm __volatile("mov	%0=ar.bspstore" : "=r"(bspst));
+comment|/* 		 * Make sure we have all the user registers written out. 		 * We're doing culculations with ndirty and ar.bspstore 		 * and we better make sure ar.bspstore>= ndirty. 		 */
 name|rssz
 operator|=
 name|bspst
 operator|-
 name|kstack
-operator|-
-name|ndirty
 expr_stmt|;
+if|if
+condition|(
+name|rssz
+operator|<
+name|ndirty
+condition|)
+block|{
+asm|__asm __volatile("flushrs;;");
+asm|__asm __volatile("mov   %0=ar.bspstore" : "=r"(bspst));
+name|rssz
+operator|=
+name|bspst
+operator|-
+name|kstack
+expr_stmt|;
+block|}
 name|bcopy
 argument_list|(
 operator|(
@@ -4627,6 +4642,8 @@ operator|)
 name|kstack
 argument_list|,
 name|rssz
+operator|-
+name|ndirty
 argument_list|)
 expr_stmt|;
 name|bspst
