@@ -138,6 +138,38 @@ value|0xb8
 end_define
 
 begin_comment
+comment|/*  * Config offsets for Intel i820/i840/i845/i850/i860 AGP chipsets.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_INTEL_MCHCFG
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_INTEL_I820_RDCR
+value|0x51
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_INTEL_I845_MCHCFG
+value|0x51
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_INTEL_I8XX_ERRSTS
+value|0xc8
+end_define
+
+begin_comment
 comment|/*  * Config offsets for VIA AGP chipsets.  */
 end_comment
 
