@@ -3359,19 +3359,6 @@ operator|||
 name|PCVT_FREEBSD
 operator|>=
 literal|200
-if|#
-directive|if
-name|PCVT_NETBSD
-operator|==
-literal|9
-specifier|extern
-name|void
-name|ttrstrt
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-comment|/* PCVT_NETBSD == 9 */
 name|void
 name|pcstart
 parameter_list|(
@@ -3439,13 +3426,18 @@ argument_list|(
 name|UPDATE_KERN
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We need to do this outside spl since it could be fairly 	 * expensive and we don't want our serial ports to overflow. 	 */
 name|rbp
 operator|=
 operator|&
 name|tp
 operator|->
 name|t_outq
+expr_stmt|;
+comment|/* 	 * Call q_to_b() at spltty() to ensure that the queue is empty when 	 * the loop terminates. 	 */
+name|s
+operator|=
+name|spltty
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -3460,6 +3452,13 @@ argument_list|,
 name|PCVT_PCBURST
 argument_list|)
 condition|)
+block|{
+comment|/* 		 * We need to do this outside spl since it could be fairly 		 * expensive and we don't want our serial ports to overflow. 		 */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|sput
 argument_list|(
 operator|&
@@ -3485,6 +3484,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+block|}
 name|tp
 operator|->
 name|t_state
@@ -3492,29 +3492,6 @@ operator|&=
 operator|~
 name|TS_BUSY
 expr_stmt|;
-if|if
-condition|(
-name|rbp
-operator|->
-name|c_cc
-condition|)
-block|{
-name|tp
-operator|->
-name|t_state
-operator||=
-name|TS_TIMEOUT
-expr_stmt|;
-name|timeout
-argument_list|(
-name|ttrstrt
-argument_list|,
-name|tp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 ifndef|#
 directive|ifndef
 name|TS_ASLEEP
