@@ -860,6 +860,18 @@ name|tz_requested
 operator|=
 name|TZ_ACTIVE_NONE
 expr_stmt|;
+name|sc
+operator|->
+name|tz_active
+operator|=
+name|TZ_ACTIVE_NONE
+expr_stmt|;
+name|sc
+operator|->
+name|tz_thflags
+operator|=
+name|TZ_THFLAG_NONE
+expr_stmt|;
 comment|/*      * Parse the current state of the thermal zone and build control      * structures.  We don't need to worry about interference with the      * control thread since we haven't fully attached this device yet.      */
 if|if
 condition|(
@@ -2576,7 +2588,7 @@ comment|/*      * XXX revert any passive-cooling options.      */
 end_comment
 
 begin_endif
-unit|sc->tz_active = TZ_ACTIVE_NONE;     sc->tz_thflags = TZ_THFLAG_NONE;      return_VOID; }
+unit|return_VOID; }
 endif|#
 directive|endif
 end_endif
