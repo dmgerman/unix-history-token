@@ -1698,16 +1698,6 @@ name|CLS_MISC
 block|}
 block|,
 block|{
-literal|"labpc"
-block|,
-literal|"National Instruments Lab-PC/Lab-PC+"
-block|,
-literal|0
-block|,
-name|CLS_MISC
-block|}
-block|,
-block|{
 literal|"pcic"
 block|,
 literal|"PC-card controller"
