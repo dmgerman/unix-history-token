@@ -1132,10 +1132,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_short
+name|u_int
 name|sel
 decl_stmt|;
-asm|__asm __volatile("movw %%fs,%0" : "=rm" (sel));
+asm|__asm __volatile("movl %%fs,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1153,10 +1153,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_short
+name|u_int
 name|sel
 decl_stmt|;
-asm|__asm __volatile("movw %%gs,%0" : "=rm" (sel));
+asm|__asm __volatile("movl %%gs,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
