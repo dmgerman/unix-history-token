@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.22	(Berkeley)	83/12/30"
+literal|"@(#)tape.c	3.23	(Berkeley)	85/01/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,22 +106,14 @@ begin_decl_stmt
 specifier|static
 name|int
 name|bct
-init|=
-name|NTREC
-operator|+
-literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|tbf
-index|[
-name|NTREC
-operator|*
-name|TP_BSIZE
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -231,6 +223,42 @@ decl_stmt|;
 endif|#
 directive|endif
 endif|RRESTORE
+name|flsht
+argument_list|()
+expr_stmt|;
+name|tbf
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|ntrec
+operator|*
+name|TP_BSIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tbf
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot allocate space for tape buffer\n"
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|terminal
 operator|=
 name|stdin
@@ -2949,7 +2977,7 @@ if|if
 condition|(
 name|bct
 operator|>=
-name|NTREC
+name|ntrec
 condition|)
 block|{
 for|for
@@ -2960,7 +2988,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NTREC
+name|ntrec
 condition|;
 name|i
 operator|++
@@ -2990,7 +3018,7 @@ literal|0
 expr_stmt|;
 name|cnt
 operator|=
-name|NTREC
+name|ntrec
 operator|*
 name|TP_BSIZE
 expr_stmt|;
@@ -3043,7 +3071,7 @@ literal|0
 operator|&&
 name|i
 operator|!=
-name|NTREC
+name|ntrec
 operator|*
 name|TP_BSIZE
 condition|)
@@ -3059,7 +3087,7 @@ literal|"partial block read: %d should be %d\n"
 argument_list|,
 name|i
 argument_list|,
-name|NTREC
+name|ntrec
 operator|*
 name|TP_BSIZE
 argument_list|)
@@ -3176,7 +3204,7 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
-name|NTREC
+name|ntrec
 operator|*
 name|TP_BSIZE
 expr_stmt|;
@@ -3328,7 +3356,7 @@ begin_block
 block|{
 name|bct
 operator|=
-name|NTREC
+name|ntrec
 operator|+
 literal|1
 expr_stmt|;

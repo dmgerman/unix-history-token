@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.13	(Berkeley)	84/02/07"
+literal|"@(#)main.c	3.14	(Berkeley)	85/01/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"restore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dumprestor.h>
 end_include
 
 begin_include
@@ -93,6 +99,14 @@ name|long
 name|volno
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|ntrec
+init|=
+name|NTREC
 decl_stmt|;
 end_decl_stmt
 
@@ -378,6 +392,63 @@ operator|*
 name|argv
 operator|++
 expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+comment|/* 			 * change default tape blocksize 			 */
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"missing block size\n"
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|ntrec
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+operator|++
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ntrec
+operator|<=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Block size must be a positive integer\n"
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|argc
 operator|--
 expr_stmt|;

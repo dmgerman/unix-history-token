@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	restore.h	3.8	83/08/11	*/
+comment|/*	restore.h	3.9	85/01/14	*/
 end_comment
 
 begin_include
@@ -156,6 +156,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* current volume being read */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|ntrec
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of TP_BSIZE records per tape block */
 end_comment
 
 begin_decl_stmt
