@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.27 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.28 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.27 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.28 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3606,6 +3606,23 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pid
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* parent -- clean out connection cache */
+name|mci_flush
+argument_list|(
+name|FALSE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
