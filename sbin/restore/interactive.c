@@ -280,6 +280,8 @@ operator|,
 name|char
 operator|*
 operator|,
+name|int
+operator|,
 expr|struct
 name|arglist
 operator|*
@@ -545,6 +547,11 @@ argument_list|,
 name|cmd
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|,
 operator|&
 name|arglist
@@ -1195,6 +1202,8 @@ name|cmd
 parameter_list|,
 name|name
 parameter_list|,
+name|size
+parameter_list|,
 name|ap
 parameter_list|)
 name|char
@@ -1214,6 +1223,12 @@ name|struct
 name|arglist
 modifier|*
 name|ap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|size
 decl_stmt|;
 end_decl_stmt
 
@@ -1452,10 +1467,7 @@ name|rawname
 argument_list|,
 name|name
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -1498,10 +1510,7 @@ name|output
 argument_list|,
 name|name
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
+name|size
 argument_list|)
 expr_stmt|;
 block|}
