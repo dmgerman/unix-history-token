@@ -4560,7 +4560,53 @@ condition|)
 block|{
 name|size_t
 name|consumed
-init|=
+decl_stmt|;
+comment|/* 		 * Still need to get to the end of the variable 		 * specification, so kludge up a Var structure for the 		 * modifications 		 */
+name|v
+operator|=
+name|VarCreate
+argument_list|(
+name|vname
+argument_list|,
+name|NULL
+argument_list|,
+name|VAR_JUNK
+argument_list|)
+expr_stmt|;
+name|value
+operator|=
+name|ParseModifier
+argument_list|(
+name|vp
+argument_list|,
+name|startc
+argument_list|,
+name|v
+argument_list|,
+name|freeResult
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|freeResult
+condition|)
+block|{
+name|free
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+name|VarDestroy
+argument_list|(
+name|v
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|consumed
+operator|=
 name|vp
 operator|->
 name|ptr
@@ -4570,7 +4616,7 @@ operator|->
 name|input
 operator|+
 literal|1
-decl_stmt|;
+expr_stmt|;
 comment|/* 		 * If substituting a local variable in a non-local context, 		 * assume it's for dynamic source stuff. We have to handle 		 * this specially and return the longhand for the variable 		 * with the dollar sign escaped so it makes it back to the 		 * caller. Only four of the local variables are treated 		 * specially as they are the only four that will be set when 		 * dynamic sources are expanded. 		 */
 if|if
 condition|(
@@ -4783,6 +4829,22 @@ operator|)
 return|;
 block|}
 block|}
+operator|*
+name|freeResult
+operator|=
+name|FALSE
+expr_stmt|;
+return|return
+operator|(
+name|vp
+operator|->
+name|err
+condition|?
+name|var_Error
+else|:
+name|varNoError
+operator|)
+return|;
 block|}
 else|else
 block|{
@@ -4887,8 +4949,7 @@ operator|)
 return|;
 block|}
 block|}
-block|}
-comment|/* 	 * Still need to get to the end of the variable 	 * specification, so kludge up a Var structure for the 	 * modifications 	 */
+comment|/* 		 * Still need to get to the end of the variable 		 * specification, so kludge up a Var structure for the 		 * modifications 		 */
 name|v
 operator|=
 name|VarCreate
@@ -4948,6 +5009,7 @@ else|:
 name|varNoError
 operator|)
 return|;
+block|}
 block|}
 end_function
 
