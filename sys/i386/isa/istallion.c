@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * istallion.c  -- stallion intelligent multiport serial driver.  *  * Copyright (c) 1994-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: istallion.c,v 1.20 1998/08/16 01:21:49 bde Exp $  */
+comment|/*  * istallion.c  -- stallion intelligent multiport serial driver.  *  * Copyright (c) 1994-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: istallion.c,v 1.21 1998/08/23 08:26:40 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2459,7 +2459,8 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -4001,7 +4002,7 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"%s(%d): btype=%x unit=%d brd=%d io=%x mem=%x(%x)\n"
+literal|"%s(%d): btype=%x unit=%d brd=%d io=%x mem=%lx(%p)\n"
 argument_list|,
 name|__file__
 argument_list|,
@@ -4025,6 +4026,10 @@ name|brdp
 operator|->
 name|paddr
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|brdp
 operator|->
 name|vaddr
@@ -4122,8 +4127,12 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stliattach(idp=%x): unit=%d iobase=%x\n"
+literal|"stliattach(idp=%p): unit=%d iobase=%x\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idp
 argument_list|,
 name|idp
@@ -4810,14 +4819,22 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stliclose(dev=%x,flag=%x,mode=%x,p=%x)\n"
+literal|"stliclose(dev=%lx,flag=%x,mode=%x,p=%p)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|dev
 argument_list|,
 name|flag
 argument_list|,
 name|mode
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -4948,10 +4965,18 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stliread(dev=%x,uiop=%x,flag=%x)\n"
+literal|"stliread(dev=%lx,uiop=%p,flag=%x)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|dev
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|uiop
 argument_list|,
 name|flag
@@ -5219,10 +5244,18 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stliwrite(dev=%x,uiop=%x,flag=%x)\n"
+literal|"stliwrite(dev=%lx,uiop=%p,flag=%x)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|dev
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|uiop
 argument_list|,
 name|flag
@@ -5312,7 +5345,8 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|u_long
+name|unsigned
+name|long
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -5363,16 +5397,28 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stliioctl(dev=%x,cmd=%x,data=%x,flag=%x,p=%x)\n"
+literal|"stliioctl(dev=%lx,cmd=%lx,data=%p,flag=%x,p=%p)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|dev
 argument_list|,
 name|cmd
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|data
 argument_list|,
 name|flag
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -5658,7 +5704,8 @@ name|struct
 name|termios
 name|tios
 decl_stmt|;
-name|int
+name|unsigned
+name|long
 name|oldcmd
 decl_stmt|;
 name|tios
@@ -7023,8 +7070,12 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stli_shutdownclose(portp=%x): brdnr=%d panelnr=%d portnr=%d\n"
+literal|"stli_shutdownclose(portp=%p): brdnr=%d panelnr=%d portnr=%d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|portp
 argument_list|,
 name|portp
@@ -17184,8 +17235,12 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stli_getbrdstats(data=%x)\n"
+literal|"stli_getbrdstats(data=%p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|data
 argument_list|)
 expr_stmt|;
@@ -18404,7 +18459,8 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -18433,17 +18489,19 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stli_memioctl(dev=%x,cmd=%x,data=%x,flag=%x)\n"
+literal|"stli_memioctl(dev=%lx,cmd=%lx,data=%p,flag=%x)\n"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|dev
 argument_list|,
 name|cmd
 argument_list|,
 operator|(
-name|int
+name|void
+operator|*
 operator|)
 name|data
 argument_list|,
