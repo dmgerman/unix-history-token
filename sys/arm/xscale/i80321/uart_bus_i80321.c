@@ -169,14 +169,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uart_class
-name|uart_i8251_class
-decl_stmt|;
-end_decl_stmt
-
 begin_extern
 extern|extern SLIST_HEAD(uart_devinfo_list
 operator|,
@@ -225,7 +217,7 @@ operator|->
 name|sc_class
 operator|=
 operator|&
-name|uart_i8251_class
+name|uart_ns8250_class
 expr_stmt|;
 name|bcopy
 argument_list|(
