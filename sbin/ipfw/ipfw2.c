@@ -15111,7 +15111,9 @@ index|[
 literal|0
 index|]
 operator|=
-name|uid
+name|pwd
+operator|->
+name|pw_uid
 expr_stmt|;
 name|cmd
 operator|->
@@ -15213,7 +15215,9 @@ index|[
 literal|0
 index|]
 operator|=
-name|gid
+name|grp
+operator|->
+name|gr_gid
 expr_stmt|;
 name|cmd
 operator|->
