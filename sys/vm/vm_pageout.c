@@ -953,7 +953,13 @@ name|m
 operator|->
 name|pindex
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 name|object
 operator|=
@@ -1394,7 +1400,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initiate I/O.  Bump the vm_page_t->busy counter and 	 * mark the pages read-only. 	 * 	 * We do not have to fixup the clean/dirty bits here... we can 	 * allow the pager to do it after the I/O completes. 	 * 	 * NOTE! mc[i]->dirty may be partial or fragmented due to an 	 * edge case with file fragments. 	 */
 for|for
@@ -1463,6 +1475,9 @@ literal|0
 index|]
 operator|->
 name|object
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|vm_object_pip_add
 argument_list|(
@@ -1620,9 +1635,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 return|return
 name|numpagedout
 return|;
@@ -3230,6 +3242,9 @@ continue|continue;
 block|}
 block|}
 comment|/* 			 * If a page is dirty, then it is either being washed 			 * (but not yet cleaned) or it is still in the 			 * laundry.  If it is still in the laundry, then we 			 * start the cleaning operation.  			 * 			 * This operation may cluster, invalidating the 'next' 			 * pointer.  To prevent an inordinate number of 			 * restarts we use our marker to remember our place. 			 * 			 * decrement page_shortage on success to account for 			 * the (future) cleaned page.  Otherwise we could wind 			 * up laundering or cleaning too many pages. 			 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|s
 operator|=
 name|splvm
@@ -3310,6 +3325,9 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

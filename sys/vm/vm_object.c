@@ -2935,6 +2935,9 @@ operator|)
 return|;
 block|}
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|maxf
 operator|=
 literal|0
@@ -3429,6 +3432,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|maxf

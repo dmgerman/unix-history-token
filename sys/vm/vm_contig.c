@@ -288,6 +288,9 @@ name|m_tmp
 operator|=
 name|m
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_pageout_flush
 argument_list|(
 operator|&
@@ -297,6 +300,9 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
