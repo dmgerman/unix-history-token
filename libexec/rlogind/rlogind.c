@@ -1812,9 +1812,13 @@ index|]
 decl_stmt|,
 modifier|*
 name|pbp
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|fbp
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|pcc
