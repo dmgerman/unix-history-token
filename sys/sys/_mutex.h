@@ -6,17 +6,17 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SYS_MUTEX_TYPES_H_
+name|_SYS__MUTEX_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SYS_MUTEX_TYPES_H_
+name|_SYS__MUTEX_H_
 end_define
 
 begin_comment
-comment|/*  * Sleep/spin mutex  */
+comment|/*  * Sleep/spin mutex.  */
 end_comment
 
 begin_struct
@@ -32,12 +32,12 @@ specifier|volatile
 name|uintptr_t
 name|mtx_lock
 decl_stmt|;
-comment|/* owner (and state for sleep locks) */
+comment|/* Owner and flags. */
 specifier|volatile
 name|u_int
 name|mtx_recurse
 decl_stmt|;
-comment|/* number of recursive holds */
+comment|/* Number of recursive holds. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -45,15 +45,15 @@ argument|thread
 argument_list|)
 name|mtx_blocked
 expr_stmt|;
-comment|/* threads blocked on this lock */
+comment|/* Threads blocked on us. */
 name|LIST_ENTRY
 argument_list|(
 argument|mtx
 argument_list|)
 name|mtx_contested
 expr_stmt|;
-comment|/* list of all contested locks */
-comment|/* #ifdef MUTEX_PROFILING */
+comment|/* Next contested mtx. */
+comment|/* Fields used only if MUTEX_PROFILING is configured: */
 name|u_int64_t
 name|acqtime
 decl_stmt|;
@@ -65,7 +65,6 @@ decl_stmt|;
 name|int
 name|line
 decl_stmt|;
-comment|/* #endif */
 block|}
 struct|;
 end_struct
@@ -76,7 +75,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_SYS_MUTEX_TYPES_H_ */
+comment|/* !_SYS__MUTEX_H_ */
 end_comment
 
 end_unit
