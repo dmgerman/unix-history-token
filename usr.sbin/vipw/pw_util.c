@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_util.c,v 1.11 1998/10/20 11:34:11 des Exp $"
+literal|"$Id: pw_util.c,v 1.12 1998/12/13 01:36:45 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -445,7 +445,7 @@ argument_list|,
 literal|"the password db file is busy"
 argument_list|)
 expr_stmt|;
-comment|/* 	     * If the password file was replaced while we were trying to 	     * get the lock, our hardlink count will be 0 and we have to 	     * close and retry. 	     */
+comment|/* 		 * If the password file was replaced while we were trying to 		 * get the lock, our hardlink count will be 0 and we have to 		 * close and retry. 		 */
 if|if
 condition|(
 name|fstat
