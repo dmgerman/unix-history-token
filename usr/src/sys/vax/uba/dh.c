@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.36	81/06/05	*/
+comment|/*	dh.c	4.37	81/07/10	*/
 end_comment
 
 begin_include
@@ -4057,7 +4057,10 @@ operator|->
 name|dmcsr
 operator|&
 name|DM_DONE
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|addr
 operator|->
 name|dmcsr
@@ -4263,6 +4266,7 @@ name|DM_IE
 operator||
 name|DM_SE
 expr_stmt|;
+block|}
 block|}
 end_block
 
