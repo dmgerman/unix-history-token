@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ps.c,v 1.24 1998/05/15 06:29:17 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -609,6 +609,8 @@ decl_stmt|,
 name|lineno
 decl_stmt|,
 name|nentries
+decl_stmt|,
+name|dropgid
 decl_stmt|;
 name|int
 name|prtheader
@@ -766,13 +768,17 @@ name|ttydev
 operator|=
 name|NODEV
 expr_stmt|;
+name|dropgid
+operator|=
+literal|0
+expr_stmt|;
 name|memf
 operator|=
 name|nlistf
 operator|=
 name|swapf
 operator|=
-name|NULL
+name|_PATH_DEVNULL
 expr_stmt|;
 while|while
 condition|(
@@ -940,6 +946,10 @@ name|memf
 operator|=
 name|optarg
 expr_stmt|;
+name|dropgid
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'m'
@@ -955,6 +965,10 @@ case|:
 name|nlistf
 operator|=
 name|optarg
+expr_stmt|;
+name|dropgid
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1297,6 +1311,10 @@ name|swapf
 operator|=
 name|optarg
 expr_stmt|;
+name|dropgid
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'w'
@@ -1419,24 +1437,22 @@ end_comment
 begin_if
 if|if
 condition|(
-name|nlistf
-operator|!=
-name|NULL
-operator|||
-name|memf
-operator|!=
-name|NULL
-operator|||
-name|swapf
-operator|!=
-name|NULL
+name|dropgid
 condition|)
+block|{
 name|setgid
 argument_list|(
 name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 end_if
 
 begin_expr_stmt
