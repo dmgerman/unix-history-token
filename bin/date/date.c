@@ -367,7 +367,7 @@ expr_stmt|;
 block|}
 name|format
 operator|=
-literal|"%a %b %e %H:%M:%S %Z %Y\n"
+literal|"%a %b %e %H:%M:%S %Z %Y"
 expr_stmt|;
 comment|/* allow the operands in any order */
 if|if
@@ -453,7 +453,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|buf
 argument_list|)
