@@ -883,11 +883,9 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-name|strmode
+name|bsdtar_strmode
 argument_list|(
-name|st
-operator|->
-name|st_mode
+name|entry
 argument_list|,
 name|tmp
 argument_list|)

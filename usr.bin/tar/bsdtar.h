@@ -204,6 +204,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|bsdtar_strmode
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+name|entry
+parameter_list|,
+name|char
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|bsdtar_warnc
 parameter_list|(
 name|int
