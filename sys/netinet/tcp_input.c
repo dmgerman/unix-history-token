@@ -10761,7 +10761,7 @@ name|inp
 operator|->
 name|inp_socket
 expr_stmt|;
-comment|/* 	 * no route to sender, take default mss and return 	 */
+comment|/* 	 * no route to sender, stay with default mss and return 	 */
 if|if
 condition|(
 name|maxmtu
@@ -10889,9 +10889,14 @@ name|rmx_mtu
 condition|)
 name|mss
 operator|=
+name|min
+argument_list|(
 name|metrics
 operator|.
 name|rmx_mtu
+argument_list|,
+name|maxmtu
+argument_list|)
 operator|-
 name|min_protoh
 expr_stmt|;
