@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exit.c	4.4	83/06/14	*/
+comment|/*	kern_exit.c	4.5	83/06/16	*/
 end_comment
 
 begin_include
@@ -356,9 +356,6 @@ name|file
 modifier|*
 name|f
 decl_stmt|;
-name|int
-name|po
-decl_stmt|;
 name|f
 operator|=
 name|u
@@ -376,15 +373,6 @@ name|i
 index|]
 operator|=
 name|NULL
-expr_stmt|;
-name|po
-operator|=
-name|u
-operator|.
-name|u_pofile
-index|[
-name|i
-index|]
 expr_stmt|;
 name|u
 operator|.
