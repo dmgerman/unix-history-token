@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.4.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -152,6 +152,24 @@ end_endif
 begin_define
 define|#
 directive|define
+name|KERNBASE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* start of kernel virtual */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BTOPKERNBASE
+value|((u_long)KERNBASE>> PGSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NBPG
 value|512
 end_define
@@ -189,6 +207,12 @@ name|NPTEPG
 value|(NBPG/(sizeof (struct pte)))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SECSIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -213,6 +237,62 @@ directive|define
 name|BLKDEV_IOSIZE
 value|2048
 end_define
+
+begin_else
+else|#
+directive|else
+else|SECSIZE
+end_else
+
+begin_comment
+comment|/*  * Devices without disk labels and the swap virtual device  * use "blocks" of exactly pagesize.  Devices with disk labels  * use device-dependent sector sizes for block and character interfaces.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEV_BSIZE
+value|NBPG
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_BSHIFT
+value|PGSHIFT
+end_define
+
+begin_comment
+comment|/* log2(DEV_BSIZE) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLKDEV_IOSIZE
+value|NBPG
+end_define
+
+begin_comment
+comment|/* NBPG for unlabeled block devices */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|SECSIZE
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MAXPHYS
+value|(63 * 1024)
+end_define
+
+begin_comment
+comment|/* max raw I/O transfer size */
+end_comment
 
 begin_define
 define|#
@@ -289,6 +369,12 @@ parameter_list|)
 value|(x)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SECSIZE
+end_ifndef
+
 begin_comment
 comment|/* Core clicks (512 bytes) to disk blocks */
 end_comment
@@ -320,8 +406,66 @@ name|dtob
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<<9)
+value|((x)<<PGSHIFT)
 end_define
+
+begin_else
+else|#
+directive|else
+else|SECSIZE
+end_else
+
+begin_comment
+comment|/* Core clicks (512 bytes) to disk blocks; deprecated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ctod
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dtoc
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dtob
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<<PGSHIFT)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|SECSIZE
+end_endif
 
 begin_comment
 comment|/* clicks to bytes */
@@ -350,6 +494,12 @@ name|x
 parameter_list|)
 value|((((unsigned)(x)+511)>>9))
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SECSIZE
+end_ifndef
 
 begin_define
 define|#
@@ -388,6 +538,50 @@ name|bn
 parameter_list|)
 value|((bn) / (BLKDEV_IOSIZE/DEV_BSIZE))
 end_define
+
+begin_else
+else|#
+directive|else
+else|SECSIZE
+end_else
+
+begin_comment
+comment|/* bytes to "disk blocks" and back; deprecated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|btodb
+parameter_list|(
+name|bytes
+parameter_list|)
+value|((unsigned)(bytes)>> DEV_BSHIFT)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dbtob
+parameter_list|(
+name|db
+parameter_list|)
+value|((unsigned)(db)<< DEV_BSHIFT)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|SECSIZE
+end_endif
 
 begin_comment
 comment|/*  * Macros to decode processor status word.  */
