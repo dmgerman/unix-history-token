@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.9 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_LOCK_H_
 end_define
 
 begin_comment
-comment|/*  * The general lock structure.  Provides for multiple shared locks,  * upgrading from shared to exclusive, and sleeping until the lock  * can be gained. The simple_lock is defined in<machine/param.h>.  */
+comment|/*  * The general lock structure.  Provides for multiple shared locks,  * upgrading from shared to exclusive, and sleeping until the lock  * can be gained. The simple locks are defined in<machine/param.h>.  */
 end_comment
 
 begin_struct
@@ -24,7 +24,7 @@ struct|struct
 name|lock
 block|{
 name|struct
-name|simple_lock
+name|simplelock
 name|lk_interlock
 decl_stmt|;
 comment|/* lock on remaining fields */
@@ -257,7 +257,7 @@ begin_define
 define|#
 directive|define
 name|LK_DRAINING
-value|0x00001000
+value|0x00004000
 end_define
 
 begin_comment
@@ -268,7 +268,7 @@ begin_define
 define|#
 directive|define
 name|LK_DRAINED
-value|0x00002000
+value|0x00008000
 end_define
 
 begin_comment
@@ -371,7 +371,7 @@ name|u_int
 name|flags
 operator|,
 expr|struct
-name|simple_lock
+name|simplelock
 operator|*
 operator|,
 expr|struct
@@ -411,7 +411,7 @@ argument_list|(
 operator|(
 name|__volatile
 expr|struct
-name|simple_lock
+name|simplelock
 operator|*
 name|alp
 operator|)
@@ -427,7 +427,7 @@ argument_list|(
 operator|(
 name|__volatile
 expr|struct
-name|simple_lock
+name|simplelock
 operator|*
 name|alp
 operator|)
@@ -443,7 +443,7 @@ argument_list|(
 operator|(
 name|__volatile
 expr|struct
-name|simple_lock
+name|simplelock
 operator|*
 name|alp
 operator|)
@@ -458,7 +458,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|simple_lock
+name|simplelock
 operator|*
 name|alp
 operator|)
