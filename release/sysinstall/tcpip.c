@@ -961,6 +961,11 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|save
+operator|=
+name|savescr
+argument_list|()
+expr_stmt|;
 comment|/* Initialise vars from previous device values */
 if|if
 condition|(
@@ -1412,11 +1417,6 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
-name|save
-operator|=
-name|savescr
-argument_list|()
-expr_stmt|;
 comment|/* If non-interactive, jump straight over the dialog crap and into config section */
 if|if
 condition|(

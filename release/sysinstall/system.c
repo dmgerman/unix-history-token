@@ -1805,6 +1805,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Starting an emergency holographic shell on VTY4"
@@ -1813,6 +1820,11 @@ expr_stmt|;
 name|sleep
 argument_list|(
 literal|2
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 block|}

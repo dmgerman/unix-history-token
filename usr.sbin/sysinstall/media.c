@@ -1661,6 +1661,8 @@ return|return
 name|DITEM_SUCCESS
 operator||
 name|DITEM_LEAVE_MENU
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function

@@ -76,6 +76,13 @@ name|dev
 operator|->
 name|private
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|NFSMounted
@@ -178,6 +185,11 @@ argument_list|(
 name|netDevice
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
@@ -200,6 +212,11 @@ operator|->
 name|name
 argument_list|,
 name|mountpoint
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 return|return
@@ -251,7 +268,7 @@ operator|!
 name|NFSMounted
 condition|)
 return|return;
-name|msgNotify
+name|msgDebug
 argument_list|(
 literal|"Unmounting NFS partition on %s"
 argument_list|,

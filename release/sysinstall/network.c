@@ -154,13 +154,21 @@ name|FALSE
 return|;
 block|}
 block|}
+name|w
+operator|=
+name|savescr
+argument_list|()
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 comment|/* Old PPP process lying around? */
 if|if
 condition|(
 name|pppPID
 condition|)
 block|{
-name|msgNotify
+name|msgConfirm
 argument_list|(
 literal|"Killing previous PPP process %d."
 argument_list|,
@@ -252,14 +260,6 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|w
-operator|=
-name|savescr
-argument_list|()
-expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 comment|/* Cheesy slip attach */
 name|snprintf
 argument_list|(
@@ -404,7 +404,7 @@ condition|)
 goto|goto
 name|bail
 goto|;
-name|msgNotify
+name|msgDebug
 argument_list|(
 literal|"ifconfig %s %s"
 argument_list|,
@@ -474,7 +474,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|msgNotify
+name|msgDebug
 argument_list|(
 literal|"Adding default route to %s."
 argument_list|,
@@ -605,7 +605,7 @@ operator|!
 name|cp
 condition|)
 return|return;
-name|msgNotify
+name|msgDebug
 argument_list|(
 literal|"ifconfig %s down"
 argument_list|,
@@ -650,7 +650,7 @@ condition|(
 name|cp
 condition|)
 block|{
-name|msgNotify
+name|msgDebug
 argument_list|(
 literal|"Deleting default route."
 argument_list|)
@@ -668,7 +668,7 @@ condition|(
 name|pppPID
 condition|)
 block|{
-name|msgNotify
+name|msgConfirm
 argument_list|(
 literal|"Killing previous PPP process %d."
 argument_list|,
