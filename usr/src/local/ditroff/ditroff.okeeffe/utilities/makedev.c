@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makedev.c	1.1	(CWI)	1.1	85/03/27"
+literal|"@(#)makedev.c	1.2	(CWI)	1.2	85/10/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|font
+name|Font
 name|font
 decl_stmt|;
 end_decl_stmt
@@ -241,11 +241,15 @@ begin_define
 define|#
 directive|define
 name|NFONT
-value|10
+value|60
 end_define
 
 begin_comment
 comment|/* max number of default fonts */
+end_comment
+
+begin_comment
+comment|/* 				 * 60 to support Versatec Berkeley style 				 * filters. Aargh! 				 */
 end_comment
 
 begin_decl_stmt
@@ -845,6 +849,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Too many charnames at %s\n"
 argument_list|,
 name|p
@@ -1079,8 +1085,7 @@ name|i
 operator|++
 control|)
 block|{
-name|totfont
-operator|+=
+comment|/* 			 * Get fontinfo ... 			 */
 name|dofont
 argument_list|(
 name|fname
@@ -1088,6 +1093,55 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+comment|/* 			 * ... and force space in troff allocated for the 			 * biggest font possible and limited by makedev 			 * to be loaded in troff by faking font.nwfont 			 * (and bumping up the size of DESC.out) by 			 * recalculating the padded out fontsize (v) 			 *	jna 			 */
+name|font
+operator|.
+name|nwfont
+operator|=
+name|FSIZE
+expr_stmt|;
+name|v
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|Font
+argument_list|)
+operator|+
+literal|3
+operator|*
+name|FSIZE
+operator|+
+name|dev
+operator|.
+name|nchtab
+operator|+
+literal|128
+operator|-
+literal|32
+expr_stmt|;
+comment|/* 				 * This is not correct, we can still 				 * have too less space if the default 				 * mounted fonts does not contain a 				 * fonttab, but I don't want to change 				 * troff on the moment... 				 */
+if|if
+condition|(
+name|font
+operator|.
+name|fonttab
+operator|==
+literal|1
+condition|)
+name|v
+operator|+=
+name|FSIZE
+operator|*
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+expr_stmt|;
+name|totfont
+operator|+=
+name|v
 expr_stmt|;
 name|write
 argument_list|(
@@ -1099,7 +1153,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|font
+name|Font
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2277,7 +2331,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|font
+name|Font
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2376,7 +2430,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|font
+name|Font
 argument_list|)
 operator|+
 literal|3
