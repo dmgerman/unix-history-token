@@ -352,7 +352,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|br
 operator|.
