@@ -68,6 +68,9 @@ decl_stmt|;
 name|u_long
 name|fr_fsr
 decl_stmt|;
+name|u_long
+name|fr_fprs
+decl_stmt|;
 block|}
 struct|;
 end_struct
