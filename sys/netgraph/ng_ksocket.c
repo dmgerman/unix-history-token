@@ -2234,7 +2234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Give our OK for a hook to be added. The hook name is of the  * form "<family>:<type>:<proto>" where the three components may  * be decimal numbers or else aliases from the above lists.  *  * Connecting a hook amounts to opening the socket.  Disconnecting  * the hook closes the socket and destroys the node as well.  */
+comment|/*  * Give our OK for a hook to be added. The hook name is of the  * form "<family>/<type>/<proto>" where the three components may  * be decimal numbers or else aliases from the above lists.  *  * Connecting a hook amounts to opening the socket.  Disconnecting  * the hook closes the socket and destroys the node as well.  */
 end_comment
 
 begin_function
