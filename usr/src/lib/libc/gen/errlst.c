@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)errlst.c	4.6 (Berkeley) 82/12/19 */
+comment|/* @(#)errlst.c	4.7 (Berkeley) 84/12/04 */
 end_comment
 
 begin_decl_stmt
@@ -45,7 +45,7 @@ comment|/* 10 - ECHILD */
 literal|"No more processes"
 block|,
 comment|/* 11 - EAGAIN */
-literal|"Not enough core"
+literal|"Not enough memory"
 block|,
 comment|/* 12 - ENOMEM */
 literal|"Permission denied"
@@ -57,7 +57,7 @@ comment|/* 14 - EFAULT */
 literal|"Block device required"
 block|,
 comment|/* 15 - ENOTBLK */
-literal|"Mount device busy"
+literal|"Device busy"
 block|,
 comment|/* 16 - EBUSY */
 literal|"File exists"
@@ -84,7 +84,7 @@ comment|/* 23 - ENFILE */
 literal|"Too many open files"
 block|,
 comment|/* 24 - EMFILE */
-literal|"Not a typewriter"
+literal|"Inappropriate ioctl for device"
 block|,
 comment|/* 25 - ENOTTY */
 literal|"Text file busy"
@@ -139,7 +139,7 @@ comment|/* 40 - EMSGSIZE */
 literal|"Protocol wrong type for socket"
 block|,
 comment|/* 41 - EPROTOTYPE */
-literal|"Protocol not available"
+literal|"Option not supported by protocol"
 block|,
 comment|/* 42 - ENOPROTOOPT */
 literal|"Protocol not supported"
