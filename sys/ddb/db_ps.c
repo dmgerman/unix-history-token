@@ -88,6 +88,12 @@ decl_stmt|,
 modifier|*
 name|pp
 decl_stmt|;
+specifier|volatile
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|np
 operator|=
 name|nprocs
@@ -117,7 +123,7 @@ name|proc0
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"  pid   proc     addr    uid  ppid  pgrp  flag stat wmesg   wchan   cmd\n"
+literal|"  pid   proc     addr    uid  ppid  pgrp  flag  stat wmesg   wchan   cmd\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -221,7 +227,7 @@ name|p
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%5d %8p %8p %4d %5d %5d %06x  %d"
+literal|"%5d %8p %8p %4d %5d %5d %07x  %d"
 argument_list|,
 name|p
 operator|->
@@ -288,11 +294,6 @@ operator|&
 name|P_KSES
 condition|)
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|db_printf
 argument_list|(
 literal|"(threaded)  %s\n"
@@ -340,6 +341,34 @@ name|td_wchan
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|p
+operator|->
+name|p_stat
+operator|==
+name|SMTX
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"%6s %8p"
+argument_list|,
+name|td
+operator|->
+name|td_mtxname
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|td
+operator|->
+name|td_blocked
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|db_printf
@@ -352,12 +381,17 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
+name|td
+operator|=
+operator|&
 name|p
 operator|->
 name|p_thread
-operator|.
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
 name|td_wchan
 condition|)
 block|{
@@ -365,21 +399,45 @@ name|db_printf
 argument_list|(
 literal|"  %6s %8p"
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_thread
-operator|.
 name|td_wmesg
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
+name|td
+operator|->
+name|td_wchan
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|p
 operator|->
-name|p_thread
-operator|.
-name|td_wchan
+name|p_stat
+operator|==
+name|SMTX
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"  %6s %8p"
+argument_list|,
+name|td
+operator|->
+name|td_mtxname
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|td
+operator|->
+name|td_blocked
 argument_list|)
 expr_stmt|;
 block|}
