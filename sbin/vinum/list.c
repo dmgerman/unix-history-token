@@ -4779,7 +4779,7 @@ block|}
 name|printf
 argument_list|(
 literal|"Total of %d blocks malloced, total memory: %d\n"
-literal|"Maximum allocs: %8d, malloc table at 0x%08x\n"
+literal|"Maximum allocs: %8d, malloc table at 0x%08lx\n"
 argument_list|,
 name|meminfo
 operator|.
@@ -4794,7 +4794,8 @@ operator|.
 name|highwater
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|meminfo
 operator|.
@@ -4883,7 +4884,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%6d\t%6d\t\t%6d\t0x%08x\t%6d\t\t%s\n"
+literal|"%6d\t%6d\t\t%6d\t0x%08lx\t%6d\t\t%s\n"
 argument_list|,
 name|i
 argument_list|,
@@ -4896,7 +4897,8 @@ operator|.
 name|size
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|malloced
 operator|.
