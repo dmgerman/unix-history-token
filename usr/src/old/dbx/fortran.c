@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortran.c	5.5 (Berkeley) %G%"
+literal|"@(#)fortran.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2602,6 +2602,7 @@ decl_stmt|,
 name|val
 decl_stmt|,
 name|ub
+decl_stmt|;
 block|}
 name|dim
 index|[
