@@ -708,6 +708,13 @@ begin_comment
 comment|/* start address of memory based filesystem */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|filename
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -882,8 +889,7 @@ name|opstring
 operator|=
 name|mfs
 condition|?
-literal|"NT:a:b:c:d:e:f:i:m:o:s:"
-else|:
+literal|"NF:T:a:b:c:d:e:f:i:m:o:s:"
 literal|"NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:x:"
 expr_stmt|;
 while|while
@@ -961,6 +967,14 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+literal|'F'
+case|:
+name|filename
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'a'
 case|:
@@ -2708,6 +2722,21 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|filename
+condition|)
+block|{
+name|munmap
+argument_list|(
+name|membase
+argument_list|,
+name|fssize
+operator|*
+name|sectorsize
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
