@@ -1209,6 +1209,8 @@ specifier|static
 name|int
 name|pr
 decl_stmt|,
+name|stdoutatty
+decl_stmt|,
 name|init
 init|=
 literal|0
@@ -1274,18 +1276,11 @@ name|pr
 operator|=
 literal|0
 expr_stmt|;
-name|s
+name|stdoutatty
 operator|=
-name|safe_malloc
+name|isatty
 argument_list|(
-name|strlen
-argument_list|(
-name|fs
-operator|->
-name|fs_outputfile
-argument_list|)
-operator|+
-literal|50
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1294,8 +1289,9 @@ name|size
 operator|>
 literal|0
 condition|)
-name|sprintf
+name|asprintf
 argument_list|(
+operator|&
 name|s
 argument_list|,
 literal|"Receiving %s (%qd bytes)%s"
@@ -1317,8 +1313,9 @@ literal|" [appending]"
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|asprintf
 argument_list|(
+operator|&
 name|s
 argument_list|,
 literal|"Receiving %s"
@@ -1367,6 +1364,11 @@ condition|)
 block|{
 if|if
 condition|(
+name|stdoutatty
+condition|)
+block|{
+if|if
+condition|(
 name|size
 operator|>
 literal|0
@@ -1393,6 +1395,7 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
+block|}
 name|bytes
 operator|-=
 name|bytestart
@@ -1518,6 +1521,11 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|stdoutatty
+condition|)
+block|{
+if|if
+condition|(
 name|size
 operator|>
 literal|1000000
@@ -1578,6 +1586,7 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
+block|}
 name|fflush
 argument_list|(
 name|stdout
