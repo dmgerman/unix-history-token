@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  * today: Fri Jun  2 17:21:03 EST 1994  * added 24F support  ++sg  *  *      $Id: ultra14f.c,v 1.25 1994/09/16 13:33:50 davidg Exp $  */
+comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  * today: Fri Jun  2 17:21:03 EST 1994  * added 24F support  ++sg  *  *      $Id: ultra14f.c,v 1.26 1994/10/23 21:27:38 wollman Exp $  */
 end_comment
 
 begin_include
@@ -4118,8 +4118,6 @@ name|p3
 decl_stmt|,
 name|p5
 decl_stmt|,
-name|p6
-decl_stmt|,
 name|p7
 decl_stmt|;
 name|unsigned
@@ -4130,8 +4128,6 @@ literal|7
 index|]
 decl_stmt|,
 name|rev
-decl_stmt|,
-name|emu
 decl_stmt|,
 name|haid
 decl_stmt|;
@@ -4601,17 +4597,6 @@ operator|->
 name|config
 argument_list|)
 expr_stmt|;
-name|p6
-operator|=
-name|inb
-argument_list|(
-name|ur
-operator|->
-name|config
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 name|p7
 operator|=
 name|inb
@@ -4623,40 +4608,6 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* If the 24F is currently emulating an ISA device, leave. */
-name|emu
-operator|=
-operator|(
-operator|(
-name|p6
-operator|&
-literal|0x04
-operator|)
-operator|>>
-literal|1
-operator|)
-operator||
-operator|(
-operator|(
-name|p5
-operator|&
-literal|0x08
-operator|)
-operator|>>
-literal|3
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|emu
-operator|!=
-literal|3
-condition|)
-return|return
-operator|(
-name|ENODEV
-operator|)
-return|;
 switch|switch
 condition|(
 name|p5
