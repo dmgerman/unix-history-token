@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Id$  *  * Modification history  *  * $Log:	if_edreg.h,v $  * Revision 1.5  93/08/25  20:38:34  davidg  * added define for card type WD8013WC (10BaseT)  *   * Revision 1.4  93/08/14  20:07:55  davidg  * fix board type definition for 8013EP  *   * Revision 1.3  93/07/20  15:25:25  davidg  * added config flags for forcing 8/16bit mode and disabling double  * xmit buffers.  *   * Revision 1.2  93/06/23  03:03:05  davidg  * added some additional definitions for the 83C584 bus interface  * chip (SMC/WD boards)  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
+comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Id: if_edreg.h,v 2.0 93/09/29 00:37:15 davidg Exp Locker: davidg $  *  * Modification history  *  * $Log:	if_edreg.h,v $  * Revision 2.0  93/09/29  00:37:15  davidg  * changed double buffering flag to multi buffering  * made changes/additions for 3c503 multi-buffering  * ...companion to Rev. 2.0 of 'ed' driver.  *   * Revision 1.6  93/09/28  17:20:03  davidg  * first cut at PIO (e.g. NE1000/2000) support  *   * Revision 1.5  93/08/25  20:38:34  davidg  * added define for card type WD8013WC (10BaseT)  *   * Revision 1.4  93/08/14  20:07:55  davidg  * fix board type definition for 8013EP  *   * Revision 1.3  93/07/20  15:25:25  davidg  * added config flags for forcing 8/16bit mode and disabling double  * xmit buffers.  *   * Revision 1.2  93/06/23  03:03:05  davidg  * added some additional definitions for the 83C584 bus interface  * chip (SMC/WD boards)  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
 end_comment
 
 begin_comment
@@ -1440,6 +1440,17 @@ begin_comment
 comment|/* 3Com */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ED_VENDOR_NOVELL
+value|0x02
+end_define
+
+begin_comment
+comment|/* Novell */
+end_comment
+
 begin_comment
 comment|/*  * Compile-time config flags  */
 end_comment
@@ -1452,7 +1463,7 @@ begin_define
 define|#
 directive|define
 name|ED_FLAGS_DISABLE_TRANCEIVER
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -1463,14 +1474,14 @@ begin_define
 define|#
 directive|define
 name|ED_FLAGS_FORCE_8BIT_MODE
-value|0x02
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_FLAGS_FORCE_16BIT_MODE
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -1480,8 +1491,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_FLAGS_NO_DOUBLE_BUFFERING
-value|0x08
+name|ED_FLAGS_NO_MULTI_BUFFERING
+value|0x0008
+end_define
+
+begin_comment
+comment|/*  * This forces all operations with the NIC memory to use Programmed  *	I/O (i.e. not via shared memory)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_FLAGS_FORCE_PIO
+value|0x0010
 end_define
 
 begin_comment
@@ -1833,6 +1855,10 @@ name|ED_WD_CARD_ID
 value|ED_WD_PROM+6
 end_define
 
+begin_comment
+comment|/* Board type codes in card ID */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2022,16 +2048,38 @@ begin_comment
 comment|/* # of i/o addresses used */
 end_comment
 
+begin_comment
+comment|/* tx memory starts in second bank on 8bit cards */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ED_3COM_PAGE_OFFSET
+name|ED_3COM_TX_PAGE_OFFSET_8BIT
 value|0x20
 end_define
 
 begin_comment
-comment|/* memory starts in second bank */
+comment|/* tx memory starts in first bank on 16bit cards */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_3COM_TX_PAGE_OFFSET_16BIT
+value|0x0
+end_define
+
+begin_comment
+comment|/* ...and rx memory starts in second bank */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_3COM_RX_PAGE_OFFSET_16BIT
+value|0x20
+end_define
 
 begin_comment
 comment|/*  *	Page Start Register. Must match PSTART in NIC  */
@@ -2612,6 +2660,75 @@ begin_define
 define|#
 directive|define
 name|ED_3COM_RFLSB
+value|0x0f
+end_define
+
+begin_comment
+comment|/*  *		 Definitions for Novell NE1000/2000 boards  */
+end_comment
+
+begin_comment
+comment|/*  * Board type codes  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_TYPE_NE1000
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_TYPE_NE2000
+value|0x02
+end_define
+
+begin_comment
+comment|/*  * Register offsets/total  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_NOVELL_NIC_OFFSET
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NOVELL_ASIC_OFFSET
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NOVELL_IO_PORTS
+value|32
+end_define
+
+begin_comment
+comment|/*  * Remote DMA data register; for reading or writing to the NIC mem  *	via programmed I/O (offset from ASIC base)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_NOVELL_DATA
+value|0x00
+end_define
+
+begin_comment
+comment|/*  * Reset register; reading from this register causes a board reset  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_NOVELL_RESET
 value|0x0f
 end_define
 
