@@ -5131,6 +5131,19 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|ccio
+operator|->
+name|ccio_ndisks
+operator|>
+name|CCD_MAXNDISKS
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* Fill in some important bits. */
 name|cs
 operator|->

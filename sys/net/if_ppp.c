@@ -1426,9 +1426,10 @@ name|flags
 decl_stmt|,
 name|mru
 decl_stmt|,
-name|nb
-decl_stmt|,
 name|npx
+decl_stmt|;
+name|u_int
+name|nb
 decl_stmt|;
 name|int
 name|error

@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -382,6 +388,19 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|argp
+operator|->
+name|ex_addrlen
+operator|>
+name|MLEN
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|i
 operator|=
 sizeof|sizeof

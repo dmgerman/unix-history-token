@@ -2277,6 +2277,10 @@ name|size_t
 name|in_param_len
 decl_stmt|;
 comment|/* length of additional input parameter */
+define|#
+directive|define
+name|I4B_ACTIVE_DIAGNOSTIC_MAXPARAMLEN
+value|65536
 name|void
 modifier|*
 name|in_param
