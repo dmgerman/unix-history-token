@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.54 1995/10/24 02:17:52 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.55 1995/10/25 21:18:00 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -660,7 +660,7 @@ end_function
 
 begin_function
 specifier|static
-name|Boolean
+name|int
 name|installInitial
 parameter_list|(
 name|void
@@ -677,7 +677,7 @@ condition|(
 name|alreadyDone
 condition|)
 return|return
-name|TRUE
+name|RET_SUCCESS
 return|;
 if|if
 condition|(
@@ -697,7 +697,7 @@ literal|"You need to assign disk labels before you can proceed with\nthe install
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 block|}
 comment|/* If it's labelled, assume it's also partitioned */
@@ -732,7 +732,7 @@ literal|"We can take no responsibility for lost disk contents!"
 argument_list|)
 condition|)
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 if|if
 condition|(
@@ -753,7 +753,7 @@ literal|"Couldn't make filesystems properly.  Aborting."
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 block|}
 if|if
@@ -773,7 +773,7 @@ literal|"Aborting."
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 block|}
 name|dialog_clear
@@ -799,7 +799,7 @@ literal|"Unable to chroot to /mnt - this is bad!"
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 block|}
 name|chdir
@@ -815,197 +815,15 @@ literal|"yes"
 argument_list|)
 expr_stmt|;
 comment|/* stick a helpful shell over on the 4th VTY */
-if|if
-condition|(
-name|OnVTY
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|fork
+name|systemCreateHoloshell
 argument_list|()
-condition|)
-block|{
-name|int
-name|i
-decl_stmt|,
-name|fd
-decl_stmt|;
-name|struct
-name|termios
-name|foo
-decl_stmt|;
-specifier|extern
-name|int
-name|login_tty
-argument_list|(
-name|int
-argument_list|)
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|64
-condition|;
-name|i
-operator|++
-control|)
-name|close
-argument_list|(
-name|i
-argument_list|)
 expr_stmt|;
-name|DebugFD
-operator|=
-name|fd
-operator|=
-name|open
-argument_list|(
-literal|"/dev/ttyv3"
-argument_list|,
-name|O_RDWR
-argument_list|)
-expr_stmt|;
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TIOCSCTTY
-argument_list|,
-operator|&
-name|fd
-argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-literal|0
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|login_tty
-argument_list|(
-name|fd
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Doctor: I can't set the controlling terminal.\n"
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGTTOU
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tcgetattr
-argument_list|(
-name|fd
-argument_list|,
-operator|&
-name|foo
-argument_list|)
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-name|foo
-operator|.
-name|c_cc
-index|[
-name|VERASE
-index|]
-operator|=
-literal|'\010'
-expr_stmt|;
-if|if
-condition|(
-name|tcsetattr
-argument_list|(
-name|fd
-argument_list|,
-name|TCSANOW
-argument_list|,
-operator|&
-name|foo
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Doctor: I'm unable to set the erase character.\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|msgDebug
-argument_list|(
-literal|"Doctor: I'm unable to get the terminal attributes!\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Warning: This shell is chroot()'d to /mnt\n"
-argument_list|)
-expr_stmt|;
-name|execlp
-argument_list|(
-literal|"sh"
-argument_list|,
-literal|"-sh"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|msgDebug
-argument_list|(
-literal|"Was unable to execute sh for Holographic shell!\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|msgNotify
-argument_list|(
-literal|"Starting an emergency holographic shell on VTY4"
-argument_list|)
-expr_stmt|;
-block|}
 name|alreadyDone
 operator|=
 name|TRUE
 expr_stmt|;
 return|return
-name|TRUE
+name|RET_SUCCESS
 return|;
 block|}
 end_function
@@ -1499,17 +1317,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
+if|if
+condition|(
+operator|!
+name|Dists
+condition|)
 block|{
 name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Now it is time to select an installation subset.  There are a number of canned\n"
-literal|"distributions, ranging from minimal installation sets to full X developer\n"
-literal|"oriented configurations.  You can also select a custom software set if none\n"
-literal|"of the provided configurations are suitable."
+literal|"Now it is time to select an installation subset.  There are a number of\n"
+literal|"canned distribution sets, ranging from minimal installation sets to full\n"
+literal|"X11 developer oriented configurations.  You can also select a custom set\n"
+literal|"of distributions if none of the provided ones are suitable."
 argument_list|)
 expr_stmt|;
 while|while
