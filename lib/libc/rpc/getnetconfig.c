@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -1671,7 +1677,7 @@ return|;
 block|}
 do|do
 block|{
-name|int
+name|ptrdiff_t
 name|len
 decl_stmt|;
 name|char
@@ -1750,13 +1756,16 @@ argument_list|(
 name|netid
 argument_list|)
 operator|==
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|len
 operator|=
 name|tmpp
 operator|-
 name|stringp
-operator|)
+argument_list|)
 operator|&&
 comment|/* a match */
 name|strncmp
@@ -2607,7 +2616,7 @@ name|char
 modifier|*
 name|tmp
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 if|if
@@ -2662,7 +2671,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*      * First we dup all the data from matched netconfig buffer.  Then we      * adjust some of the member pointer to a pre-allocated buffer where      * contains part of the data.      * To follow the convention used in parse_ncp(), we store all the      * neccessary information in the pre-allocated buffer and let each      * of the netconfig char pointer member point to the right address      * in the buffer.      */
+comment|/*      * First we dup all the data from matched netconfig buffer.  Then we      * adjust some of the member pointer to a pre-allocated buffer where      * contains part of the data.      * To follow the convention used in parse_ncp(), we store all the      * necessary information in the pre-allocated buffer and let each      * of the netconfig char pointer member point to the right address      * in the buffer.      */
 operator|*
 name|p
 operator|=
