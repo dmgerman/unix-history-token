@@ -1685,6 +1685,10 @@ argument_list|)
 operator|)
 operator|==
 literal|0
+operator|||
+name|nentries
+operator|<
+literal|0
 condition|)
 name|errx
 argument_list|(
