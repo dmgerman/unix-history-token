@@ -378,6 +378,11 @@ argument_list|,
 name|SIGSTOP
 argument_list|)
 expr_stmt|;
+name|wakeup
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 name|tsleep
 argument_list|(
