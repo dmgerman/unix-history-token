@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.16 (Berkeley) %G%"
+literal|"@(#)util.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -319,8 +319,10 @@ name|toupper
 argument_list|(
 operator|*
 name|s
-operator|++
 argument_list|)
+expr_stmt|;
+name|s
+operator|++
 expr_stmt|;
 while|while
 condition|(
