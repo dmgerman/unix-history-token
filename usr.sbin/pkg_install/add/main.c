@@ -356,6 +356,8 @@ name|cp
 decl_stmt|,
 modifier|*
 name|packagesite
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|remotepkg
@@ -1018,6 +1020,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|packagesite
+operator|!=
+name|NULL
+condition|)
 name|packagesite
 index|[
 literal|0
