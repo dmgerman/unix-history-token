@@ -1218,9 +1218,12 @@ begin_comment
 comment|/* Define if you want to use __cxa_atexit, rather than atexit, to    register C++ destructors for local statics and global objects.    This is essential for fully standards-compliant handling of    destructors, but requires __cxa_atexit in libc. */
 end_comment
 
-begin_comment
-comment|/* #undef DEFAULT_USE_CXA_ATEXIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|DEFAULT_USE_CXA_ATEXIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you want the C and C++ compilers to support multibyte    character sets for source code. */
