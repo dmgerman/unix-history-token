@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -163,6 +163,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NFLUSHWANT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Want wakeup from a flush in prog. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NFLUSHINPROG
 value|0x0002
 end_define
@@ -258,44 +269,6 @@ end_define
 begin_comment
 comment|/* Special file times changed */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NFS_VINVBUF
-parameter_list|(
-name|np
-parameter_list|,
-name|vp
-parameter_list|,
-name|flags
-parameter_list|,
-name|cred
-parameter_list|,
-name|p
-parameter_list|)
-value|{		\ 	if ((np->n_flag& NFLUSHINPROG) == 0) {		\ 		np->n_flag |= NFLUSHINPROG;		\ 		(void) vinvalbuf(vp, flags, cred, p);	\ 		np->n_flag&= ~(NFLUSHINPROG|NMODIFIED);\ 	}						\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFS_VINVBUFE
-parameter_list|(
-name|np
-parameter_list|,
-name|vp
-parameter_list|,
-name|flags
-parameter_list|,
-name|cred
-parameter_list|,
-name|p
-parameter_list|,
-name|error
-parameter_list|)
-value|{	\ 	if ((np->n_flag& NFLUSHINPROG) == 0) {		\ 		np->n_flag |= NFLUSHINPROG;		\ 		error = vinvalbuf(vp, flags, cred, p);	\ 		np->n_flag&= ~(NFLUSHINPROG|NMODIFIED);\ 	} else						\ 		error = 0;				\ }
-end_define
 
 begin_comment
 comment|/*  * Convert between nfsnode pointers and vnode pointers  */
@@ -983,16 +956,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
-name|bwrite
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* NFS needs a bwrite routine */
-end_comment
+name|nfs_bwrite
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bwrite_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
