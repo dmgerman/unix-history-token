@@ -138,7 +138,7 @@ value|0xb8
 end_define
 
 begin_comment
-comment|/*  * Config offsets for Intel i820/i840/i845/i850/i860 AGP chipsets.  */
+comment|/*  * Config offsets for Intel i820/i840/i845/i850/i860/i865 AGP chipsets.  */
 end_comment
 
 begin_define
