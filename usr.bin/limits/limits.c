@@ -1426,7 +1426,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":EeC:U:BSHabc:d:f:l:m:n:s:t:u:v:"
+literal|":EeC:U:BSHab:c:d:f:l:m:n:s:t:u:v:"
 argument_list|)
 operator|)
 operator|!=
@@ -3039,6 +3039,9 @@ name|RLIMIT_RSS
 case|:
 case|case
 name|RLIMIT_MEMLOCK
+case|:
+case|case
+name|RLIMIT_SBSIZE
 case|:
 case|case
 name|RLIMIT_VMEM
