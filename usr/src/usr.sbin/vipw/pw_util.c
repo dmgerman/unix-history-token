@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pw_util.c	8.1 (Berkeley) %G%"
+literal|"@(#)pw_util.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -71,13 +71,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -89,19 +95,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_decl_stmt
@@ -326,7 +326,7 @@ end_macro
 
 begin_block
 block|{
-comment|/*  	 * If the master password file doesn't exist, the system is hosed. 	 * Might as well try to build one. 	 * Open should allow flock'ing the file; see 4.4BSD.	XXX 	 */
+comment|/*  	 * If the master password file doesn't exist, the system is hosed. 	 * Might as well try to build one.  Set the close-on-exec bit so 	 * that users can't get at the encrypted passwords while editing. 	 * Open should allow flock'ing the file; see 4.4BSD.	XXX 	 */
 name|lockfd
 operator|=
 name|open
@@ -343,6 +343,18 @@ condition|(
 name|lockfd
 operator|<
 literal|0
+operator|||
+name|fcntl
+argument_list|(
+name|lockfd
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 operator|(
@@ -453,9 +465,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
 argument_list|,
 literal|"%s.XXXXXX"
 argument_list|,
