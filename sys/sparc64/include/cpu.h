@@ -89,6 +89,17 @@ parameter_list|)
 value|((td)->td_frame->tf_sp = (sp))
 end_define
 
+begin_define
+define|#
+directive|define
+name|cpu_spinwait
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
 begin_comment
 comment|/*  * CTL_MACHDEP definitions.  */
 end_comment

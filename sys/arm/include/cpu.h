@@ -188,6 +188,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|cpu_spinwait
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ARM_NVEC
 value|8
 end_define

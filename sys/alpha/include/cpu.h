@@ -230,6 +230,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|cpu_spinwait
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|get_cyclecount
 value|alpha_rpcc
 end_define

@@ -202,6 +202,17 @@ parameter_list|)
 value|((td)->td_frame->tf_special.sp)
 end_define
 
+begin_define
+define|#
+directive|define
+name|cpu_spinwait
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
 begin_function_decl
 name|void
 name|cpu_halt

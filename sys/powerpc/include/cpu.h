@@ -285,6 +285,17 @@ parameter_list|)
 value|((td)->td_frame->fixreg[1])
 end_define
 
+begin_define
+define|#
+directive|define
+name|cpu_spinwait
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
 begin_expr_stmt
 unit|void
 name|cpu_halt

@@ -102,6 +102,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|cpu_spinwait
+parameter_list|()
+value|ia32_pause()
+end_define
+
+begin_define
+define|#
+directive|define
 name|TRAPF_USERMODE
 parameter_list|(
 name|framep
