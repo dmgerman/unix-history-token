@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.15 1998/04/24 20:15:43 des Exp $"
+literal|"$Id: util.c,v 1.16 1998/04/25 00:10:24 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,8 @@ decl_stmt|;
 block|{
 name|int
 name|r
+init|=
+literal|0
 decl_stmt|;
 while|while
 condition|(
