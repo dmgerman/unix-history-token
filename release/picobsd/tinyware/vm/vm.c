@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -33,11 +33,15 @@ directive|include
 file|<vm/vm_param.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_define
+define|#
+directive|define
+name|pgtok
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) * (u_int) DEFAULT_PAGE_SIZE>> 10)
+end_define
 
 begin_function
 name|int
