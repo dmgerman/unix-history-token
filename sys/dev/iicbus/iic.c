@@ -391,6 +391,13 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|cdevsw_add
+argument_list|(
+operator|&
+name|iic_cdevsw
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 return|return
 operator|(
 literal|0
@@ -1141,7 +1148,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|iic
 argument_list|,
@@ -1150,8 +1157,6 @@ argument_list|,
 name|iic_driver
 argument_list|,
 name|iic_devclass
-argument_list|,
-name|iic_cdevsw
 argument_list|,
 literal|0
 argument_list|,
