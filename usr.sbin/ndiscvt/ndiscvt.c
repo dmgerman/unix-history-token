@@ -653,8 +653,20 @@ argument_list|(
 name|sysbuf
 argument_list|)
 argument_list|,
+ifdef|#
+directive|ifdef
+name|__i386__
 literal|"objcopy -I binary -O elf32-i386-freebsd -B i386 %s %s.o\n"
 argument_list|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__amd64__
+literal|"objcopy -I binary -O elf64-x86-64 -B i386 %s %s.o\n"
+argument_list|,
+endif|#
+directive|endif
 name|tname
 argument_list|,
 name|outfile
@@ -780,9 +792,12 @@ index|]
 decl_stmt|;
 name|outfile
 operator|=
+name|strdup
+argument_list|(
 name|basename
 argument_list|(
 name|firmfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|basefile
@@ -801,8 +816,20 @@ argument_list|(
 name|sysbuf
 argument_list|)
 argument_list|,
+ifdef|#
+directive|ifdef
+name|__i386__
 literal|"objcopy -I binary -O elf32-i386-freebsd -B i386 %s %s.o\n"
 argument_list|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__amd64__
+literal|"objcopy -I binary -O elf64-x86-64 -B i386 %s %s.o\n"
+argument_list|,
+endif|#
+directive|endif
 name|firmfile
 argument_list|,
 name|outfile
