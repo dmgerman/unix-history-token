@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.7	81/11/11	*/
+comment|/*	ut.c	4.8	81/11/13	*/
 end_comment
 
 begin_include
@@ -2384,6 +2384,12 @@ name|tjunit
 index|]
 expr_stmt|;
 comment|/* 	 * Record status... 	 */
+name|sc
+operator|->
+name|sc_timo
+operator|=
+name|INF
+expr_stmt|;
 name|sc
 operator|->
 name|sc_dsreg
