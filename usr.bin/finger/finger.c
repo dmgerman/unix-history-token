@@ -1304,9 +1304,9 @@ condition|(
 operator|*
 operator|*
 name|p
-operator|==
+operator|!=
 literal|'/'
-operator|&&
+operator|||
 operator|!
 name|show_text
 argument_list|(
