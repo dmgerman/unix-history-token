@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.9 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,6 +541,15 @@ argument_list|,
 name|_PATH_EXPORTS
 argument_list|)
 expr_stmt|;
+name|openlog
+argument_list|(
+literal|"mountd:"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
 name|get_exportlist
 argument_list|()
 expr_stmt|;
@@ -704,15 +713,6 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 block|}
-name|openlog
-argument_list|(
-literal|"mountd:"
-argument_list|,
-name|LOG_PID
-argument_list|,
-name|LOG_DAEMON
-argument_list|)
-expr_stmt|;
 name|signal
 argument_list|(
 name|SIGHUP
@@ -3653,6 +3653,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|mlfile
 operator|=
 name|fopen
@@ -3664,6 +3665,22 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|)
+operator|&&
+operator|(
+operator|(
+name|mlfile
+operator|=
+name|fopen
+argument_list|(
+name|_PATH_RMOUNTLIST
+argument_list|,
+literal|"w"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|syslog
