@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	4.2 %G%"
+literal|"@(#)ex_io.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1545,11 +1545,16 @@ expr_stmt|;
 case|case
 name|S_IFREG
 case|:
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xflag
 condition|)
 break|break;
+endif|#
+directive|endif
 name|i
 operator|=
 name|read
@@ -2660,6 +2665,9 @@ name|EOF
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|CRYPT
 name|fp
 operator|=
 name|genbuf
@@ -2704,6 +2712,8 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+endif|#
+directive|endif
 name|fp
 operator|=
 name|genbuf
@@ -2897,6 +2907,9 @@ name|fp
 operator|-
 name|genbuf
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|kflag
@@ -2912,6 +2925,8 @@ argument_list|,
 name|cntch
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|write
@@ -2985,6 +3000,9 @@ name|fp
 operator|-
 name|genbuf
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|kflag
@@ -3000,6 +3018,8 @@ argument_list|,
 name|cntch
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|write

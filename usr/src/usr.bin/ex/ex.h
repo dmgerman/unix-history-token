@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex.h	4.2 %G%  */
+comment|/* sccs id:	@(#)ex.h	4.3 %G%  */
 end_comment
 
 begin_ifdef
@@ -1462,6 +1462,12 @@ name|UNDPUT
 value|4
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRYPT
+end_ifdef
+
 begin_comment
 comment|/*  * Various miscellaneous flags and buffers needed by the encryption routines.  */
 end_comment
@@ -1555,6 +1561,11 @@ name|getpass
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Function type definitions  */

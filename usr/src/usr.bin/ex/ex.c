@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex.c	4.2 %G%"
+literal|"@(#)ex.c	4.2 8/1/80"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,18 +181,6 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HORSE
-name|horse
-argument_list|(
-name|ac
-argument_list|,
-name|av
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Defend against d's, v's, w's, and a's in directories of 	 * path leading to our true name. 	 */
 name|av
 index|[
@@ -757,6 +745,9 @@ operator|-
 literal|'0'
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|CRYPT
 case|case
 literal|'x'
 case|:
@@ -766,6 +757,8 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|smerror
 argument_list|(
@@ -819,6 +812,9 @@ name|av
 operator|++
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xflag
@@ -841,6 +837,8 @@ name|perm
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * If we are doing a recover and no filename 	 * was given, then execute an exrecover command with 	 * the -r option to type out the list of saved file names. 	 * Otherwise set the remembered file name to the first argument 	 * file name so the "recover" initial command will find it. 	 */
 if|if
 condition|(
@@ -1326,6 +1324,9 @@ name|anymarks
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xflag
@@ -1343,6 +1344,8 @@ name|tperm
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_block
 

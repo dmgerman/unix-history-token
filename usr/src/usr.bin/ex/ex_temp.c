@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_temp.c	4.2 %G%"
+literal|"@(#)ex_temp.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,6 +843,9 @@ condition|(
 name|ichang2
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xtflag
@@ -861,6 +864,8 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|blkio
 argument_list|(
 name|iblock2
@@ -888,6 +893,9 @@ argument_list|,
 name|read
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xtflag
@@ -906,6 +914,8 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|hitin2
 operator|=
 literal|1
@@ -927,6 +937,9 @@ condition|(
 name|ichanged
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xtflag
@@ -945,6 +958,8 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|blkio
 argument_list|(
 name|iblock
@@ -972,6 +987,9 @@ argument_list|,
 name|read
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xtflag
@@ -990,6 +1008,8 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ibuff
@@ -1005,6 +1025,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xtflag
@@ -1061,6 +1084,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 name|blkio
 argument_list|(
 name|oblock
@@ -3386,6 +3411,12 @@ begin_comment
 comment|/*  * Encryption routines.  These are essentially unmodified from ed.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRYPT
+end_ifdef
+
 begin_comment
 comment|/*  * crblock: encrypt/decrypt a block of text.  * buf is the buffer through which the text is both input and  * output. nchar is the size of the buffer. permp is a work  * buffer, and startn is the beginning of a sequence.  */
 end_comment
@@ -4214,6 +4245,11 @@ expr_stmt|;
 comment|/* end of nonportable part */
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
