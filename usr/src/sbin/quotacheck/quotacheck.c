@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	8.2 (Berkeley) %G%"
+literal|"@(#)quotacheck.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -650,8 +650,6 @@ decl_stmt|,
 name|maxrun
 decl_stmt|,
 name|errs
-init|=
-literal|0
 decl_stmt|;
 name|long
 name|done
@@ -664,6 +662,12 @@ decl_stmt|,
 modifier|*
 name|name
 decl_stmt|;
+name|errs
+operator|=
+name|maxrun
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
