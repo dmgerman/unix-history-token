@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/lib/libc/gen/crypt.c,v 1.2 1993/04/26 13:02:16 cgd Exp $"
+literal|"$Header: /a/cvs/386BSD/src/lib/libc/gen/crypt.c,v 1.2 1993/07/20 20:30:32 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,16 +177,18 @@ name|pw
 parameter_list|,
 name|salt
 parameter_list|)
+specifier|register
+specifier|const
 name|char
 modifier|*
 name|pw
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|register
+specifier|const
+name|char
+modifier|*
 name|salt
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 specifier|static
 name|char
@@ -804,7 +806,7 @@ return|return
 name|password
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
