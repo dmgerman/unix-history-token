@@ -9350,5 +9350,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * dummy version of read_random() until the random driver is ported.  */
+end_comment
+
+begin_function
+name|int
+name|read_random
+parameter_list|()
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
