@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.74 (Berkeley) %G%"
+literal|"@(#)map.c	8.75 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -11869,8 +11869,7 @@ if|if
 condition|(
 name|WIFEXITED
 argument_list|(
-operator|*
-name|statp
+name|stat
 argument_list|)
 condition|)
 block|{
@@ -11879,8 +11878,7 @@ name|statp
 operator|=
 name|WEXITSTATUS
 argument_list|(
-operator|*
-name|statp
+name|stat
 argument_list|)
 expr_stmt|;
 block|}
@@ -11894,8 +11892,7 @@ name|map
 operator|->
 name|map_mname
 argument_list|,
-operator|*
-name|statp
+name|stat
 argument_list|)
 expr_stmt|;
 operator|*
