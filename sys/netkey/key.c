@@ -12726,17 +12726,17 @@ argument_list|,
 literal|"key_delsah"
 argument_list|)
 expr_stmt|;
-name|key_freesav
-argument_list|(
-name|sav
-argument_list|)
-expr_stmt|;
 comment|/* remove back pointer */
 name|sav
 operator|->
 name|sah
 operator|=
 name|NULL
+expr_stmt|;
+name|key_freesav
+argument_list|(
+name|sav
+argument_list|)
 expr_stmt|;
 name|sav
 operator|=
