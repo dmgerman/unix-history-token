@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.6	81/02/19	*/
+comment|/*	param.h	4.7	81/02/23	*/
 end_comment
 
 begin_comment
@@ -465,6 +465,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NBBY
+value|8
+end_define
+
+begin_comment
+comment|/* number of bits in a byte */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NBPW
 value|sizeof(int)
 end_define
@@ -476,8 +487,37 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NBPG
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGOFSET
+value|(NBPG-1)
+end_define
+
+begin_comment
+comment|/* byte offset into page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGSHIFT
+value|9
+end_define
+
+begin_comment
+comment|/* LOG2(NBPG) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UPAGES
-value|6
+value|8
 end_define
 
 begin_comment
@@ -552,6 +592,17 @@ directive|define
 name|CLSIZE
 value|2
 end_define
+
+begin_define
+define|#
+directive|define
+name|CLOFSET
+value|(CLSIZE*NBPG-1)
+end_define
+
+begin_comment
+comment|/* for clusters, like PGOFSET */
+end_comment
 
 begin_comment
 comment|/* give the base virtual address (first of CLSIZE) */
