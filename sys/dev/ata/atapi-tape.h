@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-tape.h,v 1.1 1999/03/01 21:19:18 sos Exp $  */
+end_comment
+
+begin_comment
 comment|/* ATAPI tape commands not in std ATAPI command set */
 end_comment
 
@@ -116,7 +120,7 @@ value|10
 end_define
 
 begin_comment
-comment|/*   * MODE SENSE parameter header  */
+comment|/* MODE SENSE parameter header */
 end_comment
 
 begin_struct
@@ -126,25 +130,25 @@ block|{
 name|u_int8_t
 name|data_length
 decl_stmt|;
-comment|/* Total length of data */
+comment|/* total length of data */
 name|u_int8_t
 name|medium_type
 decl_stmt|;
-comment|/* Medium type (if any) */
+comment|/* medium type (if any) */
 name|u_int8_t
 name|dsp
 decl_stmt|;
-comment|/* Device specific parameter */
+comment|/* device specific parameter */
 name|u_int8_t
 name|bdl
 decl_stmt|;
-comment|/* Block Descriptor Length */
+comment|/* block Descriptor Length */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * ATAPI tape drive Capabilities and Mechanical Status Page  */
+comment|/* ATAPI tape drive Capabilities and Mechanical Status Page */
 end_comment
 
 begin_define
@@ -163,7 +167,7 @@ name|page_code
 range|:
 literal|6
 decl_stmt|;
-comment|/* Page code == 0x2a */
+comment|/* page code == 0x2a */
 name|u_int8_t
 name|reserved1_67
 range|:
@@ -172,7 +176,7 @@ decl_stmt|;
 name|u_int8_t
 name|page_length
 decl_stmt|;
-comment|/* Page Length == 0x12 */
+comment|/* page Length == 0x12 */
 name|u_int8_t
 name|reserved2
 decl_stmt|;
@@ -184,7 +188,7 @@ name|readonly
 range|:
 literal|1
 decl_stmt|;
-comment|/* Read Only Mode */
+comment|/* read Only Mode */
 name|u_int8_t
 name|reserved4_1234
 range|:
@@ -195,7 +199,7 @@ name|reverse
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports reverse direction */
+comment|/* supports reverse direction */
 name|u_int8_t
 name|reserved4_67
 range|:
@@ -211,7 +215,7 @@ name|eformat
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports ERASE formatting */
+comment|/* supports ERASE formatting */
 name|u_int8_t
 name|reserved5_4
 range|:
@@ -222,7 +226,7 @@ name|qfa
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports QFA formats */
+comment|/* supports QFA formats */
 name|u_int8_t
 name|reserved5_67
 range|:
@@ -233,31 +237,31 @@ name|lock
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports locking media */
+comment|/* supports locking media */
 name|u_int8_t
 name|locked
 range|:
 literal|1
 decl_stmt|;
-comment|/* The media is locked */
+comment|/* the media is locked */
 name|u_int8_t
 name|prevent
 range|:
 literal|1
 decl_stmt|;
-comment|/* Defaults  to prevent state */
+comment|/* defaults to prevent state */
 name|u_int8_t
 name|eject
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports eject */
+comment|/* supports eject */
 name|u_int8_t
 name|disconnect
 range|:
 literal|1
 decl_stmt|;
-comment|/* Can break request> ctl */
+comment|/* can break request> ctl */
 name|u_int8_t
 name|reserved6_5
 range|:
@@ -268,13 +272,13 @@ name|ecc
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports error correction */
+comment|/* supports error correction */
 name|u_int8_t
 name|compress
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports data compression */
+comment|/* supports data compression */
 name|u_int8_t
 name|reserved7_0
 range|:
@@ -285,13 +289,13 @@ name|blk512
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports 512b block size */
+comment|/* supports 512b block size */
 name|u_int8_t
 name|blk1024
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports 1024b block size */
+comment|/* supports 1024b block size */
 name|u_int8_t
 name|reserved7_3456
 range|:
@@ -302,27 +306,27 @@ name|slowb
 range|:
 literal|1
 decl_stmt|;
-comment|/* Restricts byte count */
+comment|/* restricts byte count */
 name|u_int16_t
 name|max_speed
 decl_stmt|;
-comment|/* Supported speed in KBps */
+comment|/* supported speed in KBps */
 name|u_int16_t
 name|max_defects
 decl_stmt|;
-comment|/* Max stored defect entries */
+comment|/* max stored defect entries */
 name|u_int16_t
 name|ctl
 decl_stmt|;
-comment|/* Continuous Transfer Limit */
+comment|/* continuous transfer limit */
 name|u_int16_t
 name|speed
 decl_stmt|;
-comment|/* Current Speed, in KBps */
+comment|/* current Speed, in KBps */
 name|u_int16_t
 name|buffer_size
 decl_stmt|;
-comment|/* Buffer Size, in 512 bytes */
+comment|/* buffer Size, in 512 bytes */
 name|u_int8_t
 name|reserved18
 decl_stmt|;
@@ -334,7 +338,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * REQUEST SENSE structure  */
+comment|/* REQUEST SENSE structure */
 end_comment
 
 begin_struct
@@ -346,47 +350,47 @@ name|error_code
 range|:
 literal|7
 decl_stmt|;
-comment|/* Current or deferred errors */
+comment|/* current or deferred errors */
 name|u_int8_t
 name|valid
 range|:
 literal|1
 decl_stmt|;
-comment|/* Follows QIC-157C */
+comment|/* follows QIC-157C */
 name|u_int8_t
 name|reserved1
 decl_stmt|;
-comment|/* Segment Number - Reserved */
+comment|/* Segment number - reserved */
 name|u_int8_t
 name|sense_key
 range|:
 literal|4
 decl_stmt|;
-comment|/* Sense Key */
+comment|/* sense key */
 name|u_int8_t
 name|reserved2_4
 range|:
 literal|1
 decl_stmt|;
-comment|/* Reserved */
+comment|/* reserved */
 name|u_int8_t
 name|ili
 range|:
 literal|1
 decl_stmt|;
-comment|/* Incorrect Length Indicator */
+comment|/* incorrect length indicator */
 name|u_int8_t
 name|eom
 range|:
 literal|1
 decl_stmt|;
-comment|/* End Of Medium */
+comment|/* end of medium */
 name|u_int8_t
 name|filemark
 range|:
 literal|1
 decl_stmt|;
-comment|/* Filemark */
+comment|/* filemark */
 name|u_int8_t
 name|info
 name|__attribute__
@@ -396,54 +400,54 @@ name|packed
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* Cmd specific info */
+comment|/* cmd specific info */
 name|u_int8_t
 name|asl
 decl_stmt|;
-comment|/* Additional sense length (n-7) */
+comment|/* additional sense length (n-7) */
 name|u_int8_t
 name|command_specific
 decl_stmt|;
-comment|/* Additional cmd specific info */
+comment|/* additional cmd specific info */
 name|u_int8_t
 name|asc
 decl_stmt|;
-comment|/* Additional Sense Code */
+comment|/* additional sense code */
 name|u_int8_t
 name|ascq
 decl_stmt|;
-comment|/* Additional Sense Code Qualifier */
+comment|/* additional sense code qualifier */
 name|u_int8_t
 name|replaceable_unit_code
 decl_stmt|;
-comment|/* Field Replaceable Unit Code */
+comment|/* field replaceable unit code */
 name|u_int8_t
 name|sk_specific1
 range|:
 literal|7
 decl_stmt|;
-comment|/* Sense Key Specific */
+comment|/* sense key specific */
 name|u_int8_t
 name|sksv
 range|:
 literal|1
 decl_stmt|;
-comment|/* Sense Key Specific info valid */
+comment|/* sense key specific info valid */
 name|u_int8_t
 name|sk_specific2
 decl_stmt|;
-comment|/* Sense Key Specific */
+comment|/* sense key specific */
 name|u_int8_t
 name|sk_specific3
 decl_stmt|;
-comment|/* Sense Key Specific */
+comment|/* sense key Specific */
 name|u_int8_t
 name|pad
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Padding */
+comment|/* padding */
 block|}
 struct|;
 end_struct
@@ -457,30 +461,30 @@ name|atapi_softc
 modifier|*
 name|atp
 decl_stmt|;
-comment|/* Controller structure */
+comment|/* controller structure */
 name|int32_t
 name|lun
 decl_stmt|;
-comment|/* Logical device unit */
+comment|/* logical device unit */
 name|int32_t
 name|flags
 decl_stmt|;
-comment|/* Device state flags */
+comment|/* device state flags */
 name|int32_t
 name|blksize
 decl_stmt|;
-comment|/* Block size (512 | 1024) */
+comment|/* block size (512 | 1024) */
 name|struct
 name|buf_queue_head
 name|buf_queue
 decl_stmt|;
-comment|/* Queue of i/o requests */
+comment|/* queue of i/o requests */
 name|struct
 name|atapi_params
 modifier|*
 name|param
 decl_stmt|;
-comment|/* Drive parameters table */
+comment|/* drive parameters table */
 name|struct
 name|ast_header
 name|header
@@ -490,7 +494,7 @@ name|struct
 name|ast_cappage
 name|cap
 decl_stmt|;
-comment|/* Capabilities page info */
+comment|/* capabilities page info */
 name|struct
 name|devstat
 name|stats
@@ -501,11 +505,11 @@ directive|ifdef
 name|DEVFS
 name|void
 modifier|*
-name|cdevs
+name|cdevs_token
 decl_stmt|;
 name|void
 modifier|*
-name|bdevs
+name|bdevs_token
 decl_stmt|;
 endif|#
 directive|endif

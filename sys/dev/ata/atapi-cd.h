@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-cd.h,v 1.3 1999/03/01 21:03:15 sos Exp sos $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-cd.h,v 1.1 1999/03/01 21:19:18 sos Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * CDROM Table Of Contents  */
+comment|/* CDROM Table Of Contents */
 end_comment
 
 begin_define
@@ -36,7 +36,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * CDROM Audio Control Parameters Page  */
+comment|/* CDROM Audio Control Parameters Page */
 end_comment
 
 begin_struct
@@ -138,7 +138,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * CDROM Capabilities and Mechanical Status Page  */
+comment|/* CDROM Capabilities and Mechanical Status Page */
 end_comment
 
 begin_struct
@@ -152,7 +152,6 @@ decl_stmt|;
 name|u_int8_t
 name|medium_type
 decl_stmt|;
-comment|/* Present media type */
 define|#
 directive|define
 name|MST_TYPE_MASK_LOW
@@ -249,21 +248,21 @@ name|read_cdr
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports CD-R read */
+comment|/* supports CD-R read */
 name|u_int8_t
 name|read_cdrw
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports CD-RW read */
+comment|/* supports CD-RW read */
 name|u_int8_t
 name|method2
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports reading packet tracks */
+comment|/* supports reading packet tracks */
 name|u_int8_t
-name|byte2_37
+name|reserved2_37
 range|:
 literal|5
 decl_stmt|;
@@ -272,21 +271,21 @@ name|write_cdr
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports CD-R write */
+comment|/* supports CD-R write */
 name|u_int8_t
 name|write_cdrw
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports CD-RW write */
+comment|/* supports CD-RW write */
 name|u_int8_t
 name|test_write
 range|:
 literal|1
 decl_stmt|;
-comment|/* Supports test writing */
+comment|/* supports test writing */
 name|u_int8_t
-name|byte3_37
+name|reserved3_37
 range|:
 literal|5
 decl_stmt|;
@@ -295,43 +294,43 @@ name|audio_play
 range|:
 literal|1
 decl_stmt|;
-comment|/* Audio play supported */
+comment|/* audio play supported */
 name|u_int8_t
 name|composite
 range|:
 literal|1
 decl_stmt|;
-comment|/* Composite audio/video supported */
+comment|/* composite audio/video supported */
 name|u_int8_t
 name|dport1
 range|:
 literal|1
 decl_stmt|;
-comment|/* Digital audio on port 1 */
+comment|/* digital audio on port 1 */
 name|u_int8_t
 name|dport2
 range|:
 literal|1
 decl_stmt|;
-comment|/* Digital audio on port 2 */
+comment|/* digital audio on port 2 */
 name|u_int8_t
 name|mode2_form1
 range|:
 literal|1
 decl_stmt|;
-comment|/* Mode 2 form 1 (XA) read */
+comment|/* mode 2 form 1 (XA) read */
 name|u_int8_t
 name|mode2_form2
 range|:
 literal|1
 decl_stmt|;
-comment|/* Mode 2 form 2 format */
+comment|/* mode 2 form 2 format */
 name|u_int8_t
 name|multisession
 range|:
 literal|1
 decl_stmt|;
-comment|/* Multi-session photo-CD */
+comment|/* multi-session photo-CD */
 name|u_int8_t
 label|:
 literal|1
@@ -341,7 +340,7 @@ name|cd_da
 range|:
 literal|1
 decl_stmt|;
-comment|/* Audio-CD read supported */
+comment|/* audio-CD read supported */
 name|u_int8_t
 name|cd_da_stream
 range|:
@@ -353,7 +352,7 @@ name|rw
 range|:
 literal|1
 decl_stmt|;
-comment|/* Combined R-W subchannels */
+comment|/* combined R-W subchannels */
 name|u_int8_t
 name|rw_corr
 range|:
@@ -371,13 +370,13 @@ name|isrc
 range|:
 literal|1
 decl_stmt|;
-comment|/* Can return the ISRC info */
+comment|/* can return the ISRC info */
 name|u_int8_t
 name|upc
 range|:
 literal|1
 decl_stmt|;
-comment|/* Can return the catalog number UPC */
+comment|/* can return the catalog number UPC */
 name|u_int8_t
 label|:
 literal|1
@@ -387,25 +386,25 @@ name|lock
 range|:
 literal|1
 decl_stmt|;
-comment|/* Can be locked */
+comment|/* can be locked */
 name|u_int8_t
 name|locked
 range|:
 literal|1
 decl_stmt|;
-comment|/* Current lock state */
+comment|/* current lock state */
 name|u_int8_t
 name|prevent
 range|:
 literal|1
 decl_stmt|;
-comment|/* Prevent jumper installed */
+comment|/* prevent jumper installed */
 name|u_int8_t
 name|eject
 range|:
 literal|1
 decl_stmt|;
-comment|/* Can eject */
+comment|/* can eject */
 name|u_int8_t
 label|:
 literal|1
@@ -415,7 +414,7 @@ name|mech
 range|:
 literal|3
 decl_stmt|;
-comment|/* Loading mechanism type */
+comment|/* loading mechanism type */
 define|#
 directive|define
 name|MST_MECH_CADDY
@@ -441,13 +440,13 @@ name|sep_vol
 range|:
 literal|1
 decl_stmt|;
-comment|/* Independent volume of channels */
+comment|/* independent volume of channels */
 name|u_int8_t
 name|sep_mute
 range|:
 literal|1
 decl_stmt|;
-comment|/* Independent mute of channels */
+comment|/* independent mute of channels */
 name|u_int8_t
 label|:
 literal|6
@@ -455,19 +454,19 @@ expr_stmt|;
 name|u_int16_t
 name|max_speed
 decl_stmt|;
-comment|/* Max raw data rate in bytes/1000 */
+comment|/* max raw data rate in bytes/1000 */
 name|u_int16_t
 name|max_vol_levels
 decl_stmt|;
-comment|/* Number of discrete volume levels */
+comment|/* number of discrete volume levels */
 name|u_int16_t
 name|buf_size
 decl_stmt|;
-comment|/* Internal buffer size in bytes/1024 */
+comment|/* internal buffer size in bytes/1024 */
 name|u_int16_t
 name|cur_speed
 decl_stmt|;
-comment|/* Current data rate in bytes/1000  */
+comment|/* current data rate in bytes/1000  */
 name|u_int8_t
 name|reserved3
 decl_stmt|;
@@ -476,19 +475,19 @@ name|bckf
 range|:
 literal|1
 decl_stmt|;
-comment|/* Data valid on failing edge of BCK */
+comment|/* data valid on failing edge of BCK */
 name|u_int8_t
 name|rch
 range|:
 literal|1
 decl_stmt|;
-comment|/* High LRCK indicates left channel */
+comment|/* high LRCK indicates left channel */
 name|u_int8_t
 name|lsbf
 range|:
 literal|1
 decl_stmt|;
-comment|/* Set if LSB first */
+comment|/* set if LSB first */
 name|u_int8_t
 name|dlen
 range|:
@@ -525,7 +524,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * CDROM Changer mechanism status structure  */
+comment|/* CDROM Changer mechanism status structure */
 end_comment
 
 begin_struct
@@ -537,13 +536,13 @@ name|current_slot
 range|:
 literal|5
 decl_stmt|;
-comment|/* Active changer slot */
+comment|/* active changer slot */
 name|u_int8_t
 name|mech_state
 range|:
 literal|2
 decl_stmt|;
-comment|/* Current changer state */
+comment|/* current changer state */
 define|#
 directive|define
 name|CH_READY
@@ -565,7 +564,7 @@ name|fault
 range|:
 literal|1
 decl_stmt|;
-comment|/* Fault in last operation */
+comment|/* fault in last operation */
 name|u_int8_t
 name|reserved0
 range|:
@@ -576,7 +575,7 @@ name|cd_state
 range|:
 literal|3
 decl_stmt|;
-comment|/* Current mechanism state */
+comment|/* current mechanism state */
 define|#
 directive|define
 name|CD_IDLE
@@ -603,15 +602,15 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* Current LBA */
+comment|/* current LBA */
 name|u_int8_t
 name|slots
 decl_stmt|;
-comment|/* Number of available slots */
+comment|/* number of available slots */
 name|u_int16_t
 name|table_length
 decl_stmt|;
-comment|/* Slot table length */
+comment|/* slot table length */
 struct|struct
 block|{
 name|u_int8_t
@@ -619,7 +618,7 @@ name|changed
 range|:
 literal|1
 decl_stmt|;
-comment|/* Media has changed in this slot */
+comment|/* media has changed in this slot */
 name|u_int8_t
 name|unused
 range|:
@@ -630,7 +629,7 @@ name|present
 range|:
 literal|1
 decl_stmt|;
-comment|/* Slot has a CD present */
+comment|/* slot has a CD present */
 name|u_int8_t
 name|reserved0
 decl_stmt|;
@@ -651,7 +650,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * CDROM Write Parameters Mode Page (Burners ONLY)  */
+comment|/* CDROM Write Parameters Mode Page (Burners ONLY) */
 end_comment
 
 begin_struct
@@ -684,7 +683,7 @@ decl_stmt|;
 define|#
 directive|define
 name|ATAPI_CDROM_WRITE_PARAMETERS_PAGE
-value|0x0e
+value|0x05
 name|u_int8_t
 name|page_length
 decl_stmt|;
@@ -694,7 +693,7 @@ name|write_type
 range|:
 literal|4
 decl_stmt|;
-comment|/* Write stream type */
+comment|/* write stream type */
 define|#
 directive|define
 name|CDR_WTYPE_PACKET
@@ -716,7 +715,7 @@ name|test_write
 range|:
 literal|1
 decl_stmt|;
-comment|/* Test write enable */
+comment|/* test write enable */
 name|u_int8_t
 name|reserved2_567
 range|:
@@ -727,7 +726,7 @@ name|track_mode
 range|:
 literal|4
 decl_stmt|;
-comment|/* Track mode */
+comment|/* track mode */
 define|#
 directive|define
 name|CDR_TMODE_AUDIO
@@ -753,19 +752,19 @@ name|copy
 range|:
 literal|1
 decl_stmt|;
-comment|/* Generation stamp */
+comment|/* generation stamp */
 name|u_int8_t
 name|fp
 range|:
 literal|1
 decl_stmt|;
-comment|/* Fixed packet type */
+comment|/* fixed packet type */
 name|u_int8_t
 name|multi_session
 range|:
 literal|2
 decl_stmt|;
-comment|/* Multi-session type */
+comment|/* multi-session type */
 define|#
 directive|define
 name|CDR_MSES_NONE
@@ -787,7 +786,7 @@ name|data_block_type
 range|:
 literal|4
 decl_stmt|;
-comment|/* Data block type code */
+comment|/* data block type code */
 define|#
 directive|define
 name|CDR_DB_RAW
@@ -812,22 +811,22 @@ define|#
 directive|define
 name|CDR_DB_RES_4
 value|0x4
-comment|/* Reserved */
+comment|/* reserved */
 define|#
 directive|define
 name|CDR_DB_RES_5
 value|0x5
-comment|/* Reserved */
+comment|/* reserved */
 define|#
 directive|define
 name|CDR_DB_RES_6
 value|0x6
-comment|/* Reserved */
+comment|/* reserved */
 define|#
 directive|define
 name|CDR_DB_VS_7
 value|0x7
-comment|/* Vendor specific */
+comment|/* vendor specific */
 define|#
 directive|define
 name|CDR_DB_ROM_MODE1
@@ -862,12 +861,12 @@ define|#
 directive|define
 name|CDR_DB_RES_14
 value|0x14
-comment|/* Reserved */
+comment|/* reserved */
 define|#
 directive|define
 name|CDR_DB_VS_15
 value|0x15
-comment|/* Vendor specific */
+comment|/* vendor specific */
 name|u_int8_t
 name|reserved4_4567
 range|:
@@ -884,7 +883,7 @@ name|host_app_code
 range|:
 literal|6
 decl_stmt|;
-comment|/* Host application code */
+comment|/* host application code */
 name|u_int8_t
 name|reserved7_67
 range|:
@@ -893,7 +892,7 @@ decl_stmt|;
 name|u_int8_t
 name|session_format
 decl_stmt|;
-comment|/* Session format */
+comment|/* session format */
 define|#
 directive|define
 name|CDR_SESS_CDROM
@@ -912,11 +911,11 @@ decl_stmt|;
 name|u_int32_t
 name|packet_size
 decl_stmt|;
-comment|/* Packet size in bytes */
+comment|/* packet size in bytes */
 name|u_int16_t
 name|audio_pause_length
 decl_stmt|;
-comment|/* Audio pause length in secs */
+comment|/* audio pause length in secs */
 name|u_int8_t
 name|media_catalog_number
 index|[
@@ -953,7 +952,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * CDROM Read Track Information structure  */
+comment|/* CDROM Read Track Information structure */
 end_comment
 
 begin_struct
@@ -966,11 +965,11 @@ decl_stmt|;
 name|u_int8_t
 name|track_number
 decl_stmt|;
-comment|/* Current track number */
+comment|/* current track number */
 name|u_int8_t
 name|session_number
 decl_stmt|;
-comment|/* Current session number */
+comment|/* current session number */
 name|u_int8_t
 name|reserved4
 decl_stmt|;
@@ -979,19 +978,19 @@ name|track_mode
 range|:
 literal|4
 decl_stmt|;
-comment|/* Mode of this track */
+comment|/* mode of this track */
 name|u_int8_t
 name|copy
 range|:
 literal|1
 decl_stmt|;
-comment|/* Generation stamp */
+comment|/* generation stamp */
 name|u_int8_t
 name|damage
 range|:
 literal|1
 decl_stmt|;
-comment|/* Damaged track */
+comment|/* damaged track */
 name|u_int8_t
 name|reserved5_67
 range|:
@@ -1002,31 +1001,31 @@ name|data_mode
 range|:
 literal|4
 decl_stmt|;
-comment|/* Data mode of this disc */
+comment|/* data mode of this disc */
 name|u_int8_t
 name|fp
 range|:
 literal|1
 decl_stmt|;
-comment|/* Fixed packet */
+comment|/* fixed packet */
 name|u_int8_t
 name|packet
 range|:
 literal|1
 decl_stmt|;
-comment|/* Packet track */
+comment|/* packet track */
 name|u_int8_t
 name|blank
 range|:
 literal|1
 decl_stmt|;
-comment|/* Blank (empty) track */
+comment|/* blank (empty) track */
 name|u_int8_t
 name|rt
 range|:
 literal|1
 decl_stmt|;
-comment|/* Reserved track */
+comment|/* reserved track */
 name|u_int8_t
 name|nwa_valid
 range|:
@@ -1041,29 +1040,29 @@ decl_stmt|;
 name|u_int
 name|track_start_addr
 decl_stmt|;
-comment|/* Start of this track */
+comment|/* start of this track */
 name|u_int
 name|next_writeable_addr
 decl_stmt|;
-comment|/* Next writeable addr on this disc */
+comment|/* next writeable addr on this disc */
 name|u_int
 name|free_blocks
 decl_stmt|;
-comment|/* Free block on this disc */
+comment|/* free block on this disc */
 name|u_int
 name|fixed_packet_size
 decl_stmt|;
-comment|/* Size of packets on this track */
+comment|/* size of packets on this track */
 name|u_int
 name|track_length
 decl_stmt|;
-comment|/* Length of this track */
+comment|/* length of this track */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure describing an ATAPI CDROM device  */
+comment|/* Structure describing an ATAPI CDROM device */
 end_comment
 
 begin_struct
@@ -1075,19 +1074,19 @@ name|atapi_softc
 modifier|*
 name|atp
 decl_stmt|;
-comment|/* Controller structure */
+comment|/* controller structure */
 name|int32_t
 name|lun
 decl_stmt|;
-comment|/* Logical device unit */
+comment|/* logical device unit */
 name|int32_t
 name|flags
 decl_stmt|;
-comment|/* Device state flags */
+comment|/* device state flags */
 name|int32_t
 name|refcnt
 decl_stmt|;
-comment|/* The number of raw opens */
+comment|/* the number of raw opens */
 name|struct
 name|buf_queue_head
 name|buf_queue
@@ -1097,17 +1096,17 @@ name|struct
 name|toc
 name|toc
 decl_stmt|;
-comment|/* Table of disc contents */
+comment|/* table of disc contents */
 struct|struct
 block|{
 name|u_int32_t
 name|volsize
 decl_stmt|;
-comment|/* Volume size in blocks */
+comment|/* volume size in blocks */
 name|u_int32_t
 name|blksize
 decl_stmt|;
-comment|/* Block size in bytes */
+comment|/* block size in bytes */
 block|}
 name|info
 struct|;
@@ -1115,20 +1114,20 @@ name|struct
 name|audiopage
 name|au
 decl_stmt|;
-comment|/* Audio page info */
+comment|/* audio page info */
 name|struct
 name|cappage
 name|cap
 decl_stmt|;
-comment|/* Capabilities page info */
+comment|/* capabilities page info */
 name|struct
 name|audiopage
 name|aumask
 decl_stmt|;
-comment|/* Audio page mask */
+comment|/* audio page mask */
 struct|struct
 block|{
-comment|/* Subchannel info */
+comment|/* subchannel info */
 name|u_int8_t
 name|void0
 decl_stmt|;
@@ -1164,32 +1163,32 @@ name|changer
 modifier|*
 name|changer_info
 decl_stmt|;
-comment|/* Changer info */
+comment|/* changer info */
 name|int32_t
 name|slot
 decl_stmt|;
-comment|/* This lun's slot number */
+comment|/* this lun's slot number */
 name|u_int32_t
 name|block_size
 decl_stmt|;
-comment|/* Blocksize currently used */
+comment|/* blocksize currently used */
 name|u_int8_t
 name|dummy
 decl_stmt|;
-comment|/* Use dummy writes */
+comment|/* use dummy writes */
 name|u_int8_t
 name|speed
 decl_stmt|;
-comment|/* Select drive speed */
+comment|/* select drive speed */
 name|u_int32_t
 name|next_writeable_lba
 decl_stmt|;
-comment|/* Next writable position */
+comment|/* next writable position */
 name|struct
 name|wormio_prepare_track
 name|preptrack
 decl_stmt|;
-comment|/* Scratch region */
+comment|/* scratch region */
 name|struct
 name|devstat
 modifier|*
@@ -1201,19 +1200,19 @@ directive|ifdef
 name|DEVFS
 name|void
 modifier|*
-name|ra_devfs_token
+name|a_cdevfs_token
 decl_stmt|;
 name|void
 modifier|*
-name|rc_devfs_token
+name|c_cdevfs_token
 decl_stmt|;
 name|void
 modifier|*
-name|a_devfs_token
+name|a_bdevfs_token
 decl_stmt|;
 name|void
 modifier|*
-name|c_devfs_token
+name|c_bdevfs_token
 decl_stmt|;
 endif|#
 directive|endif
@@ -1229,7 +1228,7 @@ value|_IO('c',100)
 end_define
 
 begin_comment
-comment|/* Blank a CDRW disc */
+comment|/* blank a CDRW disc */
 end_comment
 
 begin_define
