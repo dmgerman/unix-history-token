@@ -3114,7 +3114,7 @@ name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-comment|/* 			 * XXX sro_fwd below is static, and a pointer 			 * to it gets passed to routines downstream. 			 * This could have surprisingly bad results in 			 * practice, because its content is overwritten 			 * by subsequent packets. 			 */
+comment|/* 			 * XXX sro_fwd below is static, and a pointer 			 * to it gets passed to routines downstream. 			 * This could have surprisingly bad results in 			 * practice, because its content is overwritten 			 * by subsequent packets. 			 * XXX: Breaks on SMP and possibly preemption! 			 */
 comment|/* There must be a better way to do this next line... */
 specifier|static
 name|struct
