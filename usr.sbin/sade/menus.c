@@ -2505,7 +2505,7 @@ block|,
 block|{
 literal|" 4.x SNAP Server"
 block|,
-literal|"stable.freebsd.org"
+literal|"releng4.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -2514,7 +2514,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://stable.freebsd.org"
+literal|"=ftp://releng4.freebsd.org"
 block|}
 block|,
 block|{
