@@ -434,6 +434,32 @@ begin_comment
 comment|/* string table containing device names */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_function_decl
+name|void
+name|db_dump_ithread
+parameter_list|(
+name|struct
+name|ithd
+modifier|*
+name|ithd
+parameter_list|,
+name|int
+name|handlers
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|ithread_create
