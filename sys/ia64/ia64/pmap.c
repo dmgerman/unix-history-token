@@ -3741,6 +3741,11 @@ argument_list|,
 name|pv_plist
 argument_list|)
 expr_stmt|;
+name|free_pv_entry
+argument_list|(
+name|pv
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
