@@ -878,7 +878,7 @@ name|off_t
 operator|)
 literal|0
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|myfd
