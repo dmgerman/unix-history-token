@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.78 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.79 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -424,7 +424,7 @@ begin_define
 define|#
 directive|define
 name|SEGDEC
-value|{ \ 	if (daddr != UNASSIGNED) { \ 		if (lastseg != (seg = datosn(fs, daddr))) { \ 			UPDATE_SEGUSE; \ 			num = 1; \ 			lastseg = seg; \ 		} else \ 			++num; \ 	} \ }
+value|{ \ 	if (daddr != 0) { \ 		if (lastseg != (seg = datosn(fs, daddr))) { \ 			UPDATE_SEGUSE; \ 			num = 1; \ 			lastseg = seg; \ 		} else \ 			++num; \ 	} \ }
 end_define
 
 begin_comment
