@@ -9,15 +9,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1988, 1989, 1990, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char copyright[] = "@(#) Copyright (c) 1988, 1989, 1990, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n";
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
