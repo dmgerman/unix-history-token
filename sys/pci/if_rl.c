@@ -4454,6 +4454,14 @@ name|IFCAP_VLAN_MTU
 expr_stmt|;
 name|ifp
 operator|->
+name|if_capenable
+operator|=
+name|ifp
+operator|->
+name|if_capabilities
+expr_stmt|;
+name|ifp
+operator|->
 name|if_snd
 operator|.
 name|ifq_maxlen
