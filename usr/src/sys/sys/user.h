@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)user.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)user.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -290,16 +290,12 @@ name|u_outime
 decl_stmt|;
 comment|/* user time at last sample */
 comment|/* 1.3 - signal management */
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|u_signal
 index|[
 name|NSIG
 index|]
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 comment|/* disposition of signals */
 name|int
 name|u_sigmask
@@ -320,10 +316,6 @@ name|int
 name|u_oldmask
 decl_stmt|;
 comment|/* saved mask from before sigpause */
-name|int
-name|u_code
-decl_stmt|;
-comment|/* ``code'' to trap */
 name|struct
 name|sigstack
 name|u_sigstack
@@ -337,6 +329,16 @@ define|#
 directive|define
 name|u_sigsp
 value|u_sigstack.ss_sp
+define|#
+directive|define
+name|u_sig
+value|u_arg[0]
+comment|/* for core dump/debugger XXX */
+define|#
+directive|define
+name|u_code
+value|u_arg[1]
+comment|/* for core dump/debugger XXX */
 comment|/* 1.4 - descriptor management */
 name|struct
 name|file
