@@ -7855,6 +7855,10 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|escape
+operator|!=
+name|_POSIX_VDISABLE
+operator|&&
 name|sc
 operator|==
 name|escape
@@ -7937,6 +7941,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|escape
+operator|!=
+name|_POSIX_VDISABLE
+operator|&&
 name|sc
 operator|==
 name|escape
@@ -8018,6 +8026,10 @@ name|globalmode
 operator|&
 name|MODE_EDIT
 operator|)
+operator|&&
+name|echoc
+operator|!=
+name|_POSIX_VDISABLE
 operator|&&
 operator|(
 name|sc
