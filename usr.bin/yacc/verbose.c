@@ -63,6 +63,14 @@ directive|include
 file|"defs.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|short
+modifier|*
+name|null_rules
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -167,14 +175,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|short
-modifier|*
-name|null_rules
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
