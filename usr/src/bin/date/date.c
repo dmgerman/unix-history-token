@@ -33,10 +33,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)date.c	4.20 (Berkeley) 3/24/87"
+literal|"@(#)date.c	4.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
