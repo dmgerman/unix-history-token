@@ -389,6 +389,11 @@ value|0x0008
 comment|/* queue size is measured in bytes */
 define|#
 directive|define
+name|DN_NOERROR
+value|0x0010
+comment|/* do not report ENOBUFS on drops  */
+define|#
+directive|define
 name|DN_IS_PIPE
 value|0x4000
 define|#
