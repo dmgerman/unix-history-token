@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c 1.3 %G%"
+literal|"@(#)hash.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,21 +213,23 @@ literal|"with"
 block|,
 name|YWITH
 block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* the following keywords are non-standard */
 literal|"oct"
 block|,
 name|YOCT
 block|,
-comment|/* non-standard Pascal */
 literal|"hex"
 block|,
 name|YHEX
 block|,
-comment|/* non-standard Pascal */
 literal|"external"
 block|,
 name|YEXTERN
 block|,
-comment|/* non-standard Pascal */
 literal|0
 block|}
 decl_stmt|;
@@ -237,19 +239,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|lastkey
-init|=
-operator|&
-name|yykey
-index|[
-sizeof|sizeof
-name|yykey
-operator|/
-sizeof|sizeof
-name|yykey
-index|[
-literal|0
-index|]
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -359,6 +348,51 @@ index|[
 literal|0
 index|]
 operator|=
+name|ip
+expr_stmt|;
+comment|/* 	 * If we are not running in "standard-only" mode, 	 * we load the non-standard keywords. 	 */
+if|if
+condition|(
+operator|!
+name|opt
+argument_list|(
+literal|'s'
+argument_list|)
+condition|)
+for|for
+control|(
+name|ip
+operator|+=
+literal|2
+init|;
+operator|*
+name|ip
+condition|;
+name|ip
+operator|+=
+literal|2
+control|)
+name|hash
+argument_list|(
+name|ip
+index|[
+literal|0
+index|]
+argument_list|,
+literal|0
+argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+name|ip
+expr_stmt|;
+name|lastkey
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|ip
 expr_stmt|;
 block|}
