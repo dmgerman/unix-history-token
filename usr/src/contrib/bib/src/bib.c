@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bib.c	2.2	%G%"
+literal|"@(#)bib.c	2.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
