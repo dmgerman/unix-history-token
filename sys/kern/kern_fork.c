@@ -1581,7 +1581,7 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Copy filedesc. 	 * XXX: This is busted.  fd*() need to not take proc 	 * arguments or something. 	 */
+comment|/* 	 * Copy filedesc. 	 */
 if|if
 condition|(
 name|flags
