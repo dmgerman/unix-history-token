@@ -70,19 +70,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/linker.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -94,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include

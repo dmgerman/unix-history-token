@@ -901,6 +901,12 @@ name|vm_offset_t
 name|minaddr
 decl_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|identifycpu
 argument_list|()
 expr_stmt|;
@@ -1449,6 +1455,12 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize callouts 	 */
 name|SLIST_INIT
 argument_list|(
