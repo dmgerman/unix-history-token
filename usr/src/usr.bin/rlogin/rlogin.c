@@ -1023,7 +1023,13 @@ name|sp
 operator|=
 name|getservbyname
 argument_list|(
+operator|(
+name|encrypt
+condition|?
+literal|"eklogin"
+else|:
 literal|"klogin"
+operator|)
 argument_list|,
 literal|"tcp"
 argument_list|)
