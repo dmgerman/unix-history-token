@@ -2032,5 +2032,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|MAXCOMLEN
+argument_list|,
+name|MAXCOMLEN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

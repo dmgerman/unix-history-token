@@ -55,6 +55,17 @@ decl_stmt|;
 name|u_int
 name|ih_flags
 decl_stmt|;
+name|u_int
+name|ih_index
+decl_stmt|;
+name|u_long
+modifier|*
+name|ih_count
+decl_stmt|;
+name|u_long
+modifier|*
+name|ih_straycount
+decl_stmt|;
 block|}
 struct|;
 end_struct
