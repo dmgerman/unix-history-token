@@ -203,20 +203,6 @@ argument_list|)
 name|sc_comq
 expr_stmt|;
 comment|/* Command queue		*/
-if|#
-directive|if
-name|XXX_IOCTLLOCK
-name|int
-name|sc_ioctl_lock
-decl_stmt|;
-comment|/* IOCTL lock 			*/
-name|int
-name|sc_ioctl_cnt
-decl_stmt|;
-comment|/* IOCTL lock count		*/
-endif|#
-directive|endif
-comment|/* XXX_IOCTLLOCK */
 name|struct
 name|ray_nw_param
 name|sc_c
