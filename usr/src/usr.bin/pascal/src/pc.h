@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pc.h 1.6 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pc.h 1.7 %G%"; */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ file|<setjmp.h>
 end_include
 
 begin_comment
-comment|/*      *		random constants for pc      */
+comment|/*      *	random constants for pc      */
 end_comment
 
 begin_comment
@@ -75,26 +75,114 @@ value|( CURFILEOFFSET + sizeof rtlocs.curfile )
 end_define
 
 begin_comment
-comment|/*      *	the register save mask for saving no registers      */
+comment|/*      *	this is a cookie used to communicate between the      *	routine entry code and the routine exit code.      *	mostly it's for labels shared between the two.      */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_struct
+struct|struct
+name|entry_exit_cookie
+block|{
+name|struct
+name|nl
+modifier|*
+name|nlp
+decl_stmt|;
+name|char
+name|extname
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|int
+name|toplabel
+decl_stmt|;
+name|int
+name|savlabel
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
 directive|define
-name|RSAVEMASK
-value|( 0 )
+name|FRAME_SIZE_LABEL
+value|"LF"
 end_define
-
-begin_comment
-comment|/*      *	runtime check mask for divide check and integer overflow      */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|RUNCHECK
-value|( ( 1<< 15 ) | ( 1<< 14 ) )
+name|SAVE_MASK_LABEL
+value|"L"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|vax
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|mc68000
+end_ifdef
+
+begin_struct
+struct|struct
+name|entry_exit_cookie
+block|{
+name|struct
+name|nl
+modifier|*
+name|nlp
+decl_stmt|;
+name|char
+name|extname
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|int
+name|toplabel
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FRAME_SIZE_LABEL
+value|"LF"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_BREAK_LABEL
+value|"LP"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVE_MASK_LABEL
+value|"LS"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|mc68000
+end_endif
 
 begin_comment
 comment|/*      *	formats for various names      *	    NAMEFORMAT		arbitrary length strings.      *	    EXTFORMAT		for externals, a preceding underscore.      *	    LABELFORMAT		for label names, a preceding dollar-sign.      *	    PREFIXFORMAT	used to print made up names with prefixes.      *	    LABELPREFIX		with getlab() makes up label names.      *	    LLABELPREFIX	with getlab() makes up sdb labels.      *	    FORMALPREFIX	prefix for EXTFORMAT for formal entry points.      *	a typical use might be to print out a name with a preceeding underscore      *	with putprintf( EXTFORMAT , 0 , name );      */
@@ -185,6 +273,66 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_comment
+comment|/*      *	the runtime framepointer and argumentpointer registers      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P2FP
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|P2FPNAME
+value|"fp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|P2AP
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|P2APNAME
+value|"ap"
+end_define
+
+begin_comment
+comment|/*      *	the register save mask for saving no registers      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSAVEMASK
+value|( 0 )
+end_define
+
+begin_comment
+comment|/*      *	runtime check mask for divide check and integer overflow      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RUNCHECK
+value|( ( 1<< 15 ) | ( 1<< 14 ) )
+end_define
+
 begin_comment
 comment|/*      *	and of course ...      */
 end_comment
@@ -195,6 +343,67 @@ directive|define
 name|BITSPERBYTE
 value|8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|vax
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|mc68000
+end_ifdef
+
+begin_comment
+comment|/*      *	this magic numbers lifted from pcc/mac2defs      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P2FP
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|P2FPNAME
+value|"a6"
+end_define
+
+begin_define
+define|#
+directive|define
+name|P2AP
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|P2APNAME
+value|"a6"
+end_define
+
+begin_comment
+comment|/*      *	and still ...      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITSPERBYTE
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|mc68000
+end_endif
 
 end_unit
 
