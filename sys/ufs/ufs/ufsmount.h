@@ -204,12 +204,6 @@ name|int64_t
 name|um_savedmaxfilesize
 decl_stmt|;
 comment|/* XXX - limit maxfilesize */
-name|struct
-name|malloc_type
-modifier|*
-name|um_malloctype
-decl_stmt|;
-comment|/* The inodes malloctype */
 name|int
 function_decl|(
 modifier|*
@@ -331,6 +325,21 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|um_ifree
+function_decl|)
+parameter_list|(
+name|struct
+name|ufsmount
+modifier|*
+parameter_list|,
+name|struct
+name|inode
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -429,6 +438,18 @@ parameter_list|,
 name|cc
 parameter_list|)
 value|VFSTOUFS((aa)->v_mount)->um_vfree(aa, bb, cc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFS_IFREE
+parameter_list|(
+name|aa
+parameter_list|,
+name|bb
+parameter_list|)
+value|((aa)->um_ifree(aa, bb))
 end_define
 
 begin_comment
