@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -352,31 +352,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* u_eosys values */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JUSTRETURN
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|RESTARTSYS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|NORMALRETURN
-value|3
-end_define
 
 begin_comment
 comment|/* u_error codes */
