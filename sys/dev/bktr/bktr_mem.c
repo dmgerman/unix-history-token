@@ -14,7 +14,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This is prt of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman.  *  * bktr_mem : This kernel module allows us to keep our allocated  *            contiguous memory for the video buffer, DMA programs and VBI data  *            while the main bktr driver is unloaded and reloaded.  *            This avoids the problem of trying to allocate contiguous each  *            time the bktr driver is loaded.  */
+comment|/*  * This is part of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman.  *  * bktr_mem : This kernel module allows us to keep our allocated  *            contiguous memory for the video buffer, DMA programs and VBI data  *            while the main bktr driver is unloaded and reloaded.  *            This avoids the problem of trying to allocate contiguous each  *            time the bktr driver is loaded.  */
 end_comment
 
 begin_comment
@@ -191,10 +191,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/*************************************************************/
@@ -463,7 +459,7 @@ name|type
 argument_list|)
 expr_stmt|;
 return|return
-name|NULL
+literal|0
 return|;
 block|}
 switch|switch
@@ -537,7 +533,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return
-name|NULL
+literal|0
 return|;
 block|}
 block|}
