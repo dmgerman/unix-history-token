@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.30.1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.32		%G%"
+literal|"@(#)sendmail.h	5.30.1.2		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1705,6 +1705,54 @@ end_define
 
 begin_comment
 comment|/* this entry is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_TEMP
+value|00002
+end_define
+
+begin_comment
+comment|/* don't cache this connection */
+end_comment
+
+begin_comment
+comment|/* states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_CLOSED
+value|0
+end_define
+
+begin_comment
+comment|/* no traffic on this connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_OPEN
+value|1
+end_define
+
+begin_comment
+comment|/* open, no protocol sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_SSD
+value|2
+end_define
+
+begin_comment
+comment|/* service shutting down */
 end_comment
 
 begin_escape

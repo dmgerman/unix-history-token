@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.20.1.1 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.20.1.2 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.20.1.1 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.20.1.2 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,53 +172,6 @@ begin_comment
 comment|/* pid of mailer */
 end_comment
 
-begin_comment
-comment|/* following represents the state of the SMTP connection */
-end_comment
-
-begin_decl_stmt
-name|int
-name|SmtpState
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* connection state, see below */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMTP_CLOSED
-value|0
-end_define
-
-begin_comment
-comment|/* connection is closed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMTP_OPEN
-value|1
-end_define
-
-begin_comment
-comment|/* connection is open for business */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMTP_SSD
-value|2
-end_define
-
-begin_comment
-comment|/* service shutting down */
-end_comment
-
 begin_escape
 end_escape
 
@@ -237,6 +190,8 @@ name|smtpinit
 argument_list|(
 argument|m
 argument_list|,
+argument|mci
+argument_list|,
 argument|pvp
 argument_list|)
 end_macro
@@ -246,6 +201,13 @@ name|struct
 name|mailer
 modifier|*
 name|m
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|MCONINFO
+modifier|*
+name|mci
 decl_stmt|;
 end_decl_stmt
 
@@ -289,21 +251,31 @@ modifier|*
 name|stab
 parameter_list|()
 function_decl|;
+specifier|extern
+name|MCONINFO
+modifier|*
+name|openmailer
+parameter_list|()
+function_decl|;
 comment|/* 	**  Open the connection to the mailer. 	*/
 if|if
 condition|(
-name|SmtpState
+name|mci
+operator|->
+name|mci_state
 operator|==
-name|SMTP_OPEN
+name|MCIS_OPEN
 condition|)
 name|syserr
 argument_list|(
 literal|"smtpinit: already open"
 argument_list|)
 expr_stmt|;
-name|SmtpState
+name|mci
+operator|->
+name|mci_state
 operator|=
-name|SMTP_CLOSED
+name|MCIS_CLOSED
 expr_stmt|;
 name|SmtpError
 index|[
@@ -483,9 +455,11 @@ name|ExitStat
 operator|)
 return|;
 block|}
-name|SmtpState
+name|mci
+operator|->
+name|mci_state
 operator|=
-name|SMTP_OPEN
+name|MCIS_OPEN
 expr_stmt|;
 comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously.  Give it five minutes to 	**	happen. 	*/
 if|if
@@ -536,6 +510,8 @@ operator|=
 name|reply
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 name|clrevent
@@ -591,6 +567,8 @@ operator|=
 name|reply
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -654,6 +632,8 @@ operator|=
 name|reply
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -678,6 +658,8 @@ operator|=
 name|reply
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -788,6 +770,8 @@ operator|=
 name|reply
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -832,6 +816,8 @@ comment|/* protocol error -- close up */
 name|smtpquit
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 return|return
@@ -842,34 +828,15 @@ return|;
 name|tempfail1
 label|:
 comment|/* log this as an error to avoid sure-to-be-void connections */
-name|st
-operator|=
-name|stab
-argument_list|(
-name|CurHostName
-argument_list|,
-name|ST_MCONINFO
-operator|+
-name|m
+name|mci
 operator|->
-name|m_mno
-argument_list|,
-name|ST_ENTER
-argument_list|)
-expr_stmt|;
-name|st
-operator|->
-name|s_host
-operator|.
-name|ho_exitstat
+name|mci_exitstat
 operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
-name|st
+name|mci
 operator|->
-name|s_host
-operator|.
-name|ho_errno
+name|mci_errno
 operator|=
 name|errno
 expr_stmt|;
@@ -879,6 +846,8 @@ comment|/* signal a temporary failure */
 name|smtpquit
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 return|return
@@ -892,6 +861,8 @@ comment|/* signal service unavailable */
 name|smtpquit
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 return|return
@@ -921,6 +892,8 @@ argument_list|(
 argument|to
 argument_list|,
 argument|m
+argument_list|,
+argument|mci
 argument_list|)
 name|ADDRESS
 operator|*
@@ -933,6 +906,13 @@ specifier|register
 name|MAILER
 modifier|*
 name|m
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|MCONINFO
+modifier|*
+name|mci
 decl_stmt|;
 end_decl_stmt
 
@@ -981,6 +961,8 @@ operator|=
 name|reply
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -1072,6 +1054,8 @@ name|smtpdata
 argument_list|(
 argument|m
 argument_list|,
+argument|mci
+argument_list|,
 argument|e
 argument_list|)
 end_macro
@@ -1081,6 +1065,14 @@ name|struct
 name|mailer
 modifier|*
 name|m
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|MCONINFO
+modifier|*
+name|mci
 decl_stmt|;
 end_decl_stmt
 
@@ -1129,6 +1121,8 @@ operator|=
 name|reply
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -1181,7 +1175,9 @@ operator|->
 name|e_puthdr
 call|)
 argument_list|(
-name|SmtpOut
+name|mci
+operator|->
+name|mci_out
 argument_list|,
 name|m
 argument_list|,
@@ -1192,7 +1188,9 @@ name|putline
 argument_list|(
 literal|"\n"
 argument_list|,
-name|SmtpOut
+name|mci
+operator|->
+name|mci_out
 argument_list|,
 name|m
 argument_list|)
@@ -1204,7 +1202,9 @@ operator|->
 name|e_putbody
 call|)
 argument_list|(
-name|SmtpOut
+name|mci
+operator|->
+name|mci_out
 argument_list|,
 name|m
 argument_list|,
@@ -1214,7 +1214,9 @@ expr_stmt|;
 comment|/* terminate the message */
 name|fprintf
 argument_list|(
-name|SmtpOut
+name|mci
+operator|->
+name|mci_out
 argument_list|,
 literal|".%s"
 argument_list|,
@@ -1260,6 +1262,8 @@ operator|=
 name|reply
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
@@ -1327,6 +1331,8 @@ begin_expr_stmt
 name|smtpquit
 argument_list|(
 name|mci
+argument_list|,
+name|m
 argument_list|)
 specifier|register
 name|MCONINFO
@@ -1334,6 +1340,14 @@ operator|*
 name|mci
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|MAILER
+modifier|*
+name|m
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1347,19 +1361,23 @@ name|mci
 operator|->
 name|mci_state
 operator|==
-name|MCI_CLOSED
+name|MCIS_CLOSED
 condition|)
 return|return;
 comment|/* send the quit message if not a forced quit */
 if|if
 condition|(
-name|SmtpState
+name|mci
+operator|->
+name|mci_state
 operator|==
-name|SMTP_OPEN
+name|MCIS_OPEN
 operator|||
-name|SmtpState
+name|mci
+operator|->
+name|mci_state
 operator|==
-name|SMTP_SSD
+name|MCIS_SSD
 condition|)
 block|{
 name|smtpmessage
@@ -1375,13 +1393,17 @@ operator|)
 name|reply
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SmtpState
+name|mci
+operator|->
+name|mci_state
 operator|==
-name|SMTP_CLOSED
+name|MCIS_CLOSED
 condition|)
 return|return;
 block|}
@@ -1433,9 +1455,18 @@ end_comment
 begin_macro
 name|reply
 argument_list|(
+argument|mci
+argument_list|,
 argument|m
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|MCONINFO
+modifier|*
+name|mci
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|MAILER
@@ -1451,7 +1482,9 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|SmtpOut
+name|mci
+operator|->
+name|mci_out
 argument_list|)
 expr_stmt|;
 if|if
@@ -1507,9 +1540,11 @@ comment|/* for debugging */
 comment|/* if we are in the process of closing just give the code */
 if|if
 condition|(
-name|SmtpState
+name|mci
+operator|->
+name|mci_state
 operator|==
-name|SMTP_CLOSED
+name|MCIS_CLOSED
 condition|)
 return|return
 operator|(
@@ -1526,7 +1561,9 @@ argument_list|,
 sizeof|sizeof
 name|SmtpReplyBuffer
 argument_list|,
-name|SmtpIn
+name|mci
+operator|->
+name|mci_in
 argument_list|)
 expr_stmt|;
 if|if
@@ -1611,9 +1648,11 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
-name|SmtpState
+name|mci
+operator|->
+name|mci_state
 operator|=
-name|SMTP_CLOSED
+name|MCIS_CLOSED
 expr_stmt|;
 name|smtpquit
 argument_list|(
@@ -1756,15 +1795,19 @@ name|r
 operator|==
 name|SMTPCLOSING
 operator|&&
-name|SmtpState
+name|mci
+operator|->
+name|mci_state
 operator|!=
-name|SMTP_SSD
+name|MCIS_SSD
 condition|)
 block|{
 comment|/* send the quit protocol */
-name|SmtpState
+name|mci
+operator|->
+name|mci_state
 operator|=
-name|SMTP_SSD
+name|MCIS_SSD
 expr_stmt|;
 name|smtpquit
 argument_list|(
@@ -1816,7 +1859,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPMESSAGE -- send message to server ** **	Parameters: **		f -- format **		m -- the mailer to control formatting. **		a, b, c -- parameters ** **	Returns: **		none. ** **	Side Effects: **		writes message to SmtpOut. */
+comment|/* **  SMTPMESSAGE -- send message to server ** **	Parameters: **		f -- format **		m -- the mailer to control formatting. **		a, b, c -- parameters ** **	Returns: **		none. ** **	Side Effects: **		writes message to mci->mci_out. */
 end_comment
 
 begin_comment
@@ -1829,6 +1872,8 @@ argument_list|(
 argument|f
 argument_list|,
 argument|m
+argument_list|,
+argument|mci
 argument_list|,
 argument|a
 argument_list|,
@@ -1849,6 +1894,13 @@ begin_decl_stmt
 name|MAILER
 modifier|*
 name|m
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|MCONINFO
+modifier|*
+name|mci
 decl_stmt|;
 end_decl_stmt
 
@@ -1897,13 +1949,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SmtpOut
+name|mci
+operator|->
+name|mci_out
 operator|!=
 name|NULL
 condition|)
 name|fprintf
 argument_list|(
-name|SmtpOut
+name|mci
+operator|->
+name|mci_out
 argument_list|,
 literal|"%s%s"
 argument_list|,

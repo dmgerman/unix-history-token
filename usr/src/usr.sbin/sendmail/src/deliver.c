@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.55 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.54.1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1517,6 +1517,8 @@ name|smtpinit
 argument_list|(
 name|m
 argument_list|,
+name|mci
+argument_list|,
 name|pv
 argument_list|)
 operator|)
@@ -1550,6 +1552,8 @@ operator|=
 name|tochain
 init|;
 name|to
+operator|!=
+name|NULL
 condition|;
 name|to
 operator|=
@@ -1576,6 +1580,8 @@ argument_list|(
 name|to
 argument_list|,
 name|m
+argument_list|,
+name|mci
 argument_list|)
 operator|)
 operator|!=
@@ -1662,6 +1668,8 @@ operator|=
 name|smtpdata
 argument_list|(
 name|m
+argument_list|,
+name|mci
 argument_list|,
 name|e
 argument_list|)
@@ -2133,6 +2141,17 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|register
+name|MCONINFO
+modifier|*
+name|mci
+decl_stmt|;
+specifier|extern
+name|MCONINFO
+modifier|*
+name|openmailer
+parameter_list|()
+function_decl|;
 comment|/* 	**  Create connection to mailer. 	*/
 name|mci
 operator|=
@@ -2364,7 +2383,9 @@ expr_stmt|;
 comment|/* in the IPC case there is nothing to wait for */
 if|if
 condition|(
-name|pid
+name|mci
+operator|->
+name|mci_pid
 operator|==
 literal|0
 condition|)
@@ -2378,7 +2399,9 @@ name|st
 operator|=
 name|waitfor
 argument_list|(
-name|pid
+name|mci
+operator|->
+name|mci_pid
 argument_list|)
 expr_stmt|;
 if|if
@@ -2492,6 +2515,11 @@ block|{
 name|int
 name|pid
 decl_stmt|;
+specifier|register
+name|MCONINFO
+modifier|*
+name|mci
+decl_stmt|;
 name|int
 name|mpvect
 index|[
@@ -2559,6 +2587,10 @@ condition|)
 block|{
 name|mci
 operator|=
+operator|(
+name|MCONINFO
+operator|*
+operator|)
 name|xalloc
 argument_list|(
 sizeof|sizeof
@@ -2805,19 +2837,15 @@ else|else
 block|{
 name|i
 operator|=
-name|st
+name|mci
 operator|->
-name|s_host
-operator|.
-name|ho_exitstat
+name|mci_exitstat
 expr_stmt|;
 name|errno
 operator|=
-name|st
+name|mci
 operator|->
-name|s_host
-operator|.
-name|ho_errno
+name|mci_errno
 expr_stmt|;
 block|}
 if|if
@@ -3466,6 +3494,10 @@ block|}
 comment|/* 	**  Set up return value. 	*/
 name|mci
 operator|=
+operator|(
+name|MCONINFO
+operator|*
+operator|)
 name|xalloc
 argument_list|(
 sizeof|sizeof

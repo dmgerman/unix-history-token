@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.44 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.42.1.2 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.44 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.42.1.2 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1217,8 +1217,9 @@ block|}
 block|}
 block|}
 comment|/* connection ok, put it into canonical form */
-operator|*
-name|outfile
+name|mci
+operator|->
+name|mci_out
 operator|=
 name|fdopen
 argument_list|(
@@ -1227,8 +1228,9 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
-operator|*
-name|infile
+name|mci
+operator|->
+name|mci_in
 operator|=
 name|fdopen
 argument_list|(
