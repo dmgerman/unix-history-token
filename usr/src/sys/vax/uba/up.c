@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.10	%G%	*/
+comment|/*	up.c	4.11	%G%	*/
 end_comment
 
 begin_include
@@ -1322,6 +1322,11 @@ condition|)
 goto|goto
 name|done
 goto|;
+if|#
+directive|if
+name|NUP
+operator|>
+literal|1
 comment|/* 	 * Do enough of the disk address decoding to determine 	 * which cylinder and sector the request is on. 	 * If we are on the correct cylinder and the desired sector 	 * lies between upSDIST and upSDIST+upRDIST sectors ahead of us, then 	 * we don't bother to SEARCH but just begin the transfer asap. 	 * Otherwise ask for a interrupt upSDIST sectors ahead. 	 */
 name|bn
 operator|=
@@ -1487,6 +1492,8 @@ block|}
 goto|goto
 name|out
 goto|;
+endif|#
+directive|endif
 name|done
 label|:
 comment|/* 	 * This unit is ready to go so 	 * link it onto the chain of ready disks. 	 */
@@ -1853,9 +1860,9 @@ name|bp
 operator|->
 name|b_flags
 operator|&
-name|B_WRITE
+name|B_READ
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.3	%G%	*/
+comment|/*	hp.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -1103,6 +1103,8 @@ decl_stmt|,
 name|cn
 decl_stmt|,
 name|csn
+decl_stmt|,
+name|ns
 decl_stmt|;
 operator|(
 operator|(
@@ -1209,6 +1211,14 @@ name|hpaddr
 operator|->
 name|hpcs1
 operator|=
+name|DCLR
+operator||
+name|GO
+expr_stmt|;
+name|hpaddr
+operator|->
+name|hpcs1
+operator|=
 name|PRESET
 operator||
 name|GO
@@ -1257,6 +1267,11 @@ condition|)
 goto|goto
 name|done
 goto|;
+if|#
+directive|if
+name|NHP
+operator|>
+literal|1
 name|bn
 operator|=
 name|dkblock
@@ -1303,6 +1318,10 @@ operator|)
 operator|%
 name|NRMSECT
 expr_stmt|;
+name|ns
+operator|=
+name|NRMSECT
+expr_stmt|;
 break|break;
 case|case
 name|RM5
@@ -1329,6 +1348,10 @@ operator|)
 operator|%
 name|NRMSECT
 expr_stmt|;
+name|ns
+operator|=
+name|NRMSECT
+expr_stmt|;
 break|break;
 case|case
 name|RP
@@ -1353,6 +1376,10 @@ operator|-
 name|hpSDIST
 operator|)
 operator|%
+name|NSECT
+expr_stmt|;
+name|ns
+operator|=
 name|NSECT
 expr_stmt|;
 break|break;
@@ -1412,13 +1439,13 @@ literal|0
 condition|)
 name|csn
 operator|+=
-name|NSECT
+name|ns
 expr_stmt|;
 if|if
 condition|(
 name|csn
 operator|>
-name|NSECT
+name|ns
 operator|-
 name|hpRDIST
 condition|)
@@ -1487,6 +1514,8 @@ operator|++
 expr_stmt|;
 block|}
 return|return;
+endif|#
+directive|endif
 name|done
 label|:
 name|dp
@@ -1830,9 +1859,9 @@ name|bp
 operator|->
 name|b_flags
 operator|&
-name|B_WRITE
+name|B_READ
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
