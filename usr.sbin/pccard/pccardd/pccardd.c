@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pccardd.c,v 1.2 1998/03/09 05:18:58 hosokawa Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,7 +190,7 @@ break|break;
 case|case
 literal|'i'
 case|:
-comment|/* supress specified irq */
+comment|/* configure available irq */
 if|if
 condition|(
 name|sscanf
