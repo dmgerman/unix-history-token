@@ -1,4 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)access.c	4.7 %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Adb: access data in file/process address space.  *  * The routines in this file access referenced data using  * the maps to access files, ptrace to access subprocesses,  * or the system page tables when debugging the kernel,  * to translate virtual to physical addresses.  */
 end_comment
@@ -8,16 +29,6 @@ include|#
 directive|include
 file|"defs.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#) 4.6 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|MAP
