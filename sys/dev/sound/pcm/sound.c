@@ -2176,7 +2176,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|" (mixer only)"
+literal|" (mixer only)\n"
 argument_list|)
 expr_stmt|;
 block|}
