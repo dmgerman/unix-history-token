@@ -379,6 +379,11 @@ modifier|*
 name|t_sc
 decl_stmt|;
 comment|/* driver private softc pointer. */
+name|void
+modifier|*
+name|t_lsc
+decl_stmt|;
+comment|/* linedisc private softc pointer. */
 name|int
 name|t_column
 decl_stmt|;

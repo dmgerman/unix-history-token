@@ -933,11 +933,8 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|sc
 expr_stmt|;
 comment|/* 	 * Pre-allocate cblocks to the an appropriate amount. 	 * I'm not sure what is appropriate. 	 */
@@ -1033,7 +1030,7 @@ name|sc_p
 operator|)
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 decl_stmt|;
 name|int
 name|s
@@ -1112,7 +1109,7 @@ literal|0
 expr_stmt|;
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 operator|=
 name|NULL
 expr_stmt|;
@@ -1230,7 +1227,7 @@ name|sc_p
 operator|)
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 decl_stmt|;
 name|int
 name|s
@@ -1407,7 +1404,7 @@ name|sc_p
 operator|)
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 decl_stmt|;
 specifier|const
 name|node_p
@@ -1742,7 +1739,7 @@ name|sc_p
 operator|)
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 decl_stmt|;
 name|int
 name|s
