@@ -963,15 +963,6 @@ begin_comment
 comment|/*  * Construct a control character sequence  * for a special character.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUG
-argument_list|)
-end_if
-
 begin_function
 name|char
 modifier|*
@@ -1068,15 +1059,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(DEBUG) */
-end_comment
 
 begin_escape
 end_escape
