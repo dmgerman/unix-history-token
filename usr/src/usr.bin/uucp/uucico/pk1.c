@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk1.c	5.9 (Berkeley) %G%"
+literal|"@(#)pk1.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1058,15 +1058,22 @@ name|pk
 operator|->
 name|p_rpr
 operator|=
-operator|(
 name|h
 operator|->
 name|cntl
-operator|>>
-literal|3
-operator|)
 operator|&
 name|MOD8
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|7
+argument_list|,
+literal|"end pksack 0%o\n"
+argument_list|,
+name|pk
+operator|->
+name|p_rpr
+argument_list|)
 expr_stmt|;
 name|pksack
 argument_list|(
