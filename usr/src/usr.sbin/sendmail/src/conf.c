@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.62 (Berkeley) %G%"
+literal|"@(#)conf.c	8.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5169,6 +5169,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|WILDCARD_SHELL
+value|"/SENDMAIL/ANY/SHELL/"
+end_define
+
 begin_function
 name|bool
 name|usershellok
@@ -5223,7 +5230,7 @@ name|strcmp
 argument_list|(
 name|p
 argument_list|,
-literal|"*"
+name|WILDCARD_SHELL
 argument_list|)
 operator|==
 literal|0
@@ -5411,7 +5418,7 @@ literal|0
 operator|||
 name|strcmp
 argument_list|(
-literal|"*"
+name|WILDCARD_SHELL
 argument_list|,
 name|q
 argument_list|)
