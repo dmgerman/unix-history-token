@@ -160,7 +160,12 @@ begin_comment
 comment|/* It doesn't have to be extern */
 end_comment
 
+begin_comment
+comment|/* the map_vme() call */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|unsigned
 name|short
 modifier|*
@@ -172,10 +177,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* GPS registers defined in gps.h */
+comment|/* made extern to avoid being in both map_vme.c and this file */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|void
 modifier|*
 name|gps_base
@@ -183,11 +189,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Base address of GPS VME card returned by */
-end_comment
-
-begin_comment
-comment|/* the map_vme() call */
+comment|/*  mjb lmco 12/20/99 */
 end_comment
 
 begin_function_decl
@@ -256,6 +258,18 @@ name|get_gpsvme_time
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|struct
+name|vmedate
+modifier|*
+name|time_vme
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* added to emulate LM refclock_gpsvme                   (Made global per RES suggestion to fix mem leak DW lmco)  mjb lmco 12/15/99 */
+end_comment
 
 begin_comment
 comment|/* END OF STUFF FROM RES */
@@ -564,7 +578,7 @@ specifier|static
 name|int
 name|vme_start
 parameter_list|(
-name|u_int
+name|int
 parameter_list|,
 name|struct
 name|peer
@@ -579,6 +593,10 @@ name|void
 name|vme_shutdown
 parameter_list|(
 name|int
+parameter_list|,
+name|struct
+name|peer
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -629,7 +647,7 @@ specifier|static
 name|void
 name|vme_control
 parameter_list|(
-name|u_int
+name|int
 parameter_list|,
 name|struct
 name|refclockstat
@@ -637,6 +655,10 @@ modifier|*
 parameter_list|,
 name|struct
 name|refclockstat
+modifier|*
+parameter_list|,
+name|struct
+name|peer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -651,6 +673,10 @@ name|int
 parameter_list|,
 name|struct
 name|refclockbug
+modifier|*
+parameter_list|,
+name|struct
+name|peer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -960,6 +986,23 @@ name|vmeunit
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|time_vme
+operator|=
+operator|(
+expr|struct
+name|vmedate
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vmedate
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Added to emulate LM's refclock_gpsvme                                                         (added to fix mem lead DW lmco)  mjb lmco 12/22/99 */
 block|}
 block|}
 name|bzero
@@ -1317,40 +1360,6 @@ name|tm
 modifier|*
 name|tadr
 decl_stmt|;
-name|vme
-operator|=
-operator|(
-expr|struct
-name|vmeunit
-operator|*
-operator|)
-name|emalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vmeunit
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|tptr
-operator|=
-operator|(
-expr|struct
-name|vmedate
-operator|*
-operator|)
-name|emalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vmedate
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -1731,7 +1740,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vme_control - set fudge factors, return statistics  */
+comment|/*  * vme_control - set fudge factors, return statistics2  */
 end_comment
 
 begin_function
@@ -1751,6 +1760,11 @@ name|struct
 name|refclockstat
 modifier|*
 name|out
+parameter_list|,
+name|struct
+name|peer
+modifier|*
+name|peer
 parameter_list|)
 block|{
 specifier|register
@@ -1792,15 +1806,20 @@ name|haveflags
 operator|&
 name|CLK_HAVETIME1
 condition|)
+name|DTOLFP
+argument_list|(
+name|in
+operator|->
+name|fudgetime1
+argument_list|,
+operator|&
 name|fudgefactor
 index|[
 name|unit
 index|]
-operator|=
-name|in
-operator|->
-name|fudgetime1
+argument_list|)
 expr_stmt|;
+comment|/* added mjb lmco 12/20/99 */
 if|if
 condition|(
 name|in
@@ -1953,43 +1972,40 @@ name|clockdesc
 operator|=
 name|VMEDESCRIPTION
 expr_stmt|;
-name|out
-operator|->
-name|fudgetime1
-operator|=
+name|LFPTOD
+argument_list|(
+operator|&
 name|fudgefactor
 index|[
 name|unit
 index|]
+argument_list|,
+name|out
+operator|->
+name|fudgetime1
+argument_list|)
 expr_stmt|;
+comment|/* added mjb lmco 12/20/99 */
 name|out
 operator|->
 name|fudgetime2
-operator|.
-name|l_ui
 operator|=
 literal|0
 expr_stmt|;
-name|out
-operator|->
-name|fudgetime2
-operator|.
-name|l_uf
-operator|=
-literal|0
-expr_stmt|;
+comment|/* should do what above was supposed to do  mjb lmco 12/20/99 */
 name|out
 operator|->
 name|fudgeval1
 operator|=
 operator|(
-name|LONG
+name|long
 operator|)
 name|stratumtouse
 index|[
 name|unit
 index|]
 expr_stmt|;
+comment|/*changed from above LONG was not                                                                       defined  mjb lmco 12/15/99 */
 name|out
 operator|->
 name|fudgeval2
@@ -2030,7 +2046,7 @@ name|lencode
 expr_stmt|;
 name|out
 operator|->
-name|lastcode
+name|p_lastcode
 operator|=
 name|vme
 operator|->
@@ -2105,7 +2121,7 @@ literal|0
 expr_stmt|;
 name|out
 operator|->
-name|lastcode
+name|p_lastcode
 operator|=
 literal|""
 expr_stmt|;
@@ -2167,6 +2183,11 @@ name|struct
 name|refclockbug
 modifier|*
 name|bug
+parameter_list|,
+name|struct
+name|peer
+modifier|*
+name|peer
 parameter_list|)
 block|{
 specifier|register
@@ -2424,6 +2445,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|extern
 name|struct
 name|vmedate
 modifier|*
@@ -2486,22 +2508,6 @@ operator|)
 name|malloc
 argument_list|(
 literal|7
-argument_list|)
-expr_stmt|;
-name|time_vme
-operator|=
-operator|(
-expr|struct
-name|vmedate
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vmedate
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2702,13 +2708,10 @@ condition|)
 block|{
 return|return
 operator|(
-operator|(
-name|void
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
+comment|/* fixed mjb lmco 12/20/99 */
 block|}
 else|else
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/clk_trimtaip.c,v 4.6 1998/08/16 18:46:27 kardel RELEASE_19990228_A  *  * clk_trimtaip.c,v 4.6 1998/08/16 18:46:27 kardel RELEASE_19990228_A  *  * Trimble SV6 clock support - several collected codepieces  */
+comment|/*  * /src/NTP/ntp-4/libparse/clk_trimtaip.c,v 4.7 1999/11/28 09:13:51 kardel RELEASE_19991128_A  *  * clk_trimtaip.c,v 4.7 1999/11/28 09:13:51 kardel RELEASE_19991128_A  *  * Trimble SV6 clock support - several collected codepieces  */
 end_comment
 
 begin_ifdef
@@ -791,7 +791,7 @@ comment|/* not (REFCLOCK&& CLOCK_PARSE&& CLOCK_TRIMTAIP) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_trimtaip.c,v  * Revision 4.6  1998/08/16 18:46:27  kardel  * (clock_trimtaip =): changed format name  *  * Revision 4.5  1998/06/14 21:09:38  kardel  * Sun acc cleanup  *  * Revision 4.4  1998/06/13 12:06:57  kardel  * fix SYSV clock name clash  *  * Revision 4.3  1998/06/12 15:22:29  kardel  * fix prototypes  *  * Revision 4.2  1998/06/12 09:13:26  kardel  * conditional compile macros fixed  * printf prototype  *  * Revision 4.1  1998/05/24 09:39:54  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:31  kardel  * Start 4.0 release version numbering  *  * from V3 1.4 log info deleted 1998/04/11 kardel  */
+comment|/*  * History:  *  * clk_trimtaip.c,v  * Revision 4.7  1999/11/28 09:13:51  kardel  * RECON_4_0_98F  *  * Revision 4.6  1998/08/16 18:46:27  kardel  * (clock_trimtaip =): changed format name  *  * Revision 4.5  1998/06/14 21:09:38  kardel  * Sun acc cleanup  *  * Revision 4.4  1998/06/13 12:06:57  kardel  * fix SYSV clock name clash  *  * Revision 4.3  1998/06/12 15:22:29  kardel  * fix prototypes  *  * Revision 4.2  1998/06/12 09:13:26  kardel  * conditional compile macros fixed  * printf prototype  *  * Revision 4.1  1998/05/24 09:39:54  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:31  kardel  * Start 4.0 release version numbering  *  * from V3 1.4 log info deleted 1998/04/11 kardel  */
 end_comment
 
 end_unit

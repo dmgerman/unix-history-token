@@ -886,7 +886,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"time error %.0f over %d seconds; set clock manually)"
+literal|"time error %.0f over %d seconds; set clock manually"
 argument_list|,
 name|fp_offset
 argument_list|,
@@ -1099,6 +1099,8 @@ default|default:
 if|if
 condition|(
 name|allow_set_backward
+operator||
+name|correct_any
 condition|)
 block|{
 name|step_systime
@@ -1155,11 +1157,6 @@ name|clock_offset
 operator|=
 name|fp_offset
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 break|break;
 block|}
@@ -1292,7 +1289,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 			 * Compute the FLL and PLL frequency adjustments 			 * conditioned on two weighting factors, one 			 * which limits the time constant determined 			 * from the Allan intercept, the other which 			 * limits the gain factor as a function of 			 * update interval. The net effect is to favor 			 * the PLL adjustments at the smaller update 			 * intervals and the FLL adjustments at the 			 * larger ones. 			 */
+comment|/* 			 * Compute the FLL and PLL frequency adjustments 			 * conditioned on intricate weighting factors. 			 * For the FLL, the averaging interval is 			 * clamped not to decrease below the Allan 			 * intercept and the gain is decreased from 			 * unity for mu above CLOCK_MINSEC (1024 s) to 			 * zero below CLOCK_MINSEC (256 s). For the PLL, 			 * the averaging interval is clamped not to 			 * exceed the sustem poll interval. These 			 * measures insure stability of the clock 			 * discipline even when the rules of fair 			 * engagement are broken. 			 */
 name|dtemp
 operator|=
 name|max
@@ -1343,11 +1340,23 @@ operator|+
 name|sys_poll
 argument_list|)
 expr_stmt|;
+name|etemp
+operator|=
+name|min
+argument_list|(
+name|mu
+argument_list|,
+name|ULOGTOD
+argument_list|(
+name|sys_poll
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|plladj
 operator|=
 name|fp_offset
 operator|*
-name|mu
+name|etemp
 operator|/
 operator|(
 name|dtemp
@@ -2289,6 +2298,10 @@ name|trans
 comment|/* new state */
 parameter_list|)
 block|{
+name|correct_any
+operator|=
+name|FALSE
+expr_stmt|;
 name|state
 operator|=
 name|trans

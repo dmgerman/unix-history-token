@@ -513,6 +513,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|default_get_precision
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1272,7 +1284,7 @@ name|sys_bclient
 operator|)
 condition|)
 return|return;
-comment|/* 	 * This is really awful ugly. We figure out whether an extension 	 * field is present and then measure the MAC size. If the number 	 * of words following the packet header is less than or equal to 	 * 5, no extension field is present and these words constitute the 	 * MAC. If the number of words is greater than 5, an extension 	 * field is present and the first word contains the length of 	 * the extension field and the MAC follows that. 	 */
+comment|/* 	 * This is really awful ugly. We figure out whether an extension 	 * field is present and then measure the MAC size. If the number 	 * of words following the packet header is less than or equal to 	 * 5, no extension field is present and these words constitute 	 * the MAC. If the number of words is greater than 5, an 	 * extension field is present and the first word contains the 	 * length of the extension field and the MAC follows that. 	 */
 name|has_mac
 operator|=
 literal|0
@@ -1519,7 +1531,7 @@ operator|!
 name|is_mystic
 condition|)
 block|{
-comment|/* 			 * For multicast mode, generate the session key 			 * and install in the key cache. For client mode, 			 * generate the session key for the unicast 			 * address. For server mode, the session key should 			 * already be in the key cache, since it was 			 * generated when the last request was sent. 			 */
+comment|/* 			 * For multicast mode, generate the session key 			 * and install in the key cache. For client 			 * mode, generate the session key for the 			 * unicast address. For server mode, the session 			 * key should already be in the key cache, since 			 * it was generated when the last request was 			 * sent. 			 */
 if|if
 condition|(
 name|hismode
@@ -1722,7 +1734,7 @@ operator|&
 name|retcode
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The new association matching rules are driven by a table specified 	 * in ntp.h.  We have replaced the *default* behaviour of replying 	 * to bogus packets in server mode in this version. 	 * A packet must now match an association in order to be processed. 	 * In the event that no association exists, then an association is 	 * mobilized if need be.  Two different associations can be mobilized 	 *   a) passive associations 	 *   b) client associations due to broadcasts or manycasts. 	 */
+comment|/* 	 * The new association matching rules are driven by a table 	 * specified in ntp.h. We have replaced the *default* behaviour 	 * of replying to bogus packets in server mode in this version. 	 * A packet must now match an association in order to be 	 * processed. In the event that no association exists, then an 	 * association is mobilized if need be. Two different 	 * associations can be mobilized a) passive associations b) 	 * client associations due to broadcasts or manycasts. 	 */
 name|is_error
 operator|=
 literal|0
@@ -1735,7 +1747,7 @@ block|{
 case|case
 name|AM_FXMIT
 case|:
-comment|/* 	     * If the client is configured purely as a broadcast client and 	     * not as an manycast server, it has no business being a server. 	     * Simply go home. Otherwise, send a MODE_SERVER response and go 	     * home. Note that we don't do a authentication check here, 	     * since we can't set the system clock; but, we do set the 	     * key ID to zero to tell the caller about this. 	     */
+comment|/* 		 * If the client is configured purely as a broadcast 		 * client and not as an manycast server, it has no 		 * business being a server. Simply go home. Otherwise, 		 * send a MODE_SERVER response and go home. Note that we 		 * don't do a authentication check here, since we can't 		 * set the system clock; but, we do set the key ID to 		 * zero to tell the caller about this. 		 */
 if|if
 condition|(
 operator|!
@@ -1768,7 +1780,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     * We can't get here if an association is mobilized, so just 	     * toss the key, if appropriate. 	     */
+comment|/* 		 * We can't get here if an association is mobilized, so 		 * just toss the key, if appropriate. 		 */
 if|if
 condition|(
 operator|!
@@ -1789,7 +1801,7 @@ return|return;
 case|case
 name|AM_MANYCAST
 case|:
-comment|/* 	     * This could be in response to a multicast packet sent by 	     * the "manycast" mode association. Find peer based on the 	     * originate timestamp in the packet. Note that we don't 	     * mobilize a new association, unless the packet is properly 	     * authenticated. The response must be properly authenticated 	     * and it's darn funny of the manycaster isn't around now.  	     */
+comment|/* 		 * This could be in response to a multicast packet sent 		 * by the "manycast" mode association. Find peer based 		 * on the originate timestamp in the packet. Note that 		 * we don't mobilize a new association, unless the 		 * packet is properly authenticated. The response must 		 * be properly authenticated and it's darn funny of the 		 * manycaster isn't around now.  		 */
 if|if
 condition|(
 operator|(
@@ -1834,7 +1846,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	     * Create a new association and copy the peer variables to it. 	     * If something goes wrong, carefully pry the new association 	     * away and return its marbles to the candy store. 	     */
+comment|/* 		 * Create a new association and copy the peer variables 		 * to it. If something goes wrong, carefully pry the new 		 * association away and return its marbles to the candy 		 * store. 		*/
 name|peer
 operator|=
 name|newpeer
@@ -1890,7 +1902,7 @@ break|break;
 case|case
 name|AM_ERR
 case|:
-comment|/* 	     * Something bad happened. Dirty floor will be mopped by the 	     * code at the end of this adventure. 	     */
+comment|/* 		 * Something bad happened. Dirty floor will be mopped by 		 * the code at the end of this adventure. 		 */
 name|is_error
 operator|=
 literal|1
@@ -1899,7 +1911,7 @@ break|break;
 case|case
 name|AM_NEWPASS
 case|:
-comment|/* 	     * Okay, we're going to keep him around.  Allocate him some 	     * memory. But, don't do that unless the packet is properly 	     * authenticated.              */
+comment|/* 		 * Okay, we're going to keep him around.  Allocate him 		 * some memory. But, don't do that unless the packet is 		 * properly authenticated. 		 */
 if|if
 condition|(
 operator|(
@@ -1951,7 +1963,7 @@ break|break;
 case|case
 name|AM_NEWBCL
 case|:
-comment|/*              * Broadcast client being set up now. Do this only if the 	     * packet is properly authenticated.              */
+comment|/* 		 * Broadcast client being set up now. Do this only if 		 * the packet is properly authenticated. 		 */
 if|if
 condition|(
 operator|(
@@ -2038,10 +2050,10 @@ case|:
 case|case
 name|AM_PROCPKT
 case|:
-comment|/*              * It seems like it is okay to process the packet now              */
+comment|/* 		 * It seems like it is okay to process the packet now 		 */
 break|break;
 default|default:
-comment|/* 	     * shouldn't be getting here, but simply return anyway! 	     */
+comment|/* 		 * shouldn't be getting here, but simply return anyway! 		 */
 name|is_error
 operator|=
 literal|1
@@ -2052,7 +2064,7 @@ condition|(
 name|is_error
 condition|)
 block|{
-comment|/* 		 * Error stub. If we get here, something broke. We scuttle 		 * the autokey if necessary and sink the ship. This can 		 * occur only upon mobilization, so we can throw the 		 * structure away without fear of breaking anything. 		 */
+comment|/* 		 * Error stub. If we get here, something broke. We 		 * scuttle the autokey if necessary and sink the ship. 		 * This can occur only upon mobilization, so we can 		 * throw the structure away without fear of breaking 		 * anything. 		 */
 if|if
 condition|(
 operator|!
@@ -2174,7 +2186,7 @@ name|FLAG_SKEY
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Determine if this guy is basically trustable. If not, flush 	 * the bugger. If this is the first packet that is authenticated, 	 * flush the clock filter. This is to foil clogging attacks that 	 * might starve the poor dear. 	 */
+comment|/* 	 * Determine if this guy is basically trustable. If not, flush 	 * the bugger. If this is the first packet that is 	 * authenticated, flush the clock filter. This is to foil 	 * clogging attacks that might starve the poor dear. 	 */
 name|peer
 operator|->
 name|flash
@@ -2246,7 +2258,7 @@ name|flash
 operator||=
 name|TEST5
 expr_stmt|;
-comment|/* authentication failed */
+comment|/* auth failed */
 elseif|else
 if|if
 condition|(
@@ -2260,7 +2272,7 @@ name|flash
 operator||=
 name|TEST9
 expr_stmt|;
-comment|/* peer not authenticated */
+comment|/* peer not auth */
 elseif|else
 if|if
 condition|(
@@ -2303,7 +2315,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * The packet is bogus, so we throw it away before becoming 		 * a denial-of-service hazard. We don't throw the current 		 * association away if it is configured or if it has prior 		 * reachable friends. 		 */
+comment|/* 		 * The packet is bogus, so we throw it away before 		 * becoming a denial-of-service hazard. We don't throw 		 * the current association away if it is configured or 		 * if it has prior reachable friends. 		 */
 if|if
 condition|(
 operator|!
@@ -2369,7 +2381,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|MD5
-comment|/* 	 * The autokey dance. The cha-cha requires that the hash of the 	 * current session key matches the previous key identifier. Heaps 	 * of trouble if the steps falter. 	 */
+comment|/* 	 * The autokey dance. The cha-cha requires that the hash of the 	 * current session key matches the previous key identifier. 	 * Heaps of trouble if the steps falter. 	 */
 if|if
 condition|(
 name|skeyid
@@ -2590,7 +2602,7 @@ block|}
 endif|#
 directive|endif
 comment|/* MD5 */
-comment|/* 	 * Gawdz, it's come to this. Process the dang packet. If something 	 * breaks and the association doesn't deserve to live, toss it. 	 * Be careful in active mode and return a packet anyway. 	 */
+comment|/* 	 * Gawdz, it's come to this. Process the dang packet. If 	 * something breaks and the association doesn't deserve to live, 	 * toss it. Be careful in active mode and return a packet 	 * anyway. 	 */
 name|process_packet
 argument_list|(
 name|peer
@@ -3311,7 +3323,7 @@ operator|.
 name|l_ui
 operator|)
 expr_stmt|;
-comment|/* 	 * If running in a broadcast association, the clock offset is (t1 	 * - t0) corrected by the one-way delay, but we can't measure 	 * that directly; therefore, we start up in client/server mode, 	 * calculate the clock offset, using the engineered refinement 	 * algorithms, while also receiving broadcasts. When a broadcast 	 * is received in client/server mode, we calculate a correction 	 * factor to use after switching back to broadcast mode. We know 	 * NTP_SKEWFACTOR == 16, which accounts for the simplified ei 	 * calculation. 	 * 	 * If FLAG_MCAST2 is set, we are a broadcast/multicast client. 	 * If FLAG_MCAST1 is set, we haven't calculated the propagation 	 * delay. If hmode is MODE_CLIENT, we haven't set the local 	 * clock in client/server mode. Initially, we come up 	 * MODE_CLIENT. When the clock is first updated and FLAG_MCAST2 	 * is set, we switch from MODE_CLIENT to MODE_BCLIENT. 	 */
+comment|/* 	 * If running in a broadcast association, the clock offset is 	 * (t1 - t0) corrected by the one-way delay, but we can't 	 * measure that directly; therefore, we start up in 	 * client/server mode, calculate the clock offset, using the 	 * engineered refinement algorithms, while also receiving 	 * broadcasts. When a broadcast is received in client/server 	 * mode, we calculate a correction factor to use after switching 	 * back to broadcast mode. We know NTP_SKEWFACTOR == 16, which 	 * accounts for the simplified ei calculation. 	 * 	 * If FLAG_MCAST2 is set, we are a broadcast/multicast client. 	 * If FLAG_MCAST1 is set, we haven't calculated the propagation 	 * delay. If hmode is MODE_CLIENT, we haven't set the local 	 * clock in client/server mode. Initially, we come up 	 * MODE_CLIENT. When the clock is first updated and FLAG_MCAST2 	 * is set, we switch from MODE_CLIENT to MODE_BCLIENT. 	 */
 if|if
 condition|(
 name|pmode
@@ -5315,7 +5327,7 @@ operator|&
 name|FLAG_NOSELECT
 condition|)
 continue|continue;
-comment|/* noselect (survey only) */
+comment|/* noselect (survey) */
 if|if
 condition|(
 name|peer
@@ -5375,7 +5387,7 @@ name|seldisptoolarge
 operator|++
 expr_stmt|;
 continue|continue;
-comment|/* too noisy or broken */
+comment|/* noisy or broken */
 block|}
 comment|/* 			 * Don't allow the local-clock or acts drivers 			 * in the kitchen at this point, unless the 			 * prefer peer. Do that later, but only if 			 * nobody else is around. 			 */
 if|if
@@ -6747,7 +6759,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Mitigation rules of the game. There are several types of 	 * peers that make a difference here: (1) prefer local peers 	 * (type REFCLK_LOCALCLOCK with FLAG_PREFER) or prefer modem 	 * peers (type REFCLK_NIST_ATOM etc with FLAG_PREFER), (2) pps peers 	 * (type REFCLK_ATOM_PPS), (3) remaining prefer peers (flag 	 * FLAG_PREFER), (4) the existing system peer, if any, (5) the 	 * head of the survivor list. Note that only one peer can be 	 * declared prefer. The order of preference is in the order 	 * stated. Note that all of these must be at the lowest stratum, 	 * i.e., the stratum of the head of the survivor list. 	 */
+comment|/* 	 * Mitigation rules of the game. There are several types of 	 * peers that make a difference here: (1) prefer local peers 	 * (type REFCLK_LOCALCLOCK with FLAG_PREFER) or prefer modem 	 * peers (type REFCLK_NIST_ATOM etc with FLAG_PREFER), (2) pps 	 * peers (type REFCLK_ATOM_PPS), (3) remaining prefer peers 	 * (flag FLAG_PREFER), (4) the existing system peer, if any, (5) 	 * the head of the survivor list. Note that only one peer can be 	 * declared prefer. The order of preference is in the order 	 * stated. Note that all of these must be at the lowest stratum, 	 * i.e., the stratum of the head of the survivor list. 	 */
 name|osys_peer
 operator|=
 name|sys_peer
@@ -7299,7 +7311,7 @@ operator|&
 name|FLAG_SKEY
 condition|)
 block|{
-comment|/* 			 * In SKEY mode, allocate and initialize a key list if 			 * not already done. Then, use the list in inverse 			 * order, discarding keys once used. Keep the latest 			 * key around until the next one, so clients can use 			 * client/server packets to compute propagation delay. 			 * Note we have to wait until the receive side of the 			 * socket is bound and the server address confirmed. 			 */
+comment|/* 			 * In autokey mode, allocate and initialize a 			 * key list if not already done. Then, use the 			 * list in inverse order, discarding keys once 			 * used. Keep the latest key around until the 			 * next one, so clients can use client/server 			 * packets to compute propagation delay. Note we 			 * have to wait until the receive side of the 			 * socket is bound and the server address 			 * confirmed. 			 */
 if|if
 condition|(
 name|ntohl
@@ -8651,7 +8663,7 @@ literal|3
 name|u_long
 name|freq
 decl_stmt|;
-name|int
+name|size_t
 name|j
 decl_stmt|;
 comment|/* Try to see if we can find the frequency of of the counter 	 * which drives our timekeeping 	 */
@@ -8947,7 +8959,6 @@ name|NLOG
 argument_list|(
 argument|NLOG_SYSINFO
 argument_list|)
-comment|/* conditional if clause for conditional syslog */
 name|msyslog
 argument_list|(
 name|LOG_INFO
@@ -9198,7 +9209,7 @@ operator|)
 operator|-
 literal|10
 condition|)
-comment|/* pre- SCO OpenServer 5.0.6 */
+comment|/* pre-SCO OpenServer 5.0.6 */
 name|systime_10ms_ticks
 operator|=
 literal|1

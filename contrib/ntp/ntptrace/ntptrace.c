@@ -548,6 +548,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|input_handler
+name|P
+argument_list|(
+operator|(
+name|l_fp
+operator|*
+name|x
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef

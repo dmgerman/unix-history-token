@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/parsestreams.c,v 4.6 1998/12/20 23:45:31 kardel RELEASE_19990228_A  *    * parsestreams.c,v 4.6 1998/12/20 23:45:31 kardel RELEASE_19990228_A  *  * STREAMS module for reference clocks  * (SunOS4.x)  *  * Copyright (c) 1989-1998 by Frank Kardel  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp-4/libparse/parsestreams.c,v 4.7 1999/11/28 09:13:53 kardel RELEASE_19991128_A  *    * parsestreams.c,v 4.7 1999/11/28 09:13:53 kardel RELEASE_19991128_A  *  * STREAMS module for reference clocks  * (SunOS4.x)  *  * Copyright (c) 1989-1998 by Frank Kardel  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_define
@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"parsestreams.c,v 4.6 1998/12/20 23:45:31 kardel RELEASE_19990228_A"
+literal|"parsestreams.c,v 4.7 1999/11/28 09:13:53 kardel RELEASE_19991128_A"
 decl_stmt|;
 end_decl_stmt
 
@@ -972,7 +972,7 @@ name|char
 name|revision
 index|[]
 init|=
-literal|"4.6"
+literal|"4.7"
 decl_stmt|;
 name|char
 modifier|*
@@ -2126,7 +2126,7 @@ name|printf
 argument_list|(
 literal|"%s: Copyright (C) 1991-1998, Frank Kardel\n"
 argument_list|,
-literal|"parsestreams.c,v 4.6 1998/12/20 23:45:31 kardel RELEASE_19990228_A"
+literal|"parsestreams.c,v 4.7 1999/11/28 09:13:53 kardel RELEASE_19991128_A"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5378,7 +5378,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parsestreams.c,v  * Revision 4.6  1998/12/20 23:45:31  kardel  * fix types and warnings  *  * Revision 4.5  1998/11/15 21:23:38  kardel  * ntp_memset() replicated in Sun kernel files  *  * Revision 4.4  1998/06/13 12:15:59  kardel  * superfluous variable removed  *  * Revision 4.3  1998/06/12 15:23:08  kardel  * fix prototypes  * adjust for ansi2knr  *  * Revision 4.2  1998/05/24 18:16:22  kardel  * moved copy of shadow status to the beginning  *  * Revision 4.1  1998/05/24 09:38:47  kardel  * streams initiated iopps calls (M_xHANGUP) are now consistent with the  * respective calls from zs_xsisr()  * simulation of CARRIER status to avoid unecessary M_xHANGUP messages  *  * Revision 4.0  1998/04/10 19:45:38  kardel  * Start 4.0 release version numbering  *  * from V3 3.37 log info deleted 1998/04/11 kardel  */
+comment|/*  * History:  *  * parsestreams.c,v  * Revision 4.7  1999/11/28 09:13:53  kardel  * RECON_4_0_98F  *  * Revision 4.6  1998/12/20 23:45:31  kardel  * fix types and warnings  *  * Revision 4.5  1998/11/15 21:23:38  kardel  * ntp_memset() replicated in Sun kernel files  *  * Revision 4.4  1998/06/13 12:15:59  kardel  * superfluous variable removed  *  * Revision 4.3  1998/06/12 15:23:08  kardel  * fix prototypes  * adjust for ansi2knr  *  * Revision 4.2  1998/05/24 18:16:22  kardel  * moved copy of shadow status to the beginning  *  * Revision 4.1  1998/05/24 09:38:47  kardel  * streams initiated iopps calls (M_xHANGUP) are now consistent with the  * respective calls from zs_xsisr()  * simulation of CARRIER status to avoid unecessary M_xHANGUP messages  *  * Revision 4.0  1998/04/10 19:45:38  kardel  * Start 4.0 release version numbering  *  * from V3 3.37 log info deleted 1998/04/11 kardel  */
 end_comment
 
 end_unit

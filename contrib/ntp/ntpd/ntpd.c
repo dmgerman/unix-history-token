@@ -583,9 +583,6 @@ if|#
 directive|if
 name|defined
 name|SYS_WINNT
-operator|||
-name|defined
-name|SYS_CYGWIN32
 end_if
 
 begin_comment
@@ -620,12 +617,10 @@ begin_decl_stmt
 name|HANDLE
 name|WaitHandles
 index|[
-literal|3
+literal|2
 index|]
 init|=
 block|{
-name|NULL
-block|,
 name|NULL
 block|,
 name|NULL
@@ -667,37 +662,12 @@ begin_comment
 comment|/*  * Scheduling priority we run at  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-name|SYS_WINNT
-end_if
-
 begin_define
 define|#
 directive|define
 name|NTPD_PRIO
 value|(-12)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NTPD_PRIO
-value|REALTIME_PRIORITY_CLASS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Debugging flag  */
@@ -1040,6 +1010,124 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SYS_WINNT
+name|DWORD
+name|SingleCPUMask
+init|=
+literal|0
+decl_stmt|;
+name|DWORD
+name|ProcessAffinityMask
+decl_stmt|,
+name|SystemAffinityMask
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|GetProcessAffinityMask
+argument_list|(
+name|GetCurrentProcess
+argument_list|()
+argument_list|,
+operator|&
+name|ProcessAffinityMask
+argument_list|,
+operator|&
+name|SystemAffinityMask
+argument_list|)
+condition|)
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"GetProcessAffinityMask: %m"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|SingleCPUMask
+operator|=
+literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"System AffinityMask = %x"
+argument_list|,
+name|SystemAffinityMask
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+while|while
+condition|(
+name|SingleCPUMask
+operator|&&
+operator|!
+operator|(
+name|SingleCPUMask
+operator|&
+name|SystemAffinityMask
+operator|)
+condition|)
+block|{
+name|SingleCPUMask
+operator|=
+name|SingleCPUMask
+operator|<<
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|SingleCPUMask
+condition|)
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Can't set Processor Affinity Mask"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|SetProcessAffinityMask
+argument_list|(
+name|GetCurrentProcess
+argument_list|()
+argument_list|,
+name|SingleCPUMask
+argument_list|)
+condition|)
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"SetProcessAffinityMask: %m"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+else|else
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"ProcessorAffinity Mask: %x"
+argument_list|,
+name|SingleCPUMask
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1065,9 +1153,8 @@ else|else
 operator|++
 name|done
 expr_stmt|;
-else|#
-directive|else
-comment|/* not SYS_WINNT */
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -1374,9 +1461,6 @@ comment|/* HAVE_BSD_NICE */
 endif|#
 directive|endif
 comment|/* NTPD_PRIO&& NTPD_PRIO != 0 */
-endif|#
-directive|endif
-comment|/* not SYS_WINNT */
 if|if
 condition|(
 operator|!
@@ -2345,9 +2429,6 @@ argument_list|,
 name|LOG_NTP
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SYS_CYGWIN32
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2379,8 +2460,6 @@ comment|/* @@@ was INFO */
 endif|#
 directive|endif
 comment|/* LOG_DAEMON */
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* !SYS_WINNT&& !VMS */
@@ -2753,10 +2832,6 @@ if|#
 directive|if
 name|defined
 name|SIGPIPE
-operator|&&
-operator|!
-name|defined
-name|SYS_CYGWIN32
 operator|(
 name|void
 operator|)
@@ -2996,7 +3071,6 @@ name|defined
 argument_list|(
 name|HAVE_IO_COMPLETION_PORT
 argument_list|)
-block|{
 name|WaitHandles
 index|[
 literal|0
@@ -3019,14 +3093,6 @@ index|[
 literal|1
 index|]
 operator|=
-name|get_recv_buff_event
-argument_list|()
-expr_stmt|;
-name|WaitHandles
-index|[
-literal|2
-index|]
-operator|=
 name|get_timer_handle
 argument_list|()
 expr_stmt|;
@@ -3039,7 +3105,7 @@ block|{
 name|DWORD
 name|Index
 init|=
-name|MsgWaitForMultipleObjectsEx
+name|WaitForMultipleObjectsEx
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3056,9 +3122,9 @@ argument_list|)
 argument_list|,
 name|WaitHandles
 argument_list|,
-name|INFINITE
+name|FALSE
 argument_list|,
-name|QS_ALLEVENTS
+literal|1000
 argument_list|,
 name|MWMO_ALERTABLE
 argument_list|)
@@ -3085,51 +3151,7 @@ name|WAIT_OBJECT_0
 operator|+
 literal|1
 case|:
-block|{
-comment|/* recv buffer */
-if|if
-condition|(
-name|NULL
-operator|!=
-operator|(
-name|rbuf
-operator|=
-name|get_full_recv_buffer
-argument_list|()
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|rbuf
-operator|->
-name|receiver
-operator|!=
-name|NULL
-condition|)
-block|{
-name|rbuf
-operator|->
-name|receiver
-argument_list|(
-name|rbuf
-argument_list|)
-expr_stmt|;
-block|}
-name|freerecvbuf
-argument_list|(
-name|rbuf
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-break|break;
-case|case
-name|WAIT_OBJECT_0
-operator|+
-literal|2
-case|:
-comment|/* 1 second timer */
+comment|/* timer */
 name|timer
 argument_list|()
 expr_stmt|;
@@ -3137,7 +3159,7 @@ break|break;
 case|case
 name|WAIT_OBJECT_0
 operator|+
-literal|3
+literal|2
 case|:
 block|{
 comment|/* Windows message */
@@ -3194,8 +3216,13 @@ name|WAIT_TIMEOUT
 case|:
 break|break;
 block|}
-block|}
-block|}
+comment|/* switch */
+name|rbuflist
+operator|=
+name|getrecvbufs
+argument_list|()
+expr_stmt|;
+comment|/* get received buffers */
 else|#
 directive|else
 comment|/* normal I/O */
@@ -3446,10 +3473,6 @@ name|SYS_VXWORKS
 operator|&&
 operator|!
 name|defined
-name|SYS_CYGWIN32
-operator|&&
-operator|!
-name|defined
 name|SCO5_CLOCK
 comment|/* to unclutter log */
 name|msyslog
@@ -3518,6 +3541,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* HAVE_IO_COMPLETION_PORT */
 comment|/* 		 * Call the data procedure to handle each received 		 * packet. 		 */
 while|while
 condition|(
@@ -3582,9 +3608,6 @@ endif|#
 directive|endif
 comment|/* 		 * Go around again 		 */
 block|}
-endif|#
-directive|endif
-comment|/* HAVE_IO_COMPLETION_PORT */
 name|exit
 argument_list|(
 literal|1
@@ -3596,19 +3619,10 @@ literal|1
 return|;
 comment|/* DEC OSF cc braindamage */
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SIGDIE2
-end_ifdef
-
-begin_comment
 comment|/*  * finish - exit gracefully  */
-end_comment
-
-begin_function
 specifier|static
 name|RETSIGTYPE
 name|finish
@@ -3662,28 +3676,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* SIGDIE2 */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG
-end_ifdef
-
-begin_comment
 comment|/*  * moredebug - increase debugging verbosity  */
-end_comment
-
-begin_function
 specifier|static
 name|RETSIGTYPE
 name|moredebug
@@ -3722,13 +3721,7 @@ operator|=
 name|saved_errno
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * lessdebug - decrease debugging verbosity  */
-end_comment
-
-begin_function
 specifier|static
 name|RETSIGTYPE
 name|lessdebug
@@ -3767,22 +3760,10 @@ operator|=
 name|saved_errno
 expr_stmt|;
 block|}
-end_function
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* not DEBUG */
-end_comment
-
-begin_comment
 comment|/*  * no_debug - We don't do the debug here.  */
-end_comment
-
-begin_function
 specifier|static
 name|RETSIGTYPE
 name|no_debug
@@ -3810,28 +3791,13 @@ operator|=
 name|saved_errno
 expr_stmt|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* not DEBUG */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SYS_WINNT
-end_ifdef
-
-begin_comment
 comment|/* service_ctrl - control handler for NTP service  * signals the service_main routine of start/stop requests  * from the control panel or other applications making  * win32API calls  */
-end_comment
-
-begin_function
 name|void
 name|service_ctrl
 parameter_list|(
@@ -3968,9 +3934,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|BOOL
 name|WINAPI
@@ -4066,13 +4029,7 @@ name|TRUE
 return|;
 empty_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  NT version of exit() - all calls to exit() should be routed to  *  this function.  */
-end_comment
-
-begin_function
 name|void
 name|service_exit
 parameter_list|(

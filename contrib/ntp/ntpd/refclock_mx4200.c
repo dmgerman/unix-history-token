@@ -318,39 +318,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USUAL_EDOP
-value|1.06066
-end_define
-
-begin_comment
-comment|/* used for normalizing EDOP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USUAL_NDOP
-value|1.06066
-end_define
-
-begin_comment
-comment|/* used for normalizing NDOP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USUAL_VDOP
-value|2.00
-end_define
-
-begin_comment
-comment|/* used for normalizing VDOP */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NOT_INITIALIZED
 value|-9999.
 end_define
@@ -510,10 +477,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __attribute__ */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __GNUC__< 2  || (__GNUC__ == 2&& __GNUC_MINOR__< 5) */
+end_comment
 
 begin_else
 else|#
@@ -540,10 +515,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __attribute__ */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
 
 begin_comment
 comment|/* XXX end */
@@ -955,42 +938,6 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_TIOCGPPSEV
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIOS
-name|struct
-name|termios
-name|ttyb
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_TERMIOS */
-ifdef|#
-directive|ifdef
-name|HAVE_SYSV_TTYS
-name|struct
-name|termio
-name|ttyb
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_SYSV_TTYS */
-ifdef|#
-directive|ifdef
-name|HAVE_BSD_TTYS
-name|struct
-name|sgttyb
-name|ttyb
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_BSD_TTYS */
-endif|#
-directive|endif
-comment|/* HAVE_TIOCGPPSEV */
 comment|/* 	 * Open serial port 	 */
 operator|(
 name|void
@@ -1027,70 +974,6 @@ literal|0
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|HAVE_TIOCGPPSEV
-if|if
-condition|(
-name|fdpps
-operator|>
-literal|0
-condition|)
-block|{
-comment|/* 		 * Truly nasty hack in order to get this to work on Solaris 7. 		 * Really, refclock_open() should set the port properly, but 		 * it doesn't work (as of ntp-4.0.98a) - almost 99% dropped 		 * PPS signals with "Interrupted system call".  Even this 		 * still gives a 5% error rate. 		 */
-name|ttyb
-operator|.
-name|c_iflag
-operator|=
-name|IGNCR
-expr_stmt|;
-name|ttyb
-operator|.
-name|c_oflag
-operator|=
-literal|0
-expr_stmt|;
-name|ttyb
-operator|.
-name|c_cflag
-operator|=
-name|CS8
-operator||
-name|CREAD
-operator||
-name|CLOCAL
-expr_stmt|;
-name|ttyb
-operator|.
-name|c_lflag
-operator|=
-name|ICANON
-expr_stmt|;
-if|if
-condition|(
-name|tcsetattr
-argument_list|(
-name|fdpps
-argument_list|,
-name|TCSAFLUSH
-argument_list|,
-operator|&
-name|ttyb
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* HAVE_TIOCGPPSEV */
 comment|/* 	 * Allocate unit structure 	 */
 if|if
 condition|(
@@ -1487,19 +1370,19 @@ name|up
 operator|->
 name|edop
 operator|=
-name|USUAL_EDOP
+literal|1
 expr_stmt|;
 name|up
 operator|->
 name|ndop
 operator|=
-name|USUAL_NDOP
+literal|1
 expr_stmt|;
 name|up
 operator|->
 name|vdop
 operator|=
-name|USUAL_VDOP
+literal|1
 expr_stmt|;
 name|up
 operator|->
@@ -2197,7 +2080,7 @@ name|mx4200_send
 argument_list|(
 name|peer
 argument_list|,
-literal|"%s,%03d,,,,,%s,%c,%s,%c,%.2f,"
+literal|"%s,%03d,,,,,%s,%c,%s,%c,%.2f,%d"
 argument_list|,
 name|pmvxg
 argument_list|,
@@ -2220,10 +2103,12 @@ name|ewc
 argument_list|,
 comment|/* east/west */
 name|alt
+argument_list|,
+comment|/* Altitude */
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Altitude */
-comment|/* Altitude Reference */
+comment|/* Altitude Reference (0=WGS84 ellipsoid, 1=MSL geoid) */
 name|msyslog
 argument_list|(
 name|LOG_DEBUG
@@ -4502,7 +4387,7 @@ expr_stmt|;
 comment|/* 	 * Calculate running weighted averages 	 */
 name|weight
 operator|=
-name|USUAL_EDOP
+literal|1.
 operator|/
 name|up
 operator|->
@@ -4552,7 +4437,7 @@ name|filt_lon
 expr_stmt|;
 name|weight
 operator|=
-name|USUAL_NDOP
+literal|1.
 operator|/
 name|up
 operator|->
@@ -4602,7 +4487,7 @@ name|filt_lat
 expr_stmt|;
 name|weight
 operator|=
-name|USUAL_VDOP
+literal|1.
 operator|/
 name|up
 operator|->
@@ -5252,7 +5137,10 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -5302,6 +5190,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __STDC__ */
+end_comment
+
 begin_block
 block|{
 name|va_list
@@ -5324,7 +5216,10 @@ condition|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
 name|va_start
 argument_list|(
 name|ap
@@ -5341,6 +5236,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* __STDC__ */
 name|pp
 operator|=
 name|peer
@@ -5379,48 +5275,71 @@ begin_comment
 comment|/*  * Send a character string to the receiver.  Checksum is appended here.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
+begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|void
 name|mx4200_send
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|peer
-modifier|*
+operator|*
 name|peer
-parameter_list|,
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
+argument_list|,
+operator|...
+argument_list|)
 else|#
 directive|else
-function|mx4200_send
-parameter_list|(
+decl|static
+name|void
+name|mx4200_send
+argument_list|(
 name|peer
-parameter_list|,
+argument_list|,
 name|fmt
-parameter_list|,
+argument_list|,
 name|va_alist
-parameter_list|)
-name|struct
+argument_list|)
+decl|struct
 name|peer
 modifier|*
 name|peer
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-function|va_dcl
+end_decl_stmt
+
+begin_macro
+name|va_dcl
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* __STDC__ */
+end_comment
+
+begin_block
 block|{
 name|struct
 name|refclockproc
@@ -5457,7 +5376,10 @@ name|ck
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
 name|va_start
 argument_list|(
 name|ap
@@ -5661,7 +5583,7 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_else
 else|#

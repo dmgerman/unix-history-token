@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/parse_conf.c,v 4.4 1999/02/28 15:27:25 kardel RELEASE_19990228_A  *    * parse_conf.c,v 4.4 1999/02/28 15:27:25 kardel RELEASE_19990228_A  *  * Parser configuration module for reference clocks  *  * STREAM define switches between two personalities of the module  * if STREAM is defined this module can be used with dcf77sync.c as  * a STREAMS kernel module. In this case the time stamps will be  * a struct timeval.  * when STREAM is not defined NTP time stamps will be used.  *  * Copyright (C) 1995-1998 by Frank Kardel  * Copyright (C) 1992-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp-4/libparse/parse_conf.c,v 4.5 1999/11/28 09:13:53 kardel RELEASE_19991128_A  *    * parse_conf.c,v 4.5 1999/11/28 09:13:53 kardel RELEASE_19991128_A  *  * Parser configuration module for reference clocks  *  * STREAM define switches between two personalities of the module  * if STREAM is defined this module can be used with dcf77sync.c as  * a STREAMS kernel module. In this case the time stamps will be  * a struct timeval.  * when STREAM is not defined NTP time stamps will be used.  *  * Copyright (C) 1995-1998 by Frank Kardel  * Copyright (C) 1992-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifdef
@@ -435,7 +435,7 @@ comment|/* not (REFCLOCK&& CLOCK_PARSE) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parse_conf.c,v  * Revision 4.4  1999/02/28 15:27:25  kardel  * wharton clock integration  *  * Revision 4.3  1998/08/16 18:52:15  kardel  * (clockformats): Trimble TSIP driver now also  * available for kernel operation  *  * Revision 4.2  1998/06/12 09:13:48  kardel  * conditional compile macros fixed  *  * Revision 4.1  1998/05/24 09:40:49  kardel  * adjustments of log messages  *  *  * from V3 3.24 log info deleted 1998/04/11 kardel  */
+comment|/*  * History:  *  * parse_conf.c,v  * Revision 4.5  1999/11/28 09:13:53  kardel  * RECON_4_0_98F  *  * Revision 4.4  1999/02/28 15:27:25  kardel  * wharton clock integration  *  * Revision 4.3  1998/08/16 18:52:15  kardel  * (clockformats): Trimble TSIP driver now also  * available for kernel operation  *  * Revision 4.2  1998/06/12 09:13:48  kardel  * conditional compile macros fixed  *  * Revision 4.1  1998/05/24 09:40:49  kardel  * adjustments of log messages  *  *  * from V3 3.24 log info deleted 1998/04/11 kardel  */
 end_comment
 
 end_unit

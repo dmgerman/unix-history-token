@@ -90,6 +90,28 @@ begin_comment
 comment|/*  * Definitions  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEVICE
+value|"COM%d:"
+end_define
+
+begin_comment
+comment|/* COM 1 - 3 supported */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -100,6 +122,11 @@ end_define
 begin_comment
 comment|/* name of radio device */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

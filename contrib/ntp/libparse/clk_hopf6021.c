@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/clk_hopf6021.c,v 4.6 1998/11/15 20:27:57 kardel RELEASE_19990228_A  *  * clk_hopf6021.c,v 4.6 1998/11/15 20:27:57 kardel RELEASE_19990228_A  *  * Radiocode Clocks HOPF Funkuhr 6021 mit serieller Schnittstelle  * base code version from 24th Nov 1995 - history at end  *  * Created by F.Schnekenbuehl<frank@comsys.dofn.de> from clk_rcc8000.c  * Nortel DASA Network Systems GmbH, Department: ND250  * A Joint venture of Daimler-Benz Aerospace and Nortel  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp-4/libparse/clk_hopf6021.c,v 4.7 1999/11/28 09:13:49 kardel RELEASE_19991128_A  *  * clk_hopf6021.c,v 4.7 1999/11/28 09:13:49 kardel RELEASE_19991128_A  *  * Radiocode Clocks HOPF Funkuhr 6021 mit serieller Schnittstelle  * base code version from 24th Nov 1995 - history at end  *  * Created by F.Schnekenbuehl<frank@comsys.dofn.de> from clk_rcc8000.c  * Nortel DASA Network Systems GmbH, Department: ND250  * A Joint venture of Daimler-Benz Aerospace and Nortel  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifdef
@@ -878,7 +878,7 @@ comment|/* not (REFCLOCK&& CLOCK_PARSE&& CLOCK_HOPF6021) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_hopf6021.c,v  * Revision 4.6  1998/11/15 20:27:57  kardel  * Release 4.0.73e13 reconcilation  *  * Revision 4.5  1998/06/14 21:09:35  kardel  * Sun acc cleanup  *  * Revision 4.4  1998/06/13 12:02:38  kardel  * fix SYSV clock name clash  *  * Revision 4.3  1998/06/12 15:22:27  kardel  * fix prototypes  *  * Revision 4.2  1998/06/12 09:13:25  kardel  * conditional compile macros fixed  * printf prototype  *  * Revision 4.1  1998/05/24 09:39:52  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:29  kardel  * Start 4.0 release version numbering  *  * from V3 3.6 log info deleted 1998/04/11 kardel  */
+comment|/*  * History:  *  * clk_hopf6021.c,v  * Revision 4.7  1999/11/28 09:13:49  kardel  * RECON_4_0_98F  *  * Revision 4.6  1998/11/15 20:27:57  kardel  * Release 4.0.73e13 reconcilation  *  * Revision 4.5  1998/06/14 21:09:35  kardel  * Sun acc cleanup  *  * Revision 4.4  1998/06/13 12:02:38  kardel  * fix SYSV clock name clash  *  * Revision 4.3  1998/06/12 15:22:27  kardel  * fix prototypes  *  * Revision 4.2  1998/06/12 09:13:25  kardel  * conditional compile macros fixed  * printf prototype  *  * Revision 4.1  1998/05/24 09:39:52  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:29  kardel  * Start 4.0 release version numbering  *  * from V3 3.6 log info deleted 1998/04/11 kardel  */
 end_comment
 
 end_unit

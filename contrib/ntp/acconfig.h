@@ -90,6 +90,16 @@ name|AUDIO_CHU
 end_undef
 
 begin_comment
+comment|/* PARSE kernel PLL PPS support */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PPS_SYNC
+end_undef
+
+begin_comment
 comment|/* ACTS modem service */
 end_comment
 
@@ -160,106 +170,6 @@ name|CLOCK_BANC
 end_undef
 
 begin_comment
-comment|/* ELV/DCF7000 clock */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_DCF7000
-end_undef
-
-begin_comment
-comment|/* HOPF 6021 clock */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_HOPF6021
-end_undef
-
-begin_comment
-comment|/* Meinberg clocks */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_MEINBERG
-end_undef
-
-begin_comment
-comment|/* DCF77 raw time code */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_RAWDCF
-end_undef
-
-begin_comment
-comment|/* RCC 8000 clock */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_RCC8000
-end_undef
-
-begin_comment
-comment|/* Schmid DCF77 clock */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_SCHMID
-end_undef
-
-begin_comment
-comment|/* Trimble GPS receiver/TAIP protocol */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_TRIMTAIP
-end_undef
-
-begin_comment
-comment|/* Trimble GPS receiver/TSIP protocol */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_TRIMTSIP
-end_undef
-
-begin_comment
-comment|/* WHARTON 400A Series protocol */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_WHARTON_400A
-end_undef
-
-begin_comment
-comment|/* VARITEXT protocol */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_VARITEXT
-end_undef
-
-begin_comment
 comment|/* Diems Computime Radio Clock */
 end_comment
 
@@ -270,6 +180,16 @@ name|CLOCK_COMPUTIME
 end_undef
 
 begin_comment
+comment|/* Chronolog K-series WWVB receiver */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_CHRONOLOG
+end_undef
+
+begin_comment
 comment|/* Datum Programmable Time System */
 end_comment
 
@@ -277,6 +197,36 @@ begin_undef
 undef|#
 directive|undef
 name|CLOCK_DATUM
+end_undef
+
+begin_comment
+comment|/* ELV/DCF7000 clock */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_DCF7000
+end_undef
+
+begin_comment
+comment|/* Dumb generic hh:mm:ss local clock */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_DUMBCLOCK
+end_undef
+
+begin_comment
+comment|/* Forum Graphic GPS datating station driver */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_FG
 end_undef
 
 begin_comment
@@ -297,6 +247,16 @@ begin_undef
 undef|#
 directive|undef
 name|CLOCK_HEATH
+end_undef
+
+begin_comment
+comment|/* HOPF 6021 clock */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_HOPF6021
 end_undef
 
 begin_comment
@@ -350,6 +310,16 @@ name|CLOCK_LOCAL
 end_undef
 
 begin_comment
+comment|/* Meinberg clocks */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_MEINBERG
+end_undef
+
+begin_comment
 comment|/* EES M201 MSF receiver */
 end_comment
 
@@ -380,6 +350,16 @@ name|CLOCK_NMEA
 end_undef
 
 begin_comment
+comment|/* Motorola UT Oncore GPS */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_ONCORE
+end_undef
+
+begin_comment
 comment|/* Palisade clock */
 end_comment
 
@@ -400,13 +380,13 @@ name|CLOCK_PARSE
 end_undef
 
 begin_comment
-comment|/* PARSE kernel PLL PPS support */
+comment|/* Conrad parallel port radio clock */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|PPS_SYNC
+name|CLOCK_PCF
 end_undef
 
 begin_comment
@@ -440,6 +420,36 @@ name|CLOCK_PTBACTS
 end_undef
 
 begin_comment
+comment|/* DCF77 raw time code */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_RAWDCF
+end_undef
+
+begin_comment
+comment|/* RCC 8000 clock */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_RCC8000
+end_undef
+
+begin_comment
+comment|/* Schmid DCF77 clock */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_SCHMID
+end_undef
+
+begin_comment
 comment|/* clock thru shared memory */
 end_comment
 
@@ -450,13 +460,13 @@ name|CLOCK_SHM
 end_undef
 
 begin_comment
-comment|/* Motorola UT Oncore GPS */
+comment|/* Spectracom 8170/Netclock/2 WWVB receiver */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|CLOCK_ONCORE
+name|CLOCK_SPECTRACOM
 end_undef
 
 begin_comment
@@ -480,6 +490,26 @@ name|CLOCK_TRAK
 end_undef
 
 begin_comment
+comment|/* Trimble GPS receiver/TAIP protocol */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_TRIMTAIP
+end_undef
+
+begin_comment
+comment|/* Trimble GPS receiver/TSIP protocol */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_TRIMTSIP
+end_undef
+
+begin_comment
 comment|/* Kinemetrics/TrueTime receivers */
 end_comment
 
@@ -487,26 +517,6 @@ begin_undef
 undef|#
 directive|undef
 name|CLOCK_TRUETIME
-end_undef
-
-begin_comment
-comment|/* USNO modem service */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_USNO
-end_undef
-
-begin_comment
-comment|/* Spectracom 8170/Netclock/2 WWVB receiver */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CLOCK_WWVB
 end_undef
 
 begin_comment
@@ -520,23 +530,43 @@ name|CLOCK_ULINK
 end_undef
 
 begin_comment
-comment|/* Chronolog K-series WWVB receiver */
+comment|/* USNO modem service */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|CLOCK_CHRONOLOG
+name|CLOCK_USNO
 end_undef
 
 begin_comment
-comment|/* Dumb generic hh:mm:ss local clock */
+comment|/* WHARTON 400A Series protocol */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|CLOCK_DUMBCLOCK
+name|CLOCK_WHARTON_400A
+end_undef
+
+begin_comment
+comment|/* WWV audio driver */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_WWV
+end_undef
+
+begin_comment
+comment|/* VARITEXT protocol */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_VARITEXT
 end_undef
 
 begin_comment
@@ -1070,6 +1100,22 @@ name|NLIST_EXTRA_INDIRECTION
 end_undef
 
 begin_comment
+comment|/* Other needed NLIST stuff */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NLIST_STRUCT
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|NLIST_NAME_UNION
+end_undef
+
+begin_comment
 comment|/* Should we recommend a minimum value for tickadj? */
 end_comment
 
@@ -1237,6 +1283,16 @@ begin_undef
 undef|#
 directive|undef
 name|TERMIOS_NEEDS__SVID3
+end_undef
+
+begin_comment
+comment|/* Do we have support for SHMEM_STATUS? */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ONCORE_SHMEM_STATUS
 end_undef
 
 begin_comment
@@ -1461,6 +1517,12 @@ begin_undef
 undef|#
 directive|undef
 name|DECL_STIME_0
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|DECL_STIME_1
 end_undef
 
 begin_comment

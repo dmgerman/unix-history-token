@@ -212,6 +212,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|day_of_year
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|dt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * palisade_start - open the devices and initialize data for processing  */
 end_comment

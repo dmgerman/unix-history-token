@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/clk_rawdcf.c,v 4.6 1998/06/14 21:09:37 kardel RELEASE_19990228_A  *    * clk_rawdcf.c,v 4.6 1998/06/14 21:09:37 kardel RELEASE_19990228_A  *  * Raw DCF77 pulse clock support  *  * Copyright (C) 1992-1998 by Frank Kardel  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp-4/libparse/clk_rawdcf.c,v 4.9 1999/12/06 13:42:23 kardel Exp  *    * clk_rawdcf.c,v 4.9 1999/12/06 13:42:23 kardel Exp  *  * Raw DCF77 pulse clock support  *  * Copyright (C) 1992-1998 by Frank Kardel  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifdef
@@ -179,6 +179,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|last_tcode
+block|{
+name|time_t
+name|tcode
+decl_stmt|;
+comment|/* last converted time code */
+block|}
+name|last_tcode_t
+typedef|;
+end_typedef
+
 begin_decl_stmt
 name|clockformat_t
 name|clock_rawdcf
@@ -202,8 +216,10 @@ comment|/* direct decoding / time synthesis */
 literal|61
 block|,
 comment|/* bit buffer */
-literal|0
-comment|/* no private data (currently in input buffer) */
+expr|sizeof
+operator|(
+name|last_tcode_t
+operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1380,6 +1396,16 @@ modifier|*
 name|local
 parameter_list|)
 block|{
+name|last_tcode_t
+modifier|*
+name|t
+init|=
+operator|(
+name|last_tcode_t
+operator|*
+operator|)
+name|local
+decl_stmt|;
 specifier|register
 name|unsigned
 name|char
@@ -1423,8 +1449,7 @@ name|dcfparameter
 operator|.
 name|zerobits
 decl_stmt|;
-specifier|register
-name|unsigned
+name|u_long
 name|rtc
 init|=
 name|CVT_NONE
@@ -1965,13 +1990,15 @@ name|c
 operator|++
 expr_stmt|;
 block|}
-return|return
-operator|(
+if|if
+condition|(
 name|rtc
 operator|==
 name|CVT_NONE
-operator|)
-condition|?
+condition|)
+block|{
+name|rtc
+operator|=
 name|convert_rawdcf
 argument_list|(
 name|buffer
@@ -1983,7 +2010,78 @@ name|dcfparameter
 argument_list|,
 name|clock_time
 argument_list|)
-else|:
+expr_stmt|;
+if|if
+condition|(
+name|rtc
+operator|==
+name|CVT_OK
+condition|)
+block|{
+name|time_t
+name|newtime
+decl_stmt|;
+name|newtime
+operator|=
+name|parse_to_unixtime
+argument_list|(
+name|clock_time
+argument_list|,
+operator|&
+name|rtc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rtc
+operator|==
+name|CVT_OK
+operator|)
+operator|&&
+name|t
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|newtime
+operator|-
+name|t
+operator|->
+name|tcode
+operator|)
+operator|==
+literal|60
+condition|)
+comment|/* guard against multi bit errors */
+block|{
+name|clock_time
+operator|->
+name|utctime
+operator|=
+name|newtime
+expr_stmt|;
+block|}
+else|else
+block|{
+name|rtc
+operator|=
+name|CVT_FAIL
+operator||
+name|CVT_BADTIME
+expr_stmt|;
+block|}
+name|t
+operator|->
+name|tcode
+operator|=
+name|newtime
+expr_stmt|;
+block|}
+block|}
+block|}
+return|return
 name|rtc
 return|;
 block|}
@@ -2327,7 +2425,7 @@ comment|/* not (REFCLOCK&& CLOCK_PARSE&& CLOCK_RAWDCF) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_rawdcf.c,v  * Revision 4.6  1998/06/14 21:09:37  kardel  * Sun acc cleanup  *  * Revision 4.5  1998/06/13 12:04:16  kardel  * fix SYSV clock name clash  *  * Revision 4.4  1998/06/12 15:22:28  kardel  * fix prototypes  *  * Revision 4.3  1998/06/06 18:33:36  kardel  * simplified condidional compile expression  *  * Revision 4.2  1998/05/24 11:04:18  kardel  * triggering PPS on negative edge for simpler wiring (Rx->DCD)  *  * Revision 4.1  1998/05/24 09:39:53  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:30  kardel  * Start 4.0 release version numbering  *  * from V3 3.24 log info deleted 1998/04/11 kardel  *  */
+comment|/*  * History:  *  * clk_rawdcf.c,v  * Revision 4.9  1999/12/06 13:42:23  kardel  * transfer correctly converted time codes always into tcode  *  * Revision 4.8  1999/11/28 09:13:50  kardel  * RECON_4_0_98F  *  * Revision 4.7  1999/04/01 20:07:20  kardel  * added checking for minutie increment of timestamps in clk_rawdcf.c  *  * Revision 4.6  1998/06/14 21:09:37  kardel  * Sun acc cleanup  *  * Revision 4.5  1998/06/13 12:04:16  kardel  * fix SYSV clock name clash  *  * Revision 4.4  1998/06/12 15:22:28  kardel  * fix prototypes  *  * Revision 4.3  1998/06/06 18:33:36  kardel  * simplified condidional compile expression  *  * Revision 4.2  1998/05/24 11:04:18  kardel  * triggering PPS on negative edge for simpler wiring (Rx->DCD)  *  * Revision 4.1  1998/05/24 09:39:53  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:30  kardel  * Start 4.0 release version numbering  *  * from V3 3.24 log info deleted 1998/04/11 kardel  *  */
 end_comment
 
 end_unit

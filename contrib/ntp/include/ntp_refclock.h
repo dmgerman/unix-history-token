@@ -722,7 +722,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* tty_chu */
+comment|/* depredated */
 end_comment
 
 begin_define
@@ -733,7 +733,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* ppsclock */
+comment|/* ppsclock, ppsapi */
 end_comment
 
 begin_define

@@ -349,7 +349,7 @@ condition|(
 name|tx
 operator|.
 name|access_result
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
