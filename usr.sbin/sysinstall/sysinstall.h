@@ -850,6 +850,13 @@ name|ONE_MEG
 value|2048
 end_define
 
+begin_define
+define|#
+directive|define
+name|ONE_GIG
+value|(ONE_MEG * 1024)
+end_define
+
 begin_comment
 comment|/* Which selection attributes to use */
 end_comment
@@ -1670,12 +1677,22 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
+name|PkgInteractive
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Is the package going to spew at us? 		*/
+end_comment
+
+begin_decl_stmt
+name|Boolean
 name|USAResident
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Are we cryptographically challenged? */
+comment|/* Are we cryptographically challenged?		*/
 end_comment
 
 begin_decl_stmt

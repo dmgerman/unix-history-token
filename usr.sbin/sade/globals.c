@@ -75,6 +75,16 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
+name|PkgInteractive
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Is the package going to spew at us? */
+end_comment
+
+begin_decl_stmt
+name|Boolean
 name|USAResident
 decl_stmt|;
 end_decl_stmt
@@ -152,6 +162,10 @@ operator|-
 literal|1
 expr_stmt|;
 name|ColorDisplay
+operator|=
+name|FALSE
+expr_stmt|;
+name|PkgInteractive
 operator|=
 name|FALSE
 expr_stmt|;

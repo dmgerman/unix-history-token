@@ -4310,8 +4310,9 @@ name|msgGetInput
 argument_list|(
 name|osize
 argument_list|,
-literal|"Please specify the partition size in blocks or append a trailing M for\n"
-literal|"megabytes or C for cylinders.  %d blocks (%dMB) are free."
+literal|"Please specify the partition size in blocks or append a trailing G for\n"
+literal|"gigabytes, M for megabytes, or C for cylinders.\n"
+literal|"%d blocks (%dMB) are free."
 argument_list|,
 name|sz
 argument_list|,
@@ -4366,6 +4367,21 @@ condition|)
 name|size
 operator|*=
 name|ONE_MEG
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|toupper
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+operator|==
+literal|'G'
+condition|)
+name|size
+operator|*=
+name|ONE_GIG
 expr_stmt|;
 elseif|else
 if|if

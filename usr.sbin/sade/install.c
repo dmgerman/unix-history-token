@@ -2363,6 +2363,99 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|USAResident
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"I see that you are \"USA_RESIDENT\" according to your earlier\n"
+literal|"response to the CRYPTO distribution dialog.  Do you want to try and\n"
+literal|"load the rsaref package from the current media?  Some restrictions on\n"
+literal|"usage may apply, so be sure to read the package installation output!"
+argument_list|)
+condition|)
+block|{
+name|PkgInteractive
+operator|=
+name|TRUE
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|package_add
+argument_list|(
+literal|"rsaref"
+argument_list|)
+argument_list|)
+operator|!=
+name|DITEM_SUCCESS
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to find an rsaref package on the current intallation media.\n"
+literal|"You may wish to switch media types and try again, perhaps\n"
+literal|"from an FTP server which carries this package."
+argument_list|)
+expr_stmt|;
+block|}
+name|PkgInteractive
+operator|=
+name|FALSE
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"I see that you are not \"USA_RESIDENT\" according to your earlier\n"
+literal|"response to the CRYPTO distribution dialog.  Do you want to try and\n"
+literal|"load the rsaintl package from the current media?"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|package_add
+argument_list|(
+literal|"rsaintl"
+argument_list|)
+argument_list|)
+operator|!=
+name|DITEM_SUCCESS
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to find an rsaintl package on the current intallation media.\n"
+literal|"You may wish to switch media types and try again, perhaps\n"
+literal|"from an FTP server which carries this package."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
