@@ -3784,7 +3784,9 @@ argument|; 		bp->bio_resid = bp->bio_bcount - du->dk_skip * DEV_BSIZE; 		wdutab[
 literal|0
 argument|; 		du->dk_skip =
 literal|0
-argument|; 		devstat_end_transaction_bio(&du->dk_stats, bp); 		biodone(bp); 	}
+argument|; 		biofinish(bp,&du->dk_stats,
+literal|0
+argument|); 	}
 comment|/* controller idle */
 argument|wdtab[unit].b_active =
 literal|0
