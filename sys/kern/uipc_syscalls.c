@@ -397,20 +397,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|vm_offset_t
-name|sf_base
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|sf_buf
-modifier|*
-name|sf_bufs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|u_int
 name|sf_buf_alloc_want
 decl_stmt|;
@@ -7659,6 +7646,14 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|struct
+name|sf_buf
+modifier|*
+name|sf_bufs
+decl_stmt|;
+name|vm_offset_t
+name|sf_base
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
