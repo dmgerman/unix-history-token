@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.6	%G%	*/
+comment|/*	fs.h	1.7	%G%	*/
 end_comment
 
 begin_comment
@@ -103,7 +103,7 @@ value|(cgdmin(0, fs))
 end_define
 
 begin_comment
-comment|/*  * Each file system has a number of inodes statically allocated.  * We allocate one inode slot per NBPI data bytes, expecting this  * to be far more than we will ever need.  Actually, the directory  * structure has inode numbers kept in 16 bits, so no more than  * 65K inodes are possible, and this usually cuts off well above  * the number suggested by NBPI.  *   * THE DIRECTORY STRUCTURE SHOULD BE CHANGED SOON TO ALLOW  * LARGER INODE NUMBERS (SEE DIR.H).  */
+comment|/*  * Each file system has a number of inodes statically allocated.  * We allocate one inode slot per NBPI data bytes, expecting this  * to be far more than we will ever need.  */
 end_comment
 
 begin_define
