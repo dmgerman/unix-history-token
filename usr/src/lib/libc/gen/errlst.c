@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)errlst.c	5.6 (Berkeley) %G%"
+literal|"@(#)errlst.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,7 +183,7 @@ comment|/* 43 - EPROTONOSUPPORT */
 literal|"Socket type not supported"
 block|,
 comment|/* 44 - ESOCKTNOSUPPORT */
-literal|"Operation not supported on socket"
+literal|"Operation not supported"
 block|,
 comment|/* 45 - EOPNOTSUPP */
 literal|"Protocol family not supported"
