@@ -29,6 +29,12 @@ begin_comment
 comment|/*  * Initialization code for the display package,  * as well as the signal handling routines.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USE_OLD_TTY
+end_define
+
 begin_include
 include|#
 directive|include
