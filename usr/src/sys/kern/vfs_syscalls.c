@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	4.21	82/03/18	*/
+comment|/*	vfs_syscalls.c	4.22	82/04/01	*/
 end_comment
 
 begin_include
@@ -1891,7 +1891,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Stat system call.  This version does not follow links.  */
+comment|/*  * Stat system call; this follows links.  */
 end_comment
 
 begin_macro
@@ -1943,7 +1943,7 @@ name|uchar
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1971,7 +1971,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Lstat system call.  This version does follow links.  */
+comment|/*  * Lstat system call; like stat but doesn't follow links.  */
 end_comment
 
 begin_macro
@@ -2023,7 +2023,7 @@ name|uchar
 argument_list|,
 literal|0
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
