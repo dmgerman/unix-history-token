@@ -3434,7 +3434,7 @@ name|generr
 argument_list|(
 name|h
 argument_list|,
-literal|"Too many RADIUS servers specified"
+literal|"Too many TACACS+ servers specified"
 argument_list|)
 expr_stmt|;
 return|return
