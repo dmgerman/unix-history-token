@@ -5,13 +5,122 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.4 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/*  * make file system for cylinder-group style file systems  *  * usage: mkfs special size [ nsect ntrak bsize fsize cpg ]  */
 end_comment
+
+begin_comment
+comment|/*  * The following constants set the defaults used for the number  * of sectors (fs_nsect), and number of tracks (fs_ntrak).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DFLNSECT
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFLNTRAK
+value|16
+end_define
+
+begin_comment
+comment|/*  * The following two constants set the default block and fragment sizes.  * Both constants must be a power of 2 and meet the following constraints:  *	MINBSIZE<= DESBLKSIZE<= MAXBSIZE  *	DEV_BSIZE<= DESFRAGSIZE<= DESBLKSIZE  *	DESBLKSIZE / DESFRAGSIZE<= 8  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DESBLKSIZE
+value|8192
+end_define
+
+begin_define
+define|#
+directive|define
+name|DESFRAGSIZE
+value|1024
+end_define
+
+begin_comment
+comment|/*  * Cylinder groups may have up to MAXCPG cylinders. The actual  * number used depends upon how much information can be stored  * on a single cylinder. The default is to used 16 cylinders  * per group.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DESCPG
+value|16
+end_define
+
+begin_comment
+comment|/* desired fs_cpg */
+end_comment
+
+begin_comment
+comment|/*  * MINFREE gives the minimum acceptable percentage of file system  * blocks which may be free. If the freelist drops below this level  * only the superuser may continue to allocate blocks. This may  * be set to 0 if no reserve of free blocks is deemed necessary,  * however throughput drops by fifty percent if the file system  * is run at between 90% and 100% full; thus the default value of  * fs_minfree is 10%.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINFREE
+value|10
+end_define
+
+begin_comment
+comment|/*  * ROTDELAY gives the minimum number of milliseconds to initiate  * another disk transfer on the same cylinder. It is used in  * determining the rotationally optimal layout for disk blocks  * within a file; the default of fs_rotdelay is 2ms.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ROTDELAY
+value|2
+end_define
+
+begin_comment
+comment|/*  * MAXCONTIG sets the default for the maximum number of blocks  * that may be allocated sequentially. Since UNIX drivers are  * not capable of scheduling multi-block transfers, this defaults  * to 1 (ie no contiguous blocks are allocated).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXCONTIG
+value|1
+end_define
+
+begin_comment
+comment|/*  * MAXBLKPG determines the maximum number of data blocks which are  * placed in a single cylinder group. This is currently a function  * of the block and fragment size of the file system.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXBLKPG
+parameter_list|(
+name|fs
+parameter_list|)
+value|((fs)->fs_fsize / sizeof(daddr_t))
+end_define
+
+begin_comment
+comment|/*  * Each file system has a number of inodes statically allocated.  * We allocate one inode slot per NBPI bytes, expecting this  * to be far more than we will ever need.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBPI
+value|2048
+end_define
 
 begin_ifndef
 ifndef|#
@@ -592,7 +701,7 @@ name|sblock
 operator|.
 name|fs_bsize
 operator|=
-name|MAXBSIZE
+name|DESBLKSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -617,16 +726,7 @@ name|sblock
 operator|.
 name|fs_fsize
 operator|=
-name|MAX
-argument_list|(
-name|sblock
-operator|.
-name|fs_bsize
-operator|/
-name|DESFRAG
-argument_list|,
-name|DEV_BSIZE
-argument_list|)
+name|DESFRAGSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -2355,6 +2455,22 @@ operator|.
 name|fs_minfree
 operator|=
 name|MINFREE
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_maxcontig
+operator|=
+name|MAXCONTIG
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_maxbpg
+operator|=
+name|MAXBLKPG
+argument_list|(
+operator|&
+name|sblock
+argument_list|)
 expr_stmt|;
 name|sblock
 operator|.
