@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Symmetric Computer Systems.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *		$Id$  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Symmetric Computer Systems.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,19 +35,32 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)disklabel.c	8.2 (Berkeley) 1/7/94"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
+unit|static char sccsid[] = "@(#)disklabel.c	8.2 (Berkeley) 1/7/94";
 comment|/* from static char sccsid[] = "@(#)disklabel.c	1.2 (Symmetric) 11/28/85"; */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -66,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/errno.h>
 end_include
 
@@ -79,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -589,13 +591,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|namebuf
 index|[
@@ -806,15 +801,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 specifier|register
 name|struct
 name|disklabel
@@ -1234,6 +1220,10 @@ condition|(
 name|op
 condition|)
 block|{
+case|case
+name|UNSPEC
+case|:
+break|break;
 case|case
 name|EDIT
 case|:
@@ -1715,22 +1705,15 @@ name|dp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: unknown disk type\n"
+literal|"%s: unknown disk type"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 name|lp
 operator|=
@@ -2040,7 +2023,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl DIOCWLABEL"
 argument_list|)
@@ -2063,7 +2046,7 @@ operator|->
 name|d_bbsize
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"write"
 argument_list|)
@@ -2096,7 +2079,7 @@ operator|!=
 name|bootsize
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"write"
 argument_list|)
@@ -2251,33 +2234,15 @@ name|lp
 operator|->
 name|d_secsize
 condition|)
-block|{
-name|int
-name|oerrno
-init|=
-name|errno
-decl_stmt|;
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"alternate label %d "
+literal|"alternate label %d write"
 argument_list|,
 name|i
 operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-name|oerrno
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"write"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 endif|#
@@ -2301,89 +2266,59 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|int
-name|saverrno
-init|=
-name|errno
-decl_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"disklabel: %s: "
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
-name|saverrno
+name|errno
 condition|)
 block|{
 case|case
 name|ESRCH
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s: no disk label on disk;\n"
+literal|"use \"disklabel -r\" to install initial label"
 argument_list|,
-literal|"No disk label on disk;\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"use \"disklabel -r\" to install initial label\n"
+name|s
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|EINVAL
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s: label magic number or checksum is wrong!\n"
+literal|"(disklabel or kernel is out of date?)"
 argument_list|,
-literal|"Label magic number or checksum is wrong!\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"(disklabel or kernel is out of date?)\n"
+name|s
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|EBUSY
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s: open partition would move or shrink"
 argument_list|,
-literal|"Open partition would move or shrink\n"
+name|s
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|EXDEV
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s: labeled partition or 'a' partition must start at beginning of disk"
 argument_list|,
-literal|"Labeled partition or 'a' partition must start at beginning of disk\n"
+name|s
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|errno
-operator|=
-name|saverrno
-expr_stmt|;
-name|perror
+name|warn
 argument_list|(
 operator|(
 name|char
@@ -2549,17 +2484,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bad pack magic number (label is damaged, or pack is unlabeled)\n"
-argument_list|)
-expr_stmt|;
-comment|/* lp = (struct disklabel *)(bootarea + LABELOFFSET); */
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad pack magic number (label is damaged, or pack is unlabeled)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3486,20 +3415,13 @@ condition|(
 operator|*
 name|p
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bootstrap doesn't leave room for disk label\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"bootstrap doesn't leave room for disk label"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|lp
@@ -4254,11 +4176,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't create\n"
+literal|"can't create %s"
 argument_list|,
 name|tmpfil
 argument_list|)
@@ -4310,11 +4230,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't reopen for reading\n"
+literal|"can't reopen %s for reading"
 argument_list|,
 name|tmpfil
 argument_list|)
@@ -4522,11 +4440,9 @@ operator|==
 name|EPROCLIM
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"You have too many processes\n"
+literal|"you have too many processes"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4542,7 +4458,7 @@ operator|!=
 name|EAGAIN
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fork"
 argument_list|)
@@ -4620,14 +4536,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-name|ed
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|ed
 argument_list|)
 expr_stmt|;
 block|}
@@ -7213,20 +7128,13 @@ if|if
 condition|(
 name|errors
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot install boot program\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|4
+argument_list|,
+literal|"cannot install boot program"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
