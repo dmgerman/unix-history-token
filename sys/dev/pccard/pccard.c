@@ -4025,7 +4025,7 @@ expr_stmt|;
 if|if
 condition|(
 name|err
-operator|==
+operator|<=
 literal|0
 condition|)
 name|err
