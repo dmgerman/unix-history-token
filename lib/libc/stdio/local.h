@@ -25,6 +25,24 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|fpos_t
+name|_sseek
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|fpos_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|_ftello
 name|__P

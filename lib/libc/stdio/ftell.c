@@ -294,16 +294,9 @@ else|else
 block|{
 name|pos
 operator|=
-call|(
-modifier|*
-name|fp
-operator|->
-name|_seek
-call|)
+name|_sseek
 argument_list|(
 name|fp
-operator|->
-name|_cookie
 argument_list|,
 operator|(
 name|fpos_t

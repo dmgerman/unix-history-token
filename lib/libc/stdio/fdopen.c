@@ -231,7 +231,7 @@ name|_flags
 operator|=
 name|flags
 expr_stmt|;
-comment|/* 	 * If opened for appending, but underlying descriptor does not have 	 * O_APPEND bit set, assert __SAPP so that __swrite() will lseek to 	 * end before each write. 	 */
+comment|/* 	 * If opened for appending, but underlying descriptor does not have 	 * O_APPEND bit set, assert __SAPP so that __swrite() caller 	 * will _sseek() to the end before write. 	 */
 if|if
 condition|(
 operator|(

@@ -249,12 +249,8 @@ condition|)
 operator|(
 name|void
 operator|)
-name|__sseek
+name|_sseek
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|fp
 argument_list|,
 operator|(
