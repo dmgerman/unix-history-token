@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.h	4.1	82/05/21	*/
+comment|/*	if_il.h	4.2	82/06/23	*/
 end_comment
 
 begin_comment
@@ -112,12 +112,12 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * Structure of Statistics Record  */
+comment|/*  * Structure of statistics record  */
 end_comment
 
 begin_struct
 struct|struct
-name|il_stat
+name|il_stats
 block|{
 name|u_short
 name|ils_fill1
