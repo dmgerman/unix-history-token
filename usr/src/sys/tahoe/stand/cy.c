@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	7.2	86/01/21	*/
+comment|/*	cy.c	7.3	86/12/19	*/
 end_comment
 
 begin_comment
-comment|/*	cy.c	Tahoe version 	Mar 1983.	*/
-end_comment
-
-begin_comment
-comment|/*  * Cypher tape driver. Stand alone version.  *  */
+comment|/*  * Cypher tape driver. Stand alone version.  */
 end_comment
 
 begin_include
@@ -85,12 +81,11 @@ end_define
 begin_struct
 struct|struct
 name|scp
-comment|/* SYSTEM CONFIGURATION POINTER */
 block|{
 name|char
 name|sysbus
 decl_stmt|;
-comment|/* width of system buss 0=8;1=16 */
+comment|/* width of system bus 0=8;1=16 */
 name|char
 name|nu1
 decl_stmt|;
@@ -100,31 +95,15 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* pointer to ->SYSTEM CONFIGURATION BLOCK */
 block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|struct
-name|scp
 modifier|*
 name|SCP
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* absolute address - jumpered on the controller */
-end_comment
-
-begin_comment
-comment|/* set to 0xC06 for Tahoe */
-end_comment
+struct|;
+end_struct
 
 begin_struct
 struct|struct
 name|scb
-comment|/* SYSTEM CONFIGUREATION BLOCK */
 block|{
 name|char
 name|sysblk
@@ -145,7 +124,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* pointer to ->CHANNEL CONTROL BLOCK */
 block|}
 name|scb
 struct|;
@@ -154,7 +132,6 @@ end_struct
 begin_struct
 struct|struct
 name|ccb
-comment|/* CHANNEL CONTROL BLOCK */
 block|{
 name|char
 name|ccw
@@ -176,7 +153,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* pointer to ->TAPE OPERATION BLOCK or MOVE BLOCK */
 block|}
 name|ccb
 struct|;
@@ -185,7 +161,6 @@ end_struct
 begin_struct
 struct|struct
 name|tpb
-comment|/* TAPE OPERATIONS PARAMETER BLOCK */
 block|{
 name|long
 name|cmd
@@ -230,7 +205,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* pointer to ->INTERRUPT/PARAMETER BLOCK (input) */
 block|}
 name|tpb
 struct|;
@@ -240,55 +214,16 @@ begin_decl_stmt
 name|struct
 name|tpb
 name|cycool
-comment|/* tape parameter block to clear interrupts */
-init|=
-block|{
-literal|0L
-block|,
-comment|/* command */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* control */
-literal|0
-block|,
-comment|/* count */
-literal|0
-block|,
-comment|/* size */
-literal|0
-block|,
-comment|/* rec_over */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* pt_data */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* status */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-comment|/* pt_link */
-block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* tape parameter block to clear interrupts */
+end_comment
+
 begin_decl_stmt
 name|int
-name|cyblksiz
+name|cyblocksize
 init|=
 literal|1024
 decl_stmt|;
@@ -328,8 +263,6 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|ctlradr
-expr_stmt|;
 name|ctlradr
 operator|=
 name|CYADDR
@@ -593,6 +526,9 @@ argument_list|(
 literal|"Cypher initialization error!\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|cy_decode_error
 argument_list|(
 name|tpb
@@ -643,7 +579,7 @@ name|cycmd
 argument_list|(
 name|io
 argument_list|,
-name|SPAC_FM
+name|SRFM_FD
 argument_list|)
 operator|==
 operator|-
@@ -672,10 +608,7 @@ operator|&
 name|F_READ
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|cyblksiz
+name|cyblocksize
 operator|=
 name|cycmd
 argument_list|(
@@ -683,23 +616,30 @@ name|io
 argument_list|,
 name|READ_FO
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cyblocksize
 operator|==
 operator|-
 literal|1
 condition|)
 name|_stop
 argument_list|(
-literal|"Read foriegn tape failed!\n"
+literal|"Read foreign tape failed\n"
 argument_list|)
 expr_stmt|;
+name|cyblock
+operator|++
+expr_stmt|;
+comment|/* XXX force backspace record */
 if|if
 condition|(
 name|cycmd
 argument_list|(
 name|io
 argument_list|,
-name|REWD_TA
+name|SPACE
 argument_list|)
 operator|==
 operator|-
@@ -707,7 +647,7 @@ literal|1
 condition|)
 name|_stop
 argument_list|(
-literal|"Rewind after read failed\n"
+literal|"Backspace after read foreign failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -715,10 +655,6 @@ endif|#
 directive|endif
 block|}
 end_block
-
-begin_comment
-comment|/* if tape was open for writing write a file mark */
-end_comment
 
 begin_expr_stmt
 name|cyclose
@@ -743,11 +679,12 @@ name|i_flgs
 operator|&
 name|F_WRITE
 condition|)
+comment|/* if writing, write file mark */
 name|cycmd
 argument_list|(
 name|io
 argument_list|,
-name|WRITE_FMARK
+name|WRIT_FM
 argument_list|)
 expr_stmt|;
 name|cycmd
@@ -756,10 +693,6 @@ name|io
 argument_list|,
 name|REWD_TA
 argument_list|)
-expr_stmt|;
-name|cyblock
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_block
@@ -779,12 +712,11 @@ name|io
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|register
-name|long
 name|func
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -793,25 +725,19 @@ directive|ifndef
 name|NOBLOCK
 if|if
 condition|(
-operator|(
 name|func
 operator|!=
 name|SPACE
-operator|)
 operator|&&
-operator|(
 name|func
 operator|!=
 name|REWD_TA
-operator|)
 operator|&&
-operator|(
 name|io
 operator|->
 name|i_bn
 operator|!=
 name|cyblock
-operator|)
 condition|)
 block|{
 name|cycmd
@@ -951,101 +877,24 @@ begin_block
 block|{
 specifier|register
 name|ctlradr
-expr_stmt|;
-name|short
-name|j
-decl_stmt|;
-name|ctlradr
 operator|=
 name|CYADDR
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|int
+name|timeout
+init|=
+literal|0
+decl_stmt|;
+name|short
+name|j
+decl_stmt|;
 name|cywait
 argument_list|(
 literal|9000
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|func
-operator|==
-name|READ
-condition|)
-name|func
-operator|=
-name|READ_TA
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|func
-operator|==
-name|WRITE
-condition|)
-name|func
-operator|=
-name|WRIT_TA
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|func
-operator|==
-name|WRITE_FMARK
-condition|)
-name|func
-operator|=
-name|WRIT_FM
-expr_stmt|;
-name|tpb
-operator|.
-name|cmd
-operator|=
-name|func
-expr_stmt|;
-name|uncache
-argument_list|(
-operator|&
-name|ccb
-operator|.
-name|gate
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|ccb
-operator|.
-name|gate
-index|[
-literal|0
-index|]
-operator|==
-name|GATE_CLOSED
-condition|)
-name|uncache
-argument_list|(
-operator|&
-name|ccb
-operator|.
-name|gate
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|ccb
-operator|.
-name|gate
-index|[
-literal|0
-index|]
-operator|=
-name|GATE_CLOSED
 expr_stmt|;
 name|tpb
 operator|.
@@ -1104,13 +953,19 @@ operator|.
 name|pt_tpb
 argument_list|)
 expr_stmt|;
+name|tpb
+operator|.
+name|cmd
+operator|=
+name|func
+expr_stmt|;
 switch|switch
 condition|(
 name|func
 condition|)
 block|{
 case|case
-name|READ_TA
+name|READ
 case|:
 if|if
 condition|(
@@ -1118,7 +973,7 @@ name|io
 operator|->
 name|i_cc
 operator|>
-name|cyblksiz
+name|cyblocksize
 condition|)
 name|tpb
 operator|.
@@ -1126,7 +981,7 @@ name|size
 operator|=
 name|TM_SHORT
 argument_list|(
-name|cyblksiz
+name|cyblocksize
 argument_list|)
 expr_stmt|;
 else|else
@@ -1159,14 +1014,25 @@ operator|.
 name|pt_data
 argument_list|)
 expr_stmt|;
+name|tpb
+operator|.
+name|cmd
+operator|=
+name|READ_TA
+expr_stmt|;
 name|cyblock
-operator|+=
-literal|1
+operator|++
 expr_stmt|;
 break|break;
 case|case
-name|WRIT_TA
+name|WRITE
 case|:
+name|tpb
+operator|.
+name|cmd
+operator|=
+name|WRIT_TA
+expr_stmt|;
 name|tpb
 operator|.
 name|size
@@ -1197,8 +1063,7 @@ name|pt_data
 argument_list|)
 expr_stmt|;
 name|cyblock
-operator|+=
-literal|1
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -1252,7 +1117,26 @@ argument_list|(
 name|j
 argument_list|)
 expr_stmt|;
+name|timeout
+operator|=
+literal|60
+operator|*
+literal|5
+expr_stmt|;
 break|break;
+case|case
+name|SRFM_FD
+case|:
+name|tpb
+operator|.
+name|rec_over
+operator|=
+name|TM_SHORT
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* fall thru... */
 case|case
 name|REWD_TA
 case|:
@@ -1260,8 +1144,23 @@ name|cyblock
 operator|=
 literal|0
 expr_stmt|;
+name|timeout
+operator|=
+literal|60
+operator|*
+literal|5
+expr_stmt|;
 break|break;
 block|}
+name|ccb
+operator|.
+name|gate
+index|[
+literal|0
+index|]
+operator|=
+name|GATE_CLOSED
+expr_stmt|;
 name|TM_ATTENTION
 argument_list|(
 name|ctlradr
@@ -1272,29 +1171,17 @@ expr_stmt|;
 comment|/* execute! */
 if|if
 condition|(
-name|func
+name|timeout
 operator|==
-name|REWD_TA
-operator|||
-name|func
-operator|==
-name|SPACE
+literal|0
 condition|)
-block|{
-name|cywait
-argument_list|(
-literal|60
-operator|*
-literal|5
-operator|*
-literal|1000
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|cywait
-argument_list|(
+name|timeout
+operator|=
 literal|10
+expr_stmt|;
+name|cywait
+argument_list|(
+name|timeout
 operator|*
 literal|1000
 argument_list|)
@@ -1393,8 +1280,7 @@ literal|1
 index|]
 operator|&
 name|CS_ERm
-condition|)
-block|{
+operator|&&
 name|cy_decode_error
 argument_list|(
 name|tpb
@@ -1406,10 +1292,19 @@ index|]
 operator|&
 name|CS_ERm
 argument_list|)
+condition|)
+block|{
+name|io
+operator|->
+name|i_error
+operator|=
+name|EIO
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|uncache
@@ -1423,7 +1318,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-name|long
+name|int
 operator|)
 name|TM_SHORT
 argument_list|(
@@ -1436,17 +1331,19 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|cyprint_error
 argument_list|(
-name|message
+argument|message
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|message
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1460,23 +1357,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_expr_stmt
+begin_macro
 name|cy_decode_error
 argument_list|(
-name|status
+argument|status
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
 name|status
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1532,7 +1424,7 @@ name|ER_HARD
 case|:
 name|cyprint_error
 argument_list|(
-literal|"Unrecoverble media error"
+literal|"Unrecoverable media error"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1552,6 +1444,13 @@ argument_list|(
 literal|"Unsatisfactory media"
 argument_list|)
 expr_stmt|;
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* short read */
 break|break;
 case|case
 name|ER_FIFO
@@ -1612,28 +1511,57 @@ name|ER_ER
 case|:
 name|cyprint_error
 argument_list|(
-literal|"Unrecoverble hardware error"
+literal|"Unrecoverable hardware error"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|ER_FMAR
+case|:
+comment|/* file mark */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 default|default:
+name|printf
+argument_list|(
+literal|"cy: unknown error: status %x.\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
-begin_function
-name|long
+begin_expr_stmt
 name|cywait
-parameter_list|(
+argument_list|(
 name|timeout
-parameter_list|)
-name|long
+argument_list|)
+specifier|register
 name|timeout
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
-name|long
-name|dummy
-decl_stmt|;
+do|do
+block|{
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|uncache
 argument_list|(
 operator|&
@@ -1645,7 +1573,8 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-while|while
+block|}
+do|while
 condition|(
 name|ccb
 operator|.
@@ -1655,46 +1584,26 @@ literal|0
 index|]
 operator|!=
 name|GATE_OPEN
-condition|)
-block|{
-name|uncache
-argument_list|(
-operator|&
-name|ccb
-operator|.
-name|gate
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 operator|--
 name|timeout
-operator|==
+operator|>
 literal|0
 condition|)
-block|{
-name|cyprint_error
-argument_list|(
-literal|"Transfer timeout"
-argument_list|)
-expr_stmt|;
+do|;
+if|if
+condition|(
+name|timeout
+operator|<=
+literal|0
+condition|)
 name|_stop
 argument_list|(
-literal|""
+literal|"cy: Transfer timeout"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  *  Set a TAPEMASTER pointer (first parameter), into the  *  4 bytes array pointed by the second parameter.  */
