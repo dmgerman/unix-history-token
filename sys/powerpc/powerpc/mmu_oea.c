@@ -6896,7 +6896,7 @@ operator|->
 name|pvo_pte
 operator|.
 name|pte_lo
-operator|*
+operator|&
 name|PTE_RPGN
 argument_list|)
 expr_stmt|;
