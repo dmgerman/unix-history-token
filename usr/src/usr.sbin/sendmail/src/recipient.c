@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.87 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.88 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4804,6 +4804,19 @@ literal|"found\n"
 argument_list|)
 expr_stmt|;
 comment|/* ought to cache results here */
+if|if
+condition|(
+name|sameaddr
+argument_list|(
+name|b
+argument_list|,
+name|c
+argument_list|)
+condition|)
+return|return
+name|b
+return|;
+else|else
 return|return
 name|c
 return|;
