@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.108 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.109 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1189,8 +1189,26 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  DG/UX ** **	Tested on 5.4.2 */
+comment|/* **  DG/UX ** **	Tested on 5.4.2 and 5.4.3.  Use DGUX_5_4_2 to get the **	older support. **	5.4.3 changes from Mark T. Robinson<mtr@ornl.gov>. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DGUX_5_4_2
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DGUX
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1322,6 +1340,12 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DGUX_5_4_2
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1336,6 +1360,11 @@ name|dgux_inet_addr
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

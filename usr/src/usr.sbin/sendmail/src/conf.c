@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.90 (Berkeley) %G%"
+literal|"@(#)conf.c	8.91 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4635,13 +4635,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DGUX_INET_ADDR -- inet_addr for DG/UX ** **	Data General DG/UX version of inet_addr returns a struct in_addr **	instead of a long.  This patches things. */
+comment|/* **  DGUX_INET_ADDR -- inet_addr for DG/UX ** **	Data General DG/UX version of inet_addr returns a struct in_addr **	instead of a long.  This patches things.  Only needed on versions **	prior to 5.4.3. */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DGUX
+name|DGUX_5_4_2
 end_ifdef
 
 begin_undef
