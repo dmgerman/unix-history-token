@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)creat.c	5.2 (Berkeley) %G%"
+literal|"@(#)creat.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,14 +40,28 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<fcntl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_macro
+name|creat
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|mode_t mode
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_macro
 name|creat
@@ -70,6 +84,11 @@ name|mode_t
 name|mode
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setpgrp.c	5.1 (Berkeley) %G%"
+literal|"@(#)setpgrp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,26 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_macro
+name|setpgrp
+argument_list|(
+argument|pid_t pid
+argument_list|,
+argument|pid_t pgid
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|setpgrp
 argument_list|(
@@ -65,6 +85,11 @@ decl_stmt|,
 name|pgid
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{

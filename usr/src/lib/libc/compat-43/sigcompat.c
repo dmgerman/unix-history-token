@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sigcompat.c	5.2 (Berkeley) %G%"
+literal|"@(#)sigcompat.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<signal.h>
 end_include
 
 begin_macro
