@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	7.6	%G%"
+literal|"@(#)ex_put.c	7.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3615,6 +3615,13 @@ name|value
 argument_list|(
 name|MESG
 argument_list|)
+operator|&&
+name|ttynbuf
+index|[
+literal|0
+index|]
+operator|>
+literal|1
 condition|)
 name|chmod
 argument_list|(
