@@ -9,8 +9,23 @@ directive|if
 literal|0
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_endif
 unit|static char sccsid[] = "@(#)modes.c	8.3 (Berkeley) 4/2/94";
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

@@ -35,8 +35,23 @@ directive|if
 literal|0
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_endif
 unit|static char sccsid[] = "@(#)printjob.c	8.7 (Berkeley) 5/10/95";
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
