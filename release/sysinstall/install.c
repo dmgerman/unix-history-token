@@ -4216,6 +4216,44 @@ block|}
 end_function
 
 begin_comment
+comment|/* Load the environment up from various system configuration files */
+end_comment
+
+begin_function
+name|void
+name|installEnvironment
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|file_readable
+argument_list|(
+literal|"/etc/sysconfig"
+argument_list|)
+condition|)
+name|configEnvironmentSysconfig
+argument_list|(
+literal|"/etc/sysconfig"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|file_readable
+argument_list|(
+literal|"/etc/resolv.conf"
+argument_list|)
+condition|)
+name|configEnvironmentResolv
+argument_list|(
+literal|"/etc/resolv.conf"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Copy the boot floppy contents into /stand */
 end_comment
 
