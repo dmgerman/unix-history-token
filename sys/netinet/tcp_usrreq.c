@@ -1013,9 +1013,6 @@ name|INP_IPV6
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ip6_v6only
-operator|&&
 operator|(
 name|inp
 operator|->
@@ -1301,9 +1298,6 @@ name|INP_IPV4
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ip6_v6only
-operator|&&
 operator|(
 name|inp
 operator|->
@@ -1641,8 +1635,6 @@ name|sin
 decl_stmt|;
 if|if
 condition|(
-name|ip6_v6only
-operator|||
 operator|(
 name|inp
 operator|->
@@ -1650,6 +1642,8 @@ name|inp_flags
 operator|&
 name|IN6P_IPV6_V6ONLY
 operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
