@@ -114,10 +114,6 @@ name|pm_firstcluster
 decl_stmt|;
 comment|/* block number of first cluster */
 name|u_long
-name|pm_nmbrofclusters
-decl_stmt|;
-comment|/* # of clusters in filesystem */
-name|u_long
 name|pm_maxcluster
 decl_stmt|;
 comment|/* maximum cluster number */
