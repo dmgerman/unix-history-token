@@ -89,26 +89,26 @@ name|BYTE_ORDER
 value|LITTLE_ENDIAN
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|_BSWAP16_DEFINED
-end_define
-
-begin_function_decl
-name|__uint16_t
-name|__bswap16
-parameter_list|(
-name|__uint16_t
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
 
 begin_define
 define|#
@@ -116,16 +116,111 @@ directive|define
 name|_BSWAP32_DEFINED
 end_define
 
-begin_function_decl
+begin_function
+specifier|static
+name|__inline
 name|__uint32_t
 name|__bswap32
 parameter_list|(
 name|__uint32_t
+name|__x
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|__uint32_t
+name|__r
+decl_stmt|;
+asm|__asm __volatile__ (
+literal|"insbl %1, 3, $1\n\t"
+literal|"extbl %1, 1, $2\n\t"
+literal|"extbl %1, 2, $3\n\t"
+literal|"extbl %1, 3, $4\n\t"
+literal|"sll $2, 16, $2\n\t"
+literal|"sll $3, 8, $3\n\t"
+literal|"or $4, $1, %0\n\t"
+literal|"or $2, $3, $2\n\t"
+literal|"or $2, %0, %0"
+operator|:
+literal|"=r"
+operator|(
+name|__r
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|__x
+operator|)
+operator|:
+literal|"$1"
+operator|,
+literal|"$2"
+operator|,
+literal|"$3"
+operator|,
+literal|"$4"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|__r
+operator|)
+return|;
+end_return
+
+begin_define
+unit|}
+define|#
+directive|define
+name|_BSWAP16_DEFINED
+end_define
+
+begin_function
+unit|static
+name|__inline
+name|__uint16_t
+name|__bswap16
+parameter_list|(
+name|__uint16_t
+name|__x
+parameter_list|)
+block|{
+name|__uint16_t
+name|__r
+decl_stmt|;
+asm|__asm __volatile__ (
+literal|"insbl %1, 1, $1\n\t"
+literal|"extbl %1, 1, $2\n\t"
+literal|"or $1, $2, %0"
+operator|:
+literal|"=r"
+operator|(
+name|__r
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|__x
+operator|)
+operator|:
+literal|"$1"
+operator|,
+literal|"$2"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|__r
+operator|)
+return|;
+end_return
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
@@ -140,7 +235,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_POSIX_SOURCE */
+comment|/* __GNUC__ */
 end_comment
 
 begin_endif
