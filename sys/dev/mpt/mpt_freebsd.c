@@ -5969,7 +5969,7 @@ name|cts
 argument_list|)
 condition|)
 block|{
-name|fCONFIG_PAGE_SCSI_DEVICE_0
+name|CONFIG_PAGE_SCSI_DEVICE_0
 name|tmp
 decl_stmt|;
 name|dval
@@ -6831,7 +6831,7 @@ name|int
 name|onoff
 parameter_list|)
 block|{
-name|fCONFIG_PAGE_SCSI_DEVICE_1
+name|CONFIG_PAGE_SCSI_DEVICE_1
 name|tmp
 decl_stmt|;
 name|tmp
@@ -6982,7 +6982,7 @@ name|int
 name|offset
 parameter_list|)
 block|{
-name|fCONFIG_PAGE_SCSI_DEVICE_1
+name|CONFIG_PAGE_SCSI_DEVICE_1
 name|tmp
 decl_stmt|;
 name|tmp

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2000, 2001 by LSI Logic Corporation  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  *           Name:  MPI_INIT.H  *          Title:  MPI initiator mode messages and structures  *  Creation Date:  June 8, 2000  *  *    MPI Version:  01.02.04  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  05-24-00  00.10.02  Added SenseBufferLength to _MSG_SCSI_IO_REPLY.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-08-00  01.00.02  Added MPI_SCSI_RSP_INFO_ definitions.  *  11-02-00  01.01.01  Original release for post 1.0 work.  *  12-04-00  01.01.02  Added MPI_SCSIIO_CONTROL_NO_DISCONNECT.  *  02-20-01  01.01.03  Started using MPI_POINTER.  *  03-27-01  01.01.04  Added structure offset comments.  *  04-10-01  01.01.05  Added new MsgFlag for MSG_SCSI_TASK_MGMT.  *  08-08-01  01.02.01  Original release for v1.2 work.  *  08-29-01  01.02.02  Added MPI_SCSITASKMGMT_TASKTYPE_LOGICAL_UNIT_RESET.  *                      Added MPI_SCSI_STATE_QUEUE_TAG_REJECTED for  *                      MSG_SCSI_IO_REPLY.  *  09-28-01  01.02.03  Added structures and defines for SCSI Enclosure  *                      Processor messages.  *  10-04-01  01.02.04  Added defines for SEP request Action field.  *  --------------------------------------------------------------------------  */
+comment|/*  * Copyright (c) 2000, 2001 by LSI Logic Corporation  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  *           Name:  MPI_INIT.H  *          Title:  MPI initiator mode messages and structures  *  Creation Date:  June 8, 2000  *  *    MPI_INIT.H Version:  01.02.06  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  05-24-00  00.10.02  Added SenseBufferLength to _MSG_SCSI_IO_REPLY.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-08-00  01.00.02  Added MPI_SCSI_RSP_INFO_ definitions.  *  11-02-00  01.01.01  Original release for post 1.0 work.  *  12-04-00  01.01.02  Added MPI_SCSIIO_CONTROL_NO_DISCONNECT.  *  02-20-01  01.01.03  Started using MPI_POINTER.  *  03-27-01  01.01.04  Added structure offset comments.  *  04-10-01  01.01.05  Added new MsgFlag for MSG_SCSI_TASK_MGMT.  *  08-08-01  01.02.01  Original release for v1.2 work.  *  08-29-01  01.02.02  Added MPI_SCSITASKMGMT_TASKTYPE_LOGICAL_UNIT_RESET.  *                      Added MPI_SCSI_STATE_QUEUE_TAG_REJECTED for  *                      MSG_SCSI_IO_REPLY.  *  09-28-01  01.02.03  Added structures and defines for SCSI Enclosure  *                      Processor messages.  *  10-04-01  01.02.04  Added defines for SEP request Action field.  *  05-31-02  01.02.05  Added MPI_SCSIIO_MSGFLGS_CMD_DETERMINES_DATA_DIR define  *                      for SCSI IO requests.  *  11-15-02  01.02.06  Added special extended SCSI Status defines for FCP.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -120,7 +120,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* SCSIO MsgFlags bits */
+comment|/* SCSI IO MsgFlags bits */
 end_comment
 
 begin_define
@@ -165,8 +165,15 @@ name|MPI_SCSIIO_MSGFLGS_SENSE_LOC_IOC
 value|(0x02)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI_SCSIIO_MSGFLGS_CMD_DETERMINES_DATA_DIR
+value|(0x04)
+end_define
+
 begin_comment
-comment|/* SCSIIO LUN fields */
+comment|/* SCSI IO LUN fields */
 end_comment
 
 begin_define
@@ -212,7 +219,7 @@ value|(0x0000FF00)
 end_define
 
 begin_comment
-comment|/* SCSIO Control bits */
+comment|/* SCSI IO Control bits */
 end_comment
 
 begin_define
@@ -370,7 +377,7 @@ value|(0x00010000)
 end_define
 
 begin_comment
-comment|/* SCSIIO reply structure */
+comment|/* SCSI IO reply structure */
 end_comment
 
 begin_typedef
@@ -456,7 +463,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* SCSIIO Reply SCSIStatus values (SAM-2 status codes) */
+comment|/* SCSI IO Reply SCSIStatus values (SAM-2 status codes) */
 end_comment
 
 begin_define
@@ -529,8 +536,22 @@ name|MPI_SCSI_STATUS_ACA_ACTIVE
 value|(0x30)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI_SCSI_STATUS_FCPEXT_DEVICE_LOGGED_OUT
+value|(0x80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SCSI_STATUS_FCPEXT_NO_LINK
+value|(0x81)
+end_define
+
 begin_comment
-comment|/* SCSIIO Reply SCSIState values */
+comment|/* SCSI IO Reply SCSIState values */
 end_comment
 
 begin_define
@@ -576,7 +597,7 @@ value|(0x20)
 end_define
 
 begin_comment
-comment|/* SCSIIO Reply ResponseInfo values */
+comment|/* SCSI IO Reply ResponseInfo values */
 end_comment
 
 begin_comment

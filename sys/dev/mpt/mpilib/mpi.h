@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2000, 2001 by LSI Logic Corporation  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  *           Name:  MPI.H  *          Title:  MPI Message independent structures and definitions  *  Creation Date:  July 27, 2000  *  *    MPI Version:  01.02.03  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  05-24-00  00.10.02  Added MPI_IOCSTATUS_SCSI_RESIDUAL_MISMATCH definition.  *  06-06-00  01.00.01  Update MPI_VERSION_MAJOR and MPI_VERSION_MINOR.  *  06-22-00  01.00.02  Added MPI_IOCSTATUS_LAN_ definitions.  *                      Removed LAN_SUSPEND function definition.  *                      Added MPI_MSGFLAGS_CONTINUATION_REPLY definition.  *  06-30-00  01.00.03  Added MPI_CONTEXT_REPLY_TYPE_LAN definition.  *                      Added MPI_GET/SET_CONTEXT_REPLY_TYPE macros.  *  07-27-00  01.00.04  Added MPI_FAULT_ definitions.  *                      Removed MPI_IOCSTATUS_MSG/DATA_XFER_ERROR definitions.  *                      Added MPI_IOCSTATUS_INTERNAL_ERROR definition.  *                      Added MPI_IOCSTATUS_TARGET_XFER_COUNT_MISMATCH.  *  11-02-00  01.01.01  Original release for post 1.0 work.  *  12-04-00  01.01.02  Added new function codes.  *  01-09-01  01.01.03  Added more definitions to the system interface section  *                      Added MPI_IOCSTATUS_TARGET_STS_DATA_NOT_SENT.  *  01-25-01  01.01.04  Changed MPI_VERSION_MINOR from 0x00 to 0x01.  *  02-20-01  01.01.05  Started using MPI_POINTER.  *                      Fixed value for MPI_DIAG_RW_ENABLE.  *                      Added defines for MPI_DIAG_PREVENT_IOC_BOOT and  *                      MPI_DIAG_CLEAR_FLASH_BAD_SIG.  *                      Obsoleted MPI_IOCSTATUS_TARGET_FC_ defines.  *  02-27-01  01.01.06  Removed MPI_HOST_INDEX_REGISTER define.  *                      Added function codes for RAID.  *  04-09-01  01.01.07  Added alternate define for MPI_DOORBELL_ACTIVE,  *                      MPI_DOORBELL_USED, to better match the spec.  *  08-08-01  01.02.01  Original release for v1.2 work.  *                      Changed MPI_VERSION_MINOR from 0x01 to 0x02.  *                      Added define MPI_FUNCTION_TOOLBOX.  *  09-28-01  01.02.02  New function code MPI_SCSI_ENCLOSURE_PROCESSOR.  *  11-01-01  01.02.03  Changed name to MPI_FUNCTION_SCSI_ENCLOSURE_PROCESSOR.  *  --------------------------------------------------------------------------  */
+comment|/*  * Copyright (c) 2000, 2001 by LSI Logic Corporation  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  *           Name:  MPI.H  *          Title:  MPI Message independent structures and definitions  *  Creation Date:  July 27, 2000  *  *    MPI.H Version:  01.02.09  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  05-24-00  00.10.02  Added MPI_IOCSTATUS_SCSI_RESIDUAL_MISMATCH definition.  *  06-06-00  01.00.01  Update MPI_VERSION_MAJOR and MPI_VERSION_MINOR.  *  06-22-00  01.00.02  Added MPI_IOCSTATUS_LAN_ definitions.  *                      Removed LAN_SUSPEND function definition.  *                      Added MPI_MSGFLAGS_CONTINUATION_REPLY definition.  *  06-30-00  01.00.03  Added MPI_CONTEXT_REPLY_TYPE_LAN definition.  *                      Added MPI_GET/SET_CONTEXT_REPLY_TYPE macros.  *  07-27-00  01.00.04  Added MPI_FAULT_ definitions.  *                      Removed MPI_IOCSTATUS_MSG/DATA_XFER_ERROR definitions.  *                      Added MPI_IOCSTATUS_INTERNAL_ERROR definition.  *                      Added MPI_IOCSTATUS_TARGET_XFER_COUNT_MISMATCH.  *  11-02-00  01.01.01  Original release for post 1.0 work.  *  12-04-00  01.01.02  Added new function codes.  *  01-09-01  01.01.03  Added more definitions to the system interface section  *                      Added MPI_IOCSTATUS_TARGET_STS_DATA_NOT_SENT.  *  01-25-01  01.01.04  Changed MPI_VERSION_MINOR from 0x00 to 0x01.  *  02-20-01  01.01.05  Started using MPI_POINTER.  *                      Fixed value for MPI_DIAG_RW_ENABLE.  *                      Added defines for MPI_DIAG_PREVENT_IOC_BOOT and  *                      MPI_DIAG_CLEAR_FLASH_BAD_SIG.  *                      Obsoleted MPI_IOCSTATUS_TARGET_FC_ defines.  *  02-27-01  01.01.06  Removed MPI_HOST_INDEX_REGISTER define.  *                      Added function codes for RAID.  *  04-09-01  01.01.07  Added alternate define for MPI_DOORBELL_ACTIVE,  *                      MPI_DOORBELL_USED, to better match the spec.  *  08-08-01  01.02.01  Original release for v1.2 work.  *                      Changed MPI_VERSION_MINOR from 0x01 to 0x02.  *                      Added define MPI_FUNCTION_TOOLBOX.  *  09-28-01  01.02.02  New function code MPI_SCSI_ENCLOSURE_PROCESSOR.  *  11-01-01  01.02.03  Changed name to MPI_FUNCTION_SCSI_ENCLOSURE_PROCESSOR.  *  03-14-02  01.02.04  Added MPI_HEADER_VERSION_ defines.  *  05-31-02  01.02.05  Bumped MPI_HEADER_VERSION_UNIT.  *  07-12-02  01.02.06  Added define for MPI_FUNCTION_MAILBOX.  *  09-16-02  01.02.07  Bumped value for MPI_HEADER_VERSION_UNIT.  *  11-15-02  01.02.08  Added define MPI_IOCSTATUS_TARGET_INVALID_IO_INDEX and  *                      obsoleted define MPI_IOCSTATUS_TARGET_INVALID_IOCINDEX.  *  04-01-03  01.02.09  New IOCStatus code: MPI_IOCSTATUS_FC_EXCHANGE_CANCELED  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -40,13 +40,115 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI_VERSION_MAJOR_MASK
+value|(0xFF00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_VERSION_MAJOR_SHIFT
+value|(8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_VERSION_MINOR_MASK
+value|(0x00FF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_VERSION_MINOR_SHIFT
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI_VERSION
-value|((MPI_VERSION_MAJOR<< 8) | MPI_VERSION_MINOR)
+value|((MPI_VERSION_MAJOR<< MPI_VERSION_MAJOR_SHIFT) |   \                                       MPI_VERSION_MINOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_VERSION_01_00
+value|(0x0100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_VERSION_01_01
+value|(0x0101)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_VERSION_01_02
+value|(0x0102)
 end_define
 
 begin_comment
 comment|/* Note: The major versions of 0xe0 through 0xff are reserved */
 end_comment
+
+begin_comment
+comment|/* versioning for this MPI header set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_HEADER_VERSION_UNIT
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_HEADER_VERSION_DEV
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_HEADER_VERSION_UNIT_MASK
+value|(0xFF00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_HEADER_VERSION_UNIT_SHIFT
+value|(8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_HEADER_VERSION_DEV_MASK
+value|(0x00FF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_HEADER_VERSION_DEV_SHIFT
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_HEADER_VERSION
+value|((MPI_HEADER_VERSION_UNIT<< 8) | MPI_HEADER_VERSION_DEV)
+end_define
 
 begin_comment
 comment|/***************************************************************************** * *        I O C    S t a t e    D e f i n i t i o n s * *****************************************************************************/
@@ -811,6 +913,13 @@ define|#
 directive|define
 name|MPI_FUNCTION_SCSI_ENCLOSURE_PROCESSOR
 value|(0x18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FUNCTION_MAILBOX
+value|(0x19)
 end_define
 
 begin_define
@@ -2204,6 +2313,17 @@ name|MPI_IOCSTATUS_TARGET_INVALID_IOCINDEX
 value|(0x0062)
 end_define
 
+begin_comment
+comment|/* obsolete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_IOCSTATUS_TARGET_INVALID_IO_INDEX
+value|(0x0062)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -2333,6 +2453,13 @@ define|#
 directive|define
 name|MPI_IOCSTATUS_FC_NODE_LOGGED_OUT
 value|(0x0069)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_IOCSTATUS_FC_EXCHANGE_CANCELED
+value|(0x006C)
 end_define
 
 begin_comment

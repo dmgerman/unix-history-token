@@ -2096,7 +2096,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|fCONFIG_PAGE_HEADER
+name|CONFIG_PAGE_HEADER
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2120,7 +2120,7 @@ parameter_list|,
 name|int
 name|PageAddress
 parameter_list|,
-name|fCONFIG_PAGE_HEADER
+name|CONFIG_PAGE_HEADER
 modifier|*
 name|rslt
 parameter_list|)
@@ -2366,7 +2366,7 @@ name|rslt
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_HEADER
+name|CONFIG_PAGE_HEADER
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2416,7 +2416,7 @@ parameter_list|,
 name|int
 name|PageAddress
 parameter_list|,
-name|fCONFIG_PAGE_HEADER
+name|CONFIG_PAGE_HEADER
 modifier|*
 name|hdr
 parameter_list|)
@@ -2732,7 +2732,7 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_SCSI_PORT_0
+name|CONFIG_PAGE_SCSI_PORT_0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2760,7 +2760,7 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_SCSI_PORT_1
+name|CONFIG_PAGE_SCSI_PORT_1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2788,7 +2788,7 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_SCSI_PORT_2
+name|CONFIG_PAGE_SCSI_PORT_2
 argument_list|)
 expr_stmt|;
 block|}
@@ -2816,7 +2816,7 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_SCSI_DEVICE_0
+name|CONFIG_PAGE_SCSI_DEVICE_0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2844,7 +2844,7 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_SCSI_DEVICE_1
+name|CONFIG_PAGE_SCSI_DEVICE_1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2892,7 +2892,7 @@ parameter_list|,
 name|int
 name|PageAddress
 parameter_list|,
-name|fCONFIG_PAGE_HEADER
+name|CONFIG_PAGE_HEADER
 modifier|*
 name|hdr
 parameter_list|)
@@ -3106,7 +3106,7 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_SCSI_PORT_0
+name|CONFIG_PAGE_SCSI_PORT_0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3134,7 +3134,7 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_SCSI_PORT_1
+name|CONFIG_PAGE_SCSI_PORT_1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3162,7 +3162,7 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_SCSI_PORT_2
+name|CONFIG_PAGE_SCSI_PORT_2
 argument_list|)
 expr_stmt|;
 block|}
@@ -3190,7 +3190,7 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_SCSI_DEVICE_0
+name|CONFIG_PAGE_SCSI_DEVICE_0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3218,7 +3218,7 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|fCONFIG_PAGE_SCSI_DEVICE_1
+name|CONFIG_PAGE_SCSI_DEVICE_1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4333,7 +4333,7 @@ operator|!=
 name|pp1val
 condition|)
 block|{
-name|fCONFIG_PAGE_SCSI_PORT_1
+name|CONFIG_PAGE_SCSI_PORT_1
 name|tmp
 decl_stmt|;
 name|mpt_prt
@@ -4451,7 +4451,7 @@ name|i
 operator|++
 control|)
 block|{
-name|fCONFIG_PAGE_SCSI_DEVICE_1
+name|CONFIG_PAGE_SCSI_DEVICE_1
 name|tmp
 decl_stmt|;
 name|tmp

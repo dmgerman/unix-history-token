@@ -777,7 +777,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|fCONFIG_PAGE_HEADER
+name|CONFIG_PAGE_HEADER
 modifier|*
 parameter_list|)
 function_decl|;
@@ -792,7 +792,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|fCONFIG_PAGE_HEADER
+name|CONFIG_PAGE_HEADER
 modifier|*
 parameter_list|)
 function_decl|;
