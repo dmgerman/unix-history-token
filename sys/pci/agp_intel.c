@@ -198,7 +198,18 @@ literal|"Intel 82443GX host to AGP bridge"
 operator|)
 return|;
 case|case
+literal|0x11308086
+case|:
+return|return
+operator|(
+literal|"Intel 82815 (i815 GMCH) host to PCI bridge"
+operator|)
+return|;
+case|case
 literal|0x25008086
+case|:
+case|case
+literal|0x25018086
 case|:
 return|return
 operator|(
@@ -437,6 +448,58 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/* Enable the GLTB and setup the control register. */
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+literal|0x71908086
+case|:
+comment|/* 440LX/EX */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_AGPCTRL
+argument_list|,
+literal|0x2080
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x71808086
+case|:
+comment|/* 440BX */
+comment|/* 		 * XXX: Should be 0xa080?  Bit 9 is undefined, and 		 * bit 13 being on and bit 15 being clear is illegal. 		 */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_AGPCTRL
+argument_list|,
+literal|0x2280
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_AGPCTRL
+argument_list|,
+literal|0x0080
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Enable things, clear errors etc. */
 switch|switch
 condition|(
@@ -455,17 +518,6 @@ case|case
 literal|0x25318086
 case|:
 comment|/* i860 */
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|AGP_INTEL_AGPCTRL
-argument_list|,
-literal|0x0000
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|dev
@@ -497,17 +549,10 @@ case|case
 literal|0x25008086
 case|:
 comment|/* i820 */
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|AGP_INTEL_AGPCTRL
-argument_list|,
-literal|0x0000
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
+case|case
+literal|0x25018086
+case|:
+comment|/* i820 */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -543,17 +588,6 @@ name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-name|AGP_INTEL_AGPCTRL
-argument_list|,
-literal|0x0000
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
 name|AGP_INTEL_I845_MCHCFG
 argument_list|,
 operator|(
@@ -579,17 +613,6 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* Intel Generic (maybe) */
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|AGP_INTEL_AGPCTRL
-argument_list|,
-literal|0x2280
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|dev
@@ -647,6 +670,10 @@ expr_stmt|;
 break|break;
 case|case
 literal|0x25008086
+case|:
+comment|/* i820 */
+case|case
+literal|0x25018086
 case|:
 comment|/* i820 */
 case|case
@@ -813,6 +840,10 @@ argument_list|)
 expr_stmt|;
 case|case
 literal|0x25008086
+case|:
+comment|/* i820 */
+case|case
+literal|0x25018086
 case|:
 comment|/* i820 */
 name|printf
@@ -1288,13 +1319,16 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|pci_write_config
+name|u_int32_t
+name|val
+decl_stmt|;
+name|val
+operator|=
+name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
 name|AGP_INTEL_AGPCTRL
-argument_list|,
-literal|0x2200
 argument_list|,
 literal|4
 argument_list|)
@@ -1305,7 +1339,25 @@ name|dev
 argument_list|,
 name|AGP_INTEL_AGPCTRL
 argument_list|,
-literal|0x2280
+name|val
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+literal|8
+operator|)
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_AGPCTRL
+argument_list|,
+name|val
 argument_list|,
 literal|4
 argument_list|)
