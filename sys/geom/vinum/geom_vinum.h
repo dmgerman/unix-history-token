@@ -231,6 +231,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|gv_setstate
+parameter_list|(
+name|struct
+name|g_geom
+modifier|*
+parameter_list|,
+name|struct
+name|gctl_req
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|gv_set_drive_state
 parameter_list|(
