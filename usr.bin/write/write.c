@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: write.c,v 1.8 1997/09/15 00:08:19 ache Exp $"
+literal|"$Id: write.c,v 1.9 1997/09/15 00:17:38 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1611,7 +1611,12 @@ operator|&&
 operator|*
 name|s
 operator|!=
-literal|'\007'
+literal|'\a'
+operator|&&
+operator|*
+name|s
+operator|!=
+literal|'\b'
 operator|)
 condition|)
 block|{
