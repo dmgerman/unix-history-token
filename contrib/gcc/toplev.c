@@ -17514,10 +17514,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|optimize
-operator|<
-literal|2
-operator|||
 name|optimize_size
 condition|)
 block|{
