@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.c	4.7	81/08/16	*/
+comment|/*	tip.c	4.8	81/08/26	*/
 end_comment
 
 begin_comment
@@ -265,6 +265,11 @@ block|{
 name|printf
 argument_list|(
 literal|"link down\n"
+argument_list|)
+expr_stmt|;
+name|delock
+argument_list|(
+name|uucplock
 argument_list|)
 expr_stmt|;
 name|exit
