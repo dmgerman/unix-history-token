@@ -19,8 +19,15 @@ directive|define
 name|_ISP_TARGET_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|QLTM_SENSELEN
+value|18
+end_define
+
 begin_comment
-comment|/*  * Defines for all entry types  */
+comment|/* non-FC cards only */
 end_comment
 
 begin_define
@@ -28,13 +35,6 @@ define|#
 directive|define
 name|QLTM_SVALID
 value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|QLTM_SENSELEN
-value|18
 end_define
 
 begin_comment
@@ -526,15 +526,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TASK_FLAGS_ABORT_TASK
-value|(1<<9)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TASK_FLAGS_CLEAR_TASK_SET
-value|(1<<10)
+name|TASK_FLAGS_CLEAR_ACA
+value|(1<<14)
 end_define
 
 begin_define
@@ -547,16 +540,59 @@ end_define
 begin_define
 define|#
 directive|define
-name|TASK_FLAGS_CLEAR_ACA
-value|(1<<14)
+name|TASK_FLAGS_LUN_RESET
+value|(1<<12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TASK_FLAGS_TERMINATE_TASK
-value|(1<<15)
+name|TASK_FLAGS_CLEAR_TASK_SET
+value|(1<<10)
 end_define
+
+begin_define
+define|#
+directive|define
+name|TASK_FLAGS_ABORT_TASK_SET
+value|(1<<9)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSG_ABORT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MSG_ABORT
+value|0x06
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSG_BUS_DEV_RESET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MSG_BUS_DEV_RESET
+value|0x0c
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -568,7 +604,7 @@ begin_define
 define|#
 directive|define
 name|MSG_ABORT_TAG
-value|0x06
+value|0x0d
 end_define
 
 begin_endif
@@ -587,24 +623,6 @@ define|#
 directive|define
 name|MSG_CLEAR_QUEUE
 value|0x0e
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MSG_BUS_DEV_RESET
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MSG_BUS_DEV_RESET
-value|0x0b
 end_define
 
 begin_endif
@@ -641,6 +659,24 @@ define|#
 directive|define
 name|MSG_TERM_IO_PROC
 value|0x11
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSG_LUN_RESET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MSG_LUN_RESET
+value|0x17
 end_define
 
 begin_endif
@@ -1097,8 +1133,9 @@ name|at_status
 decl_stmt|;
 comment|/* firmware status */
 name|u_int8_t
-name|at_reserved1
+name|at_crn
 decl_stmt|;
+comment|/* command reference number */
 name|u_int8_t
 name|at_taskcodes
 decl_stmt|;
@@ -1198,6 +1235,20 @@ define|#
 directive|define
 name|ATIO2_TC_ATTR_UNTAGGED
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATIO2_EX_WRITE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATIO2_EX_READ
+value|0x2
 end_define
 
 begin_comment
@@ -1892,27 +1943,6 @@ decl_stmt|;
 block|}
 name|m2
 struct|;
-comment|/* 		 * CTIO2 returned from F/W... 		 */
-struct|struct
-block|{
-name|u_int32_t
-name|_reserved
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|u_int16_t
-name|ct_scsi_status
-decl_stmt|;
-name|u_int8_t
-name|ct_sense
-index|[
-name|QLTM_SENSELEN
-index|]
-decl_stmt|;
-block|}
-name|fw
-struct|;
 block|}
 name|rsp
 union|;
@@ -1993,6 +2023,13 @@ define|#
 directive|define
 name|CT2_FASTPOST
 value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|CT2_TERMINATE
+value|0x4000
 end_define
 
 begin_define
