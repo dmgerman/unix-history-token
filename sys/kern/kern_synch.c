@@ -1906,6 +1906,9 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|db_print_backtrace
+argument_list|()
+expr_stmt|;
 name|db_error
 argument_list|(
 literal|"Context switches not allowed in the debugger."
