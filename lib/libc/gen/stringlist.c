@@ -113,7 +113,9 @@ block|{
 name|StringList
 modifier|*
 name|sl
-init|=
+decl_stmt|;
+name|sl
+operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -121,7 +123,7 @@ argument_list|(
 name|StringList
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|sl
@@ -190,7 +192,7 @@ comment|/*  * sl_add(): Add an item to the string list  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|sl_add
 parameter_list|(
 name|sl
@@ -254,13 +256,12 @@ name|sl_str
 operator|==
 name|NULL
 condition|)
-name|_err
-argument_list|(
+return|return
+operator|(
+operator|-
 literal|1
-argument_list|,
-literal|"stringlist: %m"
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|sl
 operator|->
@@ -274,6 +275,11 @@ index|]
 operator|=
 name|name
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
