@@ -35,6 +35,18 @@ directive|include
 file|<netipsec/key_var.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SOCKADDR_UNION_DEFINED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SOCKADDR_UNION_DEFINED
+end_define
+
 begin_comment
 comment|/*  * The union of all possible address formats we handle.  */
 end_comment
@@ -58,6 +70,15 @@ decl_stmt|;
 block|}
 union|;
 end_union
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SOCKADDR_UNION_DEFINED */
+end_comment
 
 begin_comment
 comment|/* Security Assocciation Index */
