@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.124 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.125 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1605,6 +1605,50 @@ end_define
 begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  OSF/1 for Intel Paragon. ** **	Contributed by Jeff A. Earickson<jeff@ithaca.ccs.ornl.gov> **	of Oak Ridge National Lab. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__PARAGON__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__osf__
+value|1
+end_define
+
+begin_comment
+comment|/* get OSF/1 defines below */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/var/adm/sendmail/sendmail.cf"
+end_define
 
 begin_endif
 endif|#
