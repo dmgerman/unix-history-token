@@ -1187,6 +1187,8 @@ name|snp_flags
 operator||=
 name|SNOOP_RWAIT
 expr_stmt|;
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -1207,6 +1209,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 block|}
 do|while
