@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_types.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_types.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Interface types for benefit of parsing media address headers.  * This list is derived from the SNMP list of ifTypes, currently  * documented in RFC1123.  */
+comment|/*  * Interface types for benefit of parsing media address headers.  * This list is derived from the SNMP list of ifTypes, currently  * documented in RFC1573.  */
 end_comment
 
 begin_define
@@ -328,7 +328,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* Frame Relay */
+comment|/* Frame Relay DTE only */
 end_comment
 
 begin_define
@@ -338,8 +338,187 @@ name|IFT_RS232
 value|0x21
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFT_PARA
+value|0x22
+end_define
+
 begin_comment
-comment|/* Used elsewhere by SNMP as index */
+comment|/* parallel-port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_ARCNET
+value|0x23
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_ARCNETPLUS
+value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_ATM
+value|0x25
+end_define
+
+begin_comment
+comment|/* ATM cells */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_MIOX25
+value|0x26
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_SONET
+value|0x27
+end_define
+
+begin_comment
+comment|/* SONET or SDH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_X25PLE
+value|0x28
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_ISO88022LLC
+value|0x29
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_LOCALTALK
+value|0x2a
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_SMDSDXI
+value|0x2b
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_FRELAYDCE
+value|0x2c
+end_define
+
+begin_comment
+comment|/* Frame Relay DCE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_V35
+value|0x2d
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_HSSI
+value|0x2e
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_HIPPI
+value|0x2f
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_MODEM
+value|0x30
+end_define
+
+begin_comment
+comment|/* Generic Modem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_AAL5
+value|0x31
+end_define
+
+begin_comment
+comment|/* AAL5 over ATM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_SONETPATH
+value|0x32
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_SONETVT
+value|0x33
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_SMDSICIP
+value|0x34
+end_define
+
+begin_comment
+comment|/* SMDS InterCarrier Interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_PROPVIRTUAL
+value|0x35
+end_define
+
+begin_comment
+comment|/* Proprietary Virtual/internal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_PROPMUX
+value|0x36
+end_define
+
+begin_comment
+comment|/* Proprietary Multiplexing */
 end_comment
 
 end_unit
