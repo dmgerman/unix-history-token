@@ -215,15 +215,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|char
-name|localhost
-index|[]
-init|=
-literal|"localhost"
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
@@ -253,15 +244,13 @@ name|op
 enum|;
 name|struct
 name|passwd
-modifier|*
-name|pw
-init|=
-name|NULL
-decl_stmt|,
 name|lpw
 decl_stmt|,
 modifier|*
 name|old_pw
+decl_stmt|,
+modifier|*
+name|pw
 decl_stmt|;
 name|int
 name|ch
@@ -306,6 +295,12 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+name|pw
+operator|=
+name|old_pw
+operator|=
+name|NULL
+expr_stmt|;
 name|op
 operator|=
 name|EDITENTRY
