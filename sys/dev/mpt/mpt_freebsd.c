@@ -450,6 +450,7 @@ name|req
 operator|->
 name|ccb
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"time out: ccb %p != req->ccb %p\n"
@@ -461,6 +462,7 @@ operator|->
 name|ccb
 argument_list|)
 expr_stmt|;
+block|}
 name|mpt_print_scsi_io_request
 argument_list|(
 operator|(
@@ -511,6 +513,11 @@ name|ccb
 argument_list|)
 expr_stmt|;
 name|CAMLOCK_2_MPTLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+name|MPT_UNLOCK
 argument_list|(
 name|mpt
 argument_list|)
@@ -2057,9 +2064,6 @@ condition|)
 block|{
 comment|/* 				 * Virtual address that needs to translated into 				 * one or more physical pages. 				 */
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|error
@@ -2113,11 +2117,6 @@ operator||=
 name|CAM_RELEASE_SIMQ
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{

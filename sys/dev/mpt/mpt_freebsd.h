@@ -39,11 +39,11 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RELENG_4
+end_ifdef
 
 begin_include
 include|#
@@ -56,12 +56,6 @@ include|#
 directive|include
 file|<sys/queue.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RELENG_4
-end_ifdef
 
 begin_include
 include|#
@@ -77,7 +71,25 @@ end_else
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -304,9 +316,6 @@ begin_define
 define|#
 directive|define
 name|CAMLOCK_2_MPTLOCK
-parameter_list|(
-name|mpt
-parameter_list|)
 value|MPT_LOCK
 end_define
 
@@ -512,7 +521,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((void *)(m->reply + ((x<< 1) - (u_int32_t)(m->reply_phys))))
+value|((void *)(&m->reply[((x<< 1) - m->reply_phys)]))
 end_define
 
 begin_define
@@ -571,11 +580,11 @@ modifier|*
 name|sense_vbuf
 decl_stmt|;
 comment|/* Virtual Address of sense data */
-name|u_int32_t
+name|bus_addr_t
 name|req_pbuf
 decl_stmt|;
 comment|/* Physical Address of Entry */
-name|u_int32_t
+name|bus_addr_t
 name|sense_pbuf
 decl_stmt|;
 comment|/* Physical Address of sense data */
@@ -860,10 +869,10 @@ modifier|*
 name|reply
 decl_stmt|;
 comment|/* KVA of reply memory */
-name|u_int32_t
+name|bus_addr_t
 name|reply_phys
 decl_stmt|;
-comment|/* BusAddr of reply memory (XXX Wrong) */
+comment|/* BusAddr of reply memory */
 name|bus_dma_tag_t
 name|buffer_dmat
 decl_stmt|;
@@ -881,10 +890,10 @@ modifier|*
 name|request
 decl_stmt|;
 comment|/* KVA of Request memory */
-name|u_int32_t
+name|bus_addr_t
 name|request_phys
 decl_stmt|;
-comment|/* BusADdr of request memory (XXX WRONG) */
+comment|/* BusADdr of request memory */
 comment|/* 	 * CAM&& Software Management 	 */
 name|request_t
 name|requests

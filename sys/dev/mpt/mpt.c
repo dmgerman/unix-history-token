@@ -969,12 +969,15 @@ name|mpt
 operator|->
 name|dev
 argument_list|,
-literal|"Send Request %d (0x%x):\n"
+literal|"Send Request %d (0x%lx):\n"
 argument_list|,
 name|req
 operator|->
 name|index
 argument_list|,
+operator|(
+name|long
+operator|)
 name|req
 operator|->
 name|req_pbuf
@@ -1630,7 +1633,7 @@ operator|->
 name|dev
 argument_list|,
 literal|"reply length does not match message length: "
-literal|"got 0x%02x, expected 0x%02x\n"
+literal|"got 0x%02x, expected 0x%02lx\n"
 argument_list|,
 name|hdr
 operator|->
@@ -1638,9 +1641,14 @@ name|MsgLength
 operator|<<
 literal|2
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|reply_len
 operator|<<
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
