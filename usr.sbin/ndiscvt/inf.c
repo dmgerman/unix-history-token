@@ -204,11 +204,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*static*/
-end_comment
-
 begin_function_decl
+specifier|static
 name|void
 name|dump_regvals
 parameter_list|(
@@ -2647,11 +2644,8 @@ return|return;
 block|}
 end_function
 
-begin_comment
-comment|/*static*/
-end_comment
-
 begin_function
+specifier|static
 name|void
 name|dump_regvals
 parameter_list|(
