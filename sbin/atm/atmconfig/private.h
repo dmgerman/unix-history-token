@@ -81,12 +81,29 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_HELP
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|PATH_HELP
-value|".:/usr/share/doc/atm"
+value|"/usr/share/doc/atm:/usr/local/share/doc/atm"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FILE_HELP
+end_ifndef
 
 begin_define
 define|#
@@ -94,6 +111,29 @@ directive|define
 name|FILE_HELP
 value|"atmconfig.help"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FILE_HELP_OTHERS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FILE_HELP_OTHERS
+value|"atmconfig_*.help"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Builtin commands  */
