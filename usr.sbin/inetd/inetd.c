@@ -4320,6 +4320,14 @@ name|new
 operator|->
 name|se_maxcpm
 expr_stmt|;
+name|sep
+operator|->
+name|se_bi
+operator|=
+name|new
+operator|->
+name|se_bi
+expr_stmt|;
 comment|/* might need to turn on or off service now */
 if|if
 condition|(
