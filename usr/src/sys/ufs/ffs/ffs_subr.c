@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_subr.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_subr.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -427,7 +427,8 @@ name|long
 name|lbn
 decl_stmt|,
 name|lastlbn
-decl_stmt|,
+decl_stmt|;
+name|int
 name|s
 decl_stmt|;
 name|daddr_t
@@ -558,7 +559,7 @@ condition|)
 continue|continue;
 name|s
 operator|=
-name|spl6
+name|splbio
 argument_list|()
 expr_stmt|;
 if|if
@@ -1729,7 +1730,7 @@ literal|0
 expr_stmt|;
 name|s
 operator|=
-name|spl6
+name|splbio
 argument_list|()
 expr_stmt|;
 for|for

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_inode.c	6.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_inode.c	6.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1758,6 +1758,8 @@ decl_stmt|;
 name|daddr_t
 name|bn
 decl_stmt|,
+name|lbn
+decl_stmt|,
 name|lastiblock
 index|[
 name|NIADDR
@@ -1782,8 +1784,6 @@ name|bp
 decl_stmt|;
 name|int
 name|offset
-decl_stmt|,
-name|lbn
 decl_stmt|,
 name|osize
 decl_stmt|,
@@ -2132,9 +2132,14 @@ name|b_addr
 operator|+
 name|offset
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|size
 operator|-
 name|offset
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bdwrite

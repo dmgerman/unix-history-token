@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vfs_lookup.c	6.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vfs_lookup.c	6.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -237,7 +237,7 @@ comment|/* cache effectiveness statistics */
 end_comment
 
 begin_comment
-comment|/*  * Convert a pathname into a pointer to a locked inode,  * with side effects usable in creating and removing files.  * This is a very central and rather complicated routine.  *  * The segflg defines whether the name is to be copied from user  * space or kernel space.  *  * The flag argument is (LOOKUP, CREATE, DELETE) depending on whether  * the name is to be (looked up, created, deleted).  If flag has  * LOCKPARENT or'ed into it and the target of the pathname exists,  * namei returns both the target and its parent directory locked.   * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation.  When creating and  * LOCKPARENT is specified, the target may not be ".".  When deleting  * and LOCKPARENT is specified, the target may be ".", but the caller  * must check to insure it does an irele and iput instead of two iputs.  *  * The FOLLOW flag is set when symbolic links are to be followed  * when they occur at the end of the name translation process.  *  * Name caching works as follows:  *  *	names found by directory scans are retained in a cache  *	for future reference.  It is managed LRU, so frequently  *	used names will hang around.  Cache is indexed by hash value  *	obtained from (ino,dev,name) where ino& dev refer to the  *	directory containing name.  *  *	For simplicity (and economy of storage), names longer than  *	some (small) maximum length are not cached, they occur  *	infrequently in any case, and are almost never of interest.  *  *	Upon reaching the last segment of a path, if the reference  *	is for DELETE, or NOCACHE is set (rewrite), and the  *	name is located in the cache, it will be dropped.  *  *	We must be sure never to enter the name ".." into the cache  *	because of the extremely kludgey way that rename() alters  *	".." in a situation like  *		mv a/x b/x  *	where x is a directory, and x/.. is the ".." in question.  *  * Overall outline of namei:  *  *	copy in name  *	get starting directory  * dirloop:  *	check accessibility of directory  * dirloop2:  *	copy next component of name to ndp->ni_dent  *	handle degenerate case where name is null string  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else to haveino  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on avail. slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (create and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if .. and on mounted filesys, look in mount table for parent  *	if not at end, if neither creating nor deleting, add name to cache  * haveino:  *	if symbolic link, massage name in buffer and continue at dirloop  *	if more components of name, do next level at dirloop  *	return the answer as locked inode  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode,  *	 but unlocked.  */
+comment|/*  * Convert a pathname into a pointer to a locked inode,  * with side effects usable in creating and removing files.  * This is a very central and rather complicated routine.  *  * The segflg defines whether the name is to be copied from user  * space or kernel space.  *  * The flag argument is (LOOKUP, CREATE, DELETE) depending on whether  * the name is to be (looked up, created, deleted).  If flag has  * LOCKPARENT or'ed into it and the target of the pathname exists,  * namei returns both the target and its parent directory locked.   * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation.  When creating and  * LOCKPARENT is specified, the target may not be ".".  When deleting  * and LOCKPARENT is specified, the target may be ".", but the caller  * must check to insure it does an irele and iput instead of two iputs.  *  * The FOLLOW flag is set when symbolic links are to be followed  * when they occur at the end of the name translation process.  *  * Name caching works as follows:  *  * Names found by directory scans are retained in a cache  * for future reference.  It is managed LRU, so frequently  * used names will hang around.  Cache is indexed by hash value  * obtained from (ino,dev,name) where ino& dev refer to the  * directory containing name.  *  * For simplicity (and economy of storage), names longer than  * some (small) maximum length are not cached, they occur  * infrequently in any case, and are almost never of interest.  *  * Upon reaching the last segment of a path, if the reference  * is for DELETE, or NOCACHE is set (rewrite), and the  * name is located in the cache, it will be dropped.  *  * We must be sure never to enter the name ".." into the cache  * because of the extremely kludgey way that rename() alters  * ".." in a situation like  * 	mv a/x b/x  * where x is a directory, and x/.. is the ".." in question.  *  * Overall outline of namei:  *  *	copy in name  *	get starting directory  * dirloop:  *	check accessibility of directory  * dirloop2:  *	copy next component of name to ndp->ni_dent  *	handle degenerate case where name is null string  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else to haveino  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on avail. slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (create and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if .. and on mounted filesys, look in mount table for parent  *	if not at end, if neither creating nor deleting, add name to cache  * haveino:  *	if symbolic link, massage name in buffer and continue at dirloop  *	if more components of name, do next level at dirloop  *	return the answer as locked inode  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode,  *	 but unlocked.  */
 end_comment
 
 begin_function
@@ -1003,6 +1003,9 @@ name|ni_dent
 operator|.
 name|d_name
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|ncp
 operator|->
 name|nc_nlen
@@ -1068,7 +1071,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * move this slot to end of LRU 					 * chain, if not already there 					 */
+comment|/* 				 * move this slot to end of LRU 				 * chain, if not already there 				 */
 if|if
 condition|(
 name|ncp
@@ -1289,12 +1292,12 @@ name|ncp
 operator|->
 name|nc_prev
 expr_stmt|;
-comment|/* remove from hash chain */
 name|remque
 argument_list|(
 name|ncp
 argument_list|)
 expr_stmt|;
+comment|/* remove from hash chain */
 comment|/* insert at head of LRU list (first to grab) */
 name|ncp
 operator|->
@@ -1687,7 +1690,7 @@ condition|(
 name|ep
 operator|->
 name|d_reclen
-operator|<=
+operator|==
 literal|0
 operator|||
 name|dirchk
@@ -1883,6 +1886,9 @@ name|ep
 operator|->
 name|d_name
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|ep
 operator|->
 name|d_namlen
@@ -2787,7 +2793,7 @@ goto|goto
 name|bad2
 goto|;
 block|}
-comment|/* 	 * insert name into cache if appropriate 	 */
+comment|/* 	 * Insert name into cache if appropriate. 	 */
 if|if
 condition|(
 name|makeentry
@@ -2804,7 +2810,7 @@ argument_list|(
 literal|"nami: duplicating cache"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * free the cache slot at head of lru chain 			 */
+comment|/* 		 * Free the cache slot at head of lru chain. 		 */
 if|if
 condition|(
 name|ncp
@@ -2845,12 +2851,12 @@ name|ncp
 operator|->
 name|nc_prev
 expr_stmt|;
-comment|/* remove from old hash chain */
 name|remque
 argument_list|(
 name|ncp
 argument_list|)
 expr_stmt|;
+comment|/* remove from old hash chain */
 comment|/* grab the inode we just found */
 name|ncp
 operator|->
@@ -2917,6 +2923,9 @@ name|ncp
 operator|->
 name|nc_name
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|ncp
 operator|->
 name|nc_nlen
@@ -3351,7 +3360,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Do consistency checking on a directory entry:  *	record length must be multiple of 4  *	record length must not be non-negative  *	entry must fit in rest of its DIRBLKSIZ block  *	record must be large enough to contain entry  *	name is not longer than MAXNAMLEN  *	name must be as long as advertised, and null terminated  */
+comment|/*  * Do consistency checking on a directory entry:  *	record length must be multiple of 4  *	entry must fit in rest of its DIRBLKSIZ block  *	record must be large enough to contain entry  *	name is not longer than MAXNAMLEN  *	name must be as long as advertised, and null terminated  */
 end_comment
 
 begin_expr_stmt
@@ -3391,12 +3400,6 @@ operator|&
 literal|0x3
 operator|)
 operator|!=
-literal|0
-operator|||
-name|ep
-operator|->
-name|d_reclen
-operator|<=
 literal|0
 operator|||
 name|ep
@@ -4011,6 +4014,9 @@ name|itrunc
 argument_list|(
 name|dp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ndp
 operator|->
 name|ni_endoff
@@ -4606,7 +4612,7 @@ condition|(
 name|dp
 operator|->
 name|d_reclen
-operator|<=
+operator|==
 literal|0
 condition|)
 return|return
@@ -5195,19 +5201,19 @@ name|nc_ip
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* remove the entry from its hash chain */
 name|remque
 argument_list|(
 name|ncp
 argument_list|)
 expr_stmt|;
-comment|/* and make a dummy one */
+comment|/* remove entry from its hash chain */
 name|ncp
 operator|->
 name|nc_forw
 operator|=
 name|ncp
 expr_stmt|;
+comment|/* and make a dummy one */
 name|ncp
 operator|->
 name|nc_back
@@ -5311,14 +5317,12 @@ condition|;
 name|ncp
 operator|++
 control|)
-block|{
 name|ncp
 operator|->
 name|nc_id
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 end_block
 
