@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -134,6 +134,8 @@ operator|(
 name|argc
 operator|,
 name|argv
+operator|,
+name|envp
 operator|)
 name|int
 name|argc
@@ -145,6 +147,14 @@ name|char
 modifier|*
 modifier|*
 name|argv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|envp
 decl_stmt|;
 end_decl_stmt
 
@@ -284,6 +294,15 @@ name|arpadate
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	**  Check to see if we reentered. 	**	This would normally happen if e_putheader or e_putbody 	**	were NULL when invoked. 	*/
@@ -441,6 +460,17 @@ name|FreezeFile
 argument_list|)
 expr_stmt|;
 end_if
+
+begin_comment
+comment|/* reset the environment after the thaw */
+end_comment
+
+begin_expr_stmt
+name|environ
+operator|=
+name|envp
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	**  Now do basic initialization 	*/
