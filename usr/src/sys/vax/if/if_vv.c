@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	6.3	83/12/22	*/
+comment|/*	if_vv.c	6.4	84/01/03	*/
 end_comment
 
 begin_include
@@ -70,18 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/time.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/kernel.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/ioctl.h"
 end_include
 
@@ -130,25 +118,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../vax/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubareg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vaxuba/ubavar.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_include
@@ -161,6 +137,18 @@ begin_include
 include|#
 directive|include
 file|"../vaxif/if_uba.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubavar.h"
 end_include
 
 begin_comment
@@ -265,6 +253,9 @@ name|vvrint
 argument_list|()
 decl_stmt|,
 name|vvxint
+argument_list|()
+decl_stmt|,
+name|vvwatchdog
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -372,7 +363,11 @@ comment|/* length of last output */
 name|u_short
 name|vs_lastx
 decl_stmt|;
-comment|/* last destination address */
+comment|/* address of last packet sent */
+name|u_short
+name|vs_lastr
+decl_stmt|;
+comment|/* address of last packet received */
 name|short
 name|vs_tries
 decl_stmt|;
@@ -385,6 +380,10 @@ name|short
 name|vs_nottaken
 decl_stmt|;
 comment|/* number of packets refused */
+name|short
+name|vs_timeouts
+decl_stmt|;
+comment|/* number of transmit timeouts */
 block|}
 name|vv_softc
 index|[
@@ -625,6 +624,22 @@ operator|.
 name|if_reset
 operator|=
 name|vvreset
+expr_stmt|;
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_timer
+operator|=
+literal|0
+expr_stmt|;
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_watchdog
+operator|=
+name|vvwatchdog
 expr_stmt|;
 name|vs
 operator|->
@@ -886,7 +901,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vv%d: can't initialize\n"
+literal|"vv%d: can't initialize, if_ubainit() failed\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -903,6 +918,9 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Now that the uba is set up, figure out our address and 	 * update complete our host address. 	 */
+if|if
+condition|(
+operator|(
 name|vs
 operator|->
 name|vs_if
@@ -916,7 +934,22 @@ name|vvidentify
 argument_list|(
 name|unit
 argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_flags
+operator|&=
+operator|~
+name|IFF_UP
 expr_stmt|;
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|"vv%d: host %d\n"
@@ -992,6 +1025,26 @@ name|vs_nottaken
 operator|=
 literal|0
 expr_stmt|;
+name|vs
+operator|->
+name|vs_timeouts
+operator|=
+literal|0
+expr_stmt|;
+name|vs
+operator|->
+name|vs_lastx
+operator|=
+literal|256
+expr_stmt|;
+comment|/* an invalid address */
+name|vs
+operator|->
+name|vs_lastr
+operator|=
+literal|256
+expr_stmt|;
+comment|/* an invalid address */
 comment|/* 	 * Hang a receive and start any 	 * pending writes by faking a transmit complete. 	 */
 name|s
 operator|=
@@ -1199,11 +1252,20 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vv%d: can't initialize, m_get() failed\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|m
 operator|->
 name|m_next
@@ -1458,7 +1520,7 @@ name|VV_INR
 operator||
 name|VV_ENB
 expr_stmt|;
-comment|/* 	 * Wait for receive side to finish. 	 * Extract source address (which will our own), 	 * and post to interface structure. 	 */
+comment|/* 	 * Wait for receive side to finish. 	 * Extract source address (which will be our own), 	 * and post to interface structure. 	 */
 name|DELAY
 argument_list|(
 literal|10000
@@ -1502,20 +1564,55 @@ if|if
 condition|(
 name|attempts
 operator|++
+operator|<
+name|VVIDENTRETRY
+condition|)
+goto|goto
+name|retry
+goto|;
+block|}
+comment|/* deallocate mbuf used for send packet */
+if|if
+condition|(
+name|vs
+operator|->
+name|vs_ifuba
+operator|.
+name|ifu_xtofree
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|vs
+operator|->
+name|vs_ifuba
+operator|.
+name|ifu_xtofree
+argument_list|)
+expr_stmt|;
+name|vs
+operator|->
+name|vs_ifuba
+operator|.
+name|ifu_xtofree
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|attempts
 operator|>=
-literal|10
+name|VVIDENTRETRY
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vv%d: can't initialize\n"
+literal|"vv%d: can't initialize after %d tries, icsr = %b\n"
 argument_list|,
 name|unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"vvinit loopwait: icsr = %b\n"
+argument_list|,
+name|VVIDENTRETRY
 argument_list|,
 literal|0xffff
 operator|&
@@ -1528,69 +1625,13 @@ argument_list|,
 name|VV_IBITS
 argument_list|)
 expr_stmt|;
-name|vs
-operator|->
-name|vs_if
-operator|.
-name|if_flags
-operator|&=
-operator|~
-name|IFF_UP
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-goto|goto
-name|retry
-goto|;
-block|}
-if|if
-condition|(
-name|vs
-operator|->
-name|vs_ifuba
-operator|.
-name|ifu_flags
-operator|&
-name|UBA_NEEDBDP
-condition|)
-name|UBAPURGE
-argument_list|(
-name|vs
-operator|->
-name|vs_ifuba
-operator|.
-name|ifu_uba
-argument_list|,
-name|vs
-operator|->
-name|vs_ifuba
-operator|.
-name|ifu_w
-operator|.
-name|ifrw_bdp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vs
-operator|->
-name|vs_ifuba
-operator|.
-name|ifu_xtofree
-condition|)
-name|m_freem
-argument_list|(
-name|vs
-operator|->
-name|vs_ifuba
-operator|.
-name|ifu_xtofree
-argument_list|)
-expr_stmt|;
+comment|/* Purge BDP before looking at packet we just received */
 if|if
 condition|(
 name|vs
@@ -1737,9 +1778,10 @@ name|m
 decl_stmt|;
 name|int
 name|ubainfo
-decl_stmt|;
-name|int
+decl_stmt|,
 name|dest
+decl_stmt|,
+name|s
 decl_stmt|;
 name|ui
 operator|=
@@ -1766,6 +1808,11 @@ goto|goto
 name|restart
 goto|;
 comment|/* 	 * Not already active: dequeue another request 	 * and map it to the UNIBUS.  If no more requests, 	 * just return. 	 */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -1776,6 +1823,11 @@ operator|.
 name|if_snd
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -1828,8 +1880,7 @@ name|dest
 expr_stmt|;
 name|restart
 label|:
-comment|/* 	 * Have request mapped to UNIBUS for transmission. 	 * Purge any stale data from this BDP, and start the otput. 	 */
-comment|/* 	 * The following test is questionable and isn't done in 	 * the en driver... 	 */
+comment|/* 	 * Have request mapped to UNIBUS for transmission. 	 * Purge any stale data from this BDP, and start the output. 	 * 	 * Make sure this packet will fit in the interface. 	 */
 if|if
 condition|(
 name|vs
@@ -1965,6 +2016,14 @@ name|VV_ENB
 expr_stmt|;
 name|vs
 operator|->
+name|vs_if
+operator|.
+name|if_timer
+operator|=
+name|VVTIMEOUT
+expr_stmt|;
+name|vs
+operator|->
 name|vs_oactive
 operator|=
 literal|1
@@ -2027,6 +2086,14 @@ name|vv_softc
 index|[
 name|unit
 index|]
+expr_stmt|;
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_timer
+operator|=
+literal|0
 expr_stmt|;
 name|addr
 operator|=
@@ -2217,31 +2284,86 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|vvstart
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Transmit watchdog timer routine.  * This routine gets called when we lose a transmit interrupt.  * The best we can do is try to restart output.  */
+end_comment
+
+begin_macro
+name|vvwatchdog
+argument_list|(
+argument|unit
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|vv_softc
+modifier|*
+name|vs
+decl_stmt|;
+specifier|register
+name|int
+name|s
+decl_stmt|;
+name|vs
+operator|=
+operator|&
+name|vv_softc
+index|[
+name|unit
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|vs
 operator|->
 name|vs_if
 operator|.
-name|if_snd
-operator|.
-name|ifq_head
-operator|==
-literal|0
+name|if_flags
+operator|&
+name|IFF_DEBUG
 condition|)
-block|{
+name|printf
+argument_list|(
+literal|"vv%d: lost a transmit interrupt.\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 name|vs
 operator|->
-name|vs_lastx
-operator|=
-literal|256
+name|vs_timeouts
+operator|++
 expr_stmt|;
-comment|/* an invalid address */
-return|return;
-block|}
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|vvstart
 argument_list|(
 name|unit
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -2300,6 +2422,8 @@ decl_stmt|,
 name|len
 decl_stmt|,
 name|off
+decl_stmt|,
+name|s
 decl_stmt|;
 name|short
 name|resid
@@ -2372,6 +2496,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|vv_logreaderrors
+operator|&&
 name|vs
 operator|->
 name|vs_if
@@ -2379,12 +2505,10 @@ operator|.
 name|if_flags
 operator|&
 name|IFF_DEBUG
-operator|&&
-name|vv_logreaderrors
 condition|)
 name|printf
 argument_list|(
-literal|"vv%d: error vvicsr = %b\n"
+literal|"vv%d: VVRERR, vvicsr = %b\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2483,9 +2607,42 @@ name|len
 operator|<=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|vv_logreaderrors
+operator|&&
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"vv%d: len too big, len = %d, vvicsr = %b\n"
+argument_list|,
+name|unit
+argument_list|,
+name|len
+argument_list|,
+literal|0xffff
+operator|&
+operator|(
+name|addr
+operator|->
+name|vvicsr
+operator|)
+argument_list|,
+name|VV_IBITS
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropit
 goto|;
+block|}
 define|#
 directive|define
 name|vvdataaddr
@@ -2532,9 +2689,42 @@ name|off
 operator|>
 name|VVMTU
 condition|)
+block|{
+if|if
+condition|(
+name|vv_logreaderrors
+operator|&&
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"vv%d: VVMTU, off = %d, vvicsr = %b\n"
+argument_list|,
+name|unit
+argument_list|,
+name|off
+argument_list|,
+literal|0xffff
+operator|&
+operator|(
+name|addr
+operator|->
+name|vvicsr
+operator|)
+argument_list|,
+name|VV_IBITS
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropit
 goto|;
+block|}
 name|vv
 operator|->
 name|vh_type
@@ -2575,9 +2765,44 @@ name|resid
 operator|>
 name|len
 condition|)
+block|{
+if|if
+condition|(
+name|vv_logreaderrors
+operator|&&
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"vv%d: off = %d, resid = %d, vvicsr = %b\n"
+argument_list|,
+name|unit
+argument_list|,
+name|off
+argument_list|,
+name|resid
+argument_list|,
+literal|0xffff
+operator|&
+operator|(
+name|addr
+operator|->
+name|vvicsr
+operator|)
+argument_list|,
+name|VV_IBITS
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropit
 goto|;
+block|}
 name|len
 operator|=
 name|off
@@ -2596,9 +2821,40 @@ name|len
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|vv_logreaderrors
+operator|&&
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"vv%d: len is zero, vvicsr = %b\n"
+argument_list|,
+name|unit
+argument_list|,
+literal|0xffff
+operator|&
+operator|(
+name|addr
+operator|->
+name|vvicsr
+operator|)
+argument_list|,
+name|VV_IBITS
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropit
 goto|;
+block|}
 name|m
 operator|=
 name|if_rubaget
@@ -2619,9 +2875,40 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|vv_logreaderrors
+operator|&&
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"vv%d: if_rubaget failed, vvicsr = %b\n"
+argument_list|,
+name|unit
+argument_list|,
+literal|0xffff
+operator|&
+operator|(
+name|addr
+operator|->
+name|vvicsr
+operator|)
+argument_list|,
+name|VV_IBITS
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropit
 goto|;
+block|}
 if|if
 condition|(
 name|off
@@ -2650,6 +2937,15 @@ name|u_short
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Keep track of source address of this packet */
+name|vs
+operator|->
+name|vs_lastr
+operator|=
+name|vv
+operator|->
+name|vh_shost
+expr_stmt|;
 comment|/* 	 * Demultiplex on packet type 	 */
 switch|switch
 condition|(
@@ -2698,6 +2994,11 @@ goto|goto
 name|setup
 goto|;
 block|}
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|IF_QFULL
@@ -2723,6 +3024,11 @@ argument_list|(
 name|inq
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reset for the next packet. 	 */
@@ -2805,35 +3111,6 @@ name|vs_if
 operator|.
 name|if_ierrors
 operator|++
-expr_stmt|;
-if|if
-condition|(
-name|vs
-operator|->
-name|vs_if
-operator|.
-name|if_flags
-operator|&
-name|IFF_DEBUG
-operator|&&
-name|vv_logreaderrors
-condition|)
-name|printf
-argument_list|(
-literal|"vv%d: error vvicsr = %b\n"
-argument_list|,
-name|unit
-argument_list|,
-literal|0xffff
-operator|&
-operator|(
-name|addr
-operator|->
-name|vvicsr
-operator|)
-argument_list|,
-name|VV_IBITS
-argument_list|)
 expr_stmt|;
 goto|goto
 name|setup
@@ -3498,7 +3775,7 @@ block|{
 case|case
 name|SIOCSIFADDR
 case|:
-comment|/* too difficult to change addr while running */
+comment|/* too difficult to change address while running */
 if|if
 condition|(
 operator|(
@@ -3561,7 +3838,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Set up the address for this interface. We use the network number  * from the passed address and an invalid host number because vvinit()  * is smart enough to figure out the host number out.  */
+comment|/*  * Set up the address for this interface. We use the network number  * from the passed address and an invalid host number; vvinit() will  * figure out the host number and insert it later.  */
 end_comment
 
 begin_expr_stmt
