@@ -7016,6 +7016,9 @@ name|void
 modifier|*
 name|data
 parameter_list|,
+name|int
+name|fflag
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -7079,6 +7082,18 @@ case|case
 name|FD_STYPE
 case|:
 comment|/* set drive type */
+if|if
+condition|(
+operator|!
+name|fflag
+operator|&
+name|FWRITE
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 comment|/* 		 * Allow setting drive type temporarily iff 		 * currently unset.  Used for fdformat so any 		 * user can set it, and then start formatting. 		 */
 name|fd
 operator|->
@@ -7170,6 +7185,18 @@ case|case
 name|FD_SOPTS
 case|:
 comment|/* set drive options */
+if|if
+condition|(
+operator|!
+name|fflag
+operator|&
+name|FWRITE
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 name|fd
 operator|->
 name|options
@@ -7295,6 +7322,18 @@ return|;
 case|case
 name|FD_FORM
 case|:
+if|if
+condition|(
+operator|!
+name|fflag
+operator|&
+name|FWRITE
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 if|if
 condition|(
 operator|(

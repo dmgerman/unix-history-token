@@ -982,6 +982,9 @@ name|void
 modifier|*
 name|data
 parameter_list|,
+name|int
+name|fflag
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -1043,7 +1046,7 @@ name|cmd
 argument_list|,
 name|data
 argument_list|,
-literal|0
+name|fflag
 argument_list|,
 name|td
 argument_list|)

@@ -282,6 +282,9 @@ name|void
 modifier|*
 name|data
 parameter_list|,
+name|int
+name|fflag
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -491,8 +494,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_VERSION_01
+value|0x20041207
+end_define
+
+begin_comment
+comment|/* add fflag to g_ioctl_t */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|G_VERSION
-value|G_VERSION_00
+value|G_VERSION_01
 end_define
 
 begin_comment

@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -848,6 +854,9 @@ name|void
 modifier|*
 name|data
 parameter_list|,
+name|int
+name|fflag
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -914,6 +923,20 @@ case|case
 name|DIOCSMBR
 case|:
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|fflag
+operator|&
+name|FWRITE
+operator|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;

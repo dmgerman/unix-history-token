@@ -285,26 +285,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|g_ioctl_t
 name|acd_geom_ioctl
-parameter_list|(
-name|struct
-name|g_provider
-modifier|*
-parameter_list|,
-name|u_long
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -3778,6 +3764,9 @@ parameter_list|,
 name|void
 modifier|*
 name|addr
+parameter_list|,
+name|int
+name|fflag
 parameter_list|,
 name|struct
 name|thread
