@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	8.4 (Berkeley) 2/21/94"
+literal|"@(#)hash_page.c	8.7 (Berkeley) 8/16/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +132,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 modifier|*
 name|fetch_bitmap
 name|__P
@@ -149,12 +149,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|first_free
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -176,7 +176,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_short
+name|u_int16_t
 name|overflow_page
 name|__P
 argument_list|(
@@ -217,7 +217,7 @@ name|squeeze_key
 name|__P
 argument_list|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|,
 specifier|const
@@ -242,7 +242,7 @@ operator|(
 name|HTAB
 operator|*
 operator|,
-name|u_int
+name|u_int32_t
 operator|,
 name|BUFHEAD
 operator|*
@@ -265,7 +265,7 @@ name|PAGE_INIT
 parameter_list|(
 name|P
 parameter_list|)
-value|{ \ 	((u_short *)(P))[0] = 0; \ 	((u_short *)(P))[1] = hashp->BSIZE - 3 * sizeof(u_short); \ 	((u_short *)(P))[2] = hashp->BSIZE; \ }
+value|{ \ 	((u_int16_t *)(P))[0] = 0; \ 	((u_int16_t *)(P))[1] = hashp->BSIZE - 3 * sizeof(u_int16_t); \ 	((u_int16_t *)(P))[2] = hashp->BSIZE; \ }
 end_define
 
 begin_comment
@@ -300,7 +300,7 @@ end_function
 begin_block
 block|{
 specifier|register
-name|u_short
+name|u_int16_t
 modifier|*
 name|bp
 decl_stmt|,
@@ -311,7 +311,7 @@ decl_stmt|;
 name|bp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|p
@@ -414,7 +414,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 operator|)
 expr_stmt|;
@@ -459,7 +459,7 @@ name|ndx
 decl_stmt|;
 block|{
 specifier|register
-name|u_short
+name|u_int16_t
 modifier|*
 name|bp
 decl_stmt|,
@@ -469,13 +469,13 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|pairlen
 decl_stmt|;
 name|bp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|bufp
@@ -732,7 +732,7 @@ literal|2
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|bp
@@ -782,7 +782,7 @@ name|HTAB
 modifier|*
 name|hashp
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|obucket
 decl_stmt|,
 name|nbucket
@@ -797,7 +797,7 @@ modifier|*
 name|old_bufp
 decl_stmt|;
 specifier|register
-name|u_short
+name|u_int16_t
 modifier|*
 name|ino
 decl_stmt|;
@@ -818,7 +818,7 @@ name|ndx
 decl_stmt|,
 name|retval
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|copyto
 decl_stmt|,
 name|diff
@@ -834,7 +834,7 @@ decl_stmt|;
 name|copyto
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|)
 name|hashp
 operator|->
@@ -843,7 +843,7 @@ expr_stmt|;
 name|off
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|)
 name|hashp
 operator|->
@@ -922,7 +922,7 @@ expr_stmt|;
 name|ino
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 operator|(
@@ -1235,7 +1235,7 @@ name|copyto
 operator|-
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 operator|*
 operator|(
@@ -1268,7 +1268,7 @@ literal|"split %d/%d\n"
 argument_list|,
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|np
@@ -1281,7 +1281,7 @@ literal|2
 argument_list|,
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|op
@@ -1343,7 +1343,7 @@ name|HTAB
 modifier|*
 name|hashp
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|obucket
 decl_stmt|;
 comment|/* Same as __split_page. */
@@ -1385,19 +1385,19 @@ name|bufp
 decl_stmt|;
 comment|/* Buffer header for ino */
 specifier|register
-name|u_short
+name|u_int16_t
 modifier|*
 name|ino
 decl_stmt|;
 comment|/* Page keys come off of */
 specifier|register
-name|u_short
+name|u_int16_t
 modifier|*
 name|np
 decl_stmt|;
 comment|/* New page */
 specifier|register
-name|u_short
+name|u_int16_t
 modifier|*
 name|op
 decl_stmt|;
@@ -1415,7 +1415,7 @@ decl_stmt|;
 name|SPLIT_RETURN
 name|ret
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|n
 decl_stmt|,
 name|off
@@ -1436,7 +1436,7 @@ expr_stmt|;
 name|ino
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|old_bufp
@@ -1446,7 +1446,7 @@ expr_stmt|;
 name|np
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|new_bufp
@@ -1456,7 +1456,7 @@ expr_stmt|;
 name|op
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|old_bufp
@@ -1470,7 +1470,7 @@ expr_stmt|;
 name|scopyto
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|)
 name|copyto
 expr_stmt|;
@@ -1559,7 +1559,7 @@ return|;
 name|op
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|old_bufp
@@ -1586,7 +1586,7 @@ return|;
 name|np
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|new_bufp
@@ -1622,7 +1622,7 @@ expr_stmt|;
 name|ino
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|cino
@@ -1675,7 +1675,7 @@ name|scopyto
 operator|-
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 operator|*
 operator|(
@@ -1721,7 +1721,7 @@ return|;
 name|ino
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|bufp
@@ -1948,7 +1948,7 @@ return|;
 name|op
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|old_bufp
@@ -2038,7 +2038,7 @@ return|;
 name|np
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|new_bufp
@@ -2127,7 +2127,7 @@ end_function
 begin_block
 block|{
 specifier|register
-name|u_short
+name|u_int16_t
 modifier|*
 name|bp
 decl_stmt|,
@@ -2140,7 +2140,7 @@ decl_stmt|;
 name|bp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|bufp
@@ -2252,7 +2252,7 @@ return|;
 name|bp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|bufp
@@ -2329,7 +2329,7 @@ return|;
 name|bp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|bufp
@@ -2388,7 +2388,7 @@ return|;
 name|sop
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|bufp
@@ -2514,11 +2514,11 @@ name|bufp
 decl_stmt|;
 block|{
 specifier|register
-name|u_short
+name|u_int16_t
 modifier|*
 name|sp
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|ndx
 decl_stmt|,
 name|ovfl_num
@@ -2536,7 +2536,7 @@ directive|endif
 name|sp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|bufp
@@ -2786,7 +2786,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|bucket
 decl_stmt|;
 name|int
@@ -2808,7 +2808,7 @@ decl_stmt|;
 name|int
 name|rsize
 decl_stmt|;
-name|u_short
+name|u_int16_t
 modifier|*
 name|bp
 decl_stmt|;
@@ -2917,7 +2917,7 @@ return|;
 name|bp
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|p
@@ -3019,7 +3019,7 @@ name|M_32_SWAP
 argument_list|(
 operator|(
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 name|p
@@ -3107,7 +3107,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|bucket
 decl_stmt|;
 name|int
@@ -3209,7 +3209,7 @@ name|M_32_SWAP
 argument_list|(
 operator|(
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 name|p
@@ -3226,7 +3226,7 @@ name|max
 operator|=
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|p
@@ -3254,7 +3254,7 @@ name|M_16_SWAP
 argument_list|(
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|p
@@ -3373,7 +3373,7 @@ end_comment
 begin_function
 specifier|extern
 name|int
-name|__init_bitmap
+name|__ibitmap
 parameter_list|(
 name|hashp
 parameter_list|,
@@ -3395,7 +3395,7 @@ decl_stmt|,
 name|ndx
 decl_stmt|;
 block|{
-name|u_long
+name|u_int32_t
 modifier|*
 name|ip
 decl_stmt|;
@@ -3410,7 +3410,7 @@ operator|(
 name|ip
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|malloc
@@ -3523,7 +3523,7 @@ name|ndx
 index|]
 operator|=
 operator|(
-name|u_short
+name|u_int16_t
 operator|)
 name|pnum
 expr_stmt|;
@@ -3546,17 +3546,17 @@ end_function
 
 begin_function
 specifier|static
-name|u_long
+name|u_int32_t
 name|first_free
 parameter_list|(
 name|map
 parameter_list|)
-name|u_long
+name|u_int32_t
 name|map
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 name|i
 decl_stmt|,
 name|mask
@@ -3610,7 +3610,7 @@ end_function
 
 begin_function
 specifier|static
-name|u_short
+name|u_int16_t
 name|overflow_page
 parameter_list|(
 name|hashp
@@ -3621,7 +3621,7 @@ name|hashp
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|freep
 decl_stmt|;
@@ -3633,7 +3633,7 @@ name|offset
 decl_stmt|,
 name|splitnum
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|addr
 decl_stmt|;
 name|int
@@ -3748,7 +3748,7 @@ operator|(
 name|freep
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|hashp
@@ -3773,7 +3773,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 if|if
@@ -3962,7 +3962,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
@@ -4048,14 +4048,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
 comment|/* 		 * This is tricky.  The 1 indicates that you want the new page 		 * allocated with 1 clear bit.  Actually, you are going to 		 * allocate 2 pages from this map.  The first is going to be 		 * the map page, the second is the overflow page we were 		 * looking for.  The init_bitmap routine automatically, sets 		 * the first bit of itself to indicate that the bitmap itself 		 * is in use.  We would explicitly set the second bit, but 		 * don't have to if we tell init_bitmap not to leave it clear 		 * in the first place. 		 */
 if|if
 condition|(
-name|__init_bitmap
+name|__ibitmap
 argument_list|(
 name|hashp
 argument_list|,
@@ -4076,7 +4076,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 name|hashp
@@ -4133,7 +4133,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
@@ -4349,7 +4349,7 @@ name|SPLITMASK
 condition|)
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 comment|/* Out of overflow pages */
@@ -4415,10 +4415,10 @@ name|obufp
 decl_stmt|;
 block|{
 specifier|register
-name|u_short
+name|u_int16_t
 name|addr
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|freep
 decl_stmt|;
@@ -4429,7 +4429,7 @@ name|free_page
 decl_stmt|,
 name|free_bit
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|ndx
 decl_stmt|;
 name|addr
@@ -4460,7 +4460,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|)
 name|addr
 operator|)
@@ -4758,7 +4758,7 @@ name|key
 parameter_list|,
 name|val
 parameter_list|)
-name|u_short
+name|u_int16_t
 modifier|*
 name|sp
 decl_stmt|;
@@ -4779,7 +4779,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|free_space
 decl_stmt|,
 name|n
@@ -4937,7 +4937,7 @@ end_block
 
 begin_function
 specifier|static
-name|u_long
+name|u_int32_t
 modifier|*
 name|fetch_bitmap
 parameter_list|(
@@ -4977,7 +4977,7 @@ name|ndx
 index|]
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|malloc
