@@ -106,6 +106,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|gregset_t
+name|prgregset_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|fpregset_t
 name|prfpregset_t
 typedef|;
@@ -179,6 +186,18 @@ block|}
 name|prpsinfo_t
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|psaddr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* An address in the target process. */
+end_comment
 
 begin_endif
 endif|#
