@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: st.c 1.8 90/10/14$  *  *      @(#)st.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: st.c 1.8 90/10/14$  *  *      @(#)st.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -103,9 +103,11 @@ directive|include
 file|"stvar.h"
 end_include
 
-begin_comment
-comment|/* #define ADD_DELAY */
-end_comment
+begin_define
+define|#
+directive|define
+name|ADD_DELAY
+end_define
 
 begin_function_decl
 specifier|extern
@@ -563,7 +565,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Exabyte only:  * From adb can have access to fixed vs. variable length modes.  * Use 0x400 for 1k (best capacity) fixed length records.  * In st_open, if minor bit 4 set then 1k records are used.  * If st_exblken is set to anything other then 0 we are in fixed length mode.  * Minor bit 4 overrides any setting of st_exblklen.  *   */
+comment|/*  * Exabyte only:  * From adb can have access to fixed vs. variable length modes.  * Use 0x400 for 1k (best capacity) fixed length records.  * In st_open, if minor bit 4 set then 1k records are used.  * If st_exblken is set to anything other then 0 we are in fixed length mode.  * Minor bit 5 requests 1K fixed-length, overriding any setting of st_exblklen.  *   */
 end_comment
 
 begin_decl_stmt
@@ -2438,10 +2440,6 @@ name|sc_tapeid
 condition|)
 block|{
 case|case
-name|MT_ISMFOUR
-case|:
-break|break;
-case|case
 name|MT_ISAR
 case|:
 if|if
@@ -2577,6 +2575,11 @@ literal|"Only one density supported\n"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|MT_ISMFOUR
+case|:
+break|break;
+comment|/* XXX could do density select? */
 default|default:
 name|uprintf
 argument_list|(
@@ -3478,7 +3481,7 @@ name|STF_WRTTN
 operator|)
 condition|)
 block|{
-comment|/* 		 * XXX driver only supports cartridge tapes. 		 * Cartridge tapes don't do double EOFs on EOT. 		 */
+comment|/* 		 * Cartridge tapes don't do double EOFs on EOT. 		 * We assume that variable-block devices use double EOF. 		 */
 name|stcommand
 argument_list|(
 name|dev
@@ -3488,6 +3491,34 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_blklen
+operator|==
+literal|0
+condition|)
+block|{
+name|stcommand
+argument_list|(
+name|dev
+argument_list|,
+name|MTWEOF
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|stcommand
+argument_list|(
+name|dev
+argument_list|,
+name|MTBSR
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|hit
 operator|++
 expr_stmt|;
@@ -5384,7 +5415,7 @@ name|EIO
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * Variable length but read more than requested, 			 * an error. 			 */
+comment|/* 			 * Variable length but read more than requested, 			 * an error.  (XXX ??? wrong for 9 track?) 			 */
 if|if
 condition|(
 name|bp
@@ -5429,12 +5460,6 @@ operator|->
 name|sc_tapeid
 operator|!=
 name|MT_ISAR
-operator|||
-name|sc
-operator|->
-name|sc_tapeid
-operator|!=
-name|MT_ISMFOUR
 operator|)
 condition|)
 block|{
