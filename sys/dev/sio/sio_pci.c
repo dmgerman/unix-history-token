@@ -237,14 +237,6 @@ literal|0x10
 block|}
 block|,
 block|{
-literal|0x65851282
-block|,
-literal|"Davicom 56PDV PCI Modem"
-block|,
-literal|0x10
-block|}
-block|,
-block|{
 literal|0x01101407
 block|,
 literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
