@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c	5.12 (Berkeley) %G%"
+literal|"@(#)opendir.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,7 +126,7 @@ name|fd
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 operator|==
 operator|-
