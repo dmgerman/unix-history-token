@@ -66,11 +66,12 @@ end_include
 begin_define
 define|#
 directive|define
-name|PLXIC_DEVICE2SOFTC
+name|PLXCARD_DEVICE2SOFTC
 parameter_list|(
 name|dev
 parameter_list|)
-value|((struct plxic_slot *) device_get_softc(dev))
+define|\
+value|((struct plxcard_slot *) device_get_softc(dev))
 end_define
 
 begin_comment
@@ -80,14 +81,14 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|driver_intr_t
-name|plxicintr
+name|plxcardintr
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|static
 name|int
-name|plxic_ioctl
+name|plxcard_ioctl
 parameter_list|(
 name|struct
 name|slot
@@ -103,7 +104,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|plxic_power
+name|plxcard_power
 parameter_list|(
 name|struct
 name|slot
@@ -115,7 +116,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|plxic_mapirq
+name|plxcard_mapirq
 parameter_list|(
 name|struct
 name|slot
@@ -129,14 +130,14 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|timeout_t
-name|plxic_reset
+name|plxcard_reset
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|static
 name|void
-name|plxic_resume
+name|plxcard_resume
 parameter_list|(
 name|struct
 name|slot
@@ -148,7 +149,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|plxic_disable
+name|plxcard_disable
 parameter_list|(
 name|struct
 name|slot
@@ -160,7 +161,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|plxic_memory
+name|plxcard_memory
 parameter_list|(
 name|struct
 name|slot
@@ -174,7 +175,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|plxic_io
+name|plxcard_io
 parameter_list|(
 name|struct
 name|slot
@@ -191,7 +192,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|plxic_slot
+name|plxcard_slot
 block|{
 name|int
 name|unit
@@ -211,10 +212,6 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/* My device */
-name|u_char
-name|last_reg1
-decl_stmt|;
-comment|/* Last value of change reg */
 block|}
 struct|;
 end_struct
@@ -223,37 +220,28 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|slot_ctrl
-name|plxic_cinfo
+name|plxcard_cinfo
 init|=
 block|{
-name|plxic_mapirq
+name|plxcard_mapirq
 block|,
-name|plxic_memory
+name|plxcard_memory
 block|,
-name|plxic_io
+name|plxcard_io
 block|,
-name|plxic_reset
+name|plxcard_reset
 block|,
-name|plxic_disable
+name|plxcard_disable
 block|,
-name|plxic_power
+name|plxcard_power
 block|,
-name|plxic_ioctl
+name|plxcard_ioctl
 block|,
-name|plxic_resume
+name|plxcard_resume
 block|,
 literal|1
 block|,
-if|#
-directive|if
-literal|0
-block|1
-else|#
-directive|else
-literal|2
-comment|/* Fake for UE2212 LAN card */
-endif|#
-directive|endif
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -274,7 +262,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|plxic_probe
+name|plxcard_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -291,7 +279,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_attach
+name|plxcard_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -321,13 +309,13 @@ modifier|*
 name|slt
 decl_stmt|;
 name|struct
-name|plxic_slot
+name|plxcard_slot
 modifier|*
 name|sp
 decl_stmt|;
 name|sp
 operator|=
-name|PLXIC_DEVICE2SOFTC
+name|PLXCARD_DEVICE2SOFTC
 argument_list|(
 name|dev
 argument_list|)
@@ -383,7 +371,7 @@ argument_list|(
 name|kid
 argument_list|,
 operator|&
-name|plxic_cinfo
+name|plxcard_cinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -461,7 +449,7 @@ name|r
 argument_list|,
 name|INTR_TYPE_MISC
 argument_list|,
-name|plxicintr
+name|plxcardintr
 argument_list|,
 operator|(
 name|void
@@ -525,7 +513,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|plxic_ioctl
+name|plxcard_ioctl
 parameter_list|(
 name|struct
 name|slot
@@ -548,13 +536,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	PLXIC Interrupt handler.  *	Check the slot and report any changes.  */
+comment|/*  *	PLXCARD Interrupt handler.  *	Check the slot and report any changes.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|plxicintr
+name|plxcardintr
 parameter_list|(
 name|void
 modifier|*
@@ -566,7 +554,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_memory
+name|plxcard_memory
 parameter_list|(
 name|struct
 name|slot
@@ -614,7 +602,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_io
+name|plxcard_io
 parameter_list|(
 name|struct
 name|slot
@@ -660,7 +648,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_power
+name|plxcard_power
 parameter_list|(
 name|struct
 name|slot
@@ -679,7 +667,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|plxic_mapirq
+name|plxcard_mapirq
 parameter_list|(
 name|struct
 name|slot
@@ -695,7 +683,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|plxic_reset
+name|plxcard_reset
 parameter_list|(
 name|void
 modifier|*
@@ -723,7 +711,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|plxic_disable
+name|plxcard_disable
 parameter_list|(
 name|struct
 name|slot
@@ -738,7 +726,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|plxic_resume
+name|plxcard_resume
 parameter_list|(
 name|struct
 name|slot
@@ -746,14 +734,14 @@ modifier|*
 name|slt
 parameter_list|)
 block|{
-comment|/* XXX PLXIC How ? */
+comment|/* XXX PLXCARD How ? */
 block|}
 end_function
 
 begin_function
 specifier|static
 name|int
-name|plxic_activate_resource
+name|plxcard_activate_resource
 parameter_list|(
 name|device_t
 name|dev
@@ -919,7 +907,7 @@ literal|1
 expr_stmt|;
 name|err
 operator|=
-name|plxic_cinfo
+name|plxcard_cinfo
 operator|.
 name|mapio
 argument_list|(
@@ -1014,7 +1002,7 @@ literal|1
 expr_stmt|;
 name|err
 operator|=
-name|plxic_cinfo
+name|plxcard_cinfo
 operator|.
 name|mapmem
 argument_list|(
@@ -1065,7 +1053,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_deactivate_resource
+name|plxcard_deactivate_resource
 parameter_list|(
 name|device_t
 name|dev
@@ -1163,7 +1151,7 @@ name|IODF_ACTIVE
 expr_stmt|;
 name|err
 operator|=
-name|plxic_cinfo
+name|plxcard_cinfo
 operator|.
 name|mapio
 argument_list|(
@@ -1221,7 +1209,7 @@ operator|)
 expr_stmt|;
 name|err
 operator|=
-name|plxic_cinfo
+name|plxcard_cinfo
 operator|.
 name|mapmem
 argument_list|(
@@ -1272,7 +1260,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_setup_intr
+name|plxcard_setup_intr
 parameter_list|(
 name|device_t
 name|dev
@@ -1340,7 +1328,7 @@ name|err
 operator|==
 literal|0
 condition|)
-name|plxic_cinfo
+name|plxcard_cinfo
 operator|.
 name|mapirq
 argument_list|(
@@ -1380,7 +1368,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_teardown_intr
+name|plxcard_teardown_intr
 parameter_list|(
 name|device_t
 name|dev
@@ -1408,7 +1396,7 @@ argument_list|(
 name|child
 argument_list|)
 decl_stmt|;
-name|plxic_cinfo
+name|plxcard_cinfo
 operator|.
 name|mapirq
 argument_list|(
@@ -1439,7 +1427,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_set_res_flags
+name|plxcard_set_res_flags
 parameter_list|(
 name|device_t
 name|bus
@@ -1546,7 +1534,7 @@ break|break;
 block|}
 name|err
 operator|=
-name|plxic_cinfo
+name|plxcard_cinfo
 operator|.
 name|mapmem
 argument_list|(
@@ -1576,7 +1564,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_get_res_flags
+name|plxcard_get_res_flags
 parameter_list|(
 name|device_t
 name|bus
@@ -1699,7 +1687,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_set_memory_offset
+name|plxcard_set_memory_offset
 parameter_list|(
 name|device_t
 name|bus
@@ -1761,7 +1749,7 @@ expr_stmt|;
 comment|/* XXX BAD XXX */
 return|return
 operator|(
-name|plxic_cinfo
+name|plxcard_cinfo
 operator|.
 name|mapmem
 argument_list|(
@@ -1779,7 +1767,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|plxic_get_memory_offset
+name|plxcard_get_memory_offset
 parameter_list|(
 name|device_t
 name|bus
@@ -1849,7 +1837,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|plxic_methods
+name|plxcard_methods
 index|[]
 init|=
 block|{
@@ -1858,14 +1846,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|plxic_probe
+name|plxcard_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|plxic_attach
+name|plxcard_attach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -1922,28 +1910,28 @@ name|DEVMETHOD
 argument_list|(
 name|bus_activate_resource
 argument_list|,
-name|plxic_activate_resource
+name|plxcard_activate_resource
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_deactivate_resource
 argument_list|,
-name|plxic_deactivate_resource
+name|plxcard_deactivate_resource
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_setup_intr
 argument_list|,
-name|plxic_setup_intr
+name|plxcard_setup_intr
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_teardown_intr
 argument_list|,
-name|plxic_teardown_intr
+name|plxcard_teardown_intr
 argument_list|)
 block|,
 comment|/* Card interface */
@@ -1951,28 +1939,28 @@ name|DEVMETHOD
 argument_list|(
 name|card_set_res_flags
 argument_list|,
-name|plxic_set_res_flags
+name|plxcard_set_res_flags
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|card_get_res_flags
 argument_list|,
-name|plxic_get_res_flags
+name|plxcard_get_res_flags
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|card_set_memory_offset
 argument_list|,
-name|plxic_set_memory_offset
+name|plxcard_set_memory_offset
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|card_get_memory_offset
 argument_list|,
-name|plxic_get_memory_offset
+name|plxcard_get_memory_offset
 argument_list|)
 block|,
 block|{
@@ -1986,24 +1974,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|devclass_t
-name|plxic_devclass
+name|plxcard_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|plxic_driver
+name|plxcard_driver
 init|=
 block|{
-literal|"plxic"
+literal|"plxcard"
 block|,
-name|plxic_methods
+name|plxcard_methods
 block|,
 expr|sizeof
 operator|(
 expr|struct
-name|plxic_slot
+name|plxcard_slot
 operator|)
 block|}
 decl_stmt|;
@@ -2012,13 +2000,13 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|plxic
+name|plxcard
 argument_list|,
-name|isa
+name|pci
 argument_list|,
-name|plxic_driver
+name|plxcard_driver
 argument_list|,
-name|plxic_devclass
+name|plxcard_devclass
 argument_list|,
 literal|0
 argument_list|,
