@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	quiz.c	4.5	90/05/12	"
+literal|"	quiz.c	4.6	91/02/04	"
 decl_stmt|;
 end_decl_stmt
 
@@ -1792,11 +1792,20 @@ expr_stmt|;
 end_if
 
 begin_expr_stmt
+name|setvbuf
+argument_list|(
 name|stdout
-operator|->
-name|_flag
-operator||=
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
 name|_IONBF
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
