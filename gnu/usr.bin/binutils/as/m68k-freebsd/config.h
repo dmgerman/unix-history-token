@@ -133,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_ALIAS
-value|"m68k-unknown-freebsdelf"
+value|"m68k-unknown-freebsd"
 end_define
 
 begin_define
@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_CANONICAL
-value|"m68k-unknown-freebsdelf"
+value|"m68k-unknown-freebsd"
 end_define
 
 begin_define
