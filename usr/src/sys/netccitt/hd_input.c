@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)hd_input.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)hd_input.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -532,7 +532,7 @@ name|PRC_LINKUP
 argument_list|,
 name|hdp
 operator|->
-name|hd_xcp
+name|hd_pkp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -610,7 +610,7 @@ name|PRC_LINKRESET
 argument_list|,
 name|hdp
 operator|->
-name|hd_xcp
+name|hd_pkp
 argument_list|)
 expr_stmt|;
 name|hdp
@@ -665,7 +665,7 @@ name|PRC_LINKDOWN
 argument_list|,
 name|hdp
 operator|->
-name|hd_xcp
+name|hd_pkp
 argument_list|)
 expr_stmt|;
 name|hd_flush
@@ -804,7 +804,7 @@ name|PRC_LINKDOWN
 argument_list|,
 name|hdp
 operator|->
-name|hd_xcp
+name|hd_pkp
 argument_list|)
 expr_stmt|;
 case|case
@@ -854,7 +854,7 @@ name|PRC_LINKDOWN
 argument_list|,
 name|hdp
 operator|->
-name|hd_xcp
+name|hd_pkp
 argument_list|)
 expr_stmt|;
 case|case
@@ -956,7 +956,7 @@ name|PRC_LINKDOWN
 argument_list|,
 name|hdp
 operator|->
-name|hd_xcp
+name|hd_pkp
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1177,7 +1177,7 @@ name|PRC_LINKDOWN
 argument_list|,
 name|hdp
 operator|->
-name|hd_xcp
+name|hd_pkp
 argument_list|)
 expr_stmt|;
 case|case
@@ -1478,6 +1478,21 @@ name|len
 operator|-=
 name|HDHEADERLN
 expr_stmt|;
+name|fbuf
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+name|hdp
+operator|->
+name|hd_pkp
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BSD4_3
@@ -1541,10 +1556,6 @@ directive|endif
 name|pk_input
 argument_list|(
 name|fbuf
-argument_list|,
-name|hdp
-operator|->
-name|hd_xcp
 argument_list|)
 expr_stmt|;
 name|queued

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)hd_var.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)hd_var.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -127,6 +127,15 @@ modifier|*
 name|hd_ifa
 decl_stmt|;
 comment|/* device's X.25 network address */
+name|struct
+name|x25config
+modifier|*
+name|hd_xcp
+decl_stmt|;
+name|caddr_t
+name|hd_pkp
+decl_stmt|;
+comment|/* Level III junk */
 name|int
 function_decl|(
 modifier|*
@@ -135,12 +144,6 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* separate entry for HDLC direct output */
-name|struct
-name|x25config
-modifier|*
-name|hd_xcp
-decl_stmt|;
-comment|/* copy of&hdp->hd_if->if_addr */
 comment|/* link statistics */
 name|long
 name|hd_iframes_in
