@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)closedir.c	5.6 (Berkeley) %G%"
+literal|"@(#)closedir.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -53,24 +53,28 @@ begin_comment
 comment|/*  * close a directory.  */
 end_comment
 
-begin_function
-name|void
+begin_expr_stmt
 name|closedir
-parameter_list|(
+argument_list|(
 name|dirp
-parameter_list|)
+argument_list|)
 specifier|register
 name|DIR
-modifier|*
+operator|*
 name|dirp
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
-name|close
-argument_list|(
+name|int
+name|fd
+decl_stmt|;
+name|fd
+operator|=
 name|dirp
 operator|->
 name|dd_fd
-argument_list|)
 expr_stmt|;
 name|dirp
 operator|->
@@ -85,23 +89,42 @@ name|dd_loc
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|dirp
 operator|->
 name|dd_buf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|dirp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|close
+argument_list|(
+name|fd
+argument_list|)
+operator|)
+return|;
 block|}
-end_function
+end_block
 
 end_unit
 
