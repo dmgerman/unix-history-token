@@ -276,7 +276,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vop_lookup_t
+name|vop_cachedlookup_t
 name|hpfs_lookup
 decl_stmt|;
 end_decl_stmt
@@ -4848,7 +4848,7 @@ parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|vop_lookup_args
+name|vop_cachedlookup_args
 comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
