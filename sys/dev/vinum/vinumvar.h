@@ -689,17 +689,6 @@ name|buf
 modifier|*
 name|lastbuf
 decl_stmt|;
-name|struct
-name|rqinfo
-modifier|*
-modifier|*
-name|rqipp
-decl_stmt|;
-name|struct
-name|rqinfo
-modifier|*
-name|rqinfop
-decl_stmt|;
 endif|#
 directive|endif
 block|}
@@ -1622,11 +1611,11 @@ init|=
 literal|256
 block|,
 comment|/* go into remote gdb */
-name|DEBUG_EXITFREE
+name|DEBUG_WARNINGS
 init|=
 literal|512
 block|,
-comment|/* log "freeing malloc" on exit  */
+comment|/* log various relatively harmless warnings  */
 block|}
 enum|;
 end_enum
