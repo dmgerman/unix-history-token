@@ -4972,21 +4972,24 @@ name|cp
 operator|++
 expr_stmt|;
 block|}
-comment|/* 		     * Replacing the empty string for something else when 		     * done globally causes an infinite loop. The only 		     * meaningful substitution of the empty string would 		     * be those anchored by '^' or '$'. Thus, we can 		     * safely turn the substitution into a non-global one 		     * if the LHS is the empty string. 		     */
+comment|/* 		     * Global substitution of the empty string causes an 		     * infinite number of matches, unless anchored by '^' 		     * (start of string) or '$' (end of string). Catch the 		     * infinite substitution here. 		     * Note that flags can only contain the 3 bits we're 		     * interested in so we don't have to mask unrelated 		     * bits. We can test for equality. 		     */
 if|if
 condition|(
+operator|!
 name|pattern
 operator|.
 name|leftLen
-operator|==
-literal|0
-condition|)
+operator|&&
 name|pattern
 operator|.
 name|flags
-operator|&=
-operator|~
+operator|==
 name|VAR_SUB_GLOBAL
+condition|)
+name|Fatal
+argument_list|(
+literal|"Global substitution of the empty string"
+argument_list|)
 expr_stmt|;
 name|termc
 operator|=
