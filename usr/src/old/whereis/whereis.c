@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)whereis.c	4.6 (Berkeley) %G%"
+literal|"@(#)whereis.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,15 +136,6 @@ block|,
 literal|"/usr/src/old"
 block|,
 literal|"/usr/src/undoc"
-block|,
-comment|/* these are temporary */
-literal|"/usr/src/src.arpa/cmd"
-block|,
-literal|"/usr/src/src.monet/4.1"
-block|,
-literal|"/usr/src/src.monet/4.1a"
-block|,
-literal|"/usr/src/src.monet/4.1b"
 block|,
 literal|0
 block|}
