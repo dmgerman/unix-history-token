@@ -1649,7 +1649,7 @@ parameter_list|(
 name|struct
 name|frame_info
 modifier|*
-name|fr
+name|fi
 parameter_list|)
 block|{
 name|struct
@@ -1668,7 +1668,7 @@ name|this_saved_pc
 operator|=
 name|read_memory_integer
 argument_list|(
-name|fr
+name|fi
 operator|->
 name|frame
 operator|+
@@ -1810,7 +1810,7 @@ return|return
 operator|(
 name|read_memory_integer
 argument_list|(
-name|fr
+name|fi
 operator|->
 name|frame
 operator|+
@@ -1829,7 +1829,7 @@ return|return
 operator|(
 name|read_memory_integer
 argument_list|(
-name|fr
+name|fi
 operator|->
 name|frame
 operator|+
@@ -1848,7 +1848,7 @@ return|return
 operator|(
 name|read_memory_integer
 argument_list|(
-name|fr
+name|fi
 operator|->
 name|frame
 operator|+
