@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.41 %G%"
+literal|"@(#)sccs.c	1.42 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -523,7 +523,7 @@ name|PROG
 block|,
 name|REALUSER
 block|,
-literal|""
+literal|"r"
 block|,
 name|PROGPATH
 argument_list|(
