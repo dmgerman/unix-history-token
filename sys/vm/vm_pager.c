@@ -706,7 +706,7 @@ literal|2
 expr_stmt|;
 name|swapbkva
 operator|=
-name|kmem_alloc_pageable
+name|kmem_alloc_nofault
 argument_list|(
 name|pager_map
 argument_list|,
