@@ -63,35 +63,12 @@ directive|include
 file|<dev/syscons/syscons.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|u_char
-modifier|*
-name|vid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|banksize
-decl_stmt|,
-name|scrmode
-decl_stmt|,
-name|bpsl
-decl_stmt|,
-name|scrw
-decl_stmt|,
-name|scrh
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|blanked
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|SAVER_NAME
+value|"logo_saver"
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -132,6 +109,36 @@ specifier|extern
 name|unsigned
 name|int
 name|logo_img_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_char
+modifier|*
+name|vid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|banksize
+decl_stmt|,
+name|scrmode
+decl_stmt|,
+name|bpsl
+decl_stmt|,
+name|scrw
+decl_stmt|,
+name|scrh
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|blanked
 decl_stmt|;
 end_decl_stmt
 
@@ -486,13 +493,13 @@ argument_list|,
 name|logo_pal
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+name|set_border
+argument_list|(
+name|adp
+argument_list|,
 literal|0
-comment|/* XXX conflict */
-block|set_border(adp, 0);
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 name|blanked
 operator|++
 expr_stmt|;
@@ -570,7 +577,9 @@ literal|0
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -633,11 +642,15 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"logo_saver: no suitable graphics mode\n"
+literal|"%s: the console does not support M_VGA_CG320\n"
+argument_list|,
+name|SAVER_NAME
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENODEV
+operator|)
 return|;
 block|}
 name|scrw
@@ -652,12 +665,10 @@ name|info
 operator|.
 name|vi_height
 expr_stmt|;
-name|blanked
-operator|=
-literal|0
-expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -673,7 +684,9 @@ name|adp
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -684,7 +697,7 @@ name|scrn_saver_t
 name|logo_module
 init|=
 block|{
-literal|"logo_saver"
+name|SAVER_NAME
 block|,
 name|logo_init
 block|,
@@ -693,7 +706,7 @@ block|,
 name|logo_saver
 block|,
 name|NULL
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

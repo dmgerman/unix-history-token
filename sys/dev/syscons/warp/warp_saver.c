@@ -63,20 +63,12 @@ directive|include
 file|<dev/syscons/syscons.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|u_char
-modifier|*
-name|vid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|blanked
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|SAVER_NAME
+value|"warp_saver"
+end_define
 
 begin_define
 define|#
@@ -103,8 +95,23 @@ begin_define
 define|#
 directive|define
 name|STARS
-value|(SPP*(1+2+4+8))
+value|(SPP * (1 + 2 + 4 + 8))
 end_define
+
+begin_decl_stmt
+specifier|static
+name|u_char
+modifier|*
+name|vid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|blanked
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -203,6 +210,7 @@ name|n
 operator|/=
 literal|2
 control|)
+block|{
 for|for
 control|(
 name|j
@@ -269,6 +277,7 @@ name|i
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
 
 begin_function
@@ -319,13 +328,13 @@ argument_list|,
 name|warp_pal
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+name|set_border
+argument_list|(
+name|adp
+argument_list|,
 literal|0
-comment|/* XXX conflict */
-block|set_border(adp, 0);
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 name|blanked
 operator|++
 expr_stmt|;
@@ -367,7 +376,9 @@ literal|0
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -406,11 +417,15 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"warp_saver: the console does not support M_VGA_CG320\n"
+literal|"%s: the console does not support M_VGA_CG320\n"
+argument_list|,
+name|SAVER_NAME
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENODEV
+operator|)
 return|;
 block|}
 comment|/* randomize the star field */
@@ -427,7 +442,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|star
 index|[
 name|i
@@ -442,13 +456,10 @@ operator|*
 name|SCRH
 operator|)
 expr_stmt|;
-block|}
-name|blanked
-operator|=
-literal|0
-expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -464,7 +475,9 @@ name|adp
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -475,7 +488,7 @@ name|scrn_saver_t
 name|warp_module
 init|=
 block|{
-literal|"warp_saver"
+name|SAVER_NAME
 block|,
 name|warp_init
 block|,
@@ -484,7 +497,7 @@ block|,
 name|warp_saver
 block|,
 name|NULL
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

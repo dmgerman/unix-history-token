@@ -63,13 +63,12 @@ directive|include
 file|<dev/syscons/syscons.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|u_char
-modifier|*
-name|vid
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|SAVER_NAME
+value|"rain_saver"
+end_define
 
 begin_define
 define|#
@@ -91,6 +90,14 @@ directive|define
 name|MAX
 value|63
 end_define
+
+begin_decl_stmt
+specifier|static
+name|u_char
+modifier|*
+name|vid
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -240,13 +247,13 @@ argument_list|,
 name|rain_pal
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+name|set_border
+argument_list|(
+name|adp
+argument_list|,
 literal|0
-comment|/* XXX conflict */
-block|set_border(adp, 0);
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 name|blanked
 operator|++
 expr_stmt|;
@@ -380,7 +387,9 @@ literal|0
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -419,11 +428,15 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"rain_saver: the console does not support M_VGA_CG320\n"
+literal|"%s: the console does not support M_VGA_CG320\n"
+argument_list|,
+name|SAVER_NAME
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENODEV
+operator|)
 return|;
 block|}
 comment|/* intialize the palette */
@@ -463,12 +476,10 @@ index|]
 operator|+
 literal|4
 expr_stmt|;
-name|blanked
-operator|=
-literal|0
-expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -484,7 +495,9 @@ name|adp
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -495,7 +508,7 @@ name|scrn_saver_t
 name|rain_module
 init|=
 block|{
-literal|"rain_saver"
+name|SAVER_NAME
 block|,
 name|rain_init
 block|,
@@ -504,7 +517,7 @@ block|,
 name|rain_saver
 block|,
 name|NULL
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
