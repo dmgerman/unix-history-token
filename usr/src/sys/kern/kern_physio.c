@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.40	83/05/18	*/
+comment|/*	kern_physio.c	4.41	83/05/21	*/
 end_comment
 
 begin_include
@@ -625,9 +625,10 @@ name|c
 expr_stmt|;
 name|dblkno
 operator|+=
+name|btodb
+argument_list|(
 name|c
-operator|/
-name|DEV_BSIZE
+argument_list|)
 expr_stmt|;
 block|}
 end_while
@@ -1150,11 +1151,12 @@ name|bp
 operator|->
 name|b_blkno
 operator|=
+name|btodb
+argument_list|(
 name|uio
 operator|->
 name|uio_offset
-operator|/
-name|DEV_BSIZE
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
