@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 149 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 150 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -270,7 +270,7 @@ comment|/*  * printf() format helpers  */
 end_comment
 
 begin_comment
-comment|/* Split 64-bit integer into two 32-bit values. Use with %8,8X%8.8X */
+comment|/* Split 64-bit integer into two 32-bit values. Use with %8.8X%8.8X */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 152 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 156 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,18 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20040402
+value|0x20040514
+end_define
+
+begin_comment
+comment|/*  * OS name, used for the _OS object.  The _OS object is essentially obsolete,  * but there is a large base of ASL/AML code in existing machines that check  * for the string below.  The use of this string usually guarantees that   * the ASL will execute down the most tested code path.  Also, there is some  * code that will not execute the _OSI method unless _OS matches the string  * below.  Therefore, change this string at your own risk.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_OS_NAME
+value|"Microsoft Windows NT"
 end_define
 
 begin_comment
@@ -467,7 +478,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_NUM_OSI_STRINGS
-value|4
+value|9
 end_define
 
 begin_comment

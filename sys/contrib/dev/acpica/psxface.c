@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 75 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -58,26 +58,16 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsxExecute  *  * PARAMETERS:  MethodNode          - A method object containing both the AML  *                                    address and length.  *              **Params            - List of parameters to pass to method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *              **ReturnObjDesc     - Return object from execution of the  *                                    method.  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsxExecute  *  * PARAMETERS:  Info->Node          - A method object containing both the AML  *                                    address and length.  *              **Params            - List of parameters to pass to method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *              **ReturnObjDesc     - Return object from execution of the  *                                    method.  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiPsxExecute
 parameter_list|(
-name|ACPI_NAMESPACE_NODE
+name|ACPI_PARAMETER_INFO
 modifier|*
-name|MethodNode
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|Params
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnObjDesc
+name|Info
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -107,7 +97,12 @@ comment|/* Validate the Node and get the attached object */
 if|if
 condition|(
 operator|!
-name|MethodNode
+name|Info
+operator|||
+operator|!
+name|Info
+operator|->
+name|Node
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -120,7 +115,9 @@ name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-name|MethodNode
+name|Info
+operator|->
+name|Node
 argument_list|)
 expr_stmt|;
 if|if
@@ -140,7 +137,9 @@ name|Status
 operator|=
 name|AcpiDsBeginMethodExecution
 argument_list|(
-name|MethodNode
+name|Info
+operator|->
+name|Node
 argument_list|,
 name|ObjDesc
 argument_list|,
@@ -163,7 +162,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|Params
+operator|(
+name|Info
+operator|->
+name|ParameterType
+operator|==
+name|ACPI_PARAM_ARGS
+operator|)
+operator|&&
+operator|(
+name|Info
+operator|->
+name|Parameters
+operator|)
 condition|)
 block|{
 comment|/*          * The caller "owns" the parameters, so give each one an extra          * reference          */
@@ -173,7 +184,9 @@ name|i
 operator|=
 literal|0
 init|;
-name|Params
+name|Info
+operator|->
+name|Parameters
 index|[
 name|i
 index|]
@@ -184,7 +197,9 @@ control|)
 block|{
 name|AcpiUtAddReference
 argument_list|(
-name|Params
+name|Info
+operator|->
+name|Parameters
 index|[
 name|i
 index|]
@@ -200,7 +215,9 @@ name|ACPI_DB_PARSE
 operator|,
 literal|"**** Begin Method Parse **** Entry=%p obj=%p\n"
 operator|,
-name|MethodNode
+name|Info
+operator|->
+name|Node
 operator|,
 name|ObjDesc
 operator|)
@@ -278,7 +295,9 @@ name|WalkState
 argument_list|,
 name|Op
 argument_list|,
-name|MethodNode
+name|Info
+operator|->
+name|Node
 argument_list|,
 name|ObjDesc
 operator|->
@@ -291,8 +310,6 @@ operator|->
 name|Method
 operator|.
 name|AmlLength
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -345,7 +362,9 @@ name|ACPI_DB_PARSE
 operator|,
 literal|"**** Begin Method Execution **** Entry=%p obj=%p\n"
 operator|,
-name|MethodNode
+name|Info
+operator|->
+name|Node
 operator|,
 name|ObjDesc
 operator|)
@@ -376,7 +395,9 @@ name|AcpiPsSetName
 argument_list|(
 name|Op
 argument_list|,
-name|MethodNode
+name|Info
+operator|->
+name|Node
 operator|->
 name|Name
 operator|.
@@ -389,7 +410,9 @@ name|Common
 operator|.
 name|Node
 operator|=
-name|MethodNode
+name|Info
+operator|->
+name|Node
 expr_stmt|;
 comment|/* Create and initialize a new walk state */
 name|WalkState
@@ -427,7 +450,9 @@ name|WalkState
 argument_list|,
 name|Op
 argument_list|,
-name|MethodNode
+name|Info
+operator|->
+name|Node
 argument_list|,
 name|ObjDesc
 operator|->
@@ -441,9 +466,7 @@ name|Method
 operator|.
 name|AmlLength
 argument_list|,
-name|Params
-argument_list|,
-name|ReturnObjDesc
+name|Info
 argument_list|,
 literal|3
 argument_list|)
@@ -490,7 +513,19 @@ name|Cleanup1
 label|:
 if|if
 condition|(
-name|Params
+operator|(
+name|Info
+operator|->
+name|ParameterType
+operator|==
+name|ACPI_PARAM_ARGS
+operator|)
+operator|&&
+operator|(
+name|Info
+operator|->
+name|Parameters
+operator|)
 condition|)
 block|{
 comment|/* Take away the extra reference that we gave the parameters above */
@@ -500,7 +535,9 @@ name|i
 operator|=
 literal|0
 init|;
-name|Params
+name|Info
+operator|->
+name|Parameters
 index|[
 name|i
 index|]
@@ -515,7 +552,9 @@ name|void
 operator|)
 name|AcpiUtUpdateObjectReference
 argument_list|(
-name|Params
+name|Info
+operator|->
+name|Parameters
 index|[
 name|i
 index|]
@@ -542,8 +581,9 @@ block|}
 comment|/*      * If the method has returned an object, signal this to the caller with      * a control exception code      */
 if|if
 condition|(
-operator|*
-name|ReturnObjDesc
+name|Info
+operator|->
+name|ReturnObject
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -553,15 +593,17 @@ name|ACPI_DB_PARSE
 operator|,
 literal|"Method returned ObjDesc=%p\n"
 operator|,
-operator|*
-name|ReturnObjDesc
+name|Info
+operator|->
+name|ReturnObject
 operator|)
 argument_list|)
 expr_stmt|;
 name|ACPI_DUMP_STACK_ENTRY
 argument_list|(
-operator|*
-name|ReturnObjDesc
+name|Info
+operator|->
+name|ReturnObject
 argument_list|)
 expr_stmt|;
 name|Status

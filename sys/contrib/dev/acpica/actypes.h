@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 266 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 270 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2075,50 +2075,153 @@ name|ACPI_NUM_GPE
 value|256
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_ENABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISABLE
+value|1
+end_define
+
 begin_comment
-comment|/*  * GPE info flags - Per GPE  * +---------+-+-+-+  * |Bits 8:3 |2|1|0|  * +---------+-+-+-+  *          | | | |  *          | | | +- Edge or Level Triggered  *          | | +--- Type: Wake or Runtime  *          | +----- Enabled for wake?  *          +--------<Reserved>  */
+comment|/*  * GPE info flags - Per GPE  * +-+-+-+---+---+-+  * |7|6|5|4:3|2:1|0|  * +-+-+-+---+---+-+  *  | | |  |   |  |  *  | | |  |   |  +--- Interrupt type: Edge or Level Triggered  *  | | |  |   +--- Type: Wake-only, Runtime-only, or wake/runtime  *  | | |  +--- Type of dispatch -- to method, handler, or none  *  | | +--- Enabled for runtime?  *  | +--- Enabled for wake?  *  +--- System state when GPE ocurred (running/waking)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE_XRUPT_TYPE_MASK
-value|(UINT8) 1
+value|(UINT8) 0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE_LEVEL_TRIGGERED
-value|(UINT8) 1
+value|(UINT8) 0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE_EDGE_TRIGGERED
-value|(UINT8) 0
+value|(UINT8) 0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE_TYPE_MASK
-value|(UINT8) 2
+value|(UINT8) 0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_TYPE_WAKE_RUN
+value|(UINT8) 0x06
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE_TYPE_WAKE
-value|(UINT8) 2
+value|(UINT8) 0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE_TYPE_RUNTIME
-value|(UINT8) 0
+value|(UINT8) 0x04
+end_define
+
+begin_comment
+comment|/* Default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_MASK
+value|(UINT8) 0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_HANDLER
+value|(UINT8) 0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_METHOD
+value|(UINT8) 0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_NOT_USED
+value|(UINT8) 0x00
+end_define
+
+begin_comment
+comment|/* Default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_RUN_ENABLE_MASK
+value|(UINT8) 0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_RUN_ENABLED
+value|(UINT8) 0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_RUN_DISABLED
+value|(UINT8) 0x00
+end_define
+
+begin_comment
+comment|/* Default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_WAKE_ENABLE_MASK
+value|(UINT8) 0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_WAKE_ENABLED
+value|(UINT8) 0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_WAKE_DISABLED
+value|(UINT8) 0x00
 end_define
 
 begin_comment
@@ -2129,26 +2232,33 @@ begin_define
 define|#
 directive|define
 name|ACPI_GPE_ENABLE_MASK
-value|(UINT8) 4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_ENABLED
-value|(UINT8) 4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_DISABLED
-value|(UINT8) 0
+value|(UINT8) 0x60
 end_define
 
 begin_comment
-comment|/* Default */
+comment|/* Both run/wake */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_SYSTEM_MASK
+value|(UINT8) 0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_SYSTEM_RUNNING
+value|(UINT8) 0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_SYSTEM_WAKING
+value|(UINT8) 0x00
+end_define
 
 begin_comment
 comment|/*  * Flags for GPE and Lock interfaces  */
@@ -2161,12 +2271,20 @@ name|ACPI_EVENT_WAKE_ENABLE
 value|0x2
 end_define
 
+begin_comment
+comment|/* AcpiGpeEnable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_EVENT_WAKE_DISABLE
 value|0x2
 end_define
+
+begin_comment
+comment|/* AcpiGpeDisable */
+end_comment
 
 begin_define
 define|#
@@ -2190,21 +2308,28 @@ begin_define
 define|#
 directive|define
 name|ACPI_SYSTEM_NOTIFY
-value|0
+value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DEVICE_NOTIFY
-value|1
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALL_NOTIFY
+value|0x3
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_MAX_NOTIFY_HANDLER_TYPE
-value|1
+value|0x3
 end_define
 
 begin_define
@@ -2817,21 +2942,6 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|ACPI_GPE_HANDLER
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
 name|ACPI_NOTIFY_HANDLER
 function_decl|)
 parameter_list|(
@@ -3124,6 +3234,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_VALID_SXDS
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_COMMON_OBJ_INFO
 define|\
 value|ACPI_OBJECT_TYPE            Type;
@@ -3158,13 +3275,6 @@ name|acpi_device_info
 block|{
 name|ACPI_COMMON_OBJ_INFO
 expr_stmt|;
-name|UINT8
-name|HighestDstates
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* _SxD values 0xFF indicates not valid */
 name|UINT32
 name|Valid
 decl_stmt|;
@@ -3185,6 +3295,13 @@ name|ACPI_DEVICE_ID
 name|UniqueId
 decl_stmt|;
 comment|/* _UID value if any */
+name|UINT8
+name|HighestDstates
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* _SxD values: 0xFF indicates not valid */
 name|ACPI_COMPATIBLE_ID_LIST
 name|CompatibilityId
 decl_stmt|;

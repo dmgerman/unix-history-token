@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 119 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 121 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -91,6 +91,9 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+name|UINT32
+name|Value
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 init|=
@@ -132,6 +135,21 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+comment|/* Second value is the notify value */
+name|Value
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|Operand
+index|[
+literal|1
+index|]
+operator|->
+name|Integer
+operator|.
+name|Value
+expr_stmt|;
 comment|/* Notifies allowed on this object? */
 if|if
 condition|(
@@ -164,6 +182,44 @@ name|AE_AML_OPERAND_TYPE
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_GPE_NOTIFY_CHECK
+comment|/*          * GPE method wake/notify check.  Here, we want to ensure that we          * don't receive any "DeviceWake" Notifies from a GPE _Lxx or _Exx          * GPE method during system runtime.  If we do, the GPE is marked          * as "wake-only" and disabled.          *          * 1) Is the Notify() value == DeviceWake?          * 2) Is this a GPE deferred method?  (An _Lxx or _Exx method)          * 3) Did the original GPE happen at system runtime?          *    (versus during wake)          *          * If all three cases are true, this is a wake-only GPE that should          * be disabled at runtime.          */
+if|if
+condition|(
+name|Value
+operator|==
+literal|2
+condition|)
+comment|/* DeviceWake */
+block|{
+name|Status
+operator|=
+name|AcpiEvCheckForWakeOnlyGpe
+argument_list|(
+name|WalkState
+operator|->
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* AE_WAKE_ONLY_GPE only error, means ignore this notify */
+name|return_ACPI_STATUS
+argument_list|(
+argument|AE_OK
+argument_list|)
+block|}
+block|}
+endif|#
+directive|endif
 comment|/*          * Dispatch the notify to the appropriate handler          * NOTE: the request is queued for execution after this method          * completes.  The notify handlers are NOT invoked synchronously          * from this thread -- because handlers may in turn run other          * control methods.          */
 name|Status
 operator|=
@@ -171,16 +227,6 @@ name|AcpiEvQueueNotifyRequest
 argument_list|(
 name|Node
 argument_list|,
-operator|(
-name|UINT32
-operator|)
-name|Operand
-index|[
-literal|1
-index|]
-operator|->
-name|Integer
-operator|.
 name|Value
 argument_list|)
 expr_stmt|;

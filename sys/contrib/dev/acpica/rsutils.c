@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 38 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 39 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -393,6 +393,9 @@ modifier|*
 name|InBuffer
 parameter_list|)
 block|{
+name|ACPI_PARAMETER_INFO
+name|Info
+decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|Params
@@ -526,18 +529,33 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|Info
+operator|.
+name|Node
+operator|=
+name|Handle
+expr_stmt|;
+name|Info
+operator|.
+name|Parameters
+operator|=
+name|Params
+expr_stmt|;
+name|Info
+operator|.
+name|ParameterType
+operator|=
+name|ACPI_PARAM_ARGS
+expr_stmt|;
 comment|/*      * Execute the method, no return value      */
 name|Status
 operator|=
 name|AcpiNsEvaluateRelative
 argument_list|(
-name|Handle
-argument_list|,
 literal|"_SRS"
 argument_list|,
-name|Params
-argument_list|,
-name|NULL
+operator|&
+name|Info
 argument_list|)
 expr_stmt|;
 comment|/*      * Clean up and return the status from AcpiNsEvaluateRelative      */

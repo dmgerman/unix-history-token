@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 180 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 182 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -464,7 +464,7 @@ operator|.
 name|SyncLevel
 operator|=
 operator|(
-name|UINT16
+name|UINT8
 operator|)
 name|ACPI_STRTOUL
 argument_list|(

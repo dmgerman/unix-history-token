@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 199 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 201 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -777,21 +777,16 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Information about a GPE, one per each GPE in an array */
+comment|/* Dispatch info for each GPE -- either a method or handler, cannot be both */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_gpe_event_info
+name|acpi_handler_info
 block|{
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|MethodNode
-decl_stmt|;
-comment|/* Method node for this GPE level */
-name|ACPI_GPE_HANDLER
-name|Handler
+name|ACPI_EVENT_HANDLER
+name|Address
 decl_stmt|;
 comment|/* Address of handler, if any */
 name|void
@@ -799,6 +794,50 @@ modifier|*
 name|Context
 decl_stmt|;
 comment|/* Context to be passed to handler */
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|MethodNode
+decl_stmt|;
+comment|/* Method node for this GPE level (saved) */
+block|}
+name|ACPI_HANDLER_INFO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+union|union
+name|acpi_gpe_dispatch_info
+block|{
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|MethodNode
+decl_stmt|;
+comment|/* Method node for this GPE level */
+name|struct
+name|acpi_handler_info
+modifier|*
+name|Handler
+decl_stmt|;
+block|}
+name|ACPI_GPE_DISPATCH_INFO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Information about a GPE, one per each GPE in an array.  * NOTE: Important to keep this struct as small as possible.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_gpe_event_info
+block|{
+name|union
+name|acpi_gpe_dispatch_info
+name|Dispatch
+decl_stmt|;
+comment|/* Either Method or Handler */
 name|struct
 name|acpi_gpe_register_info
 modifier|*
@@ -808,11 +847,11 @@ comment|/* Backpointer to register info */
 name|UINT8
 name|Flags
 decl_stmt|;
-comment|/* Level or Edge */
+comment|/* Misc info about this GPE */
 name|UINT8
-name|BitMask
+name|RegisterBit
 decl_stmt|;
-comment|/* This GPE within the register */
+comment|/* This GPE bit within the register */
 block|}
 name|ACPI_GPE_EVENT_INFO
 typedef|;
@@ -836,17 +875,13 @@ name|EnableAddress
 decl_stmt|;
 comment|/* Address of enable reg */
 name|UINT8
-name|Status
+name|EnableForWake
 decl_stmt|;
-comment|/* Current value of status reg */
+comment|/* GPEs to keep enabled when sleeping */
 name|UINT8
-name|Enable
+name|EnableForRun
 decl_stmt|;
-comment|/* Current value of enable reg */
-name|UINT8
-name|WakeEnable
-decl_stmt|;
-comment|/* Mask of bits to keep enabled when sleeping */
+comment|/* GPEs to keep enabled when running */
 name|UINT8
 name|BaseGpeNumber
 decl_stmt|;
@@ -865,6 +900,10 @@ typedef|typedef
 struct|struct
 name|acpi_gpe_block_info
 block|{
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
 name|struct
 name|acpi_gpe_block_info
 modifier|*
@@ -1302,7 +1341,7 @@ name|UINT32
 name|ThreadId
 decl_stmt|;
 comment|/* Running thread ID */
-name|UINT16
+name|UINT8
 name|CurrentSyncLevel
 decl_stmt|;
 comment|/* Mutex Sync (nested acquire) level */

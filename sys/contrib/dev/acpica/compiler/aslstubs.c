@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslstubs - Stubs used to link to Aml interpreter  *              $Revision: 12 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslstubs - Stubs used to link to Aml interpreter  *              $Revision: 13 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -245,6 +245,23 @@ name|RegionObj
 parameter_list|,
 name|BOOLEAN
 name|AcpiNsLocked
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_STATUS
+name|AcpiEvCheckForWakeOnlyGpe
+parameter_list|(
+name|ACPI_GPE_EVENT_INFO
+modifier|*
+name|GpeEventInfo
 parameter_list|)
 block|{
 return|return

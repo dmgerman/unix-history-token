@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 93 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 94 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -184,8 +184,6 @@ name|AmlLength
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -348,8 +346,6 @@ argument_list|,
 name|AmlStart
 argument_list|,
 name|AmlLength
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,

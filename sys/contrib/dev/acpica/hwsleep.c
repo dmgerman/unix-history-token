@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 66 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -602,6 +602,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Clear all fixed and general purpose status bits */
 name|Status
 operator|=
 name|AcpiHwClearAcpiStatus
@@ -657,10 +658,33 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * 1) Disable all runtime GPEs       * 2) Enable all wakeup GPEs      */
+comment|/*      * 1) Disable/Clear all GPEs      * 2) Enable all wakeup GPEs      */
 name|Status
 operator|=
-name|AcpiHwPrepareGpesForSleep
+name|AcpiHwDisableAllGpes
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiGbl_SystemAwakeAndRunning
+operator|=
+name|FALSE
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiHwEnableAllWakeupGpes
 argument_list|()
 expr_stmt|;
 if|if
@@ -1027,10 +1051,33 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * 1) Disable all runtime GPEs       * 2) Enable all wakeup GPEs      */
+comment|/*      * 1) Disable/Clear all GPEs      * 2) Enable all wakeup GPEs      */
 name|Status
 operator|=
-name|AcpiHwPrepareGpesForSleep
+name|AcpiHwDisableAllGpes
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiGbl_SystemAwakeAndRunning
+operator|=
+name|FALSE
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiHwEnableAllWakeupGpes
 argument_list|()
 expr_stmt|;
 if|if
@@ -1439,10 +1486,33 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* TBD: _WAK "sometimes" returns stuff - do we want to look at it? */
-comment|/*      * Restore the GPEs:      * 1) Disable all wakeup GPEs       * 2) Enable all runtime GPEs      */
+comment|/*      * Restore the GPEs:      * 1) Disable/Clear all GPEs      * 2) Enable all runtime GPEs      */
 name|Status
 operator|=
-name|AcpiHwRestoreGpesOnWake
+name|AcpiHwDisableAllGpes
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiGbl_SystemAwakeAndRunning
+operator|=
+name|TRUE
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiHwEnableAllRuntimeGpes
 argument_list|()
 expr_stmt|;
 if|if
@@ -1460,6 +1530,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Enable power button */
+operator|(
+name|void
+operator|)
 name|AcpiSetRegister
 argument_list|(
 name|AcpiGbl_FixedEventInfo
@@ -1474,6 +1547,9 @@ argument_list|,
 name|ACPI_MTX_DO_NOT_LOCK
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiSetRegister
 argument_list|(
 name|AcpiGbl_FixedEventInfo

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 106 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 107 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -347,18 +347,7 @@ value|unsigned long long
 end_define
 
 begin_comment
-comment|/* Name of host operating system (returned by the _OS_ namespace object) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_OS_NAME
-value|"Intel ACPI/CA Core Subsystem"
-end_define
-
-begin_comment
-comment|/* This macro is used to tag functions as "printf-like" because  * some compilers can catch printf format string problems. MSVC  * doesn't, so this is proprocessed away.  */
+comment|/*   * This macro is used to tag functions as "printf-like" because  * some compilers can catch printf format string problems. MSVC  * doesn't, so this is proprocessed away.  */
 end_comment
 
 begin_define

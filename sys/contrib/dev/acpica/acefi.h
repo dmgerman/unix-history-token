@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acefi.h - OS specific defines, etc.  *       $Revision: 14 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acefi.h - OS specific defines, etc.  *       $Revision: 15 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,13 +17,6 @@ begin_define
 define|#
 directive|define
 name|__ACEFI_H__
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_OS_NAME
-value|"AED EFI"
 end_define
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 142 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 145 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -371,7 +371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallNotifyHandler  *  * PARAMETERS:  Device          - The device for which notifies will be handled  *              HandlerType     - The type of handler:  *                                  ACPI_SYSTEM_NOTIFY: SystemHandler (00-7f)  *                                  ACPI_DEVICE_NOTIFY: DriverHandler (80-ff)  *              Handler         - Address of the handler  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for notifies on an ACPI device  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallNotifyHandler  *  * PARAMETERS:  Device          - The device for which notifies will be handled  *              HandlerType     - The type of handler:  *                                  ACPI_SYSTEM_NOTIFY: SystemHandler (00-7f)  *                                  ACPI_DEVICE_NOTIFY: DriverHandler (80-ff)  *                                  ACPI_ALL_NOTIFY:  both system and device  *              Handler         - Address of the handler  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for notifies on an ACPI device  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -495,7 +495,7 @@ condition|(
 operator|(
 operator|(
 name|HandlerType
-operator|==
+operator|&
 name|ACPI_SYSTEM_NOTIFY
 operator|)
 operator|&&
@@ -507,7 +507,7 @@ operator|||
 operator|(
 operator|(
 name|HandlerType
-operator|==
+operator|&
 name|ACPI_DEVICE_NOTIFY
 operator|)
 operator|&&
@@ -528,7 +528,7 @@ block|}
 if|if
 condition|(
 name|HandlerType
-operator|==
+operator|&
 name|ACPI_SYSTEM_NOTIFY
 condition|)
 block|{
@@ -551,8 +551,12 @@ operator|=
 name|Context
 expr_stmt|;
 block|}
-else|else
-comment|/* ACPI_DEVICE_NOTIFY */
+if|if
+condition|(
+name|HandlerType
+operator|&
+name|ACPI_DEVICE_NOTIFY
+condition|)
 block|{
 name|AcpiGbl_DeviceNotify
 operator|.
@@ -615,7 +619,7 @@ condition|(
 operator|(
 operator|(
 name|HandlerType
-operator|==
+operator|&
 name|ACPI_SYSTEM_NOTIFY
 operator|)
 operator|&&
@@ -629,7 +633,7 @@ operator|||
 operator|(
 operator|(
 name|HandlerType
-operator|==
+operator|&
 name|ACPI_DEVICE_NOTIFY
 operator|)
 operator|&&
@@ -758,7 +762,7 @@ expr_stmt|;
 if|if
 condition|(
 name|HandlerType
-operator|==
+operator|&
 name|ACPI_SYSTEM_NOTIFY
 condition|)
 block|{
@@ -771,8 +775,12 @@ operator|=
 name|NotifyObj
 expr_stmt|;
 block|}
-else|else
-comment|/* ACPI_DEVICE_NOTIFY */
+if|if
+condition|(
+name|HandlerType
+operator|&
+name|ACPI_DEVICE_NOTIFY
+condition|)
 block|{
 name|ObjDesc
 operator|->
@@ -781,6 +789,20 @@ operator|.
 name|DeviceNotify
 operator|=
 name|NotifyObj
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|HandlerType
+operator|==
+name|ACPI_ALL_NOTIFY
+condition|)
+block|{
+comment|/* Extra ref if installed in both */
+name|AcpiUtAddReference
+argument_list|(
+name|NotifyObj
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -803,7 +825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveNotifyHandler  *  * PARAMETERS:  Device          - The device for which notifies will be handled  *              HandlerType     - The type of handler:  *                                  ACPI_SYSTEM_NOTIFY: SystemHandler (00-7f)  *                                  ACPI_DEVICE_NOTIFY: DriverHandler (80-ff)  *              Handler         - Address of the handler  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for notifies on an ACPI device  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveNotifyHandler  *  * PARAMETERS:  Device          - The device for which notifies will be handled  *              HandlerType     - The type of handler:  *                                  ACPI_SYSTEM_NOTIFY: SystemHandler (00-7f)  *                                  ACPI_DEVICE_NOTIFY: DriverHandler (80-ff)  *                                  ACPI_ALL_NOTIFY:  both system and device  *              Handler         - Address of the handler  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for notifies on an ACPI device  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -931,7 +953,7 @@ condition|(
 operator|(
 operator|(
 name|HandlerType
-operator|==
+operator|&
 name|ACPI_SYSTEM_NOTIFY
 operator|)
 operator|&&
@@ -944,7 +966,7 @@ operator|||
 operator|(
 operator|(
 name|HandlerType
-operator|==
+operator|&
 name|ACPI_DEVICE_NOTIFY
 operator|)
 operator|&&
@@ -966,7 +988,7 @@ block|}
 if|if
 condition|(
 name|HandlerType
-operator|==
+operator|&
 name|ACPI_SYSTEM_NOTIFY
 condition|)
 block|{
@@ -989,7 +1011,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-else|else
+if|if
+condition|(
+name|HandlerType
+operator|&
+name|ACPI_DEVICE_NOTIFY
+condition|)
 block|{
 name|AcpiGbl_DeviceNotify
 operator|.
@@ -1058,7 +1085,7 @@ comment|/* Object exists - make sure there's an existing handler */
 if|if
 condition|(
 name|HandlerType
-operator|==
+operator|&
 name|ACPI_SYSTEM_NOTIFY
 condition|)
 block|{
@@ -1070,18 +1097,6 @@ name|CommonNotify
 operator|.
 name|SystemNotify
 expr_stmt|;
-block|}
-else|else
-block|{
-name|NotifyObj
-operator|=
-name|ObjDesc
-operator|->
-name|CommonNotify
-operator|.
-name|DeviceNotify
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1109,13 +1124,6 @@ name|UnlockAndExit
 goto|;
 block|}
 comment|/* Remove the handler */
-if|if
-condition|(
-name|HandlerType
-operator|==
-name|ACPI_SYSTEM_NOTIFY
-condition|)
-block|{
 name|ObjDesc
 operator|->
 name|CommonNotify
@@ -1124,9 +1132,54 @@ name|SystemNotify
 operator|=
 name|NULL
 expr_stmt|;
+name|AcpiUtRemoveReference
+argument_list|(
+name|NotifyObj
+argument_list|)
+expr_stmt|;
 block|}
-else|else
+if|if
+condition|(
+name|HandlerType
+operator|&
+name|ACPI_DEVICE_NOTIFY
+condition|)
 block|{
+name|NotifyObj
+operator|=
+name|ObjDesc
+operator|->
+name|CommonNotify
+operator|.
+name|DeviceNotify
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|!
+name|NotifyObj
+operator|)
+operator|||
+operator|(
+name|NotifyObj
+operator|->
+name|Notify
+operator|.
+name|Handler
+operator|!=
+name|Handler
+operator|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+comment|/* Remove the handler */
 name|ObjDesc
 operator|->
 name|CommonNotify
@@ -1135,12 +1188,12 @@ name|DeviceNotify
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|AcpiUtRemoveReference
 argument_list|(
 name|NotifyObj
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|UnlockAndExit
 label|:
@@ -1161,7 +1214,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallGpeHandler  *  * PARAMETERS:  GpeNumber       - The GPE number within the GPE block  *              GpeBlock        - GPE block (NULL == FADT GPEs)  *              Type            - Whether this GPE should be treated as an  *                                edge- or level-triggered interrupt.  *              Handler         - Address of the handler  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for a General Purpose Event.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallGpeHandler  *  * PARAMETERS:  GpeNumber       - The GPE number within the GPE block  *              GpeBlock        - GPE block (NULL == FADT GPEs)  *              Type            - Whether this GPE should be treated as an  *                                edge- or level-triggered interrupt.  *              Address         - Address of the handler  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for a General Purpose Event.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1177,20 +1230,24 @@ parameter_list|,
 name|UINT32
 name|Type
 parameter_list|,
-name|ACPI_GPE_HANDLER
-name|Handler
+name|ACPI_EVENT_HANDLER
+name|Address
 parameter_list|,
 name|void
 modifier|*
 name|Context
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
+decl_stmt|;
+name|ACPI_HANDLER_INFO
+modifier|*
+name|Handler
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -1200,8 +1257,16 @@ expr_stmt|;
 comment|/* Parameter validation */
 if|if
 condition|(
+operator|(
 operator|!
-name|Handler
+name|Address
+operator|)
+operator|||
+operator|(
+name|Type
+operator|>
+name|ACPI_GPE_XRUPT_TYPE_MASK
+operator|)
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -1258,9 +1323,15 @@ block|}
 comment|/* Make sure that there isn't a handler there already */
 if|if
 condition|(
+operator|(
 name|GpeEventInfo
 operator|->
-name|Handler
+name|Flags
+operator|&
+name|ACPI_GPE_DISPATCH_MASK
+operator|)
+operator|==
+name|ACPI_GPE_DISPATCH_HANDLER
 condition|)
 block|{
 name|Status
@@ -1271,46 +1342,57 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/* Install the handler */
-name|AcpiOsAcquireLock
-argument_list|(
-name|AcpiGbl_GpeLock
-argument_list|,
-name|ACPI_NOT_ISR
-argument_list|)
-expr_stmt|;
-name|GpeEventInfo
-operator|->
+comment|/* Allocate and init handler object */
 name|Handler
 operator|=
-name|Handler
-expr_stmt|;
-name|GpeEventInfo
-operator|->
-name|Context
-operator|=
-name|Context
-expr_stmt|;
-name|GpeEventInfo
-operator|->
-name|Flags
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|Type
-expr_stmt|;
-name|AcpiOsReleaseLock
+name|ACPI_MEM_CALLOCATE
 argument_list|(
-name|AcpiGbl_GpeLock
-argument_list|,
-name|ACPI_NOT_ISR
+sizeof|sizeof
+argument_list|(
+name|ACPI_HANDLER_INFO
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Clear the GPE (of stale events), the enable it */
+if|if
+condition|(
+operator|!
+name|Handler
+condition|)
+block|{
 name|Status
 operator|=
-name|AcpiHwClearGpe
+name|AE_NO_MEMORY
+expr_stmt|;
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+name|Handler
+operator|->
+name|Address
+operator|=
+name|Address
+expr_stmt|;
+name|Handler
+operator|->
+name|Context
+operator|=
+name|Context
+expr_stmt|;
+name|Handler
+operator|->
+name|MethodNode
+operator|=
+name|GpeEventInfo
+operator|->
+name|Dispatch
+operator|.
+name|MethodNode
+expr_stmt|;
+comment|/* Disable the GPE before installing the handler */
+name|Status
+operator|=
+name|AcpiEvDisableGpe
 argument_list|(
 name|GpeEventInfo
 argument_list|)
@@ -1327,11 +1409,53 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-name|Status
-operator|=
-name|AcpiHwEnableGpe
+comment|/* Install the handler */
+name|AcpiOsAcquireLock
 argument_list|(
+name|AcpiGbl_GpeLock
+argument_list|,
+name|ACPI_NOT_ISR
+argument_list|)
+expr_stmt|;
 name|GpeEventInfo
+operator|->
+name|Dispatch
+operator|.
+name|Handler
+operator|=
+name|Handler
+expr_stmt|;
+comment|/* Setup up dispatch flags to indicate handler (vs. method) */
+name|GpeEventInfo
+operator|->
+name|Flags
+operator|&=
+operator|~
+operator|(
+name|ACPI_GPE_XRUPT_TYPE_MASK
+operator||
+name|ACPI_GPE_DISPATCH_MASK
+operator|)
+expr_stmt|;
+comment|/* Clear bits */
+name|GpeEventInfo
+operator|->
+name|Flags
+operator||=
+call|(
+name|UINT8
+call|)
+argument_list|(
+name|Type
+operator||
+name|ACPI_GPE_DISPATCH_HANDLER
+argument_list|)
+expr_stmt|;
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_GpeLock
+argument_list|,
+name|ACPI_NOT_ISR
 argument_list|)
 expr_stmt|;
 name|UnlockAndExit
@@ -1353,7 +1477,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveGpeHandler  *  * PARAMETERS:  GpeNumber       - The event to remove a handler  *              GpeBlock        - GPE block (NULL == FADT GPEs)  *              Handler         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for a General Purpose AcpiEvent.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveGpeHandler  *  * PARAMETERS:  GpeNumber       - The event to remove a handler  *              GpeBlock        - GPE block (NULL == FADT GPEs)  *              Address         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for a General Purpose AcpiEvent.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1366,16 +1490,20 @@ parameter_list|,
 name|UINT32
 name|GpeNumber
 parameter_list|,
-name|ACPI_GPE_HANDLER
-name|Handler
+name|ACPI_EVENT_HANDLER
+name|Address
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
+decl_stmt|;
+name|ACPI_HANDLER_INFO
+modifier|*
+name|Handler
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -1386,7 +1514,7 @@ comment|/* Parameter validation */
 if|if
 condition|(
 operator|!
-name|Handler
+name|Address
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -1440,10 +1568,54 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
+comment|/* Make sure that a handler is indeed installed */
+if|if
+condition|(
+operator|(
+name|GpeEventInfo
+operator|->
+name|Flags
+operator|&
+name|ACPI_GPE_DISPATCH_MASK
+operator|)
+operator|!=
+name|ACPI_GPE_DISPATCH_HANDLER
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_NOT_EXIST
+expr_stmt|;
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+comment|/* Make sure that the installed handler is the same */
+if|if
+condition|(
+name|GpeEventInfo
+operator|->
+name|Dispatch
+operator|.
+name|Handler
+operator|->
+name|Address
+operator|!=
+name|Address
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
 comment|/* Disable the GPE before removing the handler */
 name|Status
 operator|=
-name|AcpiHwDisableGpe
+name|AcpiEvDisableGpe
 argument_list|(
 name|GpeEventInfo
 argument_list|)
@@ -1460,32 +1632,6 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/* Make sure that the installed handler is the same */
-if|if
-condition|(
-name|GpeEventInfo
-operator|->
-name|Handler
-operator|!=
-name|Handler
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|AcpiHwEnableGpe
-argument_list|(
-name|GpeEventInfo
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_BAD_PARAMETER
-expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
 comment|/* Remove the handler */
 name|AcpiOsAcquireLock
 argument_list|(
@@ -1494,23 +1640,58 @@ argument_list|,
 name|ACPI_NOT_ISR
 argument_list|)
 expr_stmt|;
-name|GpeEventInfo
-operator|->
 name|Handler
 operator|=
-name|NULL
+name|GpeEventInfo
+operator|->
+name|Dispatch
+operator|.
+name|Handler
+expr_stmt|;
+comment|/* Restore Method node (if any), set dispatch flags */
+name|GpeEventInfo
+operator|->
+name|Dispatch
+operator|.
+name|MethodNode
+operator|=
+name|Handler
+operator|->
+name|MethodNode
 expr_stmt|;
 name|GpeEventInfo
 operator|->
-name|Context
-operator|=
-name|NULL
+name|Flags
+operator|&=
+operator|~
+name|ACPI_GPE_DISPATCH_MASK
 expr_stmt|;
+comment|/* Clear bits */
+if|if
+condition|(
+name|Handler
+operator|->
+name|MethodNode
+condition|)
+block|{
+name|GpeEventInfo
+operator|->
+name|Flags
+operator||=
+name|ACPI_GPE_DISPATCH_METHOD
+expr_stmt|;
+block|}
 name|AcpiOsReleaseLock
 argument_list|(
 name|AcpiGbl_GpeLock
 argument_list|,
 name|ACPI_NOT_ISR
+argument_list|)
+expr_stmt|;
+comment|/* Now we can free the handler object */
+name|ACPI_MEM_FREE
+argument_list|(
+name|Handler
 argument_list|)
 expr_stmt|;
 name|UnlockAndExit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 66 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -834,39 +834,6 @@ name|SMART_BATTERY_TABLE
 typedef|;
 end_typedef
 
-begin_comment
-comment|/*  * High performance timer  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|hpet_table
-block|{
-name|ACPI_TABLE_HEADER_DEF
-name|UINT32
-name|HardwareId
-decl_stmt|;
-name|UINT32
-name|BaseAddress
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|UINT8
-name|HpetNumber
-decl_stmt|;
-name|UINT16
-name|ClockTick
-decl_stmt|;
-name|UINT8
-name|Attributes
-decl_stmt|;
-block|}
-name|HPET_TABLE
-typedef|;
-end_typedef
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -1016,6 +983,53 @@ end_include
 begin_comment
 comment|/* Acpi 2.0 table definitions */
 end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
+
+begin_comment
+comment|/*  * High performance timer  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|hpet_table
+block|{
+name|ACPI_TABLE_HEADER_DEF
+name|UINT32
+name|HardwareId
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|BaseAddress
+decl_stmt|;
+name|UINT8
+name|HpetNumber
+decl_stmt|;
+name|UINT16
+name|ClockTick
+decl_stmt|;
+name|UINT8
+name|Attributes
+decl_stmt|;
+block|}
+name|HPET_TABLE
+typedef|;
+end_typedef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
 
 begin_endif
 endif|#

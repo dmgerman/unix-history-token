@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: acparser.h - AML Parser subcomponent prototypes and defines  *       $Revision: 66 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: acparser.h - AML Parser subcomponent prototypes and defines  *       $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -115,19 +115,9 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiPsxExecute
 parameter_list|(
-name|ACPI_NAMESPACE_NODE
+name|ACPI_PARAMETER_INFO
 modifier|*
-name|MethodNode
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|Params
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnObjDesc
+name|Info
 parameter_list|)
 function_decl|;
 end_function_decl
