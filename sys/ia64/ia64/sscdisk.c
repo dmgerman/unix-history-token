@@ -1189,7 +1189,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"ufs:/dev/sscdisk0c"
+literal|"ufs:/dev/sscdisk0"
 expr_stmt|;
 block|}
 end_function
