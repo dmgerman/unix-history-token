@@ -1389,11 +1389,6 @@ name|EINVAL
 return|;
 comment|/* Can only start a stopped process */
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|procp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1422,9 +1417,16 @@ name|signo
 operator|<=
 literal|0
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|procp
+argument_list|)
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
+block|}
 name|psignal
 argument_list|(
 name|procp
@@ -1433,11 +1435,6 @@ name|signo
 argument_list|)
 expr_stmt|;
 block|}
-name|PROC_LOCK
-argument_list|(
-name|procp
-argument_list|)
-expr_stmt|;
 name|procp
 operator|->
 name|p_step

@@ -3014,6 +3014,12 @@ name|error
 operator|==
 name|EPIPE
 condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|p
@@ -3021,6 +3027,12 @@ argument_list|,
 name|SIGPIPE
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

@@ -943,6 +943,14 @@ name|ss
 operator|->
 name|signal_num
 condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|ss
+operator|->
+name|p
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|ss
@@ -954,6 +962,14 @@ operator|->
 name|signal_num
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|ss
+operator|->
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

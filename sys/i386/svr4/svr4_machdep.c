@@ -1955,6 +1955,11 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sigexit
 argument_list|(
 name|p

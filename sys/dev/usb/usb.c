@@ -65,12 +65,6 @@ directive|include
 file|<sys/kthread.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
 begin_elif
 elif|#
 directive|elif
@@ -108,6 +102,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
 
 begin_include
 include|#
@@ -3075,6 +3075,12 @@ name|usb_async_proc
 operator|!=
 name|NULL
 condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|usb_async_proc
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|usb_async_proc
@@ -3082,6 +3088,12 @@ argument_list|,
 name|SIGIO
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|usb_async_proc
+argument_list|)
+expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s

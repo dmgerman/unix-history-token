@@ -1703,6 +1703,13 @@ name|sc_async
 operator|)
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_async
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|sc
@@ -1710,6 +1717,13 @@ operator|->
 name|sc_async
 argument_list|,
 name|SIGIO
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_async
 argument_list|)
 expr_stmt|;
 block|}

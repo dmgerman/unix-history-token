@@ -3550,11 +3550,21 @@ operator|.
 name|rlim_cur
 condition|)
 block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|p
 argument_list|,
 name|SIGXFSZ
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -6146,6 +6156,11 @@ argument_list|(
 literal|"Process killed due to text file modification\n"
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|p
@@ -6153,7 +6168,12 @@ argument_list|,
 name|SIGKILL
 argument_list|)
 expr_stmt|;
-name|PHOLD
+name|_PHOLD
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)

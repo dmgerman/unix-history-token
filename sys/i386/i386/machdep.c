@@ -2316,16 +2316,16 @@ argument_list|,
 name|SIGILL
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|psignal
 argument_list|(
 name|p
 argument_list|,
 name|SIGILL
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2901,6 +2901,11 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Something is wrong with the stack pointer. 		 * ...Kill the process. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sigexit
 argument_list|(
 name|p
@@ -2908,6 +2913,7 @@ argument_list|,
 name|SIGILL
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|regs
 operator|->
@@ -3368,16 +3374,16 @@ argument_list|,
 name|SIGILL
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|psignal
 argument_list|(
 name|p
 argument_list|,
 name|SIGILL
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3706,6 +3712,11 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Something is wrong with the stack pointer. 		 * ...Kill the process. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sigexit
 argument_list|(
 name|p
@@ -3713,6 +3724,7 @@ argument_list|,
 name|SIGILL
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|regs
 operator|->
