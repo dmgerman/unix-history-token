@@ -536,11 +536,6 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* Are we a task leader? */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -550,6 +545,12 @@ operator|->
 name|p_leader
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|ppeers_lock
+argument_list|)
+expr_stmt|;
 name|q
 operator|=
 name|p
@@ -592,15 +593,15 @@ condition|(
 name|p
 operator|->
 name|p_peers
+operator|!=
+name|NULL
 condition|)
 name|msleep
 argument_list|(
 name|p
 argument_list|,
 operator|&
-name|p
-operator|->
-name|p_mtx
+name|ppeers_lock
 argument_list|,
 name|PWAIT
 argument_list|,
@@ -609,12 +610,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-name|PROC_UNLOCK
+name|mtx_unlock
 argument_list|(
-name|p
+operator|&
+name|ppeers_lock
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|PGINPROF
@@ -754,11 +756,10 @@ expr_stmt|;
 comment|/* XXXKSE */
 comment|/* may not be the one in proc */
 comment|/* 	 * Remove ourself from our leader's peer list and wake our leader. 	 */
-name|PROC_LOCK
+name|mtx_lock
 argument_list|(
-name|p
-operator|->
-name|p_leader
+operator|&
+name|ppeers_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -806,11 +807,10 @@ name|p_leader
 argument_list|)
 expr_stmt|;
 block|}
-name|PROC_UNLOCK
+name|mtx_unlock
 argument_list|(
-name|p
-operator|->
-name|p_leader
+operator|&
+name|ppeers_lock
 argument_list|)
 expr_stmt|;
 comment|/* The next two chunks should probably be moved to vmspace_exit. */

@@ -415,6 +415,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|mtx
+name|ppeers_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|uma_zone_t
 name|proc_zone
 decl_stmt|;
@@ -543,6 +550,18 @@ operator|&
 name|pargs_ref_lock
 argument_list|,
 literal|"struct pargs.ref"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|ppeers_lock
+argument_list|,
+literal|"p_peers"
 argument_list|,
 name|NULL
 argument_list|,
