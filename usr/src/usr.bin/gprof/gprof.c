@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.22 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,12 +399,31 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *	how long is a clock tick? 	 */
+comment|/* 	 *	how many ticks per second? 	 *	if we can't tell, report time in ticks. 	 */
 name|hz
 operator|=
 name|hertz
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|hz
+operator|==
+literal|0
+condition|)
+block|{
+name|hz
+operator|=
+literal|1
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"time is in ticks, not seconds\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 *	get information about a.out file. 	 */
 name|getnfile
 argument_list|()
