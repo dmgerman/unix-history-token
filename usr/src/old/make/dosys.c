@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dosys.c	4.10 (Berkeley) %G%"
+literal|"@(#)dosys.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -388,13 +388,17 @@ operator|!=
 name|NULL
 condition|)
 comment|/* 		 * vfork kludge... 		 * we cannot call closedir since this will modify 		 * the parents data space; just call close directly. 		 */
+operator|(
+name|void
+operator|)
 name|close
+argument_list|(
+name|dirfd
 argument_list|(
 name|od
 operator|->
 name|dirfc
-operator|->
-name|dd_fd
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.9 (Berkeley) 87/05/21"
+literal|"@(#)main.c	4.10 (Berkeley) 87/11/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -1712,11 +1712,12 @@ name|printf
 argument_list|(
 literal|"\t%d: %s\n"
 argument_list|,
+name|dirfd
+argument_list|(
 name|od
 operator|->
 name|dirfc
-operator|->
-name|dd_fd
+argument_list|)
 argument_list|,
 name|od
 operator|->

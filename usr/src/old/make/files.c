@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.15 (Berkeley) 87/05/05"
+literal|"@(#)files.c	4.16 (Berkeley) 87/11/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -955,9 +955,10 @@ argument_list|)
 expr_stmt|;
 name|fcntl
 argument_list|(
+name|dirfd
+argument_list|(
 name|dirf
-operator|->
-name|dd_fd
+argument_list|)
 argument_list|,
 name|F_SETFD
 argument_list|,
