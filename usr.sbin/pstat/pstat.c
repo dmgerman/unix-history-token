@@ -1274,16 +1274,11 @@ case|case
 literal|'i'
 case|:
 comment|/* Backward compatibility. */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"vnode mode not supported\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"vnode mode not supported"
 argument_list|)
 expr_stmt|;
 if|#
