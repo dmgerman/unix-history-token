@@ -888,9 +888,11 @@ name|sc
 operator|->
 name|aac_regs_rid
 operator|=
-literal|0x10
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
-comment|/* first base address register */
 if|if
 condition|(
 operator|(
