@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mount.c	4.5 (Berkeley) %G%"
+literal|"@(#)mount.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -203,6 +206,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|strcmp
 argument_list|(
 name|argv
@@ -212,11 +216,36 @@ index|]
 argument_list|,
 literal|"-a"
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|all
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+goto|goto
+name|top
+goto|;
+block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-r"
+argument_list|)
+condition|)
+block|{
+name|ro
 operator|++
 expr_stmt|;
 name|argc
