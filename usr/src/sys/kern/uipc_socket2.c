@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.33	83/01/04	*/
+comment|/*	uipc_socket2.c	4.34	83/01/08	*/
 end_comment
 
 begin_include
@@ -479,6 +479,8 @@ operator|=
 name|head
 operator|->
 name|so_state
+operator||
+name|SS_NOFDREF
 expr_stmt|;
 name|so
 operator|->
