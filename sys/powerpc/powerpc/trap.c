@@ -2049,7 +2049,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sr_t
+name|u_int
 name|user_sr
 decl_stmt|;
 if|if

@@ -92,6 +92,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/powerpc.h>
 end_include
 
@@ -126,6 +144,21 @@ begin_decl_stmt
 specifier|extern
 name|long
 name|ofmsr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pmap
+name|ofw_pmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pmap_bootstrapped
 decl_stmt|;
 end_decl_stmt
 
@@ -276,7 +309,58 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-asm|__asm(	"\t"
+name|u_int
+name|srsave
+index|[
+literal|16
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|pmap_bootstrapped
+condition|)
+block|{
+asm|__asm __volatile("mfsr %0,0" : "=r"(srsave[0]));
+asm|__asm __volatile("mfsr %0,1" : "=r"(srsave[1]));
+asm|__asm __volatile("mfsr %0,2" : "=r"(srsave[2]));
+asm|__asm __volatile("mfsr %0,3" : "=r"(srsave[3]));
+asm|__asm __volatile("mfsr %0,4" : "=r"(srsave[4]));
+asm|__asm __volatile("mfsr %0,5" : "=r"(srsave[5]));
+asm|__asm __volatile("mfsr %0,6" : "=r"(srsave[6]));
+asm|__asm __volatile("mfsr %0,7" : "=r"(srsave[7]));
+asm|__asm __volatile("mfsr %0,8" : "=r"(srsave[8]));
+asm|__asm __volatile("mfsr %0,9" : "=r"(srsave[9]));
+asm|__asm __volatile("mfsr %0,10" : "=r"(srsave[10]));
+asm|__asm __volatile("mfsr %0,11" : "=r"(srsave[11]));
+asm|__asm __volatile("mfsr %0,12" : "=r"(srsave[12]));
+asm|__asm __volatile("mfsr %0,13" : "=r"(srsave[13]));
+asm|__asm __volatile("mfsr %0,14" : "=r"(srsave[14]));
+asm|__asm __volatile("mfsr %0,15" : "=r"(srsave[15]));
+asm|__asm __volatile("mtsr 0,%0" :: "r"(ofw_pmap.pm_sr[0]));
+asm|__asm __volatile("mtsr 1,%0" :: "r"(ofw_pmap.pm_sr[1]));
+asm|__asm __volatile("mtsr 2,%0" :: "r"(ofw_pmap.pm_sr[2]));
+asm|__asm __volatile("mtsr 3,%0" :: "r"(ofw_pmap.pm_sr[3]));
+asm|__asm __volatile("mtsr 4,%0" :: "r"(ofw_pmap.pm_sr[4]));
+asm|__asm __volatile("mtsr 5,%0" :: "r"(ofw_pmap.pm_sr[5]));
+asm|__asm __volatile("mtsr 6,%0" :: "r"(ofw_pmap.pm_sr[6]));
+asm|__asm __volatile("mtsr 7,%0" :: "r"(ofw_pmap.pm_sr[7]));
+asm|__asm __volatile("mtsr 8,%0" :: "r"(ofw_pmap.pm_sr[8]));
+asm|__asm __volatile("mtsr 9,%0" :: "r"(ofw_pmap.pm_sr[9]));
+asm|__asm __volatile("mtsr 10,%0" :: "r"(ofw_pmap.pm_sr[10]));
+asm|__asm __volatile("mtsr 11,%0" :: "r"(ofw_pmap.pm_sr[11]));
+asm|__asm __volatile("mtsr 12,%0" :: "r"(ofw_pmap.pm_sr[12]));
+asm|__asm __volatile("mtsr 13,%0" :: "r"(ofw_pmap.pm_sr[13]));
+asm|__asm __volatile("mtsr 14,%0" :: "r"(ofw_pmap.pm_sr[14]));
+asm|__asm __volatile("mtsr 15,%0" :: "r"(ofw_pmap.pm_sr[15]));
+block|}
+name|ofmsr
+operator||=
+name|PSL_RI
+operator||
+name|PSL_EE
+expr_stmt|;
+asm|__asm __volatile(	"\t"
+literal|"sync\n\t"
 literal|"mfmsr  %0\n\t"
 literal|"mtmsr  %1\n\t"
 literal|"isync\n"
@@ -323,6 +407,32 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_if
+if|if
+condition|(
+name|pmap_bootstrapped
+condition|)
+block|{
+asm|__asm __volatile("mtsr 0,%0" :: "r"(srsave[0]));
+asm|__asm __volatile("mtsr 1,%0" :: "r"(srsave[1]));
+asm|__asm __volatile("mtsr 2,%0" :: "r"(srsave[2]));
+asm|__asm __volatile("mtsr 3,%0" :: "r"(srsave[3]));
+asm|__asm __volatile("mtsr 4,%0" :: "r"(srsave[4]));
+asm|__asm __volatile("mtsr 5,%0" :: "r"(srsave[5]));
+asm|__asm __volatile("mtsr 6,%0" :: "r"(srsave[6]));
+asm|__asm __volatile("mtsr 7,%0" :: "r"(srsave[7]));
+asm|__asm __volatile("mtsr 8,%0" :: "r"(srsave[8]));
+asm|__asm __volatile("mtsr 9,%0" :: "r"(srsave[9]));
+asm|__asm __volatile("mtsr 10,%0" :: "r"(srsave[10]));
+asm|__asm __volatile("mtsr 11,%0" :: "r"(srsave[11]));
+asm|__asm __volatile("mtsr 12,%0" :: "r"(srsave[12]));
+asm|__asm __volatile("mtsr 13,%0" :: "r"(srsave[13]));
+asm|__asm __volatile("mtsr 14,%0" :: "r"(srsave[14]));
+asm|__asm __volatile("mtsr 15,%0" :: "r"(srsave[15]));
+asm|__asm __volatile("sync");
+block|}
+end_if
 
 begin_return
 return|return

@@ -45,6 +45,21 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pteg
+block|{
+name|struct
+name|pte
+name|pt
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
@@ -156,15 +171,59 @@ end_define
 begin_define
 define|#
 directive|define
-name|PTE_RO
+name|PTE_SO
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Super. Only       (U: XX, S: RW) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_SW
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Super. Write-Only (U: RO, S: RW) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_BW
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Supervisor        (U: RW, S: RW) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_BR
 value|0x00000003
 end_define
+
+begin_comment
+comment|/* Both Read Only    (U: RO, S: RO) */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|PTE_RW
-value|0x00000002
+value|PTE_BW
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_RO
+value|PTE_BR
 end_define
 
 begin_ifndef

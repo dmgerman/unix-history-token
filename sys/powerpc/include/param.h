@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * Machine dependent constants for PowerPC (32-bit only currently)  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<machine/pte.h>
+end_include
+
 begin_comment
 comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value  * for all data types (int, long, ...).   The result is unsigned int  * and must be cast to any desired pointer type.  */
 end_comment
@@ -373,6 +379,13 @@ begin_comment
 comment|/* includes pcb */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KSTACK_GUARD_PAGES
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -665,6 +678,13 @@ define|#
 directive|define
 name|KERNEL_SR
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL_VSIDBITS
+value|0xfffff
 end_define
 
 begin_define

@@ -56,6 +56,20 @@ name|busdma_swi_pending
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|kstack0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|kstack0_phys
+decl_stmt|;
+end_decl_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|fpreg
