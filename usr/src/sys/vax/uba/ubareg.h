@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.28	82/04/11	*/
+comment|/*	ubareg.h	4.29	82/05/19	*/
 end_comment
 
 begin_comment
@@ -927,7 +927,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Formulas for locations of the last 8k of UNIBUS memory  * for each possible uba.  */
+comment|/*  * Symbolic addresses of UNIBUS memory for UBAs.  */
 end_comment
 
 begin_if
@@ -989,6 +989,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Macro to offset a UNIBUS device address, often expressed as  * something like 0172520 by forcing it into the last 8K of UNIBUS space.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ubdevreg
+parameter_list|(
+name|addr
+parameter_list|)
+value|(0760000|((addr)&017777))
+end_define
 
 end_unit
 
