@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.17	83/07/21	*/
+comment|/*	param.c	4.18	83/07/21	*/
 end_comment
 
 begin_include
@@ -150,9 +150,39 @@ name|NPROC
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NETSLOP
+value|20
+end_define
+
 begin_comment
-comment|/* the +20 here is for all the lousy server processes */
+comment|/* for all the lousy servers*/
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NETSLOP
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -162,7 +192,7 @@ literal|24
 operator|+
 name|MAXUSERS
 operator|+
-literal|20
+name|NETSLOP
 decl_stmt|;
 end_decl_stmt
 
@@ -182,10 +212,6 @@ literal|32
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* the +40 here is for 20 server processes */
-end_comment
-
 begin_decl_stmt
 name|int
 name|nfile
@@ -204,7 +230,9 @@ literal|10
 operator|+
 literal|32
 operator|+
-literal|40
+literal|2
+operator|*
+name|NETSLOP
 decl_stmt|;
 end_decl_stmt
 
