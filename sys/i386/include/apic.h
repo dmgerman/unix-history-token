@@ -408,9 +408,11 @@ begin_comment
 comment|/******************************************************************************  * various code 'logical' values  */
 end_comment
 
-begin_comment
-comment|/* default level for TPR */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GRAB_LOPRIO
+end_ifdef
 
 begin_define
 define|#
@@ -422,12 +424,6 @@ end_define
 begin_comment
 comment|/* TPR of CPU accepting INTs */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GRAB_LOPRIO
-end_ifdef
 
 begin_define
 define|#

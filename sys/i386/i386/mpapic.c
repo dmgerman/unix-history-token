@@ -22,7 +22,7 @@ file|<machine/smptests.h>
 end_include
 
 begin_comment
-comment|/** TEST_TEST1 */
+comment|/** TEST_TEST1, GRAB_LOPRIO */
 end_comment
 
 begin_include
@@ -211,11 +211,16 @@ operator|~
 name|APIC_TPR_PRIO
 expr_stmt|;
 comment|/* clear priority field */
+ifdef|#
+directive|ifdef
+name|GRAB_LOPRIO
 name|temp
 operator||=
 name|LOPRIO_LEVEL
 expr_stmt|;
 comment|/* allow INT arbitration */
+endif|#
+directive|endif
 name|lapic
 operator|.
 name|tpr
