@@ -6671,12 +6671,6 @@ name|xl_ioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_output
-operator|=
-name|ether_output
-expr_stmt|;
-name|ifp
-operator|->
 name|if_capabilities
 operator|=
 name|IFCAP_VLAN_MTU

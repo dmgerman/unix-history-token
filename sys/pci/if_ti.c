@@ -9635,12 +9635,6 @@ name|ti_ioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_output
-operator|=
-name|ether_output
-expr_stmt|;
-name|ifp
-operator|->
 name|if_start
 operator|=
 name|ti_start

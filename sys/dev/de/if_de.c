@@ -24615,12 +24615,6 @@ literal|1
 expr_stmt|;
 name|ifp
 operator|->
-name|if_output
-operator|=
-name|ether_output
-expr_stmt|;
-name|ifp
-operator|->
 name|if_init
 operator|=
 name|tulip_ifinit
