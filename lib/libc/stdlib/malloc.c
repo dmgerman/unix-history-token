@@ -1,20 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.3 1995/09/16 09:28:13 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.4 1995/09/22 14:11:00 phk Exp $  *  */
 end_comment
 
 begin_comment
-comment|/*  * Defining SANITY will enable some checks which will tell you if the users  * program did botch something  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SANITY
-end_define
-
-begin_comment
-comment|/*  * Defining EXTRA_SANITY will enable some checks which are mostly related  * to internal conditions in malloc.c  */
+comment|/*  * Defining EXTRA_SANITY will enable some checks which are related  * to internal conditions and consistency in malloc.c  */
 end_comment
 
 begin_define
@@ -24,44 +14,23 @@ name|EXTRA_SANITY
 end_define
 
 begin_comment
-comment|/*  * Very verbose progress on stdout...  */
+comment|/*  * What to use for Junk  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
-name|TRACE
-parameter_list|(
-name|foo
-parameter_list|)
-value|printf  foo
+name|SOME_JUNK
+value|0xd0
 end_define
 
-begin_else
-unit|static int malloc_event;
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* as in "Duh" :-) */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|TRACE
-parameter_list|(
-name|foo
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  * If these weren't defined here, they would be calculated on the fly,  * at a considerable cost in performance.  */
+end_comment
 
 begin_if
 if|#
@@ -76,16 +45,6 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
-
-begin_warning
-warning|#
-directive|warning
-warning|FreeBSD i386 constants hardcoded.
-end_warning
-
-begin_comment
-comment|/*  * If these weren't defined here, they would be calculated on the fly  */
-end_comment
 
 begin_define
 define|#
@@ -105,7 +64,14 @@ begin_define
 define|#
 directive|define
 name|malloc_minsize
-value|32U
+value|16U
+end_define
+
+begin_define
+define|#
+directive|define
+name|malloc_maxsize
+value|((malloc_pagesize)>>1)
 end_define
 
 begin_endif
@@ -166,7 +132,7 @@ file|<sys/mman.h>
 end_include
 
 begin_comment
-comment|/*  * This structure describes a page's worth of chunks.  */
+comment|/*  * This structure describes a page worth of chunks.  */
 end_comment
 
 begin_struct
@@ -210,6 +176,10 @@ comment|/* Which chunks are free */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * This structure describes a number of free pages.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -296,7 +266,7 @@ value|((struct pginfo*) 4)
 end_define
 
 begin_comment
-comment|/*  * The i386 architecture has some very convenient instructions.  * We might as well use them.  */
+comment|/*  * The i386 architecture has some very convenient instructions.  * We might as well use them.  There are C-language backups, but  * they are considerably slower.  */
 end_comment
 
 begin_ifdef
@@ -304,12 +274,6 @@ ifdef|#
 directive|ifdef
 name|__i386__
 end_ifdef
-
-begin_warning
-warning|#
-directive|warning
-warning|i386 inline assembly used.
-end_warning
 
 begin_define
 define|#
@@ -424,8 +388,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|__i386__
 end_endif
+
+begin_comment
+comment|/* __i386__ */
+end_comment
 
 begin_comment
 comment|/*  * Set to one when malloc_init has been called  */
@@ -442,6 +409,32 @@ begin_comment
 comment|/*  * The size of a page.  * Must be a integral multiplum of the granularity of mmap(2).  * Your toes will curl if it isn't a power of two  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|malloc_pagesize
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|malloc_pagesize
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* malloc_pagesize */
+end_comment
+
+begin_comment
+comment|/*  * A mask for the offset inside a page.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -449,15 +442,24 @@ name|malloc_pagemask
 value|((malloc_pagesize)-1)
 end_define
 
-begin_comment
-comment|/*  * The size of the largest chunk.  * Half a page.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|pageround
+parameter_list|(
+name|foo
+parameter_list|)
+value|(((foo) + (malloc_pagemask))&(~(malloc_pagemask)))
+end_define
 
 begin_define
 define|#
 directive|define
-name|malloc_maxsize
-value|((malloc_pagesize)>>1)
+name|ptr2index
+parameter_list|(
+name|foo
+parameter_list|)
+value|(((u_long)(foo)>> malloc_pageshift)-malloc_origo)
 end_define
 
 begin_comment
@@ -538,6 +540,10 @@ begin_comment
 comment|/* malloc_maxsize */
 end_comment
 
+begin_comment
+comment|/*  * The minimum size (in bytes) of the free page cache.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -608,7 +614,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Free pages line up here   */
+comment|/*  * Free pages line up here  */
 end_comment
 
 begin_decl_stmt
@@ -641,6 +647,12 @@ name|suicide
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EXTRA_SANITY
+end_ifdef
+
 begin_comment
 comment|/*  * dump statistics  */
 end_comment
@@ -652,6 +664,15 @@ name|malloc_stats
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EXTRA_SANITY */
+end_comment
+
 begin_comment
 comment|/*  * always realloc ?  */
 end_comment
@@ -660,6 +681,28 @@ begin_decl_stmt
 specifier|static
 name|int
 name|malloc_realloc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * zero fill ?  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|malloc_zero
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * junk fill ?  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|malloc_junk
 decl_stmt|;
 end_decl_stmt
 
@@ -688,33 +731,26 @@ name|px
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|int
-name|set_pgdir
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|struct
-name|pginfo
-modifier|*
-name|info
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*  * Necessary function declarations  */
+end_comment
 
 begin_function_decl
 specifier|static
 name|int
-name|extend_page_directory
+name|extend_pgdir
 parameter_list|(
 name|u_long
 name|index
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EXTRA_SANITY
+end_ifdef
 
 begin_function
 name|void
@@ -1131,6 +1167,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EXTRA_SANITY */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1145,7 +1190,7 @@ name|char
 modifier|*
 name|q
 init|=
-literal|"malloc() error: "
+literal|"Malloc error: "
 decl_stmt|;
 name|suicide
 operator|=
@@ -1175,11 +1220,21 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EXTRA_SANITY
+if|if
+condition|(
+name|malloc_stats
+condition|)
 name|malloc_dump
 argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* EXTRA_SANITY */
 name|abort
 argument_list|()
 expr_stmt|;
@@ -1200,47 +1255,49 @@ name|char
 modifier|*
 name|q
 init|=
-literal|"malloc() warning: "
+literal|"Malloc warning: "
 decl_stmt|;
-name|write
-argument_list|(
-literal|2
-argument_list|,
-name|q
-argument_list|,
-name|strlen
-argument_list|(
-name|q
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-literal|2
-argument_list|,
-name|p
-argument_list|,
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|malloc_abort
 condition|)
-block|{
-name|suicide
-operator|=
-literal|1
+name|wrterror
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|q
+argument_list|,
+name|strlen
+argument_list|(
+name|q
+argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|p
+argument_list|,
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EXTRA_SANITY
+end_ifdef
 
 begin_function
 specifier|static
@@ -1297,6 +1354,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EXTRA_SANITY */
+end_comment
+
 begin_comment
 comment|/*  * Allocate a number of pages from the OS  */
 end_comment
@@ -1320,28 +1386,18 @@ name|tail
 decl_stmt|;
 name|result
 operator|=
-name|sbrk
-argument_list|(
-literal|0
-argument_list|)
-operator|+
-name|malloc_pagemask
-operator|-
-literal|1
-expr_stmt|;
-name|result
-operator|=
-call|(
+operator|(
 name|caddr_t
-call|)
+operator|)
+name|pageround
 argument_list|(
 operator|(
 name|u_long
 operator|)
-name|result
-operator|&
-operator|~
-name|malloc_pagemask
+name|sbrk
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|tail
@@ -1356,25 +1412,33 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|brk
 argument_list|(
 name|tail
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|EXTRA_SANITY
+name|wrterror
+argument_list|(
+literal|"(internal): map_pages fails\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* EXTRA_SANITY */
+return|return
+literal|0
+return|;
+block|}
 name|last_index
 operator|=
-operator|(
-operator|(
-name|u_long
-operator|)
+name|ptr2index
+argument_list|(
 name|tail
-operator|>>
-name|malloc_pageshift
-operator|)
-operator|-
-name|malloc_origo
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -1382,69 +1446,26 @@ name|malloc_brk
 operator|=
 name|tail
 expr_stmt|;
-name|TRACE
-argument_list|(
-operator|(
-literal|"%6d S %p .. %p\n"
-operator|,
-name|malloc_event
-operator|++
-operator|,
-name|result
-operator|,
-name|tail
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|!
 name|update
-operator|||
+operator|&&
 name|last_index
-operator|<
+operator|>=
 name|malloc_ninfo
-operator|||
-name|extend_page_directory
+operator|&&
+operator|!
+name|extend_pgdir
 argument_list|(
 name|last_index
 argument_list|)
 condition|)
 return|return
-name|result
+literal|0
 return|;
-block|}
-name|TRACE
-argument_list|(
-operator|(
-literal|"%6d s %d %p %d\n"
-operator|,
-name|malloc_event
-operator|++
-operator|,
-name|pages
-operator|,
-name|sbrk
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|errno
-operator|)
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|EXTRA_SANITY
-name|wrterror
-argument_list|(
-literal|"map_pages fails\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+empty_stmt|;
 return|return
-literal|0
+name|result
 return|;
 block|}
 end_function
@@ -1673,7 +1694,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|extend_page_directory
+name|extend_pgdir
 parameter_list|(
 name|u_long
 name|index
@@ -1692,18 +1713,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|TRACE
-argument_list|(
-operator|(
-literal|"%6d E %lu\n"
-operator|,
-name|malloc_event
-operator|++
-operator|,
-name|index
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* Make it this many pages */
 name|i
 operator|=
@@ -1721,7 +1730,7 @@ name|i
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* Get new pages, if you used this much mem you don't care :-) */
+comment|/* Get new pages */
 name|new
 operator|=
 operator|(
@@ -1793,16 +1802,10 @@ expr_stmt|;
 comment|/* Mark the pages */
 name|index
 operator|=
-operator|(
-operator|(
-name|u_long
-operator|)
+name|ptr2index
+argument_list|(
 name|new
-operator|>>
-name|malloc_pageshift
-operator|)
-operator|-
-name|malloc_origo
+argument_list|)
 expr_stmt|;
 name|page_dir
 index|[
@@ -1839,67 +1842,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set entry in page directory.  * Extend page directory if need be.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|set_pgdir
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|struct
-name|pginfo
-modifier|*
-name|info
-parameter_list|)
-block|{
-name|u_long
-name|index
-init|=
-operator|(
-operator|(
-name|u_long
-operator|)
-name|ptr
-operator|>>
-name|malloc_pageshift
-operator|)
-operator|-
-name|malloc_origo
-decl_stmt|;
-if|if
-condition|(
-name|index
-operator|>=
-name|malloc_ninfo
-operator|&&
-operator|!
-name|extend_page_directory
-argument_list|(
-name|index
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
-name|page_dir
-index|[
-name|index
-index|]
-operator|=
-name|info
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Initialize the world  */
 end_comment
 
@@ -1916,16 +1858,16 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|TRACE
-argument_list|(
-operator|(
-literal|"%6d I\n"
-operator|,
-name|malloc_event
-operator|++
-operator|)
-argument_list|)
+ifdef|#
+directive|ifdef
+name|EXTRA_SANITY
+name|malloc_junk
+operator|=
+literal|1
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* EXTRA_SANITY */
 for|for
 control|(
 name|p
@@ -1966,6 +1908,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|EXTRA_SANITY
 case|case
 literal|'d'
 case|:
@@ -1982,6 +1927,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* EXTRA_SANITY */
 case|case
 literal|'r'
 case|:
@@ -1998,15 +1946,63 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'j'
+case|:
+name|malloc_junk
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'J'
+case|:
+name|malloc_junk
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|malloc_zero
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+name|malloc_zero
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 default|default:
 name|wrtwarning
 argument_list|(
-literal|"Unknown chars in MALLOC_OPTIONS\n"
+literal|"(Init): Unknown char in MALLOC_OPTIONS\n"
 argument_list|)
+expr_stmt|;
+name|p
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/*      * We want junk in the entire allocation, and zero only in the part      * the user asked for.      */
+if|if
+condition|(
+name|malloc_zero
+condition|)
+name|malloc_junk
+operator|=
+literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EXTRA_SANITY
 if|if
 condition|(
 name|malloc_stats
@@ -2016,6 +2012,9 @@ argument_list|(
 name|malloc_exit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* EXTRA_SANITY */
 ifndef|#
 directive|ifndef
 name|malloc_pagesize
@@ -2028,6 +2027,18 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* malloc_pagesize */
+ifndef|#
+directive|ifndef
+name|malloc_maxsize
+name|malloc_maxsize
+operator|=
+name|malloc_pagesize
+operator|>>
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* malloc_maxsize */
 ifndef|#
 directive|ifndef
 name|malloc_pageshift
@@ -2057,7 +2068,7 @@ directive|ifndef
 name|malloc_cache
 name|malloc_cache
 operator|=
-literal|50
+literal|100
 operator|<<
 name|malloc_pageshift
 expr_stmt|;
@@ -2161,7 +2172,7 @@ name|page_dir
 condition|)
 name|wrterror
 argument_list|(
-literal|"fatal: my first mmap failed.  (check limits ?)\n"
+literal|"(Init) my first mmap failed.  (check limits ?)\n"
 argument_list|)
 expr_stmt|;
 comment|/*      * We need a maximum of malloc_pageshift buckets, steal these from the      * front of the page_directory;      */
@@ -2178,7 +2189,6 @@ name|malloc_origo
 operator|-=
 name|malloc_pageshift
 expr_stmt|;
-comment|/* Clear it */
 name|memset
 argument_list|(
 name|page_dir
@@ -2188,7 +2198,6 @@ argument_list|,
 name|malloc_pagesize
 argument_list|)
 expr_stmt|;
-comment|/* Find out how much it tells us */
 name|malloc_ninfo
 operator|=
 name|malloc_pagesize
@@ -2198,24 +2207,15 @@ expr|*
 name|page_dir
 expr_stmt|;
 comment|/* Plug the page directory into itself */
-name|i
-operator|=
-name|set_pgdir
+name|page_dir
+index|[
+name|ptr2index
 argument_list|(
 name|page_dir
-argument_list|,
+argument_list|)
+index|]
+operator|=
 name|MALLOC_FIRST
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|i
-condition|)
-name|wrterror
-argument_list|(
-literal|"fatal: couldn't set myself in the page directory\n"
-argument_list|)
 expr_stmt|;
 comment|/* Been here, done that */
 name|initialized
@@ -2257,19 +2257,12 @@ decl_stmt|;
 name|u_long
 name|index
 decl_stmt|;
-comment|/* How many pages ? */
 name|size
-operator|+=
-operator|(
-name|malloc_pagesize
-operator|-
-literal|1
-operator|)
-expr_stmt|;
+operator|=
+name|pageround
+argument_list|(
 name|size
-operator|&=
-operator|~
-name|malloc_pagemask
+argument_list|)
 expr_stmt|;
 name|p
 operator|=
@@ -2300,6 +2293,31 @@ if|if
 condition|(
 name|pf
 operator|->
+name|size
+operator|&
+name|malloc_pagemask
+condition|)
+name|wrterror
+argument_list|(
+literal|"(ES): junk length entry on free_list\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pf
+operator|->
+name|size
+condition|)
+name|wrterror
+argument_list|(
+literal|"(ES): zero length entry on free_list\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pf
+operator|->
 name|page
 operator|==
 name|pf
@@ -2308,7 +2326,7 @@ name|end
 condition|)
 name|wrterror
 argument_list|(
-literal|"zero entry on free_list\n"
+literal|"(ES): zero entry on free_list\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2321,35 +2339,11 @@ name|pf
 operator|->
 name|end
 condition|)
-block|{
-name|TRACE
-argument_list|(
-operator|(
-literal|"%6d !s %p %p %p<%d>\n"
-operator|,
-name|malloc_event
-operator|++
-operator|,
-name|pf
-operator|,
-name|pf
-operator|->
-name|page
-operator|,
-name|pf
-operator|->
-name|end
-operator|,
-name|__LINE__
-operator|)
-argument_list|)
-expr_stmt|;
 name|wrterror
 argument_list|(
-literal|"sick entry on free_list\n"
+literal|"(ES): sick entry on free_list\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2360,6 +2354,10 @@ name|pf
 operator|->
 name|page
 operator|>=
+operator|(
+name|void
+operator|*
+operator|)
 name|sbrk
 argument_list|(
 literal|0
@@ -2367,83 +2365,47 @@ argument_list|)
 condition|)
 name|wrterror
 argument_list|(
-literal|"entry on free_list past brk\n"
+literal|"(ES): entry on free_list past brk\n"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|page_dir
 index|[
-operator|(
-operator|(
-name|u_long
-operator|)
+name|ptr2index
+argument_list|(
 name|pf
 operator|->
 name|page
-operator|>>
-name|malloc_pageshift
-operator|)
-operator|-
-name|malloc_origo
+argument_list|)
 index|]
 operator|!=
 name|MALLOC_FREE
 condition|)
-block|{
-name|TRACE
-argument_list|(
-operator|(
-literal|"%6d !f %p %p %p<%d>\n"
-operator|,
-name|malloc_event
-operator|++
-operator|,
-name|pf
-operator|,
-name|pf
-operator|->
-name|page
-operator|,
-name|pf
-operator|->
-name|end
-operator|,
-name|__LINE__
-operator|)
-argument_list|)
-expr_stmt|;
 name|wrterror
 argument_list|(
-literal|"non-free first page on free-list\n"
+literal|"(ES): non-free first page on free-list\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|page_dir
 index|[
-operator|(
-operator|(
-name|u_long
-operator|)
+name|ptr2index
+argument_list|(
 name|pf
 operator|->
 name|end
-operator|>>
-name|malloc_pageshift
-operator|)
+argument_list|)
 operator|-
 literal|1
-operator|-
-name|malloc_origo
 index|]
 operator|!=
 name|MALLOC_FREE
 condition|)
 name|wrterror
 argument_list|(
-literal|"non-free last page on free-list\n"
+literal|"(ES): non-free last page on free-list\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2458,7 +2420,6 @@ operator|<
 name|size
 condition|)
 continue|continue;
-elseif|else
 if|if
 condition|(
 name|pf
@@ -2506,8 +2467,6 @@ name|pf
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
 name|p
 operator|=
 name|pf
@@ -2528,7 +2487,6 @@ name|size
 expr_stmt|;
 break|break;
 block|}
-block|}
 ifdef|#
 directive|ifdef
 name|EXTRA_SANITY
@@ -2538,27 +2496,19 @@ name|p
 operator|&&
 name|page_dir
 index|[
-operator|(
-operator|(
-name|u_long
-operator|)
+name|ptr2index
+argument_list|(
 name|p
-operator|>>
-name|malloc_pageshift
-operator|)
-operator|-
-name|malloc_origo
+argument_list|)
 index|]
 operator|!=
 name|MALLOC_FREE
 condition|)
-block|{
 name|wrterror
 argument_list|(
-literal|"allocated non-free page on free-list\n"
+literal|"(ES): allocated non-free page on free-list\n"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* EXTRA_SANITY */
@@ -2586,19 +2536,12 @@ condition|(
 name|p
 condition|)
 block|{
-comment|/* Mark the pages in the directory */
 name|index
 operator|=
-operator|(
-operator|(
-name|u_long
-operator|)
+name|ptr2index
+argument_list|(
 name|p
-operator|>>
-name|malloc_pageshift
-operator|)
-operator|-
-name|malloc_origo
+argument_list|)
 expr_stmt|;
 name|page_dir
 index|[
@@ -2628,6 +2571,21 @@ name|i
 index|]
 operator|=
 name|MALLOC_FOLLOW
+expr_stmt|;
+if|if
+condition|(
+name|malloc_junk
+condition|)
+name|memset
+argument_list|(
+name|p
+argument_list|,
+name|SOME_JUNK
+argument_list|,
+name|size
+operator|<<
+name|malloc_pageshift
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -2703,6 +2661,7 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* Find length of admin structure */
 name|l
 operator|=
 sizeof|sizeof
@@ -2737,6 +2696,7 @@ operator|/
 name|MALLOC_BITS
 operator|)
 expr_stmt|;
+comment|/* Don't waste more than two chunks on this */
 if|if
 condition|(
 operator|(
@@ -2776,7 +2736,6 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -2785,6 +2744,7 @@ condition|)
 return|return
 literal|0
 return|;
+block|}
 name|bp
 operator|->
 name|size
@@ -2815,6 +2775,22 @@ name|bits
 expr_stmt|;
 name|bp
 operator|->
+name|page
+operator|=
+name|pp
+expr_stmt|;
+name|page_dir
+index|[
+name|ptr2index
+argument_list|(
+name|pp
+argument_list|)
+index|]
+operator|=
+name|bp
+expr_stmt|;
+name|bp
+operator|->
 name|next
 operator|=
 name|page_dir
@@ -2822,30 +2798,6 @@ index|[
 name|bits
 index|]
 expr_stmt|;
-name|bp
-operator|->
-name|page
-operator|=
-name|pp
-expr_stmt|;
-name|i
-operator|=
-name|set_pgdir
-argument_list|(
-name|pp
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|i
-condition|)
-return|return
-literal|0
-return|;
-comment|/* We can safely assume that there is nobody in this chain */
 name|page_dir
 index|[
 name|bits
@@ -2864,7 +2816,32 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-comment|/*     for(;k-i>= MALLOC_BITS; i += MALLOC_BITS) 	bp->bits[i / MALLOC_BITS] = ~0; */
+comment|/* Do a bunch at a time */
+for|for
+control|(
+init|;
+name|k
+operator|-
+name|i
+operator|>=
+name|MALLOC_BITS
+condition|;
+name|i
+operator|+=
+name|MALLOC_BITS
+control|)
+name|bp
+operator|->
+name|bits
+index|[
+name|i
+operator|/
+name|MALLOC_BITS
+index|]
+operator|=
+operator|~
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2885,13 +2862,13 @@ expr_stmt|;
 if|if
 condition|(
 name|bp
-operator|!=
-name|pp
+operator|==
+name|bp
+operator|->
+name|page
 condition|)
-return|return
-literal|1
-return|;
-comment|/* We may have used the first ones already */
+block|{
+comment|/* Mark the ones we stole for ourselves */
 for|for
 control|(
 name|i
@@ -2931,6 +2908,7 @@ operator|<<
 name|bits
 operator|)
 expr_stmt|;
+block|}
 block|}
 return|return
 literal|1
@@ -3032,7 +3010,7 @@ name|lp
 operator|++
 control|)
 empty_stmt|;
-comment|/* Find that bit */
+comment|/* Find that bit, and tweak it */
 name|k
 operator|=
 name|ffs
@@ -3050,14 +3028,11 @@ literal|1
 operator|<<
 name|k
 expr_stmt|;
-name|bp
-operator|->
-name|free
-operator|--
-expr_stmt|;
+comment|/* If there are no more free, remove from free-list */
 if|if
 condition|(
 operator|!
+operator|--
 name|bp
 operator|->
 name|free
@@ -3079,6 +3054,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* Adjust to the real offset of that chunk */
 name|k
 operator|+=
 operator|(
@@ -3091,18 +3067,37 @@ operator|)
 operator|*
 name|MALLOC_BITS
 expr_stmt|;
+name|k
+operator|<<=
+name|bp
+operator|->
+name|shift
+expr_stmt|;
+if|if
+condition|(
+name|malloc_junk
+condition|)
+name|memset
+argument_list|(
+name|bp
+operator|->
+name|page
+operator|+
+name|k
+argument_list|,
+name|SOME_JUNK
+argument_list|,
+name|bp
+operator|->
+name|size
+argument_list|)
+expr_stmt|;
 return|return
 name|bp
 operator|->
 name|page
 operator|+
-operator|(
 name|k
-operator|<<
-name|bp
-operator|->
-name|shift
-operator|)
 return|;
 block|}
 end_function
@@ -3169,21 +3164,20 @@ name|result
 condition|)
 name|wrterror
 argument_list|(
-literal|"malloc() returns NULL\n"
+literal|"malloc(): returns NULL\n"
 argument_list|)
 expr_stmt|;
-name|TRACE
+if|if
+condition|(
+name|malloc_zero
+condition|)
+name|memset
 argument_list|(
-operator|(
-literal|"%6d M %p %d\n"
-operator|,
-name|malloc_event
-operator|++
-operator|,
 name|result
-operator|,
+argument_list|,
+literal|0
+argument_list|,
 name|size
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3193,7 +3187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Change an allocation's size  */
+comment|/*  * Change the size of an allocation.  */
 end_comment
 
 begin_function
@@ -3216,8 +3210,6 @@ decl_stmt|;
 name|u_long
 name|osize
 decl_stmt|,
-name|page
-decl_stmt|,
 name|index
 decl_stmt|;
 name|struct
@@ -3226,22 +3218,43 @@ modifier|*
 modifier|*
 name|mp
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|suicide
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|ptr
+condition|)
+comment|/* Bounce to malloc() */
+return|return
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+return|;
 if|if
 condition|(
 operator|!
 name|initialized
 condition|)
-name|malloc_init
-argument_list|()
+block|{
+name|wrtwarning
+argument_list|(
+literal|"realloc(): malloc() never got called.\n"
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|suicide
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* used as free() */
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|ptr
@@ -3250,6 +3263,7 @@ operator|!
 name|size
 condition|)
 block|{
+comment|/* Bounce to free() */
 name|free
 argument_list|(
 name|ptr
@@ -3259,41 +3273,31 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* used as malloc() */
-if|if
-condition|(
-operator|!
-name|ptr
-condition|)
-return|return
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-return|;
-comment|/* Find the page directory entry for the page in question */
-name|page
-operator|=
-operator|(
-name|u_long
-operator|)
-name|ptr
-operator|>>
-name|malloc_pageshift
-expr_stmt|;
 name|index
 operator|=
-name|page
-operator|-
-name|malloc_origo
+name|ptr2index
+argument_list|(
+name|ptr
+argument_list|)
 expr_stmt|;
-comment|/* make sure it makes sense in some fashion */
 if|if
 condition|(
 name|index
 operator|<
 name|malloc_pageshift
-operator|||
+condition|)
+block|{
+name|wrtwarning
+argument_list|(
+literal|"realloc(): junk pointer (too low)\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
 name|index
 operator|>
 name|last_index
@@ -3301,14 +3305,13 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer passed to realloc()\n"
+literal|"realloc(): junk pointer (too high)\n"
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-comment|/* find the size of that allocation, and see if we need to relocate */
 name|mp
 operator|=
 operator|&
@@ -3325,41 +3328,56 @@ operator|==
 name|MALLOC_FIRST
 condition|)
 block|{
+comment|/* Page allocation */
+comment|/* Check the pointer */
+if|if
+condition|(
+operator|(
+name|u_long
+operator|)
+name|ptr
+operator|&
+name|malloc_pagemask
+condition|)
+block|{
+name|wrtwarning
+argument_list|(
+literal|"realloc(): modified page pointer.\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/* Find the size in bytes */
+for|for
+control|(
 name|osize
 operator|=
 name|malloc_pagesize
-expr_stmt|;
-while|while
-condition|(
+init|;
+operator|*
+operator|++
 name|mp
-index|[
-literal|1
-index|]
 operator|==
 name|MALLOC_FOLLOW
-condition|)
-block|{
+condition|;
+control|)
 name|osize
 operator|+=
 name|malloc_pagesize
 expr_stmt|;
-name|mp
-operator|++
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 name|malloc_realloc
 operator|&&
+comment|/* unless we have to, */
 name|size
-operator|<
+operator|<=
 name|osize
 operator|&&
-name|size
-operator|>
-name|malloc_maxsize
-operator|&&
+comment|/* .. or are too small, */
 name|size
 operator|>
 operator|(
@@ -3368,9 +3386,11 @@ operator|-
 name|malloc_pagesize
 operator|)
 condition|)
+comment|/* .. or can free a page, */
 return|return
 name|ptr
 return|;
+comment|/* don't do anything. */
 block|}
 elseif|else
 if|if
@@ -3381,6 +3401,78 @@ operator|>=
 name|MALLOC_MAGIC
 condition|)
 block|{
+comment|/* Chunk allocation */
+comment|/* Check the pointer for sane values */
+if|if
+condition|(
+operator|(
+operator|(
+name|u_long
+operator|)
+name|ptr
+operator|&
+operator|(
+operator|(
+operator|*
+name|mp
+operator|)
+operator|->
+name|size
+operator|-
+literal|1
+operator|)
+operator|)
+condition|)
+block|{
+name|wrtwarning
+argument_list|(
+literal|"realloc(): modified chunk pointer.\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/* Find the chunk index in the page */
+name|i
+operator|=
+operator|(
+operator|(
+name|u_long
+operator|)
+name|ptr
+operator|&
+name|malloc_pagemask
+operator|)
+operator|>>
+operator|(
+operator|*
+name|mp
+operator|)
+operator|->
+name|shift
+expr_stmt|;
+comment|/* Verify that it isn't a free chunk already */
+if|if
+condition|(
+name|tst_bit
+argument_list|(
+operator|*
+name|mp
+argument_list|,
+name|i
+argument_list|)
+condition|)
+block|{
+name|wrtwarning
+argument_list|(
+literal|"realloc(): already free chunk.\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|osize
 operator|=
 operator|(
@@ -3395,45 +3487,42 @@ condition|(
 operator|!
 name|malloc_realloc
 operator|&&
+comment|/* Unless we have to, */
 name|size
 operator|<
 name|osize
 operator|&&
+comment|/* ..or are too small, */
 operator|(
 name|size
 operator|>
-operator|(
-operator|*
-name|mp
-operator|)
-operator|->
-name|size
+name|osize
 operator|/
 literal|2
 operator|||
-operator|(
-operator|*
-name|mp
-operator|)
-operator|->
-name|size
+comment|/* ..or could use a smaller size, */
+name|osize
 operator|==
 name|malloc_minsize
 operator|)
 condition|)
+comment|/* ..(if there is one) */
 return|return
 name|ptr
 return|;
+comment|/* ..Don't do anything */
 block|}
 else|else
 block|{
-name|wrterror
+name|wrtwarning
 argument_list|(
-literal|"realloc() of wrong page.\n"
+literal|"realloc(): wrong page pointer.\n"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-comment|/* try to reallocate */
 name|p
 operator|=
 name|malloc
@@ -3446,7 +3535,7 @@ condition|(
 name|p
 condition|)
 block|{
-comment|/* copy the lesser of the two sizes */
+comment|/* copy the lesser of the two sizes, and free the old one */
 if|if
 condition|(
 name|osize
@@ -3478,16 +3567,6 @@ name|ptr
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|malloc_abort
-condition|)
-name|wrterror
-argument_list|(
-literal|"realloc() returns NULL\n"
-argument_list|)
-expr_stmt|;
 return|return
 name|p
 return|;
@@ -3507,9 +3586,6 @@ parameter_list|(
 name|void
 modifier|*
 name|ptr
-parameter_list|,
-name|u_long
-name|page
 parameter_list|,
 name|int
 name|index
@@ -3538,10 +3614,6 @@ name|void
 modifier|*
 name|tail
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SANITY
-comment|/* Is it free already ? */
 if|if
 condition|(
 name|info
@@ -3551,24 +3623,25 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"freeing free page.\n"
+literal|"free(): already free page.\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Is it not the right place to begin ? */
 if|if
 condition|(
 name|info
 operator|!=
 name|MALLOC_FIRST
 condition|)
-name|wrterror
+block|{
+name|wrtwarning
 argument_list|(
-literal|"freeing wrong page.\n"
+literal|"free(): freeing wrong page.\n"
 argument_list|)
 expr_stmt|;
-comment|/* Is this really a pointer to a page ? */
+return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -3578,14 +3651,15 @@ name|ptr
 operator|&
 name|malloc_pagemask
 condition|)
-name|wrterror
+block|{
+name|wrtwarning
 argument_list|(
-literal|"freeing messed up page pointer.\n"
+literal|"free(): modified page pointer.\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* Count how many pages it is anyway */
+return|return;
+block|}
+comment|/* Count how many pages and mark them free at the same time */
 name|page_dir
 index|[
 name|index
@@ -3647,7 +3721,7 @@ expr|*
 name|pt
 argument_list|)
 expr_stmt|;
-comment|/* XXX check success */
+comment|/* This cannot fail... */
 name|px
 operator|->
 name|page
@@ -3674,6 +3748,7 @@ operator|.
 name|next
 condition|)
 block|{
+comment|/* Nothing on free list, put this at head */
 name|px
 operator|->
 name|next
@@ -3706,6 +3781,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Find the right spot, leave pf pointing to the modified entry. */
 name|tail
 operator|=
 name|ptr
@@ -3722,13 +3798,13 @@ name|next
 init|;
 name|pf
 operator|->
-name|next
-operator|&&
-name|pf
-operator|->
 name|end
 operator|<
 name|ptr
+operator|&&
+name|pf
+operator|->
+name|next
 condition|;
 name|pf
 operator|=
@@ -3737,18 +3813,55 @@ operator|->
 name|next
 control|)
 empty_stmt|;
-for|for
-control|(
-init|;
+comment|/* Race ahead here */
+if|if
+condition|(
 name|pf
-condition|;
+operator|->
+name|page
+operator|>
+name|tail
+condition|)
+block|{
+comment|/* Insert before entry */
+name|px
+operator|->
+name|next
+operator|=
 name|pf
+expr_stmt|;
+name|px
+operator|->
+name|prev
 operator|=
 name|pf
 operator|->
+name|prev
+expr_stmt|;
+name|pf
+operator|->
+name|prev
+operator|=
+name|px
+expr_stmt|;
+name|px
+operator|->
+name|prev
+operator|->
 name|next
-control|)
-block|{
+operator|=
+name|px
+expr_stmt|;
+name|pf
+operator|=
+name|px
+expr_stmt|;
+name|px
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|pf
@@ -3758,7 +3871,7 @@ operator|==
 name|ptr
 condition|)
 block|{
-comment|/* append to entry */
+comment|/* Append to the previuos entry */
 name|pf
 operator|->
 name|end
@@ -3788,6 +3901,7 @@ operator|->
 name|page
 condition|)
 block|{
+comment|/* And collapse the next too. */
 name|pt
 operator|=
 name|pf
@@ -3849,7 +3963,7 @@ operator|==
 name|tail
 condition|)
 block|{
-comment|/* prepend to entry */
+comment|/* Prepend to entry */
 name|pf
 operator|->
 name|size
@@ -3866,59 +3980,13 @@ block|}
 elseif|else
 if|if
 condition|(
-name|pf
-operator|->
-name|page
-operator|>
-name|ptr
-condition|)
-block|{
-name|px
-operator|->
-name|next
-operator|=
-name|pf
-expr_stmt|;
-name|px
-operator|->
-name|prev
-operator|=
-name|pf
-operator|->
-name|prev
-expr_stmt|;
-name|pf
-operator|->
-name|prev
-operator|=
-name|px
-expr_stmt|;
-name|px
-operator|->
-name|prev
-operator|->
-name|next
-operator|=
-name|px
-expr_stmt|;
-name|pf
-operator|=
-name|px
-expr_stmt|;
-name|px
-operator|=
-literal|0
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 operator|!
 name|pf
 operator|->
 name|next
 condition|)
 block|{
+comment|/* Append at tail of chain */
 name|px
 operator|->
 name|next
@@ -3948,11 +4016,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-continue|continue;
+name|wrterror
+argument_list|(
+literal|"messed up free list"
+argument_list|)
+expr_stmt|;
 block|}
-break|break;
 block|}
-block|}
+comment|/* Return something to OS ? */
 if|if
 condition|(
 operator|!
@@ -3960,18 +4031,21 @@ name|pf
 operator|->
 name|next
 operator|&&
+comment|/* If we're the last one, */
 name|pf
 operator|->
 name|size
 operator|>
 name|malloc_cache
 operator|&&
+comment|/* ..and the cache is full, */
 name|pf
 operator|->
 name|end
 operator|==
 name|malloc_brk
 operator|&&
+comment|/* ..and none behind us, */
 name|malloc_brk
 operator|==
 name|sbrk
@@ -3980,6 +4054,8 @@ literal|0
 argument_list|)
 condition|)
 block|{
+comment|/* ..and it's OK to do... */
+comment|/* 	 * Keep the cache intact.  Notice that the '>' above guarantees that 	 * the pf will always have at least one page afterwards. 	 */
 name|pf
 operator|->
 name|end
@@ -3996,28 +4072,6 @@ name|size
 operator|=
 name|malloc_cache
 expr_stmt|;
-name|TRACE
-argument_list|(
-operator|(
-literal|"%6d U %p %d\n"
-operator|,
-name|malloc_event
-operator|++
-operator|,
-name|pf
-operator|->
-name|end
-operator|,
-name|pf
-operator|->
-name|end
-operator|-
-name|pf
-operator|->
-name|page
-operator|)
-argument_list|)
-expr_stmt|;
 name|brk
 argument_list|(
 name|pf
@@ -4031,25 +4085,21 @@ name|pf
 operator|->
 name|end
 expr_stmt|;
-comment|/* Find the page directory entry for the page in question */
-name|page
+name|index
 operator|=
-operator|(
-name|u_long
-operator|)
+name|ptr2index
+argument_list|(
 name|pf
 operator|->
 name|end
-operator|>>
-name|malloc_pageshift
+argument_list|)
 expr_stmt|;
-name|index
+name|last_index
 operator|=
-name|page
+name|index
 operator|-
-name|malloc_origo
+literal|1
 expr_stmt|;
-comment|/* Now update the directory */
 for|for
 control|(
 name|i
@@ -4069,12 +4119,7 @@ index|]
 operator|=
 name|MALLOC_NOT_MINE
 expr_stmt|;
-name|last_index
-operator|=
-name|index
-operator|-
-literal|1
-expr_stmt|;
+comment|/* XXX: We could realloc/shrink the pagedir here I guess. */
 block|}
 block|}
 end_function
@@ -4092,9 +4137,6 @@ parameter_list|(
 name|void
 modifier|*
 name|ptr
-parameter_list|,
-name|u_long
-name|page
 parameter_list|,
 name|int
 name|index
@@ -4118,27 +4160,6 @@ name|void
 modifier|*
 name|vp
 decl_stmt|;
-comment|/* Make sure that pointer is multiplum of chunk-size */
-if|if
-condition|(
-operator|(
-name|u_long
-operator|)
-name|ptr
-operator|&
-operator|(
-name|info
-operator|->
-name|size
-operator|-
-literal|1
-operator|)
-condition|)
-name|wrterror
-argument_list|(
-literal|" freeing messed up chunk pointer\n"
-argument_list|)
-expr_stmt|;
 comment|/* Find the chunk number on the page */
 name|i
 operator|=
@@ -4155,10 +4176,31 @@ name|info
 operator|->
 name|shift
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SANITY
-comment|/* See if it's free already */
+if|if
+condition|(
+operator|(
+operator|(
+name|u_long
+operator|)
+name|ptr
+operator|&
+operator|(
+name|info
+operator|->
+name|size
+operator|-
+literal|1
+operator|)
+operator|)
+condition|)
+block|{
+name|wrtwarning
+argument_list|(
+literal|"free(): modified pointer.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|tst_bit
@@ -4171,14 +4213,11 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"freeing free chunk.\n"
+literal|"free(): already free chunk.\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* Mark it free */
 name|set_bit
 argument_list|(
 name|info
@@ -4191,7 +4230,14 @@ operator|->
 name|free
 operator|++
 expr_stmt|;
-comment|/* If the page was full before, we need to put it on the queue now */
+name|mp
+operator|=
+name|page_dir
+operator|+
+name|info
+operator|->
+name|shift
+expr_stmt|;
 if|if
 condition|(
 name|info
@@ -4201,6 +4247,7 @@ operator|==
 literal|1
 condition|)
 block|{
+comment|/* Page became non-full */
 name|mp
 operator|=
 name|page_dir
@@ -4209,6 +4256,7 @@ name|info
 operator|->
 name|shift
 expr_stmt|;
+comment|/* Insert in address order */
 while|while
 condition|(
 operator|*
@@ -4258,7 +4306,6 @@ name|info
 expr_stmt|;
 return|return;
 block|}
-comment|/* If this page isn't empty, don't do anything. */
 if|if
 condition|(
 name|info
@@ -4268,32 +4315,6 @@ operator|!=
 name|info
 operator|->
 name|total
-condition|)
-return|return;
-comment|/* We may want to keep at least one page of each size chunks around.  */
-name|mp
-operator|=
-name|page_dir
-operator|+
-name|info
-operator|->
-name|shift
-expr_stmt|;
-if|if
-condition|(
-literal|0
-operator|&&
-operator|(
-operator|*
-name|mp
-operator|==
-name|info
-operator|)
-operator|&&
-operator|!
-name|info
-operator|->
-name|next
 condition|)
 return|return;
 comment|/* Find& remove this page in the queue */
@@ -4326,27 +4347,14 @@ operator|!
 operator|*
 name|mp
 condition|)
-block|{
-name|TRACE
-argument_list|(
-operator|(
-literal|"%6d !q %p\n"
-operator|,
-name|malloc_event
-operator|++
-operator|,
-name|info
-operator|)
-argument_list|)
-expr_stmt|;
 name|wrterror
 argument_list|(
-literal|"Not on queue\n"
+literal|"(ES): Not on queue\n"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+comment|/* EXTRA_SANITY */
 block|}
 operator|*
 name|mp
@@ -4356,48 +4364,35 @@ operator|->
 name|next
 expr_stmt|;
 comment|/* Free the page& the info structure if need be */
-name|set_pgdir
+name|page_dir
+index|[
+name|ptr2index
 argument_list|(
 name|info
 operator|->
 name|page
-argument_list|,
+argument_list|)
+index|]
+operator|=
 name|MALLOC_FIRST
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|void
-operator|*
-operator|)
-name|info
-operator|->
-name|page
-operator|==
-operator|(
-name|void
-operator|*
-operator|)
-name|info
-condition|)
-block|{
-name|free
-argument_list|(
-name|info
-operator|->
-name|page
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|vp
 operator|=
 name|info
 operator|->
 name|page
 expr_stmt|;
+comment|/* Order is important ! */
+if|if
+condition|(
+name|vp
+operator|!=
+operator|(
+name|void
+operator|*
+operator|)
+name|info
+condition|)
 name|free
 argument_list|(
 name|info
@@ -4408,7 +4403,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -4432,18 +4426,6 @@ decl_stmt|;
 name|int
 name|index
 decl_stmt|;
-name|TRACE
-argument_list|(
-operator|(
-literal|"%6d F %p\n"
-operator|,
-name|malloc_event
-operator|++
-operator|,
-name|ptr
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* This is legal */
 if|if
 condition|(
@@ -4451,10 +4433,6 @@ operator|!
 name|ptr
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|SANITY
-comment|/* There wouldn't be anything to free */
 if|if
 condition|(
 operator|!
@@ -4463,40 +4441,24 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"free() called before malloc() ever got called\n"
+literal|"free(): malloc() never got called.\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
+comment|/* If we're already sinking, don't make matters any worse. */
 if|if
 condition|(
 name|suicide
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* Find the page directory entry for the page in question */
-name|page
-operator|=
-operator|(
-name|u_long
-operator|)
-name|ptr
-operator|>>
-name|malloc_pageshift
-expr_stmt|;
+return|return;
 name|index
 operator|=
-name|page
-operator|-
-name|malloc_origo
+name|ptr2index
+argument_list|(
+name|ptr
+argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SANITY
-comment|/* make sure it makes sense in some fashion */
 if|if
 condition|(
 name|index
@@ -4506,7 +4468,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer (low) passed to free()\n"
+literal|"free(): junk pointer (too low)\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4520,14 +4482,11 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer (high) passed to free()\n"
+literal|"free(): junk pointer (too high)\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* handle as page-allocation or chunk allocation */
 name|info
 operator|=
 name|page_dir
@@ -4545,8 +4504,6 @@ name|free_pages
 argument_list|(
 name|ptr
 argument_list|,
-name|page
-argument_list|,
 name|index
 argument_list|,
 name|info
@@ -4556,8 +4513,6 @@ else|else
 name|free_bytes
 argument_list|(
 name|ptr
-argument_list|,
-name|page
 argument_list|,
 name|index
 argument_list|,
