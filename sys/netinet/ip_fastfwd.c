@@ -1421,6 +1421,20 @@ name|ro_rt
 operator|->
 name|rt_ifp
 expr_stmt|;
+comment|/* 	 * Immediately drop blackholed traffic. 	 */
+if|if
+condition|(
+name|ro
+operator|.
+name|ro_rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_BLACKHOLE
+condition|)
+goto|goto
+name|drop
+goto|;
 comment|/* 	 * Step 5: outgoing firewall packet processing 	 */
 comment|/* 	 * Run through list of hooks for output packets. 	 */
 if|if
