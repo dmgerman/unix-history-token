@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -126,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|KGDBDEV
-value|-1
+value|NODEV
 end_define
 
 begin_endif
@@ -153,7 +153,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|int
+name|dev_t
 name|kgdb_dev
 init|=
 name|KGDBDEV
@@ -161,7 +161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* remote debugging device (-1 if none) */
+comment|/* remote debugging device (NODEV if none) */
 end_comment
 
 begin_decl_stmt
@@ -777,6 +777,10 @@ operator|==
 literal|0
 operator|&&
 name|kgdb_debug_panic
+operator|&&
+name|kgdb_dev
+operator|!=
+name|NODEV
 condition|)
 name|kgdb_connect
 argument_list|(
