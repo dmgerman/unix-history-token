@@ -706,6 +706,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+operator|*
+name|countp
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
