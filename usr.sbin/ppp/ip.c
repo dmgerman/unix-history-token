@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.47 1998/06/27 14:18:05 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
+comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.48 1998/06/27 23:48:45 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
 end_comment
 
 begin_include
@@ -3406,15 +3406,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|vj_SendFrame
-argument_list|(
-name|l
-argument_list|,
-name|bp
-argument_list|,
-name|bundle
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3436,6 +3427,15 @@ operator|)
 condition|)
 name|bundle_StartIdleTimer
 argument_list|(
+name|bundle
+argument_list|)
+expr_stmt|;
+name|vj_SendFrame
+argument_list|(
+name|l
+argument_list|,
+name|bp
+argument_list|,
 name|bundle
 argument_list|)
 expr_stmt|;
