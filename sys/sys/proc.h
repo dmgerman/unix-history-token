@@ -4069,6 +4069,11 @@ name|defined
 argument_list|(
 name|__sparc64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 end_if
 
 begin_function_decl

@@ -1841,6 +1841,11 @@ name|defined
 argument_list|(
 name|__sparc64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 name|struct
 name|thread
 modifier|*
@@ -2093,6 +2098,11 @@ operator|||
 name|defined
 argument_list|(
 name|__sparc64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
 argument_list|)
 name|newtd
 operator|=
