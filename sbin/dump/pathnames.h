@@ -48,5 +48,12 @@ begin_comment
 comment|/* path on remote host */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_PATH_WALL
+value|"/usr/bin/wall"
+end_define
+
 end_unit
 

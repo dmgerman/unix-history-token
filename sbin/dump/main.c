@@ -1278,10 +1278,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|set_operators
-argument_list|()
-expr_stmt|;
-comment|/* /etc/group snarfed */
 name|getfstab
 argument_list|()
 expr_stmt|;

@@ -472,6 +472,12 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|__printflike
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -488,6 +494,12 @@ name|fmt
 operator|,
 operator|...
 operator|)
+argument_list|)
+name|__printflike
+argument_list|(
+literal|1
+argument_list|,
+literal|2
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -520,17 +532,11 @@ operator|,
 operator|...
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|set_operators
-name|__P
+name|__printflike
 argument_list|(
-operator|(
-name|void
-operator|)
+literal|1
+argument_list|,
+literal|2
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1023,17 +1029,6 @@ end_define
 
 begin_comment
 comment|/* group entry to notify */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIALUP
-value|"ttyd"
-end_define
-
-begin_comment
-comment|/* prefix for dialups */
 end_comment
 
 begin_decl_stmt
