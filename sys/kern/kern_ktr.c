@@ -509,6 +509,9 @@ name|arg4
 argument_list|,
 name|u_long
 name|arg5
+argument_list|,
+name|u_long
+name|arg6
 argument_list|)
 endif|#
 directive|endif
