@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move_robs.c	5.4 (Berkeley) %G%"
+literal|"@(#)move_robs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,20 +44,15 @@ begin_comment
 comment|/*  * move_robots:  *	Move the robots around  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|move_robots
-argument_list|(
-argument|was_sig
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|was_sig
+parameter_list|)
 name|bool
 name|was_sig
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|COORD
@@ -524,6 +519,8 @@ condition|)
 name|longjmp
 argument_list|(
 name|End_move
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -583,7 +580,7 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * add_score:  *	Add a score to the overall point total  */

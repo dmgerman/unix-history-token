@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	quiz.c	4.6	91/02/04	"
+literal|"	quiz.c	4.7	91/02/28	"
 decl_stmt|;
 end_decl_stmt
 
@@ -1480,6 +1480,13 @@ expr_stmt|;
 block|}
 end_block
 
+begin_function_decl
+name|void
+name|done
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|(
@@ -1519,33 +1526,18 @@ name|char
 modifier|*
 name|t
 decl_stmt|;
-extern|extern done(
-block|)
-function|;
-end_function
-
-begin_decl_stmt
 name|int
 name|count
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|info
 operator|=
 name|_PATH_INDEX
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|time
 argument_list|(
 name|tvec
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|inc
 operator|=
 name|tvec
@@ -1557,14 +1549,8 @@ literal|077774
 operator||
 literal|01
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|loop
 label|:
-end_label
-
-begin_if
 if|if
 condition|(
 name|argc
@@ -1636,9 +1622,6 @@ name|loop
 goto|;
 block|}
 block|}
-end_if
-
-begin_expr_stmt
 name|input
 operator|=
 name|fopen
@@ -1648,9 +1631,6 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|input
@@ -1669,15 +1649,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|talloc
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|argc
@@ -1689,9 +1663,6 @@ argument_list|(
 name|info
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGINT
@@ -1699,9 +1670,6 @@ argument_list|,
 name|done
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|argv
 index|[
 name|argc
@@ -1709,9 +1677,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|find
@@ -1732,17 +1697,11 @@ condition|)
 name|dunno
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|fclose
 argument_list|(
 name|input
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|input
 operator|=
 name|fopen
@@ -1755,9 +1714,6 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|input
@@ -1767,15 +1723,9 @@ condition|)
 name|dunno
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|readindex
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1789,9 +1739,6 @@ name|na
 operator|=
 name|nl
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|setvbuf
 argument_list|(
 name|stdout
@@ -1807,9 +1754,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 init|;
@@ -2085,18 +2029,22 @@ operator|+=
 name|count
 expr_stmt|;
 block|}
-end_for
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  query
-operator|(
-name|r
-operator|)
+begin_macro
+name|query
+argument_list|(
+argument|r
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|r
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2274,12 +2222,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|done
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -2330,7 +2276,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|instruct
@@ -2338,6 +2284,13 @@ argument_list|(
 argument|info
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|info
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

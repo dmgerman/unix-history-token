@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mille.c	5.4 (Berkeley) %G%"
+literal|"@(#)mille.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,7 +87,7 @@ comment|/*  * @(#)mille.c	1.3 (Berkeley) 5/10/83  */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|rub
 parameter_list|()
 function_decl|;
@@ -575,12 +575,10 @@ begin_comment
 comment|/*  *	Routine to trap rubouts, and make sure they really want to  * quit.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rub
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -613,7 +611,7 @@ name|rub
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Time to go beddy-by  */

@@ -168,6 +168,14 @@ block|}
 block|}
 end_block
 
+begin_function_decl
+specifier|static
+name|void
+name|botsub
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_macro
 name|bot_linex
 argument_list|()
@@ -1259,28 +1267,23 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|botsub
-argument_list|(
+parameter_list|(
 name|idx
-argument_list|,
+parameter_list|,
 name|str
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|idx
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1353,7 +1356,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	subroutine to draw only a section of the screen  *	only the top section of the screen is updated.  If entire lines are being  *	drawn, then they will be cleared first.  */

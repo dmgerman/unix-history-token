@@ -2315,6 +2315,14 @@ end_block
 begin_escape
 end_escape
 
+begin_function_decl
+specifier|static
+name|void
+name|fillroom
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* 	*********** 	MAKE_OBJECT 	*********** 	subroutine to create the objects in the maze for the given level  */
 end_comment
@@ -3289,26 +3297,21 @@ begin_comment
 comment|/* 	subroutine to put an object into an empty room  *	uses a random walk  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|fillroom
-argument_list|(
-argument|what
-argument_list|,
-argument|arg
-argument_list|)
+parameter_list|(
+name|what
+parameter_list|,
+name|arg
+parameter_list|)
 name|int
 name|arg
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 name|what
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -3456,7 +3459,7 @@ operator|=
 name|arg
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* 	subroutine to put monsters into an empty room without walls or other 	monsters  */

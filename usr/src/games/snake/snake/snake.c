@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snake.c	5.8 (Berkeley) %G%"
+literal|"@(#)snake.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,7 +321,7 @@ name|long
 name|atol
 parameter_list|()
 function_decl|;
-name|int
+name|void
 name|stop
 parameter_list|()
 function_decl|;
@@ -452,7 +452,7 @@ block|{
 name|cook
 argument_list|()
 expr_stmt|;
-name|printf
+name|pr
 argument_list|(
 literal|"snake: screen too small for a fair game.\n"
 argument_list|)
@@ -1620,7 +1620,7 @@ expr_stmt|;
 name|cook
 argument_list|()
 expr_stmt|;
-name|printf
+name|pr
 argument_list|(
 literal|"You have won with $%d.\n"
 argument_list|,
@@ -2111,10 +2111,6 @@ name|struct
 name|passwd
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|getpwuid
-argument_list|()
 decl_stmt|;
 comment|/* 	 * Neg uid, 0, and 1 cannot have scores recorded. 	 */
 if|if
@@ -2256,7 +2252,7 @@ name|short
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|pr
 argument_list|(
 literal|"You bettered your previous best of $%d\n"
 argument_list|,
@@ -2265,7 +2261,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|pr
 argument_list|(
 literal|"Your best to date is $%d\n"
 argument_list|,
@@ -2335,7 +2331,7 @@ name|p
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|pr
 argument_list|(
 literal|"You beat %s's old record of $%d!\n"
 argument_list|,
@@ -2347,14 +2343,14 @@ name|allbscore
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|pr
 argument_list|(
 literal|"You set a new record!\n"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|pr
 argument_list|(
 literal|"The highest is %s with $%d\n"
 argument_list|,
@@ -2377,7 +2373,7 @@ condition|(
 operator|!
 name|flag
 condition|)
-name|printf
+name|pr
 argument_list|(
 literal|"Unable to post score.\n"
 argument_list|)
@@ -2899,7 +2895,7 @@ operator|==
 literal|8
 condition|)
 block|{
-name|printf
+name|pr
 argument_list|(
 literal|"failure\n"
 argument_list|)
@@ -3086,7 +3082,7 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-name|aprintf
+name|apr
 argument_list|(
 operator|&
 name|p
@@ -3285,7 +3281,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|remove
+name|chk
 argument_list|(
 operator|&
 name|p
@@ -3317,7 +3313,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|remove
+name|chk
 argument_list|(
 operator|&
 name|p
@@ -3345,7 +3341,7 @@ operator|.
 name|line
 argument_list|)
 expr_stmt|;
-name|remove
+name|chk
 argument_list|(
 operator|&
 name|p
@@ -3377,7 +3373,7 @@ operator|.
 name|line
 argument_list|)
 expr_stmt|;
-name|remove
+name|chk
 argument_list|(
 operator|&
 name|p
@@ -3508,7 +3504,7 @@ operator|.
 name|line
 operator|--
 control|)
-name|remove
+name|chk
 argument_list|(
 operator|&
 name|p
@@ -3571,7 +3567,7 @@ operator|.
 name|line
 operator|++
 control|)
-name|remove
+name|chk
 argument_list|(
 operator|&
 name|p
@@ -3674,7 +3670,7 @@ operator|.
 name|col
 operator|--
 control|)
-name|remove
+name|chk
 argument_list|(
 operator|&
 name|p
@@ -3737,7 +3733,7 @@ operator|.
 name|col
 operator|++
 control|)
-name|remove
+name|chk
 argument_list|(
 operator|&
 name|p
@@ -3840,7 +3836,7 @@ operator|->
 name|col
 operator|--
 expr_stmt|;
-name|aprintf
+name|apr
 argument_list|(
 name|point
 argument_list|(
@@ -3912,7 +3908,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|aprintf
+name|apr
 argument_list|(
 name|point
 argument_list|(
@@ -3940,7 +3936,7 @@ argument_list|(
 literal|6
 argument_list|)
 expr_stmt|;
-name|aprintf
+name|apr
 argument_list|(
 name|point
 argument_list|(
@@ -3969,7 +3965,7 @@ literal|6
 argument_list|)
 expr_stmt|;
 block|}
-name|aprintf
+name|apr
 argument_list|(
 name|point
 argument_list|(
@@ -4375,7 +4371,7 @@ expr_stmt|;
 name|ll
 argument_list|()
 expr_stmt|;
-name|printf
+name|pr
 argument_list|(
 literal|"%d\n"
 argument_list|,
@@ -4420,7 +4416,7 @@ operator|>=
 name|penalty
 condition|)
 block|{
-name|printf
+name|pr
 argument_list|(
 literal|"You and your $%d have been eaten\n"
 argument_list|,
@@ -4430,7 +4426,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|pr
 argument_list|(
 literal|"The snake ate you.  You owe $%d.\n"
 argument_list|,
@@ -4463,7 +4459,7 @@ block|}
 end_block
 
 begin_macro
-name|remove
+name|chk
 argument_list|(
 argument|sp
 argument_list|)
@@ -4736,7 +4732,7 @@ operator|&
 name|p
 argument_list|)
 expr_stmt|;
-name|printf
+name|pr
 argument_list|(
 literal|"$%d"
 argument_list|,
@@ -4747,18 +4743,16 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|stop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-literal|1
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|ll
@@ -4773,7 +4767,7 @@ name|done
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|suspend
@@ -4829,7 +4823,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|printf
+name|pr
 argument_list|(
 literal|"You made %d moves.\n"
 argument_list|,

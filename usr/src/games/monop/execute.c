@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)execute.c	5.4 (Berkeley) %G%"
+literal|"@(#)execute.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -597,31 +597,22 @@ name|outf
 decl_stmt|,
 name|num
 decl_stmt|;
-name|TIME
-name|tme
-decl_stmt|,
-modifier|*
-name|tp
+name|time_t
+name|t
 decl_stmt|;
 name|int
 modifier|*
 name|dat_end
-decl_stmt|,
-name|junk
-index|[
-literal|18
-index|]
+decl_stmt|;
+name|struct
+name|stat
+name|sb
 decl_stmt|;
 name|unsgn
 name|start
 decl_stmt|,
 name|end
 decl_stmt|;
-name|tp
-operator|=
-operator|&
-name|tme
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"Which file do you wish to save it in? "
@@ -658,7 +649,8 @@ name|stat
 argument_list|(
 name|buf
 argument_list|,
-name|junk
+operator|&
+name|sb
 argument_list|)
 operator|>
 operator|-
@@ -706,7 +698,8 @@ argument_list|)
 expr_stmt|;
 name|time
 argument_list|(
-name|tp
+operator|&
+name|t
 argument_list|)
 expr_stmt|;
 comment|/* get current time		*/
@@ -716,7 +709,8 @@ name|buf
 argument_list|,
 name|ctime
 argument_list|(
-name|tp
+operator|&
+name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1045,6 +1039,7 @@ name|buf
 argument_list|,
 name|ctime
 argument_list|(
+operator|&
 name|sbuf
 operator|.
 name|st_mtime

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pom.c	5.2 (Berkeley) %G%"
+literal|"@(#)pom.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,19 @@ begin_comment
 comment|/* lunar mean long of node at EPOCH */
 end_comment
 
+begin_decl_stmt
+name|double
+name|dtor
+argument_list|()
+decl_stmt|,
+name|potm
+argument_list|()
+decl_stmt|,
+name|adj360
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|()
@@ -191,15 +204,6 @@ decl_stmt|,
 name|today
 decl_stmt|,
 name|tomorrow
-decl_stmt|,
-name|dtor
-argument_list|()
-decl_stmt|,
-name|adj360
-argument_list|()
-decl_stmt|,
-name|potm
-argument_list|()
 decl_stmt|;
 name|int
 name|cnt

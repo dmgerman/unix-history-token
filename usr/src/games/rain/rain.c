@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rain.c	5.5 (Berkeley) %G%"
+literal|"@(#)rain.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,10 +270,12 @@ name|ypos
 index|[
 literal|5
 index|]
-decl_stmt|,
-name|onsig
-argument_list|()
 decl_stmt|;
+specifier|static
+name|void
+name|onsig
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|!
@@ -1408,10 +1410,11 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|onsig
-argument_list|()
+parameter_list|()
 block|{
 name|tputs
 argument_list|(
@@ -1421,7 +1424,7 @@ literal|1
 argument_list|,
 name|fputchar
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|TE
@@ -1443,15 +1446,9 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|USG
-end_ifdef
-
-begin_expr_stmt
 name|ioctl
 argument_list|(
 literal|1
@@ -1462,14 +1459,8 @@ operator|&
 name|old_tty
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_expr_stmt
 name|stty
 argument_list|(
 literal|1
@@ -1478,34 +1469,26 @@ operator|&
 name|old_tty
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-begin_macro
-unit|}  static
+begin_expr_stmt
+specifier|static
 name|fputchar
 argument_list|(
 argument|c
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 name|c
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

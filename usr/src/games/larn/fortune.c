@@ -15,35 +15,11 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BSD4
-name|.1
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|O_RDONLY
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pl_7.c	5.6 (Berkeley) %G%"
+literal|"@(#)pl_7.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +188,7 @@ ifdef|#
 directive|ifdef
 name|SIGTSTP
 block|{
-name|int
+name|void
 name|susp
 parameter_list|()
 function_decl|;
@@ -259,12 +259,10 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|newturn
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|repaired
 operator|=
@@ -587,7 +585,7 @@ literal|7
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*VARARGS2*/
@@ -2955,12 +2953,10 @@ directive|ifdef
 name|SIGTSTP
 end_ifdef
 
-begin_macro
+begin_function
+name|void
 name|susp
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|blockalarm
 argument_list|()
@@ -2982,7 +2978,7 @@ name|unblockalarm
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

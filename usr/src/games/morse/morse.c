@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)morse.c	5.2 (Berkeley) %G%"
+literal|"@(#)morse.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -310,7 +310,6 @@ block|}
 end_function
 
 begin_expr_stmt
-specifier|static
 name|morse
 argument_list|(
 name|c
@@ -408,7 +407,6 @@ block|}
 end_block
 
 begin_expr_stmt
-specifier|static
 name|show
 argument_list|(
 name|s

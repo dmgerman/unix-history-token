@@ -221,10 +221,6 @@ name|struct
 name|passwd
 modifier|*
 name|pwe
-decl_stmt|,
-modifier|*
-name|getpwuid
-argument_list|()
 decl_stmt|;
 comment|/*  *	first task is to identify the player  */
 ifndef|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pl_1.c	5.4 (Berkeley) %G%"
+literal|"@(#)pl_1.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -349,12 +349,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|choke
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|leave
 argument_list|(
@@ -362,14 +360,12 @@ name|LEAVE_QUIT
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|child
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|union
 name|wait
@@ -394,6 +390,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -446,7 +446,7 @@ name|child
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

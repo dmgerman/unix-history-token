@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.4 (Berkeley) %G%"
+literal|"@(#)misc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1165,12 +1165,10 @@ begin_comment
 comment|/*  *	This routine gives the players a chance before it exits.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|quit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|putchar
 argument_list|(
@@ -1195,13 +1193,13 @@ argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
-literal|2
+name|SIGINT
 argument_list|,
 name|quit
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	This routine copies one structure to another  */
@@ -1286,7 +1284,9 @@ name|shell_in
 argument_list|()
 expr_stmt|;
 name|fflush
-argument_list|()
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1343,15 +1343,6 @@ include|#
 directive|include
 file|<pwd.h>
 end_include
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|char
@@ -1503,7 +1494,7 @@ argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
-literal|2
+name|SIGINT
 argument_list|,
 name|quit
 argument_list|)

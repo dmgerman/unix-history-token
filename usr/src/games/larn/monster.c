@@ -805,6 +805,14 @@ expr_stmt|;
 block|}
 end_block
 
+begin_function_decl
+specifier|static
+name|int
+name|dirsub
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  *	speldamage(x) 		Function to perform spell functions cast by the player  *		int x;  *  *	Enter with the spell number, returns no value.  *	Please insure that there are 2 spaces before all messages here  */
 end_comment
@@ -4427,22 +4435,23 @@ begin_comment
 comment|/*  *	static dirsub(x,y)		Routine to ask for direction, then modify x,y for it  *		int *x,*y;  *  *	Function to ask for a direction and modify an x,y for that direction  *	Enter with the origination coordinates in (x,y).  *	Returns index into diroffx[] (0-8).  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
-name|dirsub
-argument_list|(
-argument|x
-argument_list|,
-argument|y
-argument_list|)
 name|int
-operator|*
+name|dirsub
+parameter_list|(
 name|x
-operator|,
-operator|*
+parameter_list|,
 name|y
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+name|int
+modifier|*
+name|x
+decl_stmt|,
+decl|*
+name|y
+decl_stmt|;
+end_function
 
 begin_block
 block|{

@@ -9,6 +9,14 @@ directive|include
 file|"header.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|ohear
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  *	******  *	OALTAR  *	******  *  *	subroutine to process an altar object  */
 end_comment
@@ -481,16 +489,17 @@ begin_comment
 comment|/* 	function to cast a +3 protection on the player  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|ohear
-argument_list|()
+parameter_list|()
 block|{
 name|lprcat
 argument_list|(
 literal|"\nYou have been heard!"
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -514,32 +523,29 @@ index|]
 operator|+=
 literal|500
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* protection field */
-end_comment
-
-begin_expr_stmt
 name|bottomline
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/* 	******* 	OTHRONE 	*******  	subroutine to process a throne object  */
 end_comment
 
-begin_expr_stmt
-unit|othrone
-operator|(
-name|arg
-operator|)
+begin_macro
+name|othrone
+argument_list|(
+argument|arg
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|arg
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1517,6 +1523,66 @@ block|}
 end_block
 
 begin_comment
+comment|/* 	*** 	FCH 	***  	subroutine to process an up/down of a character attribute for ofountain  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|fch
+parameter_list|(
+name|how
+parameter_list|,
+name|x
+parameter_list|)
+name|int
+name|how
+decl_stmt|;
+name|long
+modifier|*
+name|x
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|how
+operator|<
+literal|0
+condition|)
+block|{
+name|lprcat
+argument_list|(
+literal|" went down by one!"
+argument_list|)
+expr_stmt|;
+operator|--
+operator|(
+operator|*
+name|x
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|lprcat
+argument_list|(
+literal|" went up by one!"
+argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|x
+operator|)
+operator|++
+expr_stmt|;
+block|}
+name|bottomline
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* 	a subroutine to raise or lower character levels 	if x> 0 they are raised   if x< 0 they are lowered  */
 end_comment
 
@@ -1972,71 +2038,6 @@ block|}
 break|break;
 block|}
 name|cursors
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/* 	*** 	FCH 	***  	subroutine to process an up/down of a character attribute for ofountain  */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|fch
-argument_list|(
-argument|how
-argument_list|,
-argument|x
-argument_list|)
-name|int
-name|how
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|long
-modifier|*
-name|x
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|how
-operator|<
-literal|0
-condition|)
-block|{
-name|lprcat
-argument_list|(
-literal|" went down by one!"
-argument_list|)
-expr_stmt|;
-operator|--
-operator|(
-operator|*
-name|x
-operator|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|lprcat
-argument_list|(
-literal|" went up by one!"
-argument_list|)
-expr_stmt|;
-operator|(
-operator|*
-name|x
-operator|)
-operator|++
-expr_stmt|;
-block|}
-name|bottomline
 argument_list|()
 expr_stmt|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.3 (Berkeley) %G%"
+literal|"@(#)init.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -811,12 +811,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|byebye
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|md_ignore_signals
 argument_list|()
@@ -844,14 +842,12 @@ name|md_heed_signals
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|md_ignore_signals
 argument_list|()
@@ -883,14 +879,12 @@ name|md_heed_signals
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|error_save
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|save_is_interactive
 operator|=
@@ -907,7 +901,7 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|do_args

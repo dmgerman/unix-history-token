@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pl_main.c	5.4 (Berkeley) %G%"
+literal|"@(#)pl_main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ file|<sys/wait.h>
 end_include
 
 begin_decl_stmt
-name|int
+name|void
 name|choke
 argument_list|()
 decl_stmt|,

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)number.c	4.6 (Berkeley) %G%"
+literal|"@(#)number.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -323,17 +323,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|convert
 argument_list|(
 argument|line
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|line
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -578,7 +580,6 @@ block|}
 end_block
 
 begin_expr_stmt
-specifier|static
 name|unit
 argument_list|(
 name|len
@@ -741,7 +742,6 @@ block|}
 end_block
 
 begin_expr_stmt
-specifier|static
 name|number
 argument_list|(
 name|C
@@ -939,7 +939,6 @@ block|}
 end_block
 
 begin_expr_stmt
-specifier|static
 name|pfract
 argument_list|(
 name|len
@@ -1013,16 +1012,18 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|usage
 argument_list|(
 argument|toobig
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|toobig
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

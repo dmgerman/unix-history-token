@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)store.c	5.2 (Berkeley) %G%"
+literal|"@(#)store.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1111,6 +1111,14 @@ expr_stmt|;
 block|}
 end_block
 
+begin_function_decl
+specifier|static
+name|void
+name|dnditem
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_macro
 name|dnd_hed
 argument_list|()
@@ -1156,6 +1164,72 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_function
+specifier|static
+name|void
+name|handsfull
+parameter_list|()
+block|{
+name|lprcat
+argument_list|(
+literal|"\nYou can't carry anything more!"
+argument_list|)
+expr_stmt|;
+name|lflush
+argument_list|()
+expr_stmt|;
+name|nap
+argument_list|(
+literal|2200
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|outofstock
+parameter_list|()
+block|{
+name|lprcat
+argument_list|(
+literal|"\nSorry, but we are out of that item."
+argument_list|)
+expr_stmt|;
+name|lflush
+argument_list|()
+expr_stmt|;
+name|nap
+argument_list|(
+literal|2200
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|nogold
+parameter_list|()
+block|{
+name|lprcat
+argument_list|(
+literal|"\nYou don't have enough gold to pay for that!"
+argument_list|)
+expr_stmt|;
+name|lflush
+argument_list|()
+expr_stmt|;
+name|nap
+argument_list|(
+literal|2200
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_macro
 name|dndstore
@@ -1596,74 +1670,20 @@ block|}
 end_block
 
 begin_comment
-comment|/* 	function for the players hands are full  */
+comment|/* 	dnditem(index)  	to print the item list;  used in dndstore() enter with the index into itm  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
-name|handsfull
-argument_list|()
-block|{
-name|lprcat
-argument_list|(
-literal|"\nYou can't carry anything more!"
-argument_list|)
-block|;
-name|lflush
-argument_list|()
-block|;
-name|nap
-argument_list|(
-literal|2200
-argument_list|)
-block|; }
-specifier|static
-name|outofstock
-argument_list|()
-block|{
-name|lprcat
-argument_list|(
-literal|"\nSorry, but we are out of that item."
-argument_list|)
-block|;
-name|lflush
-argument_list|()
-block|;
-name|nap
-argument_list|(
-literal|2200
-argument_list|)
-block|; }
-specifier|static
-name|nogold
-argument_list|()
-block|{
-name|lprcat
-argument_list|(
-literal|"\nYou don't have enough gold to pay for that!"
-argument_list|)
-block|;
-name|lflush
-argument_list|()
-block|;
-name|nap
-argument_list|(
-literal|2200
-argument_list|)
-block|; }
-comment|/* 	dnditem(index)  	to print the item list;  used in dndstore() enter with the index into itm  */
-specifier|static
+name|void
 name|dnditem
-argument_list|(
+parameter_list|(
 name|i
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|i
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -1865,7 +1885,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2689,6 +2709,14 @@ begin_comment
 comment|/* last time he was in bank */
 end_comment
 
+begin_function_decl
+specifier|static
+name|void
+name|banktitle
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_macro
 name|obank
 argument_list|()
@@ -2719,19 +2747,17 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|banktitle
-argument_list|(
-argument|str
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|str
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|str
+decl_stmt|;
 block|{
 name|nosignal
 operator|=
@@ -2848,7 +2874,7 @@ name|drawscreen
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	function to put interest on your bank account  */

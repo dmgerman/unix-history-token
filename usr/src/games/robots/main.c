@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,10 +108,8 @@ specifier|extern
 name|int
 name|Max_per_uid
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|rindex
+name|void
+name|quit
 parameter_list|()
 function_decl|;
 name|show_only
@@ -542,12 +540,10 @@ begin_comment
 comment|/*  * quit:  *	Leave the program elegantly.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|quit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|int
@@ -605,7 +601,7 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * another:  *	See if another game is desired  */

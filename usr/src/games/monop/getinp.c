@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getinp.c	5.3 (Berkeley) %G%"
+literal|"@(#)getinp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,11 @@ decl_stmt|;
 name|int
 name|plen
 decl_stmt|;
+specifier|static
+name|int
+name|comp
+parameter_list|()
+function_decl|;
 for|for
 control|(
 init|;
