@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 2000 Free Software Foundation, Inc.      Written by Werner Lemberg (wl@gnu.org)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.      Written by Werner Lemberg (wl@gnu.org)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -89,78 +89,78 @@ name|int
 name|getopt
 parameter_list|(
 name|int
-name|__argc
 parameter_list|,
+comment|// __argc
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
 parameter_list|,
+comment|// __argv
 specifier|const
 name|char
 modifier|*
-name|__shortopts
 parameter_list|)
 function_decl|;
+comment|// __shortopts
 specifier|extern
 name|int
 name|getopt_long
 parameter_list|(
 name|int
-name|__argc
 parameter_list|,
+comment|// __argc
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
 parameter_list|,
+comment|// __argv
 specifier|const
 name|char
 modifier|*
-name|__shortopts
 parameter_list|,
+comment|// __shortopts
 specifier|const
 name|struct
 name|option
 modifier|*
-name|__longopts
 parameter_list|,
+comment|// __longopts
 name|int
 modifier|*
-name|__longind
 parameter_list|)
 function_decl|;
+comment|// __longind
 specifier|extern
 name|int
 name|getopt_long_only
 parameter_list|(
 name|int
-name|__argc
 parameter_list|,
+comment|// __argc
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
 parameter_list|,
+comment|// __argv
 specifier|const
 name|char
 modifier|*
-name|__shortopts
 parameter_list|,
+comment|// __shortopts
 specifier|const
 name|struct
 name|option
 modifier|*
-name|__longopts
 parameter_list|,
+comment|// __longopts
 name|int
 modifier|*
-name|__longind
 parameter_list|)
 function_decl|;
+comment|// __longind
 ifdef|#
 directive|ifdef
 name|__cplusplus

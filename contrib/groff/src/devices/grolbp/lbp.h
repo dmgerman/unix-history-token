@@ -83,6 +83,7 @@ specifier|inline
 name|void
 name|lbpprintf
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|format
@@ -128,6 +129,7 @@ specifier|inline
 name|void
 name|lbpputs
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|data
@@ -511,6 +513,7 @@ specifier|inline
 name|void
 name|vdmprintf
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|format
@@ -805,6 +808,7 @@ specifier|inline
 name|void
 name|vdmprintf
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|format

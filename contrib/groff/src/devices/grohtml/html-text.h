@@ -281,7 +281,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-name|int
+name|void
 name|emit_space
 parameter_list|(
 name|void

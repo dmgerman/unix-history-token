@@ -227,20 +227,30 @@ name|_
 end_ifndef
 
 begin_comment
-comment|/* This is for other GNU distributions with internationalized messages.    When compiling libc, the _ macro is predefined.  */
+comment|/* This is for other GNU distributions with internationalized messages.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
 name|HAVE_LIBINTL_H
-end_ifdef
+operator|||
+name|defined
+name|_LIBC
+end_if
 
 begin_include
 include|#
 directive|include
 file|<libintl.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_
+end_ifndef
 
 begin_define
 define|#
@@ -251,6 +261,11 @@ name|msgid
 parameter_list|)
 value|gettext (msgid)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -1470,6 +1485,16 @@ name|print_errors
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|optarg
 operator|=
 name|NULL
@@ -1960,7 +1985,35 @@ operator|=
 name|option_index
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|long_only
+operator|||
+name|pfound
+operator|->
+name|has_arg
+operator|!=
+name|p
+operator|->
+name|has_arg
+operator|||
+name|pfound
+operator|->
+name|flag
+operator|!=
+name|p
+operator|->
+name|flag
+operator|||
+name|pfound
+operator|->
+name|val
+operator|!=
+name|p
+operator|->
+name|val
+condition|)
 comment|/* Second or later nonexact match found.  */
 name|ambig
 operator|=

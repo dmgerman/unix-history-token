@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989-2000 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989-2000, 2001 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_extern
@@ -13,7 +13,7 @@ literal|"C"
 block|{
 ifndef|#
 directive|ifndef
-name|strerror
+name|HAVE_STRERROR
 name|char
 modifier|*
 name|strerror
@@ -45,7 +45,7 @@ block|}
 end_extern
 
 begin_comment
-comment|/* stdio.h on IRIX and OSF/1 include getopt.h */
+comment|/* stdio.h on IRIX, OSF/1, and UWIN includes getopt.h */
 end_comment
 
 begin_if
@@ -57,6 +57,7 @@ name|defined
 argument_list|(
 name|__sgi
 argument_list|)
+expr|\
 operator|||
 operator|(
 name|defined
@@ -69,6 +70,12 @@ argument_list|(
 name|__alpha
 argument_list|)
 operator|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|_UWIN
+argument_list|)
 operator|)
 end_if
 
@@ -237,6 +244,18 @@ end_endif
 begin_comment
 comment|/* NEED_DECLARATION_PCLOSE */
 end_comment
+
+begin_function_decl
+name|size_t
+name|file_name_max
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fname
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
