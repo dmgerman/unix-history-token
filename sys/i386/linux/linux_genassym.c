@@ -91,5 +91,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|LINUX_RT_SIGF_HANDLER
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|linux_rt_sigframe
+argument_list|,
+name|sf_handler
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|LINUX_RT_SIGF_UC
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|linux_rt_sigframe
+argument_list|,
+name|sf_sc
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
