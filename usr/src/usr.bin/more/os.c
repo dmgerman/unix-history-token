@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)os.c	5.6 (Berkeley) %G%"
+literal|"@(#)os.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -231,6 +231,9 @@ name|shell
 expr_stmt|;
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cmdbuf
@@ -487,6 +490,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|cmd
+decl_stmt|,
+modifier|*
+name|malloc
+argument_list|()
 decl_stmt|;
 specifier|static
 name|char
@@ -532,7 +539,11 @@ block|{
 comment|/* 		 * Read the output of<echo filename>. 		 */
 name|cmd
 operator|=
-name|calloc
+name|malloc
+argument_list|(
+call|(
+name|u_int
+call|)
 argument_list|(
 name|strlen
 argument_list|(
@@ -540,10 +551,6 @@ name|filename
 argument_list|)
 operator|+
 literal|8
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -558,6 +565,9 @@ operator|(
 name|filename
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cmd
@@ -573,7 +583,11 @@ block|{
 comment|/* 		 * Read the output of<$SHELL -c "echo filename">. 		 */
 name|cmd
 operator|=
-name|calloc
+name|malloc
+argument_list|(
+call|(
+name|u_int
+call|)
 argument_list|(
 name|strlen
 argument_list|(
@@ -581,6 +595,7 @@ name|p
 argument_list|)
 operator|+
 literal|12
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -594,6 +609,9 @@ operator|(
 name|filename
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cmd
@@ -741,6 +759,11 @@ name|struct
 name|stat
 name|statbuf
 decl_stmt|;
+name|char
+modifier|*
+name|strcat
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|stat
@@ -801,6 +824,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|message
@@ -850,6 +876,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|message
@@ -948,6 +977,9 @@ index|]
 expr_stmt|;
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|msg
@@ -978,6 +1010,9 @@ operator|-
 literal|3
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|message
@@ -985,6 +1020,9 @@ argument_list|,
 literal|": "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|message
