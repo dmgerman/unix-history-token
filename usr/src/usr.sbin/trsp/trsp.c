@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trsp.c	6.2 (Berkeley) %G%"
+literal|"@(#)trsp.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +161,12 @@ begin_include
 include|#
 directive|include
 file|<netns/spidp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netns/spp_timer.h>
 end_include
 
 begin_include
@@ -1934,7 +1940,12 @@ argument_list|)
 expr_stmt|;
 name|p3
 argument_list|(
-name|snt
+name|smax
+argument_list|)
+expr_stmt|;
+name|p3
+argument_list|(
+name|snxt
 argument_list|)
 expr_stmt|;
 name|p3
@@ -1977,7 +1988,7 @@ literal|"<"
 decl_stmt|;
 name|pf
 argument_list|(
-name|AK
+name|ACKNOW
 argument_list|)
 expr_stmt|;
 name|pf
@@ -1993,6 +2004,26 @@ expr_stmt|;
 name|pf
 argument_list|(
 name|HO
+argument_list|)
+expr_stmt|;
+name|pf
+argument_list|(
+name|PI
+argument_list|)
+expr_stmt|;
+name|pf
+argument_list|(
+name|WIN
+argument_list|)
+expr_stmt|;
+name|pf
+argument_list|(
+name|RXT
+argument_list|)
+expr_stmt|;
+name|pf
+argument_list|(
+name|RVD
 argument_list|)
 expr_stmt|;
 name|flags
