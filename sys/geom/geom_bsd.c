@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Poul-Henning Kamp  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by Poul-Henning Kamp  * and NAI Labs, the Security Research Division of Network Associates, Inc.  * under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the  * DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The names of the authors may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * This is the method for dealing with BSD disklabels.  It has been  * extensively (by my standards at least) commented, in the vain hope that  * it will server as the source in future copy&paste operations.  */
+comment|/*-  * Copyright (c) 2002 Poul-Henning Kamp  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by Poul-Henning Kamp  * and NAI Labs, the Security Research Division of Network Associates, Inc.  * under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the  * DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The names of the authors may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * This is the method for dealing with BSD disklabels.  It has been  * extensively (by my standards at least) commented, in the vain hope that  * it will serve as the source in future copy&paste operations.  */
 end_comment
 
 begin_include
@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/md5.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -165,6 +171,12 @@ decl_stmt|;
 name|struct
 name|disklabel
 name|inram
+decl_stmt|;
+name|u_char
+name|labelsum
+index|[
+literal|16
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -3113,6 +3125,32 @@ return|;
 case|case
 name|BIO_GETATTR
 case|:
+if|if
+condition|(
+name|g_handleattr
+argument_list|(
+name|bp
+argument_list|,
+literal|"BSD::labelsum"
+argument_list|,
+name|ms
+operator|->
+name|labelsum
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ms
+operator|->
+name|labelsum
+argument_list|)
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+break|break;
 case|case
 name|BIO_SETATTR
 case|:
@@ -3461,6 +3499,15 @@ name|g_slicer
 modifier|*
 name|gsp
 decl_stmt|;
+name|MD5_CTX
+name|md5sum
+decl_stmt|;
+name|u_char
+name|hash
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
@@ -3485,32 +3532,6 @@ condition|(
 name|flags
 operator|==
 name|G_TF_TRANSPARENT
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-comment|/* 	 * The BSD-method will not automatically configure itself recursively 	 * Note that it is legal to examine the class-name of our provider, 	 * nothing else should ever be examined inside the provider. 	 */
-if|if
-condition|(
-name|flags
-operator|==
-name|G_TF_NORMAL
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|pp
-operator|->
-name|geom
-operator|->
-name|class
-operator|->
-name|name
-argument_list|,
-name|BSD_CLASS_NAME
-argument_list|)
 condition|)
 return|return
 operator|(
@@ -3575,7 +3596,7 @@ expr_stmt|;
 comment|/* 	 * The do...while loop here allows us to have multiple escapes 	 * using a simple "break".  This improves code clarity without 	 * ending up in deep nesting and without using goto or come from. 	 */
 do|do
 block|{
-comment|/* 		 * If the provider is an MBR we will only auto attach 		 * to type 165 slices in the G_TF_NORMAL case.  We will 		 * attach to any other type (BSD was handles above) 		 */
+comment|/* 		 * If the provider is an MBR we will only auto attach 		 * to type 165 slices in the G_TF_NORMAL case.  We will 		 * attach to any other type. 		 */
 name|error
 operator|=
 name|g_getattr
@@ -3737,7 +3758,7 @@ condition|(
 name|error
 condition|)
 break|break;
-comment|/* 		 * Process the found disklabel, and modify our "slice" 		 * instance to match it, if possible. 		 */
+comment|/* 		 * In order to avoid recursively attaching to the same 		 * on-disk label (it's usually visible through the 'c' 		 * partition) we calculate an MD5 and ask if other BSD's 		 * below us love that label.  If they do, we don't. 		 */
 name|dl
 operator|=
 operator|&
@@ -3745,6 +3766,73 @@ name|ms
 operator|->
 name|inram
 expr_stmt|;
+name|MD5Init
+argument_list|(
+operator|&
+name|md5sum
+argument_list|)
+expr_stmt|;
+name|MD5Update
+argument_list|(
+operator|&
+name|md5sum
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+name|dl
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dl
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|MD5Final
+argument_list|(
+name|ms
+operator|->
+name|labelsum
+argument_list|,
+operator|&
+name|md5sum
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|g_getattr
+argument_list|(
+literal|"BSD::labelsum"
+argument_list|,
+name|cp
+argument_list|,
+operator|&
+name|hash
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+name|ms
+operator|->
+name|labelsum
+argument_list|,
+name|hash
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hash
+argument_list|)
+argument_list|)
+condition|)
+break|break;
+comment|/* 		 * Process the found disklabel, and modify our "slice" 		 * instance to match it, if possible. 		 */
 name|error
 operator|=
 name|g_bsd_modify
