@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_proxy.c,v 1.2 1998/03/21 11:34:23 peter Exp $"
+literal|"@(#)$Id: ip_proxy.c,v 1.3 1998/06/20 18:37:50 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -799,6 +799,7 @@ operator|!
 name|tcp
 operator|||
 operator|(
+operator|(
 name|sport
 operator|==
 name|aps
@@ -812,6 +813,7 @@ operator|==
 name|aps
 operator|->
 name|aps_dport
+operator|)
 operator|)
 operator|)
 condition|)
@@ -852,6 +854,7 @@ operator|!
 name|tcp
 operator|||
 operator|(
+operator|(
 name|sport
 operator|==
 name|aps
@@ -865,6 +868,7 @@ operator|==
 name|aps
 operator|->
 name|aps_sport
+operator|)
 operator|)
 operator|)
 condition|)

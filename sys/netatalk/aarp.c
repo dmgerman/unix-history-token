@@ -2169,6 +2169,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|aat
 operator|=
 name|aarptnew
@@ -2176,6 +2177,9 @@ argument_list|(
 operator|&
 name|spa
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|bcopy

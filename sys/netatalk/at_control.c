@@ -1327,6 +1327,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|aa_delsingleroute
@@ -1350,6 +1351,9 @@ name|aa_netmask
 operator|.
 name|sat_addr
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 return|return

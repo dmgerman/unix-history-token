@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.79 1998/11/29 22:38:57 dt Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.80 1998/12/07 21:58:35 archie Exp $ */
 end_comment
 
 begin_comment
@@ -1170,6 +1170,8 @@ name|EROFS
 operator|)
 return|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* User id 0 always gets access. */
@@ -2338,6 +2340,7 @@ operator|(
 name|EISDIR
 operator|)
 return|;
+comment|/* NOT REACHED */
 case|case
 name|VLNK
 case|:
@@ -2359,6 +2362,8 @@ operator|(
 name|EROFS
 operator|)
 return|;
+break|break;
+default|default:
 break|break;
 block|}
 name|error

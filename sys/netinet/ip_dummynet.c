@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.6 1999/01/12 16:40:57 eivind Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.7 1999/01/12 16:43:52 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -592,6 +592,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pkt
 operator|=
 name|pipe
@@ -599,6 +600,9 @@ operator|->
 name|r
 operator|.
 name|head
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 	 * Move at most numbytes bytes from src and move to dst. 	 * delay is set to ticks_from_last_insert, which 	 * is reset after the first insertion; 	 */

@@ -1755,6 +1755,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ifp
 operator|=
 name|ro
@@ -1762,6 +1763,9 @@ operator|->
 name|ro_rt
 operator|->
 name|rt_ifp
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 for|for

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: zlib.h,v 1.3 1997/08/19 14:10:50 peter Exp $	*/
+comment|/*	$Id: zlib.h,v 1.4 1998/03/21 20:56:16 peter Exp $	*/
 end_comment
 
 begin_comment
@@ -714,6 +714,7 @@ name|uLong
 name|total_out
 decl_stmt|;
 comment|/* total nb of bytes output so far */
+specifier|const
 name|char
 modifier|*
 name|msg

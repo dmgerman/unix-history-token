@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: spans_if.c,v 1.3 1998/10/31 20:06:56 phk Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: spans_if.c,v 1.4 1998/12/04 22:54:53 archie Exp $  *  */
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"@(#) $Id: spans_if.c,v 1.3 1998/10/31 20:06:56 phk Exp $"
+literal|"@(#) $Id: spans_if.c,v 1.4 1998/12/04 22:54:53 archie Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1149,11 +1149,15 @@ block|}
 comment|/* 	 * Now close the SPANS signalling VCC 	 */
 if|if
 condition|(
+operator|(
 name|cop
 operator|=
 name|spp
 operator|->
 name|sp_conn
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|err
@@ -1952,6 +1956,7 @@ expr_stmt|;
 comment|/* 	 * Clean up the VCCB--the connection manager will free it 	 * spans_close_vcc will send a SPANS open response 	 */
 if|if
 condition|(
+operator|(
 operator|*
 name|errp
 operator|=
@@ -1963,6 +1968,9 @@ name|svp
 argument_list|,
 name|TRUE
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|ATM_DEBUG0
@@ -2970,6 +2978,7 @@ expr_stmt|;
 comment|/* 			 * Copy the response into the user's buffer 			 */
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|copyout
@@ -2987,6 +2996,9 @@ argument_list|(
 name|rsp
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 break|break;
 name|buf_addr

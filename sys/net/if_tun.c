@@ -2393,6 +2393,7 @@ name|TUN_RWAIT
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|tsleep
@@ -2414,6 +2415,9 @@ literal|"tunread"
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|splx

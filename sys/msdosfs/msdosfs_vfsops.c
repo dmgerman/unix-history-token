@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.38 1998/10/31 15:31:24 peter Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.39 1998/12/07 21:58:35 archie Exp $ */
 end_comment
 
 begin_comment
@@ -4685,6 +4685,7 @@ operator|==
 name|VNON
 operator|||
 operator|(
+operator|(
 name|dep
 operator|->
 name|de_flag
@@ -4714,6 +4715,7 @@ operator|||
 name|waitfor
 operator|==
 name|MNT_LAZY
+operator|)
 operator|)
 condition|)
 block|{

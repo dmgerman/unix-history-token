@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_vnops.c,v 1.65 1999/01/12 11:49:29 eivind Exp $  */
+comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_vnops.c,v 1.66 1999/01/21 08:29:06 dillon Exp $  */
 end_comment
 
 begin_include
@@ -336,6 +336,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -350,6 +351,9 @@ name|cn_cred
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 return|return
@@ -445,6 +449,7 @@ block|}
 comment|/* 		 * Access for write is interpreted as allowing 		 * creation of files in the directory. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -459,6 +464,9 @@ name|cn_cred
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|DBPRINT
@@ -533,6 +541,7 @@ block|{
 comment|/* 		 * Write access to directory required to delete files. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -547,6 +556,9 @@ name|cn_cred
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -684,6 +696,7 @@ block|{
 comment|/* 		 * Are we allowed to change the holding directory? 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -698,6 +711,9 @@ name|cn_cred
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -926,6 +942,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -935,6 +952,9 @@ argument_list|,
 operator|&
 name|file_node
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -1117,6 +1137,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -1126,6 +1147,9 @@ argument_list|,
 operator|&
 name|file_node
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -1538,6 +1562,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -1547,6 +1572,9 @@ argument_list|,
 operator|&
 name|file_node
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -1984,6 +2012,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -1995,6 +2024,9 @@ argument_list|,
 operator|&
 name|file_node
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -2210,6 +2242,7 @@ expr_stmt|;
 comment|/* 	 * Lock our directories and get our name pointers 	 * assume that the names are null terminated as they 	 * are the end of the path. Get pointers to all our 	 * devfs structures. 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -2219,6 +2252,9 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|abortit
@@ -2238,6 +2274,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -2247,6 +2284,9 @@ argument_list|,
 operator|&
 name|tp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|abortit
@@ -2526,6 +2566,7 @@ block|}
 comment|/* 	 * Lock our directories and get our name pointers 	 * assume that the names are null terminated as they 	 * are the end of the path. Get pointers to all our 	 * devfs structures. 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -2535,12 +2576,16 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|abortit
 goto|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -2550,6 +2595,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|abortit
@@ -2778,6 +2826,7 @@ block|}
 comment|/* 	 * Lock our directories and get our name pointers 	 * assume that the names are null terminated as they 	 * are the end of the path. Get pointers to all our 	 * devfs structures. 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -2787,12 +2836,16 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|abortit
 goto|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -2802,12 +2855,16 @@ argument_list|,
 operator|&
 name|fdp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|abortit
 goto|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -2817,6 +2874,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|abortit
@@ -2834,6 +2894,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -2843,6 +2904,9 @@ argument_list|,
 operator|&
 name|tp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|abortit
@@ -3553,6 +3617,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -3564,6 +3629,9 @@ argument_list|,
 operator|&
 name|dnp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 return|return
@@ -3620,6 +3688,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_dntovn
@@ -3631,6 +3700,9 @@ argument_list|,
 operator|&
 name|vp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 return|return
@@ -3752,6 +3824,7 @@ expr_stmt|;
 comment|/*  set up refs to dir */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -3761,6 +3834,9 @@ argument_list|,
 operator|&
 name|dir_node
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -4077,6 +4153,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|uiomove
@@ -4093,6 +4170,9 @@ name|d_reclen
 argument_list|,
 name|uio
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 break|break;
 block|}
@@ -4186,6 +4266,7 @@ expr_stmt|;
 comment|/*  set up refs to dir */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -4195,6 +4276,9 @@ argument_list|,
 operator|&
 name|lnk_node
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -4214,6 +4298,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -4228,6 +4313,9 @@ name|a_cred
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* XXX */
@@ -4362,6 +4450,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -4373,6 +4462,9 @@ argument_list|,
 operator|&
 name|file_node
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -4593,6 +4685,7 @@ name|dnp
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -4602,6 +4695,9 @@ argument_list|,
 operator|&
 name|dnp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -4673,6 +4769,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* NOT REACHED */
 case|case
 name|VBLK
 case|:
@@ -4708,6 +4805,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+break|break;
 block|}
 return|return
 operator|(
@@ -4806,6 +4906,7 @@ name|dnp
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -4815,6 +4916,9 @@ argument_list|,
 operator|&
 name|dnp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -5354,6 +5458,7 @@ name|dnp
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -5363,6 +5468,9 @@ argument_list|,
 operator|&
 name|dnp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -5817,6 +5925,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -5828,6 +5937,9 @@ argument_list|,
 operator|&
 name|dnp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -5967,6 +6079,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -5978,6 +6091,9 @@ argument_list|,
 operator|&
 name|dnp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -6094,6 +6210,7 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -6103,6 +6220,9 @@ argument_list|,
 operator|&
 name|dnp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -6429,6 +6549,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -6440,6 +6561,9 @@ argument_list|,
 operator|&
 name|dnp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -6664,6 +6788,7 @@ name|dnp
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|devfs_vntodn
@@ -6673,6 +6798,9 @@ argument_list|,
 operator|&
 name|dnp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|error
@@ -6798,7 +6926,7 @@ name|a_p
 argument_list|)
 operator|)
 return|;
-break|break;
+comment|/* NOT REACHED */
 case|case
 name|VBLK
 case|:
@@ -6919,6 +7047,7 @@ name|a_p
 argument_list|)
 operator|)
 return|;
+comment|/* NOT REACHED */
 default|default:
 name|panic
 argument_list|(

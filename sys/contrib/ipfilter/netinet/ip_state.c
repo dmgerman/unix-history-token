@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_state.c,v 1.3 1998/06/20 18:37:51 peter Exp $"
+literal|"@(#)$Id: ip_state.c,v 1.4 1998/11/26 18:54:52 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2482,6 +2482,7 @@ operator|!
 name|tcp
 operator|||
 operator|(
+operator|(
 name|sp
 operator|==
 name|is
@@ -2495,6 +2496,7 @@ operator|==
 name|is
 operator|->
 name|is_dport
+operator|)
 operator|)
 operator|)
 condition|)
@@ -2561,6 +2563,7 @@ operator|!
 name|tcp
 operator|||
 operator|(
+operator|(
 name|sp
 operator|==
 name|is
@@ -2574,6 +2577,7 @@ operator|==
 name|is
 operator|->
 name|is_sport
+operator|)
 operator|)
 operator|)
 condition|)

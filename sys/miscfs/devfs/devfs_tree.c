@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_tree.c,v 1.57 1998/11/26 18:50:23 eivind Exp $  */
+comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_tree.c,v 1.58 1998/12/10 19:57:00 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -750,6 +750,7 @@ name|ENOENT
 return|;
 if|if
 condition|(
+operator|(
 name|retval
 operator|=
 name|dev_add_entry
@@ -769,6 +770,9 @@ argument_list|,
 operator|&
 name|devnmp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 return|return
@@ -2182,6 +2186,7 @@ block|{
 comment|/* 		 * Make the node, using the original as a prototype) 		 * if the node already exists on that plane it won't be 		 * re-made.. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|dev_add_entry
@@ -2205,6 +2210,9 @@ argument_list|,
 operator|&
 name|newnmp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -2395,6 +2403,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|dev_dup_entry
@@ -2408,6 +2417,9 @@ name|new
 argument_list|,
 name|devfs_mp_p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 return|return
@@ -2561,6 +2573,7 @@ expr_stmt|;
 comment|/* 	 * go get the node made (if we need to) 	 * use the back one as a prototype 	 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|dev_add_entry
@@ -2588,6 +2601,9 @@ argument_list|,
 operator|&
 name|newnmp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -2648,6 +2664,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|dev_dup_entry
@@ -2663,6 +2680,9 @@ name|newfront
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 break|break;
@@ -3094,6 +3114,8 @@ literal|0
 block|case VNON: 		printf("bad-type2 (VNON)"); 		return(EINVAL);
 endif|#
 directive|endif
+default|default:
+break|break;
 block|}
 operator|*
 name|dn_pp
@@ -3424,6 +3446,7 @@ name|VBLK
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|nvp
 operator|=
 name|checkalias
@@ -3445,6 +3468,9 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|vput
@@ -3469,6 +3495,7 @@ name|VCHR
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|nvp
 operator|=
 name|checkalias
@@ -3490,6 +3517,9 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|vput
@@ -3625,6 +3655,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|dev_add_node
@@ -3648,6 +3679,9 @@ else|:
 name|dvm
 operator|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -3665,6 +3699,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|dev_add_name
@@ -3679,6 +3714,9 @@ name|dnp
 argument_list|,
 name|nm_pp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|devfs_dn_free
