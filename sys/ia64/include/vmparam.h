@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ALPHA_VMPARAM_H
+name|_MACHINE_VMPARAM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ALPHA_VMPARAM_H
+name|_MACHINE_VMPARAM_H
 end_define
 
 begin_comment
@@ -24,7 +24,7 @@ comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993
 end_comment
 
 begin_comment
-comment|/*  * Machine dependent constants for Alpha.  */
+comment|/*  * Machine dependent constants for ia64.  */
 end_comment
 
 begin_comment
@@ -252,6 +252,50 @@ comment|/* nominal ``small'' resident set size 					   protected against replace
 end_comment
 
 begin_comment
+comment|/*  * Manipulating region bits of an address.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA64_RR_BASE
+parameter_list|(
+name|n
+parameter_list|)
+value|(((u_int64_t) (n))<< 61)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_RR_MASK
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ((1L<< 61) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_PHYS_TO_RR6
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) | IA64_RR_BASE(6))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_PHYS_TO_RR7
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) | IA64_RR_BASE(7))
+end_define
+
+begin_comment
 comment|/*  * Mach derived constants  */
 end_comment
 
@@ -292,6 +336,13 @@ define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
 value|(IA64_RR_BASE(6) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|(VM_MIN_KERNEL_ADDRESS)
 end_define
 
 begin_comment
@@ -370,7 +421,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_ALPHA_VMPARAM_H */
+comment|/* !_MACHINE_VMPARAM_H */
 end_comment
 
 end_unit

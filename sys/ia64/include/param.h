@@ -102,14 +102,14 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MACHINE
+name|_MACHINE_ARCH
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MACHINE
-value|"ia64"
+name|_MACHINE_ARCH
+value|ia64
 end_define
 
 begin_endif
@@ -120,14 +120,32 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_ARCH
+name|_NO_NAMESPACE_POLLUTION
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_PARAM_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_ARCH
-value|ia64
+name|_MACHINE_PARAM_H_
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MACHINE
+value|"ia64"
 end_define
 
 begin_endif
@@ -159,18 +177,6 @@ directive|define
 name|MID_MACHINE
 value|MID_IA64
 end_define
-
-begin_include
-include|#
-directive|include
-file|<machine/ia64_cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
 
 begin_comment
 comment|/*  * OBJFORMAT_NAMES is a comma-separated list of the object formats  * that are supported on the architecture.  */
@@ -390,24 +396,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|KERNBASE
-value|0xfffffc0000300000LL
-end_define
-
-begin_comment
-comment|/* start of kernel virtual */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BTOPKERNBASE
-value|((u_long)KERNBASE>> PGSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CLSIZE
 value|1
 end_define
@@ -465,14 +453,6 @@ end_define
 
 begin_comment
 comment|/* pages of u-area */
-end_comment
-
-begin_comment
-comment|/* #define KSTACK_GUARD */
-end_comment
-
-begin_comment
-comment|/* compile in kstack guard page */
 end_comment
 
 begin_comment
@@ -548,6 +528,24 @@ name|x
 parameter_list|)
 value|((x) * (PAGE_SIZE / 1024))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_MACHINE_PARAM_H_ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_NO_NAMESPACE_POLLUTION */
+end_comment
 
 end_unit
 

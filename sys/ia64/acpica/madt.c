@@ -9,6 +9,12 @@ directive|include
 file|"acpi.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
 begin_function_decl
 name|struct
 name|sapic
