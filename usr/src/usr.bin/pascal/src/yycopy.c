@@ -9,9 +9,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yycopy.c 1.1 %G%"
+literal|"@(#)yycopy.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|"whoami.h"
+end_include
 
 begin_include
 include|#
