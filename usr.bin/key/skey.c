@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libskey/skey.h"
+file|<skey.h>
 end_include
 
 begin_function_decl

@@ -384,7 +384,7 @@ end_define
 begin_decl_stmt
 name|void
 name|MDreverse
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|unsigned
