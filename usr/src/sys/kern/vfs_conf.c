@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -722,6 +722,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|vnodeopv_desc
+name|lofs_vnodeop_opv_desc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnodeopv_desc
+name|fdesc_vnodeop_opv_desc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnodeopv_desc
+name|portal_vnodeop_opv_desc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|vnodeopv_desc
 modifier|*
@@ -780,6 +804,30 @@ name|spec_nfsv2nodeop_opv_desc
 block|,
 operator|&
 name|fifo_nfsv2nodeop_opv_desc
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|LOFS
+operator|&
+name|lofs_vnodeop_opv_desc
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|FDESC
+operator|&
+name|fdesc_vnodeop_opv_desc
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PORTAL
+operator|&
+name|portal_vnodeop_opv_desc
 block|,
 endif|#
 directive|endif
