@@ -2077,16 +2077,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCI_VENDOR_PINNACLE_ALT
-value|0xBD11
+name|PCI_VENDOR_IODATA
+value|0x10fc
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCI_VENDOR_IODATA
-value|0x10fc
+name|PCI_VENDOR_PINNACLE_ALT
+value|0xBD11
 end_define
+
+begin_comment
+comment|/* They got their own ID backwards? */
+end_comment
 
 begin_define
 define|#
@@ -2865,6 +2869,10 @@ condition|(
 name|subsystem_vendor_id
 operator|==
 name|PCI_VENDOR_PINNACLE_ALT
+operator|||
+name|subsystem_vendor_id
+operator|==
+name|PCI_VENDOR_PINNACLE_NEW
 condition|)
 block|{
 name|bktr
@@ -2911,11 +2919,11 @@ if|if
 condition|(
 name|subsystem_vendor_id
 operator|==
-literal|0x10fc
+name|PCI_VENDOR_IODATA
 operator|&&
 name|subsystem_id
 operator|==
-literal|0x4020
+name|MODEL_IODATA_GV_BCTV3_PCI
 condition|)
 block|{
 name|bktr
