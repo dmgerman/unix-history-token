@@ -15,15 +15,24 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.11 (Berkeley) %G%"
+literal|"@(#)tape.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"dump.h"
+end_include
 
 begin_include
 include|#
@@ -34,13 +43,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<sys/wait.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dump.h"
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -143,11 +158,51 @@ name|host
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|rmtopen
+argument_list|()
+decl_stmt|,
+name|rmtwrite
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|rmtclose
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 endif|RDUMP
 end_endif
+
+begin_function_decl
+name|int
+name|atomic
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+name|doslave
+argument_list|()
+decl_stmt|,
+name|enslave
+argument_list|()
+decl_stmt|,
+name|flusht
+argument_list|()
+decl_stmt|,
+name|killall
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Concurrent dump mods (Caltech) - disk block reading and tape writing  * are exported to several slave processes.  While one slave writes the  * tape, the others read disk blocks; they pass control of the tape in  * a ring via flock().	The parent process traverses the filesystem and  * sends spclrec()'s and lists of daddr's to the slaves via pipes.  */
@@ -243,12 +298,10 @@ begin_comment
 comment|/* length of tape used per block written */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|alloctape
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|pgoff
@@ -369,23 +422,18 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|taprec
-argument_list|(
-argument|dp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dp
+parameter_list|)
 name|char
 modifier|*
 name|dp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|req
 index|[
@@ -453,30 +501,22 @@ name|flusht
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|dmpblk
-argument_list|(
-argument|blkno
-argument_list|,
-argument|size
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|blkno
+parameter_list|,
+name|size
+parameter_list|)
 name|daddr_t
 name|blkno
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|avail
@@ -497,8 +537,8 @@ expr_stmt|;
 name|tpblks
 operator|=
 name|size
-operator|/
-name|TP_BSIZE
+operator|>>
+name|tp_bshift
 expr_stmt|;
 while|while
 condition|(
@@ -558,11 +598,11 @@ expr_stmt|;
 name|dblkno
 operator|+=
 name|avail
-operator|*
+operator|<<
 operator|(
-name|TP_BSIZE
-operator|/
-name|dev_bsize
+name|tp_bshift
+operator|-
+name|dev_bshift
 operator|)
 expr_stmt|;
 name|tpblks
@@ -571,7 +611,7 @@ name|avail
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
@@ -581,12 +621,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|tperror
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -600,13 +638,10 @@ argument_list|,
 name|tape
 argument_list|)
 expr_stmt|;
-name|msg
+name|quit
 argument_list|(
 literal|"Cannot recover\n"
 argument_list|)
-expr_stmt|;
-name|dumpabort
-argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
@@ -668,25 +703,20 @@ name|X_REWRITE
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|sigpipe
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-name|msg
+name|quit
 argument_list|(
 literal|"Broken pipe\n"
 argument_list|)
 expr_stmt|;
-name|dumpabort
-argument_list|()
-expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -698,20 +728,15 @@ begin_comment
 comment|/*  * compatibility routine  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tflush
-argument_list|(
-argument|i
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|i
+parameter_list|)
 name|int
 name|i
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 for|for
 control|(
@@ -730,7 +755,7 @@ name|spclrec
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -738,12 +763,10 @@ directive|endif
 endif|RDUMP
 end_endif
 
-begin_macro
+begin_function
+name|void
 name|flusht
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|siz
@@ -778,16 +801,16 @@ argument_list|)
 operator|!=
 name|siz
 condition|)
-block|{
-name|perror
+name|quit
 argument_list|(
-literal|"  DUMP: error writing command pipe"
+literal|"error writing command pipe: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|dumpabort
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|++
@@ -849,14 +872,12 @@ name|timeest
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|trewind
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|f
@@ -891,13 +912,18 @@ while|while
 condition|(
 name|wait
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 name|NULL
 argument_list|)
 operator|>=
 literal|0
 condition|)
-empty_stmt|;
 comment|/* wait for any signals from slaves */
+comment|/* void */
+empty_stmt|;
 name|msg
 argument_list|(
 literal|"Tape rewinding\n"
@@ -969,14 +995,12 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|close_rewind
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|trewind
 argument_list|()
@@ -1024,18 +1048,16 @@ expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	We implement taking and restoring checkpoints on the tape level.  *	When each tape is opened, a new process is created by forking; this  *	saves all of the necessary context in the parent.  The child  *	continues the dump; the parent waits around, saving the context.  *	If the child returns X_REWRITE, then it had problems writing that tape;  *	this causes the parent to fork again, duplicating the context, and  *	everything continues as if nothing had happened.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|otape
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|parentpid
@@ -1518,14 +1540,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|dumpabort
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1563,22 +1583,17 @@ name|X_ABORT
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|Exit
-argument_list|(
-argument|status
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|status
+parameter_list|)
 name|int
 name|status
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -1602,29 +1617,24 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * could use pipe() for this if flock() worked on pipes  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|lockfile
-argument_list|(
-argument|fd
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fd
+parameter_list|)
 name|int
 name|fd
 index|[
 literal|2
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|tmpname
@@ -1662,21 +1672,18 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|msg
+name|quit
 argument_list|(
-literal|"Could not create lockfile "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"cannot create lockfile %s: %s\n"
+argument_list|,
 name|tmpname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|dumpabort
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1695,35 +1702,33 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|msg
+name|quit
 argument_list|(
-literal|"Could not reopen lockfile "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"cannot reopen lockfile %s: %s\n"
+argument_list|,
 name|tmpname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|dumpabort
-argument_list|()
-expr_stmt|;
-block|}
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|tmpname
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|enslave
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|first
@@ -1921,23 +1926,18 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|msg
+name|quit
 argument_list|(
-literal|"too many slaves, %d (recompile smaller) "
+literal|"too many slaves, %d (recompile smaller): %s\n"
 argument_list|,
 name|i
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-literal|""
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|dumpabort
-argument_list|()
-expr_stmt|;
-block|}
 name|slavefd
 index|[
 name|i
@@ -2064,14 +2064,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|killall
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -2110,13 +2108,14 @@ name|SIGKILL
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Synchronization - each process has a lockfile, and shares file  * descriptors to the following process's lockfile.  When our write  * completes, we release our lock on the following process's lock-  * file, allowing the following process to lock it and proceed. We  * get the lock back for the next cycle by swapping descriptors.  */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
+name|void
 name|doslave
 argument_list|(
 name|cmd
@@ -2125,21 +2124,21 @@ name|prev
 argument_list|,
 name|next
 argument_list|)
-specifier|register
+decl|register
 name|int
 name|cmd
-operator|,
+decl_stmt|,
 name|prev
 index|[
 literal|2
 index|]
-operator|,
+decl_stmt|,
 name|next
 index|[
 literal|2
 index|]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2171,17 +2170,17 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
 comment|/* Need our own seek pointer */
-name|perror
+name|quit
 argument_list|(
-literal|"  DUMP: slave couldn't reopen disk"
+literal|"slave couldn't reopen disk: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|dumpabort
-argument_list|()
-expr_stmt|;
-block|}
 comment|/* 	 * Get list of blocks to dump, read the blocks into tape buffer 	 */
 while|while
 condition|(
@@ -2286,16 +2285,11 @@ argument_list|)
 operator|!=
 name|TP_BSIZE
 condition|)
-block|{
-name|msg
+name|quit
 argument_list|(
-literal|"Master/slave protocol botched.\n"
+literal|"master/slave protocol botched.\n"
 argument_list|)
 expr_stmt|;
-name|dumpabort
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 block|}
 name|flock
@@ -2407,27 +2401,28 @@ name|nread
 operator|!=
 literal|0
 condition|)
-block|{
-name|perror
+name|quit
 argument_list|(
-literal|"  DUMP: error reading command pipe"
+literal|"error reading command pipe: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|dumpabort
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 comment|/*  * Since a read from a pipe may not return all we asked for,  * or a write may not write all we ask if we get a signal,  * loop until the count is satisfied (or error).  */
+name|int
 name|atomic
 argument_list|(
-argument|func
+name|func
 argument_list|,
-argument|fd
+name|fd
 argument_list|,
-argument|buf
+name|buf
 argument_list|,
-argument|count
+name|count
 argument_list|)
 name|int
 argument_list|(
