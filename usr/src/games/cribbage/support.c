@@ -562,6 +562,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|register
 name|BOOLEAN
 name|win
 decl_stmt|;
@@ -602,12 +603,16 @@ name|turnover
 argument_list|,
 name|CINHAND
 argument_list|,
-name|FALSE
+name|strcmp
+argument_list|(
+name|s
+argument_list|,
+literal|"crib"
+argument_list|)
 argument_list|,
 name|explain
 argument_list|)
 expr_stmt|;
-comment|/* count */
 if|if
 condition|(
 operator|(
