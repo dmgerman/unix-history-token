@@ -4939,11 +4939,12 @@ operator|->
 name|f_prevpri
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|f_s
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|char
 name|f_n
@@ -4952,11 +4953,12 @@ literal|5
 index|]
 decl_stmt|;
 comment|/* Hollow laugh */
+specifier|const
 name|char
 modifier|*
 name|p_s
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|char
 name|p_n
