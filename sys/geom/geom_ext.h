@@ -21,6 +21,12 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_ctl.h>
+end_include
+
 begin_struct
 struct|struct
 name|geom_ctl_req_arg
