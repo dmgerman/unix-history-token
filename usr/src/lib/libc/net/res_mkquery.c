@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.10 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,12 +196,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|n
-decl_stmt|;
-name|char
-name|dnbuf
-index|[
-name|MAXDNAME
-index|]
 decl_stmt|;
 name|char
 modifier|*
