@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	5.2 (Berkeley) %G%"
+literal|"@(#)log.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -863,6 +863,17 @@ operator|=
 name|thisscore
 operator|.
 name|planes
+expr_stmt|;
+name|score
+index|[
+name|i
+index|]
+operator|.
+name|real_time
+operator|=
+name|thisscore
+operator|.
+name|real_time
 expr_stmt|;
 name|changed
 operator|++
