@@ -1755,6 +1755,30 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'/'
+condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"is not an absolute pathname\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|found
+goto|;
+comment|/* skip. */
+block|}
 comment|/*        * The directory we're working on is in the config file.        * If we haven't added it to the list yet, do.        */
 for|for
 control|(
