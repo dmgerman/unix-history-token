@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strptime.c,v 1.2 1997/08/09 15:43:56 joerg Exp $"
+literal|"$Id: strptime.c,v 1.3 1997/08/13 13:11:53 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,6 @@ value|(sizeof (a) / sizeof ((a)[0]))
 end_define
 
 begin_function
-specifier|const
 name|char
 modifier|*
 name|strptime
@@ -1530,6 +1529,10 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 return|;
 block|}

@@ -615,7 +615,6 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-specifier|const
 name|char
 modifier|*
 name|strptime
