@@ -67,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -191,6 +197,23 @@ end_comment
 begin_function
 specifier|static
 name|void
+name|sighup
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
+block|{
+name|readcf
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|sigchld
 parameter_list|(
 name|sig
@@ -228,6 +251,10 @@ operator|>
 literal|0
 condition|)
 empty_stmt|;
+comment|/* wrtp - waitpid _doesn't_ return 0 when no children! */
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|pid
@@ -246,6 +273,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -704,6 +733,13 @@ argument_list|,
 name|sigchld
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|sighup
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Just loop waiting for new connections and activating them 	 */
 for|for
 control|(
@@ -741,6 +777,16 @@ condition|(
 name|readcf
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"re-reading configuration file\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|readcf
 operator|=
 literal|0
@@ -756,6 +802,12 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Accept a new connection 		 * Will get EINTR if a signal has arrived, so just 		 * ignore that error code 		 */
+name|FD_ZERO
+argument_list|(
+operator|&
+name|fdset
+argument_list|)
+expr_stmt|;
 name|FD_SET
 argument_list|(
 name|so
@@ -776,19 +828,20 @@ operator|&
 name|fdset
 argument_list|,
 operator|(
-name|void
+name|fd_set
 operator|*
 operator|)
 literal|0
 argument_list|,
 operator|(
-name|void
+name|fd_set
 operator|*
 operator|)
 literal|0
 argument_list|,
 operator|(
-name|void
+expr|struct
+name|timeval
 operator|*
 operator|)
 literal|0
@@ -957,7 +1010,12 @@ argument_list|,
 name|so2
 argument_list|)
 expr_stmt|;
-break|break;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* stupid errors.... tidied up... wrtp*/
 default|default:
 operator|(
 name|void
