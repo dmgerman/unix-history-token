@@ -843,6 +843,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* the matching rule # */
+name|divert_tag
+operator|.
+name|mh_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr

@@ -4050,6 +4050,12 @@ name|mh_next
 operator|=
 name|m
 expr_stmt|;
+name|tag
+operator|.
+name|mh_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
 operator|(
 operator|*
 name|inetsw
@@ -8402,6 +8408,12 @@ operator|.
 name|mh_next
 operator|=
 name|m
+expr_stmt|;
+name|tag
+operator|.
+name|mh_nextpkt
+operator|=
+name|NULL
 expr_stmt|;
 name|m
 operator|=
