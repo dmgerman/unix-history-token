@@ -1597,6 +1597,16 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
+literal|"dm"
+block|,
+literal|"Davicom DM910x Ethernet adapter"
+block|,
+name|FLG_FIXED
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"fpa"
 block|,
 literal|"DEC DEFPA PCI FDDI adapter"

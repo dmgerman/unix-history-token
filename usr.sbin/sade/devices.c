@@ -537,6 +537,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"dm"
+block|,
+literal|"Davicom DM9100/DM9102 PCI fast ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"fxp"
 block|,
 literal|"Intel EtherExpress Pro/100B PCI Fast Ethernet card"
