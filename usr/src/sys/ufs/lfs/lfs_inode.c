@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.43 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.44 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -218,12 +218,10 @@ begin_comment
 comment|/*  * Initialize hash links for inodes.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|lfs_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -319,25 +317,25 @@ directive|endif
 comment|/* QUOTA */
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|lfs_hqueue
-argument_list|(
-argument|ip
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ip
+parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|union
 name|lfsihead
@@ -374,47 +372,36 @@ name|ip
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Look up a UFS dinode number to find its incore vnode.  * If it is not in core, read it in from the specified device.  * If it is in core, wait for the lock bit to clear, then  * return the inode locked. Detection and handling of mount  * points must be done by the calling routine.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|lfs_iget
-argument_list|(
-argument|xp
-argument_list|,
-argument|ino
-argument_list|,
-argument|ipp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|xp
+parameter_list|,
+name|ino
+parameter_list|,
+name|ipp
+parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|xp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ino_t
 name|ino
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|inode
 modifier|*
 modifier|*
 name|ipp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|dev_t
 name|dev
@@ -451,8 +438,6 @@ comment|/* LFS */
 specifier|extern
 name|struct
 name|vnodeops
-name|ufs_vnodeops
-decl_stmt|,
 name|spec_inodeops
 decl_stmt|;
 specifier|register
@@ -486,8 +471,6 @@ modifier|*
 name|ih
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
 decl_stmt|;
 name|printf
@@ -965,38 +948,30 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Last reference to an inode, write the inode out and if necessary,  * truncate and deallocate the file.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|lfs_inactive
-argument_list|(
-argument|vp
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|,
+name|p
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1251,7 +1226,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#

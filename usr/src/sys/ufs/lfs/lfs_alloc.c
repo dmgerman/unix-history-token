@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -618,39 +618,28 @@ begin_comment
 comment|/* Create a new vnode/inode pair and initialize what fields we can. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|lfs_vcreate
-argument_list|(
-argument|mp
-argument_list|,
-argument|ino
-argument_list|,
-argument|vpp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mp
+parameter_list|,
+name|ino
+parameter_list|,
+name|vpp
+parameter_list|)
 name|MOUNT
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ino_t
 name|ino
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|VNODE
 modifier|*
 modifier|*
 name|vpp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|INODE
 modifier|*
@@ -819,7 +808,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Return the current version number for a specific inode. */
