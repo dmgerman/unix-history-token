@@ -2593,10 +2593,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * If we are in APIC_IO mode, we should ignore the ISA PIC if it 	 * shows up.  Likewise, in !APIC_IO mode, we should ignore the 	 * APIC (less important). 	 * This is significant because the ISA PIC will claim IRQ 2 (which 	 * it uses for chaining), while in APIC mode this is a valid IRQ 	 * available for general use. 	 */
-ifdef|#
-directive|ifdef
-name|APIC_IO
+comment|/* 	 * Ignore PICs so that we don't have to worry about the PICs 	 * claiming IRQs to prevent their use.  The PIC drivers 	 * already ensure that invalid IRQs are not used. 	 */
 if|if
 condition|(
 operator|!
@@ -2614,8 +2611,6 @@ argument_list|)
 condition|)
 comment|/* ISA PIC */
 continue|continue;
-else|#
-directive|else
 if|if
 condition|(
 operator|!
@@ -2633,8 +2628,6 @@ argument_list|)
 condition|)
 comment|/* APIC */
 continue|continue;
-endif|#
-directive|endif
 comment|/* Add the device and parse its resources */
 name|dev
 operator|=
