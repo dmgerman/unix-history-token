@@ -890,7 +890,7 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|,
-name|MA_OWNWED
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
