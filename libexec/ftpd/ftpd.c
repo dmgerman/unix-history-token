@@ -4436,7 +4436,7 @@ specifier|static
 name|char
 name|curname
 index|[
-literal|10
+name|MAXLOGNAME
 index|]
 decl_stmt|;
 comment|/* current USER name */
