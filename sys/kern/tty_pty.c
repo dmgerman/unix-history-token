@@ -616,6 +616,14 @@ name|pt
 operator|->
 name|pt_tty
 expr_stmt|;
+name|pt
+operator|->
+name|pt_tty
+operator|.
+name|t_dev
+operator|=
+name|devs
+expr_stmt|;
 name|ttyregister
 argument_list|(
 operator|&
