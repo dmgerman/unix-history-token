@@ -5610,8 +5610,12 @@ argument_list|,
 name|NULL
 argument_list|,
 name|td
+condition|?
+name|td
 operator|->
 name|td_proc
+else|:
+name|NULL
 argument_list|)
 condition|)
 return|return
