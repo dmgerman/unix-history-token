@@ -331,13 +331,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|95
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_ioctl_t
@@ -361,12 +354,7 @@ operator|.
 name|d_name
 operator|=
 name|MD_NAME
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -5895,6 +5883,13 @@ decl_stmt|;
 name|unsigned
 name|len
 decl_stmt|;
+name|mod
+operator|=
+name|NULL
+expr_stmt|;
+name|g_topology_unlock
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MD_ROOT_SIZE
@@ -5909,13 +5904,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mod
-operator|=
-name|NULL
-expr_stmt|;
-name|g_topology_unlock
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -6189,8 +6177,6 @@ argument_list|,
 name|SI_SUB_DRIVERS
 argument_list|,
 name|SI_ORDER_MIDDLE
-operator|+
-name|CDEV_MAJOR
 argument_list|)
 expr_stmt|;
 end_expr_stmt
