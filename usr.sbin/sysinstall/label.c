@@ -6488,7 +6488,7 @@ operator|/
 literal|512
 argument_list|)
 operator|/
-literal|2
+literal|8
 expr_stmt|;
 name|sz
 operator|=
