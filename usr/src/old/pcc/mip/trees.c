@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.13 (Berkeley) %G%"
+literal|"@(#)trees.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2500,9 +2500,19 @@ argument|&& 		        ( p->in.right->in.op == CALL || 			  p->in.right->in.op ==
 literal|"%s is not a permitted struct/union operation"
 argument|, opst[o] ); 	else 		uerror(
 literal|"operands of %s have incompatible types"
-argument|, opst[o] ); 	return( NCVT ); 	}  moditype( ty ) TWORD ty; {  	switch( ty ){  	case TVOID: 		return( MPTR ); 	case UNDEF: 		return( MVOID ); 	case ENUMTY: 	case MOETY: 		return( MENU );  	case STRTY: 	case UNIONTY: 		return( MSTR );  	case CHAR: 	case SHORT: 	case UCHAR: 	case USHORT: 		return( MINT|MPTI|MDBI ); 	case UNSIGNED: 	case ULONG: 	case INT: 	case LONG: 		return( MINT|MDBI|MPTI ); 	case FLOAT: 	case DOUBLE: 		return( MDBI ); 	default: 		return( MPTR|MPTI );  		} 	}  NODE * doszof( p )  register NODE *p; {
+argument|, opst[o] ); 	return( NCVT ); 	}  moditype( ty ) TWORD ty; {  	switch( ty ){  	case TVOID: 		return( MPTR ); 	case UNDEF: 		return( MVOID ); 	case ENUMTY: 	case MOETY: 		return( MENU );  	case STRTY: 	case UNIONTY: 		return( MSTR );  	case CHAR: 	case SHORT: 	case UCHAR: 	case USHORT: 		return( MINT|MPTI|MDBI ); 	case UNSIGNED: 	case ULONG: 	case INT: 	case LONG: 		return( MINT|MDBI|MPTI ); 	case FLOAT: 	case DOUBLE: 		return( MDBI ); 	default: 		return( MPTR|MPTI );  		} 	}  int	nsizeof;  static haseffects(p) register NODE *	p; { 	register	o, ty;  	o = p->in.op; 	ty = optype(o); 	if (ty == LTYPE) 		return
+literal|0
+argument|; 	if (asgop(o) || callop(o)) 		return
+literal|1
+argument|; 	if (haseffects(p->in.left)) 		return
+literal|1
+argument|; 	if (ty == UTYPE) 		return
+literal|0
+argument|; 	return haseffects(p->in.right); }  NODE * doszof( p )  register NODE *p; {
 comment|/* do sizeof p */
-argument|int i;
+argument|int i;  	--nsizeof; 	if (haseffects(p)) 		werror(
+literal|"operations in object of sizeof are skipped"
+argument|);
 comment|/* whatever is the meaning of this if it is a bitfield? */
 argument|i = tsize( p->in.type, p->fn.cdim, p->fn.csiz )/SZCHAR;  	tfree(p); 	if( i<=
 literal|0

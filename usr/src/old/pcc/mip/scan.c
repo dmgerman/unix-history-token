@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.3 (Berkeley) %G%"
+literal|"@(#)scan.c	2.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3108,7 +3108,7 @@ argument|switch( p->lxract ){  			case AR_TY:
 comment|/* type word */
 argument|stwart = instruct; 				yylval.nodep = mkty( (TWORD)p->lxrval,
 literal|0
-argument|, p->lxrval ); 				return( TYPE );  			case AR_RW:
+argument|, p->lxrval ); 				return( TYPE );  			case AR_RW: 				{ 					extern int	nsizeof;  					if (p->lxrval == SIZEOF) 						++nsizeof; 				}
 comment|/* ordinary reserved word */
 argument|return( yylval.intval = p->lxrval );  			case AR_CL:
 comment|/* class word */
