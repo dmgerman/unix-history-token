@@ -15,34 +15,28 @@ directive|define
 name|__PC98_PC98_PC98_MACHDEP_H__
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|pc98_init_dmac
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|unsigned
 name|int
 name|pc98_getmemsize
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -50,19 +44,16 @@ name|ccb_calc_geometry
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|scsi_da_bios_params
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ccb_calc_geometry
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
