@@ -497,6 +497,7 @@ name|rv
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Prevent packet filtering from starving the modification of 	 * the packet filters. We would prefer a reader/writer locking 	 * mechanism with guaranteed ordering, though. 	 */
 if|if
 condition|(
 name|ph
@@ -510,11 +511,24 @@ name|ph
 operator|->
 name|ph_want_write
 condition|)
+block|{
+name|m_freem
+argument_list|(
+operator|*
+name|mp
+argument_list|)
+expr_stmt|;
+operator|*
+name|mp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENOBUFS
 operator|)
 return|;
+block|}
 name|PFIL_RLOCK
 argument_list|(
 name|ph
