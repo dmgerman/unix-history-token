@@ -7611,15 +7611,5 @@ begin_comment
 comment|/* DDB */
 end_comment
 
-begin_expr_stmt
-name|MODULE_VERSION
-argument_list|(
-name|acpi
-argument_list|,
-literal|100
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 end_unit
 
