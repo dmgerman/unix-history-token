@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mysys.c	4.3	(Berkeley)	%G%"
+literal|"@(#)mysys.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,7 +303,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-empty_stmt|;
 name|i
 operator|--
 expr_stmt|;
