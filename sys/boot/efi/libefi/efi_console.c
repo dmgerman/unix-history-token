@@ -171,9 +171,32 @@ block|{
 name|EFI_INPUT_KEY
 name|key
 decl_stmt|;
+name|EFI_STATUS
+name|status
+decl_stmt|;
 name|UINTN
 name|junk
 decl_stmt|;
+comment|/* Try to read a key stroke. We wait for one if none is pending. */
+name|status
+operator|=
+name|conin
+operator|->
+name|ReadKeyStroke
+argument_list|(
+name|conin
+argument_list|,
+operator|&
+name|key
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|EFI_NOT_READY
+condition|)
+block|{
 name|BS
 operator|->
 name|WaitForEvent
@@ -189,6 +212,8 @@ operator|&
 name|junk
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
 name|conin
 operator|->
 name|ReadKeyStroke
@@ -199,10 +224,13 @@ operator|&
 name|key
 argument_list|)
 expr_stmt|;
+block|}
 return|return
+operator|(
 name|key
 operator|.
 name|UnicodeChar
+operator|)
 return|;
 block|}
 end_function
@@ -212,7 +240,9 @@ name|int
 name|efi_cons_poll
 parameter_list|()
 block|{
+comment|/* This can clear the signaled state. */
 return|return
+operator|(
 name|BS
 operator|->
 name|CheckEvent
@@ -223,6 +253,7 @@ name|WaitForKey
 argument_list|)
 operator|==
 name|EFI_SUCCESS
+operator|)
 return|;
 block|}
 end_function
