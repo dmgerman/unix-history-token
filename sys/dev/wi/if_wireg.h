@@ -454,14 +454,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_PCI_IORES
-value|0x1c
+name|WI_PCI_MEMRES
+value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
-name|WI_PCI_VENDOR_Eumitcom
+name|WI_PCI_IORES
+value|0x1C
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_PCI_VENDOR_EUMITCOM
 value|0x1638
 end_define
 
@@ -475,7 +482,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_HFA384x_SWSUPPORT0_OFF
+name|WI_HFA384X_SWSUPPORT0_OFF
 value|0x28
 end_define
 
@@ -483,7 +490,7 @@ begin_define
 define|#
 directive|define
 name|WI_PRISM2STA_MAGIC
-value|0x4a2d
+value|0x4A2D
 end_define
 
 begin_comment

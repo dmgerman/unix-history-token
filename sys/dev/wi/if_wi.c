@@ -1249,7 +1249,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|WI_PCI_VENDOR_Eumitcom
+name|WI_PCI_VENDOR_EUMITCOM
 operator|)
 operator|&&
 operator|(
@@ -1695,7 +1695,7 @@ name|sc
 operator|->
 name|mem_rid
 operator|=
-literal|0x18
+name|WI_PCI_MEMRES
 expr_stmt|;
 name|sc
 operator|->
@@ -1771,7 +1771,7 @@ operator|->
 name|mem
 argument_list|)
 expr_stmt|;
-comment|/* 	 * From Linux driver: 	 * Write COR to enable PC card 	 * (FOR GREAT JUSTICE) 	 */
+comment|/* 	 * From Linux driver: 	 * Write COR to enable PC card 	 */
 name|CSM_WRITE_1
 argument_list|(
 name|sc
@@ -1794,7 +1794,7 @@ name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
-name|WI_HFA384x_SWSUPPORT0_OFF
+name|WI_HFA384X_SWSUPPORT0_OFF
 argument_list|,
 name|WI_PRISM2STA_MAGIC
 argument_list|)
@@ -1805,7 +1805,7 @@ name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
-name|WI_HFA384x_SWSUPPORT0_OFF
+name|WI_HFA384X_SWSUPPORT0_OFF
 argument_list|)
 expr_stmt|;
 if|if
@@ -1819,7 +1819,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"CSR_READ_2(WI_HFA384x_SWSUPPORT0_OFF) wanted %d, got %d\n"
+literal|"CSR_READ_2(WI_HFA384X_SWSUPPORT0_OFF) "
+literal|"wanted %d, got %d\n"
 argument_list|,
 name|WI_PRISM2STA_MAGIC
 argument_list|,
