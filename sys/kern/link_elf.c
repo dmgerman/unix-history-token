@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
+file|"opt_gdb.h"
 end_include
 
 begin_include
@@ -331,7 +331,7 @@ decl_stmt|;
 comment|/* malloc'ed string base */
 ifdef|#
 directive|ifdef
-name|DDB
+name|GDB
 name|struct
 name|link_map
 name|gdb
@@ -699,7 +699,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|GDB
 end_ifdef
 
 begin_function_decl
@@ -933,7 +933,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DDB */
+comment|/* GDB */
 end_comment
 
 begin_ifdef
@@ -1004,7 +1004,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|DDB
+name|GDB
 name|elf_file_t
 name|ef
 init|=
@@ -1041,7 +1041,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|DDB
+name|GDB
 name|GDB_STATE
 argument_list|(
 name|RT_ADD
@@ -1381,7 +1381,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DDB
+name|GDB
 name|r_debug
 operator|.
 name|r_map
@@ -2080,7 +2080,7 @@ return|;
 break|break;
 ifdef|#
 directive|ifdef
-name|DDB
+name|GDB
 case|case
 name|DT_DEBUG
 case|:
@@ -4132,7 +4132,7 @@ name|file
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DDB
+name|GDB
 if|if
 condition|(
 name|ef
