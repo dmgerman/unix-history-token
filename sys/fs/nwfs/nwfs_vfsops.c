@@ -1559,7 +1559,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ncp_disconnect
+name|ncp_conn_free
 argument_list|(
 name|conn
 argument_list|)
