@@ -3156,7 +3156,12 @@ name|cp2
 operator|=
 name|hfield
 argument_list|(
+operator|*
 name|str
+condition|?
+name|str
+else|:
+literal|"subject"
 argument_list|,
 name|mp
 argument_list|)
