@@ -753,7 +753,7 @@ name|OID_AUTO
 argument_list|,
 name|shmseg
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|shminfo
