@@ -1,10 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: units.c,v 1.1.1.1 1996/06/08 03:43:43 alex Exp $	*/
+comment|/*  * units.c   Copyright (c) 1993 by Adrian Mariano (adrian@cam.cornell.edu)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  * Disclaimer:  This software is provided by the author "as is".  The author  * shall not be liable for any damages caused in any way by this software.  *  * I would appreciate (though I do not require) receiving a copy of any  * improvements you might make to this program.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * units.c   Copyright (c) 1993 by Adrian Mariano (adrian@cam.cornell.edu)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  * Disclaimer:  This software is provided by the author "as is".  The author  * shall not be liable for any damages caused in any way by this software.  *  * I would appreciate (though I do not require) receiving a copy of any  * improvements you might make to this program.  */
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -16,7 +38,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -28,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -214,20 +248,13 @@ condition|(
 operator|!
 name|ret
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Memory allocation error\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|3
+argument_list|,
+literal|"memory allocation error"
 argument_list|)
 expr_stmt|;
-block|}
 name|strcpy
 argument_list|(
 name|ret
@@ -251,11 +278,9 @@ name|int
 name|linenum
 parameter_list|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Error in units file '%s' line %d\n"
+literal|"error in units file '%s' line %d"
 argument_list|,
 name|UNITSFILE
 argument_list|,
@@ -321,22 +346,15 @@ condition|(
 operator|!
 name|unitfile
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Unable to open units file '%s'\n"
+literal|"unable to open units file '%s'"
 argument_list|,
 name|userfile
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -498,22 +516,15 @@ condition|(
 operator|!
 name|unitfile
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Can't find units file '%s'\n"
+literal|"can't find units file '%s'"
 argument_list|,
 name|UNITSFILE
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 while|while
@@ -610,11 +621,9 @@ operator|==
 name|MAXPREFIXES
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Memory for prefixes exceeded in line %d\n"
+literal|"memory for prefixes exceeded in line %d"
 argument_list|,
 name|linenum
 argument_list|)
@@ -674,11 +683,9 @@ name|lineptr
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Redefinition of prefix '%s' on line %d ignored\n"
+literal|"redefinition of prefix '%s' on line %d ignored"
 argument_list|,
 name|lineptr
 argument_list|,
@@ -758,11 +765,9 @@ operator|==
 name|MAXUNITS
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Memory for units exceeded in line %d\n"
+literal|"memory for units exceeded in line %d"
 argument_list|,
 name|linenum
 argument_list|)
@@ -810,11 +815,9 @@ name|lineptr
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Redefinition of unit '%s' on line %d ignored\n"
+literal|"redefinition of unit '%s' on line %d ignored"
 argument_list|,
 name|lineptr
 argument_list|,
@@ -974,11 +977,9 @@ operator|+
 name|MAXSUBUNITS
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Memory overflow in unit reduction\n"
+literal|"memory overflow in unit reduction"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1275,11 +1276,9 @@ name|void
 name|zeroerror
 parameter_list|()
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unit reduces to zero\n"
+literal|"unit reduces to zero"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2853,28 +2852,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nunits [-f unitsfile] [-q] [-v] [from-unit to-unit]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n    -f specify units file\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -q supress prompting (quiet)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -v print version number\n"
+literal|"usage: units [-f unitsfile] [-q] [-v] [from-unit to-unit]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2928,15 +2906,6 @@ name|int
 name|quiet
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 while|while
 condition|(
@@ -3121,7 +3090,7 @@ name|quiet
 condition|)
 name|printf
 argument_list|(
-literal|"%d units, %d prefixes\n\n"
+literal|"%d units, %d prefixes\n"
 argument_list|,
 name|unitcount
 argument_list|,
