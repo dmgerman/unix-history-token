@@ -105,8 +105,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
-name|long
+name|int64_t
 name|l_fp
 typedef|;
 end_typedef
@@ -144,7 +143,7 @@ name|v
 parameter_list|,
 name|a
 parameter_list|)
-value|((v) += (long long)(a)<< 32)
+value|((v) += (int64_t)(a)<< 32)
 end_define
 
 begin_define
@@ -211,7 +210,7 @@ name|v
 parameter_list|,
 name|a
 parameter_list|)
-value|((v) = (long long)(a)<< 32)
+value|((v) = (int64_t)(a)<< 32)
 end_define
 
 begin_define
@@ -1445,13 +1444,19 @@ name|MAXFREQ
 argument_list|)
 expr_stmt|;
 else|else
-name|L_LINT
-argument_list|(
+block|{
+comment|/* 			 * ntv.freq is [PPM * 2^16] = [us/s * 2^16] 			 * time_freq is [ns/s * 2^32] 			 */
 name|time_freq
-argument_list|,
+operator|=
+name|ntv
+operator|.
 name|freq
-argument_list|)
+operator|*
+literal|1000LL
+operator|*
+literal|65536LL
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|PPS_SYNC
@@ -2108,23 +2113,11 @@ operator|=
 operator|-
 literal|500
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|time_adjtime
-operator|!=
-literal|0
-condition|)
-name|tickrate
-operator|=
-name|time_adjtime
-expr_stmt|;
 else|else
 name|tickrate
 operator|=
-literal|0
+name|time_adjtime
 expr_stmt|;
-comment|/* GCC sucks! */
 name|time_adjtime
 operator|-=
 name|tickrate
