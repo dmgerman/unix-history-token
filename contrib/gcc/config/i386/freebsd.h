@@ -17,7 +17,7 @@ begin_define
 define|#
 directive|define
 name|CC1_SPEC
-value|"%(cc1_cpu) %{profile:-p} \   %{gline:%{!g:%{!g0:%{!g1:%{!g2: -g1}}}}} \   "
+value|"%(cc1_cpu) %{profile:-p}"
 end_define
 
 begin_undef

@@ -27,32 +27,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|CC1_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CC1_SPEC
-value|"%(cc1_cpu) %{profile:-p} \   %{gline:%{!g:%{!g0:%{!g1:%{!g2: -g1}}}}} \   %{maout: %{!mno-underscores: %{!munderscores: -munderscores }}}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|"%{v*: -v} %{maout: %{fpic:-k} %{fPIC:-k}} \ 			%{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} \ 			%{Wa,*:%*} %{m32:--32}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|LINK_SPEC
 end_undef
 
