@@ -1068,6 +1068,21 @@ name|file_findfile
 argument_list|(
 name|NULL
 argument_list|,
+literal|"elf64 kernel"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kfp
+operator|==
+name|NULL
+condition|)
+name|kfp
+operator|=
+name|file_findfile
+argument_list|(
+name|NULL
+argument_list|,
 literal|"elf kernel"
 argument_list|)
 expr_stmt|;
