@@ -234,6 +234,12 @@ name|flags
 decl_stmt|;
 comment|/* description of transfer */
 name|struct
+name|rangelock
+modifier|*
+name|lock
+decl_stmt|;
+comment|/* lock for this transfer */
+name|struct
 name|rqelement
 name|rqe
 index|[
@@ -241,12 +247,6 @@ literal|0
 index|]
 decl_stmt|;
 comment|/* and the elements of this request */
-name|struct
-name|rangelock
-modifier|*
-name|lock
-decl_stmt|;
-comment|/* lock for this transfer */
 block|}
 struct|;
 end_struct
