@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inbound.c	4.1 (Berkeley) %G%"
+literal|"@(#)inbound.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1013,6 +1013,26 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+comment|/*      * If the initial value of i points to the field attribute of      * an unprotected field, we need to return the address of the      * first data byte in the field (assuming there are any!).      */
+if|if
+condition|(
+name|IsStartField
+argument_list|(
+name|i
+argument_list|)
+operator|&&
+name|IsUnProtected
+argument_list|(
+name|j
+argument_list|)
+condition|)
+block|{
+name|CursorAddress
+operator|=
+name|j
+expr_stmt|;
+return|return;
+block|}
 do|do
 block|{
 if|if
