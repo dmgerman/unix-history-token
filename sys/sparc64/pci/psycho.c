@@ -3602,6 +3602,26 @@ argument_list|,
 name|PSR_UE_AFS
 argument_list|)
 expr_stmt|;
+comment|/* 	 * On the UltraSPARC-IIi/IIe, IOMMU misses/protection faults cause 	 * the AFAR to be set to the physical address of the TTE entry that 	 * was invalid/write protected. Call into the iommu code to have 	 * them decoded to virtual IO addresses. 	 */
+if|if
+condition|(
+operator|(
+name|afsr
+operator|&
+name|UEAFSR_P_DTE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|iommu_decode_fault
+argument_list|(
+name|sc
+operator|->
+name|sc_is
+argument_list|,
+name|afar
+argument_list|)
+expr_stmt|;
 comment|/* It's uncorrectable.  Dump the regs and panic. */
 name|panic
 argument_list|(

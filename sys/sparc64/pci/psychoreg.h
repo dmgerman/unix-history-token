@@ -1284,6 +1284,87 @@ comment|/* enable 6 PCI slots */
 end_comment
 
 begin_comment
+comment|/* Uncorrectable error asynchronous fault status registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UEAFSR_BLK
+value|(1UL<< 22)
+end_define
+
+begin_comment
+comment|/* pri. error caused by read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UEAFSR_P_DTE
+value|(1UL<< 56)
+end_define
+
+begin_comment
+comment|/* pri. DMA translation error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UEAFSR_S_DTE
+value|(1UL<< 57)
+end_define
+
+begin_comment
+comment|/* sec. DMA translation error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UEAFSR_S_DWR
+value|(1UL<< 58)
+end_define
+
+begin_comment
+comment|/* sec. error during write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UEAFSR_S_DRD
+value|(1UL<< 59)
+end_define
+
+begin_comment
+comment|/* sec. error during read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UEAFSR_P_DWR
+value|(1UL<< 61)
+end_define
+
+begin_comment
+comment|/* pri. error during write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UEAFSR_P_DRD
+value|(1UL<< 62)
+end_define
+
+begin_comment
+comment|/* pri. error during read */
+end_comment
+
+begin_comment
 comment|/*  * these are the PROM structures we grovel  */
 end_comment
 

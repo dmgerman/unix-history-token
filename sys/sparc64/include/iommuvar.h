@@ -224,6 +224,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|iommu_decode_fault
+parameter_list|(
+name|struct
+name|iommu_state
+modifier|*
+parameter_list|,
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|iommu_dvmamap_create
 parameter_list|(
