@@ -710,17 +710,6 @@ end_struct
 
 begin_function_decl
 name|int
-name|ata_raiddisk_probe
-parameter_list|(
-name|struct
-name|ad_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ata_raiddisk_attach
 parameter_list|(
 name|struct
@@ -775,7 +764,6 @@ name|int
 name|ata_raid_status
 parameter_list|(
 name|int
-name|array
 parameter_list|,
 name|struct
 name|raid_status
