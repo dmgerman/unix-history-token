@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	makevfont.c	(Berkeley)	85/02/26	1.5  *  * Font description file producer for versatec fonts:  David Slattengren  * Taken from vfontinfo by Andy Hertzfeld  4/79  *  *	Use:  makevfont [ -nNAME ]  [ -s -a -o -l -c -p# -r# -f# -ddir ]  *		[ "-xs1,s2[;s1,s2...]" ]  [ "-ys1,s2[;s1,s2...]" ]  font  *  *	Makefont takes the font named "font" and produces a ditroff description  *	file from it.  The -n option takes the 1 or 2 letter troff name to put  *	the description (default = XX).  The -f option takes an integer per-  *	centage factor to multiply widths by.  The -s, -o and -a options select  *	a different character mapping than for a "roman" font.  s = special;  *	o = otimespecal; a = ascii.  The -l option indicates it has ligatures.  *	The -c option tells makevfont that the font is constant width and  *	will set parameters appropriately.  *  *	Both -x and -y options allow character name mapping.  A colon separated  *	list of comma-separated character-name pairs follows the x or y.  *	Notice that there are no spaces in the -x or -y command.  A -x pair  *	REPLACES the definition for s1 by s2.  A -y pair creates a synonym for  *	s1 and calls it s2.  -x and -y MUST be sent after -s, -m, -i, or -a  *	if one of them is used.  Some synonyms are defaulted.  To remove a  *	synonym or character, leave out s2.  *  *	The -p# option tells what point size the DESC file has as it's  *	"unitwidth" argument (default: 36).  The -r# option is the resolution  *	of the device (default: 200, in units/inch).  The -d option tells  *	where to find fonts (default: /usr/lib/vfont).  */
+comment|/*	makevfont.c	(Berkeley)	85/05/03	1.6  *  * Font description file producer for versatec fonts:  David Slattengren  * Taken from vfontinfo by Andy Hertzfeld  4/79  *  *	Use:  makevfont [ -nNAME ]  [ -s -a -o -l -c -p# -r# -f# -ddir ]  *		[ "-xs1,s2[;s1,s2...]" ]  [ "-ys1,s2[;s1,s2...]" ]  font  *  *	Makefont takes the font named "font" (with or without pointsize  *	extension on the filename) and produces a ditroff description file  *	from it.  The -n option takes the 1 or 2 letter troff name to put  *	the description (default = XX).  The -f option takes an integer per-  *	centage factor to multiply widths by.  The -s, -o and -a options select  *	a different character mapping than for a "roman" font.  s = special;  *	o = otimespecal; a = ascii.  The -l option indicates it has ligatures.  *	The -c option tells makevfont that the font is constant width and  *	will set parameters appropriately.  *  *	Both -x and -y options allow character name mapping.  A colon separated  *	list of comma-separated character-name pairs follows the x or y.  *	Notice that there are no spaces in the -x or -y command.  A -x pair  *	REPLACES the definition for s1 by s2.  A -y pair creates a synonym for  *	s1 and calls it s2.  -x and -y MUST be sent after -s, -m, -i, or -a  *	if one of them is used.  Some synonyms are defaulted.  To remove a  *	synonym or character, leave out s2.  *  *	The -p# option tells what point size the DESC file has as it's  *	"unitwidth" argument (default: 36).  The -r# option is the resolution  *	of the device (default: 200, in units/inch).  The -d option tells  *	where to find fonts (default: /usr/lib/vfont).  */
 end_comment
 
 begin_comment
@@ -25,12 +25,18 @@ directive|include
 file|<vfont.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
 begin_decl_stmt
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makevfont.c	1.5	(Berkeley)	%G%"
+literal|"@(#)makevfont.c	1.6	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2313,6 +2319,85 @@ argument_list|(
 literal|"A vfont filename must be the last operand."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ptr
+operator|=
+name|rindex
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|'.'
+argument_list|)
+condition|)
+name|ptr
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ptr
+operator|&&
+operator|*
+name|ptr
+operator|<=
+literal|'9'
+operator|&&
+operator|*
+name|ptr
+operator|>=
+literal|'0'
+condition|)
+block|{
+name|psize
+operator|=
+name|atoi
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|psize
+operator|<
+name|MINSIZE
+operator|||
+name|psize
+operator|>
+name|MAXSIZE
+condition|)
+name|error
+argument_list|(
+literal|"point size of file \"%s\" out of range"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|IName
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|fontdir
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+name|FID
+operator|=
+name|open
+argument_list|(
+name|IName
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 for|for
 control|(
 name|i
@@ -2362,27 +2447,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|FID
 operator|<
 literal|0
 condition|)
-block|{
-name|printf
+name|error
 argument_list|(
-literal|"Can't find %s\n"
+literal|"Can't open %s"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* read font width table */
 if|if
 condition|(
