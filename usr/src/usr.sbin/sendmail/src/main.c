@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.9.1.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -745,7 +745,13 @@ name|argv
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
 name|LastArgv
 operator|=
 name|envp
@@ -765,7 +771,27 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+else|else
+name|LastArgv
+operator|=
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+operator|+
+name|strlen
+argument_list|(
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_endif
 endif|#

@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	5.6 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -968,6 +968,14 @@ operator|=
 name|ESM_DONE
 expr_stmt|;
 else|else
+name|state
+operator|=
+name|ESM_MAIL
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* no data file -- try mailing back */
 name|state
 operator|=
 name|ESM_MAIL

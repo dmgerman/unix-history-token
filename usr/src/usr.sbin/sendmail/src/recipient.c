@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	5.4 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1652,6 +1652,30 @@ operator|*
 name|p
 operator|=
 literal|' '
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ischar
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+name|isupper
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|=
+name|tolower
+argument_list|(
+operator|*
+name|p
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* look up this login name */
