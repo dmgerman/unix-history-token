@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.1 90/07/09$  *  * from: hp300/hp300/cons.c	7.1 (Berkeley) 6/4/92  *  *	@(#)cons.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.1 90/07/09$  *  * from: hp300/hp300/cons.c	7.1 (Berkeley) 6/4/92  *  *	@(#)cons.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -57,15 +57,46 @@ directive|include
 file|<luna68k/luna68k/cons.h>
 end_include
 
-begin_comment
-comment|/* XXX - all this could be autoconfig()ed */
-end_comment
+begin_include
+include|#
+directive|include
+file|"bmc.h"
+end_include
 
 begin_include
 include|#
 directive|include
 file|"sio.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|NBMC
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|int
+name|bmccnprobe
+argument_list|()
+decl_stmt|,
+name|bmccninit
+argument_list|()
+decl_stmt|,
+name|bmccngetc
+argument_list|()
+decl_stmt|,
+name|bmccnputc
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -105,6 +136,23 @@ init|=
 block|{
 if|#
 directive|if
+name|NBMC
+operator|>
+literal|0
+block|{
+name|bmccnprobe
+block|,
+name|bmccninit
+block|,
+name|bmccngetc
+block|,
+name|bmccnputc
+block|}
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
 name|NSIO
 operator|>
 literal|0
@@ -126,10 +174,6 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* end XXX */
-end_comment
 
 begin_decl_stmt
 name|struct
