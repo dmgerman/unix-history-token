@@ -251,6 +251,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|ffs_uninit
+parameter_list|(
+name|struct
+name|vfsconf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -282,7 +294,7 @@ name|ffs_vptofh
 block|,
 name|ffs_init
 block|,
-name|vfs_stduninit
+name|ffs_uninit
 block|,
 ifdef|#
 directive|ifdef
@@ -6715,7 +6727,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize the filesystem; just use ufs_init.  */
+comment|/*  * Initialize the filesystem.  */
 end_comment
 
 begin_function
@@ -6740,6 +6752,44 @@ name|ufs_init
 argument_list|(
 name|vfsp
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Undo the work of ffs_init().  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ffs_uninit
+parameter_list|(
+name|vfsp
+parameter_list|)
+name|struct
+name|vfsconf
+modifier|*
+name|vfsp
+decl_stmt|;
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|ufs_uninit
+argument_list|(
+name|vfsp
+argument_list|)
+expr_stmt|;
+name|softdep_uninitialize
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|ret
 operator|)
 return|;
 block|}

@@ -159,6 +159,15 @@ end_function
 
 begin_function
 name|void
+name|softdep_uninitialize
+parameter_list|()
+block|{
+return|return;
+block|}
+end_function
+
+begin_function
+name|void
 name|softdep_setup_inomapdep
 parameter_list|(
 name|bp

@@ -5531,6 +5531,45 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Executed after all filesystems have been unmounted during  * filesystem module unload.  */
+end_comment
+
+begin_function
+name|void
+name|softdep_uninitialize
+parameter_list|()
+block|{
+name|hashdestroy
+argument_list|(
+name|pagedep_hashtbl
+argument_list|,
+name|M_PAGEDEP
+argument_list|,
+name|pagedep_hash
+argument_list|)
+expr_stmt|;
+name|hashdestroy
+argument_list|(
+name|inodedep_hashtbl
+argument_list|,
+name|M_INODEDEP
+argument_list|,
+name|inodedep_hash
+argument_list|)
+expr_stmt|;
+name|hashdestroy
+argument_list|(
+name|newblk_hashtbl
+argument_list|,
+name|M_NEWBLK
+argument_list|,
+name|newblk_hash
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Called at mount time to notify the dependency code that a  * filesystem wishes to use it.  */
 end_comment
 
