@@ -381,25 +381,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|swaponvp
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
-name|dev_t
-parameter_list|,
-name|u_long
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|swapout_procs
 parameter_list|(
