@@ -149,13 +149,6 @@ name|HOST_STACK_END_ADDR
 value|USRSTACK
 end_define
 
-begin_define
-define|#
-directive|define
-name|HOST_DATA_START_ADDR
-value|((bfd_vma)u.u_kproc.kp_eproc.e_vm.vm_daddr)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -176,6 +169,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|HOST_DATA_START_ADDR
+value|((bfd_vma)u.u_kproc.kp_eproc.e_vm.vm_daddr)
+end_define
 
 begin_define
 define|#
