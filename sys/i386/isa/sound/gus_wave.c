@@ -995,6 +995,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|do_volume_irq
 parameter_list|(
