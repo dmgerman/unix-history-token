@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.12 (Berkeley) %G%"
+literal|"@(#)stty.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1157,16 +1157,14 @@ block|, }
 block|,
 block|{
 block|{
-literal|"flusho"
+literal|"discard"
 block|,
-literal|"fls"
+literal|"disc"
+block|, }
 block|,
-literal|"flush"
-block|}
+name|VDISCARD
 block|,
-name|VFLUSHO
-block|,
-name|CFLUSHO
+name|CDISCARD
 block|, }
 block|,
 block|{
