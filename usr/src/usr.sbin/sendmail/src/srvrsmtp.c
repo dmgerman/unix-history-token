@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.60 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.61 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.60 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.61 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3397,6 +3397,12 @@ name|QPINGONFAILURE
 operator||
 name|QPINGONDELAY
 operator|)
+expr_stmt|;
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QHASNOTIFY
 expr_stmt|;
 if|if
 condition|(

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.39 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.40 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.39 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.40 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1987,12 +1987,24 @@ name|mci_flags
 argument_list|)
 condition|)
 block|{
+comment|/* NOTIFY= parameter */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QHASNOTIFY
+argument_list|,
+name|to
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+block|{
 name|bool
 name|firstone
 init|=
 name|TRUE
 decl_stmt|;
-comment|/* NOTIFY= parameter */
 name|strcat
 argument_list|(
 name|optbuf
@@ -2107,6 +2119,7 @@ argument_list|,
 literal|"NEVER"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* ORCPT= parameter */
 if|if
 condition|(
