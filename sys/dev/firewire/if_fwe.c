@@ -2966,19 +2966,6 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sxfer
-operator|->
-name|resp
-operator|!=
-literal|0
-condition|)
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
 name|fp
 operator|=
 name|mtod
@@ -2992,7 +2979,6 @@ name|fw_pkt
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|fwe
@@ -3032,7 +3018,7 @@ name|sxfer
 operator|->
 name|mbuf
 expr_stmt|;
-comment|/* insert rbuf */
+comment|/* insert new rbuf */
 name|sxfer
 operator|->
 name|mbuf
@@ -3090,6 +3076,43 @@ argument_list|(
 literal|"fwe_as_input: m_getcl failed\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sxfer
+operator|->
+name|resp
+operator|!=
+literal|0
+operator|||
+name|fp
+operator|->
+name|mode
+operator|.
+name|stream
+operator|.
+name|len
+operator|<
+name|ETHER_ALIGN
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_header
+argument_list|)
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_ierrors
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 name|m
 operator|->
 name|m_data
