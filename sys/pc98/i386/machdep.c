@@ -4748,6 +4748,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|u_long
+name|bootdev
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* not a dev_t - encoding is different */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|guessed_bootdev
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|bootdev
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maybe the Boot device (not in dev_t format)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Initialize 386 and configure to run kernel  */
 end_comment
