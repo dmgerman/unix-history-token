@@ -2849,7 +2849,7 @@ name|sc
 operator|->
 name|amr_dev
 argument_list|,
-literal|"firmware %.4s bios %.4s  %dMB memory, chipset %x\n"
+literal|"firmware %.4s bios %.4s  %dMB memory\n"
 argument_list|,
 name|ae
 operator|->
@@ -2868,12 +2868,6 @@ operator|->
 name|ae_adapter
 operator|.
 name|aa_memorysize
-argument_list|,
-name|ae
-operator|->
-name|ae_adapter
-operator|.
-name|aa_chipsetvalue
 argument_list|)
 expr_stmt|;
 block|}
