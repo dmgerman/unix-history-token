@@ -232,6 +232,13 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|killchild
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cleanup
 parameter_list|()
 function_decl|;
@@ -1343,6 +1350,33 @@ end_function
 
 begin_function
 name|void
+name|killchild
+parameter_list|()
+block|{
+if|if
+condition|(
+name|pid
+operator|!=
+literal|0
+condition|)
+block|{
+name|kill
+argument_list|(
+name|pid
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+name|pid
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
 name|cleanup
 parameter_list|()
 block|{
@@ -1850,6 +1884,11 @@ name|bol
 init|=
 literal|1
 decl_stmt|;
+name|atexit
+argument_list|(
+name|killchild
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Kinda klugey here... 	 *   check for scripting being turned on from the .tiprc file, 	 *   but be careful about just using setscript(), as we may 	 *   send a SIGEMT before tipout has a chance to set up catching 	 *   it; so wait a second, then setscript() 	 */
 if|if
 condition|(
