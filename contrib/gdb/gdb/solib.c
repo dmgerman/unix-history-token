@@ -1711,8 +1711,7 @@ modifier|*
 name|symname
 decl_stmt|;
 block|{
-name|unsigned
-name|int
+name|long
 name|storage_needed
 decl_stmt|;
 name|asymbol
