@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verify_krb5_conf.c,v 1.17 2003/03/29 09:52:50 lha Exp $"
+literal|"$Id: verify_krb5_conf.c,v 1.17.2.1 2003/09/22 18:46:58 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2307,7 +2307,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct entry kdcdefaults_entries[] = {     { "kdc_ports, krb5_config_string, mit_entry },     { "v4_mode, krb5_config_string, mit_entry },     { NULL } };
+unit|struct entry kdcdefaults_entries[] = {     { "kdc_ports", krb5_config_string, mit_entry },     { "v4_mode", krb5_config_string, mit_entry },     { NULL } };
 endif|#
 directive|endif
 end_endif
