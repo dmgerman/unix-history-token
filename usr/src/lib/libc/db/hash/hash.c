@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.15 (Berkeley) %G%"
+literal|"@(#)hash.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,6 +217,7 @@ specifier|const
 name|DB
 operator|*
 operator|,
+specifier|const
 name|DBT
 operator|*
 operator|,
@@ -877,7 +878,7 @@ argument_list|,
 name|error1
 argument_list|)
 expr_stmt|;
-comment|/*  			Figure out how many segments we need.  			Max_Bucket it the maximum bucket number, so the 			number of buckets is max_bucket+1. 		*/
+comment|/* 		 * Figure out how many segments we need.  Max_Bucket is the 		 * maximum bucket number, so the number of buckets is 		 * max_bucket + 1. 		 */
 name|nsegs
 operator|=
 operator|(
@@ -958,6 +959,9 @@ name|nmaps
 operator|=
 name|bpages
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1639,6 +1643,8 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* First bitmap page is at: splitpoint l2 page offset 1 */
+if|if
+condition|(
 name|__init_bitmap
 argument_list|(
 name|OADDR_OF
@@ -1654,7 +1660,13 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|hashp
 operator|->
 name|MAX_BUCKET
@@ -2377,22 +2389,18 @@ name|DB
 modifier|*
 name|dbp
 decl_stmt|;
+specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|DBT
+modifier|*
 name|data
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|u_int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2452,6 +2460,10 @@ name|hash_access
 argument_list|(
 name|HASH_GET
 argument_list|,
+operator|(
+name|DBT
+operator|*
+operator|)
 name|key
 argument_list|,
 name|data
@@ -2459,7 +2471,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -3244,6 +3256,8 @@ index|]
 operator|<
 name|REAL_KEY
 condition|)
+if|if
+condition|(
 name|__big_return
 argument_list|(
 name|rbufp
@@ -3254,7 +3268,12 @@ name|val
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
 else|else
 block|{
 name|val
@@ -3752,8 +3771,6 @@ condition|(
 name|__big_keydata
 argument_list|(
 name|bufp
-argument_list|,
-name|ndx
 argument_list|,
 name|key
 argument_list|,
