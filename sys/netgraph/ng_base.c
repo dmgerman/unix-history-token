@@ -2240,9 +2240,15 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|linker_load_file
+name|linker_load_module
 argument_list|(
+name|NULL
+argument_list|,
 name|filename
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|lf

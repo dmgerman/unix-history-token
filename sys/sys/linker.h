@@ -317,21 +317,38 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Load a file, trying each file class until one succeeds.  */
+comment|/*  * Load a kernel module.  */
 end_comment
 
 begin_function_decl
 name|int
-name|linker_load_file
+name|linker_load_module
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|_filename
+name|_kldname
 parameter_list|,
-name|linker_file_t
+specifier|const
+name|char
 modifier|*
-name|_result
+name|_modname
+parameter_list|,
+name|struct
+name|linker_file
+modifier|*
+name|_parent
+parameter_list|,
+name|struct
+name|mod_depend
+modifier|*
+name|_verinfo
+parameter_list|,
+name|struct
+name|linker_file
+modifier|*
+modifier|*
+name|_lfpp
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -155,40 +155,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|linker_load_module
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|kldname
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|modname
-parameter_list|,
-name|struct
-name|linker_file
-modifier|*
-name|parent
-parameter_list|,
-name|struct
-name|mod_depend
-modifier|*
-name|verinfo
-parameter_list|,
-name|struct
-name|linker_file
-modifier|*
-modifier|*
-name|lfpp
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Metadata from the static kernel */
 end_comment
@@ -1333,6 +1299,7 @@ argument_list|)
 end_macro
 
 begin_function
+specifier|static
 name|int
 name|linker_load_file
 parameter_list|(
@@ -7751,7 +7718,6 @@ comment|/*  * Find a file which contains given module and load it, if "parent" i
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|linker_load_module
 parameter_list|(
