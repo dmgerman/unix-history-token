@@ -4726,7 +4726,7 @@ name|vm_object_t
 name|object
 parameter_list|,
 name|vm_pindex_t
-name|index
+name|pindex
 parameter_list|,
 name|daddr_t
 name|swapblk
@@ -4742,6 +4742,9 @@ name|swblock
 modifier|*
 modifier|*
 name|pswap
+decl_stmt|;
+name|int
+name|idx
 decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
@@ -4830,7 +4833,7 @@ name|swp_pager_hash
 argument_list|(
 name|object
 argument_list|,
-name|index
+name|pindex
 argument_list|)
 expr_stmt|;
 if|if
@@ -4896,7 +4899,7 @@ name|swap
 operator|->
 name|swb_index
 operator|=
-name|index
+name|pindex
 operator|&
 operator|~
 operator|(
@@ -4943,8 +4946,10 @@ name|SWAPBLK_NONE
 expr_stmt|;
 block|}
 comment|/* 	 * Delete prior contents of metadata 	 */
-name|index
-operator|&=
+name|idx
+operator|=
+name|pindex
+operator|&
 name|SWAP_META_MASK
 expr_stmt|;
 if|if
@@ -4953,7 +4958,7 @@ name|swap
 operator|->
 name|swb_pages
 index|[
-name|index
+name|idx
 index|]
 operator|!=
 name|SWAPBLK_NONE
@@ -4965,7 +4970,7 @@ name|swap
 operator|->
 name|swb_pages
 index|[
-name|index
+name|idx
 index|]
 argument_list|,
 literal|1
@@ -4982,7 +4987,7 @@ name|swap
 operator|->
 name|swb_pages
 index|[
-name|index
+name|idx
 index|]
 operator|=
 name|swapblk
@@ -5364,7 +5369,7 @@ name|vm_object_t
 name|object
 parameter_list|,
 name|vm_pindex_t
-name|index
+name|pindex
 parameter_list|,
 name|int
 name|flags
@@ -5383,6 +5388,9 @@ name|swap
 decl_stmt|;
 name|daddr_t
 name|r1
+decl_stmt|;
+name|int
+name|idx
 decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
@@ -5410,7 +5418,7 @@ name|swp_pager_hash
 argument_list|(
 name|object
 argument_list|,
-name|index
+name|pindex
 argument_list|)
 expr_stmt|;
 if|if
@@ -5425,8 +5433,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|index
-operator|&=
+name|idx
+operator|=
+name|pindex
+operator|&
 name|SWAP_META_MASK
 expr_stmt|;
 name|r1
@@ -5435,7 +5445,7 @@ name|swap
 operator|->
 name|swb_pages
 index|[
-name|index
+name|idx
 index|]
 expr_stmt|;
 if|if
@@ -5479,7 +5489,7 @@ name|swap
 operator|->
 name|swb_pages
 index|[
-name|index
+name|idx
 index|]
 operator|=
 name|SWAPBLK_NONE

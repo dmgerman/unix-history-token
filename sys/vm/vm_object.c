@@ -4190,10 +4190,10 @@ name|vm_pindex_t
 name|offidxstart
 decl_stmt|,
 name|offidxend
-decl_stmt|,
-name|idx
 decl_stmt|;
 name|vm_size_t
+name|idx
+decl_stmt|,
 name|size
 decl_stmt|;
 name|vm_ooffset_t

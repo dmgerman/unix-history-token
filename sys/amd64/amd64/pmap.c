@@ -7532,7 +7532,7 @@ decl_stmt|;
 name|pd_entry_t
 name|ptpaddr
 decl_stmt|;
-name|vm_pindex_t
+name|vm_offset_t
 name|sindex
 decl_stmt|,
 name|eindex

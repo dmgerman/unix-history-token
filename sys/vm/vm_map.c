@@ -10555,9 +10555,10 @@ decl_stmt|;
 name|vm_pindex_t
 name|first_pindex
 decl_stmt|,
-name|osize
-decl_stmt|,
 name|oindex
+decl_stmt|;
+name|vm_size_t
+name|osize
 decl_stmt|;
 name|off_t
 name|ooffset
@@ -10714,7 +10715,7 @@ condition|(
 name|npages
 condition|)
 block|{
-name|vm_pindex_t
+name|vm_size_t
 name|idx
 decl_stmt|;
 for|for
