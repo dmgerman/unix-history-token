@@ -1009,7 +1009,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"           MSCHAP =    %s\n"
+literal|"           CHAP80 =    %s\n"
 argument_list|,
 name|command_ShowNegval
 argument_list|(
