@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_func.c	5.2 (Berkeley) %G%"
+literal|"@(#)hash_func.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +138,7 @@ end_comment
 begin_macro
 name|int
 argument_list|(
-argument|*default_hash
+argument|*__default_hash
 argument_list|)
 end_macro
 

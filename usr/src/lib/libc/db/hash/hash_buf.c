@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_buf.c	5.10 (Berkeley) %G%"
+literal|"@(#)hash_buf.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,9 @@ name|newbuf
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|u_int
 operator|,
 name|BUFHEAD
@@ -197,12 +200,18 @@ name|BUFHEAD
 modifier|*
 name|__get_buf
 parameter_list|(
+name|hashp
+parameter_list|,
 name|addr
 parameter_list|,
 name|prev_bp
 parameter_list|,
 name|newpage
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|u_int
 name|addr
 decl_stmt|;
@@ -360,6 +369,8 @@ name|bp
 operator|=
 name|newbuf
 argument_list|(
+name|hashp
+argument_list|,
 name|addr
 argument_list|,
 name|prev_bp
@@ -372,6 +383,8 @@ name|bp
 operator|||
 name|__get_page
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 operator|->
 name|page
@@ -446,10 +459,16 @@ name|BUFHEAD
 modifier|*
 name|newbuf
 parameter_list|(
+name|hashp
+parameter_list|,
 name|addr
 parameter_list|,
 name|prev_bp
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|u_int
 name|addr
 decl_stmt|;
@@ -629,6 +648,8 @@ operator|)
 operator|&&
 name|__put_page
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 operator|->
 name|page
@@ -841,6 +862,8 @@ operator|)
 operator|&&
 name|__put_page
 argument_list|(
+name|hashp
+argument_list|,
 name|xbp
 operator|->
 name|page
@@ -1019,8 +1042,14 @@ specifier|extern
 name|void
 name|__buf_init
 parameter_list|(
+name|hashp
+parameter_list|,
 name|nbytes
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|int
 name|nbytes
 decl_stmt|;
@@ -1093,10 +1122,16 @@ specifier|extern
 name|int
 name|__buf_free
 parameter_list|(
+name|hashp
+parameter_list|,
 name|do_free
 parameter_list|,
 name|to_disk
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|int
 name|do_free
 decl_stmt|,
@@ -1162,6 +1197,8 @@ operator|)
 operator|&&
 name|__put_page
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 operator|->
 name|page
@@ -1242,8 +1279,14 @@ specifier|extern
 name|void
 name|__reclaim_buf
 parameter_list|(
+name|hashp
+parameter_list|,
 name|bp
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bp

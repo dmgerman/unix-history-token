@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_bigkey.c	5.7 (Berkeley) %G%"
+literal|"@(#)hash_bigkey.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -119,6 +119,9 @@ name|collect_key
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|,
@@ -140,6 +143,9 @@ name|collect_data
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|,
@@ -160,12 +166,18 @@ specifier|extern
 name|int
 name|__big_insert
 parameter_list|(
+name|hashp
+parameter_list|,
 name|bufp
 parameter_list|,
 name|key
 parameter_list|,
 name|val
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bufp
@@ -372,6 +384,8 @@ name|bufp
 operator|=
 name|__add_ovflpage
 argument_list|(
+name|hashp
+argument_list|,
 name|bufp
 argument_list|)
 expr_stmt|;
@@ -650,6 +664,8 @@ name|bufp
 operator|=
 name|__add_ovflpage
 argument_list|(
+name|hashp
+argument_list|,
 name|bufp
 argument_list|)
 expr_stmt|;
@@ -711,8 +727,14 @@ specifier|extern
 name|int
 name|__big_delete
 parameter_list|(
+name|hashp
+parameter_list|,
 name|bufp
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bufp
@@ -836,6 +858,8 @@ name|rbufp
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|pageno
 argument_list|,
 name|rbufp
@@ -849,6 +873,8 @@ name|last_bfp
 condition|)
 name|__free_ovflpage
 argument_list|(
+name|hashp
+argument_list|,
 name|last_bfp
 argument_list|)
 expr_stmt|;
@@ -995,6 +1021,8 @@ name|rbufp
 condition|)
 name|__free_ovflpage
 argument_list|(
+name|hashp
+argument_list|,
 name|rbufp
 argument_list|)
 expr_stmt|;
@@ -1006,6 +1034,8 @@ name|rbufp
 condition|)
 name|__free_ovflpage
 argument_list|(
+name|hashp
+argument_list|,
 name|last_bfp
 argument_list|)
 expr_stmt|;
@@ -1031,6 +1061,8 @@ specifier|extern
 name|int
 name|__find_bigpair
 parameter_list|(
+name|hashp
+parameter_list|,
 name|bufp
 parameter_list|,
 name|ndx
@@ -1039,6 +1071,10 @@ name|key
 parameter_list|,
 name|size
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bufp
@@ -1170,6 +1206,8 @@ name|bufp
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 index|[
 name|ndx
@@ -1266,8 +1304,14 @@ specifier|extern
 name|u_short
 name|__find_last_page
 parameter_list|(
+name|hashp
+parameter_list|,
 name|bpp
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|BUFHEAD
 modifier|*
 modifier|*
@@ -1363,6 +1407,8 @@ name|bufp
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|pageno
 argument_list|,
 name|bufp
@@ -1432,6 +1478,8 @@ specifier|extern
 name|int
 name|__big_return
 parameter_list|(
+name|hashp
+parameter_list|,
 name|bufp
 parameter_list|,
 name|ndx
@@ -1440,6 +1488,10 @@ name|val
 parameter_list|,
 name|set_current
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bufp
@@ -1499,6 +1551,8 @@ name|bufp
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 index|[
 name|bp
@@ -1556,6 +1610,8 @@ name|bufp
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 index|[
 name|bp
@@ -1658,6 +1714,8 @@ name|bufp
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 index|[
 name|bp
@@ -1781,6 +1839,8 @@ name|cpage
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 index|[
 name|bp
@@ -1860,6 +1920,8 @@ name|size
 operator|=
 name|collect_data
 argument_list|(
+name|hashp
+argument_list|,
 name|bufp
 argument_list|,
 operator|(
@@ -1953,12 +2015,18 @@ specifier|static
 name|int
 name|collect_data
 parameter_list|(
+name|hashp
+parameter_list|,
 name|bufp
 parameter_list|,
 name|len
 parameter_list|,
 name|set
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bufp
@@ -2116,6 +2184,8 @@ name|cpage
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 index|[
 name|bp
@@ -2185,6 +2255,8 @@ name|xbp
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 index|[
 name|bp
@@ -2211,6 +2283,8 @@ name|totlen
 operator|=
 name|collect_data
 argument_list|(
+name|hashp
+argument_list|,
 name|xbp
 argument_list|,
 name|len
@@ -2293,6 +2367,8 @@ specifier|extern
 name|int
 name|__big_keydata
 parameter_list|(
+name|hashp
+parameter_list|,
 name|bufp
 parameter_list|,
 name|key
@@ -2301,6 +2377,10 @@ name|val
 parameter_list|,
 name|set
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bufp
@@ -2328,6 +2408,8 @@ name|size
 operator|=
 name|collect_key
 argument_list|(
+name|hashp
+argument_list|,
 name|bufp
 argument_list|,
 literal|0
@@ -2381,6 +2463,8 @@ specifier|static
 name|int
 name|collect_key
 parameter_list|(
+name|hashp
+parameter_list|,
 name|bufp
 parameter_list|,
 name|len
@@ -2389,6 +2473,10 @@ name|val
 parameter_list|,
 name|set
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|bufp
@@ -2517,6 +2605,8 @@ if|if
 condition|(
 name|__big_return
 argument_list|(
+name|hashp
+argument_list|,
 name|bufp
 argument_list|,
 literal|1
@@ -2539,6 +2629,8 @@ name|xbp
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|bp
 index|[
 name|bp
@@ -2565,6 +2657,8 @@ name|totlen
 operator|=
 name|collect_key
 argument_list|(
+name|hashp
+argument_list|,
 name|xbp
 argument_list|,
 name|totlen
@@ -2647,6 +2741,8 @@ specifier|extern
 name|int
 name|__big_split
 parameter_list|(
+name|hashp
+parameter_list|,
 name|op
 parameter_list|,
 name|np
@@ -2659,6 +2755,10 @@ name|obucket
 parameter_list|,
 name|ret
 parameter_list|)
+name|HTAB
+modifier|*
+name|hashp
+decl_stmt|;
 name|BUFHEAD
 modifier|*
 name|op
@@ -2725,6 +2825,8 @@ if|if
 condition|(
 name|__big_keydata
 argument_list|(
+name|hashp
+argument_list|,
 name|big_keyp
 argument_list|,
 operator|&
@@ -2747,6 +2849,8 @@ operator|=
 operator|(
 name|__call_hash
 argument_list|(
+name|hashp
+argument_list|,
 name|key
 operator|.
 name|data
@@ -2767,6 +2871,8 @@ name|next_addr
 operator|=
 name|__find_last_page
 argument_list|(
+name|hashp
+argument_list|,
 operator|&
 name|big_keyp
 argument_list|)
@@ -2782,6 +2888,8 @@ name|nextp
 operator|=
 name|__get_buf
 argument_list|(
+name|hashp
+argument_list|,
 name|ret
 operator|->
 name|next_addr
@@ -3067,6 +3175,8 @@ name|tmpp
 operator|=
 name|__add_ovflpage
 argument_list|(
+name|hashp
+argument_list|,
 name|big_keyp
 argument_list|)
 expr_stmt|;

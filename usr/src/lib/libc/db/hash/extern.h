@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -10,6 +10,9 @@ name|__add_ovflpage
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|)
@@ -23,6 +26,9 @@ name|__addel
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|,
@@ -44,6 +50,9 @@ name|__big_delete
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|)
@@ -57,6 +66,9 @@ name|__big_insert
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|,
@@ -78,6 +90,9 @@ name|__big_keydata
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|,
@@ -99,6 +114,9 @@ name|__big_return
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|,
@@ -119,6 +137,9 @@ name|__big_split
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|,
@@ -145,6 +166,9 @@ name|__buf_free
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|int
 operator|,
 name|int
@@ -159,6 +183,9 @@ name|__buf_init
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|int
 operator|)
 argument_list|)
@@ -171,6 +198,9 @@ name|__call_hash
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|char
 operator|*
 operator|,
@@ -186,6 +216,9 @@ name|__delpair
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|,
@@ -201,7 +234,8 @@ name|__expand_table
 name|__P
 argument_list|(
 operator|(
-name|void
+name|HTAB
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -213,6 +247,9 @@ name|__find_bigpair
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|,
@@ -233,6 +270,9 @@ name|__find_last_page
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|*
@@ -247,6 +287,9 @@ name|__free_ovflpage
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|)
@@ -261,6 +304,9 @@ name|__get_buf
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|u_int
 operator|,
 name|BUFHEAD
@@ -278,6 +324,9 @@ name|__get_page
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|char
 operator|*
 operator|,
@@ -299,6 +348,9 @@ name|__init_bitmap
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|int
 operator|,
 name|int
@@ -327,6 +379,9 @@ name|__put_page
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|char
 operator|*
 operator|,
@@ -346,6 +401,9 @@ name|__reclaim_buf
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|BUFHEAD
 operator|*
 operator|)
@@ -359,6 +417,9 @@ name|__split_page
 name|__P
 argument_list|(
 operator|(
+name|HTAB
+operator|*
+operator|,
 name|u_int
 operator|,
 name|u_int
@@ -367,13 +428,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|HTAB
-modifier|*
-name|hashp
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* Default hash routine. */
+end_comment
+
+begin_extern
+extern|extern int	(*__default_hash
+end_extern
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -398,24 +473,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_extern
-extern|extern int (*default_hash
-end_extern
-
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 end_unit
 
