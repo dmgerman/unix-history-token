@@ -31,6 +31,12 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1255,6 +1261,23 @@ name|NOSTR
 value|((char *)NULL)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOFILE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|NOFILE
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1548,7 +1571,7 @@ begin_decl_stmt
 name|char
 name|fname
 index|[
-literal|80
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1561,7 +1584,7 @@ begin_decl_stmt
 name|char
 name|copyname
 index|[
-literal|80
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1873,6 +1896,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
