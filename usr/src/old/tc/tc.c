@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tc.c	4.1 (Berkeley) %G%"
+literal|"@(#)tc.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,7 @@ name|oput
 parameter_list|(
 name|c
 parameter_list|)
-value|if (pgskip==0) putchar(c); else;
+value|if (pgskip==0) putchar(c); else (c);
 end_define
 
 begin_define
