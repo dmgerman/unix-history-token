@@ -123,6 +123,8 @@ block|,
 name|VT_CODA
 block|,
 name|VT_NTFS
+block|,
+name|VT_HPFS
 block|}
 enum|;
 end_enum
