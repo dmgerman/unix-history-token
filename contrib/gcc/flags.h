@@ -264,6 +264,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means warn if a frame is larger that N bytes.  The value     of N is warn_frame_size. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_frame_size_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_frame_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn if a function call pushes more than N bytes     onto the stack.  The value of N is warn_arglist_size. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_arglist_size_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_arglist_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means warn about any identifiers that match in the first N    characters.  The value N is in `id_clash_len'.  */
 end_comment
 

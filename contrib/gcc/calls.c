@@ -8318,6 +8318,32 @@ name|emit_queue
 argument_list|()
 expr_stmt|;
 comment|/* All arguments and registers used for the call must be set up by now!  */
+if|if
+condition|(
+name|warn_arglist_size_flag
+condition|)
+if|if
+condition|(
+name|unadjusted_args_size
+operator|>
+name|warn_arglist_size
+condition|)
+block|{
+name|warning
+argument_list|(
+literal|"%d byte arglist in function call"
+argument_list|,
+name|unadjusted_args_size
+argument_list|)
+expr_stmt|;
+name|warning
+argument_list|(
+literal|"exceeds user specified limit (%d bytes)"
+argument_list|,
+name|warn_arglist_size
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Generate the actual call instruction.  */
 name|emit_call_1
 argument_list|(

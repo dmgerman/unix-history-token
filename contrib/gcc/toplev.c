@@ -4672,6 +4672,18 @@ literal|"Warn about suspicious declarations of main"
 block|}
 block|,
 block|{
+literal|"-Wframe-size-<N>"
+block|,
+literal|"Warn if frame uses greater than<N> bytes."
+block|}
+block|,
+block|{
+literal|"-Wlarglist-size-<N>"
+block|,
+literal|"Warn if function argument list uses greater than<N> bytes."
+block|}
+block|,
+block|{
 literal|"-Wno-main"
 block|,
 literal|""
@@ -5270,6 +5282,42 @@ end_comment
 begin_decl_stmt
 name|int
 name|warn_cast_align
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn if a frame is larger that N bytes.  The value     of N is warn_frame_size. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|warn_frame_size_flag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|warn_frame_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn if a function call pushes more than N bytes     onto the stack.  The value of N is warn_arglist_size. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|warn_arglist_size_flag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|warn_arglist_size
 decl_stmt|;
 end_decl_stmt
 
@@ -16262,6 +16310,27 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|warn_frame_size_flag
+condition|)
+if|if
+condition|(
+name|get_frame_size
+argument_list|()
+operator|>
+name|warn_frame_size
+condition|)
+name|warning
+argument_list|(
+literal|"%d byte frame exceeds user specified limit (%d bytes)"
+argument_list|,
+name|get_frame_size
+argument_list|()
+argument_list|,
+name|warn_frame_size
+argument_list|)
+expr_stmt|;
 comment|/* Now turn the rtl into assembler code.  */
 name|TIMEVAR
 argument_list|(
