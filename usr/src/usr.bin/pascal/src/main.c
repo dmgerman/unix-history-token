@@ -6,6 +6,16 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#)Copyright (c) 1979 Regents of the University of California"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|sccsid
 index|[]
 init|=
