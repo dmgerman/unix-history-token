@@ -6187,7 +6187,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"got message of size %d on %s"
+literal|"\ngot message of size %d on %s"
 argument_list|,
 name|n
 argument_list|,
@@ -7929,7 +7929,17 @@ name|addrs
 operator|==
 literal|0
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 operator|(
 name|void
 operator|)
