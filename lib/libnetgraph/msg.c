@@ -574,12 +574,24 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|ascii
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
+name|free
+argument_list|(
+name|ascii
+argument_list|)
+expr_stmt|;
 comment|/* Get reply */
 if|if
 condition|(
