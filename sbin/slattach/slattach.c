@@ -1199,12 +1199,20 @@ name|ttydisc
 init|=
 name|TTYDISC
 decl_stmt|;
+name|int
+name|oflags
+decl_stmt|;
 name|FILE
 modifier|*
 name|pidfile
 decl_stmt|;
+comment|/* reset to tty discipline */
 if|if
 condition|(
+name|fd
+operator|>=
+literal|0
+operator|&&
 name|ioctl
 argument_list|(
 name|fd
@@ -1218,7 +1226,6 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* reset to tty discipline */
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1438,6 +1445,68 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Turn off O_NONBLOCK for dumb redialers, if any. */
+if|if
+condition|(
+operator|(
+name|oflags
+operator|=
+name|fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_GETFL
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"fcntl(F_GETFL) failed: %m"
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|oflags
+operator|&
+operator|~
+name|O_NONBLOCK
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"fcntl(F_SETFL) failed: %m"
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1581,7 +1650,15 @@ name|modem_control
 operator||
 name|cflag
 expr_stmt|;
-name|cfsetspeed
+name|cfsetispeed
+argument_list|(
+operator|&
+name|tty
+argument_list|,
+name|speed
+argument_list|)
+expr_stmt|;
+name|cfsetospeed
 argument_list|(
 operator|&
 name|tty
@@ -2163,7 +2240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* signup_handler() is invoked when carrier drops, eg. before redial. */
+comment|/* sighup_handler() is invoked when carrier drops, eg. before redial. */
 end_comment
 
 begin_function
@@ -2357,6 +2434,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|#
+directive|if
+literal|0
+comment|/* 		 * XXX should do this except we are called from main() via 		 * kill(getpid(), SIGHUP).  Ick. 		 */
+block|syslog(LOG_NOTICE, "SIGHUP on %s (sl%d); exiting", dev, unit); 		exit_handler(0);
+endif|#
+directive|endif
 if|if
 condition|(
 name|ioctl
