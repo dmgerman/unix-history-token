@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -2205,6 +2205,14 @@ name|time_t
 name|convtime
 parameter_list|()
 function_decl|;
+specifier|extern
+name|int
+name|QueueLA
+decl_stmt|;
+specifier|extern
+name|int
+name|RefuseLA
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2814,6 +2822,30 @@ break|break;
 endif|#
 directive|endif
 endif|DEBUG
+case|case
+literal|'x'
+case|:
+comment|/* load avg at which to auto-queue msgs */
+name|QueueLA
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+comment|/* load avg at which to auto-reject connections */
+name|RefuseLA
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}

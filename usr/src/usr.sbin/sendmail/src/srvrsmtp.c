@@ -33,7 +33,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -792,6 +792,28 @@ case|:
 comment|/* hello -- introduce yourself */
 if|if
 condition|(
+name|sameword
+argument_list|(
+name|p
+argument_list|,
+name|HostName
+argument_list|)
+condition|)
+block|{
+comment|/* connected to an echo server */
+name|message
+argument_list|(
+literal|"553"
+argument_list|,
+literal|"%s I refuse to talk to myself"
+argument_list|,
+name|HostName
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
 name|RealHostName
 operator|!=
 name|NULL
@@ -1218,7 +1240,7 @@ name|sendall
 argument_list|(
 name|CurEnv
 argument_list|,
-name|SendMode
+name|SM_DEFAULT
 argument_list|)
 expr_stmt|;
 name|CurEnv

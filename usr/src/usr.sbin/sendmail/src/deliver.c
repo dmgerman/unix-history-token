@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -4183,7 +4183,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SENDALL -- actually send all the messages. ** **	Parameters: **		e -- the envelope to send. **		mode -- the delivery mode to use. ** **	Returns: **		none. ** **	Side Effects: **		Scans the send lists and sends everything it finds. **		Delivers any appropriate error messages. **		If we are running in a non-interactive mode, takes the **			appropriate action. */
+comment|/* **  SENDALL -- actually send all the messages. ** **	Parameters: **		e -- the envelope to send. **		mode -- the delivery mode to use.  If SM_DEFAULT, use **			the current SendMode. ** **	Returns: **		none. ** **	Side Effects: **		Scans the send lists and sends everything it finds. **		Delivers any appropriate error messages. **		If we are running in a non-interactive mode, takes the **			appropriate action. */
 end_comment
 
 begin_macro
@@ -4221,6 +4221,35 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
+comment|/* determine actual delivery mode */
+if|if
+condition|(
+name|mode
+operator|==
+name|SM_DEFAULT
+condition|)
+block|{
+specifier|extern
+name|int
+name|QueueLA
+decl_stmt|;
+if|if
+condition|(
+name|getla
+argument_list|()
+operator|>
+name|QueueLA
+condition|)
+name|mode
+operator|=
+name|SM_QUEUE
+expr_stmt|;
+else|else
+name|mode
+operator|=
+name|SendMode
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG

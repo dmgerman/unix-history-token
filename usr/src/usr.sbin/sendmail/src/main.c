@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -2500,7 +2500,7 @@ name|sendall
 argument_list|(
 name|CurEnv
 argument_list|,
-name|SendMode
+name|SM_DEFAULT
 argument_list|)
 expr_stmt|;
 end_expr_stmt
