@@ -2874,12 +2874,6 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TERMCAP
-end_ifdef
-
 begin_decl_stmt
 name|char
 name|termbuf
@@ -2968,31 +2962,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|termbuf
-value|ttytype
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|ttytype
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
