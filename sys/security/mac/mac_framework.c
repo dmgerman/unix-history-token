@@ -15948,7 +15948,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|mpc
 argument_list|,
-argument|&mac_policy_list
+argument|&mac_static_policy_list
 argument_list|,
 argument|mpc_list
 argument_list|)
