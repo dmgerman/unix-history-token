@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -67,57 +67,81 @@ end_comment
 begin_define
 define|#
 directive|define
-name|D_UNKNOWN
+name|DT_UNKNOWN
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|D_REG
+name|DT_FIFO
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|D_DIR
+name|DT_CHR
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|D_BLK
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|D_CHR
+name|DT_DIR
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|D_LNK
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|D_SOCK
+name|DT_BLK
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|D_FIFO
-value|7
+name|DT_REG
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_LNK
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_SOCK
+value|12
+end_define
+
+begin_comment
+comment|/*  * Convert between stat structure types and directory types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFTODT
+parameter_list|(
+name|mode
+parameter_list|)
+value|(((mode)& 0170000)>> 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTTOIF
+parameter_list|(
+name|dirtype
+parameter_list|)
+value|((dirtype)<< 12)
 end_define
 
 end_unit
