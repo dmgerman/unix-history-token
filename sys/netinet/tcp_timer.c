@@ -1099,6 +1099,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * The timed wait lists contain references to each of the TCP sessions  * currently TIME_WAIT state.  The list pointers, including the list pointers  * in each tcptw structure, are protected using the global tcbinfo lock,  * which must be held over list iteration and modification.  */
+end_comment
+
 begin_struct
 struct|struct
 name|twlist
@@ -1247,6 +1251,12 @@ name|tcptw
 modifier|*
 name|tw_tail
 decl_stmt|;
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tw
@@ -1312,6 +1322,12 @@ modifier|*
 name|tw
 parameter_list|)
 block|{
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tw
@@ -1356,6 +1372,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
