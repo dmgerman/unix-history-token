@@ -638,6 +638,17 @@ begin_comment
 comment|/* can throw this buffer away w/page flipping */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EXT_EXTREF
+value|400
+end_define
+
+begin_comment
+comment|/* has externally maintained ref_cnt ptr*/
+end_comment
+
 begin_comment
 comment|/*  * Flags copied when copying m_pkthdr.  */
 end_comment
