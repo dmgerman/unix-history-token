@@ -1,19 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw_user.c,v 1.21 1997/06/14 00:23:49 ache Exp $  */
+comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -24,7 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -37,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -61,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -611,11 +643,11 @@ operator|!=
 literal|'/'
 condition|)
 comment|/* Check for absolute path name */
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"invalid base directory for home '%s'\n"
+literal|"invalid base directory for home '%s'"
 argument_list|,
 name|cnf
 operator|->
@@ -828,11 +860,11 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_OSFILE
 argument_list|,
-literal|"'%s' (root home parent) is not a directory\n"
+literal|"'%s' (root home parent) is not a directory"
 argument_list|,
 name|dbuf
 argument_list|)
@@ -873,18 +905,13 @@ condition|)
 block|{
 name|direrr
 label|:
-name|cmderr
+name|err
 argument_list|(
 name|EX_OSFILE
 argument_list|,
-literal|"mkdir '%s': %s\n"
+literal|"mkdir '%s'"
 argument_list|,
 name|dbuf
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -910,11 +937,11 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_OSFILE
 argument_list|,
-literal|"root home `%s' is not a directory\n"
+literal|"root home `%s' is not a directory"
 argument_list|,
 name|cnf
 operator|->
@@ -1063,11 +1090,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_NOUSER
 argument_list|,
-literal|"group `%s' does not exist\n"
+literal|"group `%s' does not exist"
 argument_list|,
 name|p
 argument_list|)
@@ -1209,11 +1236,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_NOUSER
 argument_list|,
-literal|"group `%s' does not exist\n"
+literal|"group `%s' does not exist"
 argument_list|,
 name|p
 argument_list|)
@@ -1319,11 +1346,11 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_OSFILE
 argument_list|,
-literal|"skeleton `%s' is not a directory or does not exist\n"
+literal|"skeleton `%s' is not a directory or does not exist"
 argument_list|,
 name|cnf
 operator|->
@@ -1379,11 +1406,11 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"can't combine `-D' with `-n name'\n"
+literal|"can't combine `-D' with `-n name'"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1631,7 +1658,7 @@ condition|)
 return|return
 name|EXIT_SUCCESS
 return|;
-name|perror
+name|warn
 argument_list|(
 literal|"config update"
 argument_list|)
@@ -1749,11 +1776,11 @@ name|a_name
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"user name or id required\n"
+literal|"user name or id required"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Determine whether 'n' switch is name or uid - we don't 		 * really don't really care which we have, but we need to 		 * know. 		 */
@@ -1916,22 +1943,22 @@ name|a_name
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_NOUSER
 argument_list|,
-literal|"no such uid `%s'\n"
+literal|"no such uid `%s'"
 argument_list|,
 name|a_uid
 operator|->
 name|val
 argument_list|)
 expr_stmt|;
-name|cmderr
+name|errx
 argument_list|(
 name|EX_NOUSER
 argument_list|,
-literal|"no such user `%s'\n"
+literal|"no such user `%s'"
 argument_list|,
 name|a_name
 operator|->
@@ -2002,11 +2029,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"cannot remove user 'root'\n"
+literal|"cannot remove user 'root'"
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Remove skey record from /etc/skeykeys 			 */
@@ -2102,16 +2129,11 @@ argument_list|(
 name|pwd
 argument_list|)
 condition|)
-name|cmderr
+name|err
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"Error updating passwd file: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"error updating passwd file"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2139,7 +2161,7 @@ operator|->
 name|val
 argument_list|)
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"WARNING: NIS passwd update"
 argument_list|)
@@ -2335,11 +2357,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"can't rename `root' account\n"
+literal|"can't rename `root' account"
 argument_list|)
 expr_stmt|;
 name|pwd
@@ -2417,11 +2439,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"can't change uid of `root' account\n"
+literal|"can't change uid of `root' account"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2443,11 +2465,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"WARNING: account `%s' will have a uid of 0 (superuser access!)\n"
+literal|"WARNING: account `%s' will have a uid of 0 (superuser access!)"
 argument_list|,
 name|pwd
 operator|->
@@ -2563,11 +2583,11 @@ name|now
 operator|==
 name|expire
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"Invalid password change date `%s'\n"
+literal|"invalid password change date `%s'"
 argument_list|,
 name|arg
 operator|->
@@ -2652,11 +2672,11 @@ name|now
 operator|==
 name|expire
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"Invalid account expiry date `%s'\n"
+literal|"invalid account expiry date `%s'"
 argument_list|,
 name|arg
 operator|->
@@ -2780,11 +2800,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"WARNING: home `%s' does not exist\n"
+literal|"WARNING: home `%s' does not exist"
 argument_list|,
 name|pwd
 operator|->
@@ -2803,11 +2821,9 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"WARNING: home `%s' is not a directory\n"
+literal|"WARNING: home `%s' is not a directory"
 argument_list|,
 name|pwd
 operator|->
@@ -2864,11 +2880,11 @@ operator|==
 name|NULL
 condition|)
 comment|/* Required */
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"login name required\n"
+literal|"login name required"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2888,11 +2904,11 @@ operator|!=
 name|NULL
 condition|)
 comment|/* Exists */
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"login name `%s' already exists\n"
+literal|"login name `%s' already exists"
 argument_list|,
 name|a_name
 operator|->
@@ -3044,11 +3060,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"WARNING: new account `%s' has a uid of 0 (superuser access!)\n"
+literal|"WARNING: new account `%s' has a uid of 0 (superuser access!)"
 argument_list|,
 name|pwd
 operator|->
@@ -3280,7 +3294,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"-h file descriptor"
 argument_list|)
@@ -3322,11 +3336,11 @@ operator|!
 operator|*
 name|line
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"empty password read on file descriptor %d\n"
+literal|"empty password read on file descriptor %d"
 argument_list|,
 name|fd
 argument_list|)
@@ -3472,7 +3486,7 @@ operator|!
 name|r
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"password update"
 argument_list|)
@@ -3488,7 +3502,7 @@ operator|!
 name|r1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"WARNING: NIS password update"
 argument_list|)
@@ -3538,11 +3552,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_NOUSER
 argument_list|,
-literal|"user '%s' disappeared during update\n"
+literal|"user '%s' disappeared during update"
 argument_list|,
 name|a_name
 operator|->
@@ -3713,7 +3727,7 @@ name|pfp
 operator|==
 name|NULL
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"sendmail"
 argument_list|)
@@ -3963,11 +3977,11 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"uid `%ld' has already been allocated\n"
+literal|"uid `%ld' has already been allocated"
 argument_list|,
 operator|(
 name|long
@@ -4145,11 +4159,11 @@ name|cnf
 operator|->
 name|max_uid
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_SOFTWARE
 argument_list|,
-literal|"unable to allocate a new uid - range fully used\n"
+literal|"unable to allocate a new uid - range fully used"
 argument_list|)
 expr_stmt|;
 name|bm_dealloc
@@ -4310,11 +4324,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_NOUSER
 argument_list|,
-literal|"group `%s' is not defined\n"
+literal|"group `%s' is not defined"
 argument_list|,
 name|a_gid
 operator|->
@@ -4610,11 +4624,11 @@ operator|)
 operator|==
 name|now
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"invalid date/time `%s'\n"
+literal|"invalid date/time `%s'"
 argument_list|,
 name|arg
 operator|->
@@ -4717,11 +4731,11 @@ operator|)
 operator|==
 name|now
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"invalid date/time `%s'\n"
+literal|"invalid date/time `%s'"
 argument_list|,
 name|arg
 operator|->
@@ -4826,11 +4840,11 @@ name|home
 operator|==
 literal|'\0'
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_CONFIG
 argument_list|,
-literal|"no base home directory set\n"
+literal|"no base home directory set"
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -5055,20 +5069,20 @@ name|sh
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_OSFILE
 argument_list|,
-literal|"can't find shell `%s' in shell paths\n"
+literal|"can't find shell `%s' in shell paths"
 argument_list|,
 name|sh
 argument_list|)
 expr_stmt|;
-name|cmderr
+name|errx
 argument_list|(
 name|EX_CONFIG
 argument_list|,
-literal|"no default shell available or defined\n"
+literal|"no default shell available or defined"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6508,7 +6522,7 @@ literal|0x80
 operator|)
 condition|)
 comment|/* 8-bit */
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
@@ -6528,9 +6542,9 @@ operator|<
 literal|127
 operator|)
 condition|?
-literal|"invalid character `%c' in field\n"
+literal|"invalid character `%c' in field"
 else|:
-literal|"invalid character 0x%02x in field\n"
+literal|"invalid character 0x%02x in field"
 argument_list|,
 name|name
 index|[
@@ -6551,11 +6565,11 @@ name|l
 operator|>
 name|LOGNAMESIZE
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"name too long `%s'\n"
+literal|"name too long `%s'"
 argument_list|,
 name|name
 argument_list|)

@@ -1,12 +1,44 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw.c,v 1.5 1997/02/22 16:12:25 peter Exp $  */
+comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"pw.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -20,16 +52,6 @@ include|#
 directive|include
 file|<sys/wait.h>
 end_include
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|progname
-init|=
-literal|"pw"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -302,41 +324,6 @@ comment|/* We wish to handle this manually */
 end_comment
 
 begin_expr_stmt
-name|progname
-operator|=
-name|strrchr
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|progname
-operator|!=
-name|NULL
-condition|)
-operator|++
-name|progname
-expr_stmt|;
-else|else
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -521,11 +508,11 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|cmderr
+name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"Unknown keyword `%s'\n"
+literal|"unknown keyword `%s'"
 argument_list|,
 name|argv
 index|[
@@ -573,20 +560,6 @@ comment|/* 	 * We know which mode we're in and what we're about to do, so now 	 
 end_comment
 
 begin_expr_stmt
-name|argv
-index|[
-literal|0
-index|]
-operator|=
-name|progname
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Preserve this */
-end_comment
-
-begin_expr_stmt
 name|optarg
 operator|=
 name|NULL
@@ -625,7 +598,7 @@ name|ch
 operator|==
 literal|'?'
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
@@ -680,11 +653,11 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_NOPERM
 argument_list|,
-literal|"you must be root to run this program\n"
+literal|"you must be root to run this program"
 argument_list|)
 expr_stmt|;
 end_if
@@ -807,7 +780,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"chdir("
 name|_PATH_YP
@@ -827,7 +800,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"fork()"
 argument_list|)
@@ -884,11 +857,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|ch
 argument_list|,
-literal|"warning: make exited with status %d\n"
+literal|"make exited with status %d"
 argument_list|,
 name|i
 argument_list|)
@@ -980,84 +953,6 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|banner
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|cmderr
-parameter_list|(
-name|int
-name|ec
-parameter_list|,
-name|char
-specifier|const
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-if|if
-condition|(
-name|fmt
-operator|!=
-name|NULL
-condition|)
-block|{
-name|va_list
-name|argp
-decl_stmt|;
-name|banner
-argument_list|()
-expr_stmt|;
-name|va_start
-argument_list|(
-name|argp
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|argp
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|argp
-argument_list|)
-expr_stmt|;
-block|}
-name|exit
-argument_list|(
-name|ec
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|cmdhelp
 parameter_list|(
 name|int
@@ -1067,9 +962,6 @@ name|int
 name|which
 parameter_list|)
 block|{
-name|banner
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|which
@@ -1081,9 +973,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [user|group] [add|del|mod|show|next] [ help | switches/values ]\n"
-argument_list|,
-name|progname
+literal|"usage: pw [user|group] [add|del|mod|show|next] [ help | switches/values ]\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1098,9 +988,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s [add|del|mod|show|next] [ help | switches/values ]\n"
-argument_list|,
-name|progname
+literal|"usage: pw %s [add|del|mod|show|next] [ help | switches/values ]\n"
 argument_list|,
 name|Which
 index|[
@@ -1125,7 +1013,7 @@ index|]
 init|=
 block|{
 block|{
-literal|"usage: %s useradd [name] [switches]\n"
+literal|"usage: pw useradd [name] [switches]\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"  Adding users:\n"
@@ -1159,13 +1047,13 @@ literal|"\t-w method      set default password method\n"
 literal|"\t-s shell       default shell\n"
 literal|"\t-y path        set NIS passwd file path\n"
 block|,
-literal|"usage: %s userdel [uid|name] [switches]\n"
+literal|"usage: pw userdel [uid|name] [switches]\n"
 literal|"\t-n name        login name\n"
 literal|"\t-u uid         user id\n"
 literal|"\t-Y             update NIS maps\n"
 literal|"\t-r             remove home& contents\n"
 block|,
-literal|"usage: %s usermod [uid|name] [switches]\n"
+literal|"usage: pw usermod [uid|name] [switches]\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-F             force add if no user\n"
@@ -1186,19 +1074,19 @@ literal|"\t-h fd          read password on fd\n"
 literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 block|,
-literal|"usage: %s usershow [uid|name] [switches]\n"
+literal|"usage: pw usershow [uid|name] [switches]\n"
 literal|"\t-n name        login name\n"
 literal|"\t-u uid         user id\n"
 literal|"\t-F             force print\n"
 literal|"\t-P             prettier format\n"
 literal|"\t-a             print all users\n"
 block|,
-literal|"usage: %s usernext [switches]\n"
+literal|"usage: pw usernext [switches]\n"
 literal|"\t-C config      configuration file\n"
 block|}
 block|,
 block|{
-literal|"usage: %s groupadd [group|gid] [switches]\n"
+literal|"usage: pw groupadd [group|gid] [switches]\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-n group       group name\n"
@@ -1208,12 +1096,12 @@ literal|"\t-o             duplicate gid ok\n"
 literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 block|,
-literal|"usage: %s groupdel [group|gid] [switches]\n"
+literal|"usage: pw groupdel [group|gid] [switches]\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-Y             update NIS maps\n"
 block|,
-literal|"usage: %s groupmod [group|gid] [switches]\n"
+literal|"usage: pw groupmod [group|gid] [switches]\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-F             force add if not exists\n"
@@ -1225,14 +1113,14 @@ literal|"\t-l name        new group name\n"
 literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 block|,
-literal|"usage: %s groupshow [group|gid] [switches]\n"
+literal|"usage: pw groupshow [group|gid] [switches]\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-F             force print\n"
 literal|"\t-P             prettier format\n"
 literal|"\t-a             print all accounting groups\n"
 block|,
-literal|"usage: %s groupnext [switches]\n"
+literal|"usage: pw groupnext [switches]\n"
 literal|"\t-C config      configuration file\n"
 block|}
 block|}
@@ -1248,8 +1136,6 @@ index|]
 index|[
 name|mode
 index|]
-argument_list|,
-name|progname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1350,11 +1236,11 @@ name|ca
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"Abort - out of memory\n"
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 name|ca
