@@ -1653,6 +1653,12 @@ goto|goto
 name|retry
 goto|;
 block|}
+comment|/* 			 * cleanup our reference 			 */
+name|vmspace_free
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * If we swapped something out, and another process needed memory, 	 * then wakeup the sched process. 	 */
