@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_sfil.c,v 2.23.2.2 2000/05/22 10:26:14 darrenr Exp $"
+literal|"@(#)$Id: ip_sfil.c,v 2.23.2.3 2000/07/08 02:20:14 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2874,7 +2874,7 @@ operator|->
 name|fr_cksum
 init|;
 name|p
-operator|!=
+operator|<
 name|pp
 condition|;
 name|p
