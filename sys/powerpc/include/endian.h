@@ -49,6 +49,16 @@ begin_comment
 comment|/*  * Definitions for byte order, according to byte significance from low  * address to high.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|_BIG_ENDIAN
+end_undef
+
+begin_comment
+comment|/* GCC annoyingly defines this for PowerPC */
+end_comment
+
 begin_define
 define|#
 directive|define
