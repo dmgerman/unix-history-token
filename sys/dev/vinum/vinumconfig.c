@@ -6523,7 +6523,7 @@ comment|/* and add it to the name */
 block|}
 if|if
 condition|(
-name|isparity
+name|isstriped
 argument_list|(
 name|plex
 argument_list|)
@@ -8410,7 +8410,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isparity
+name|isstriped
 argument_list|(
 name|plex
 argument_list|)
