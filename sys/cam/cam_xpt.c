@@ -4072,6 +4072,12 @@ break|break;
 block|}
 comment|/* FALLTHROUGH */
 case|case
+name|XPT_PATH_INQ
+case|:
+case|case
+name|XPT_ENG_INQ
+case|:
+case|case
 name|XPT_SCAN_LUN
 case|:
 name|ccb
@@ -4446,7 +4452,7 @@ block|}
 default|default:
 name|error
 operator|=
-name|EINVAL
+name|ENOTSUP
 expr_stmt|;
 break|break;
 block|}
