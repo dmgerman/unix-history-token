@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wheredump.c 1.1 %G%"
+literal|"@(#)wheredump.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,9 +152,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", line %d\n"
-argument_list|,
+literal|", "
+argument_list|)
+expr_stmt|;
+name|printwhere
+argument_list|(
 name|line
+argument_list|,
+name|srcfilename
+argument_list|(
+name|prevpc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|prevpc
@@ -173,14 +186,27 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s, line %d\n"
+literal|"%s, "
 argument_list|,
 name|name
 argument_list|(
 name|program
 argument_list|)
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|printwhere
+argument_list|(
 name|line
+argument_list|,
+name|srcfilename
+argument_list|(
+name|prevpc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -264,12 +290,6 @@ argument_list|(
 name|prevpc
 argument_list|)
 expr_stmt|;
-name|prevpc
-operator|=
-name|frp
-operator|->
-name|save_pc
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s"
@@ -289,9 +309,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", line %d\n"
-argument_list|,
+literal|", "
+argument_list|)
+expr_stmt|;
+name|printwhere
+argument_list|(
 name|line
+argument_list|,
+name|srcfilename
+argument_list|(
+name|prevpc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|dumpvars
@@ -306,6 +339,12 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+name|prevpc
+operator|=
+name|frp
+operator|->
+name|save_pc
+expr_stmt|;
 block|}
 name|line
 operator|=
@@ -316,14 +355,27 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s, line %d\n"
+literal|"%s, "
 argument_list|,
 name|name
 argument_list|(
 name|program
 argument_list|)
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|printwhere
+argument_list|(
 name|line
+argument_list|,
+name|srcfilename
+argument_list|(
+name|prevpc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|dumpvars
