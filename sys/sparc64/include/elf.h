@@ -768,12 +768,37 @@ begin_comment
 comment|/* Define "machine" characteristics */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|==
+literal|32
+end_if
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_CLASS
+value|ELFCLASS32
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|ELF_TARG_CLASS
 value|ELFCLASS64
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
