@@ -607,6 +607,8 @@ argument_list|,
 name|ic
 operator|->
 name|icmp_id
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -853,6 +855,8 @@ operator|->
 name|uh_sport
 argument_list|,
 name|IPPROTO_UDP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -885,6 +889,8 @@ operator|->
 name|th_sport
 argument_list|,
 name|IPPROTO_TCP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -926,6 +932,8 @@ argument_list|,
 name|ic2
 operator|->
 name|icmp_id
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -1448,6 +1456,8 @@ argument_list|,
 name|ic
 operator|->
 name|icmp_id
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1694,6 +1704,8 @@ operator|->
 name|uh_sport
 argument_list|,
 name|IPPROTO_UDP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1726,6 +1738,8 @@ operator|->
 name|th_sport
 argument_list|,
 name|IPPROTO_TCP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1767,6 +1781,8 @@ argument_list|,
 name|ic2
 operator|->
 name|icmp_id
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -2552,6 +2568,8 @@ operator|->
 name|uh_dport
 argument_list|,
 name|IPPROTO_UDP
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2917,6 +2935,8 @@ operator|->
 name|uh_dport
 argument_list|,
 name|IPPROTO_UDP
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3242,6 +3262,13 @@ operator|->
 name|th_dport
 argument_list|,
 name|IPPROTO_TCP
+argument_list|,
+operator|!
+operator|(
+name|packetAliasMode
+operator|&
+name|PKT_ALIAS_PROXY_ONLY
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3987,6 +4014,8 @@ operator|->
 name|th_dport
 argument_list|,
 name|IPPROTO_TCP
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -5665,7 +5694,7 @@ name|IPPROTO_UDP
 condition|)
 name|link
 operator|=
-name|QueryUdpTcpIn
+name|FindUdpTcpIn
 argument_list|(
 name|pip
 operator|->
@@ -5684,6 +5713,8 @@ operator|->
 name|uh_sport
 argument_list|,
 name|IPPROTO_UDP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5697,7 +5728,7 @@ name|IPPROTO_TCP
 condition|)
 name|link
 operator|=
-name|QueryUdpTcpIn
+name|FindUdpTcpIn
 argument_list|(
 name|pip
 operator|->
@@ -5716,6 +5747,8 @@ operator|->
 name|th_sport
 argument_list|,
 name|IPPROTO_TCP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5742,6 +5775,8 @@ argument_list|,
 name|ic
 operator|->
 name|icmp_id
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
