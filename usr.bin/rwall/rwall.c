@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwall.c,v 1.2.6.1 1997/08/11 07:13:00 charnier Exp $"
+literal|"$Id: rwall.c,v 1.2.6.2 1998/07/17 04:21:04 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -425,32 +425,26 @@ index|]
 decl_stmt|,
 name|lbuf
 index|[
-literal|100
+literal|256
 index|]
 decl_stmt|,
 name|tmpname
 index|[
-literal|15
+literal|64
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|tmpname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmpname
+argument_list|)
+argument_list|,
+literal|"%s/wall.XXXXXX"
 argument_list|,
 name|_PATH_TMP
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|tmpname
-argument_list|,
-literal|"wall.XXXXXX"
 argument_list|)
 expr_stmt|;
 if|if
