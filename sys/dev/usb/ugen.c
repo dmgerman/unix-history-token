@@ -2430,6 +2430,8 @@ name|pipeh
 argument_list|,
 literal|0
 argument_list|,
+name|UBSD_NO_TIMEOUT
+argument_list|,
 name|buf
 argument_list|,
 operator|&
@@ -2745,6 +2747,8 @@ operator|->
 name|pipeh
 argument_list|,
 literal|0
+argument_list|,
+name|USBD_NO_TIMEOUT
 argument_list|,
 name|buf
 argument_list|,
