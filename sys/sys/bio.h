@@ -310,6 +310,9 @@ name|bio
 modifier|*
 name|switch_point
 decl_stmt|;
+name|int
+name|busy
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -51,6 +51,12 @@ directive|include
 file|<sys/syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
 begin_comment
 comment|/*  * Seek sort for disks.  *  * The buf_queue keep two queues, sorted in ascending block order.  The first  * queue holds those requests which are positioned after the current block  * (in the first request); the second, which starts at queue->switch_point,  * holds requests which came in after their block number was passed.  Thus  * we implement a one way scan, retracting after reaching the end of the drive  * to the first request on the second queue, at which time it becomes the  * first queue.  *  * A one-way scan is natural because of the way UNIX read-ahead blocks are  * allocated.  */
 end_comment
@@ -89,6 +95,26 @@ name|bio
 modifier|*
 name|be
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|bioq
+operator|->
+name|busy
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"Recursing in bioqdisksort()"
+argument_list|)
+expr_stmt|;
 name|be
 operator|=
 name|TAILQ_LAST
@@ -132,6 +158,12 @@ name|bioq
 argument_list|,
 name|bp
 argument_list|)
+expr_stmt|;
+name|bioq
+operator|->
+name|busy
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -194,6 +226,12 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+name|bioq
+operator|->
+name|busy
+operator|=
+literal|0
+expr_stmt|;
 return|return;
 block|}
 comment|/* 			 * If we lie ahead of the current switch point, 			 * insert us before the switch point and move 			 * the switch point. 			 */
@@ -222,6 +260,12 @@ name|bp
 argument_list|,
 name|bio_queue
 argument_list|)
+expr_stmt|;
+name|bioq
+operator|->
+name|busy
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -270,6 +314,12 @@ argument_list|,
 name|bio_queue
 argument_list|)
 expr_stmt|;
+name|bioq
+operator|->
+name|busy
+operator|=
+literal|0
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -299,6 +349,12 @@ name|bp
 argument_list|,
 name|bio_queue
 argument_list|)
+expr_stmt|;
+name|bioq
+operator|->
+name|busy
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -355,6 +411,12 @@ name|bp
 argument_list|,
 name|bio_queue
 argument_list|)
+expr_stmt|;
+name|bioq
+operator|->
+name|busy
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
