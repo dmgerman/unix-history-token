@@ -2324,6 +2324,17 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
+name|bp
+operator|->
+name|bio_driver1
+operator|=
+operator|&
+name|sc
+operator|->
+name|twed_drive
+operator|->
+name|td_unit
+expr_stmt|;
 name|TWED_BIO_IN
 expr_stmt|;
 comment|/* bogus disk? */

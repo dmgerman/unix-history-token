@@ -795,7 +795,7 @@ name|TWE_BIO_UNIT
 parameter_list|(
 name|bp
 parameter_list|)
-value|(bp)->bio_disk->d_unit
+value|*(int *)(bp->bio_driver1)
 end_define
 
 begin_define
