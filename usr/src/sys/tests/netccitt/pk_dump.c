@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk_dump.c	7.1 (Berkeley) %G%"
+literal|"@(#)pk_dump.c	7.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,12 +102,6 @@ begin_include
 include|#
 directive|include
 file|<netccitt/pk_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netccitt/pk_debug.h>
 end_include
 
 begin_include
@@ -798,24 +792,36 @@ end_block
 begin_decl_stmt
 name|int
 name|verbose
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* so you can adb -w the binary */
+end_comment
 
 begin_decl_stmt
 name|int
 name|tflag
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|Iflag
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|Aflag
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -843,11 +849,11 @@ index|[]
 init|=
 block|{
 block|{
-literal|"_pk_input_cache"
+literal|"_pk_output_cache"
 block|}
 block|,
 block|{
-literal|"_pk_output_cache"
+literal|"_pk_input_cache"
 block|}
 block|,
 literal|0
@@ -951,6 +957,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+name|struct
+name|mbuf_cache
+name|c
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|mbvec
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -981,16 +1003,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|mbuf_cache
-name|c
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mbvec
-decl_stmt|;
 specifier|register
 name|struct
 name|mbuf
@@ -1050,6 +1062,12 @@ expr_stmt|;
 if|if
 condition|(
 name|mbvec
+operator|==
+literal|0
+operator|||
+name|c
+operator|.
+name|mbc_cache
 operator|==
 literal|0
 condition|)
