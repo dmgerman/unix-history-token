@@ -220,6 +220,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FLOOD_BACKOFF
+value|20000
+end_define
+
+begin_comment
+comment|/* usecs to back off if flooding */
+end_comment
+
+begin_comment
+comment|/* reports we are out of buffer space */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|A
 parameter_list|(
 name|bit
@@ -544,6 +559,18 @@ begin_comment
 comment|/* interval between packets */
 end_comment
 
+begin_decl_stmt
+name|int
+name|finish_up
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* We've been told to finish up */
+end_comment
+
 begin_comment
 comment|/* timing */
 end_comment
@@ -617,6 +644,9 @@ name|finish
 argument_list|()
 decl_stmt|,
 name|status
+argument_list|()
+decl_stmt|,
+name|stopit
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -1970,7 +2000,7 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|finish
+name|stopit
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2058,11 +2088,12 @@ name|catcher
 argument_list|()
 expr_stmt|;
 comment|/* start things going */
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+name|finish_up
+operator|==
+literal|0
+condition|)
 block|{
 name|struct
 name|sockaddr_in
@@ -2226,6 +2257,22 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Stopit --  *   * set the global bit that cause everything to quit..  * do rNOT quit and exit from the signal handler!  */
+end_comment
+
+begin_function
+name|void
+name|stopit
+parameter_list|()
+block|{
+name|finish_up
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * catcher --  *	This routine causes another PING to be transmitted, and then  * schedules another SIGALRM for 1 second from now.  *  * bug --  *	Our sense of time will slowly skew (i.e., packets will not be  * launched exactly at 1-second intervals).  This does not affect the  * quality of the delay and loss statistics.  */
 end_comment
 
@@ -2304,7 +2351,7 @@ name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|finish
+name|stopit
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2490,11 +2537,35 @@ name|i
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|F_FLOOD
+operator|)
+operator|&&
+operator|(
+name|errno
+operator|==
+name|ENOBUFS
+operator|)
+condition|)
+block|{
+name|usleep
+argument_list|(
+name|FLOOD_BACKOFF
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|perror
 argument_list|(
 literal|"ping: sendto"
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
