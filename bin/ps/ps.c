@@ -1149,7 +1149,7 @@ name|ttypath
 decl_stmt|,
 name|pathbuf
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 if|if
