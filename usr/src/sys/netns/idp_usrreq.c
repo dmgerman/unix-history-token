@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *      @(#)idp_usrreq.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *      @(#)idp_usrreq.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ns_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"idp.h"
 end_include
 
@@ -124,6 +130,8 @@ argument_list|(
 argument|m
 argument_list|,
 argument|nsp
+argument_list|,
+argument|ifp
 argument_list|)
 end_macro
 
@@ -141,6 +149,14 @@ name|struct
 name|nspcb
 modifier|*
 name|nsp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 end_decl_stmt
 
@@ -167,13 +183,11 @@ name|nsp
 operator|==
 literal|0
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"No nspcb"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source address and datagram in user buffer. 	 */
 name|idp_ns
 operator|.
@@ -183,6 +197,69 @@ name|idp
 operator|->
 name|idp_sna
 expr_stmt|;
+if|if
+condition|(
+name|ns_netof
+argument_list|(
+name|idp
+operator|->
+name|idp_sna
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+specifier|register
+name|struct
+name|ifaddr
+modifier|*
+name|ia
+decl_stmt|;
+for|for
+control|(
+name|ia
+operator|=
+name|ifp
+operator|->
+name|if_addrlist
+init|;
+name|ia
+condition|;
+name|ia
+operator|->
+name|ifa_next
+control|)
+block|{
+if|if
+condition|(
+name|ia
+operator|->
+name|ifa_addr
+operator|.
+name|sa_family
+operator|==
+name|AF_NS
+condition|)
+block|{
+name|idp_ns
+operator|.
+name|sns_addr
+operator|.
+name|x_net
+operator|=
+name|IA_SNS
+argument_list|(
+name|ia
+argument_list|)
+operator|->
+name|sns_addr
+operator|.
+name|x_net
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
 name|nsp
 operator|->
 name|nsp_rpt
