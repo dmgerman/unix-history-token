@@ -112,6 +112,9 @@ decl_stmt|;
 name|uint64_t
 name|r_ar_lc
 decl_stmt|;
+name|uint64_t
+name|r_ar_ec
+decl_stmt|;
 block|}
 struct|;
 end_struct
