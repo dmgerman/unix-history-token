@@ -60,19 +60,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kdb.h>
+file|<sys/eventhandler.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/eventhandler.h>
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -133,24 +151,6 @@ begin_include
 include|#
 directive|include
 file|<sys/reboot.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
 end_include
 
 begin_include
