@@ -1960,8 +1960,6 @@ else|#
 directive|else
 block|{
 name|int
-name|error
-decl_stmt|,
 name|ocmd
 init|=
 name|cmd
