@@ -243,7 +243,7 @@ specifier|volatile
 name|int
 name|c
 init|=
-literal|'\0'
+name|EOF
 decl_stmt|;
 specifier|volatile
 name|bool
