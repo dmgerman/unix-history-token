@@ -1274,9 +1274,6 @@ condition|)
 break|break;
 continue|continue;
 block|}
-if|if
-condition|(
-operator|(
 name|rval
 operator|=
 name|ficlExec
@@ -1287,9 +1284,20 @@ name|cp
 argument_list|,
 name|i
 argument_list|)
-operator|)
-operator|>=
-name|VM_ERREXIT
+expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|!=
+name|VM_QUIT
+operator|&&
+name|rval
+operator|!=
+name|VM_USEREXIT
+operator|&&
+name|rval
+operator|!=
+name|VM_OUTOFTEXT
 condition|)
 block|{
 name|pVM
@@ -1298,16 +1306,9 @@ name|sourceID
 operator|=
 name|id
 expr_stmt|;
-name|vmThrowErr
-argument_list|(
-name|pVM
-argument_list|,
-literal|"ficlExecFD: Error at line %d"
-argument_list|,
-name|nLine
-argument_list|)
-expr_stmt|;
-break|break;
+return|return
+name|rval
+return|;
 block|}
 block|}
 comment|/*     ** Pass an empty line with SOURCE-ID == 0 to flush     ** any pending REFILLs (as required by FILE wordset)     */
