@@ -728,9 +728,7 @@ name|name
 argument_list|,
 name|sc
 operator|->
-name|sc_geom
-operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 name|sc
@@ -774,9 +772,7 @@ literal|"Device %s removed."
 argument_list|,
 name|sc
 operator|->
-name|sc_geom
-operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -2873,13 +2869,11 @@ name|sc
 operator|->
 name|sc_geom
 argument_list|,
-literal|"%s"
+literal|"stripe/%s"
 argument_list|,
 name|sc
 operator|->
-name|sc_geom
-operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find the smallest disk. 	 */
@@ -3062,9 +3056,7 @@ literal|"Device %s activated."
 argument_list|,
 name|sc
 operator|->
-name|sc_geom
-operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -3508,9 +3500,9 @@ name|pp
 operator|->
 name|name
 argument_list|,
-name|gp
+name|sc
 operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 name|g_stripe_check_and_run
@@ -3628,7 +3620,7 @@ name|G_STRIPE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Creating device %s.stripe (id=%u)."
+literal|"Creating device %s (id=%u)."
 argument_list|,
 name|md
 operator|->
@@ -3645,15 +3637,15 @@ condition|(
 name|md
 operator|->
 name|md_all
-operator|<=
-literal|1
+operator|<
+literal|2
 condition|)
 block|{
 name|G_STRIPE_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Too few disks defined for %s.stripe."
+literal|"Too few disks defined for %s."
 argument_list|,
 name|md
 operator|->
@@ -3670,7 +3662,7 @@ if|#
 directive|if
 literal|0
 comment|/* Stripe size have to be grater than or equal to sector size. */
-block|if (md->md_stripesize< sectorsize) { 		G_STRIPE_DEBUG(0, "Invalid stripe size for %s.stripe.", 		    md->md_name); 		return (NULL); 	}
+block|if (md->md_stripesize< sectorsize) { 		G_STRIPE_DEBUG(0, "Invalid stripe size for %s.", md->md_name); 		return (NULL); 	}
 endif|#
 directive|endif
 comment|/* Stripe size have to be power of 2. */
@@ -3689,7 +3681,7 @@ name|G_STRIPE_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Invalid stripe size for %s.stripe."
+literal|"Invalid stripe size for %s."
 argument_list|,
 name|md
 operator|->
@@ -3744,9 +3736,9 @@ literal|0
 argument_list|,
 literal|"Device %s already configured."
 argument_list|,
-name|gp
+name|sc
 operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -3762,7 +3754,7 @@ name|g_new_geomf
 argument_list|(
 name|mp
 argument_list|,
-literal|"%s.stripe"
+literal|"%s"
 argument_list|,
 name|md
 operator|->
@@ -3822,24 +3814,6 @@ operator|->
 name|dumpconf
 operator|=
 name|g_stripe_dumpconf
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|sc
-operator|->
-name|sc_name
-argument_list|,
-name|md
-operator|->
-name|md_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_name
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -3956,9 +3930,9 @@ literal|0
 argument_list|,
 literal|"Device %s created (id=%u)."
 argument_list|,
-name|gp
+name|sc
 operator|->
-name|name
+name|sc_name
 argument_list|,
 name|sc
 operator|->
@@ -4635,7 +4609,7 @@ name|G_STRIPE_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Cannot create device %s.stripe."
+literal|"Cannot create device %s."
 argument_list|,
 name|md
 operator|.
@@ -5110,7 +5084,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Can't configure %s.stripe."
+literal|"Can't configure %s."
 argument_list|,
 name|md
 operator|.
@@ -5382,17 +5356,6 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|gp
-operator|->
-name|name
-argument_list|,
-name|name
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
 name|sc
 operator|->
 name|sc_name
@@ -5402,13 +5365,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|sc
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
@@ -5659,9 +5620,7 @@ literal|"Cannot destroy device %s (error=%d)."
 argument_list|,
 name|sc
 operator|->
-name|sc_geom
-operator|->
-name|name
+name|sc_name
 argument_list|,
 name|error
 argument_list|)
