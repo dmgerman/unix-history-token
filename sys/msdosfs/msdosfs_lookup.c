@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.10 1997/02/22 09:40:47 peter Exp $ */
 end_comment
 
 begin_comment
@@ -272,6 +272,15 @@ name|cnp
 operator|->
 name|cn_nameiop
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|cnp
+operator|->
+name|cn_proc
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MSDOSFS_DEBUG
@@ -436,7 +445,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -446,10 +455,8 @@ argument_list|(
 name|vdp
 argument_list|,
 name|LK_EXCLUSIVE
-operator||
-name|LK_INTERLOCK
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -472,10 +479,8 @@ argument_list|(
 name|pdp
 argument_list|,
 name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -488,10 +493,8 @@ argument_list|(
 name|vdp
 argument_list|,
 name|LK_EXCLUSIVE
-operator||
-name|LK_INTERLOCK
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -514,7 +517,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -598,7 +601,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -609,10 +612,8 @@ argument_list|(
 name|pdp
 argument_list|,
 name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1207,7 +1208,7 @@ name|vdp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1402,7 +1403,7 @@ name|vdp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1550,7 +1551,7 @@ name|vdp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1584,7 +1585,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -1616,7 +1617,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1650,10 +1651,8 @@ argument_list|(
 name|pdp
 argument_list|,
 name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 operator|)
 condition|)
@@ -1757,7 +1756,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: denode.h,v 1.11 1997/02/22 09:40:44 peter Exp $ */
 end_comment
 
 begin_comment
@@ -192,14 +192,11 @@ modifier|*
 name|de_lockf
 decl_stmt|;
 comment|/* byte level lock list */
-name|pid_t
-name|de_lockholder
+name|struct
+name|lock
+name|de_lock
 decl_stmt|;
-comment|/* current lock holder */
-name|pid_t
-name|de_lockwaiter
-decl_stmt|;
-comment|/* lock wanter */
+comment|/* denode lock */
 comment|/* the next two fields must be contiguous in memory... */
 name|u_char
 name|de_Name
@@ -253,28 +250,6 @@ end_struct
 
 begin_comment
 comment|/*  * Values for the de_flag field of the denode.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DE_LOCKED
-value|0x0001
-end_define
-
-begin_comment
-comment|/* directory entry is locked */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DE_WANTED
-value|0x0002
-end_define
-
-begin_comment
-comment|/* someone wants this de */
 end_comment
 
 begin_define
