@@ -41,7 +41,7 @@ name|p3
 parameter_list|)
 else|#
 directive|else
-function|int semctl
+function|int semconfig
 parameter_list|(
 name|cmd
 parameter_list|,
