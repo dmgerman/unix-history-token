@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.1 1995/05/31 07:13:51 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.2 1995/05/31 09:05:42 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -245,6 +245,21 @@ comment|/* F */
 name|DMENU_DISPLAY_FILE
 block|,
 literal|"faq.hlp"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+comment|/* E */
+name|DMENU_CANCEL
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -1721,7 +1736,7 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"XFree86 3.1.1u1 Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.1.1u1\n\ distribution.  We recommend that you select what you need from the basic\n\ components set and at least one entry from the Server and Font set menus.\n\n\ When you're finished, select Cancel."
+literal|"Please select the components you need from the XFree86 3.1.1u1\n\ distribution.  We recommend that you select what you need from the basic\n\ components set and at least one entry from the Server and Font set menus."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -1733,6 +1748,7 @@ literal|"Basic"
 block|,
 literal|"Basic component menu (required)"
 block|,
+comment|/* B */
 name|DMENU_SUBMENU
 block|,
 operator|&
@@ -1748,6 +1764,7 @@ literal|"Server"
 block|,
 literal|"X server menu"
 block|,
+comment|/* S */
 name|DMENU_SUBMENU
 block|,
 operator|&
@@ -1763,10 +1780,26 @@ literal|"Fonts"
 block|,
 literal|"Font set menu"
 block|,
+comment|/* F */
 name|DMENU_SUBMENU
 block|,
 operator|&
 name|MenuXF86SelectFonts
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+comment|/* E */
+name|DMENU_CANCEL
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -2288,7 +2321,7 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Choose Installation Options"
 block|,
-literal|"The following options control how this utility will deal\n\ with various possible error conditions and how verbose it will\n\ be at various stages.\n\n\ When you're done setting options, select Cancel"
+literal|"The following options control how this utility will deal\n\ with various possible error conditions and how verbose it will\n\ be at various stages."
 block|,
 name|NULL
 block|,
@@ -2374,6 +2407,20 @@ block|,
 name|DMENU_SET_VARIABLE
 block|,
 literal|"noConfirmation=Yes"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|DMENU_CANCEL
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -2484,7 +2531,7 @@ block|,
 literal|"Choose Installation Options"
 block|,
 comment|/* title */
-literal|"Before installation can continue, you need to specify a few\n\ details on the type of distribution you wish to have, where you wish\n\ to install it from and how you wish to allocate disk storage to FreeBSD.\n\n\ None of the items in this menu will actually modify the contents of\n\ your disk until you select the \"Install\" menu item (and even then, only\n\ after a final confirmation).  Select Cancel to leave this menu."
+literal|"Before installation can continue, you need to specify a few\n\ details on the type of distribution you wish to have, where you wish\n\ to install it from and how you wish to allocate disk storage to FreeBSD.\n\n\ None of the items in this menu will actually modify the contents of\n\ your disk until you select the \"Install\" menu item (and even then, only\n\ after a final confirmation)."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -2578,6 +2625,20 @@ name|DMENU_SUBMENU
 block|,
 operator|&
 name|MenuConfigure
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|DMENU_CANCEL
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -2682,7 +2743,7 @@ block|,
 literal|"FreeBSD Configuration Menu"
 block|,
 comment|/* title */
-literal|"If you've already installed FreeBSD, you may use this menu to\n\ customize it somewhat to suit your particular configuration.  Most\n\ importantly, you can use the Packages utility to load extra \"3rd party\"\n\ software not provided in the base distributions.\n\n\ When you're done, select Cancel"
+literal|"If you've already installed FreeBSD, you may use this menu to\n\ customize it somewhat to suit your particular configuration.  Most\n\ importantly, you can use the Packages utility to load extra \"3rd party\"\n\ software not provided in the base distributions."
 block|,
 literal|"Press F1 for more information on these options"
 block|,
@@ -2804,6 +2865,20 @@ literal|0
 block|}
 block|,
 block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|DMENU_CANCEL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -2820,7 +2895,7 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Network Services Menu"
 block|,
-literal|"You may have already configured one network device (and the\n\ other various hostname/gateway/name server parameters) in the process\n\ of installing FreeBSD.  This menu allows you to configure other\n\ aspects of your system's network configuration.\n\n\ When you are done, select Cancel."
+literal|"You may have already configured one network device (and the\n\ other various hostname/gateway/name server parameters) in the process\n\ of installing FreeBSD.  This menu allows you to configure other\n\ aspects of your system's network configuration."
 block|,
 name|NULL
 block|,
@@ -2862,7 +2937,7 @@ literal|"Configure additional interfaces"
 block|,
 name|DMENU_CALL
 block|,
-name|tcpDeviceSelect
+name|tcpMenuSelect
 block|,
 literal|0
 block|,
@@ -2906,6 +2981,20 @@ block|,
 name|DMENU_SET_VARIABLE
 block|,
 literal|"rwhod=YES"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|DMENU_CANCEL
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -3267,6 +3356,20 @@ name|DMENU_SUBMENU
 block|,
 operator|&
 name|MenuSysconsSaver
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|DMENU_CANCEL
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -3651,6 +3754,20 @@ block|,
 name|DMENU_CALL
 block|,
 name|configSaverTimeout
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|DMENU_CANCEL
+block|,
+name|NULL
 block|,
 literal|0
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.70 1995/05/30 08:28:41 rgrimes Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.70.2.1 1995/05/31 09:05:38 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -563,12 +563,18 @@ return|return
 name|FALSE
 return|;
 comment|/* Figure out what kind of MBR the user wants */
+if|if
+condition|(
+operator|!
 name|dmenuOpenSimple
 argument_list|(
 operator|&
 name|MenuMBRType
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|FALSE
+return|;
 name|mbrContents
 operator|=
 name|NULL
@@ -989,16 +995,6 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-specifier|static
-name|Boolean
-name|hostsModified
-init|=
-name|FALSE
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1047,57 +1043,6 @@ block|}
 name|distExtractAll
 argument_list|()
 expr_stmt|;
-comment|/* Tack ourselves at the end of /etc/hosts */
-if|if
-condition|(
-name|RunningAsInit
-operator|&&
-name|getenv
-argument_list|(
-name|VAR_IPADDR
-argument_list|)
-operator|&&
-operator|!
-name|hostsModified
-condition|)
-block|{
-name|fp
-operator|=
-name|fopen
-argument_list|(
-literal|"/etc/hosts"
-argument_list|,
-literal|"a"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"%s\t\t%s\n"
-argument_list|,
-name|getenv
-argument_list|(
-name|VAR_IPADDR
-argument_list|)
-argument_list|,
-name|getenv
-argument_list|(
-name|VAR_HOSTNAME
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-name|hostsModified
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-comment|/* If there's no kernel but there is a kernel.GENERIC, link it over */
 if|if
 condition|(
 name|access

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.35.2.1 1995/05/31 07:13:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.35.2.2 1995/05/31 07:17:01 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -241,12 +241,18 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
 name|dmenuOpenSimple
 argument_list|(
 operator|&
 name|MenuSrcDistributions
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|SrcDists
@@ -271,12 +277,18 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
 name|dmenuOpenSimple
 argument_list|(
 operator|&
 name|MenuXF86Select
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|XF86ServerDists
@@ -292,6 +304,7 @@ condition|)
 name|XF86Dists
 operator||=
 name|DIST_XF86_FONTS
+expr_stmt|;
 if|if
 condition|(
 name|XF86Dists
@@ -893,7 +906,7 @@ block|,
 operator|&
 name|XF86Dists
 block|,
-name|DIST_SRC_XF86
+name|DIST_XF86_SRC
 block|,
 name|NULL
 block|}
@@ -906,7 +919,7 @@ block|,
 operator|&
 name|XF86Dists
 block|,
-name|DIST_SRC_XF86
+name|DIST_XF86_SRC
 block|,
 name|NULL
 block|}
@@ -1219,28 +1232,24 @@ name|status
 operator|=
 name|FALSE
 expr_stmt|;
-if|if
-condition|(
-name|mediaDevice
-operator|->
-name|init
-condition|)
+comment|/* Nothing left to do?  Bail! */
 if|if
 condition|(
 operator|!
-call|(
-modifier|*
-name|mediaDevice
-operator|->
-name|init
-call|)
-argument_list|(
-name|mediaDevice
-argument_list|)
+operator|*
+operator|(
+name|me
+index|[
+literal|0
+index|]
+operator|.
+name|my_mask
+operator|)
 condition|)
 return|return
-name|FALSE
+name|TRUE
 return|;
+comment|/* Otherwise, loop through to see if we're in our parent's plans */
 for|for
 control|(
 name|i
@@ -1258,7 +1267,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* If we're not doing it, we're not doing it */
+comment|/* If our bit isn't set, go to the next */
 if|if
 condition|(
 operator|!
@@ -1293,8 +1302,9 @@ operator|.
 name|my_dist
 condition|)
 block|{
-name|status
-operator|=
+operator|(
+name|void
+operator|)
 name|distExtract
 argument_list|(
 name|me
@@ -1312,9 +1322,50 @@ operator|.
 name|my_dist
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+comment|/* If all the subdistribution bits are cleared, we're done with it */
+if|if
+condition|(
+operator|!
+operator|*
+operator|(
+name|me
+index|[
+name|i
+index|]
+operator|.
+name|my_dist
+operator|->
+name|my_mask
+operator|)
+condition|)
+block|{
+operator|*
+operator|(
+name|me
+index|[
+name|i
+index|]
+operator|.
+name|my_mask
+operator|)
+operator|&=
+operator|~
+operator|(
+name|me
+index|[
+name|i
+index|]
+operator|.
+name|my_bit
+operator|)
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+return|return
+name|FALSE
+return|;
 block|}
 name|dist
 operator|=
@@ -2031,12 +2082,11 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Extract was successful, remove ourselves from further consideration */
 if|if
 condition|(
 name|status
 condition|)
-block|{
-comment|/* Extract was successful, remove ourselves from further consideration */
 operator|*
 operator|(
 name|me
@@ -2058,33 +2108,6 @@ name|my_bit
 operator|)
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-name|mediaDevice
-operator|->
-name|shutdown
-operator|&&
-name|parent
-operator|==
-name|NULL
-condition|)
-block|{
-call|(
-modifier|*
-name|mediaDevice
-operator|->
-name|shutdown
-call|)
-argument_list|(
-name|mediaDevice
-argument_list|)
-expr_stmt|;
-name|mediaDevice
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 return|return
 name|status
 return|;
@@ -2103,6 +2126,27 @@ name|retries
 init|=
 literal|0
 decl_stmt|;
+comment|/* First try to initialize the state of things */
+if|if
+condition|(
+name|mediaDevice
+operator|->
+name|init
+condition|)
+if|if
+condition|(
+operator|!
+call|(
+modifier|*
+name|mediaDevice
+operator|->
+name|init
+call|)
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+return|return;
 comment|/* Try for 3 times around the loop, then give up. */
 while|while
 condition|(
@@ -2120,6 +2164,7 @@ argument_list|,
 name|DistTable
 argument_list|)
 expr_stmt|;
+comment|/* Anything left? */
 if|if
 condition|(
 name|Dists
@@ -2129,6 +2174,23 @@ argument_list|(
 literal|"Couldn't extract all of the dists.  Residue: %0x"
 argument_list|,
 name|Dists
+argument_list|)
+expr_stmt|;
+comment|/* Close up shop and go home */
+if|if
+condition|(
+name|mediaDevice
+operator|->
+name|shutdown
+condition|)
+call|(
+modifier|*
+name|mediaDevice
+operator|->
+name|shutdown
+call|)
+argument_list|(
+name|mediaDevice
 argument_list|)
 expr_stmt|;
 block|}
