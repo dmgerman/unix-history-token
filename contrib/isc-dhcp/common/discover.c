@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: discover.c,v 1.42.2.9 2002/03/12 06:46:17 mellon Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: discover.c,v 1.42.2.12 2002/11/03 04:31:55 dhankins Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -2346,7 +2346,31 @@ name|flags
 operator|&
 name|INTERFACE_RUNNING
 condition|)
+block|{
+name|interface_dereference
+argument_list|(
+operator|&
+name|tmp
+argument_list|,
+name|MDL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|next
+condition|)
+name|interface_reference
+argument_list|(
+operator|&
+name|tmp
+argument_list|,
+name|next
+argument_list|,
+name|MDL
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 operator|(

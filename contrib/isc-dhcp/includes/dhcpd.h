@@ -862,7 +862,7 @@ block|,
 name|FTS_BACKUP
 init|=
 literal|7
-block|, }
+block|}
 name|binding_state_t
 typedef|;
 end_typedef
@@ -2459,7 +2459,7 @@ name|is_bootp
 range|:
 literal|1
 decl_stmt|;
-comment|/* If set, lease was aquired with BOOTP. */
+comment|/* If set, lease was acquired with BOOTP. */
 name|struct
 name|option_state
 modifier|*
@@ -3404,6 +3404,19 @@ define|#
 directive|define
 name|_PATH_DHCPD_DB
 value|"dhcpd.leases"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|_PATH_DHCPD_PID
+end_undef
+
+begin_define
+define|#
+directive|define
+name|_PATH_DHCPD_PID
+value|"dhcpd.pid"
 end_define
 
 begin_else

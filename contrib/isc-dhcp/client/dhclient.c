@@ -19,7 +19,7 @@ name|char
 name|ocopyright
 index|[]
 init|=
-literal|"$Id: dhclient.c,v 1.129.2.10 2002/04/26 23:33:05 murray Exp $ Copyright (c) 1995-2001 Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dhclient.c,v 1.129.2.12 2002/11/07 23:26:38 dhankins Exp $ Copyright (c) 1995-2002 Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,7 +224,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"Copyright 1995-2001 Internet Software Consortium."
+literal|"Copyright 1995-2002 Internet Software Consortium."
 decl_stmt|;
 end_decl_stmt
 
@@ -261,18 +261,24 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int16_t
 name|local_port
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int16_t
 name|remote_port
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|no_daemon
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -281,30 +287,40 @@ name|struct
 name|string_list
 modifier|*
 name|client_env
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|client_env_count
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|onetry
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|quiet
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|nowait
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1547,6 +1563,7 @@ operator|!
 name|local_port
 condition|)
 block|{
+comment|/* If we're faking a relay agent, and we're not using loopback, 		   use the server port, not the client port. */
 if|if
 condition|(
 name|relay
@@ -1609,7 +1626,7 @@ endif|#
 directive|endif
 block|}
 block|}
-comment|/* If we're faking a relay agent, and we're not using loopback, 	   use the server port, not the client port. */
+comment|/* If we're faking a relay agent, and we're not using loopback, 	   we're using the server port, not the client port. */
 if|if
 condition|(
 name|relay
@@ -1624,18 +1641,6 @@ name|INADDR_LOOPBACK
 argument_list|)
 condition|)
 block|{
-name|local_port
-operator|=
-name|htons
-argument_list|(
-name|ntohs
-argument_list|(
-name|local_port
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 name|remote_port
 operator|=
 name|local_port

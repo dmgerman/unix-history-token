@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: icmp.c,v 1.30.2.3 2001/10/18 20:11:24 mellon Exp $ Copyright (c) 1996-2001 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: icmp.c,v 1.30.2.4 2002/06/09 22:23:03 murray Exp $ Copyright (c) 1996-2001 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,6 +570,19 @@ condition|)
 name|log_fatal
 argument_list|(
 literal|"ICMP protocol used before initialization."
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|to
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|to
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
