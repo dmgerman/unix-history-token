@@ -387,6 +387,13 @@ name|UTP_TYPE_IDT77105
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|UTP_TYPE_IDT77155
+value|5
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
