@@ -2654,7 +2654,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Disk devices menu				*/
+comment|/* X Desktops menu				*/
 end_comment
 
 begin_decl_stmt
