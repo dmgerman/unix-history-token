@@ -7907,8 +7907,12 @@ name|sc
 operator|->
 name|mlx_dev
 argument_list|,
-literal|"I/O beyond end of unit (%llu,%d> %u)\n"
+literal|"I/O beyond end of unit (%lld,%d> %lu)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|MLX_BIO_LBA
 argument_list|(
 name|bp
@@ -7916,6 +7920,9 @@ argument_list|)
 argument_list|,
 name|blkcount
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sc
 operator|->
 name|mlx_sysdrive
