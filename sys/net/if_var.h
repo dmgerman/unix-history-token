@@ -480,6 +480,29 @@ name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+modifier|*
+name|if_spare1
+decl_stmt|;
+comment|/* spare pointer 1 */
+name|void
+modifier|*
+name|if_spare2
+decl_stmt|;
+comment|/* spare pointer 2 */
+name|void
+modifier|*
+name|if_spare3
+decl_stmt|;
+comment|/* spare pointer 3 */
+name|u_int
+name|if_spare_flags1
+decl_stmt|;
+comment|/* spare flags 1 */
+name|u_int
+name|if_spare_flags2
+decl_stmt|;
+comment|/* spare flags 2 */
 if|#
 directive|if
 literal|1
