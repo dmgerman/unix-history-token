@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.14 (Berkeley) %G%"
+literal|"@(#)csh.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,17 +211,17 @@ end_decl_stmt
 begin_function
 name|main
 parameter_list|(
-name|c
+name|argc
 parameter_list|,
-name|av
+name|argv
 parameter_list|)
 name|int
-name|c
+name|argc
 decl_stmt|;
 name|char
 modifier|*
 modifier|*
-name|av
+name|argv
 decl_stmt|;
 block|{
 specifier|register
@@ -247,7 +247,7 @@ expr_stmt|;
 comment|/* Immed. estab. timing base */
 name|v
 operator|=
-name|av
+name|argv
 expr_stmt|;
 if|if
 condition|(
@@ -279,7 +279,7 @@ name|v
 operator|==
 literal|'-'
 operator|&&
-name|c
+name|argc
 operator|==
 literal|1
 expr_stmt|;
@@ -540,7 +540,7 @@ expr_stmt|;
 comment|/* ...and on XFSZ */
 block|}
 comment|/* 	 * Process the arguments. 	 * 	 * Note that processing of -v/-x is actually delayed till after 	 * script processing. 	 */
-name|c
+name|argc
 operator|--
 operator|,
 name|v
@@ -548,7 +548,7 @@ operator|++
 expr_stmt|;
 while|while
 condition|(
-name|c
+name|argc
 operator|>
 literal|0
 operator|&&
@@ -598,7 +598,7 @@ case|:
 comment|/* -c	Command input from arg */
 if|if
 condition|(
-name|c
+name|argc
 operator|==
 literal|1
 condition|)
@@ -607,7 +607,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|c
+name|argc
 operator|--
 operator|,
 name|v
@@ -756,7 +756,7 @@ do|;
 name|v
 operator|++
 operator|,
-name|c
+name|argc
 operator|--
 expr_stmt|;
 block|}
@@ -782,7 +782,7 @@ name|nofile
 operator|==
 literal|0
 operator|&&
-name|c
+name|argc
 operator|>
 literal|0
 condition|)
@@ -857,7 +857,7 @@ name|prompt
 operator|=
 literal|0
 expr_stmt|;
-name|c
+name|argc
 operator|--
 operator|,
 name|v
@@ -985,7 +985,7 @@ condition|)
 block|{
 operator|*
 operator|*
-name|av
+name|argv
 operator|=
 literal|'-'
 expr_stmt|;
