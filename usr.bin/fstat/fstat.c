@@ -405,6 +405,13 @@ name|MMAP
 value|-5
 end_define
 
+begin_define
+define|#
+directive|define
+name|JDIR
+value|-6
+end_define
+
 begin_decl_stmt
 name|DEVS
 modifier|*
@@ -1334,7 +1341,7 @@ name|PREFIX
 parameter_list|(
 name|i
 parameter_list|)
-value|printf("%-8.8s %-10s %5d", Uname, Comm, Pid); \ 	switch(i) { \ 	case TEXT: \ 		printf(" text"); \ 		break; \ 	case CDIR: \ 		printf("   wd"); \ 		break; \ 	case RDIR: \ 		printf(" root"); \ 		break; \ 	case TRACE: \ 		printf("   tr"); \ 		break; \ 	case MMAP: \ 		printf(" mmap"); \ 		break; \ 	default: \ 		printf(" %4d", i); \ 		break; \ 	}
+value|printf("%-8.8s %-10s %5d", Uname, Comm, Pid); \ 	switch(i) { \ 	case TEXT: \ 		printf(" text"); \ 		break; \ 	case CDIR: \ 		printf("   wd"); \ 		break; \ 	case RDIR: \ 		printf(" root"); \ 		break; \ 	case TRACE: \ 		printf("   tr"); \ 		break; \ 	case MMAP: \ 		printf(" mmap"); \ 		break; \ 	case JDIR: \ 		printf(" jail"); \ 		break; \ 	default: \ 		printf(" %4d", i); \ 		break; \ 	}
 end_define
 
 begin_comment
@@ -1462,6 +1469,24 @@ argument_list|,
 name|FREAD
 argument_list|)
 expr_stmt|;
+comment|/* 	 * jail root, if any. 	 */
+if|if
+condition|(
+name|filed
+operator|.
+name|fd_jdir
+condition|)
+name|vtrans
+argument_list|(
+name|filed
+operator|.
+name|fd_jdir
+argument_list|,
+name|JDIR
+argument_list|,
+name|FREAD
+argument_list|)
+expr_stmt|;
 comment|/* 	 * ktrace vnode, if one 	 */
 if|if
 condition|(
@@ -1505,6 +1530,27 @@ define|#
 directive|define
 name|FPSIZE
 value|(sizeof (struct file *))
+define|#
+directive|define
+name|MAX_LASTFILE
+value|(0x1000000)
+comment|/* Sanity check on filed.fd_lastfile */
+if|if
+condition|(
+name|filed
+operator|.
+name|fd_lastfile
+operator|<=
+operator|-
+literal|1
+operator|||
+name|filed
+operator|.
+name|fd_lastfile
+operator|>
+name|MAX_LASTFILE
+condition|)
+return|return;
 name|ALLOC_OFILES
 argument_list|(
 name|filed
