@@ -700,7 +700,6 @@ argument_list|,
 literal|"so_rcv"
 argument_list|)
 expr_stmt|;
-comment|/* sx_init(&so->so_sxlock, "socket sxlock"); */
 name|TAILQ_INIT
 argument_list|(
 operator|&
