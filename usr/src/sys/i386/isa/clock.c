@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Added stuff to read the cmos clock on startup - Don Ahn  *  * %sccs.include.386.c%  *  *	@(#)clock.c	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Added stuff to read the cmos clock on startup - Don Ahn  *  * %sccs.include.386.c%  *  *	@(#)clock.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ directive|include
 file|"icu.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"isa.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -55,46 +61,33 @@ block|{
 comment|/* initialize 8253 clock */
 name|outb
 argument_list|(
-literal|0x43
+name|IO_TIMER0
+operator|+
+literal|3
 argument_list|,
 literal|0x36
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-literal|0x40
+name|IO_TIMER0
 argument_list|,
 literal|1193182
 operator|/
-literal|60
+name|hz
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-literal|0x40
+name|IO_TIMER0
 argument_list|,
 operator|(
 literal|1193182
 operator|/
-literal|60
+name|hz
 operator|)
 operator|/
 literal|256
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|clkreld
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|pg
-argument_list|(
-literal|"clkreld"
 argument_list|)
 expr_stmt|;
 block|}
@@ -324,7 +317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialze the time of day register, based on the time base which is, e.g.  * from a filesystem.  */
+comment|/*  * Initialize the time of day register, based on the time base which is, e.g.  * from a filesystem.  */
 end_comment
 
 begin_macro
@@ -355,21 +348,13 @@ name|t
 decl_stmt|,
 name|yd
 decl_stmt|;
-name|outb
-argument_list|(
-literal|0x70
-argument_list|,
-literal|9
-argument_list|)
-expr_stmt|;
-comment|/* year    */
 name|sec
 operator|=
 name|bcd
 argument_list|(
-name|inb
+name|rtcin
 argument_list|(
-literal|0x71
+literal|9
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -389,23 +374,16 @@ argument_list|(
 name|sec
 argument_list|)
 expr_stmt|;
-name|outb
-argument_list|(
-literal|0x70
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-comment|/* month   */
+comment|/* year    */
 name|yd
 operator|=
 name|mtos
 argument_list|(
 name|bcd
 argument_list|(
-name|inb
+name|rtcin
 argument_list|(
-literal|0x71
+literal|8
 argument_list|)
 argument_list|)
 argument_list|,
@@ -416,22 +394,15 @@ name|sec
 operator|+=
 name|yd
 expr_stmt|;
-name|outb
-argument_list|(
-literal|0x70
-argument_list|,
-literal|7
-argument_list|)
-expr_stmt|;
-comment|/* date    */
+comment|/* month   */
 name|t
 operator|=
 operator|(
 name|bcd
 argument_list|(
-name|inb
+name|rtcin
 argument_list|(
-literal|0x71
+literal|7
 argument_list|)
 argument_list|)
 operator|-
@@ -448,79 +419,52 @@ name|yd
 operator|+=
 name|t
 expr_stmt|;
-name|outb
+comment|/* date    */
+name|day_week
+operator|=
+name|rtcin
 argument_list|(
-literal|0x70
-argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
 comment|/* day     */
-name|day_week
-operator|=
-name|inb
+name|sec
+operator|+=
+name|bcd
 argument_list|(
-literal|0x71
-argument_list|)
-expr_stmt|;
-name|outb
+name|rtcin
 argument_list|(
-literal|0x70
-argument_list|,
 literal|4
 argument_list|)
+argument_list|)
+operator|*
+literal|3600
 expr_stmt|;
 comment|/* hour    */
 name|sec
 operator|+=
 name|bcd
 argument_list|(
-name|inb
+name|rtcin
 argument_list|(
-literal|0x71
+literal|2
 argument_list|)
 argument_list|)
 operator|*
-literal|3600
-expr_stmt|;
-name|outb
-argument_list|(
-literal|0x70
-argument_list|,
-literal|2
-argument_list|)
+literal|60
 expr_stmt|;
 comment|/* minutes */
 name|sec
 operator|+=
 name|bcd
 argument_list|(
-name|inb
+name|rtcin
 argument_list|(
-literal|0x71
-argument_list|)
-argument_list|)
-operator|*
-literal|60
-expr_stmt|;
-name|outb
-argument_list|(
-literal|0x70
-argument_list|,
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* seconds */
-name|sec
-operator|+=
-name|bcd
-argument_list|(
-name|inb
-argument_list|(
-literal|0x71
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* XXX off by one? Need to calculate DST on SUNDAY */
 comment|/* Perhaps we should have the RTC hold GMT time to save */
 comment|/* us the bother of converting. */
@@ -567,6 +511,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|garbage
+end_ifdef
+
 begin_comment
 comment|/*  * Initialze the time of day register, based on the time base which is, e.g.  * from a filesystem.  */
 end_comment
@@ -588,7 +538,7 @@ begin_block
 block|{
 name|outb
 argument_list|(
-literal|0x70
+name|IO_RTC
 argument_list|,
 literal|9
 argument_list|)
@@ -602,14 +552,16 @@ name|bcd
 argument_list|(
 name|inb
 argument_list|(
-literal|0x71
+name|IO_RTC
+operator|+
+literal|1
 argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-literal|0x70
+name|IO_RTC
 argument_list|,
 literal|8
 argument_list|)
@@ -623,14 +575,16 @@ name|bcd
 argument_list|(
 name|inb
 argument_list|(
-literal|0x71
+name|IO_RTC
+operator|+
+literal|1
 argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-literal|0x70
+name|IO_RTC
 argument_list|,
 literal|7
 argument_list|)
@@ -644,14 +598,16 @@ name|bcd
 argument_list|(
 name|inb
 argument_list|(
-literal|0x71
+name|IO_RTC
+operator|+
+literal|1
 argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-literal|0x70
+name|IO_RTC
 argument_list|,
 literal|4
 argument_list|)
@@ -665,14 +621,16 @@ name|bcd
 argument_list|(
 name|inb
 argument_list|(
-literal|0x71
+name|IO_RTC
+operator|+
+literal|1
 argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-literal|0x70
+name|IO_RTC
 argument_list|,
 literal|2
 argument_list|)
@@ -686,14 +644,16 @@ name|bcd
 argument_list|(
 name|inb
 argument_list|(
-literal|0x71
+name|IO_RTC
+operator|+
+literal|1
 argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-literal|0x70
+name|IO_RTC
 argument_list|,
 literal|0
 argument_list|)
@@ -707,7 +667,9 @@ name|bcd
 argument_list|(
 name|inb
 argument_list|(
-literal|0x71
+name|IO_RTC
+operator|+
+literal|1
 argument_list|)
 argument_list|)
 argument_list|)
@@ -720,6 +682,62 @@ name|base
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * retreve a value from realtime clock  */
+end_comment
+
+begin_function
+name|u_char
+name|rtcin
+parameter_list|(
+name|n
+parameter_list|)
+block|{
+name|u_char
+name|val
+decl_stmt|;
+name|outb
+argument_list|(
+name|IO_RTC
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+do|do
+name|val
+operator|=
+name|inb
+argument_list|(
+name|IO_RTC
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+do|while
+condition|(
+name|val
+operator|!=
+name|inb
+argument_list|(
+name|IO_RTC
+operator|+
+literal|1
+argument_list|)
+condition|)
+do|;
+return|return
+operator|(
+name|val
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Restart the clock.  */
