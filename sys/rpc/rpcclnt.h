@@ -99,7 +99,7 @@ parameter_list|(
 name|args
 modifier|...
 parameter_list|)
-value|do{	\ 	if(rpcdebugon != 0){	\ 		printf("%s(): ", __FUNCTION__);\ 		printf(args);	\ 		printf("\n");	\ 	}}while(0)
+value|do{	\ 	if(rpcdebugon != 0){	\ 		printf("%s(): ", __func__);\ 		printf(args);	\ 		printf("\n");	\ 	}}while(0)
 end_define
 
 begin_else
