@@ -34,11 +34,12 @@ begin_comment
 comment|/*  * NOTE:  *		by rvb:  *  1.	The best book on the 82586 is:  *		LAN Components User's Manual by Intel  *	The copy I found was dated 1984.  This really tells you  *	what the state machines are doing  *  2.	In the current design, we only do one write at a time,  *	though the hardware is capable of chaining and possibly  *	even batching.  The problem is that we only make one  *	transmit buffer available in sram space.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"wl.h"
-end_include
+begin_define
+define|#
+directive|define
+name|NWL
+value|4
+end_define
 
 begin_include
 include|#
@@ -195,7 +196,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_wl.h>
+file|<dev/wl/if_wl.h>
 end_include
 
 begin_include
