@@ -2076,9 +2076,7 @@ comment|/* Number of errors the Job module reports */
 name|toBeMade
 operator|=
 name|Lst_Init
-argument_list|(
-name|FALSE
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|examine
 operator|=

@@ -205,7 +205,7 @@ name|LstUnknown
 expr_stmt|;
 block|}
 block|}
-comment|/*      * the only way firstPtr can still point to ln is if ln is the last      * node on the list (the list is circular, so ln->nextptr == ln in      * this case). The list is, therefore, empty and is marked as such      */
+comment|/*      * the only way firstPtr can still point to ln is if ln is the last      * node on the list. The list is, therefore, empty and is marked as such      */
 if|if
 condition|(
 name|list

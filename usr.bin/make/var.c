@@ -7172,9 +7172,7 @@ expr_stmt|;
 name|allVars
 operator|=
 name|Lst_Init
-argument_list|(
-name|FALSE
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function

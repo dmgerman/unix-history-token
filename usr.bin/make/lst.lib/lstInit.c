@@ -49,15 +49,14 @@ file|"lst.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Init --  *	Create and initialize a new list.  *  * Results:  *	The created list.  *  * Arguments:  *	 circ	TRUE if the list should be made circular  *  * Side Effects:  *	A list is created, what else?  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Init --  *	Create and initialize a new list.  *  * Results:  *	The created list.  *  * Side Effects:  *	A list is created, what else?  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|Lst
 name|Lst_Init
 parameter_list|(
-name|Boolean
-name|circ
+name|void
 parameter_list|)
 block|{
 name|Lst
@@ -91,12 +90,6 @@ operator|->
 name|isOpen
 operator|=
 name|FALSE
-expr_stmt|;
-name|nList
-operator|->
-name|isCirc
-operator|=
-name|circ
 expr_stmt|;
 name|nList
 operator|->

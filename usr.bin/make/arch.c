@@ -905,9 +905,7 @@ name|Lst
 name|members
 init|=
 name|Lst_Init
-argument_list|(
-name|FALSE
-argument_list|)
+argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -3970,9 +3968,7 @@ block|{
 name|archives
 operator|=
 name|Lst_Init
-argument_list|(
-name|FALSE
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function

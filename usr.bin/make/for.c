@@ -463,9 +463,7 @@ comment|/* 	 * Make a list with the remaining words 	 */
 name|forLst
 operator|=
 name|Lst_Init
-argument_list|(
-name|FALSE
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|buf
 operator|=

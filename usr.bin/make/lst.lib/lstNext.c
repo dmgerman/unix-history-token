@@ -33,7 +33,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*-  * LstNext.c --  *	Return the next node for a list.  *	The sequential functions access the list in a slightly different way.  *	CurPtr points to their idea of the current node in the list and they  *	access the list based on it. Because the list is circular, Lst_Next  *	and Lst_Prev will go around the list forever. Lst_IsAtEnd must be  *	used to determine when to stop.  */
+comment|/*-  * LstNext.c --  *	Return the next node for a list.  *	The sequential functions access the list in a slightly different way.  *	CurPtr points to their idea of the current node in the list and they  *	access the list based on it. Lst_IsAtEnd must be used to determine  *	when to stop.  */
 end_comment
 
 begin_include
@@ -49,7 +49,7 @@ file|"lst.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Next --  *	Return the next node for the given list.  *  * Results:  *	The next node or NULL if the list has yet to be opened. Also  *	if the list is non-circular and the end has been reached, NULL  *	is returned.  *  * Side Effects:  *	the curPtr field is updated.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Next --  *	Return the next node for the given list.  *  * Results:  *	The next node or NULL if the list has yet to be opened or the end  *	has been reached.  *  * Side Effects:  *	the curPtr field is updated.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -167,16 +167,9 @@ if|if
 condition|(
 name|tln
 operator|==
-name|list
-operator|->
-name|firstPtr
-operator|||
-name|tln
-operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	     * If back at the front, then we've hit the end... 	     */
 name|list
 operator|->
 name|atEnd
@@ -186,7 +179,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	     * Reset to Middle if gone past first. 	     */
 name|list
 operator|->
 name|atEnd

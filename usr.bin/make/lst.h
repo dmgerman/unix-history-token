@@ -134,10 +134,6 @@ name|LstNode
 name|lastPtr
 decl_stmt|;
 comment|/* last node in list */
-name|Boolean
-name|isCirc
-decl_stmt|;
-comment|/* true if the list should be considered 				   * circular */
 comment|/* 	 * fields for sequential access 	 */
 name|LstWhere
 name|atEnd
@@ -271,7 +267,7 @@ begin_function_decl
 name|Lst
 name|Lst_Init
 parameter_list|(
-name|Boolean
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
