@@ -727,18 +727,6 @@ argument|NULL
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|u_long
-name|bootdev
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* not a dev_t - encoding is different */
-end_comment
-
 begin_if
 if|#
 directive|if
