@@ -228,10 +228,11 @@ name|int
 name|type
 parameter_list|)
 block|{
-comment|/* XXX SMP ? */
 return|return
 operator|(
-literal|0
+name|ch
+operator|->
+name|unit
 operator|)
 return|;
 block|}
