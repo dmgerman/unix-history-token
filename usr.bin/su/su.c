@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.12 1996/03/09 14:57:43 markm Exp $"
+literal|"$Id: su.c,v 1.13 1996/03/11 22:14:52 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1376,6 +1376,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+condition|)
 operator|(
 name|void
 operator|)
