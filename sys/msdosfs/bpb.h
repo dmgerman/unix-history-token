@@ -323,6 +323,23 @@ directive|include
 file|<machine/endian.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UNLALIGNED_ACCESS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -331,11 +348,12 @@ name|BYTE_ORDER
 operator|==
 name|LITTLE_ENDIAN
 operator|)
+operator|&&
+name|defined
+argument_list|(
+name|UNALIGNED_ACCESS
+argument_list|)
 end_if
-
-begin_comment
-comment|/*&& defined(UNALIGNED_ACCESS) */
-end_comment
 
 begin_define
 define|#
