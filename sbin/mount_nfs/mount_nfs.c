@@ -731,10 +731,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_short
+name|char
+modifier|*
 name|port_no
 init|=
-literal|0
+literal|"nfs"
 decl_stmt|;
 end_decl_stmt
 
@@ -1634,9 +1635,10 @@ name|altflags
 operator|&
 name|ALTF_PORT
 condition|)
+block|{
 name|port_no
 operator|=
-name|atoi
+name|strdup
 argument_list|(
 name|strstr
 argument_list|(
@@ -1648,6 +1650,20 @@ operator|+
 literal|5
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|port_no
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 name|mountmode
 operator|=
 name|ANY
@@ -3098,7 +3114,7 @@ name|getaddrinfo
 argument_list|(
 name|hostp
 argument_list|,
-literal|"nfs"
+name|port_no
 argument_list|,
 operator|&
 name|hints
@@ -3189,7 +3205,7 @@ name|getaddrinfo
 argument_list|(
 name|hostp
 argument_list|,
-literal|"nfs"
+name|port_no
 argument_list|,
 operator|&
 name|hints
