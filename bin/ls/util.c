@@ -281,6 +281,13 @@ name|s
 operator|+=
 name|clen
 expr_stmt|;
+if|if
+condition|(
+name|iswprint
+argument_list|(
+name|wc
+argument_list|)
+condition|)
 name|n
 operator|+=
 name|wcwidth
