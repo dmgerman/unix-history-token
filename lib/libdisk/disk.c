@@ -118,11 +118,22 @@ directive|include
 file|"libdisk.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|HAVE_GEOM
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -4294,6 +4305,12 @@ name|bad
 label|:
 end_label
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GEOM
+end_ifdef
+
 begin_if
 if|if
 condition|(
@@ -4307,6 +4324,11 @@ name|confxml
 argument_list|)
 expr_stmt|;
 end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|if
