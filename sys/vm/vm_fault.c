@@ -992,7 +992,7 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|unlock_things
+name|unlock_and_deallocate
 argument_list|(
 operator|&
 name|fs
