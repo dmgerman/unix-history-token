@@ -598,7 +598,7 @@ name|usagestr
 index|[]
 init|=
 block|{
-literal|"\ Usage: syscons  -v               (be verbose)\n\                 -s {TIME|off}    (set screensaver timeout to TIME seconds)\n\                 -m {80x25|80x50} (set screen to 25 or 50 lines)\n\                 -r DELAY.REPEAT  (set keyboard delay& repeat rate)\n\                 -k MAPFILE       (load keyboard map file)\n\                 -f SIZE FILE     (load font file of size 8, 14 or 16)\n\                 -t SCRNUM        (switch to specified VT)\n\                 -F NUM STRING    (set function key NUM to send STRING)\n\                 -S SCRNMAP       (load screen map file)\n\ "
+literal|"\ Usage: syscons  -v               (be verbose)\n\                 -s {TIME|off}    (set screensaver timeout to TIME seconds)\n\                 -m {80x25|80x50} (set screen to 25 or 50 lines)\n\                 -r DELAY.REPEAT  (set keyboard delay& repeat rate)\n\                 -r fast		 (set keyboard delay& repeat to fast)\n\                 -r slow		 (set keyboard delay& repeat to slow)\n\                 -r normal	 (set keyboard delay& repeat to normal)\n\                 -k MAPFILE       (load keyboard map file)\n\                 -f SIZE FILE     (load font file of size 8, 14 or 16)\n\                 -t SCRNUM        (switch to specified VT)\n\                 -F NUM STRING    (set function key NUM to send STRING)\n\                 -S SCRNMAP       (load screen map file)\n\ "
 block|}
 decl_stmt|;
 name|fprintf
