@@ -4,7 +4,7 @@ comment|/* vinuminterrupt.c: bottom half of the driver */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinuminterrupt.c,v 1.15 1999/08/14 06:25:52 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinuminterrupt.c,v 1.6 1999/06/18 00:50:53 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -628,7 +628,7 @@ index|[
 name|count
 index|]
 expr_stmt|;
-comment|/* 	 * In a normal read, we will normally read directly 	 * into the user buffer.  This doesn't work if 	 * we're also doing a recovery, so we have to 	 * copy it  	 */
+comment|/* 	 * In a normal read, we will normally read directly 	 * into the user buffer.  This doesn't work if 	 * we're also doing a recovery, so we have to 	 * copy it 	 */
 if|if
 condition|(
 name|rqe
@@ -935,6 +935,12 @@ comment|/* got a lock? */
 name|unlockrange
 argument_list|(
 name|rqg
+operator|->
+name|plexno
+argument_list|,
+name|rqg
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* yes, free it */
@@ -1315,7 +1321,7 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* point to the parity block */
-comment|/*      * If we get to this function, we have normal or      * degraded writes, or a combination of both.  We do      * the same thing in each case: we perform an      * exclusive or to the parity block.  The only      * difference is the origin of the data and the      * address range.       */
+comment|/*      * If we get to this function, we have normal or      * degraded writes, or a combination of both.  We do      * the same thing in each case: we perform an      * exclusive or to the parity block.  The only      * difference is the origin of the data and the      * address range.      */
 if|if
 condition|(
 name|rqe
@@ -1381,7 +1387,7 @@ operator|++
 control|)
 block|{
 comment|/* for all the data blocks */
-comment|/* 	     * This can do with improvement.  If we're doing 	     * both a degraded and a normal write, we don't 	     * need to xor (nor to read) the part of the block 	     * that we're going to overwrite.  FIXME XXX  	     */
+comment|/* 	     * This can do with improvement.  If we're doing 	     * both a degraded and a normal write, we don't 	     * need to xor (nor to read) the part of the block 	     * that we're going to overwrite.  FIXME XXX 	     */
 name|rqe
 operator|=
 operator|&
@@ -1429,7 +1435,7 @@ literal|2
 operator|)
 expr_stmt|;
 comment|/* and count involved */
-comment|/* 	     * add the data block to the parity block.  Before 	     * we started the request, we zeroed the parity 	     * block, so the result of adding all the other 	     * blocks and the block we want to write will be 	     * the correct parity block.   	     */
+comment|/* 	     * add the data block to the parity block.  Before 	     * we started the request, we zeroed the parity 	     * block, so the result of adding all the other 	     * blocks and the block we want to write will be 	     * the correct parity block. 	     */
 for|for
 control|(
 name|count
@@ -1631,7 +1637,7 @@ literal|2
 operator|)
 expr_stmt|;
 comment|/* and count involved */
-comment|/* 		 * "remove" the old data block 		 * from the parity block  		 */
+comment|/* 		 * "remove" the old data block 		 * from the parity block 		 */
 if|if
 condition|(
 operator|(

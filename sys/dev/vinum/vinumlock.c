@@ -937,10 +937,13 @@ begin_function
 name|void
 name|unlockrange
 parameter_list|(
+name|int
+name|plexno
+parameter_list|,
 name|struct
-name|rqgroup
+name|rangelock
 modifier|*
-name|rqg
+name|lock
 parameter_list|)
 block|{
 name|daddr_t
@@ -963,12 +966,8 @@ operator|(
 expr|union
 name|rqinfou
 operator|)
-name|rqg
-operator|->
 name|lock
 argument_list|,
-name|rqg
-operator|->
 name|lock
 operator|->
 name|bp
@@ -978,14 +977,10 @@ endif|#
 directive|endif
 name|lockaddr
 operator|=
-name|rqg
-operator|->
 name|lock
 operator|->
 name|stripe
 expr_stmt|;
-name|rqg
-operator|->
 name|lock
 operator|->
 name|stripe
@@ -995,8 +990,6 @@ expr_stmt|;
 comment|/* no longer used */
 name|PLEX
 index|[
-name|rqg
-operator|->
 name|plexno
 index|]
 operator|.
