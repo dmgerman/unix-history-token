@@ -830,10 +830,6 @@ block|{
 name|u_int32_t
 name|ret
 block|;
-name|ret
-operator|=
-literal|0
-block|;
 asm|__asm __volatile (
 literal|"1:\tlwarx %0, 0, %3\n\t"
 comment|/* load old value */
@@ -849,6 +845,7 @@ literal|"bne- 1b\n\t"
 comment|/* spin if failed */
 literal|"eieio\n"
 comment|/* memory barrier */
+literal|"sync\n"
 literal|"2:\t\n"
 operator|:
 literal|"=&r"
