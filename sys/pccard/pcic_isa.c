@@ -143,6 +143,13 @@ block|}
 block|,
 comment|/* SCM0469 */
 block|{
+name|PCIC_NEC_PC9801_102
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8091 */
+block|{
 literal|0
 block|}
 block|}

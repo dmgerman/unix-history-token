@@ -1843,5 +1843,20 @@ begin_comment
 comment|/* SMC0469 */
 end_comment
 
+begin_comment
+comment|/* C-Bus PnP Definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_NEC_PC9801_102
+value|0x9180a3b8
+end_define
+
+begin_comment
+comment|/* NEC8091 PC-9801-102 */
+end_comment
+
 end_unit
 
