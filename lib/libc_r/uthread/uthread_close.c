@@ -65,9 +65,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|struct
 name|stat
 name|sb
@@ -77,6 +74,9 @@ name|fd_table_entry
 modifier|*
 name|entry
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -236,6 +236,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ret

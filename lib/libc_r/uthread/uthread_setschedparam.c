@@ -43,6 +43,7 @@ parameter_list|,
 name|int
 name|policy
 parameter_list|,
+specifier|const
 name|struct
 name|sched_param
 modifier|*

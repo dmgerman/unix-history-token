@@ -69,6 +69,9 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Lock the file descriptor: */
 if|if
 condition|(
@@ -370,6 +373,9 @@ name|FD_RDWR
 argument_list|)
 expr_stmt|;
 block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Return the completion status: */
 return|return
 operator|(

@@ -24,6 +24,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -305,6 +317,40 @@ directive|endif
 block|}
 end_function
 
+begin_comment
+comment|/*  * Only called when a thread is cancelled.  It may be more useful  * to call it from pthread_exit() if other ways of asynchronous or  * abnormal thread termination can be found.  */
+end_comment
+
+begin_function
+name|void
+name|_thread_exit_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * POSIX states that cancellation/termination of a thread should 	 * not release any visible resources (such as mutexes) and that 	 * it is the applications responsibility.  Resources that are 	 * internal to the threads library, including file and fd locks, 	 * are not visible to the application and need to be released. 	 */
+comment|/* Unlock all owned fd locks: */
+name|_thread_fd_unlock_owned
+argument_list|(
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* Unlock all owned file locks: */
+name|_funlock_owned
+argument_list|(
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* Unlock all private mutexes: */
+name|_mutex_unlock_private
+argument_list|(
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* 	 * This still isn't quite correct because we don't account 	 * for held spinlocks (see libc/stdlib/malloc.c). 	 */
+block|}
+end_function
+
 begin_function
 name|void
 name|pthread_exit
@@ -314,12 +360,6 @@ modifier|*
 name|status
 parameter_list|)
 block|{
-name|int
-name|sig
-decl_stmt|;
-name|long
-name|l
-decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
@@ -346,6 +386,11 @@ decl_stmt|;
 name|snprintf
 argument_list|(
 name|msg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msg
+argument_list|)
 argument_list|,
 literal|"Thread %p has called pthread_exit() from a destructor. POSIX 1003.1 1996 s16.2.5.2 does not allow this!"
 argument_list|,
@@ -427,7 +472,7 @@ name|_thread_cleanupspecific
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Free thread-specific poll_data structure, if allocated */
+comment|/* Free thread-specific poll_data structure, if allocated: */
 if|if
 condition|(
 name|_thread_run

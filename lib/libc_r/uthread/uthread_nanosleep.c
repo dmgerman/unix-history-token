@@ -70,6 +70,9 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Check if the time to sleep is legal: */
 if|if
 condition|(
@@ -371,6 +374,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ret

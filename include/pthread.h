@@ -216,6 +216,45 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * Flags for cancelling threads  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CANCEL_ENABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CANCEL_DISABLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CANCEL_DEFERRED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CANCEL_ASYNCHRONOUS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CANCELED
+value|((void *) 1)
+end_define
+
+begin_comment
 comment|/*  * Forward structure definitions.  *  * These are mostly opaque to the user.  */
 end_comment
 
@@ -1429,6 +1468,48 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|pthread_cancel
+name|__P
+argument_list|(
+operator|(
+name|pthread_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pthread_setcancelstate
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pthread_setcanceltype
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|pthread_testcancel
 name|__P
 argument_list|(
@@ -1672,6 +1753,7 @@ name|pthread_attr_getinheritsched
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -1688,6 +1770,7 @@ name|pthread_attr_getschedparam
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -1705,6 +1788,7 @@ name|pthread_attr_getschedpolicy
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -1721,6 +1805,7 @@ name|pthread_attr_getscope
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -1755,6 +1840,7 @@ operator|(
 name|pthread_attr_t
 operator|*
 operator|,
+specifier|const
 expr|struct
 name|sched_param
 operator|*
@@ -1827,6 +1913,7 @@ operator|,
 name|int
 name|policy
 operator|,
+specifier|const
 expr|struct
 name|sched_param
 operator|*

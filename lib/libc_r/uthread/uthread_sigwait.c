@@ -64,6 +64,9 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Specify the thread kernel signal handler. 	 */
 name|act
 operator|.
@@ -206,6 +209,9 @@ operator|*
 name|sig
 operator|=
 name|i
+expr_stmt|;
+name|_thread_leave_cancellation_point
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -384,6 +390,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Return the completion status: */
 return|return
 operator|(
