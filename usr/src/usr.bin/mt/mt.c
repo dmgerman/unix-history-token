@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mt.c	5.1 (Berkeley) %G%"
+literal|"@(#)mt.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -659,6 +659,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|tahoe
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<tahoevba/cyreg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|tape_desc
@@ -763,6 +780,21 @@ block|,
 name|ARCH_CTRL_BITS
 block|,
 name|ARCH_BITS
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|tahoe
+block|{
+name|MT_ISCY
+block|,
+literal|"cipher"
+block|,
+name|CYS_BITS
+block|,
+name|CYCW_BITS
 block|}
 block|,
 endif|#
