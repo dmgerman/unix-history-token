@@ -591,7 +591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check if we have anything open.  If so, return 0 (not inactive),  * otherwise 1 (inactive) */
+comment|/*  * Check if we have anything open.  If so, return 0 (not inactive),  * otherwise 1 (inactive)   */
 end_comment
 
 begin_function
@@ -659,7 +659,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Free all structures.  * If cleardrive is 0, save the configuration; otherwise  * remove the configuration from the drive.  *  * Before coming here, ensure that no volumes are open.  */
+comment|/*  * Free all structures.  * If cleardrive is 0, save the configuration; otherwise  * remove the configuration from the drive.  *  * Before coming here, ensure that no volumes are open.  */
 end_comment
 
 begin_function
@@ -1202,7 +1202,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_comment
-comment|/* Open a vinum object  * At the moment, we only open volumes and the  * super device.  It's a nice concept to be  * able to open drives, subdisks and plexes, but  * I can't think what good it could be */
+comment|/*  * Open a vinum object  * At the moment, we only open volumes and the  * super device.  It's a nice concept to be  * able to open drives, subdisks and plexes, but  * I can't think what good it could be   */
 end_comment
 
 begin_function
@@ -1527,7 +1527,7 @@ index|[
 name|index
 index|]
 expr_stmt|;
-comment|/* Opening a subdisk is always a special operation, so we  	 * ignore the state as long as it represents a real subdisk */
+comment|/* 	 * Opening a subdisk is always a special operation, so we  	 * ignore the state as long as it represents a real subdisk  	 */
 switch|switch
 condition|(
 name|sd
@@ -1608,18 +1608,28 @@ comment|/* don't know what to do with these */
 case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
-if|if
-condition|(
+name|error
+operator|=
+name|suser
+argument_list|(
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+operator|&
+name|p
 operator|->
-name|cr_uid
+name|p_acflag
+argument_list|)
+expr_stmt|;
+comment|/* are we root? */
+if|if
+condition|(
+name|error
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* root calling, */
+comment|/* yes, can do */
 name|vinum_conf
 operator|.
 name|opencount
@@ -1628,15 +1638,8 @@ literal|1
 expr_stmt|;
 comment|/* we're open */
 return|return
-literal|0
+name|error
 return|;
-comment|/* no worries opening super dev */
-block|}
-else|else
-return|return
-name|EPERM
-return|;
-comment|/* you can't do that! */
 block|}
 block|}
 end_function
@@ -1908,17 +1911,7 @@ return|;
 case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
-if|if
-condition|(
-name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-operator|==
-literal|0
-condition|)
-comment|/* root calling, */
+comment|/* 	 * don't worry about whether we're root: 	 * nobody else would get this far. 	 */
 name|vinum_conf
 operator|.
 name|opencount
