@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyboard.c	1.3 (Lucasfilm) %G%"
+literal|"@(#)keyboard.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,10 +372,9 @@ argument_list|(
 name|ch
 argument_list|)
 operator|||
-name|isspace
-argument_list|(
 name|ch
-argument_list|)
+operator|==
+literal|' '
 condition|)
 block|{
 name|line
