@@ -19,6 +19,12 @@ directive|include
 file|<sgtty.h>
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|CEOF
+end_undef
+
 begin_include
 include|#
 directive|include
