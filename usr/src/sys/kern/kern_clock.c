@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.38	82/09/06	*/
+comment|/*	kern_clock.c	4.39	82/09/08	*/
 end_comment
 
 begin_include
@@ -243,15 +243,19 @@ name|p1
 operator|->
 name|c_next
 control|)
-empty_stmt|;
+operator|--
+name|p1
+operator|->
+name|c_time
+expr_stmt|;
 if|if
 condition|(
 name|p1
 condition|)
+operator|--
 name|p1
 operator|->
 name|c_time
-operator|--
 expr_stmt|;
 comment|/* charge process for resource usage... statistically! */
 if|if
@@ -885,6 +889,12 @@ name|p1
 operator|->
 name|c_func
 expr_stmt|;
+name|a
+operator|=
+name|p1
+operator|->
+name|c_time
+expr_stmt|;
 name|p1
 operator|->
 name|c_next
@@ -909,6 +919,8 @@ name|func
 call|)
 argument_list|(
 name|arg
+argument_list|,
+name|a
 argument_list|)
 expr_stmt|;
 block|}
@@ -1146,12 +1158,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
 begin_comment
 comment|/*  * untimeout is called to remove a function timeout call  * from the callout structure.  */
 end_comment
@@ -1243,6 +1249,12 @@ condition|(
 name|p2
 operator|->
 name|c_next
+operator|&&
+name|p2
+operator|->
+name|c_time
+operator|>
+literal|0
 condition|)
 name|p2
 operator|->
@@ -1283,10 +1295,79 @@ expr_stmt|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|hzto
+argument_list|(
+argument|tv
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|timeval
+modifier|*
+name|tv
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|ticks
+decl_stmt|;
+name|int
+name|s
+init|=
+name|spl7
+argument_list|()
+decl_stmt|;
+name|ticks
+operator|=
+operator|(
+operator|(
+name|tv
+operator|->
+name|tv_sec
+operator|-
+name|time
+operator|.
+name|tv_sec
+operator|)
+operator|*
+literal|1000
+operator|+
+operator|(
+name|tv
+operator|->
+name|tv_usec
+operator|-
+name|time
+operator|.
+name|tv_usec
+operator|)
+operator|/
+literal|1000
+operator|)
+operator|/
+operator|(
+name|tick
+operator|/
+literal|1000
+operator|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ticks
+operator|)
+return|;
+block|}
+end_block
 
 end_unit
 
