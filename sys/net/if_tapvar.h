@@ -60,6 +60,10 @@ define|#
 directive|define
 name|TAP_READY
 value|(TAP_OPEN|TAP_INITED)
+define|#
+directive|define
+name|TAP_VMNET
+value|(1<< 4)
 name|pid_t
 name|tap_pid
 decl_stmt|;
