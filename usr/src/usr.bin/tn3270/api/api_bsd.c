@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)api_bsd.c	8.1 (Berkeley) %G%"
+literal|"@(#)api_bsd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,22 +155,6 @@ modifier|*
 name|getenv
 parameter_list|()
 function_decl|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|htons
-argument_list|)
-specifier|extern
-name|unsigned
-name|short
-name|htons
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-comment|/* !defined(htons) */
 name|char
 name|thehostname
 index|[
