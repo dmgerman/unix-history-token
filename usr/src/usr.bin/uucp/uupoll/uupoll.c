@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uupoll.c	5.4 (Berkeley) %G%"
+literal|"@(#)uupoll.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,13 @@ name|int
 name|TransferSucceeded
 init|=
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timeb
+name|Now
 decl_stmt|;
 end_decl_stmt
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuq.c	4.5 (Berkeley) %G%"
+literal|"@(#)uuq.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +322,13 @@ name|int
 name|Maxulen
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timeb
+name|Now
 decl_stmt|;
 end_decl_stmt
 
