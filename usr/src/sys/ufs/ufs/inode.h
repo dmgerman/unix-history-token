@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inode.h	6.3	84/06/27	*/
+comment|/*	inode.h	6.4	84/07/20	*/
 end_comment
 
 begin_comment
@@ -464,6 +464,21 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * Invalidate an inode. Used by the namei cache to detect stale  * information. At an absurd rate of 100 calls/second, the inode  * table invalidation should only occur once every 16 months.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cacheinval
+parameter_list|(
+name|ip
+parameter_list|)
+define|\
+value|{ \ 	struct inode *xp; \ 	(ip)->i_id = ++nextinodeid; \ 	if (nextinodeid == 0) \ 		for (nextinodeid = 0, xp = inode; xp< inodeNINODE; xp++) \ 			xp->i_id = 0; \ }
+end_define
 
 begin_decl_stmt
 name|struct
