@@ -572,6 +572,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"serial number         %.20s\n"
+argument_list|,
+name|parm
+operator|->
+name|serial
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"firmware revision     %.8s\n"
 argument_list|,
 name|parm
