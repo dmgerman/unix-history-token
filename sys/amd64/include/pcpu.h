@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_GLOBALDATA_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -67,6 +73,13 @@ name|proc
 modifier|*
 name|gd_curproc
 decl_stmt|;
+comment|/* current process */
+name|struct
+name|proc
+modifier|*
+name|gd_idleproc
+decl_stmt|;
+comment|/* idle process */
 name|struct
 name|proc
 modifier|*
@@ -77,11 +90,7 @@ name|pcb
 modifier|*
 name|gd_curpcb
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|gd_idleproc
-decl_stmt|;
+comment|/* current pcb */
 name|struct
 name|timeval
 name|gd_switchtime
@@ -108,9 +117,11 @@ decl_stmt|;
 name|u_int
 name|gd_cpuid
 decl_stmt|;
+comment|/* this cpu number */
 name|u_int
 name|gd_other_cpus
 decl_stmt|;
+comment|/* all other cpus */
 name|SLIST_ENTRY
 argument_list|(
 argument|globaldata
@@ -125,13 +136,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR_PERCPU
-ifdef|#
-directive|ifdef
-name|KTR
 specifier|volatile
 name|int
 name|gd_ktr_idx
 decl_stmt|;
+comment|/* Index into trace table */
 name|char
 modifier|*
 name|gd_ktr_buf
@@ -142,8 +151,6 @@ index|[
 name|KTR_SIZE
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
@@ -208,6 +215,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
