@@ -28,18 +28,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/selinfo.h>
 end_include
 
@@ -58,31 +46,8 @@ name|so_gen_t
 typedef|;
 end_typedef
 
-begin_struct_decl
-struct_decl|struct
-name|socket
-struct_decl|;
-end_struct_decl
-
-begin_typedef
-typedef|typedef
-name|void
-name|so_upcall_t
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_comment
-comment|/*  * List of locks:  * (c)	const, inited in either socreate() or sonewconn()  * (m)	sb_mtx mutex  * (mh)	the mutex of so_head  * (mr)	so_rcv.sb_mtx mutex  * (sg)	sigio_lock mutex  *  * Members marked by brackets are not locked yet.  */
+comment|/*  * List of locks:  * (c)	const, inited in either socreate() or sonewconn()  * (m)	sb_mtx mutex  * (mr)	so_rcv.sb_mtx mutex  * (sg)	sigio_lock sx  * (sh)	sohead_lock sx  *  * Lock of so_rcv.sb_mtx can duplicate, provided that sohead_lock  * is exclusively locked.  *  * Brackets mean that this data is not protected yet.  */
 end_comment
 
 begin_struct
@@ -92,40 +57,40 @@ block|{
 name|int
 name|so_count
 decl_stmt|;
-comment|/* (mr)	reference count */
+comment|/* reference count */
 name|short
 name|so_type
 decl_stmt|;
-comment|/* (c)	generic type, see socket.h */
+comment|/* generic type, see socket.h */
 name|short
 name|so_options
 decl_stmt|;
-comment|/* (mr)	from socket call, see socket.h */
+comment|/* from socket call, see socket.h */
 name|short
 name|so_linger
 decl_stmt|;
-comment|/* (mr)	time to linger while closing */
+comment|/* time to linger while closing */
 name|short
 name|so_state
 decl_stmt|;
-comment|/* (mr)	internal state flags SS_*, below */
+comment|/* internal state flags SS_*, below */
 name|caddr_t
 name|so_pcb
 decl_stmt|;
-comment|/* [mr]	protocol control block */
+comment|/* protocol control block */
 name|struct
 name|protosw
 modifier|*
 name|so_proto
 decl_stmt|;
-comment|/* (c)	protocol handle */
+comment|/* protocol handle */
 comment|/*  * Variables for connection queuing.  * Socket where accepts occur is so_head in all subsidiary sockets.  * If so_head is 0, socket is not related to an accept.  * For head socket so_incomp queues partially completed connections,  * while so_comp is a queue of connections ready to be accepted.  * If a connection is aborted and it has so_head set, then  * it has to be pulled out of either so_incomp or so_comp.  * We allow connections to queue up based on current queue lengths  * and limit on number of queued connections for this socket.  */
 name|struct
 name|socket
 modifier|*
 name|so_head
 decl_stmt|;
-comment|/* [mr]	back pointer to accept socket */
+comment|/* back pointer to accept socket */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -133,7 +98,7 @@ argument|socket
 argument_list|)
 name|so_incomp
 expr_stmt|;
-comment|/* [mr]	queue of partial unaccepted connections */
+comment|/* queue of partial unaccepted connections */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -141,44 +106,44 @@ argument|socket
 argument_list|)
 name|so_comp
 expr_stmt|;
-comment|/* [mr]	queue of complete unaccepted connections */
+comment|/* queue of complete unaccepted connections */
 name|TAILQ_ENTRY
 argument_list|(
 argument|socket
 argument_list|)
 name|so_list
 expr_stmt|;
-comment|/* [mh]	list of unaccepted connections */
+comment|/* list of unaccepted connections */
 name|short
 name|so_qlen
 decl_stmt|;
-comment|/* [mr]	number of unaccepted connections */
+comment|/* number of unaccepted connections */
 name|short
 name|so_incqlen
 decl_stmt|;
-comment|/* [mr]	number of unaccepted incomplete 					   connections */
+comment|/* number of unaccepted incomplete 					   connections */
 name|short
 name|so_qlimit
 decl_stmt|;
-comment|/* [mr]	max number queued connections */
+comment|/* max number queued connections */
 name|short
 name|so_timeo
 decl_stmt|;
-comment|/* [mr]	connection timeout */
+comment|/* connection timeout */
 name|u_short
 name|so_error
 decl_stmt|;
-comment|/* [mr]	error affecting connection */
+comment|/* error affecting connection */
 name|struct
 name|sigio
 modifier|*
 name|so_sigio
 decl_stmt|;
-comment|/* (sg)	information for async I/O or 					   out of band data (SIGURG) */
+comment|/* [sg] information for async I/O or 					   out of band data (SIGURG) */
 name|u_long
 name|so_oobmark
 decl_stmt|;
-comment|/* [mr]	chars to oob mark */
+comment|/* chars to oob mark */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -186,63 +151,50 @@ argument|aiocblist
 argument_list|)
 name|so_aiojobq
 expr_stmt|;
-comment|/* [mr]	AIO ops waiting on socket */
+comment|/* AIO ops waiting on socket */
 comment|/*  * Variables for socket buffering.  */
 struct|struct
 name|sockbuf
 block|{
-define|#
-directive|define
-name|sb_startzero
-value|sb_cc
 name|u_long
 name|sb_cc
 decl_stmt|;
-comment|/* [m]	actual chars in buffer */
+comment|/* actual chars in buffer */
 name|u_long
 name|sb_hiwat
 decl_stmt|;
-comment|/* [m]	max actual char count */
+comment|/* max actual char count */
 name|u_long
 name|sb_mbcnt
 decl_stmt|;
-comment|/* [m]	chars of mbufs used */
+comment|/* chars of mbufs used */
 name|u_long
 name|sb_mbmax
 decl_stmt|;
-comment|/* [m]	max chars of mbufs to use */
+comment|/* max chars of mbufs to use */
 name|long
 name|sb_lowat
 decl_stmt|;
-comment|/* [m]	low water mark */
+comment|/* low water mark */
 name|struct
 name|mbuf
 modifier|*
 name|sb_mb
 decl_stmt|;
-comment|/* [m]	the mbuf chain */
+comment|/* the mbuf chain */
 name|struct
 name|selinfo
 name|sb_sel
 decl_stmt|;
-comment|/* [m]	process selecting read/write */
+comment|/* process selecting read/write */
 name|short
 name|sb_flags
 decl_stmt|;
-comment|/* [m]	flags, see below */
+comment|/* flags, see below */
 name|short
 name|sb_timeo
 decl_stmt|;
-comment|/* [m]	timeout for read/write */
-define|#
-directive|define
-name|sb_endzero
-value|sb_timeo
-name|struct
-name|mtx
-name|sb_mtx
-decl_stmt|;
-comment|/* mutex of this socket buffer */
+comment|/* timeout for read/write */
 block|}
 name|so_rcv
 struct|,
@@ -298,32 +250,42 @@ directive|define
 name|SB_KNOTE
 value|0x100
 comment|/* kernel note attached */
-name|so_upcall_t
+name|void
+function_decl|(
 modifier|*
 name|so_upcall
-decl_stmt|;
-comment|/* [mr] */
+function_decl|)
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 name|void
 modifier|*
 name|so_upcallarg
 decl_stmt|;
-comment|/* [mr] */
 name|struct
 name|ucred
 modifier|*
 name|so_cred
 decl_stmt|;
-comment|/* (c)	user credentials */
+comment|/* user credentials */
 comment|/* NB: generation count must not be first; easiest to make it last. */
 name|so_gen_t
 name|so_gencnt
 decl_stmt|;
-comment|/* [mr]	generation count */
+comment|/* generation count */
 name|void
 modifier|*
 name|so_emuldata
 decl_stmt|;
-comment|/* [mr]	private data for emulators */
+comment|/* private data for emulators */
 struct|struct
 name|so_accf
 block|{
@@ -332,143 +294,23 @@ name|accept_filter
 modifier|*
 name|so_accept_filter
 decl_stmt|;
-comment|/* [mr] */
 name|void
 modifier|*
 name|so_accept_filter_arg
 decl_stmt|;
-comment|/* [mr]	saved filter args */
+comment|/* saved filter args */
 name|char
 modifier|*
 name|so_accept_filter_str
 decl_stmt|;
-comment|/* [mr]	saved user args */
+comment|/* saved user args */
 block|}
 modifier|*
 name|so_accf
 struct|;
-comment|/* [mr] */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Macros to lock a socket.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SOCKBUF_LOCK
-parameter_list|(
-name|sb
-parameter_list|)
-value|mtx_lock(&(sb)->sb_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCKBUF_TRYLOCK
-parameter_list|(
-name|sb
-parameter_list|)
-value|mtx_trylock(&(sb)->sb_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCKBUF_UNLOCK
-parameter_list|(
-name|sb
-parameter_list|)
-value|mtx_unlock(&(sb)->sb_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCKBUF_LOCKED
-parameter_list|(
-name|sb
-parameter_list|)
-value|mtx_owned(&(sb)->sb_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCKBUF_ASSERT
-parameter_list|(
-name|sb
-parameter_list|,
-name|type
-parameter_list|)
-value|mtx_assert(&(sb)->sb_mtx, type)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCK_MTX
-parameter_list|(
-name|so
-parameter_list|)
-value|(&(so)->so_rcv.sb_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCK_LOCK
-parameter_list|(
-name|so
-parameter_list|)
-value|SOCKBUF_LOCK(&(so)->so_rcv)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCK_TRYLOCK
-parameter_list|(
-name|so
-parameter_list|)
-value|SOCKBUF_TRYLOCK(&(so)->so_rcv)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCK_UNLOCK
-parameter_list|(
-name|so
-parameter_list|)
-value|SOCKBUF_UNLOCK(&(so)->so_rcv)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCK_LOCKED
-parameter_list|(
-name|so
-parameter_list|)
-value|SOCKBUF_LOCKED(&(so)->so_rcv)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCK_ASSERT
-parameter_list|(
-name|so
-parameter_list|,
-name|type
-parameter_list|)
-value|SOCKBUF_ASSERT(&(so)->so_rcv, type)
-end_define
 
 begin_comment
 comment|/*  * Socket state bits.  */
@@ -866,7 +708,7 @@ name|soref
 parameter_list|(
 name|so
 parameter_list|)
-value|do {					\ 				SOCK_ASSERT(so, MA_OWNED);	\ 				++(so)->so_count;		\ 			} while (0)
+value|do {			\ 				++(so)->so_count; \ 			} while (0)
 end_define
 
 begin_define
@@ -876,7 +718,7 @@ name|sorele
 parameter_list|(
 name|so
 parameter_list|)
-value|do {					\ 				SOCK_ASSERT(so, MA_OWNED);	\ 				if ((so)->so_count<= 0)	\ 					panic("sorele");	\ 				if (--(so)->so_count == 0)	\ 					sofree(so);		\ 				else				\ 					SOCK_UNLOCK(so);	\ 			} while (0)
+value|do {				\ 				if ((so)->so_count<= 0)	\ 					panic("sorele");\ 				if (--(so)->so_count == 0)\ 					sofree(so);	\ 			} while (0)
 end_define
 
 begin_define
@@ -886,7 +728,17 @@ name|sotryfree
 parameter_list|(
 name|so
 parameter_list|)
-value|do {					\ 				SOCK_ASSERT(so, MA_OWNED);	\ 				if ((so)->so_count == 0)	\ 					sofree(so);		\ 				else				\ 					SOCK_UNLOCK(so);	\ 			} while(0)
+value|do {				\ 				if ((so)->so_count == 0)	\ 					sofree(so);	\ 			} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sorwakeup_locked
+parameter_list|(
+name|so
+parameter_list|)
+value|do {					\ 					if (sb_notify(&(so)->so_rcv))	\ 						sowakeup((so),&(so)->so_rcv); \ 				} while (0)
 end_define
 
 begin_define
@@ -896,7 +748,17 @@ name|sorwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 				SOCK_ASSERT(so, MA_OWNED);		\ 				if (sb_notify(&(so)->so_rcv))		\ 					sowakeup((so),&(so)->so_rcv);	\ 			} while (0)
+value|do {					\ 					sorwakeup_locked(so);		\ 				} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sowwakeup_locked
+parameter_list|(
+name|so
+parameter_list|)
+value|do {					\ 					if (sb_notify(&(so)->so_snd))	\ 						sowakeup((so),&(so)->so_snd); \ 				} while (0)
 end_define
 
 begin_define
@@ -906,7 +768,7 @@ name|sowwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 				SOCK_ASSERT(so, MA_OWNED);		\ 				if (sb_notify(&(so)->so_snd))		\ 					sowakeup((so),&(so)->so_snd);	\ 			} while (0)
+value|do {					\ 					sowwakeup_locked(so);		\ 				} while (0)
 end_define
 
 begin_ifdef
@@ -1896,6 +1758,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|soisconnected_locked
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sofree
 parameter_list|(
 name|struct
@@ -1962,6 +1836,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|soisdisconnected
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|soisdisconnected_locked
 parameter_list|(
 name|struct
 name|socket

@@ -5409,17 +5409,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|SOCK_LOCK
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|sorwakeup
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|SOCK_UNLOCK
 argument_list|(
 name|s
 argument_list|)

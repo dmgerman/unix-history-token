@@ -375,11 +375,6 @@ block|{
 case|case
 name|FIONBIO
 case|:
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -402,11 +397,6 @@ name|so_state
 operator|&=
 operator|~
 name|SS_NBIO
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -416,11 +406,6 @@ return|;
 case|case
 name|FIOASYNC
 case|:
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -482,11 +467,6 @@ operator|~
 name|SB_ASYNC
 expr_stmt|;
 block|}
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -606,11 +586,6 @@ return|;
 case|case
 name|SIOCATMARK
 case|:
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 operator|*
 operator|(
 name|int
@@ -627,11 +602,6 @@ name|SS_RCVATMARK
 operator|)
 operator|!=
 literal|0
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -837,11 +807,6 @@ operator|=
 name|S_IFSOCK
 expr_stmt|;
 comment|/* 	 * If SS_CANTRCVMORE is set, but there's still data left in the 	 * receive buffer, the socket is still readable. 	 */
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -893,11 +858,6 @@ operator||
 name|S_IWGRP
 operator||
 name|S_IWOTH
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
 expr_stmt|;
 name|ub
 operator|->

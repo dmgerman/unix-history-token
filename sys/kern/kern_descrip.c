@@ -8193,19 +8193,7 @@ name|fp
 operator|->
 name|f_flag
 expr_stmt|;
-name|SOCK_LOCK
-argument_list|(
-operator|*
-name|spp
-argument_list|)
-expr_stmt|;
 name|soref
-argument_list|(
-operator|*
-name|spp
-argument_list|)
-expr_stmt|;
-name|SOCK_UNLOCK
 argument_list|(
 operator|*
 name|spp
@@ -8230,7 +8218,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drop the reference count on the the socket and release the lock.  * The last reference closes the socket.  The socket must be unlocked.  */
+comment|/*  * Drop the reference count on the the socket and XXX release the SX lock in  * the future.  The last reference closes the socket.  */
 end_comment
 
 begin_function
@@ -8243,11 +8231,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|sorele
 argument_list|(
 name|so

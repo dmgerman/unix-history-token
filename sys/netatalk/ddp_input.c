@@ -1779,21 +1779,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*      * And wake up whatever might be waiting for it      */
-name|SOCK_LOCK
-argument_list|(
-name|ddp
-operator|->
-name|ddp_socket
-argument_list|)
-expr_stmt|;
 name|sorwakeup
-argument_list|(
-name|ddp
-operator|->
-name|ddp_socket
-argument_list|)
-expr_stmt|;
-name|SOCK_UNLOCK
 argument_list|(
 name|ddp
 operator|->

@@ -600,12 +600,7 @@ operator|.
 name|any_count
 operator|++
 expr_stmt|;
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|soisconnected
+name|soisconnected_locked
 argument_list|(
 name|so
 argument_list|)
@@ -615,11 +610,6 @@ operator|->
 name|so_options
 operator||=
 name|SO_USELOOPBACK
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -2418,11 +2408,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Check to see if we don't want our own messages. 	 */
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2436,11 +2421,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|route_cb
@@ -2479,12 +2459,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rtm

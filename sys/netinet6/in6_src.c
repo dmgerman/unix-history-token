@@ -1103,11 +1103,6 @@ name|inp
 operator|->
 name|inp_pcbinfo
 decl_stmt|;
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 comment|/* XXX: this is redundant when called from in6_pcbbind */
 if|if
 condition|(
@@ -1128,11 +1123,6 @@ condition|)
 name|wild
 operator|=
 name|INPLOOKUP_WILDCARD
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
 expr_stmt|;
 name|inp
 operator|->

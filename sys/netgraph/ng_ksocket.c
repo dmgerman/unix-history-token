@@ -2339,19 +2339,7 @@ name|ERROUT
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|do {				\ 		error = (x);		\ 		goto done;		\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERROUT_SOCK
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|do {				\ 		error = (x);		\ 		SOCK_UNLOCK(so);	\ 		goto done;		\ 	} while (0)
+value|do { error = (x); goto done; } while (0)
 end_define
 
 begin_comment
@@ -2828,13 +2816,6 @@ name|sb_flags
 operator||=
 name|SB_UPCALL
 expr_stmt|;
-name|SOCK_LOCK
-argument_list|(
-name|priv
-operator|->
-name|so
-argument_list|)
-expr_stmt|;
 name|priv
 operator|->
 name|so
@@ -2842,13 +2823,6 @@ operator|->
 name|so_state
 operator||=
 name|SS_NBIO
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|priv
-operator|->
-name|so
-argument_list|)
 expr_stmt|;
 comment|/* 	 * --Original comment-- 	 * On a cloned socket we may have already received one or more 	 * upcalls which we couldn't handle without a hook.  Handle 	 * those now. 	 * We cannot call the upcall function directly 	 * from here, because until this function has returned our 	 * hook isn't connected. 	 * 	 * ---meta comment for -current --- 	 * XXX This is dubius. 	 * Upcalls between the time that the hook was 	 * first created and now (on another processesor) will 	 * be earlier on the queue than the request to finalise the hook. 	 * By the time the hook is finalised, 	 * The queued upcalls will have happenned and the code 	 * will have discarded them because of a lack of a hook. 	 * (socket not open). 	 * 	 * This is a bad byproduct of the complicated way in which hooks 	 * are now created (3 daisy chained async events). 	 * 	 * Since we are a netgraph operation  	 * We know that we hold a lock on this node. This forces the 	 * request we make below to be queued rather than implemented 	 * immediatly which will cause the upcall function to be called a bit 	 * later. 	 * However, as we will run any waiting queued operations immediatly 	 * after doing this one, if we have not finalised the other end 	 * of the hook, those queued operations will fail. 	 */
 if|if
@@ -3141,11 +3115,6 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 comment|/* Make sure the socket is capable of accepting */
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3157,14 +3126,9 @@ operator|&
 name|SO_ACCEPTCONN
 operator|)
 condition|)
-name|ERROUT_SOCK
+name|ERROUT
 argument_list|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
 argument_list|)
 expr_stmt|;
 if|if
@@ -3298,11 +3262,6 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 comment|/* Do connect */
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3315,14 +3274,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|ERROUT_SOCK
+name|ERROUT
 argument_list|(
 name|EALREADY
-argument_list|)
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
 argument_list|)
 expr_stmt|;
 if|if
@@ -3343,11 +3297,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -3355,17 +3304,12 @@ operator|&=
 operator|~
 name|SS_ISCONNECTING
 expr_stmt|;
-name|ERROUT_SOCK
+name|ERROUT
 argument_list|(
 name|error
 argument_list|)
 expr_stmt|;
 block|}
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3378,7 +3322,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 comment|/* We will notify the sender when we connect */
 name|priv
 operator|->
@@ -3402,15 +3345,9 @@ name|flags
 operator||=
 name|KSF_CONNECTING
 expr_stmt|;
-name|ERROUT_SOCK
+name|ERROUT
 argument_list|(
 name|EINPROGRESS
-argument_list|)
-expr_stmt|;
-block|}
-name|SOCK_UNLOCK
-argument_list|(
-name|so
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3489,11 +3426,6 @@ operator|==
 name|NGM_KSOCKET_GETPEERNAME
 condition|)
 block|{
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3510,14 +3442,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|ERROUT_SOCK
+name|ERROUT
 argument_list|(
 name|ENOTCONN
-argument_list|)
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
 argument_list|)
 expr_stmt|;
 name|func
@@ -4634,11 +4561,6 @@ operator|&
 name|KSF_CONNECTING
 condition|)
 block|{
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4678,11 +4600,6 @@ name|SS_ISCONNECTING
 operator|)
 condition|)
 block|{
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|NG_MKMESSAGE
 argument_list|(
 name|response
@@ -4760,12 +4677,6 @@ operator|~
 name|KSF_CONNECTING
 expr_stmt|;
 block|}
-else|else
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Check whether a pending accept operation has completed */
 if|if
@@ -4865,28 +4776,7 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-name|int
-name|sostate
-decl_stmt|;
 comment|/* Try to get next packet from socket */
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|sostate
-operator|=
-name|so
-operator|->
-name|so_state
-operator|&
-name|SS_ISCONNECTED
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4905,7 +4795,13 @@ call|)
 argument_list|(
 name|so
 argument_list|,
-name|sostate
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_ISCONNECTED
+operator|)
 condition|?
 name|NULL
 else|:
@@ -5166,11 +5062,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * If the peer has closed the connection, forward a 0-length mbuf 	 * to indicate end-of-file. 	 */
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -5189,11 +5080,6 @@ name|KSF_EOFSEEN
 operator|)
 condition|)
 block|{
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|MGETHDR
 argument_list|(
 name|m
@@ -5241,12 +5127,6 @@ operator||=
 name|KSF_EOFSEEN
 expr_stmt|;
 block|}
-else|else
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -5315,11 +5195,6 @@ name|so_comp
 argument_list|)
 condition|)
 block|{
-name|SOCK_LOCK
-argument_list|(
-name|head
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|head
@@ -5328,21 +5203,9 @@ name|so_state
 operator|&
 name|SS_CANTRCVMORE
 condition|)
-block|{
-name|SOCK_UNLOCK
-argument_list|(
-name|head
-argument_list|)
-expr_stmt|;
 return|return
 name|ECONNABORTED
 return|;
-block|}
-name|SOCK_UNLOCK
-argument_list|(
-name|head
-argument_list|)
-expr_stmt|;
 return|return
 name|EWOULDBLOCK
 return|;
@@ -5446,11 +5309,6 @@ name|so_qlen
 operator|--
 expr_stmt|;
 comment|/* XXX KNOTE(&head->so_rcv.sb_sel.si_note, 0); */
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -5463,11 +5321,6 @@ operator|->
 name|so_state
 operator||=
 name|SS_NBIO
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
 expr_stmt|;
 name|so
 operator|->
