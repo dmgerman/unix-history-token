@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.17 1994/05/17 20:02:12 jkh Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.18 1994/05/19 08:17:53 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -4446,14 +4446,9 @@ case|:
 comment|/* PC/AT 24 bit address bus */
 name|printf
 argument_list|(
-literal|"bt%d: bt54x-ISA(24bit) bus detected.."
+literal|"bt%d: bt54x-ISA(24bit) bus detected\n"
 argument_list|,
 name|unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"You may have to use the aha1542 driver instead! "
 argument_list|)
 expr_stmt|;
 break|break;
