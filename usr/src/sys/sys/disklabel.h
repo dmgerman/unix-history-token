@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)disklabel.h	7.4 (Berkeley) %G%  */
+comment|/*  *	@(#)disklabel.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -691,6 +691,28 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Structure used internally to retrieve  * information about a partition on a disk.  */
+end_comment
+
+begin_struct
+struct|struct
+name|partinfo
+block|{
+name|struct
+name|disklabel
+modifier|*
+name|disklab
+decl_stmt|;
+name|struct
+name|partition
+modifier|*
+name|part
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Disk-specific ioctls.  */
 end_comment
 
@@ -734,12 +756,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DIOCGDINFOP
-value|_IOW(d, 104, struct disklabel *)
+name|DIOCGPART
+value|_IOW(d, 104, struct partinfo)
 end_define
 
 begin_comment
-comment|/* get pointer */
+comment|/* get partition */
 end_comment
 
 begin_comment
