@@ -1990,9 +1990,6 @@ block|{
 case|case
 name|CB_RF5C46X
 case|:
-case|case
-name|CB_RF5C47X
-case|:
 name|PCI_MASK_CONFIG
 argument_list|(
 name|sc
@@ -2052,6 +2049,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* XXX this should be a function table, ala OLDCARD. */
 switch|switch
 condition|(
 name|sc
@@ -2062,7 +2060,8 @@ block|{
 case|case
 name|CB_TI113X
 case|:
-name|PCI_MASK2_CONFIG
+comment|/* 		 * The TI 1030, TI 1130 and TI 1131 all require another bit 		 * be set to enable PCI routing of interrupts, and then 		 * a bit for each of the CSC and Function interrupts we 		 * want routed. 		 */
+name|PCI_MASK_CONFIG
 argument_list|(
 name|sc
 operator|->
@@ -2070,10 +2069,8 @@ name|sc_dev
 argument_list|,
 name|PCCBBR_CBCTRL
 argument_list|,
-operator|&
-operator|~
+operator||
 name|PCCBBM_CBCTRL_113X_PCI_INTR
-argument_list|,
 operator||
 name|PCCBBM_CBCTRL_113X_PCI_CSC
 operator||
