@@ -31,7 +31,7 @@ name|_sex_private
 block|{
 comment|/* INITIALIZED AT SCREEN CREATE. */
 name|int
-name|__unused
+name|__sex_unused
 decl_stmt|;
 comment|/* Make sure it's not empty. */
 comment|/* PARTIALLY OR COMPLETELY COPIED FROM PREVIOUS SCREEN. */
