@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.41	81/08/30	*/
+comment|/*	tm.c	4.42	81/08/31	*/
 end_comment
 
 begin_include
@@ -3016,6 +3016,11 @@ block|{
 name|printf
 argument_list|(
 literal|"te%d: lost interrupt\n"
+argument_list|,
+name|TEUNIT
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sc
