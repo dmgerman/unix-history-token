@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $OpenBSD: mac.h,v 1.1 2001/02/11 12:59:24 markus Exp $   */
+comment|/*      $OpenBSD: mac.h,v 1.3 2001/06/26 17:27:24 markus Exp $   */
 end_comment
 
 begin_comment
@@ -14,7 +14,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|names
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -25,11 +24,9 @@ name|mac_init
 parameter_list|(
 name|Mac
 modifier|*
-name|mac
 parameter_list|,
 name|char
 modifier|*
-name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -41,17 +38,13 @@ name|mac_compute
 parameter_list|(
 name|Mac
 modifier|*
-name|mac
 parameter_list|,
 name|u_int32_t
-name|seqno
 parameter_list|,
 name|u_char
 modifier|*
-name|data
 parameter_list|,
 name|int
-name|datalen
 parameter_list|)
 function_decl|;
 end_function_decl

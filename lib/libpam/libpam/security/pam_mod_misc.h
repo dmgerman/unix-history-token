@@ -104,6 +104,49 @@ end_struct
 
 begin_function_decl
 name|__BEGIN_DECLS
+name|int
+name|pam_get_pass
+parameter_list|(
+name|pam_handle_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|options
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pam_prompt
+parameter_list|(
+name|pam_handle_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pam_std_option
 parameter_list|(
@@ -171,32 +214,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|_pam_verbose_error
-parameter_list|(
-name|pam_handle_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_macro
 name|__END_DECLS
 end_macro
@@ -210,7 +227,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|openpam_log(PAM_LOG_DEBUG, ##args)
+value|_pam_log(&options, __FILE__, __FUNCTION__, ##args)
 end_define
 
 begin_define
@@ -221,7 +238,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|return (arg)
+value|do {                                                            \ 		_pam_log_retval(&options, __FILE__, __FUNCTION__, arg); \ 		return arg;                                             \ 	} while (0)
 end_define
 
 begin_define
@@ -233,8 +250,49 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|_pam_verbose_error(pamh, flags, __FILE__, __FUNCTION__, ##args)
+value|_pam_verbose_error(pamh,&options, __FILE__, __FUNCTION__, ##args)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NGROUPS_MAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PAM_SAVED_CRED
+value|"pam_saved_cred"
+end_define
+
+begin_struct
+struct|struct
+name|pam_saved_cred
+block|{
+name|uid_t
+name|euid
+decl_stmt|;
+name|gid_t
+name|egid
+decl_stmt|;
+name|gid_t
+name|groups
+index|[
+name|NGROUPS_MAX
+index|]
+decl_stmt|;
+name|int
+name|ngroups
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

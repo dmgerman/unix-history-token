@@ -3856,11 +3856,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|buffer_clear
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|buffer_put_int
 argument_list|(
 name|m

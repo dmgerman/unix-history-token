@@ -1,243 +1,163 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: rijndael.h,v 1.7 2001/03/01 03:38:33 deraadt Exp $	*/
+comment|/*	$OpenBSD: rijndael.h,v 1.12 2001/12/19 07:18:56 deraadt Exp $ */
 end_comment
 
 begin_comment
-comment|/* This is an independent implementation of the encryption algorithm:   */
-end_comment
-
-begin_comment
-comment|/*                                                                      */
-end_comment
-
-begin_comment
-comment|/*         RIJNDAEL by Joan Daemen and Vincent Rijmen                   */
-end_comment
-
-begin_comment
-comment|/*                                                                      */
-end_comment
-
-begin_comment
-comment|/* which is a candidate algorithm in the Advanced Encryption Standard   */
-end_comment
-
-begin_comment
-comment|/* programme of the US National Institute of Standards and Technology.  */
-end_comment
-
-begin_comment
-comment|/*                                                                      */
-end_comment
-
-begin_comment
-comment|/* Copyright in this implementation is held by Dr B R Gladman but I     */
-end_comment
-
-begin_comment
-comment|/* hereby give permission for its free direct or derivative use subject */
-end_comment
-
-begin_comment
-comment|/* to acknowledgment of its origin and compliance with any conditions   */
-end_comment
-
-begin_comment
-comment|/* that the originators of the algorithm place on its exploitation.     */
-end_comment
-
-begin_comment
-comment|/*                                                                      */
-end_comment
-
-begin_comment
-comment|/* Dr Brian Gladman (gladman@seven77.demon.co.uk) 14th January 1999     */
+comment|/**  * rijndael-alg-fst.h  *  * @version 3.0 (December 2000)  *  * Optimised ANSI C code for the Rijndael cipher (now AES)  *  * @author Vincent Rijmen<vincent.rijmen@esat.kuleuven.ac.be>  * @author Antoon Bosselaers<antoon.bosselaers@esat.kuleuven.ac.be>  * @author Paulo Barreto<paulo.barreto@terra.com.br>  *  * This code is hereby placed in the public domain.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ''AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_RIJNDAEL_H_
+name|__RIJNDAEL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_RIJNDAEL_H_
+name|__RIJNDAEL_H
 end_define
 
-begin_comment
-comment|/* 1. Standard types for AES cryptography source code               */
-end_comment
+begin_define
+define|#
+directive|define
+name|MAXKC
+value|(256/32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXKB
+value|(256/8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXNR
+value|14
+end_define
 
 begin_typedef
 typedef|typedef
-name|u_int8_t
-name|u1byte
+name|unsigned
+name|char
+name|u8
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|u16
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|u32
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* an 8 bit unsigned character type */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int16_t
-name|u2byte
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* a 16 bit unsigned integer type   */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|u4byte
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* a 32 bit unsigned integer type   */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int8_t
-name|s1byte
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* an 8 bit signed character type   */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int16_t
-name|s2byte
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* a 16 bit signed integer type     */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int32_t
-name|s4byte
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* a 32 bit signed integer type     */
+comment|/*  The structure for key information */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|_rijndael_ctx
 block|{
-name|u4byte
-name|k_len
-decl_stmt|;
 name|int
 name|decrypt
 decl_stmt|;
-name|u4byte
-name|e_key
+name|int
+name|Nr
+decl_stmt|;
+comment|/* key-length-dependent number of rounds */
+name|u32
+name|ek
 index|[
-literal|64
+literal|4
+operator|*
+operator|(
+name|MAXNR
+operator|+
+literal|1
+operator|)
 index|]
 decl_stmt|;
-name|u4byte
-name|d_key
+comment|/* encrypt key schedule */
+name|u32
+name|dk
 index|[
-literal|64
+literal|4
+operator|*
+operator|(
+name|MAXNR
+operator|+
+literal|1
+operator|)
 index|]
 decl_stmt|;
+comment|/* decrypt key schedule */
 block|}
 name|rijndael_ctx
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* 2. Standard interface for AES cryptographic routines             */
-end_comment
-
-begin_comment
-comment|/* These are all based on 32 bit unsigned values and will therefore */
-end_comment
-
-begin_comment
-comment|/* require endian conversions for big-endian architectures          */
-end_comment
-
-begin_decl_stmt
+begin_function_decl
+name|void
+name|rijndael_set_key
+parameter_list|(
 name|rijndael_ctx
 modifier|*
-name|rijndael_set_key
-name|__P
-argument_list|(
-operator|(
-name|rijndael_ctx
-operator|*
-operator|,
-specifier|const
-name|u4byte
-operator|*
-operator|,
-name|u4byte
-operator|,
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|void
-name|rijndael_encrypt
-name|__P
-argument_list|(
-operator|(
-name|rijndael_ctx
-operator|*
-operator|,
-specifier|const
-name|u4byte
-operator|*
-operator|,
-name|u4byte
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 name|void
 name|rijndael_decrypt
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|rijndael_ctx
-operator|*
-operator|,
-specifier|const
-name|u4byte
-operator|*
-operator|,
-name|u4byte
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rijndael_encrypt
+parameter_list|(
+name|rijndael_ctx
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -245,7 +165,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _RIJNDAEL_H_ */
+comment|/* __RIJNDAEL_H */
 end_comment
 
 end_unit

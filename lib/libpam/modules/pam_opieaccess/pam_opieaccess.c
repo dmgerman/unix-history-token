@@ -103,6 +103,10 @@ name|__unused
 parameter_list|)
 block|{
 name|struct
+name|options
+name|options
+decl_stmt|;
+name|struct
 name|opie
 name|opie
 decl_stmt|;
@@ -121,6 +125,23 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+name|pam_std_option
+argument_list|(
+operator|&
+name|options
+argument_list|,
+name|NULL
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Options processed"
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 name|pam_get_item

@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: scp.c,v 1.68 2001/04/22 12:34:05 markus Exp $"
+literal|"$OpenBSD: scp.c,v 1.91 2002/06/19 00:27:55 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -52,8 +52,39 @@ end_include
 begin_include
 include|#
 directive|include
-file|"scp-common.h"
+file|"misc.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE___PROGNAME
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* For progressmeter() -- number of seconds before xfer considered "stalled" */
@@ -64,6 +95,17 @@ define|#
 directive|define
 name|STALLTIME
 value|5
+end_define
+
+begin_comment
+comment|/* alarm() interval for updating progress meter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROGRESSTIME
+value|1
 end_define
 
 begin_comment
@@ -123,34 +165,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* setup arguments for the call to ssh */
+comment|/* Struct for addargs */
 end_comment
 
-begin_function_decl
-name|void
-name|addargs
-parameter_list|(
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(format
-parameter_list|(
-name|printf
-parameter_list|,
-function_decl|1
-operator|,
-function_decl|2
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+name|arglist
+name|args
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Time a transfer started. */
@@ -234,29 +256,6 @@ init|=
 name|_PATH_SSH_PROGRAM
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* This is the list of arguments that scp passes to ssh */
-end_comment
-
-begin_struct
-struct|struct
-block|{
-name|char
-modifier|*
-modifier|*
-name|list
-decl_stmt|;
-name|int
-name|num
-decl_stmt|;
-name|int
-name|nalloc
-decl_stmt|;
-block|}
-name|args
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * This function executes the given command as the specified user on the  * given host.  This returns< 0 if execution fails, and>= 0 otherwise. This  * assigns the input and output file descriptors on success.  */
@@ -470,6 +469,9 @@ name|NULL
 condition|)
 name|addargs
 argument_list|(
+operator|&
+name|args
+argument_list|,
 literal|"-l%s"
 argument_list|,
 name|remuser
@@ -477,6 +479,9 @@ argument_list|)
 expr_stmt|;
 name|addargs
 argument_list|(
+operator|&
+name|args
+argument_list|,
 literal|"%s"
 argument_list|,
 name|host
@@ -484,6 +489,9 @@ argument_list|)
 expr_stmt|;
 name|addargs
 argument_list|(
+operator|&
+name|args
+argument_list|,
 literal|"%s"
 argument_list|,
 name|cmd
@@ -810,6 +818,16 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
+name|__progname
+operator|=
+name|get_progname
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|args
 operator|.
 name|list
@@ -818,18 +836,35 @@ name|NULL
 expr_stmt|;
 name|addargs
 argument_list|(
+operator|&
+name|args
+argument_list|,
 literal|"ssh"
 argument_list|)
 expr_stmt|;
 comment|/* overwritten with ssh_program */
 name|addargs
 argument_list|(
+operator|&
+name|args
+argument_list|,
 literal|"-x"
 argument_list|)
 expr_stmt|;
 name|addargs
 argument_list|(
-literal|"-oFallBackToRsh no"
+operator|&
+name|args
+argument_list|,
+literal|"-oForwardAgent no"
+argument_list|)
+expr_stmt|;
+name|addargs
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|"-oClearAllForwardings yes"
 argument_list|)
 expr_stmt|;
 name|fflag
@@ -849,7 +884,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dfprtvBCc:i:P:q46S:o:"
+literal|"dfprtvBCc:i:P:q46S:o:F:"
 argument_list|)
 operator|)
 operator|!=
@@ -873,6 +908,9 @@ literal|'C'
 case|:
 name|addargs
 argument_list|(
+operator|&
+name|args
+argument_list|,
 literal|"-%c"
 argument_list|,
 name|ch
@@ -888,8 +926,14 @@ case|:
 case|case
 literal|'i'
 case|:
+case|case
+literal|'F'
+case|:
 name|addargs
 argument_list|(
+operator|&
+name|args
+argument_list|,
 literal|"-%c%s"
 argument_list|,
 name|ch
@@ -903,6 +947,9 @@ literal|'P'
 case|:
 name|addargs
 argument_list|(
+operator|&
+name|args
+argument_list|,
 literal|"-p%s"
 argument_list|,
 name|optarg
@@ -914,6 +961,9 @@ literal|'B'
 case|:
 name|addargs
 argument_list|(
+operator|&
+name|args
+argument_list|,
 literal|"-oBatchmode yes"
 argument_list|)
 expr_stmt|;
@@ -948,6 +998,14 @@ break|break;
 case|case
 literal|'v'
 case|:
+name|addargs
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|"-v"
+argument_list|)
+expr_stmt|;
 name|verbose_mode
 operator|=
 literal|1
@@ -995,6 +1053,18 @@ name|tflag
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+name|setmode
+argument_list|(
+literal|0
+argument_list|,
+name|O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|usage
@@ -1416,6 +1486,13 @@ name|src
 condition|)
 block|{
 comment|/* remote to remote */
+specifier|static
+name|char
+modifier|*
+name|ssh_options
+init|=
+literal|"-x -o'ClearAllForwardings yes'"
+decl_stmt|;
 operator|*
 name|src
 operator|++
@@ -1486,9 +1563,14 @@ argument_list|(
 name|targ
 argument_list|)
 operator|+
+name|strlen
+argument_list|(
+name|ssh_options
+argument_list|)
+operator|+
 name|CMDNEEDS
 operator|+
-literal|32
+literal|20
 expr_stmt|;
 name|bp
 operator|=
@@ -1551,7 +1633,7 @@ name|bp
 argument_list|,
 name|len
 argument_list|,
-literal|"%s%s -x -o'FallBackToRsh no' -n "
+literal|"%s%s %s -n "
 literal|"-l %s %s %s %s '%s%s%s:%s'"
 argument_list|,
 name|ssh_program
@@ -1561,6 +1643,8 @@ condition|?
 literal|" -v"
 else|:
 literal|""
+argument_list|,
+name|ssh_options
 argument_list|,
 name|suser
 argument_list|,
@@ -1606,7 +1690,7 @@ name|bp
 argument_list|,
 name|len
 argument_list|,
-literal|"exec %s%s -x -o'FallBackToRsh no' -n %s "
+literal|"exec %s%s %s -n %s "
 literal|"%s %s '%s%s%s:%s'"
 argument_list|,
 name|ssh_program
@@ -1616,6 +1700,8 @@ condition|?
 literal|" -v"
 else|:
 literal|""
+argument_list|,
+name|ssh_options
 argument_list|,
 name|host
 argument_list|,
@@ -2270,6 +2356,29 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+name|strchr
+argument_list|(
+name|name
+argument_list|,
+literal|'\n'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|run_err
+argument_list|(
+literal|"%s: skipping, filename contains a newline"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+if|if
+condition|(
 operator|(
 name|fd
 operator|=
@@ -2457,6 +2566,9 @@ define|#
 directive|define
 name|FILEMODEMASK
 value|(S_ISUID|S_ISGID|S_IRWXU|S_IRWXG|S_IRWXO)
+ifdef|#
+directive|ifdef
+name|HAVE_LONG_LONG_INT
 name|snprintf
 argument_list|(
 name|buf
@@ -2488,6 +2600,41 @@ argument_list|,
 name|last
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* XXX: Handle integer overflow? */
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"C%04o %lu %s\n"
+argument_list|,
+call|(
+name|u_int
+call|)
+argument_list|(
+name|stb
+operator|.
+name|st_mode
+operator|&
+name|FILEMODEMASK
+argument_list|)
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|stb
+operator|.
+name|st_size
+argument_list|,
+name|last
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|verbose_mode
@@ -3294,7 +3441,7 @@ name|SCREWUP
 parameter_list|(
 name|str
 parameter_list|)
-value|{ why = str; goto screwup; }
+value|do { why = str; goto screwup; } while (0)
 name|setimes
 operator|=
 name|targisdir
@@ -3966,8 +4113,12 @@ literal|"%s%s%s"
 argument_list|,
 name|targ
 argument_list|,
-operator|*
+name|strcmp
+argument_list|(
 name|targ
+argument_list|,
+literal|"/"
+argument_list|)
 condition|?
 literal|"/"
 else|:
@@ -4190,8 +4341,6 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
-operator||
-name|O_TRUNC
 argument_list|,
 name|mode
 argument_list|)
@@ -4530,12 +4679,33 @@ else|:
 name|errno
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (ftruncate(ofd, size)) { 			run_err("%s: truncate: %s", np, strerror(errno)); 			wrerr = DISPLAYED; 		}
-endif|#
-directive|endif
+if|if
+condition|(
+name|ftruncate
+argument_list|(
+name|ofd
+argument_list|,
+name|size
+argument_list|)
+condition|)
+block|{
+name|run_err
+argument_list|(
+literal|"%s: truncate: %s"
+argument_list|,
+name|np
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|wrerr
+operator|=
+name|DISPLAYED
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|pflag
@@ -4549,6 +4719,9 @@ name|omode
 operator|!=
 name|mode
 condition|)
+ifdef|#
+directive|ifdef
+name|HAVE_FCHMOD
 if|if
 condition|(
 name|fchmod
@@ -4558,6 +4731,21 @@ argument_list|,
 name|omode
 argument_list|)
 condition|)
+else|#
+directive|else
+comment|/* HAVE_FCHMOD */
+if|if
+condition|(
+name|chmod
+argument_list|(
+name|np
+argument_list|,
+name|omode
+argument_list|)
+condition|)
+endif|#
+directive|endif
+comment|/* HAVE_FCHMOD */
 name|run_err
 argument_list|(
 literal|"%s: set mode: %s"
@@ -4582,6 +4770,9 @@ name|omode
 operator|!=
 name|mode
 condition|)
+ifdef|#
+directive|ifdef
+name|HAVE_FCHMOD
 if|if
 condition|(
 name|fchmod
@@ -4594,6 +4785,24 @@ operator|~
 name|mask
 argument_list|)
 condition|)
+else|#
+directive|else
+comment|/* HAVE_FCHMOD */
+if|if
+condition|(
+name|chmod
+argument_list|(
+name|np
+argument_list|,
+name|omode
+operator|&
+operator|~
+name|mask
+argument_list|)
+condition|)
+endif|#
+directive|endif
+comment|/* HAVE_FCHMOD */
 name|run_err
 argument_list|(
 literal|"%s: set mode: %s"
@@ -4741,7 +4950,9 @@ end_function
 begin_function
 name|int
 name|response
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|ch
@@ -4922,7 +5133,9 @@ end_function
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -4931,9 +5144,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: scp "
-literal|"[-pqrvBC46] [-S ssh] [-P port] [-c cipher] [-i identity] f1 f2\n"
-literal|"   or: scp [options] f1 ... fn directory\n"
+literal|"usage: scp [-pqrvBC46] [-F config] [-S program] [-P port]\n"
+literal|"           [-c cipher] [-i identity] [-o option]\n"
+literal|"           [[user@]host1:]file1 [...] [[user@]host2:]file2\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4964,13 +5177,6 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
 operator|++
 name|errs
 expr_stmt|;
@@ -5015,6 +5221,13 @@ argument_list|,
 literal|"scp: "
 argument_list|)
 expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5024,6 +5237,11 @@ name|fp
 argument_list|,
 name|fmt
 argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
@@ -5051,12 +5269,24 @@ operator|!
 name|iamremote
 condition|)
 block|{
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
 name|vfprintf
 argument_list|(
 name|stderr
 argument_list|,
 name|fmt
 argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
@@ -5068,11 +5298,6 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5164,6 +5389,9 @@ do|do
 block|{
 name|c
 operator|=
+operator|(
+name|int
+operator|)
 operator|*
 name|cp
 expr_stmt|;
@@ -5265,6 +5493,9 @@ block|{
 name|size_t
 name|size
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRUCT_STAT_ST_BLKSIZE
 name|struct
 name|stat
 name|stb
@@ -5331,6 +5562,16 @@ name|stb
 operator|.
 name|st_blksize
 expr_stmt|;
+else|#
+directive|else
+comment|/* HAVE_STRUCT_STAT_ST_BLKSIZE */
+name|size
+operator|=
+name|blksize
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_STRUCT_STAT_ST_BLKSIZE */
 if|if
 condition|(
 name|bp
@@ -5375,6 +5616,17 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+name|bp
+operator|->
+name|buf
+argument_list|,
+literal|0
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|cnt
@@ -5404,13 +5656,25 @@ condition|(
 operator|!
 name|iamremote
 condition|)
-name|fprintf
+name|write
 argument_list|(
-name|stderr
+name|STDERR_FILENO
 argument_list|,
 literal|"lost connection\n"
+argument_list|,
+literal|16
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|signo
+condition|)
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
 name|exit
 argument_list|(
 literal|1
@@ -5420,55 +5684,7 @@ block|}
 end_function
 
 begin_function
-name|void
-name|alarmtimer
-parameter_list|(
-name|int
-name|wait
-parameter_list|)
-block|{
-name|struct
-name|itimerval
-name|itv
-decl_stmt|;
-name|itv
-operator|.
-name|it_value
-operator|.
-name|tv_sec
-operator|=
-name|wait
-expr_stmt|;
-name|itv
-operator|.
-name|it_value
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
-name|itv
-operator|.
-name|it_interval
-operator|=
-name|itv
-operator|.
-name|it_value
-expr_stmt|;
-name|setitimer
-argument_list|(
-name|ITIMER_REAL
-argument_list|,
-operator|&
-name|itv
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
+specifier|static
 name|void
 name|updateprogressmeter
 parameter_list|(
@@ -5486,6 +5702,18 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|updateprogressmeter
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+name|PROGRESSTIME
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|save_errno
@@ -5494,6 +5722,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|foregroundproc
 parameter_list|(
@@ -5522,6 +5751,30 @@ operator|=
 name|getpgrp
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_TCGETPGRP
+return|return
+operator|(
+operator|(
+name|ctty_pgrp
+operator|=
+name|tcgetpgrp
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|ctty_pgrp
+operator|==
+name|pgrp
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 operator|(
@@ -5544,6 +5797,8 @@ name|pgrp
 operator|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5600,7 +5855,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|256
+literal|512
 index|]
 decl_stmt|;
 if|if
@@ -5764,8 +6019,13 @@ literal|"|%.*s%*s|"
 argument_list|,
 name|i
 argument_list|,
-literal|"*****************************************************************************"
-literal|"*****************************************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
 argument_list|,
 name|barlength
 operator|-
@@ -5824,11 +6084,10 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|" %5llu %c%c "
+literal|" %5lu %c%c "
 argument_list|,
 operator|(
 name|unsigned
-name|long
 name|long
 operator|)
 name|abbrevsize
@@ -6172,16 +6431,16 @@ operator|-
 literal|1
 condition|)
 block|{
-name|signal
+name|mysignal
 argument_list|(
 name|SIGALRM
 argument_list|,
 name|updateprogressmeter
 argument_list|)
 expr_stmt|;
-name|alarmtimer
+name|alarm
 argument_list|(
-literal|1
+name|PROGRESSTIME
 argument_list|)
 expr_stmt|;
 block|}
@@ -6193,7 +6452,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|alarmtimer
+name|alarm
 argument_list|(
 literal|0
 argument_list|)
@@ -6268,162 +6527,6 @@ operator|(
 literal|80
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|addargs
-parameter_list|(
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|1024
-index|]
-decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-name|vsnprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|args
-operator|.
-name|list
-operator|==
-name|NULL
-condition|)
-block|{
-name|args
-operator|.
-name|nalloc
-operator|=
-literal|32
-expr_stmt|;
-name|args
-operator|.
-name|num
-operator|=
-literal|0
-expr_stmt|;
-name|args
-operator|.
-name|list
-operator|=
-name|xmalloc
-argument_list|(
-name|args
-operator|.
-name|nalloc
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|args
-operator|.
-name|num
-operator|+
-literal|2
-operator|>=
-name|args
-operator|.
-name|nalloc
-condition|)
-block|{
-name|args
-operator|.
-name|nalloc
-operator|*=
-literal|2
-expr_stmt|;
-name|args
-operator|.
-name|list
-operator|=
-name|xrealloc
-argument_list|(
-name|args
-operator|.
-name|list
-argument_list|,
-name|args
-operator|.
-name|nalloc
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|args
-operator|.
-name|list
-index|[
-name|args
-operator|.
-name|num
-operator|++
-index|]
-operator|=
-name|xstrdup
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-name|args
-operator|.
-name|list
-index|[
-name|args
-operator|.
-name|num
-index|]
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 end_function
 

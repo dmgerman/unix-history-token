@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * The main loop for the interactive session (client side).  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  *  * Copyright (c) 1999 Theo de Raadt.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * SSH2 support added by Markus Friedl.  * Copyright (c) 1999,2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * The main loop for the interactive session (client side).  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  *  * Copyright (c) 1999 Theo de Raadt.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * SSH2 support added by Markus Friedl.  * Copyright (c) 1999, 2000, 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: clientloop.c,v 1.65 2001/04/20 07:17:51 djm Exp $"
+literal|"$OpenBSD: clientloop.c,v 1.102 2002/06/24 14:33:27 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -137,6 +137,12 @@ directive|include
 file|"misc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"readpass.h"
+end_include
+
 begin_comment
 comment|/* import options */
 end_comment
@@ -178,8 +184,18 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|volatile
-name|int
+name|sig_atomic_t
 name|received_window_change_signal
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|sig_atomic_t
+name|received_signal
 init|=
 literal|0
 decl_stmt|;
@@ -370,6 +386,7 @@ comment|/* In SSH2: login session closed. */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|client_init_dispatch
 parameter_list|(
@@ -404,6 +421,7 @@ comment|/* Restores stdin to blocking mode. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|leave_non_blocking
 parameter_list|(
@@ -460,6 +478,7 @@ comment|/* Puts stdin terminal in non-blocking mode. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|enter_non_blocking
 parameter_list|(
@@ -510,6 +529,7 @@ comment|/*  * Signal handler for the window change signal (SIGWINCH).  This just
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|window_change_handler
 parameter_list|(
@@ -536,6 +556,7 @@ comment|/*  * Signal handler for signals that cause the program to terminate.  T
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|signal_handler
 parameter_list|(
@@ -543,33 +564,13 @@ name|int
 name|sig
 parameter_list|)
 block|{
-if|if
-condition|(
-name|in_raw_mode
-argument_list|()
-condition|)
-name|leave_raw_mode
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|in_non_blocking_mode
-condition|)
-name|leave_non_blocking
-argument_list|()
-expr_stmt|;
-name|channel_stop_listening
-argument_list|()
-expr_stmt|;
-name|packet_close
-argument_list|()
-expr_stmt|;
-name|fatal
-argument_list|(
-literal|"Killed by signal %d."
-argument_list|,
+name|received_signal
+operator|=
 name|sig
-argument_list|)
+expr_stmt|;
+name|quit_pending
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -579,6 +580,7 @@ comment|/*  * Returns current time in seconds from Jan 1, 1970 with the maximum 
 end_comment
 
 begin_function
+specifier|static
 name|double
 name|get_current_time
 parameter_list|(
@@ -622,6 +624,7 @@ comment|/*  * This is called when the interactive is entered.  This checks if th
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|client_check_initial_eof_on_stdin
 parameter_list|(
@@ -757,6 +760,7 @@ comment|/*  * Make packets from buffered stdin data, and buffer them for sending
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|client_make_packets_from_stdin_data
 parameter_list|(
@@ -865,6 +869,7 @@ comment|/*  * Checks if the client window has changed, and sends a packet about 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|client_check_window_change
 parameter_list|(
@@ -1002,6 +1007,7 @@ comment|/*  * Waits until the client can do something (some data becomes availab
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|client_wait_until_can_do_something
 parameter_list|(
@@ -1020,6 +1026,10 @@ modifier|*
 name|maxfdp
 parameter_list|,
 name|int
+modifier|*
+name|nallocp
+parameter_list|,
+name|int
 name|rekeying
 parameter_list|)
 block|{
@@ -1031,6 +1041,8 @@ argument_list|,
 name|writesetp
 argument_list|,
 name|maxfdp
+argument_list|,
+name|nallocp
 argument_list|,
 name|rekeying
 argument_list|)
@@ -1137,6 +1149,47 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* channel_prepare_select could have closed the last channel */
+if|if
+condition|(
+name|session_closed
+operator|&&
+operator|!
+name|channel_still_open
+argument_list|()
+operator|&&
+operator|!
+name|packet_have_data_to_write
+argument_list|()
+condition|)
+block|{
+comment|/* clear mask since we did not call select() */
+name|memset
+argument_list|(
+operator|*
+name|readsetp
+argument_list|,
+literal|0
+argument_list|,
+operator|*
+name|nallocp
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|*
+name|writesetp
+argument_list|,
+literal|0
+argument_list|,
+operator|*
+name|nallocp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+else|else
+block|{
 name|FD_SET
 argument_list|(
 name|connection_in
@@ -1145,6 +1198,7 @@ operator|*
 name|readsetp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Select server connection if have data to write to the server. */
 if|if
@@ -1201,7 +1255,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|*
-name|maxfdp
+name|nallocp
 argument_list|)
 expr_stmt|;
 name|memset
@@ -1212,7 +1266,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|*
-name|maxfdp
+name|nallocp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1260,6 +1314,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_suspend_self
 parameter_list|(
@@ -1462,6 +1517,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_process_net_input
 parameter_list|(
@@ -1620,11 +1676,358 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|process_cmdline
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|void
+function_decl|(
+modifier|*
+name|handler
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+name|char
+modifier|*
+name|s
+decl_stmt|,
+modifier|*
+name|cmd
+decl_stmt|;
+name|u_short
+name|fwd_port
+decl_stmt|,
+name|fwd_host_port
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|1024
+index|]
+decl_stmt|,
+name|sfwd_port
+index|[
+literal|6
+index|]
+decl_stmt|,
+name|sfwd_host_port
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|int
+name|local
+init|=
+literal|0
+decl_stmt|;
+name|leave_raw_mode
+argument_list|()
+expr_stmt|;
+name|handler
+operator|=
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|s
+operator|=
+name|read_passphrase
+argument_list|(
+literal|"\r\nssh> "
+argument_list|,
+name|RP_ECHO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|out
+goto|;
+while|while
+condition|(
+operator|*
+name|s
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|s
+argument_list|)
+condition|)
+name|s
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+operator|<
+literal|2
+operator|||
+name|s
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+operator|||
+operator|!
+operator|(
+name|s
+index|[
+literal|1
+index|]
+operator|==
+literal|'L'
+operator|||
+name|s
+index|[
+literal|1
+index|]
+operator|==
+literal|'R'
+operator|)
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"Invalid command."
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|s
+index|[
+literal|1
+index|]
+operator|==
+literal|'L'
+condition|)
+name|local
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|local
+operator|&&
+operator|!
+name|compat20
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"Not supported for SSH protocol version 1."
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|s
+operator|+=
+literal|2
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|s
+argument_list|)
+condition|)
+name|s
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|s
+argument_list|,
+literal|"%5[0-9]:%255[^:]:%5[0-9]"
+argument_list|,
+name|sfwd_port
+argument_list|,
+name|buf
+argument_list|,
+name|sfwd_host_port
+argument_list|)
+operator|!=
+literal|3
+operator|&&
+name|sscanf
+argument_list|(
+name|s
+argument_list|,
+literal|"%5[0-9]/%255[^/]/%5[0-9]"
+argument_list|,
+name|sfwd_port
+argument_list|,
+name|buf
+argument_list|,
+name|sfwd_host_port
+argument_list|)
+operator|!=
+literal|3
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"Bad forwarding specification."
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+operator|(
+name|fwd_port
+operator|=
+name|a2port
+argument_list|(
+name|sfwd_port
+argument_list|)
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|fwd_host_port
+operator|=
+name|a2port
+argument_list|(
+name|sfwd_host_port
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"Bad forwarding port(s)."
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|local
+condition|)
+block|{
+if|if
+condition|(
+name|channel_setup_local_fwd_listener
+argument_list|(
+name|fwd_port
+argument_list|,
+name|buf
+argument_list|,
+name|fwd_host_port
+argument_list|,
+name|options
+operator|.
+name|gateway_ports
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"Port forwarding failed."
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+block|}
+else|else
+name|channel_request_remote_forwarding
+argument_list|(
+name|fwd_port
+argument_list|,
+name|buf
+argument_list|,
+name|fwd_host_port
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+literal|"Forwarding port."
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|handler
+argument_list|)
+expr_stmt|;
+name|enter_raw_mode
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cmd
+condition|)
+name|xfree
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* process the characters one by one */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|process_escapes
 parameter_list|(
@@ -1819,13 +2222,101 @@ continue|continue;
 case|case
 literal|'&'
 case|:
-comment|/* XXX does not work yet with proto 2 */
+comment|/* 				 * Detach the program (continue to serve connections, 				 * but put in background and no more new connections). 				 */
+comment|/* Restore tty modes. */
+name|leave_raw_mode
+argument_list|()
+expr_stmt|;
+comment|/* Stop listening for new connections. */
+name|channel_stop_listening
+argument_list|()
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|string
+argument_list|,
+sizeof|sizeof
+name|string
+argument_list|,
+literal|"%c& [backgrounded]\n"
+argument_list|,
+name|escape_char
+argument_list|)
+expr_stmt|;
+name|buffer_append
+argument_list|(
+name|berr
+argument_list|,
+name|string
+argument_list|,
+name|strlen
+argument_list|(
+name|string
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Fork into background. */
+name|pid
+operator|=
+name|fork
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"fork: %.100s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|pid
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* This is the parent. */
+comment|/* The parent just exits. */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* The child continues serving connections. */
 if|if
 condition|(
 name|compat20
 condition|)
-continue|continue;
-comment|/* 				 * Detach the program (continue to serve connections, 				 * but put in background and no more new connections). 				 */
+block|{
+name|buffer_append
+argument_list|(
+name|bin
+argument_list|,
+literal|"\004"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* fake EOF on stdin */
+return|return
+operator|-
+literal|1
+return|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -1873,64 +2364,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* Restore tty modes. */
-name|leave_raw_mode
-argument_list|()
-expr_stmt|;
-comment|/* Stop listening for new connections. */
-name|channel_stop_listening
-argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%c& [backgrounded]\n"
-argument_list|,
-name|escape_char
-argument_list|)
-expr_stmt|;
-comment|/* Fork into background. */
-name|pid
-operator|=
-name|fork
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|pid
-operator|<
-literal|0
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"fork: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
-if|if
-condition|(
-name|pid
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* This is the parent. */
-comment|/* The parent just exits. */
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* The child continues serving connections. */
-continue|continue;
-comment|/*XXX ? */
 case|case
 literal|'?'
 case|:
@@ -1941,7 +2375,7 @@ argument_list|,
 sizeof|sizeof
 name|string
 argument_list|,
-literal|"%c?\r\n\ Supported escape sequences:\r\n\ ~.  - terminate connection\r\n\ ~R - Request rekey (SSH protocol 2 only)\r\n\ ~^Z - suspend ssh\r\n\ ~#  - list forwarded connections\r\n\ ~&  - background ssh (when waiting for connections to terminate)\r\n\ ~?  - this message\r\n\ ~~  - send the escape character by typing it twice\r\n\ (Note that escapes are only recognized immediately after newline.)\r\n"
+literal|"%c?\r\n\ Supported escape sequences:\r\n\ ~.  - terminate connection\r\n\ ~C  - open a command line\r\n\ ~R  - Request rekey (SSH protocol 2 only)\r\n\ ~^Z - suspend ssh\r\n\ ~#  - list forwarded connections\r\n\ ~&  - background ssh (when waiting for connections to terminate)\r\n\ ~?  - this message\r\n\ ~~  - send the escape character by typing it twice\r\n\ (Note that escapes are only recognized immediately after newline.)\r\n"
 argument_list|,
 name|escape_char
 argument_list|)
@@ -2007,6 +2441,13 @@ name|xfree
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+continue|continue;
+case|case
+literal|'C'
+case|:
+name|process_cmdline
+argument_list|()
 expr_stmt|;
 continue|continue;
 default|default:
@@ -2083,6 +2524,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_process_input
 parameter_list|(
@@ -2226,8 +2668,7 @@ if|if
 condition|(
 name|escape_char
 operator|==
-operator|-
-literal|1
+name|SSH_ESCAPECHAR_NONE
 condition|)
 block|{
 comment|/* 			 * Normal successful read, and no escape character. 			 * Just append the data to buffer. 			 */
@@ -2273,6 +2714,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_process_output
 parameter_list|(
@@ -2490,6 +2932,7 @@ comment|/*  * Get packets from the connection input buffer, and process them as 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|client_process_buffered_input_packets
 parameter_list|(
@@ -2518,6 +2961,7 @@ comment|/* scan buf[] for '~' before sending data to the peer */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|simple_escape_filter
 parameter_list|(
@@ -2561,6 +3005,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_channel_closed
 parameter_list|(
@@ -2587,6 +3032,11 @@ argument_list|,
 name|session_ident
 argument_list|)
 expr_stmt|;
+name|channel_cancel_cleanup
+argument_list|(
+name|id
+argument_list|)
+expr_stmt|;
 name|session_closed
 operator|=
 literal|1
@@ -2603,7 +3053,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implements the interactive session with the server.  This is called after  * the user has been authenticated, and a command has been started on the  * remote host.  If escape_char != -1, it is the character used as an escape  * character for terminating or suspending the session.  */
+comment|/*  * Implements the interactive session with the server.  This is called after  * the user has been authenticated, and a command has been started on the  * remote host.  If escape_char != SSH_ESCAPECHAR_NONE, it is the character  * used as an escape character for terminating or suspending the session.  */
 end_comment
 
 begin_function
@@ -2641,9 +3091,17 @@ name|max_fd
 init|=
 literal|0
 decl_stmt|,
+name|max_fd2
+init|=
+literal|0
+decl_stmt|,
 name|len
 decl_stmt|,
 name|rekeying
+init|=
+literal|0
+decl_stmt|,
+name|nalloc
 init|=
 literal|0
 decl_stmt|;
@@ -2871,13 +3329,6 @@ argument_list|,
 name|signal_handler
 argument_list|)
 expr_stmt|;
-name|signal
-argument_list|(
-name|SIGPIPE
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|have_pty
@@ -2909,8 +3360,7 @@ if|if
 condition|(
 name|escape_char
 operator|!=
-operator|-
-literal|1
+name|SSH_ESCAPECHAR_NONE
 condition|)
 name|channel_register_filter
 argument_list|(
@@ -3018,6 +3468,10 @@ condition|)
 break|break;
 block|}
 comment|/* 		 * Wait until we have something to do (something becomes 		 * available on one of the descriptors). 		 */
+name|max_fd2
+operator|=
+name|max_fd
+expr_stmt|;
 name|client_wait_until_can_do_something
 argument_list|(
 operator|&
@@ -3027,7 +3481,10 @@ operator|&
 name|writeset
 argument_list|,
 operator|&
-name|max_fd
+name|max_fd2
+argument_list|,
+operator|&
+name|nalloc
 argument_list|,
 name|rekeying
 argument_list|)
@@ -3153,10 +3610,98 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-comment|/* Stop listening for connections. */
-name|channel_stop_listening
+name|channel_free_all
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|have_pty
+condition|)
+name|leave_raw_mode
+argument_list|()
+expr_stmt|;
+comment|/* restore blocking io */
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
+condition|)
+name|unset_nonblock
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|)
+condition|)
+name|unset_nonblock
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stderr
+argument_list|)
+argument_list|)
+condition|)
+name|unset_nonblock
+argument_list|(
+name|fileno
+argument_list|(
+name|stderr
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|received_signal
+condition|)
+block|{
+if|if
+condition|(
+name|in_non_blocking_mode
+condition|)
+comment|/* XXX */
+name|leave_non_blocking
+argument_list|()
+expr_stmt|;
+name|fatal
+argument_list|(
+literal|"Killed by signal %d."
+argument_list|,
+operator|(
+name|int
+operator|)
+name|received_signal
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * In interactive mode (with pseudo tty) display a message indicating 	 * that the connection has been closed. 	 */
 if|if
 condition|(
@@ -3317,13 +3862,6 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|have_pty
-condition|)
-name|leave_raw_mode
-argument_list|()
-expr_stmt|;
 comment|/* Clear and free any buffers. */
 name|memset
 argument_list|(
@@ -3418,14 +3956,15 @@ comment|/*********/
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|client_input_stdout_data
 parameter_list|(
 name|int
 name|type
 parameter_list|,
-name|int
-name|plen
+name|u_int32_t
+name|seq
 parameter_list|,
 name|void
 modifier|*
@@ -3445,16 +3984,8 @@ operator|&
 name|data_len
 argument_list|)
 decl_stmt|;
-name|packet_integrity_check
-argument_list|(
-name|plen
-argument_list|,
-literal|4
-operator|+
-name|data_len
-argument_list|,
-name|type
-argument_list|)
+name|packet_check_eom
+argument_list|()
 expr_stmt|;
 name|buffer_append
 argument_list|(
@@ -3484,14 +4015,15 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_input_stderr_data
 parameter_list|(
 name|int
 name|type
 parameter_list|,
-name|int
-name|plen
+name|u_int32_t
+name|seq
 parameter_list|,
 name|void
 modifier|*
@@ -3511,16 +4043,8 @@ operator|&
 name|data_len
 argument_list|)
 decl_stmt|;
-name|packet_integrity_check
-argument_list|(
-name|plen
-argument_list|,
-literal|4
-operator|+
-name|data_len
-argument_list|,
-name|type
-argument_list|)
+name|packet_check_eom
+argument_list|()
 expr_stmt|;
 name|buffer_append
 argument_list|(
@@ -3550,32 +4074,27 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_input_exit_status
 parameter_list|(
 name|int
 name|type
 parameter_list|,
-name|int
-name|plen
+name|u_int32_t
+name|seq
 parameter_list|,
 name|void
 modifier|*
 name|ctxt
 parameter_list|)
 block|{
-name|packet_integrity_check
-argument_list|(
-name|plen
-argument_list|,
-literal|4
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
 name|exit_status
 operator|=
 name|packet_get_int
+argument_list|()
+expr_stmt|;
+name|packet_check_eom
 argument_list|()
 expr_stmt|;
 comment|/* Acknowledge the exit. */
@@ -3600,6 +4119,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|Channel
 modifier|*
 name|client_request_forwarded_tcpip
@@ -3633,8 +4153,6 @@ name|originator_port
 decl_stmt|;
 name|int
 name|sock
-decl_stmt|,
-name|newch
 decl_stmt|;
 comment|/* Get rest of the packet */
 name|listen_address
@@ -3661,7 +4179,7 @@ operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
-name|packet_done
+name|packet_check_eom
 argument_list|()
 expr_stmt|;
 name|debug
@@ -3679,7 +4197,7 @@ argument_list|)
 expr_stmt|;
 name|sock
 operator|=
-name|channel_connect_by_listen_adress
+name|channel_connect_by_listen_address
 argument_list|(
 name|listen_port
 argument_list|)
@@ -3687,11 +4205,25 @@ expr_stmt|;
 if|if
 condition|(
 name|sock
-operator|>=
+operator|<
 literal|0
 condition|)
 block|{
-name|newch
+name|xfree
+argument_list|(
+name|originator_address
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|listen_address
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+name|c
 operator|=
 name|channel_new
 argument_list|(
@@ -3720,14 +4252,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|c
-operator|=
-name|channel_lookup
-argument_list|(
-name|newch
-argument_list|)
-expr_stmt|;
-block|}
 name|xfree
 argument_list|(
 name|originator_address
@@ -3745,6 +4269,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|Channel
 modifier|*
 name|client_request_x11
@@ -3773,8 +4298,6 @@ name|originator_port
 decl_stmt|;
 name|int
 name|sock
-decl_stmt|,
-name|newch
 decl_stmt|;
 if|if
 condition|(
@@ -3830,7 +4353,7 @@ name|packet_get_int
 argument_list|()
 expr_stmt|;
 block|}
-name|packet_done
+name|packet_check_eom
 argument_list|()
 expr_stmt|;
 comment|/* XXX check permission */
@@ -3843,6 +4366,11 @@ argument_list|,
 name|originator_port
 argument_list|)
 expr_stmt|;
+name|xfree
+argument_list|(
+name|originator
+argument_list|)
+expr_stmt|;
 name|sock
 operator|=
 name|x11_connect_display
@@ -3851,11 +4379,13 @@ expr_stmt|;
 if|if
 condition|(
 name|sock
-operator|>=
+operator|<
 literal|0
 condition|)
-block|{
-name|newch
+return|return
+name|NULL
+return|;
+name|c
 operator|=
 name|channel_new
 argument_list|(
@@ -3885,17 +4415,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|c
+operator|->
+name|force_drain
 operator|=
-name|channel_lookup
-argument_list|(
-name|newch
-argument_list|)
-expr_stmt|;
-block|}
-name|xfree
-argument_list|(
-name|originator
-argument_list|)
+literal|1
 expr_stmt|;
 return|return
 name|c
@@ -3904,6 +4427,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|Channel
 modifier|*
 name|client_request_agent
@@ -3925,8 +4449,6 @@ name|NULL
 decl_stmt|;
 name|int
 name|sock
-decl_stmt|,
-name|newch
 decl_stmt|;
 if|if
 condition|(
@@ -3958,11 +4480,13 @@ expr_stmt|;
 if|if
 condition|(
 name|sock
-operator|>=
+operator|<
 literal|0
 condition|)
-block|{
-name|newch
+return|return
+name|NULL
+return|;
+name|c
 operator|=
 name|channel_new
 argument_list|(
@@ -3992,13 +4516,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|c
+operator|->
+name|force_drain
 operator|=
-name|channel_lookup
-argument_list|(
-name|newch
-argument_list|)
+literal|1
 expr_stmt|;
-block|}
 return|return
 name|c
 return|;
@@ -4010,14 +4532,15 @@ comment|/* XXXX move to generic input handler */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|client_input_channel_open
 parameter_list|(
 name|int
 name|type
 parameter_list|,
-name|int
-name|plen
+name|u_int32_t
+name|seq
 parameter_list|,
 name|void
 modifier|*
@@ -4034,17 +4557,15 @@ name|char
 modifier|*
 name|ctype
 decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
 name|int
 name|rchan
 decl_stmt|;
-name|int
+name|u_int
 name|rmaxpack
-decl_stmt|;
-name|int
+decl_stmt|,
 name|rwindow
+decl_stmt|,
+name|len
 decl_stmt|;
 name|ctype
 operator|=
@@ -4183,6 +4704,15 @@ name|remote_maxpacket
 operator|=
 name|rmaxpack
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|type
+operator|!=
+name|SSH_CHANNEL_CONNECTING
+condition|)
+block|{
 name|packet_start
 argument_list|(
 name|SSH2_MSG_CHANNEL_OPEN_CONFIRMATION
@@ -4220,6 +4750,7 @@ name|packet_send
 argument_list|()
 expr_stmt|;
 block|}
+block|}
 else|else
 block|{
 name|debug
@@ -4244,9 +4775,19 @@ argument_list|(
 name|SSH2_OPEN_ADMINISTRATIVELY_PROHIBITED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|datafellows
+operator|&
+name|SSH_BUG_OPENFAILURE
+operator|)
+condition|)
+block|{
 name|packet_put_cstring
 argument_list|(
-literal|"bla bla"
+literal|"open failed"
 argument_list|)
 expr_stmt|;
 name|packet_put_cstring
@@ -4254,6 +4795,7 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
 name|packet_send
 argument_list|()
 expr_stmt|;
@@ -4267,14 +4809,15 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_input_channel_req
 parameter_list|(
 name|int
 name|type
 parameter_list|,
-name|int
-name|plen
+name|u_int32_t
+name|seq
 parameter_list|,
 name|void
 modifier|*
@@ -4406,7 +4949,7 @@ operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
-name|packet_done
+name|packet_check_eom
 argument_list|()
 expr_stmt|;
 block|}
@@ -4444,6 +4987,85 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|client_input_global_request
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|u_int32_t
+name|seq
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|rtype
+decl_stmt|;
+name|int
+name|want_reply
+decl_stmt|;
+name|int
+name|success
+init|=
+literal|0
+decl_stmt|;
+name|rtype
+operator|=
+name|packet_get_string
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|want_reply
+operator|=
+name|packet_get_char
+argument_list|()
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"client_input_global_request: rtype %s want_reply %d"
+argument_list|,
+name|rtype
+argument_list|,
+name|want_reply
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|want_reply
+condition|)
+block|{
+name|packet_start
+argument_list|(
+name|success
+condition|?
+name|SSH2_MSG_REQUEST_SUCCESS
+else|:
+name|SSH2_MSG_REQUEST_FAILURE
+argument_list|)
+expr_stmt|;
+name|packet_send
+argument_list|()
+expr_stmt|;
+name|packet_write_wait
+argument_list|()
+expr_stmt|;
+block|}
+name|xfree
+argument_list|(
+name|rtype
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|client_init_dispatch_20
 parameter_list|(
@@ -4528,6 +5150,14 @@ operator|&
 name|channel_input_window_adjust
 argument_list|)
 expr_stmt|;
+name|dispatch_set
+argument_list|(
+name|SSH2_MSG_GLOBAL_REQUEST
+argument_list|,
+operator|&
+name|client_input_global_request
+argument_list|)
+expr_stmt|;
 comment|/* rekeying */
 name|dispatch_set
 argument_list|(
@@ -4537,10 +5167,28 @@ operator|&
 name|kex_input_kexinit
 argument_list|)
 expr_stmt|;
+comment|/* global request reply messages */
+name|dispatch_set
+argument_list|(
+name|SSH2_MSG_REQUEST_FAILURE
+argument_list|,
+operator|&
+name|client_global_request_reply
+argument_list|)
+expr_stmt|;
+name|dispatch_set
+argument_list|(
+name|SSH2_MSG_REQUEST_SUCCESS
+argument_list|,
+operator|&
+name|client_global_request_reply
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_init_dispatch_13
 parameter_list|(
@@ -4658,6 +5306,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_init_dispatch_15
 parameter_list|(
@@ -4687,6 +5336,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|client_init_dispatch
 parameter_list|(

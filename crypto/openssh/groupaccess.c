@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: groupaccess.c,v 1.3 2001/01/29 01:58:15 niklas Exp $	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (c) 2001 Kevin Steves.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -12,6 +8,14 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$OpenBSD: groupaccess.c,v 1.5 2002/03/04 17:27:39 stevesk Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -59,6 +63,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* +1 for base/primary group */
+end_comment
+
+begin_comment
+comment|/*  * Initialize group access list for user with primary (base) and  * supplementary groups.  Return the number of groups in the list.  */
 end_comment
 
 begin_function
@@ -191,6 +199,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return 1 if one of user's groups is contained in groups.  * Return 0 otherwise.  Use match_pattern() for string comparison.  */
+end_comment
+
 begin_function
 name|int
 name|ga_match
@@ -259,6 +271,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Free memory allocated for group access list.  */
+end_comment
 
 begin_function
 name|void

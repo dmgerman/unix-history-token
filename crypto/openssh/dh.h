@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: dh.h,v 1.5 2001/04/03 19:53:29 markus Exp $	*/
+comment|/*	$OpenBSD: dh.h,v 1.7 2001/06/26 17:27:23 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -44,13 +44,10 @@ modifier|*
 name|choose_dh
 parameter_list|(
 name|int
-name|min
 parameter_list|,
 name|int
-name|nbits
 parameter_list|,
 name|int
-name|max
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -113,11 +110,9 @@ name|dh_pub_is_valid
 parameter_list|(
 name|DH
 modifier|*
-name|dh
 parameter_list|,
 name|BIGNUM
 modifier|*
-name|dh_pub
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -127,7 +122,6 @@ name|int
 name|dh_estimate
 parameter_list|(
 name|int
-name|bits
 parameter_list|)
 function_decl|;
 end_function_decl

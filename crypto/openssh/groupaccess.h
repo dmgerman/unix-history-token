@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: groupaccess.h,v 1.2 2001/01/29 01:58:15 niklas Exp $	*/
+comment|/*	$OpenBSD: groupaccess.h,v 1.4 2001/06/26 17:27:23 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -25,10 +25,6 @@ directive|include
 file|<grp.h>
 end_include
 
-begin_comment
-comment|/*  * Initialize group access list for user with primary (base) and  * supplementary groups.  Return the number of groups in the list.  */
-end_comment
-
 begin_function_decl
 name|int
 name|ga_init
@@ -36,17 +32,11 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|user
 parameter_list|,
 name|gid_t
-name|base
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Return 1 if one of user's groups is contained in groups.  * Return 0 otherwise.  Use match_pattern() for string comparison.  */
-end_comment
 
 begin_function_decl
 name|int
@@ -56,17 +46,11 @@ name|char
 modifier|*
 specifier|const
 modifier|*
-name|groups
 parameter_list|,
 name|int
-name|ngroups
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Free memory allocated for group access list.  */
-end_comment
 
 begin_function_decl
 name|void

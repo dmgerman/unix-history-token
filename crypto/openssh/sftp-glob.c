@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2001,2002 Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,22 +12,10 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-glob.c,v 1.5 2001/04/15 08:43:46 markus Exp $"
+literal|"$OpenBSD: sftp-glob.c,v 1.10 2002/02/13 00:59:23 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|<glob.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssh.h"
-end_include
 
 begin_include
 include|#
@@ -44,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"getput.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xmalloc.h"
 end_include
 
@@ -57,18 +39,6 @@ begin_include
 include|#
 directive|include
 file|"log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"atomicio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
 end_include
 
 begin_include
@@ -115,11 +85,10 @@ begin_struct
 specifier|static
 struct|struct
 block|{
-name|int
-name|fd_in
-decl_stmt|;
-name|int
-name|fd_out
+name|struct
+name|sftp_conn
+modifier|*
+name|conn
 decl_stmt|;
 block|}
 name|cur
@@ -127,6 +96,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|fudge_opendir
@@ -159,11 +129,7 @@ name|do_readdir
 argument_list|(
 name|cur
 operator|.
-name|fd_in
-argument_list|,
-name|cur
-operator|.
-name|fd_out
+name|conn
 argument_list|,
 operator|(
 name|char
@@ -201,6 +167,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|dirent
 modifier|*
@@ -212,11 +179,44 @@ modifier|*
 name|od
 parameter_list|)
 block|{
+comment|/* Solaris needs sizeof(dirent) + path length (see below) */
 specifier|static
+name|char
+name|buf
+index|[
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dirent
+argument_list|)
+operator|+
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 name|struct
 name|dirent
+modifier|*
 name|ret
+init|=
+operator|(
+expr|struct
+name|dirent
+operator|*
+operator|)
+name|buf
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNU_LIBRARY__
+specifier|static
+name|int
+name|inum
+init|=
+literal|1
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* __GNU_LIBRARY__ */
 if|if
 condition|(
 name|od
@@ -237,21 +237,47 @@ operator|)
 return|;
 name|memset
 argument_list|(
-operator|&
-name|ret
+name|buf
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ret
+name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Solaris defines dirent->d_name as a one byte array and expects 	 * you to hack around it. 	 */
+ifdef|#
+directive|ifdef
+name|BROKEN_ONE_BYTE_DIRENT_D_NAME
 name|strlcpy
 argument_list|(
 name|ret
-operator|.
+operator|->
+name|d_name
+argument_list|,
+name|od
+operator|->
+name|dir
+index|[
+name|od
+operator|->
+name|offset
+operator|++
+index|]
+operator|->
+name|filename
+argument_list|,
+name|MAXPATHLEN
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|strlcpy
+argument_list|(
+name|ret
+operator|->
 name|d_name
 argument_list|,
 name|od
@@ -269,14 +295,38 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ret
-operator|.
+operator|->
 name|d_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__GNU_LIBRARY__
+comment|/* 	 * Idiot glibc uses extensions to struct dirent for readdir with 	 * ALTDIRFUNCs. Not that this is documented anywhere but the  	 * source... Fake an inode number to appease it. 	 */
+name|ret
+operator|->
+name|d_ino
+operator|=
+name|inum
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|inum
+condition|)
+name|inum
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __GNU_LIBRARY__ */
 return|return
 operator|(
-operator|&
 name|ret
 operator|)
 return|;
@@ -284,6 +334,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fudge_closedir
 parameter_list|(
@@ -309,6 +360,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|attrib_to_stat
 parameter_list|(
@@ -423,6 +475,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fudge_lstat
 parameter_list|(
@@ -451,11 +504,7 @@ name|do_lstat
 argument_list|(
 name|cur
 operator|.
-name|fd_in
-argument_list|,
-name|cur
-operator|.
-name|fd_out
+name|conn
 argument_list|,
 operator|(
 name|char
@@ -489,6 +538,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fudge_stat
 parameter_list|(
@@ -517,11 +567,7 @@ name|do_stat
 argument_list|(
 name|cur
 operator|.
-name|fd_in
-argument_list|,
-name|cur
-operator|.
-name|fd_out
+name|conn
 argument_list|,
 operator|(
 name|char
@@ -558,11 +604,10 @@ begin_function
 name|int
 name|remote_glob
 parameter_list|(
-name|int
-name|fd_in
-parameter_list|,
-name|int
-name|fd_out
+name|struct
+name|sftp_conn
+modifier|*
+name|conn
 parameter_list|,
 specifier|const
 name|char
@@ -594,10 +639,6 @@ name|pglob
 operator|->
 name|gl_opendir
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|fudge_opendir
 expr_stmt|;
 name|pglob
@@ -605,8 +646,16 @@ operator|->
 name|gl_readdir
 operator|=
 operator|(
+expr|struct
+name|dirent
+operator|*
+call|(
+modifier|*
+call|)
+argument_list|(
 name|void
 operator|*
+argument_list|)
 operator|)
 name|fudge_readdir
 expr_stmt|;
@@ -616,7 +665,13 @@ name|gl_closedir
 operator|=
 operator|(
 name|void
+argument_list|(
 operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
 operator|)
 name|fudge_closedir
 expr_stmt|;
@@ -647,15 +702,9 @@ argument_list|)
 expr_stmt|;
 name|cur
 operator|.
-name|fd_in
+name|conn
 operator|=
-name|fd_in
-expr_stmt|;
-name|cur
-operator|.
-name|fd_out
-operator|=
-name|fd_out
+name|conn
 expr_stmt|;
 return|return
 operator|(
@@ -667,10 +716,6 @@ name|flags
 operator||
 name|GLOB_ALTDIRFUNC
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|errfunc
 argument_list|,
 name|pglob
