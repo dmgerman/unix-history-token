@@ -4901,9 +4901,7 @@ comment|/* if mirror gone or close to last access on source */
 if|if
 condition|(
 operator|!
-operator|(
 name|mir_online
-operator|)
 operator|||
 operator|(
 operator|(
@@ -4968,7 +4966,6 @@ if|if
 condition|(
 operator|!
 name|src_online
-condition|)
 operator|||
 operator|(
 operator|(
@@ -5025,7 +5022,7 @@ operator|+
 name|AR_PROXIMITY
 operator|)
 operator|)
-block|)
+condition|)
 block|{
 name|buf1
 operator|->
@@ -5391,10 +5388,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|void
 name|ar_done
 parameter_list|(
