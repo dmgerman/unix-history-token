@@ -136,6 +136,8 @@ name|int
 name|sflag
 decl_stmt|,
 name|r
+decl_stmt|,
+name|namelen
 decl_stmt|;
 name|char
 name|p
@@ -156,14 +158,14 @@ value|20
 define|#
 directive|define
 name|MAXHOSTNAME
-value|18
-comment|/* in reality, hosts are not longer than 16 */
+value|20
+comment|/* in reality, hosts are never longer than 16 */
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*s %-*s %s  %s\n"
+literal|"%-*s %-*s%s  %s\n"
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
@@ -173,7 +175,7 @@ name|MAXREALNAME
 argument_list|,
 literal|"Name"
 argument_list|,
-literal|"TTY   Idle  Login Time"
+literal|" TTY  Idle  Login Time"
 argument_list|,
 name|oflag
 condition|?
@@ -269,12 +271,33 @@ operator|->
 name|next
 control|)
 block|{
+name|namelen
+operator|=
+name|MAXREALNAME
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|info
+operator|==
+name|LOGGEDIN
+operator|&&
+operator|!
+name|w
+operator|->
+name|writable
+condition|)
+operator|--
+name|namelen
+expr_stmt|;
+comment|/* leave space before `*' */
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*.*s %-*.*s "
+literal|"%-*.*s %-*.*s"
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
@@ -286,7 +309,7 @@ name|name
 argument_list|,
 name|MAXREALNAME
 argument_list|,
-name|MAXREALNAME
+name|namelen
 argument_list|,
 name|pn
 operator|->
@@ -593,7 +616,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %-.13s"
+literal|" %-.15s"
 argument_list|,
 name|prphone
 argument_list|(
