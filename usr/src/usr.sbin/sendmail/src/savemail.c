@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.15 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,6 +673,14 @@ name|PostMasterCopy
 operator|!=
 name|NULL
 condition|)
+block|{
+specifier|auto
+name|ADDRESS
+modifier|*
+name|rlist
+init|=
+name|NULL
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -687,13 +695,28 @@ operator|)
 name|NULL
 argument_list|,
 operator|&
-name|e
-operator|->
-name|e_errorqueue
+name|rlist
 argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|returntosender
+argument_list|(
+name|e
+operator|->
+name|e_message
+argument_list|,
+name|rlist
+argument_list|,
+name|FALSE
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
 name|q
 operator|=
 name|e
