@@ -180,7 +180,13 @@ argument_list|(
 operator|&
 name|opie
 argument_list|,
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 name|luser
+argument_list|)
 argument_list|)
 operator|!=
 literal|0
@@ -242,7 +248,13 @@ if|if
 condition|(
 name|opieaccessfile
 argument_list|(
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 name|rhost
+argument_list|)
 argument_list|)
 operator|!=
 literal|0
