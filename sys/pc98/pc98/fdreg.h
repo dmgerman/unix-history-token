@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|FDDATA
-value|2
+value|1
 end_define
 
 begin_comment
@@ -52,18 +52,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FDOUT
-value|4
+name|FDCTL
+value|2
 end_define
 
 begin_comment
-comment|/* Digital Output Register (W) */
+comment|/* FD Control Register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FDO_RST
+name|FDC_RST
 value|0x80
 end_define
 
@@ -74,7 +74,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FDO_FRY
+name|FDC_RDY
 value|0x40
 end_define
 
@@ -85,18 +85,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FDO_AIE
-value|0x20
-end_define
-
-begin_comment
-comment|/*  Attention Interrupt Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDO_DD
+name|FDC_DD
 value|0x20
 end_define
 
@@ -107,7 +96,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FDO_DMAE
+name|FDC_DMAE
 value|0x10
 end_define
 
@@ -118,7 +107,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FDO_MTON
+name|FDC_MTON
 value|0x08
 end_define
 
@@ -129,7 +118,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FDO_TMSK
+name|FDC_TMSK
 value|0x04
 end_define
 
@@ -140,89 +129,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FDO_TTRG
+name|FDC_TTRG
 value|0x01
 end_define
 
 begin_comment
 comment|/*  TIMER TRIGER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDIN
-value|4
-end_define
-
-begin_comment
-comment|/* Digital Input Register (R) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDI_TYP0
-value|0x04
-end_define
-
-begin_comment
-comment|/* FDD #1/#2 TYPE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDI_TYP1
-value|0x08
-end_define
-
-begin_comment
-comment|/* FDD #3/#4 TYPE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDI_RDY
-value|0x10
-end_define
-
-begin_comment
-comment|/* Ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDI_DMACH
-value|0x20
-end_define
-
-begin_comment
-comment|/* DMA Channel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDI_FINT0
-value|0x40
-end_define
-
-begin_comment
-comment|/* Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDI_FINT1
-value|0x80
-end_define
-
-begin_comment
-comment|/* Interrupt */
 end_comment
 
 begin_define
@@ -388,6 +300,15 @@ begin_comment
 comment|/* Control Register (W) */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -449,15 +370,6 @@ end_endif
 
 begin_comment
 comment|/* FDC_500KBPS */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PC98 */
 end_comment
 
 begin_comment
