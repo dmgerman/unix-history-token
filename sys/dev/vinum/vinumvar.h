@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *	Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.27 2001/05/22 04:07:22 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *	Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.32 2003/04/28 02:54:43 grog Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -18,14 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mutex.h>
 end_include
+
+begin_comment
+comment|/* Directory for device nodes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VINUM_DIR
+value|"/dev/vinum"
+end_define
 
 begin_comment
 comment|/*  * Some configuration maxima.  They're an enum because  * we can't define global constants.  Sorry about that.  *  * These aren't as bad as they look: most of them are soft limits.  */
@@ -72,7 +77,7 @@ operator|-
 literal|1
 block|,
 comment|/* round robin read policy */
-comment|/* type field in minor number */
+comment|/*      * Type field in high-order two bits of minor      * number.  Subdisks are in fact both type 2 and      * type 3, giving twice the number of subdisks.      * This causes some ugliness in the code.      */
 name|VINUM_VOLUME_TYPE
 init|=
 literal|0
@@ -85,65 +90,55 @@ name|VINUM_SD_TYPE
 init|=
 literal|2
 block|,
-name|VINUM_DRIVE_TYPE
+name|VINUM_SD2_TYPE
 init|=
 literal|3
 block|,
-name|VINUM_SUPERDEV_TYPE
-init|=
-literal|4
-block|,
-comment|/* super device. */
-name|VINUM_RAWPLEX_TYPE
-init|=
-literal|5
-block|,
-comment|/* anonymous plex */
-name|VINUM_RAWSD_TYPE
-init|=
-literal|6
-block|,
-comment|/* anonymous subdisk */
-comment|/* Shifts for the individual fields in the device */
+comment|/*      * Define a minor device number.      * This is not used directly; instead, it's      * called by the other macros.      */
+define|#
+directive|define
+name|VINUMMINOR
+parameter_list|(
+name|o
+parameter_list|,
+name|t
+parameter_list|)
+value|((o& 0xff) | ((o& 0x3fff00)<< 8) | (t<< VINUM_TYPE_SHIFT))
 name|VINUM_TYPE_SHIFT
 init|=
-literal|28
+literal|30
 block|,
-name|VINUM_VOL_SHIFT
+name|VINUM_MAXVOL
 init|=
-literal|0
+literal|0x3ffffd
 block|,
-name|VINUM_PLEX_SHIFT
+comment|/* highest numbered volume */
+comment|/*      * The super device and the daemon device are      * magic: they're the two highest-numbered      * volumes.      */
+name|VINUM_SUPERDEV_VOL
 init|=
-literal|16
+literal|0x3ffffe
 block|,
-name|VINUM_SD_SHIFT
+name|VINUM_DAEMON_VOL
 init|=
-literal|20
+literal|0x3fffff
 block|,
-name|VINUM_VOL_WIDTH
+name|VINUM_MAXPLEX
 init|=
-literal|8
+literal|0x3fffff
 block|,
-name|VINUM_PLEX_WIDTH
+name|VINUM_MAXSD
 init|=
-literal|3
+literal|0x7fffff
 block|,
-name|VINUM_SD_WIDTH
-init|=
-literal|8
-block|,
-comment|/*    * Shifts for the second half of raw plex and    * subdisk numbers  */
-name|VINUM_RAWPLEX_SHIFT
-init|=
-literal|8
-block|,
-comment|/* shift the second half this much */
-name|VINUM_RAWPLEX_WIDTH
-init|=
-literal|12
-block|,
-comment|/* width of second half */
+define|#
+directive|define
+name|VINUM_SUPERDEV_MINOR
+value|VINUMMINOR (VINUM_SUPERDEV_VOL, VINUM_VOLUME_TYPE)
+define|#
+directive|define
+name|VINUM_DAEMON_MINOR
+value|VINUMMINOR (VINUM_DAEMON_VOL, VINUM_VOLUME_TYPE)
+comment|/*      * Mask for the number part of each object.      * Plexes and volumes are the same, subdisks use      * the low-order bit of the type field and thus      * have twice the number.      */
 name|MAJORDEV_SHIFT
 init|=
 literal|8
@@ -183,66 +178,44 @@ init|=
 literal|64
 block|,
 comment|/* maximum length of any name */
-comment|/*      * Define a minor device number.      * This is not used directly; instead, it's      * called by the other macros.      */
 define|#
 directive|define
-name|VINUMMINOR
+name|OBJTYPE
 parameter_list|(
-name|v
-parameter_list|,
-name|p
-parameter_list|,
-name|s
-parameter_list|,
-name|t
+name|x
 parameter_list|)
-value|( (v<< VINUM_VOL_SHIFT)		\ 			      | (p<< VINUM_PLEX_SHIFT)		\ 			      | (s<< VINUM_SD_SHIFT)		\ 			      | (t<< VINUM_TYPE_SHIFT) )
+value|((minor(x)>> VINUM_TYPE_SHIFT)& 3)
 comment|/* Create device minor numbers */
 define|#
 directive|define
 name|VINUMDEV
 parameter_list|(
-name|v
-parameter_list|,
-name|p
-parameter_list|,
-name|s
+name|o
 parameter_list|,
 name|t
 parameter_list|)
-value|makedev (VINUM_CDEV_MAJOR, VINUMMINOR (v, p, s, t))
+value|makedev (VINUM_CDEV_MAJOR, VINUMMINOR (o, t))
+define|#
+directive|define
+name|VINUM_VOL
+parameter_list|(
+name|v
+parameter_list|)
+value|makedev (VINUM_CDEV_MAJOR, \ 				 VINUMMINOR (v, VINUM_VOLUME_TYPE))
 define|#
 directive|define
 name|VINUM_PLEX
 parameter_list|(
 name|p
 parameter_list|)
-value|makedev (VINUM_CDEV_MAJOR,				\ 				 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 				 | (p& 0xff)				\ 				 | ((p& ~0xff)<< 8) )
+value|makedev (VINUM_CDEV_MAJOR, \ 				 VINUMMINOR (p, VINUM_PLEX_TYPE))
 define|#
 directive|define
 name|VINUM_SD
 parameter_list|(
 name|s
 parameter_list|)
-value|makedev (VINUM_CDEV_MAJOR,				\ 				 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 				 | (s& 0xff)				\ 				 | ((s& ~0xff)<< 8) )
-comment|/* Create a bit mask for x bits */
-define|#
-directive|define
-name|MASK
-parameter_list|(
-name|x
-parameter_list|)
-value|((1<< (x)) - 1)
-comment|/* Create a raw block device minor number */
-define|#
-directive|define
-name|VINUMRMINOR
-parameter_list|(
-name|d
-parameter_list|,
-name|t
-parameter_list|)
-value|( ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			  | ((d& ~MASK (VINUM_VOL_WIDTH))			\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH))		\ 			  | (t<< VINUM_TYPE_SHIFT) )
+value|makedev (VINUM_CDEV_MAJOR, \ 				 VINUMMINOR (s, VINUM_SD_TYPE))
 comment|/* extract device type */
 define|#
 directive|define
@@ -250,18 +223,17 @@ name|DEVTYPE
 parameter_list|(
 name|x
 parameter_list|)
-value|((minor (x)>> VINUM_TYPE_SHIFT)& 7)
-comment|/*      * This mess is used to catch people who compile      * a debug vinum(8) and non-debug kernel module,      * or the other way round.      */
+value|((minor (x)>> VINUM_TYPE_SHIFT)& 3)
 define|#
 directive|define
-name|VINUM_SUPERDEV
-value|VINUMMINOR (1, 0, 0, VINUM_SUPERDEV_TYPE)
-comment|/* superdevice number */
+name|VINUM_SUPERDEV_NAME
+value|VINUM_DIR"/control"
+comment|/* normal super device */
 define|#
 directive|define
-name|VINUM_DAEMON_DEV
-value|VINUMMINOR (0, 0, 0, VINUM_SUPERDEV_TYPE)
-comment|/* daemon superdevice number */
+name|VINUM_DAEMON_DEV_NAME
+value|VINUM_DIR"/controld"
+comment|/* super device for daemon only */
 comment|/*  * the number of object entries to cater for initially, and also the  * value by which they are incremented.  It doesn't take long  * to extend them, so theoretically we could start with 1 of each, but  * it's untidy to allocate such small areas.  These values are  * probably too small.  */
 name|INITIAL_DRIVES
 init|=
@@ -322,103 +294,6 @@ comment|/* host name field in label */
 block|}
 enum|;
 end_enum
-
-begin_comment
-comment|/* device numbers */
-end_comment
-
-begin_comment
-comment|/*  *  31 30   28  27                  20  19 18    16  15                 8    7                   0  * |-----------------------------------------------------------------------------------------------|  * |X |  Type  |    Subdisk number     | X| Plex   |      Major number     |  volume number        |  * |-----------------------------------------------------------------------------------------------|  *  *    0x2                 03                 1           19                      06  *  * The fields in the minor number are interpreted as follows:  *  * Volume:              Only type and volume number are relevant  * Plex in volume:      type, plex number in volume and volume number are relevant  * raw plex:            type, plex number is made of bits 27-16 and 7-0  * raw subdisk:         type, subdisk number is made of bits 27-16 and 7-0  */
-end_comment
-
-begin_comment
-comment|/* This doesn't get used.  Consider removing it. */
-end_comment
-
-begin_struct
-struct|struct
-name|devcode
-block|{
-comment|/*  * CARE.  These fields assume a big-endian word.  On a  * little-endian system, they're the wrong way around  */
-name|unsigned
-name|volume
-range|:
-literal|8
-decl_stmt|;
-comment|/* up to 256 volumes */
-name|unsigned
-name|major
-range|:
-literal|8
-decl_stmt|;
-comment|/* this is where the major number fits */
-name|unsigned
-name|plex
-range|:
-literal|3
-decl_stmt|;
-comment|/* up to 8 plexes per volume */
-name|unsigned
-name|unused
-range|:
-literal|1
-decl_stmt|;
-comment|/* up for grabs */
-name|unsigned
-name|sd
-range|:
-literal|8
-decl_stmt|;
-comment|/* up to 256 subdisks per plex */
-name|unsigned
-name|type
-range|:
-literal|3
-decl_stmt|;
-comment|/* type of object */
-comment|/*      * type field      VINUM_VOLUME = 0,      VINUM_PLEX = 1,      VINUM_SUBDISK = 2,      VINUM_DRIVE = 3,      VINUM_SUPERDEV = 4,      VINUM_RAWPLEX = 5,      VINUM_RAWSD = 6 */
-name|unsigned
-name|signbit
-range|:
-literal|1
-decl_stmt|;
-comment|/* to make 32 bits */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|VINUM_DIR
-value|"/dev/vinum"
-end_define
-
-begin_comment
-comment|/*  * These definitions help catch  * userland/kernel mismatches.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VINUM_SUPERDEV_NAME
-value|VINUM_DIR"/control"
-end_define
-
-begin_comment
-comment|/* normal super device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VINUM_DAEMON_DEV_NAME
-value|VINUM_DIR"/controld"
-end_define
-
-begin_comment
-comment|/* super device for daemon only */
-end_comment
 
 begin_comment
 comment|/*  * Slice header  *  * Vinum drives start with this structure:  *  *\                                            Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      8  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      9  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      9 + size of config  * |                                      |  * |--------------------------------------|  */
