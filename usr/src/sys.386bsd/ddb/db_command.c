@@ -4,7 +4,7 @@ comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: db_command.c,v $  * Revision 1.1  1992/03/25  21:45:02  pace  * Initial revision  *  * Revision 2.6  91/02/05  17:06:10  mrt  * 	Changed to new Mach copyright  * 	[91/01/31  16:17:18  mrt]  *   * Revision 2.5  91/01/08  17:31:54  rpd  * 	Forward reference for db_fncall();  * 	[91/01/04  12:35:17  rvb]  *   * 	Add call as a synonym for ! and match for next  * 	[91/01/04  12:14:48  rvb]  *   * Revision 2.4  90/11/07  16:49:15  rpd  * 	Added search.  * 	[90/11/06            rpd]  *   * Revision 2.3  90/10/25  14:43:45  rwd  * 	Changed db_fncall to print the result unsigned.  * 	[90/10/19            rpd]  *   * 	Added CS_MORE to db_watchpoint_cmd.  * 	[90/10/17            rpd]  * 	Added watchpoint commands: watch, dwatch, show watches.  * 	[90/10/16            rpd]  *   * Revision 2.2  90/08/27  21:50:10  dbg  * 	Remove 'listbreaks' - use 'show breaks' instead.  Change 'show  * 	threads' to 'show all threads' to avoid clash with 'show thread'.  * 	Set 'dot' here from db_prev or db_next, depending on 'db_ed_style'  * 	flag and syntax table.  * 	[90/08/22            dbg]  * 	Reduce lint.  * 	[90/08/07            dbg]  * 	Created.  * 	[90/07/25            dbg]  *   */
+comment|/*  * HISTORY  * $Log: db_command.c,v $  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00081  * --------------------         -----   ----------------------  *  * 01 Feb 93	Julian Elischer		move strcmp to a more general  *					part of the kernel.  *  * Revision 1.1  1992/03/25  21:45:02  pace  * Initial revision  *  * Revision 2.6  91/02/05  17:06:10  mrt  * 	Changed to new Mach copyright  * 	[91/01/31  16:17:18  mrt]  *   * Revision 2.5  91/01/08  17:31:54  rpd  * 	Forward reference for db_fncall();  * 	[91/01/04  12:35:17  rvb]  *   * 	Add call as a synonym for ! and match for next  * 	[91/01/04  12:14:48  rvb]  *   * Revision 2.4  90/11/07  16:49:15  rpd  * 	Added search.  * 	[90/11/06            rpd]  *   * Revision 2.3  90/10/25  14:43:45  rwd  * 	Changed db_fncall to print the result unsigned.  * 	[90/10/19            rpd]  *   * 	Added CS_MORE to db_watchpoint_cmd.  * 	[90/10/17            rpd]  * 	Added watchpoint commands: watch, dwatch, show watches.  * 	[90/10/16            rpd]  *   * Revision 2.2  90/08/27  21:50:10  dbg  * 	Remove 'listbreaks' - use 'show breaks' instead.  Change 'show  * 	threads' to 'show all threads' to avoid clash with 'show thread'.  * 	Set 'dot' here from db_prev or db_next, depending on 'db_ed_style'  * 	flag and syntax table.  * 	[90/08/22            dbg]  * 	Reduce lint.  * 	[90/08/07            dbg]  * 	Created.  * 	[90/07/25            dbg]  *   */
 end_comment
 
 begin_comment
@@ -1882,72 +1882,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_function
-name|int
-name|strcmp
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-specifier|register
-specifier|const
-name|char
-modifier|*
-name|s1
-decl_stmt|,
-decl|*
-name|s2
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-while|while
-condition|(
-operator|*
-name|s1
-operator|==
-operator|*
-name|s2
-operator|++
-condition|)
-if|if
-condition|(
-operator|*
-name|s1
-operator|++
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
-operator|*
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|s1
-operator|-
-operator|*
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|--
-name|s2
-operator|)
-return|;
-block|}
-end_block
 
 end_unit
 
