@@ -1037,6 +1037,18 @@ argument_list|(
 literal|"IRQL_NOT_LESS_THAN"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hal_irql
+argument_list|()
+operator|==
+name|DISPATCH_LEVEL
+condition|)
+return|return
+operator|(
+name|DISPATCH_LEVEL
+operator|)
+return|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1047,7 +1059,7 @@ name|oldirql
 operator|=
 name|curthread
 operator|->
-name|td_priority
+name|td_base_pri
 expr_stmt|;
 name|sched_prio
 argument_list|(
@@ -1055,6 +1067,12 @@ name|curthread
 argument_list|,
 name|PI_REALTIME
 argument_list|)
+expr_stmt|;
+name|curthread
+operator|->
+name|td_base_pri
+operator|=
+name|PI_REALTIME
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -1087,6 +1105,13 @@ specifier|__volatile__
 asm|("" : "=c" (oldirql));
 if|if
 condition|(
+name|oldirql
+operator|==
+name|DISPATCH_LEVEL
+condition|)
+return|return;
+if|if
+condition|(
 name|hal_irql
 argument_list|()
 operator|!=
@@ -1102,6 +1127,12 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
+expr_stmt|;
+name|curthread
+operator|->
+name|td_base_pri
+operator|=
+name|oldirql
 expr_stmt|;
 name|sched_prio
 argument_list|(
