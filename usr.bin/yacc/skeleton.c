@@ -164,6 +164,12 @@ name|header
 index|[]
 init|=
 block|{
+literal|"#if YYDEBUG"
+block|,
+literal|"#include<stdio.h>"
+block|,
+literal|"#endif"
+block|,
 literal|"#ifdef YYSTACKSIZE"
 block|,
 literal|"#undef YYMAXDEPTH"

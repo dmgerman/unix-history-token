@@ -4599,16 +4599,9 @@ name|fprintf
 argument_list|(
 name|code_file
 argument_list|,
-literal|"#ifndef YYDEBUG\n#define YYDEBUG %d\n"
+literal|"#ifndef YYDEBUG\n#define YYDEBUG %d\n#endif\n"
 argument_list|,
 name|tflag
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|code_file
-argument_list|,
-literal|"#elif YYDEBUG\n#include<stdio.h>\n#endif\n"
 argument_list|)
 expr_stmt|;
 if|if
