@@ -98,9 +98,6 @@ expr_stmt|;
 name|root_bus_configure
 argument_list|()
 expr_stmt|;
-name|cninit_finish
-argument_list|()
-expr_stmt|;
 name|cold
 operator|=
 literal|0
