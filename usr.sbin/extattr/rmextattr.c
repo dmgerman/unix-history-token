@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libgen.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libutil.h>
 end_include
 
@@ -373,14 +379,12 @@ name|NULL
 expr_stmt|;
 name|p
 operator|=
-name|strrchr
+name|basename
 argument_list|(
 name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-literal|'/'
 argument_list|)
 expr_stmt|;
 if|if
