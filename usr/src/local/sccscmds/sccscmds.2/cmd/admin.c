@@ -11,20 +11,15 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|admin
-operator|.
-name|c
-literal|4.1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)admin.c	4.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Program to create new SCCS files and change parameters 	of existing ones. Arguments to the program may appear in 	any order and consist of keyletters, which begin with '-', 	and named files. Named files which do not exist are created 	and their parameters are initialized according to the given 	keyletter arguments, or are given default values if the 	corresponding keyletters were not supplied. Named files which 	do exist have those parameters corresponding to given key-letter 	arguments changed and other parameters are left as is.  	If a directory is given as an argument, each SCCS file within 	the directory is processed as if it had been specifically named. 	If a name of '-' is given, the standard input is read for a list 	of names of SCCS files to be processed. 	Non-SCCS files are ignored.  	Files created are given mode 444. */
@@ -123,13 +118,14 @@ name|Mrs
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
 name|Valpgm
 index|[]
+init|=
 literal|"/usr/local/val"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -141,12 +137,13 @@ name|num_files
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
 name|VFLAG
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1000,8 +997,7 @@ end_comment
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator|&
+operator|&=
 operator|~
 name|FTLEXIT
 expr_stmt|;
@@ -1009,8 +1005,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator||
+operator||=
 name|FTLJMP
 expr_stmt|;
 end_expr_stmt
@@ -2035,8 +2030,7 @@ literal|1
 expr_stmt|;
 comment|/* don't write previous line */
 name|cp
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 comment|/* point to flag character */

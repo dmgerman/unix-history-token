@@ -11,20 +11,15 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|rmchg
-operator|.
-name|c
-literal|4.2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)rmchg.c	4.3	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Program to remove a specified delta from an SCCS file, 	when invoked as 'rmdel', 	or to change the MRs and/or comments of a specified delta, 	when invoked as 'chghist'. 	(The program has two links to it, one called 'rmdel', the 	other 'chghist'.)  	The delta to be removed (or whose MRs and/or comments 	are to be changed) is specified via the 	r argument, in the form of an SID.  	If the delta is to be removed, it must be the most recent one 	in its branch in the delta tree (a so-called 'leaf' delta). 	For either function, the delta being processed must not 	have any 'delivered' MRs, and the user must have basically 	the same permissions as are required to make deltas.  	If a directory is given as an argument, each SCCS file 	within the directory will be processed as if it had been 	specifically named. If a name of '-' is given, the standard 	input will be read for a list of names of SCCS files to be 	processed. Non SCCS files are ignored. */
@@ -342,8 +337,7 @@ end_comment
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator|&
+operator|&=
 operator|~
 name|FTLEXIT
 expr_stmt|;
@@ -351,8 +345,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator||
+operator||=
 name|FTLJMP
 expr_stmt|;
 end_expr_stmt
@@ -479,8 +472,9 @@ block|{
 specifier|static
 name|int
 name|first_time
+init|=
 literal|1
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|deltab
 name|dt

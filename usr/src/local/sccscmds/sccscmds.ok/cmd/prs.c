@@ -39,20 +39,15 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|prs
-operator|.
-name|c
-literal|4.1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)prs.c	4.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -63,13 +58,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
 name|Getpgm
 index|[]
+init|=
 literal|"/usr/local/get"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -112,16 +108,17 @@ name|Deltatime
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
 name|tempskel
 index|[]
+init|=
 literal|"/tmp/prXXXXXX"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* used to generate temp 						   file names 						*/
+comment|/* used to generate temp file names */
 end_comment
 
 begin_decl_stmt
@@ -579,8 +576,7 @@ end_comment
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator|&
+operator|&=
 operator|~
 name|FTLEXIT
 expr_stmt|;
@@ -588,8 +584,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator||
+operator||=
 name|FTLJMP
 expr_stmt|;
 end_expr_stmt
@@ -1012,16 +1007,17 @@ begin_comment
 comment|/*  * The scanspec procedure scans the dataspec searching for ID keywords.  * When a keyword is found the value is replaced and printed on the  * standard output. Any character that is not an ID keyword is printed  * immediately. */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|Zkeywd
 index|[
 literal|5
 index|]
+init|=
 literal|"@(#)"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|scanspec
@@ -1493,8 +1489,7 @@ argument_list|)
 expr_stmt|;
 operator|*
 name|lp
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 continue|continue;
@@ -3284,8 +3279,7 @@ end_expr_stmt
 begin_block
 block|{
 name|cp
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 name|NONBLANK

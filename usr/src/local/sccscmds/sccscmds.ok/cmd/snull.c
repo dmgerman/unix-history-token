@@ -11,20 +11,15 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|snull
-operator|.
-name|c
-literal|4.3
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)snull.c	4.4	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|USXALLOC
@@ -32,12 +27,13 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
 name|Debug
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -346,8 +342,7 @@ end_comment
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator|&
+operator|&=
 operator|~
 name|FTLEXIT
 expr_stmt|;
@@ -355,8 +350,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator||
+operator||=
 name|FTLJMP
 expr_stmt|;
 end_expr_stmt
@@ -1512,8 +1506,7 @@ literal|"file has invalid trunk delta (sn1)"
 argument_list|)
 expr_stmt|;
 name|currel
-operator|=
-operator|+
+operator|+=
 name|reldiff
 expr_stmt|;
 comment|/* update currel */
@@ -1771,8 +1764,7 @@ condition|)
 name|ptrtemp
 operator|->
 name|ds_ser
-operator|=
-operator|+
+operator|+=
 name|reldiff
 expr_stmt|;
 if|if
@@ -1786,8 +1778,7 @@ condition|)
 name|ptrtemp
 operator|->
 name|ds_pred
-operator|=
-operator|+
+operator|+=
 name|reldiff
 expr_stmt|;
 name|ptrtemp

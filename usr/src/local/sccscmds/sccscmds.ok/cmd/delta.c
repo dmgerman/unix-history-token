@@ -11,20 +11,15 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|delta
-operator|.
-name|c
-literal|4.7
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)delta.c	4.8	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|USXALLOC
@@ -75,12 +70,13 @@ name|Diffin
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
 name|Debug
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -488,8 +484,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator|&
+operator|&=
 operator|~
 name|FTLEXIT
 expr_stmt|;
@@ -497,8 +492,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator||
+operator||=
 name|FTLJMP
 expr_stmt|;
 end_expr_stmt
@@ -588,8 +582,9 @@ block|{
 specifier|static
 name|int
 name|first
+init|=
 literal|1
-expr_stmt|;
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -1222,8 +1217,7 @@ name|INS
 condition|)
 block|{
 name|inserted
-operator|=
-operator|+
+operator|+=
 name|n
 expr_stmt|;
 name|insert
@@ -1242,8 +1236,7 @@ block|}
 else|else
 block|{
 name|deleted
-operator|=
-operator|+
+operator|+=
 name|n
 expr_stmt|;
 name|delete

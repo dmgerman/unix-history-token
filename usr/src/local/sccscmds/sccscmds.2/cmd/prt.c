@@ -11,20 +11,15 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|prt
-operator|.
-name|c
-literal|4.1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)prt.c	4.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Program to print parts or all of an SCCS file. 	Arguments to the program may appear in any order 	and consist of keyletters, which begin with '-', 	and named files.  	If a direcory is given as an argument, each 	SCCS file within the directory is processed as if 	it had been specifically named. If a name of '-' 	is given, the standard input is read for a list 	of names of SCCS files to be processed. 	Non-SCCS files are ignored. */
@@ -157,64 +152,62 @@ name|flagdesc
 index|[
 literal|26
 index|]
+init|=
 block|{
 literal|""
-operator|,
+block|,
 literal|"branch"
-operator|,
+block|,
 literal|"ceiling"
-operator|,
+block|,
 literal|"default SID"
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|"floor"
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|"id keywd err/warn"
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|"module"
-operator|,
+block|,
 literal|"null delta"
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|"type"
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|"validate MRs"
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|""
-operator|,
+block|,
 literal|""
 block|}
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 name|main
@@ -520,8 +513,7 @@ end_comment
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator|&
+operator|&=
 operator|~
 name|FTLEXIT
 expr_stmt|;
@@ -529,8 +521,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator||
+operator||=
 name|FTLJMP
 expr_stmt|;
 end_expr_stmt
@@ -1384,8 +1375,7 @@ end_decl_stmt
 begin_block
 block|{
 name|lp
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 name|NONBLANK

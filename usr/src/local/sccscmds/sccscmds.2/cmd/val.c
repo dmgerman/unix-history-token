@@ -349,20 +349,15 @@ name|del
 struct|;
 end_struct
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|val
-operator|.
-name|c
-literal|4.2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)val.c	4.3	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* This is the main program that determines whether the command line  * comes from the standard input or read off the original command  * line.  See VAL(I) for more information. */
@@ -472,8 +467,7 @@ name|line
 argument_list|)
 expr_stmt|;
 name|ret_code
-operator|=
-operator||
+operator||=
 name|inline_err
 expr_stmt|;
 block|}
@@ -696,8 +690,7 @@ literal|'-'
 condition|)
 block|{
 name|p_line
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 name|c
@@ -767,8 +760,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|inline_err
-operator|=
-operator||
+operator||=
 name|UNKDUP_ERR
 expr_stmt|;
 block|}
@@ -787,8 +779,7 @@ name|testklt
 operator|++
 condition|)
 name|inline_err
-operator|=
-operator||
+operator||=
 name|UNKDUP_ERR
 expr_stmt|;
 block|}
@@ -820,8 +811,7 @@ operator|==
 literal|0
 condition|)
 name|inline_err
-operator|=
-operator||
+operator||=
 name|FILARG_ERR
 expr_stmt|;
 comment|/* 	check for error in command line. 	*/
@@ -904,8 +894,7 @@ name|name
 argument_list|)
 expr_stmt|;
 name|inline_err
-operator|=
-operator||
+operator||=
 name|infile_err
 expr_stmt|;
 comment|/* 		check for error from 'validate' and call 'report' 		depending on 'silent' flag. 		*/
@@ -1060,8 +1049,7 @@ operator|==
 name|NULL
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|FILENAM_ERR
 expr_stmt|;
 else|else
@@ -1091,8 +1079,7 @@ operator|!=
 name|HEAD
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|CORRUPT_ERR
 expr_stmt|;
 else|else
@@ -1127,8 +1114,7 @@ name|c_sid
 argument_list|)
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|INVALSID_ERR
 expr_stmt|;
 comment|/* 			read delta table checking for errors and/or 			SID. 			*/
@@ -1153,8 +1139,7 @@ name|p_iop
 argument_list|)
 expr_stmt|;
 name|infile_err
-operator|=
-operator||
+operator||=
 name|CORRUPT_ERR
 expr_stmt|;
 return|return;
@@ -1223,8 +1208,7 @@ name|TYPEFLAG
 condition|)
 block|{
 name|l
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 if|if
@@ -1253,8 +1237,7 @@ name|hadmflag
 operator|++
 expr_stmt|;
 name|l
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 if|if
@@ -1290,8 +1273,7 @@ name|p_iop
 argument_list|)
 expr_stmt|;
 name|infile_err
-operator|=
-operator||
+operator||=
 name|CORRUPT_ERR
 expr_stmt|;
 return|return;
@@ -1305,8 +1287,7 @@ operator|&&
 name|HADY
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|TYPE_ERR
 expr_stmt|;
 comment|/* 				check if 'm' flag matched '-m' arg value. 				*/
@@ -1337,8 +1318,7 @@ name|c_name
 argument_list|)
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|NAME_ERR
 expr_stmt|;
 block|}
@@ -1353,8 +1333,7 @@ operator|!
 name|goodn
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|NAME_ERR
 expr_stmt|;
 block|}
@@ -2092,8 +2071,7 @@ control|)
 name|pkt
 operator|->
 name|p_chash
-operator|=
-operator|+
+operator|+=
 operator|*
 name|p
 operator|++
@@ -2109,8 +2087,7 @@ operator|->
 name|p_chkeof
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|CORRUPT_ERR
 expr_stmt|;
 if|if
@@ -2132,8 +2109,7 @@ operator|&
 literal|0xFFFF
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|CORRUPT_ERR
 expr_stmt|;
 block|}
@@ -2294,8 +2270,7 @@ operator|)
 condition|)
 block|{
 name|infile_err
-operator|=
-operator||
+operator||=
 name|CORRUPT_ERR
 expr_stmt|;
 return|return
@@ -2405,8 +2380,7 @@ operator|->
 name|p_q
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|CORRUPT_ERR
 expr_stmt|;
 return|return
@@ -2510,8 +2484,7 @@ operator|==
 name|ser
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|CORRUPT_ERR
 expr_stmt|;
 name|prev
@@ -2703,8 +2676,7 @@ expr_stmt|;
 block|}
 else|else
 name|infile_err
-operator|=
-operator||
+operator||=
 name|CORRUPT_ERR
 expr_stmt|;
 block|}
@@ -3294,8 +3266,7 @@ name|INVALSID_ERR
 operator|)
 condition|)
 name|infile_err
-operator|=
-operator||
+operator||=
 name|NONEXSID_ERR
 expr_stmt|;
 return|return

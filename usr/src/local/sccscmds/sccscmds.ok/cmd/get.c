@@ -33,27 +33,23 @@ directive|include
 file|<sys/dir.h>
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|get
-operator|.
-name|c
-literal|4.7
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)get.c	4.8	%G%"
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
 name|Debug
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -103,12 +99,13 @@ name|lfile
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|long
 name|cutoff
+init|=
 literal|0X7FFFFFFFL
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* max positive long */
@@ -590,8 +587,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator|&
+operator|&=
 operator|~
 name|FTLEXIT
 expr_stmt|;
@@ -599,8 +595,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator||
+operator||=
 name|FTLJMP
 expr_stmt|;
 end_expr_stmt
@@ -1595,8 +1590,7 @@ operator|->
 name|p_reqsid
 operator|.
 name|s_lev
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 if|if
@@ -1710,8 +1704,7 @@ operator|->
 name|p_reqsid
 operator|.
 name|s_seq
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 if|if
@@ -1734,8 +1727,7 @@ operator|->
 name|p_reqsid
 operator|.
 name|s_br
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 name|pkt
@@ -1772,8 +1764,7 @@ operator|->
 name|p_reqsid
 operator|.
 name|s_br
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 if|if
@@ -3051,16 +3042,17 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|Zkeywd
 index|[
 literal|5
 index|]
+init|=
 literal|"@(#)"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|idsubst

@@ -11,20 +11,15 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|cmt
-operator|.
-name|c
-literal|4.3
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)cmt.c	4.4	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -100,14 +95,15 @@ name|Xiop
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|ifde
 index|[]
+init|=
 literal|"initial file does not exists"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -317,8 +313,7 @@ end_comment
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator|&
+operator|&=
 operator|~
 name|FTLEXIT
 expr_stmt|;
@@ -326,8 +321,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator||
+operator||=
 name|FTLJMP
 expr_stmt|;
 end_expr_stmt
@@ -380,23 +374,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 unit|}   static
 name|char
 name|s_warn
 index|[]
+init|=
 literal|"WARNING: MR flag is set; `%s' should contain both MR line and comment line\n"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|ns_warn
 index|[]
+init|=
 literal|"WARNING: MR flag is not set; `%s' should only contain comment line\n"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|cmt
@@ -843,14 +839,15 @@ return|return;
 block|}
 end_block
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|cle
 index|[]
+init|=
 literal|"comment line for initial delta already exists"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|do_delt
@@ -872,8 +869,9 @@ name|n
 decl_stmt|;
 name|int
 name|did_zero
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|deltab
 name|dt
