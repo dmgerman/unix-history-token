@@ -1566,11 +1566,6 @@ else|else
 block|{
 name|g_free
 argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-name|g_free
-argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
