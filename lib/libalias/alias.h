@@ -510,19 +510,6 @@ name|PKT_ALIAS_FOUND_HEADER_FRAGMENT
 value|4
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|__libalias_version
-end_undef
-
-begin_define
-define|#
-directive|define
-name|__libalias_version
-value|"2.4"
-end_define
-
 begin_endif
 endif|#
 directive|endif
