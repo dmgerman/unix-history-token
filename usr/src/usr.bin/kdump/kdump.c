@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kdump.c	8.3 (Berkeley) %G%"
+literal|"@(#)kdump.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,7 +116,13 @@ end_undef
 begin_include
 include|#
 directive|include
-file|<vis.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -135,6 +141,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vis.h>
 end_include
 
 begin_include
@@ -188,6 +206,7 @@ value|(strcmp((s1), (s2)) == 0)
 end_define
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -203,15 +222,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -244,13 +254,11 @@ literal|"f:dlm:nRTt:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -330,25 +338,15 @@ name|trpoints
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"kdump: unknown trace point in %s\n"
+literal|"unknown trace point in %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 default|default:
 name|usage
@@ -391,15 +389,11 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"kdump: %s.\n"
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -407,12 +401,6 @@ name|ENOMEM
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -425,30 +413,15 @@ argument_list|,
 name|stdin
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kdump: %s: %s.\n"
-argument_list|,
-name|tracefile
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|tracefile
 argument_list|)
 expr_stmt|;
-block|}
 while|while
 condition|(
 name|fread_tail
@@ -496,25 +469,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"kdump: bogus length 0x%x\n"
+literal|"bogus length 0x%x"
 argument_list|,
 name|ktrlen
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ktrlen
@@ -543,15 +506,11 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"kdump: %s.\n"
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -559,12 +518,6 @@ name|ENOMEM
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|size
 operator|=
 name|ktrlen
@@ -585,23 +538,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kdump: data too short.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"data too short"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2065,89 +2008,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_decl_stmt
-name|char
-modifier|*
-name|signames
-index|[]
-init|=
-block|{
-literal|"NULL"
-block|,
-literal|"HUP"
-block|,
-literal|"INT"
-block|,
-literal|"QUIT"
-block|,
-literal|"ILL"
-block|,
-literal|"TRAP"
-block|,
-literal|"IOT"
-block|,
-comment|/*  1 - 6  */
-literal|"EMT"
-block|,
-literal|"FPE"
-block|,
-literal|"KILL"
-block|,
-literal|"BUS"
-block|,
-literal|"SEGV"
-block|,
-literal|"SYS"
-block|,
-comment|/*  7 - 12 */
-literal|"PIPE"
-block|,
-literal|"ALRM"
-block|,
-literal|"TERM"
-block|,
-literal|"URG"
-block|,
-literal|"STOP"
-block|,
-literal|"TSTP"
-block|,
-comment|/* 13 - 18 */
-literal|"CONT"
-block|,
-literal|"CHLD"
-block|,
-literal|"TTIN"
-block|,
-literal|"TTOU"
-block|,
-literal|"IO"
-block|,
-literal|"XCPU"
-block|,
-comment|/* 19 - 24 */
-literal|"XFSZ"
-block|,
-literal|"VTALRM"
-block|,
-literal|"PROF"
-block|,
-literal|"WINCH"
-block|,
-literal|"29"
-block|,
-literal|"USR1"
-block|,
-comment|/* 25 - 30 */
-literal|"USR2"
-block|,
-name|NULL
-block|,
-comment|/* 31 - 32 */
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|ktrpsig
 argument_list|(
@@ -2172,7 +2032,7 @@ name|printf
 argument_list|(
 literal|"SIG%s "
 argument_list|,
-name|signames
+name|sys_signame
 index|[
 name|psig
 operator|->
