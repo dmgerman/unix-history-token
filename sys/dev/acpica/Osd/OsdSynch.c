@@ -659,7 +659,7 @@ if|if
 condition|(
 name|as
 operator|->
-name|as_units
+name|as_maxunits
 operator|==
 name|ACPI_NO_UNIT_LIMIT
 condition|)
@@ -1135,7 +1135,7 @@ if|if
 condition|(
 name|as
 operator|->
-name|as_units
+name|as_maxunits
 operator|!=
 name|ACPI_NO_UNIT_LIMIT
 condition|)
