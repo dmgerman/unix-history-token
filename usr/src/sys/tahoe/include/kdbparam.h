@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdbparam.h	7.2	86/11/20	*/
+comment|/*	kdbparam.h	7.3	86/11/23	*/
 end_comment
 
 begin_include
@@ -47,6 +47,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|ENTRYMASK
+value|1
+end_define
+
+begin_comment
+comment|/* check for entry masks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ishiddenreg
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)<= reglist[8])
+end_define
+
+begin_define
+define|#
+directive|define
 name|BPT
 value|0x30
 end_define
@@ -75,6 +96,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|clrsstep
+parameter_list|()
+value|(pcb.pcb_psl&= ~TBIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|setsstep
+parameter_list|()
+value|(pcb.pcb_psl |= TBIT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SETBP
 parameter_list|(
 name|ins
@@ -85,9 +122,89 @@ end_define
 begin_define
 define|#
 directive|define
-name|ALIGN
-value|-4
+name|getprevpc
+parameter_list|(
+name|fp
+parameter_list|)
+value|get((fp)-8, DSP)
 end_define
+
+begin_comment
+comment|/* pc of caller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|getprevframe
+parameter_list|(
+name|fp
+parameter_list|)
+value|(get((fp), DSP)&~3)
+end_define
+
+begin_comment
+comment|/* fp of caller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|getnargs
+parameter_list|(
+name|fp
+parameter_list|)
+value|(((get((fp)-4, DSP)&0xffff)-4)/4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nextarg
+parameter_list|(
+name|ap
+parameter_list|)
+value|((ap) + 4)
+end_define
+
+begin_comment
+comment|/* next argument in list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOFRAME
+value|0
+end_define
+
+begin_comment
+comment|/* fp at top of call stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|issignalpc
+parameter_list|(
+name|pc
+parameter_list|)
+value|(MAXSTOR< (pc)&& (pc)< MAXSTOR+ctob(UPAGES))
+end_define
+
+begin_define
+define|#
+directive|define
+name|getsignalpc
+parameter_list|(
+name|fp
+parameter_list|)
+value|get((fp)+44, DSP)
+end_define
+
+begin_comment
+comment|/* pc of caller before signal */
+end_comment
 
 begin_define
 define|#
@@ -139,6 +256,23 @@ parameter_list|(
 name|a
 parameter_list|)
 value|((a)<< 24)
+end_define
+
+begin_comment
+comment|/* check for address wrap around */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|addrwrap
+parameter_list|(
+name|oaddr
+parameter_list|,
+name|newaddr
+parameter_list|)
+define|\
+value|(((oaddr)^(newaddr))>> 24)
 end_define
 
 begin_comment
