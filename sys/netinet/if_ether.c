@@ -2278,11 +2278,18 @@ name|if_flags
 operator|&
 name|IFF_NOARP
 condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* 	 * There is an arptab entry, but no ethernet address 	 * response yet.  Replace the held mbuf with this 	 * latest one. 	 */
 if|if
 condition|(
