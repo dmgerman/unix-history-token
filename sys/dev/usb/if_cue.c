@@ -188,6 +188,12 @@ name|USB_PRODUCT_CATC_NETMATE2
 block|}
 block|,
 block|{
+name|USB_VENDOR_SMARTBRIDGES
+block|,
+name|USB_PRODUCT_SMARTBRIDGES_SMARTLINK
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -2721,6 +2727,11 @@ argument_list|,
 name|sc
 operator|->
 name|cue_stat_ch
+argument_list|)
+expr_stmt|;
+name|bpfdetach
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|if_detach
