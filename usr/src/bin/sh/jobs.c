@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)jobs.c	5.4 (Berkeley) 7/15/92"
+literal|"@(#)jobs.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
