@@ -375,7 +375,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-comment|/* The ever-famous proc pointer */
 block|{
 name|struct
 name|vnode
