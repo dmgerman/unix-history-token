@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.16 1996/04/28 20:53:56 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.14.2.6 1996/05/24 06:08:36 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
 end_comment
 
 begin_include
@@ -304,8 +304,7 @@ name|i
 argument_list|)
 condition|)
 return|return
-operator|-
-literal|2
+name|IO_ERROR
 return|;
 return|return
 literal|0
@@ -469,8 +468,7 @@ operator|!
 name|p
 condition|)
 return|return
-operator|-
-literal|2
+name|IO_ERROR
 return|;
 if|if
 condition|(
@@ -682,8 +680,7 @@ operator|=
 name|init
 expr_stmt|;
 return|return
-operator|-
-literal|2
+name|IO_ERROR
 return|;
 block|}
 end_function
@@ -717,8 +714,7 @@ name|state
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|2
+name|IO_ERROR
 return|;
 block|}
 end_function
@@ -806,8 +802,7 @@ name|p
 argument_list|)
 condition|)
 return|return
-operator|-
-literal|2
+name|IO_ERROR
 return|;
 name|i
 operator|=
