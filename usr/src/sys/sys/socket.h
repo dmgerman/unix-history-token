@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.20	82/09/27	*/
+comment|/*	socket.h	4.21	82/10/05	*/
 end_comment
 
 begin_comment
@@ -434,6 +434,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SOF_OOB
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOF_PREVIEW
+value|0x2
+end_define
 
 end_unit
 
