@@ -7688,7 +7688,7 @@ name|EINVAL
 argument_list|)
 return|;
 block|}
-comment|/* 	 * checking there is SP already or not. 	 * If type is SPDUPDATE and no SP found, then error. 	 * If type is either SPDADD or SPDSETIDX and SP found, then error. 	 */
+comment|/* 	 * checking there is SP already or not. 	 * SPDUPDATE doesn't depend on whether there is a SP or not. 	 * If the type is either SPDADD or SPDSETIDX AND a SP is found, 	 * then error. 	 */
 name|newsp
 operator|=
 name|key_getsp
@@ -7711,31 +7711,8 @@ block|{
 if|if
 condition|(
 name|newsp
-operator|==
-name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
-argument_list|(
-literal|"key_spdadd: no SP found.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-name|key_senderror
-argument_list|(
-name|so
-argument_list|,
-name|m
-argument_list|,
-name|ENOENT
-argument_list|)
-return|;
-block|}
 name|newsp
 operator|->
 name|state
@@ -7747,6 +7724,7 @@ argument_list|(
 name|newsp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
