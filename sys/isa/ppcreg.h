@@ -275,6 +275,8 @@ decl_stmt|,
 name|rid_drq
 decl_stmt|,
 name|rid_ioport
+decl_stmt|,
+name|rid_extraio
 decl_stmt|;
 name|struct
 name|resource
@@ -286,6 +288,9 @@ name|res_drq
 decl_stmt|,
 modifier|*
 name|res_ioport
+decl_stmt|,
+modifier|*
+name|res_extraio
 decl_stmt|;
 name|void
 modifier|*
