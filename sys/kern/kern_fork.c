@@ -2542,6 +2542,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|trapframe
+modifier|*
 name|frame
 decl_stmt|;
 end_decl_stmt
@@ -2604,7 +2605,6 @@ call|)
 argument_list|(
 name|arg
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;

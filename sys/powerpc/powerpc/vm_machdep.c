@@ -533,7 +533,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* is child (FreeBSD) 	*/
-comment|/* 		 * Arrange for continuation at child_return(), which 		 * will return to exception_return().  Note that the child 		 * process doesn't stay in the kernel for long! 		 *  		 * This is an inlined version of cpu_set_kpc. 		 */
+comment|/* 		 * Arrange for continuation at fork_return(), which 		 * will return to exception_return().  Note that the child 		 * process doesn't stay in the kernel for long! 		 *  		 * This is an inlined version of cpu_set_kpc. 		 */
 name|up
 operator|->
 name|u_pcb
@@ -559,7 +559,7 @@ operator|=
 operator|(
 name|u_int64_t
 operator|)
-name|child_return
+name|fork_return
 expr_stmt|;
 comment|/* s0: pc */
 name|up

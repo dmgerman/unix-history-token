@@ -63,22 +63,11 @@ directive|include
 file|<sys/signal.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_include
 include|#
@@ -2081,6 +2070,12 @@ name|mtx
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|struct
 name|proc
@@ -2251,6 +2246,7 @@ operator|*
 operator|,
 expr|struct
 name|trapframe
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
