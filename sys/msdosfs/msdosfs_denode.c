@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<msdosfs/bpb.h>
 end_include
 
@@ -453,12 +459,14 @@ argument_list|(
 name|dep
 argument_list|)
 expr_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
 name|vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|simple_unlock
@@ -971,7 +979,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|(
 expr|struct
-name|simplelock
+name|mtx
 operator|*
 operator|)
 literal|0
@@ -2479,6 +2487,14 @@ comment|/* XXX */
 block|dep->de_flag = 0;
 endif|#
 directive|endif
+name|lockdestroy
+argument_list|(
+operator|&
+name|dep
+operator|->
+name|de_lock
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|dep

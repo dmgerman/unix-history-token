@@ -423,6 +423,10 @@ begin_comment
 comment|/*  *	Macros:		vm_map_lock, etc.  *	Function:  *		Perform locking on the data portion of a map.  Note that  *		these macros mimic procedure calls returning void.  The  *		semicolon is supplied by the user of these macros, not  *		by the macros themselves.  The macros can safely be used  *		as unbraced elements in a higher level statement.  */
 end_comment
 
+begin_comment
+comment|/* XXX This macro is not called anywhere, and (map)->ref_lock doesn't exist. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -721,7 +725,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		simple_lock(&(map)->lock.lk_interlock); \ 		(map)->lock.lk_flags |= LK_CANRECURSE; \ 		simple_unlock(&(map)->lock.lk_interlock); \ 	} while(0)
+value|do { \ 		mtx_enter(&(map)->lock.lk_interlock, MTX_DEF); \ 		(map)->lock.lk_flags |= LK_CANRECURSE; \ 		mtx_exit(&(map)->lock.lk_interlock, MTX_DEF); \ 	} while(0)
 end_define
 
 begin_define
@@ -732,7 +736,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		simple_lock(&(map)->lock.lk_interlock); \ 		(map)->lock.lk_flags&= ~LK_CANRECURSE; \ 		simple_unlock(&(map)->lock.lk_interlock); \ 	} while(0)
+value|do { \ 		mtx_enter(&(map)->lock.lk_interlock, MTX_DEF); \ 		(map)->lock.lk_flags&= ~LK_CANRECURSE; \ 		mtx_exit(&(map)->lock.lk_interlock, MTX_DEF); \ 	} while(0)
 end_define
 
 begin_comment
@@ -1100,6 +1104,20 @@ operator|,
 name|vm_offset_t
 operator|,
 name|vm_offset_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_map_destroy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vm_map
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

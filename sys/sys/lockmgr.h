@@ -21,6 +21,12 @@ directive|include
 file|<machine/lock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
+end_include
+
 begin_comment
 comment|/*  * The general lock structure.  Provides for multiple shared locks,  * upgrading from shared to exclusive, and sleeping until the lock  * can be gained. The simple locks are defined in<machine/param.h>.  */
 end_comment
@@ -30,10 +36,15 @@ struct|struct
 name|lock
 block|{
 name|struct
-name|simplelock
+name|mtx
 name|lk_interlock
 decl_stmt|;
 comment|/* lock on remaining fields */
+name|struct
+name|mtxf
+name|lk_pad
+decl_stmt|;
+comment|/* padding to keep sizeof constant */
 name|u_int
 name|lk_flags
 decl_stmt|;
@@ -321,6 +332,17 @@ begin_comment
 comment|/* lock is being drained */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LK_VALID
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* 					 * Lock is initialized.  This is a 					 * temporary hack to support vfs 					 * layering. 					 */
+end_comment
+
 begin_comment
 comment|/*  * Control flags  *  * Non-persistent external flags.  */
 end_comment
@@ -333,7 +355,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* unlock passed simple lock after 				   getting lk_interlock */
+comment|/* 				    * unlock passed mutex after getting 				    * lk_interlock 				    */
 end_comment
 
 begin_define
@@ -454,6 +476,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|lockdestroy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lock
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -474,7 +510,7 @@ name|u_int
 name|flags
 operator|,
 expr|struct
-name|simplelock
+name|mtx
 operator|*
 operator|,
 expr|struct
@@ -532,7 +568,7 @@ name|u_int
 name|flags
 operator|,
 expr|struct
-name|simplelock
+name|mtx
 operator|*
 operator|,
 expr|struct

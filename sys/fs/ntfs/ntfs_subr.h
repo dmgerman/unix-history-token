@@ -841,6 +841,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|ntfs_toupper_destroy
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ntfs_toupper_use
 name|__P

@@ -208,7 +208,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|simplelock
+name|mtx
 name|buftimelock
 decl_stmt|;
 end_decl_stmt
@@ -1352,10 +1352,14 @@ operator|&
 name|invalhash
 argument_list|)
 expr_stmt|;
-name|simple_lock_init
+name|mtx_init
 argument_list|(
 operator|&
 name|buftimelock
+argument_list|,
+literal|"buftime lock"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 for|for

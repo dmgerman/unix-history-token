@@ -198,6 +198,26 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Destroy inode hash table.  */
+end_comment
+
+begin_function
+name|void
+name|ntfs_nthashdestroy
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|lockdestroy
+argument_list|(
+operator|&
+name|ntfs_hashlock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Use the device/inum pair to find the incore inode, and return a pointer  * to it. If it is in core, return it, even if it is locked.  */
 end_comment
 

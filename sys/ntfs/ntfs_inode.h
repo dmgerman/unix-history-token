@@ -324,7 +324,7 @@ name|lock
 name|i_lock
 decl_stmt|;
 name|struct
-name|simplelock
+name|mtx
 name|i_interlock
 decl_stmt|;
 name|int

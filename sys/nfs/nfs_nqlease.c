@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -6214,10 +6220,12 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Search the mount list for all nqnfs mounts and do their timer 	 * queues. 	 */
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|mountlist_slock
+name|mountlist_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 for|for
@@ -6248,7 +6256,7 @@ argument_list|,
 name|LK_NOWAIT
 argument_list|,
 operator|&
-name|mountlist_slock
+name|mountlist_mtx
 argument_list|,
 name|p
 argument_list|)
@@ -6331,10 +6339,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
-name|mountlist_slock
+name|mountlist_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|nxtmp
@@ -6354,10 +6364,12 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|mountlist_slock
+name|mountlist_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}

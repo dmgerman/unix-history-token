@@ -189,6 +189,12 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1994,7 +2000,7 @@ operator|)
 expr_stmt|;
 comment|/* 	 * From this point on, we may have resources that need to be freed. 	 */
 comment|/* 	 * Yeah, I'm paranoid.  There is every reason in the world to get 	 * VTEXT now since from here on out, there are places we can have 	 * a context switch.  Better safe than sorry; I really don't want 	 * the file to change while it's being loaded. 	 */
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
 name|imgp
@@ -2002,6 +2008,8 @@ operator|->
 name|vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|imgp
@@ -2012,7 +2020,7 @@ name|v_flag
 operator||=
 name|VTEXT
 expr_stmt|;
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
 name|imgp
@@ -2020,6 +2028,8 @@ operator|->
 name|vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if

@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isofs/cd9660/iso.h>
 end_include
 
@@ -328,12 +334,14 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
 name|vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|simple_unlock
@@ -491,7 +499,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|(
 expr|struct
-name|simplelock
+name|mtx
 operator|*
 operator|)
 literal|0
@@ -787,6 +795,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|lockdestroy
+argument_list|(
+operator|&
+name|ip
+operator|->
+name|i_vnode
+operator|->
+name|v_lock
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|vp

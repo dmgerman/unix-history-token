@@ -1090,6 +1090,14 @@ argument_list|,
 name|curproc
 argument_list|)
 expr_stmt|;
+name|lockdestroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|as_lock
+argument_list|)
+expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|sc

@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<msdosfs/bpb.h>
 end_include
 
@@ -899,12 +905,14 @@ name|struct
 name|timespec
 name|ts
 decl_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
 name|vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -937,12 +945,14 @@ name|ts
 argument_list|)
 expr_stmt|;
 block|}
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
 name|vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return

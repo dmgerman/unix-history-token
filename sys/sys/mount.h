@@ -1997,7 +1997,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|simplelock
+name|mtx
 operator|*
 operator|,
 expr|struct
@@ -2250,8 +2250,8 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|simplelock
-name|mountlist_slock
+name|mtx
+name|mountlist_mtx
 decl_stmt|;
 end_decl_stmt
 

@@ -1248,6 +1248,14 @@ name|M_NFSBIGFH
 argument_list|)
 expr_stmt|;
 block|}
+name|lockdestroy
+argument_list|(
+operator|&
+name|np
+operator|->
+name|n_rslock
+argument_list|)
+expr_stmt|;
 name|cache_purge
 argument_list|(
 name|vp

@@ -295,6 +295,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|lockdestroy
+argument_list|(
+operator|&
+name|nwhashlock
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|nwhashtbl

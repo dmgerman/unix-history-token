@@ -51,6 +51,12 @@ directive|include
 file|<machine/lock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
+end_include
+
 begin_comment
 comment|/*  * The vnode is the focus of all file activity in UNIX.  There is a  * unique vnode allocated for each active file, each current directory,  * each mounted-on file, text file, and the root.  */
 end_comment
@@ -175,7 +181,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  * v_freelist is locked by the global vnode_free_list simple lock.  * v_mntvnodes is locked by the global mntvnodes simple lock.  * v_flag, v_usecount, v_holdcount and v_writecount are  *    locked by the v_interlock simple lock.  * v_pollinfo is locked by the lock contained inside it.  */
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  * v_freelist is locked by the global vnode_free_list simple lock.  * v_mntvnodes is locked by the global mntvnodes simple lock.  * v_flag, v_usecount, v_holdcount and v_writecount are  *    locked by the v_interlock mutex.  * v_pollinfo is locked by the lock contained inside it.  */
 end_comment
 
 begin_struct
@@ -323,7 +329,7 @@ name|v_object
 decl_stmt|;
 comment|/* Place to store VM object */
 name|struct
-name|simplelock
+name|mtx
 name|v_interlock
 decl_stmt|;
 comment|/* lock on usecount and flag */

@@ -3663,6 +3663,16 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|lockdestroy
+argument_list|(
+operator|&
+name|ump
+operator|->
+name|um_extattr
+operator|.
+name|uepm_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

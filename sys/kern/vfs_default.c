@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1448,7 +1454,7 @@ name|a_flags
 operator|&
 name|LK_INTERLOCK
 condition|)
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
 name|ap
@@ -1456,6 +1462,8 @@ operator|->
 name|a_vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -1494,7 +1502,7 @@ name|a_flags
 operator|&
 name|LK_INTERLOCK
 condition|)
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
 name|ap
@@ -1502,6 +1510,8 @@ operator|->
 name|a_vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return

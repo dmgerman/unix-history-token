@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/hpfs/hpfs.h>
 end_include
 
@@ -176,6 +182,26 @@ name|simple_lock_init
 argument_list|(
 operator|&
 name|hpfs_hphash_slock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Destroy inode hash table.  */
+end_comment
+
+begin_function
+name|void
+name|hpfs_hphashdestroy
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|lockdestroy
+argument_list|(
+operator|&
+name|hpfs_hphash_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -365,12 +391,14 @@ argument_list|(
 name|hp
 argument_list|)
 expr_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
 name|vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|simple_unlock

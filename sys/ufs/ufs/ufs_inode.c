@@ -576,6 +576,14 @@ block|}
 block|}
 endif|#
 directive|endif
+name|lockdestroy
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_lock
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|vp

@@ -100,6 +100,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<msdosfs/bpb.h>
 end_include
 
@@ -4434,12 +4440,14 @@ condition|)
 goto|goto
 name|loop
 goto|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
 name|vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|nvp
@@ -4500,12 +4508,14 @@ operator|)
 operator|)
 condition|)
 block|{
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
 name|vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 continue|continue;

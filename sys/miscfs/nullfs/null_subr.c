@@ -252,6 +252,13 @@ if|if
 condition|(
 name|null_node_hashtbl
 condition|)
+block|{
+name|lockdestroy
+argument_list|(
+operator|&
+name|null_hashlock
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|null_node_hashtbl
@@ -259,6 +266,7 @@ argument_list|,
 name|M_NULLFSHASH
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0

@@ -810,7 +810,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|simplelock
+name|mtx
 name|buftimelock
 decl_stmt|;
 end_decl_stmt
@@ -847,6 +847,12 @@ end_include
 begin_comment
 comment|/* XXX for curproc */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
+end_include
 
 begin_comment
 comment|/*  * Initialize a lock.  */
@@ -910,10 +916,12 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
 name|buftimelock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|locktype
@@ -1040,10 +1048,12 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|simple_lock
+name|mtx_enter
 argument_list|(
 operator|&
 name|buftimelock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|locktype
@@ -1188,7 +1198,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|if (BUF_REFCNT(bp)> 0)			\ 		panic("free locked buf")
+value|do {						\ 	if (BUF_REFCNT(bp)> 0)			\ 		panic("free locked buf");	\ 	lockdestroy(&(bp)->b_lock);		\ } while (0)
 end_define
 
 begin_comment
@@ -1846,6 +1856,11 @@ name|bioops
 operator|.
 name|io_deallocate
 call|)
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|BUF_LOCKFREE
 argument_list|(
 name|bp
 argument_list|)

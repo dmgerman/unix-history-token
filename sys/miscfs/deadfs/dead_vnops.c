@@ -39,6 +39,12 @@ directive|include
 file|<sys/poll.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -832,12 +838,14 @@ operator|&
 name|LK_INTERLOCK
 condition|)
 block|{
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
 name|vp
 operator|->
 name|v_interlock
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|ap

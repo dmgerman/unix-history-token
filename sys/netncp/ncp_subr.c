@@ -508,6 +508,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|ncp_conn_destroy
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
