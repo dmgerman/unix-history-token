@@ -4972,8 +4972,7 @@ operator|)
 return|;
 default|default:
 comment|/* DO NOTHING */
-name|beak
-expr_stmt|;
+break|break;
 block|}
 return|return
 name|EROFS
