@@ -385,9 +385,15 @@ literal|1
 case|:
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|FWRITE
+operator|)
+operator|&&
 name|securelevel
-operator|>=
-literal|1
+operator|>
+literal|0
 condition|)
 return|return
 operator|(
