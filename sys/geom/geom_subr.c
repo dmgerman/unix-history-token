@@ -971,6 +971,12 @@ expr_stmt|;
 name|g_nproviders
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|g_nproviders
+operator|>
+literal|1
+condition|)
 name|g_post_event
 argument_list|(
 name|EV_NEW_PROVIDER
