@@ -2487,7 +2487,6 @@ name|tunable_int_delay
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|sysctl_hw_fxp_int_delay
 argument_list|,
 literal|"I"
@@ -2526,7 +2525,6 @@ name|tunable_bundle_max
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|sysctl_hw_fxp_bundle_max
 argument_list|,
 literal|"I"
