@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 operator|.
 operator|\
-literal|" Copyright (c) 1986 Regents of the University of California. .\" All rights reserved.  The Berkeley software License Agreement .\" specifies the terms and conditions for redistribution. .\" .\"	@(#)ustreamwrite.c	6.1 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<sys/un.h> #include<stdio.h>  #define DATA "
+literal|" Copyright (c) 1986 Regents of the University of California. .\" All rights reserved.  The Berkeley software License Agreement .\" specifies the terms and conditions for redistribution. .\" .\"	@(#)ustreamwrite.c	6.2 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<sys/un.h> #include<stdio.h>  #define DATA "
 name|Half
 name|a
 name|league
@@ -13,7 +13,7 @@ name|league
 operator|.
 expr|.
 operator|.
-literal|"  /*  * This program connects to the socket named in the command line and sends a  * one line message to that socket. The form of the command line is  * ustreamwrite pathname   */  main(argc, argv) 	int             argc; 	char           *argv[]; { 	int             sock; 	struct sockaddr_un server; 	char            buf[1024];  	/* Create socket */ 	sock = socket(AF_UNIX, SOCK_STREAM, 0); 	if (sock< 0) { 		perror("
+literal|"  /*  * This program connects to the socket named in the command line and sends a  * one line message to that socket. The form of the command line is  * ustreamwrite pathname   */ main(argc, argv) 	int             argc; 	char           *argv[]; { 	int             sock; 	struct sockaddr_un server; 	char            buf[1024];  	/* Create socket */ 	sock = socket(AF_UNIX, SOCK_STREAM, 0); 	if (sock< 0) { 		perror("
 name|opening
 name|stream
 name|socket
