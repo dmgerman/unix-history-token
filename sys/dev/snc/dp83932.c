@@ -1538,14 +1538,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If bpf is listening on this interface, let it 	 * see the packet before we commit it to the wire. 	 */
-name|BPF_MTAP
-argument_list|(
-name|ifp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If there is nothing in the o/p queue, and there is room in 	 * the Tx ring, then send the packet directly.  Otherwise append 	 * it to the o/p queue. 	 */
 if|if
 condition|(
@@ -1575,6 +1567,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * If bpf is listening on this interface, let it see the packet 	 * before we commit it to the wire, but only if we are really 	 * committed to send it. 	 * 	 * XXX: Locking must protect m against premature m_freem() in 	 * sonictxint(). 	 */
+name|BPF_MTAP
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|mtd_prev
