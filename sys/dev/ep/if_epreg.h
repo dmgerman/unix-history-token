@@ -698,6 +698,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EP_W2_ALT_EEPROM
+value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
 name|EP_W2_ADDR_5
 value|0x05
 end_define
