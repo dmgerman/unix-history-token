@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in.h 4.2 81/11/08 */
+comment|/* in.h 4.3 81/11/15 */
 end_comment
 
 begin_comment
@@ -72,6 +72,13 @@ end_define
 begin_comment
 comment|/* user datagram protocol */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_MAX
+value|256
+end_define
 
 begin_comment
 comment|/*  * Port/socket numbers: network standard functions  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.3	81/11/14	*/
+comment|/*	protosw.h	4.4	81/11/15	*/
 end_comment
 
 begin_comment
@@ -403,6 +403,9 @@ name|struct
 name|protosw
 name|protosw
 index|[]
+decl_stmt|,
+modifier|*
+name|protoswLAST
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	4.1	81/11/14	*/
+comment|/*	ip_var.h	4.2	81/11/15	*/
 end_comment
 
 begin_comment
@@ -12,31 +12,31 @@ struct|struct
 name|ipovly
 block|{
 name|caddr_t
-name|ipo_next
+name|ih_next
 decl_stmt|,
-name|ipo_prev
+name|ih_prev
 decl_stmt|;
 comment|/* for protocol sequence q's */
 name|u_char
-name|ipo_x1
+name|ih_x1
 decl_stmt|;
 comment|/* (unused) */
 name|u_char
-name|ipo_pr
+name|ih_pr
 decl_stmt|;
 comment|/* protocol */
 name|short
-name|ipo_len
+name|ih_len
 decl_stmt|;
 comment|/* protocol length */
 name|struct
 name|ip_addr
-name|ipo_s
+name|ih_src
 decl_stmt|;
 comment|/* source internet address */
 name|struct
 name|ip_addr
-name|ipo_d
+name|ih_dst
 decl_stmt|;
 comment|/* destination internet address */
 block|}
@@ -131,13 +131,13 @@ name|u_short
 name|ip_sum
 decl_stmt|;
 name|struct
-name|ipf
+name|ipasfrag
 modifier|*
 name|ipf_next
 decl_stmt|;
 comment|/* next fragment */
 name|struct
-name|ipf
+name|ipasfrag
 modifier|*
 name|ipf_prev
 decl_stmt|;

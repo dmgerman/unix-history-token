@@ -1,40 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_systm.h 4.1 81/11/08 */
+comment|/* in_systm.h 4.2 81/11/15 */
 end_comment
 
 begin_comment
 comment|/*  * Miscellaneous internetwork  * definitions for kernel.  */
-end_comment
-
-begin_comment
-comment|/* THESE SHOULD BE ELIMINATED */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NCON
-value|20
-end_define
-
-begin_comment
-comment|/* SHOULD BE DYNAMIC, NO LIMIT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NHOST
-value|20
-end_define
-
-begin_comment
-comment|/* SHOULD BE SOME DYNAMIC LIMIT */
-end_comment
-
-begin_comment
-comment|/* END SHOULD BE ELIMINATED */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.27 81/11/14 */
+comment|/* tcp_usrreq.c 1.28 81/11/15 */
 end_comment
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"../net/ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/ip_var.h"
 end_include
 
 begin_include
@@ -607,7 +613,7 @@ name|inp
 operator|->
 name|inp_lhost
 operator|=
-name|h_make
+name|in_hmake
 argument_list|(
 operator|&
 name|n_lhost
@@ -1340,9 +1346,14 @@ name|tp
 condition|;
 name|t
 operator|=
+operator|(
+expr|struct
+name|tcpiphdr
+operator|*
+operator|)
 name|t
 operator|->
-name|t_next
+name|ti_next
 control|)
 name|m_freem
 argument_list|(
@@ -2023,7 +2034,7 @@ name|td_sno
 operator|=
 name|n
 operator|->
-name|t_seq
+name|ti_seq
 expr_stmt|;
 name|tdp
 operator|->
@@ -2031,7 +2042,7 @@ name|td_ano
 operator|=
 name|n
 operator|->
-name|t_ackno
+name|ti_ackno
 expr_stmt|;
 name|tdp
 operator|->
@@ -2047,7 +2058,7 @@ name|td_lno
 operator|=
 name|n
 operator|->
-name|t_len
+name|ti_len
 expr_stmt|;
 name|tdp
 operator|->
@@ -2055,7 +2066,7 @@ name|td_flg
 operator|=
 name|n
 operator|->
-name|th_flags
+name|ti_flags
 expr_stmt|;
 block|}
 else|else

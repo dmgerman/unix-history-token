@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* if_en.c 4.7 81/11/14 */
+comment|/* if_en.c 4.8 81/11/15 */
 end_comment
 
 begin_include
@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../net/inet_pcb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/inet_systm.h"
 end_include
 
@@ -58,12 +64,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../net/ip_var.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/tcp.h"
 end_include
 
 begin_comment
 comment|/* XXX */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../net/tcp_var.h"
+end_include
 
 begin_include
 include|#
@@ -2329,9 +2347,9 @@ operator|)
 name|ip
 operator|)
 operator|->
-name|t_off
-operator|*
-literal|4
+name|ti_off
+operator|<<
+literal|2
 expr_stmt|;
 break|break;
 block|}

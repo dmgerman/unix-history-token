@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_fsm.h	4.4	81/11/08	*/
+comment|/*	tcp_fsm.h	4.5	81/11/15	*/
 end_comment
 
 begin_comment
@@ -175,127 +175,6 @@ begin_comment
 comment|/* closed */
 end_comment
 
-begin_comment
-comment|/*  * Inputs to fsm.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCP_NINPUTS
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|IUOPENA
-value|0
-end_define
-
-begin_comment
-comment|/* active open by user */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INRECV
-value|1
-end_define
-
-begin_comment
-comment|/* segment received from net */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IUOPENR
-value|2
-end_define
-
-begin_comment
-comment|/* passive open by user */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IUCLOSE
-value|3
-end_define
-
-begin_comment
-comment|/* close by user */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISTIMER
-value|4
-end_define
-
-begin_comment
-comment|/* tcp timer expired */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IURECV
-value|5
-end_define
-
-begin_comment
-comment|/* user read data; adjust window */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IUSEND
-value|6
-end_define
-
-begin_comment
-comment|/* user sending data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IUABORT
-value|7
-end_define
-
-begin_comment
-comment|/* user aborts connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INCLEAR
-value|8
-end_define
-
-begin_comment
-comment|/* network clear */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INSEND
-value|9
-end_define
-
-begin_comment
-comment|/* send by tcp to remote peer */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -304,12 +183,12 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|acounts
+name|tcp_acounts
 index|[
 name|TCP_NSTATES
 index|]
 index|[
-name|TCP_NINPUTS
+name|PRU_NREQ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -360,38 +239,6 @@ literal|"RCV_WAIT"
 block|,
 literal|"CLOSED"
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|tcpinputs
-index|[]
-init|=
-block|{
-literal|"BAD"
-block|,
-literal|"UOPENA"
-block|,
-literal|"NRECV"
-block|,
-literal|"UOPENR"
-block|,
-literal|"UCLOSE"
-block|,
-literal|"STIMER"
-block|,
-literal|"URECV"
-block|,
-literal|"USEND"
-block|,
-literal|"UABORT"
-block|,
-literal|"NCLEAR"
-block|,
-literal|"NSEND"
-block|, }
 decl_stmt|;
 end_decl_stmt
 

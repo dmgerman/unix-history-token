@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.3	81/11/14	*/
+comment|/*	uipc_socket.c	4.4	81/11/15	*/
 end_comment
 
 begin_include
@@ -310,8 +310,6 @@ operator|->
 name|so_error
 condition|)
 block|{
-comment|/*###80 [cc] operands of = have incompatible types %%%*/
-comment|/*###80 [cc] zerosocket undefined %%%*/
 name|error
 operator|=
 name|so
@@ -1530,10 +1528,19 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|iap
+argument_list|,
+sizeof|sizeof
+argument_list|(
 operator|*
 name|iap
-operator|=
-name|zeroin_addr
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|m
 operator|=
@@ -1883,14 +1890,6 @@ break|break;
 block|}
 block|}
 end_block
-
-begin_comment
-comment|/*###417 [cc] operands of = have incompatible types %%%*/
-end_comment
-
-begin_comment
-comment|/*###417 [cc] zeroin_addr undefined %%%*/
-end_comment
 
 end_unit
 

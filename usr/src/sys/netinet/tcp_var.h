@@ -1,11 +1,152 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.2	81/11/14	*/
+comment|/*	tcp_var.h	4.3	81/11/15	*/
 end_comment
 
 begin_comment
 comment|/*  * Kernel variables for tcp.  */
 end_comment
+
+begin_comment
+comment|/*  * Tcp+ip header, after ip options removed.  */
+end_comment
+
+begin_struct
+struct|struct
+name|tcpiphdr
+block|{
+name|struct
+name|ipovly
+name|ti_i
+decl_stmt|;
+comment|/* overlaid ip structure */
+name|struct
+name|tcphdr
+name|ti_t
+decl_stmt|;
+comment|/* tcp header */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ti_next
+value|ti_i.ih_next
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_prev
+value|ti_i.ih_prev
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_x1
+value|ti_i.ih_x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_pr
+value|ti_i.ih_pr
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_len
+value|ti_i.ih_len
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_src
+value|ti_i.ih_src
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_dst
+value|ti_i.ih_dst
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_sport
+value|ti_t.th_sport
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_dport
+value|ti_t.th_dport
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_seq
+value|ti_t.th_seq
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_ackno
+value|ti_t.th_ackno
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_x2
+value|ti_t.th_x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_off
+value|ti_t.th_off
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_flags
+value|ti_t.th_flags
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_win
+value|ti_t.th_win
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_sum
+value|ti_t.th_sum
+end_define
+
+begin_define
+define|#
+directive|define
+name|ti_urp
+value|ti_t.th_urp
+end_define
 
 begin_comment
 comment|/*  * Tcp control block.  */
@@ -428,7 +569,7 @@ parameter_list|,
 name|y
 parameter_list|)
 define|\
-value|(((y)->th_flags&TH_ACK)==0 || \       ((x)->iss< (y)->t_ackno&& (y)->t_ackno<= (x)->snd_hi))
+value|(((y)->ti_flags&TH_ACK)==0 || \       ((x)->iss< (y)->ti_ackno&& (y)->ti_ackno<= (x)->snd_hi))
 end_define
 
 begin_define
@@ -441,7 +582,7 @@ parameter_list|,
 name|y
 parameter_list|)
 define|\
-value|((y)->th_flags&TH_SYN)
+value|((y)->ti_flags&TH_SYN)
 end_define
 
 begin_define
@@ -454,7 +595,7 @@ parameter_list|,
 name|y
 parameter_list|)
 define|\
-value|((x)->seq_fin> (x)->iss&& (y)->t_ackno> (x)->seq_fin)
+value|((x)->seq_fin> (x)->iss&& (y)->ti_ackno> (x)->seq_fin)
 end_define
 
 begin_define

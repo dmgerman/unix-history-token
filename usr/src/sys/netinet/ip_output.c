@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_output.c 1.11 81/11/08 */
+comment|/* ip_output.c 1.12 81/11/15 */
 end_comment
 
 begin_include
@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/tcp.h"
+file|"../net/ip_var.h"
 end_include
 
 begin_macro
@@ -181,6 +181,7 @@ name|ip_ttl
 operator|=
 name|MAXTTL
 expr_stmt|;
+comment|/*###35 [cc] ip_id undefined %%%*/
 name|p
 operator|->
 name|ip_id
