@@ -129,7 +129,7 @@ end_include
 
 begin_decl_stmt
 name|struct
-name|ip_firewall
+name|ip_fw
 modifier|*
 name|ip_fw_fwd_chain
 decl_stmt|;
@@ -137,7 +137,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ip_firewall
+name|ip_fw
 modifier|*
 name|ip_fw_blk_chain
 decl_stmt|;
@@ -310,18 +310,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns 0 if packet should be dropped, 1 if it should be accepted  */
+comment|/*  * Returns 0 if packet should be dropped, 1 or more if it should be accepted  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|old
-end_ifdef
-
 begin_function
 name|int
-name|ip_firewall_check_print
+name|ip_fw_chk
 parameter_list|(
 name|ip
 parameter_list|,
@@ -333,237 +327,7 @@ modifier|*
 name|ip
 decl_stmt|;
 name|struct
-name|ip_firewall
-modifier|*
-name|chain
-decl_stmt|;
-block|{
-name|struct
-name|ip_firewall
-modifier|*
-name|fwtmp
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|ip_firewall_check_noprint
-argument_list|(
-name|ip
-argument_list|,
-name|chain
-argument_list|,
-operator|&
-name|fwtmp
-argument_list|)
-condition|)
-block|{
-name|u_short
-modifier|*
-name|portptr
-init|=
-operator|(
-name|u_short
-operator|*
-operator|)
-operator|&
-operator|(
-operator|(
-operator|(
-name|u_int
-operator|*
-operator|)
-name|ip
-operator|)
-index|[
-name|ip
-operator|->
-name|ip_hl
-index|]
-operator|)
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"ip_firewall_check says no to "
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|ip
-operator|->
-name|ip_p
-condition|)
-block|{
-case|case
-name|IPPROTO_TCP
-case|:
-name|printf
-argument_list|(
-literal|"TCP "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPPROTO_UDP
-case|:
-name|printf
-argument_list|(
-literal|"UDP "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPPROTO_ICMP
-case|:
-name|printf
-argument_list|(
-literal|"ICMP:%d "
-argument_list|,
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|portptr
-operator|)
-index|[
-literal|0
-index|]
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"p=%d "
-argument_list|,
-name|ip
-operator|->
-name|ip_p
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|print_ip
-argument_list|(
-name|ip
-operator|->
-name|ip_src
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_p
-operator|==
-name|IPPROTO_TCP
-operator|||
-name|ip
-operator|->
-name|ip_p
-operator|==
-name|IPPROTO_UDP
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|":%d "
-argument_list|,
-name|ntohs
-argument_list|(
-name|portptr
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|print_ip
-argument_list|(
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_p
-operator|==
-name|IPPROTO_TCP
-operator|||
-name|ip
-operator|->
-name|ip_p
-operator|==
-name|IPPROTO_UDP
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|":%d "
-argument_list|,
-name|ntohs
-argument_list|(
-name|portptr
-index|[
-literal|1
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|int
-name|ip_firewall_check
-parameter_list|(
-name|ip
-parameter_list|,
-name|chain
-parameter_list|)
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
-name|struct
-name|ip_firewall
+name|ip_fw
 modifier|*
 name|chain
 decl_stmt|;
@@ -580,7 +344,7 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|firewall_proto
+name|frwl_proto
 decl_stmt|,
 name|proto
 init|=
@@ -588,7 +352,7 @@ literal|0
 decl_stmt|;
 specifier|register
 name|struct
-name|ip_firewall
+name|ip_fw
 modifier|*
 name|fptr
 decl_stmt|;
@@ -637,7 +401,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* Is there a firewall chain? */
+comment|/* Is there a frwl chain? */
 return|return
 operator|(
 literal|1
@@ -887,25 +651,25 @@ block|{
 if|if
 condition|(
 operator|(
-name|firewall_proto
+name|frwl_proto
 operator|=
 name|fptr
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_KIND
+name|IP_FW_F_KIND
 operator|)
 operator|==
-name|IP_FIREWALL_UNIVERSAL
+name|IP_FW_F_ALL
 condition|)
 block|{
-comment|/* Universal firewall - we've got a match! */
+comment|/* Universal frwl - we've got a match! */
 ifdef|#
 directive|ifdef
 name|DEBUG_IPFIREWALL
 name|printf
 argument_list|(
-literal|"universal firewall match\n"
+literal|"universal frwl match\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -913,6 +677,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_VERBOSE
+comment|/* 		 * VERY ugly piece of code which actually 		 * makes kernel printf for denyed packets... 		 * This thingy will be added in more places... 		 */
 if|if
 condition|(
 operator|!
@@ -921,7 +686,7 @@ name|fptr
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_ACCEPT
+name|IP_FW_F_ACCEPT
 operator|)
 operator|&&
 operator|(
@@ -929,13 +694,13 @@ name|fptr
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_PRINT
+name|IP_FW_F_PRN
 operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ip_firewall_check says no to "
+literal|"ip_fw_chk says no to "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1096,13 +861,13 @@ name|fptr
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_ACCEPT
+name|IP_FW_F_ACCEPT
 operator|)
 return|;
 block|}
 else|else
 block|{
-comment|/* Specific firewall - packet's protocol must match firewall's */
+comment|/* Specific frwl - packet's protocol must match frwl's */
 if|if
 condition|(
 operator|!
@@ -1145,7 +910,7 @@ name|IPPROTO_TCP
 case|:
 name|proto
 operator|=
-name|IP_FIREWALL_TCP
+name|IP_FW_F_TCP
 expr_stmt|;
 name|src_port
 operator|=
@@ -1175,7 +940,7 @@ name|IPPROTO_UDP
 case|:
 name|proto
 operator|=
-name|IP_FIREWALL_UDP
+name|IP_FW_F_UDP
 expr_stmt|;
 name|src_port
 operator|=
@@ -1205,13 +970,13 @@ name|IPPROTO_ICMP
 case|:
 name|proto
 operator|=
-name|IP_FIREWALL_ICMP
+name|IP_FW_F_ICMP
 expr_stmt|;
 break|break;
 default|default:
 name|proto
 operator|=
-name|IP_FIREWALL_UNIVERSAL
+name|IP_FW_F_ALL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1233,20 +998,20 @@ if|if
 condition|(
 name|proto
 operator|==
-name|firewall_proto
+name|frwl_proto
 condition|)
 block|{
 if|if
 condition|(
 name|proto
 operator|==
-name|IP_FIREWALL_ICMP
+name|IP_FW_F_ICMP
 operator|||
 operator|(
 operator|(
 name|fptr
 operator|->
-name|num_src_ports
+name|n_src_p
 operator|==
 literal|0
 operator|||
@@ -1262,7 +1027,7 @@ index|]
 argument_list|,
 name|fptr
 operator|->
-name|num_src_ports
+name|n_src_p
 argument_list|,
 name|src_port
 argument_list|,
@@ -1270,14 +1035,14 @@ name|fptr
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_SRC_RANGE
+name|IP_FW_F_SRNG
 argument_list|)
 operator|)
 operator|&&
 operator|(
 name|fptr
 operator|->
-name|num_dst_ports
+name|n_dst_p
 operator|==
 literal|0
 operator|||
@@ -1290,12 +1055,12 @@ name|ports
 index|[
 name|fptr
 operator|->
-name|num_src_ports
+name|n_src_p
 index|]
 argument_list|,
 name|fptr
 operator|->
-name|num_dst_ports
+name|n_dst_p
 argument_list|,
 name|dst_port
 argument_list|,
@@ -1303,7 +1068,7 @@ name|fptr
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_DST_RANGE
+name|IP_FW_F_DRNG
 argument_list|)
 operator|)
 operator|)
@@ -1312,6 +1077,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_VERBOSE
+comment|/* 		 * VERY ugly piece of code which actually 		 * makes kernel printf for denyed packets... 		 * This thingy will be added in more places... 		 */
 if|if
 condition|(
 operator|!
@@ -1320,7 +1086,7 @@ name|fptr
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_ACCEPT
+name|IP_FW_F_ACCEPT
 operator|)
 operator|&&
 operator|(
@@ -1328,13 +1094,13 @@ name|fptr
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_PRINT
+name|IP_FW_F_PRN
 operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ip_firewall_check says no to "
+literal|"ip_fw_chk says no to "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1495,7 +1261,7 @@ name|fptr
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_ACCEPT
+name|IP_FW_F_ACCEPT
 operator|)
 return|;
 block|}
@@ -1503,10 +1269,11 @@ block|}
 block|}
 block|}
 block|}
-comment|/*      * If we get here then none of the firewalls matched.      * If the first firewall was an accept firewall then reject the packet.      * If the first firewall was a deny firewall then accept the packet.      *      * The basic idea is that there is a virtual final firewall which is      * the exact complement of the first firewall (this idea is a slight      * variant of the way that the Telebit's Netblazer IP filtering scheme      * handles this case).      */
+comment|/*      * If we get here then none of the frwls matched.      * So now we relay on policy defined by user-unmatched packet can      * be ever accepted or rejected...      */
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_VERBOSE
+comment|/* 		 * VERY ugly piece of code which actually 		 * makes kernel printf for denyed packets... 		 * This thingy will be added in more places... 		 */
 if|if
 condition|(
 operator|!
@@ -1519,13 +1286,13 @@ name|fptr
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_PRINT
+name|IP_FW_F_PRN
 operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ip_firewall_check says no to "
+literal|"ip_fw_chk says no to "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1691,12 +1458,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|free_firewall_chain
+name|free_fw_chain
 parameter_list|(
 name|chainptr
 parameter_list|)
 name|struct
-name|ip_firewall
+name|ip_fw
 modifier|*
 modifier|*
 name|chainptr
@@ -1717,7 +1484,7 @@ name|NULL
 condition|)
 block|{
 name|struct
-name|ip_firewall
+name|ip_fw
 modifier|*
 name|ftmp
 decl_stmt|;
@@ -2553,22 +2320,22 @@ name|del_from_chain
 parameter_list|(
 name|chainptr
 parameter_list|,
-name|firewall
+name|frwl
 parameter_list|)
 name|struct
-name|ip_firewall
+name|ip_fw
 modifier|*
 modifier|*
 name|chainptr
 decl_stmt|;
 name|struct
-name|ip_firewall
+name|ip_fw
 modifier|*
-name|firewall
+name|frwl
 decl_stmt|;
 block|{
 name|struct
-name|ip_firewall
+name|ip_fw
 modifier|*
 name|ftmp
 decl_stmt|,
@@ -2605,11 +2372,16 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_IPFIREWALL
 name|printf
 argument_list|(
-literal|"ip_firewall_ctl:  chain is empty\n"
+literal|"ip_fw_ctl:  chain is empty\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
@@ -2651,7 +2423,7 @@ operator|->
 name|src
 argument_list|,
 operator|&
-name|firewall
+name|frwl
 operator|->
 name|src
 argument_list|,
@@ -2672,7 +2444,7 @@ operator|->
 name|src_mask
 argument_list|,
 operator|&
-name|firewall
+name|frwl
 operator|->
 name|src_mask
 argument_list|,
@@ -2693,7 +2465,7 @@ operator|->
 name|dst
 argument_list|,
 operator|&
-name|firewall
+name|frwl
 operator|->
 name|dst
 argument_list|,
@@ -2714,7 +2486,7 @@ operator|->
 name|dst_mask
 argument_list|,
 operator|&
-name|firewall
+name|frwl
 operator|->
 name|dst_mask
 argument_list|,
@@ -2731,7 +2503,7 @@ name|ftmp
 operator|->
 name|flags
 operator|!=
-name|firewall
+name|frwl
 operator|->
 name|flags
 operator|)
@@ -2744,21 +2516,21 @@ name|tport1
 operator|=
 name|ftmp
 operator|->
-name|num_src_ports
+name|n_src_p
 operator|+
 name|ftmp
 operator|->
-name|num_dst_ports
+name|n_dst_p
 expr_stmt|;
 name|tport2
 operator|=
-name|firewall
+name|frwl
 operator|->
-name|num_src_ports
+name|n_src_p
 operator|+
-name|firewall
+name|frwl
 operator|->
-name|num_dst_ports
+name|n_dst_p
 expr_stmt|;
 if|if
 condition|(
@@ -2790,7 +2562,7 @@ name|tport1
 operator|&&
 name|tmpnum
 operator|<
-name|IP_FIREWALL_MAX_PORTS
+name|IP_FW_MAX_PORTS
 condition|;
 name|tmpnum
 operator|++
@@ -2804,7 +2576,7 @@ index|[
 name|tmpnum
 index|]
 operator|!=
-name|firewall
+name|frwl
 operator|->
 name|ports
 index|[
@@ -2912,7 +2684,7 @@ end_function
 
 begin_function
 name|int
-name|ip_firewall_ctl
+name|ip_fw_ctl
 parameter_list|(
 name|stage
 parameter_list|,
@@ -2938,13 +2710,13 @@ operator|==
 name|IP_FW_FLUSH
 condition|)
 block|{
-name|free_firewall_chain
+name|free_fw_chain
 argument_list|(
 operator|&
 name|ip_fw_blk_chain
 argument_list|)
 expr_stmt|;
-name|free_firewall_chain
+name|free_fw_chain
 argument_list|(
 operator|&
 name|ip_fw_fwd_chain
@@ -2965,7 +2737,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ip_firewall_ctl:  NULL mbuf ptr\n"
+literal|"ip_fw_ctl:  NULL mbuf ptr\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3057,9 +2829,12 @@ name|u_short
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_IPFIREWALL
 name|printf
 argument_list|(
-literal|"ip_firewall_ctl:  mbuf len=%d, want at least %d\n"
+literal|"ip_fw_ctl:  mbuf len=%d, want at least %d\n"
 argument_list|,
 name|m
 operator|->
@@ -3079,6 +2854,8 @@ name|u_short
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -3114,9 +2891,12 @@ name|int
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_IPFIREWALL
 name|printf
 argument_list|(
-literal|"ip_firewall_ctl:  ip->ip_hl=%d, want %d\n"
+literal|"ip_fw_ctl:  ip->ip_hl=%d, want %d\n"
 argument_list|,
 name|ip
 operator|->
@@ -3134,6 +2914,8 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -3142,7 +2924,7 @@ return|;
 block|}
 if|if
 condition|(
-name|ip_firewall_check
+name|ip_fw_chk
 argument_list|(
 name|ip
 argument_list|,
@@ -3190,9 +2972,9 @@ name|IP_FW_DEL_FWD
 condition|)
 block|{
 name|struct
-name|ip_firewall
+name|ip_fw
 modifier|*
-name|firewall
+name|frwl
 decl_stmt|;
 if|if
 condition|(
@@ -3203,13 +2985,16 @@ operator|!=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ip_firewall
+name|ip_fw
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_IPFIREWALL
 name|printf
 argument_list|(
-literal|"ip_firewall_ctl:  len=%d, want %d\n"
+literal|"ip_fw_ctl:  len=%d, want %d\n"
 argument_list|,
 name|m
 operator|->
@@ -3218,50 +3003,57 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ip_firewall
+name|ip_fw
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
 block|}
-name|firewall
+name|frwl
 operator|=
 name|mtod
 argument_list|(
 name|m
 argument_list|,
 expr|struct
-name|ip_firewall
+name|ip_fw
 operator|*
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|firewall
+name|frwl
 operator|->
 name|flags
 operator|&
 operator|~
-name|IP_FIREWALL_FLAG_BITS
+name|IP_FW_F_MASK
 operator|)
 operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_IPFIREWALL
 name|printf
 argument_list|(
-literal|"ip_firewall_ctl:  undefined flag bits set (flags=%x)\n"
+literal|"ip_fw_ctl:  undefined flag bits set (flags=%x)\n"
 argument_list|,
-name|firewall
+name|frwl
 operator|->
 name|flags
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -3271,29 +3063,34 @@ block|}
 if|if
 condition|(
 operator|(
-name|firewall
+name|frwl
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_SRC_RANGE
+name|IP_FW_F_SRNG
 operator|)
 operator|&&
-name|firewall
+name|frwl
 operator|->
-name|num_src_ports
+name|n_src_p
 operator|<
 literal|2
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_IPFIREWALL
 name|printf
 argument_list|(
-literal|"ip_firewall_ctl:  SRC_RANGE set but num_src_ports=%d\n"
+literal|"ip_fw_ctl:  src range set but n_src_p=%d\n"
 argument_list|,
-name|firewall
+name|frwl
 operator|->
-name|num_src_ports
+name|n_src_p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -3303,29 +3100,34 @@ block|}
 if|if
 condition|(
 operator|(
-name|firewall
+name|frwl
 operator|->
 name|flags
 operator|&
-name|IP_FIREWALL_DST_RANGE
+name|IP_FW_F_DRNG
 operator|)
 operator|&&
-name|firewall
+name|frwl
 operator|->
-name|num_dst_ports
+name|n_dst_p
 operator|<
 literal|2
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_IPFIREWALL
 name|printf
 argument_list|(
-literal|"ip_firewall_ctl:  DST_RANGE set but num_dst_ports=%d\n"
+literal|"ip_fw_ctl:  dst range set but n_dst_p=%d\n"
 argument_list|,
-name|firewall
+name|frwl
 operator|->
-name|num_dst_ports
+name|n_dst_p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -3334,30 +3136,35 @@ return|;
 block|}
 if|if
 condition|(
-name|firewall
+name|frwl
 operator|->
-name|num_src_ports
+name|n_src_p
 operator|+
-name|firewall
+name|frwl
 operator|->
-name|num_dst_ports
+name|n_dst_p
 operator|>
-name|IP_FIREWALL_MAX_PORTS
+name|IP_FW_MAX_PORTS
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_IPFIREWALL
 name|printf
 argument_list|(
-literal|"ip_firewall_ctl:  too many ports (%d+%d)\n"
+literal|"ip_fw_ctl:  too many ports (%d+%d)\n"
 argument_list|,
-name|firewall
+name|frwl
 operator|->
-name|num_src_ports
+name|n_src_p
 argument_list|,
-name|firewall
+name|frwl
 operator|->
-name|num_dst_ports
+name|n_dst_p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -3367,7 +3174,14 @@ block|}
 if|#
 directive|if
 literal|0
-block|if ( (firewall->flags& IP_FIREWALL_KIND) == IP_FIREWALL_ICMP ) { 		printf("ip_firewall_ctl:  request for unsupported ICMP firewalling\n"); 		return( EINVAL ); 	    }
+block|if ( (frwl->flags& IP_FW_F_KIND) == IP_FW_F_ICMP ) {
+ifdef|#
+directive|ifdef
+name|DEBUG_IPFIREWALL
+block|printf("ip_fw_ctl:  request for unsupported ICMP frwling\n");
+endif|#
+directive|endif
+block|return( EINVAL ); 	    }
 endif|#
 directive|endif
 if|if
@@ -3384,7 +3198,7 @@ argument_list|(
 operator|&
 name|ip_fw_blk_chain
 argument_list|,
-name|firewall
+name|frwl
 argument_list|)
 operator|)
 return|;
@@ -3403,7 +3217,7 @@ argument_list|(
 operator|&
 name|ip_fw_fwd_chain
 argument_list|,
-name|firewall
+name|frwl
 argument_list|)
 operator|)
 return|;
@@ -3422,7 +3236,7 @@ argument_list|(
 operator|&
 name|ip_fw_blk_chain
 argument_list|,
-name|firewall
+name|frwl
 argument_list|)
 operator|)
 return|;
@@ -3441,19 +3255,24 @@ argument_list|(
 operator|&
 name|ip_fw_fwd_chain
 argument_list|,
-name|firewall
+name|frwl
 argument_list|)
 operator|)
 return|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG_IPFIREWALL
 name|printf
 argument_list|(
-literal|"ip_firewall_ctl:  unknown request %d\n"
+literal|"ip_fw_ctl:  unknown request %d\n"
 argument_list|,
 name|stage
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
