@@ -1688,7 +1688,6 @@ operator|)
 operator|>
 literal|0
 condition|)
-empty_stmt|;
 break|break;
 name|ipfw_destroy
 argument_list|()
