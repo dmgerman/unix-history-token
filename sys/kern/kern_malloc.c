@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -546,6 +552,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* time_uptime of last malloc(9) failure */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|time_t
+name|t_malloc_fail
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|malloc_last_fail
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|time_uptime
+operator|-
+name|t_malloc_fail
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *	malloc:  *  *	Allocate a block of memory.  *  *	If M_NOWAIT is set, this routine will not block and return NULL if  *	the allocation fails.  */
 end_comment
 
@@ -800,6 +834,38 @@ operator|->
 name|ks_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|M_NOWAIT
+operator|)
+condition|)
+name|KASSERT
+argument_list|(
+name|va
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"malloc(M_WAITOK) returned NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|va
+operator|==
+name|NULL
+condition|)
+block|{
+name|t_malloc_fail
+operator|=
+name|time_uptime
+expr_stmt|;
+block|}
 return|return
 operator|(
 operator|(
