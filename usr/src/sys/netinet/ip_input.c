@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5190,18 +5190,6 @@ operator|.
 name|s_addr
 argument_list|)
 decl_stmt|;
-name|u_long
-name|dst
-init|=
-name|ntohl
-argument_list|(
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|RTA
@@ -5501,11 +5489,7 @@ name|size_t
 name|newlen
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|ip_ttl
-decl_stmt|;
-comment|/* all sysctl names at this level are terminal */
+comment|/* All sysctl names at this level are terminal. */
 if|if
 condition|(
 name|namelen

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -200,13 +200,6 @@ init|=
 block|{
 literal|0
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_char
-name|nfs_mntid
 decl_stmt|;
 end_decl_stmt
 
@@ -733,8 +726,6 @@ name|int
 name|error
 decl_stmt|,
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
 comment|/* 	 * XXX time must be non-zero when we init the interface or else 	 * the arp code will wedge... 	 */
 if|if
@@ -1955,9 +1946,6 @@ name|np
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|fsid_t
-name|tfsid
 decl_stmt|;
 if|if
 condition|(

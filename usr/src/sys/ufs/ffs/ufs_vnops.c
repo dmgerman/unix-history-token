@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3332,18 +3332,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* the directory we are searching */
-name|struct
-name|vnode
-modifier|*
-name|tdp
-decl_stmt|;
-comment|/* saved dp */
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-comment|/* mount table entry */
 name|int
 name|docache
 decl_stmt|;
@@ -3753,8 +3741,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|nextname
-label|:
 comment|/* 	 * Check for read-only file systems. 	 */
 if|if
 condition|(
@@ -4018,15 +4004,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|fdvpneedsrele
-init|=
-literal|1
-decl_stmt|,
-name|tdvpneedsrele
-init|=
-literal|1
 decl_stmt|;
 name|u_char
 name|namlen

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -703,20 +703,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|sockproto
-name|icmproto
-init|=
-block|{
-name|AF_INET
-block|,
-name|IPPROTO_ICMP
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2728,11 +2714,7 @@ name|size_t
 name|newlen
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|ip_ttl
-decl_stmt|;
-comment|/* all sysctl names at this level are terminal */
+comment|/* All sysctl names at this level are terminal. */
 if|if
 condition|(
 name|namelen

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3813,11 +3813,6 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-decl_stmt|;
-name|union
-name|ihead
-modifier|*
-name|ih
 decl_stmt|;
 name|dev_t
 name|dev

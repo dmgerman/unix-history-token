@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -897,9 +897,6 @@ operator|)
 name|tp
 operator|->
 name|t_sc
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 switch|switch
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vnops.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vnops.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -106,18 +106,6 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* not extern, really "forward" */
-name|int
-modifier|*
-name|mapdata
-decl_stmt|,
-name|nentries
-decl_stmt|;
-name|int
-modifier|*
-name|gmapdata
-decl_stmt|,
-name|gnentries
-decl_stmt|;
 name|struct
 name|ucred
 modifier|*
@@ -129,9 +117,6 @@ name|credp
 decl_stmt|,
 modifier|*
 name|savecredp
-decl_stmt|,
-modifier|*
-name|saveucredp
 decl_stmt|,
 modifier|*
 name|savecompcredp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -146,8 +146,6 @@ decl_stmt|,
 name|max
 decl_stmt|;
 name|int
-name|bb
-decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* Get the head of the freelist. */
@@ -861,9 +859,6 @@ name|old_iaddr
 decl_stmt|;
 name|ino_t
 name|ino
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 comment|/* Get the inode number and file system. */
 name|ip

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1914,14 +1914,6 @@ operator|)
 name|n_arg
 decl_stmt|;
 specifier|register
-name|int
-name|j
-decl_stmt|;
-specifier|register
-name|caddr_t
-name|cp
-decl_stmt|;
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -1953,26 +1945,12 @@ decl_stmt|,
 name|b_leaf
 decl_stmt|;
 name|int
-name|vlen
-init|=
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
-name|v
-decl_stmt|,
 name|mlen
 decl_stmt|,
 name|keyduplicated
 decl_stmt|;
 name|caddr_t
 name|cplim
-decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|maskp
 decl_stmt|;
 name|struct
 name|radix_mask

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1684,8 +1684,6 @@ operator||=
 name|RTF_DONE
 expr_stmt|;
 block|}
-name|cleanup
-label|:
 if|if
 condition|(
 name|rt
@@ -3052,10 +3050,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|sockaddr
 modifier|*
@@ -3699,12 +3693,6 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|sockaddr
-modifier|*
-name|sa
-decl_stmt|;
-specifier|register
-name|struct
 name|rtentry
 modifier|*
 name|rt
@@ -3717,8 +3705,6 @@ operator|)
 name|rn
 decl_stmt|;
 name|int
-name|n
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -3960,11 +3946,6 @@ decl_stmt|;
 name|struct
 name|rt_addrinfo
 name|info
-decl_stmt|;
-name|struct
-name|sockaddr
-modifier|*
-name|sa
 decl_stmt|;
 name|int
 name|len

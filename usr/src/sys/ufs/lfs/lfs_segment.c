@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -612,11 +612,6 @@ name|segment
 modifier|*
 name|sp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|,
-name|s
-decl_stmt|;
 name|fs
 operator|=
 name|VFSTOUFS
@@ -836,13 +831,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|,
-name|s
-decl_stmt|,
-name|active
-decl_stmt|;
 name|loop
 label|:
 for|for
@@ -1057,14 +1045,11 @@ decl_stmt|;
 name|int
 name|clean
 decl_stmt|,
+name|do_ckp
+decl_stmt|,
 name|error
 decl_stmt|,
 name|i
-decl_stmt|,
-name|s
-decl_stmt|;
-name|int
-name|do_ckp
 decl_stmt|;
 name|fs
 operator|=
@@ -3237,12 +3222,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|daddr_t
-name|lbn
-decl_stmt|,
-modifier|*
-name|lbnp
-decl_stmt|;
 name|int
 name|repeat
 decl_stmt|;
@@ -3617,8 +3596,6 @@ decl_stmt|;
 name|int
 name|curseg
 decl_stmt|,
-name|error
-decl_stmt|,
 name|isdirty
 decl_stmt|,
 name|sn
@@ -3879,8 +3856,6 @@ name|int
 name|ch_per_blk
 decl_stmt|,
 name|do_again
-decl_stmt|,
-name|error
 decl_stmt|,
 name|i
 decl_stmt|,

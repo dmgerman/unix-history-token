@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -71,17 +71,6 @@ name|void
 name|vmmeter
 parameter_list|()
 block|{
-specifier|register
-name|unsigned
-modifier|*
-name|cp
-decl_stmt|,
-modifier|*
-name|rp
-decl_stmt|,
-modifier|*
-name|sp
-decl_stmt|;
 if|if
 condition|(
 name|time

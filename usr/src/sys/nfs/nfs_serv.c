@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -301,9 +301,6 @@ name|struct
 name|mbuf
 modifier|*
 name|mb
-decl_stmt|,
-modifier|*
-name|mb2
 decl_stmt|,
 modifier|*
 name|mreq
@@ -805,10 +802,6 @@ decl_stmt|,
 name|rdonly
 decl_stmt|,
 name|cache
-decl_stmt|,
-name|duration2
-decl_stmt|,
-name|cache2
 decl_stmt|;
 name|char
 modifier|*
@@ -1461,8 +1454,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|,
-name|rdonly
 decl_stmt|,
 name|cache
 decl_stmt|,
@@ -7596,8 +7587,6 @@ name|error
 init|=
 literal|0
 decl_stmt|,
-name|rdonly
-decl_stmt|,
 name|cache
 decl_stmt|,
 name|len
@@ -8110,8 +8099,6 @@ name|error
 init|=
 literal|0
 decl_stmt|,
-name|rdonly
-decl_stmt|,
 name|cache
 decl_stmt|,
 name|len
@@ -8565,10 +8552,6 @@ decl_stmt|;
 name|struct
 name|iovec
 name|iv
-decl_stmt|;
-name|struct
-name|vattr
-name|va
 decl_stmt|;
 name|int
 name|len
