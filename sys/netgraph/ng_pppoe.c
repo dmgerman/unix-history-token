@@ -233,24 +233,24 @@ init|=
 literal|0
 block|,
 comment|/* [both] Initial state */
+name|PPPOE_LISTENING
+block|,
+comment|/* [Daemon] Listening for discover initiation pkt */
 name|PPPOE_SINIT
 block|,
 comment|/* [Client] Sent discovery initiation */
 name|PPPOE_PRIMED
 block|,
-comment|/* [Server] Received discovery initiation */
+comment|/* [Server] Awaiting PADI from daemon */
 name|PPPOE_SOFFER
 block|,
-comment|/* [Server] Sent offer message */
+comment|/* [Server] Sent offer message  (got PADI)*/
 name|PPPOE_SREQ
 block|,
 comment|/* [Client] Sent a Request */
-name|PPPOE_LISTENING
-block|,
-comment|/* [Server] Listening for discover initiation msg */
 name|PPPOE_NEWCONNECTED
 block|,
-comment|/* [Both] Connection established, No data received */
+comment|/* [Server] Connection established, No data received */
 name|PPPOE_CONNECTED
 block|,
 comment|/* [Both] Connection established, Data received */
@@ -3981,16 +3981,16 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-name|sendpacket
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
 name|sp
 operator|->
 name|state
 operator|=
 name|PPPOE_NEWCONNECTED
+expr_stmt|;
+name|sendpacket
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 comment|/* 				 * Having sent the last Negotiation header, 				 * Set up the stored packet header to  				 * be correct for the actual session. 				 * But keep the negotialtion stuff 				 * around in case we need to resend this last  				 * packet. We'll discard it when we move 				 * from NEWCONNECTED to CONNECTED 				 */
 name|sp
@@ -5016,7 +5016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hook disconnection  *  * Clean up all dangling links and infirmation about the session/hook.  * For this type, removal of the last link destroys the node  */
+comment|/*  * Hook disconnection  *  * Clean up all dangling links and information about the session/hook.  * For this type, removal of the last link destroys the node  */
 end_comment
 
 begin_function
@@ -5213,6 +5213,19 @@ argument_list|,
 name|MT_DATA
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"pppoe: Session out of mbufs\n"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|m
 operator|->
 name|m_pkthdr
@@ -5258,7 +5271,7 @@ name|wh
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Add a General error message and adjust sizes */
+comment|/* 				 * Add a General error message and adjust 				 * sizes 				 */
 name|wh
 operator|=
 name|mtod
@@ -5357,6 +5370,7 @@ argument_list|,
 name|dummy
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -5740,14 +5754,42 @@ case|case
 name|PPPOE_SNONE
 case|:
 case|case
-name|PPPOE_NEWCONNECTED
-case|:
-case|case
 name|PPPOE_CONNECTED
 case|:
 name|printf
 argument_list|(
 literal|"pppoe: sendpacket: unexpected state\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PPPOE_NEWCONNECTED
+case|:
+comment|/* send the PADS without a timeout - we're now connected */
+name|m0
+operator|=
+name|m_copypacket
+argument_list|(
+name|sp
+operator|->
+name|neg
+operator|->
+name|m
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+name|NG_SEND_DATA
+argument_list|(
+name|error
+argument_list|,
+name|privp
+operator|->
+name|ethernet_hook
+argument_list|,
+name|m0
+argument_list|,
+name|dummy
 argument_list|)
 expr_stmt|;
 break|break;
