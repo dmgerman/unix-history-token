@@ -10392,7 +10392,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|addr
-operator|>
+operator|>=
 name|stack_entry
 operator|->
 name|end
@@ -10927,6 +10927,18 @@ name|grow_amount
 argument_list|)
 condition|)
 block|{
+name|map
+operator|->
+name|size
+operator|+=
+operator|(
+name|addr
+operator|-
+name|stack_entry
+operator|->
+name|end
+operator|)
+expr_stmt|;
 comment|/* Update the current entry. */
 name|stack_entry
 operator|->
