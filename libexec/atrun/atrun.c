@@ -235,7 +235,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: atrun.c,v 1.6 1995/08/28 21:30:23 mpp Exp $"
+literal|"$Id: atrun.c,v 1.6.2.1 1997/09/08 23:45:35 dima Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1625,7 +1625,8 @@ literal|"dl:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
