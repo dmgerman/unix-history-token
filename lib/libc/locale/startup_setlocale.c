@@ -135,16 +135,6 @@ if|if
 condition|(
 operator|!
 name|PathLocale
-operator|&&
-operator|!
-operator|(
-name|PathLocale
-operator|=
-name|getenv
-argument_list|(
-literal|"PATH_LOCALE"
-argument_list|)
-operator|)
 condition|)
 name|PathLocale
 operator|=
