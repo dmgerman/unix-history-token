@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	4.5 (Berkeley) %G%"
+literal|"@(#)ping.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
