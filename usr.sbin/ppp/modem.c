@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.21 1996/03/27 22:58:21 ache Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.22 1996/03/28 13:38:59 ache Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1561,6 +1561,14 @@ return|;
 block|}
 end_block
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|termios
+name|modemios
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|OpenModem
@@ -1877,6 +1885,10 @@ operator|&
 name|rstio
 argument_list|)
 expr_stmt|;
+name|modemios
+operator|=
+name|rstio
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2137,14 +2149,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|termios
-name|modemios
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Put modem tty line into raw mode which is necessary in packet mode operation  */
 end_comment
@@ -2231,10 +2235,6 @@ argument_list|,
 operator|&
 name|rstio
 argument_list|)
-expr_stmt|;
-name|modemios
-operator|=
-name|rstio
 expr_stmt|;
 name|cfmakeraw
 argument_list|(
@@ -2379,13 +2379,16 @@ name|isatty
 argument_list|(
 name|modem
 argument_list|)
+operator|&&
+operator|!
+name|DEV_IS_SYNC
 condition|)
 block|{
 name|tcsetattr
 argument_list|(
 name|modem
 argument_list|,
-name|TCSADRAIN
+name|TCSAFLUSH
 argument_list|,
 operator|&
 name|modemios
