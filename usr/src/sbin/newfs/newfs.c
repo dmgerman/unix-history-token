@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.17 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,13 +65,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fs.h>
+file|<ufs/fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<ufs/dir.h>
 end_include
 
 begin_include
