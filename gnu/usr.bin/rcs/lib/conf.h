@@ -1174,7 +1174,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* DOes mkstemp() work?  */
+comment|/* Does mkstemp() work?  */
 end_comment
 
 begin_define
