@@ -911,7 +911,7 @@ end_decl_stmt
 begin_expr_stmt
 name|NETGRAPH_INIT
 argument_list|(
-name|ether
+name|bridge
 argument_list|,
 operator|&
 name|ng_bridge_typestruct
