@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.h	4.16	82/10/20	*/
+comment|/*	in.h	4.17	82/10/31	*/
 end_comment
 
 begin_comment
@@ -518,6 +518,65 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * Macros for number representation conversion.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ntohl
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ntohs
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|htonl
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|htons
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
