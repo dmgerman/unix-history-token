@@ -2842,7 +2842,7 @@ begin_define
 define|#
 directive|define
 name|TBL_IF
-value|freqTable[ bktr->tuner.chnlset ].ptr[ 1 ]
+value|(bktr->format_params == BT848_IFORM_F_NTSCJ || \                  bktr->format_params == BT848_IFORM_F_NTSCM ? \                  nabcst[1] : weurope[1])
 end_define
 
 begin_comment
