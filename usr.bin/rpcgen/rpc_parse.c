@@ -1,27 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_empty
 empty|#ident	"@(#)rpc_parse.c	1.12	93/07/05 SMI"
 end_empty
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)rpc_parse.c 1.8 89/02/22 (C) 1987 SMI";
@@ -33,6 +29,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * rpc_parse.c, Parser for the RPC protocol compiler  * Copyright (C) 1987 Sun Microsystems, Inc.  */
@@ -250,7 +260,7 @@ name|tok
 decl_stmt|;
 name|defp
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|definition
 argument_list|)
@@ -461,7 +471,7 @@ argument_list|)
 expr_stmt|;
 name|decls
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|decl_list
 argument_list|)
@@ -648,7 +658,7 @@ argument_list|)
 expr_stmt|;
 name|vlist
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|version_list
 argument_list|)
@@ -681,7 +691,7 @@ block|{
 comment|/* get result type */
 name|plist
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|proc_list
 argument_list|)
@@ -780,7 +790,7 @@ name|TRUE
 expr_stmt|;
 name|decls
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|decl_list
 argument_list|)
@@ -833,7 +843,7 @@ argument_list|)
 expr_stmt|;
 name|decls
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|decl_list
 argument_list|)
@@ -1206,7 +1216,7 @@ argument_list|)
 expr_stmt|;
 name|elist
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|enumval_list
 argument_list|)
@@ -1511,7 +1521,7 @@ argument_list|)
 expr_stmt|;
 name|cases
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|case_list
 argument_list|)
@@ -1581,7 +1591,7 @@ name|next
 expr_stmt|;
 name|cases
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|case_list
 argument_list|)
@@ -1635,7 +1645,7 @@ name|next
 expr_stmt|;
 name|cases
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|case_list
 argument_list|)
@@ -1734,7 +1744,7 @@ name|un
 operator|.
 name|default_decl
 operator|=
-name|ALLOC
+name|XALLOC
 argument_list|(
 name|declaration
 argument_list|)
@@ -2519,7 +2529,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|strdup
+name|xstrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2581,7 +2591,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"pointer to string not allowed in program arguments\n"
+literal|"pointer to string not allowed in program arguments"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2601,18 +2611,20 @@ operator|&
 name|tok
 argument_list|)
 condition|)
+block|{
 comment|/* optional name of argument */
 name|dec
 operator|->
 name|name
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|tok
 operator|.
 name|str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

@@ -4,7 +4,7 @@ comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|/*	actual or intended publication of such source code.	*/
 end_comment
 
 begin_comment
-comment|/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *	PROPRIETARY NOTICE (Combined) * * This source code is unpublished proprietary information * constituting, or derived under license from AT&T's UNIX(r) System V. * In addition, portions of such source code were derived from Berkeley * 4.3 BSD under license from the Regents of the University of * California. * * * *	Copyright Notice  * * Notice of copyright on this source code product does not indicate  *  publication. * *	(c) 1986,1987,1988.1989  Sun Microsystems, Inc *	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T. *          All rights reserved. */
+comment|/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *	PROPRIETARY NOTICE (Combined) * * This source code is unpublished proprietary information * constituting, or derived under license from AT&T's UNIX(r) System V. * In addition, portions of such source code were derived from Berkeley * 4.3 BSD under license from the Regents of the University of * California. * * * *	Copyright Notice * * Notice of copyright on this source code product does not indicate *  publication. * *	(c) 1986,1987,1988.1989  Sun Microsystems, Inc *	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T. *          All rights reserved. */
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|/*      @(#)rpc_util.h  1.5  90/08/29  (C) 1987 SMI   */
 end_comment
 
 begin_comment
-comment|/*  * rpc_util.h, Useful definitions for the RPC protocol compiler   */
+comment|/*  * rpc_util.h, Useful definitions for the RPC protocol compiler  */
 end_comment
 
 begin_include
@@ -58,21 +58,11 @@ end_include
 begin_define
 define|#
 directive|define
-name|alloc
-parameter_list|(
-name|size
-parameter_list|)
-value|malloc((unsigned)(size))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALLOC
+name|XALLOC
 parameter_list|(
 name|object
 parameter_list|)
-value|(object *) malloc(sizeof(object))
+value|(object *) xmalloc(sizeof(object))
 end_define
 
 begin_define
@@ -215,7 +205,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Global variables   */
+comment|/*  * Global variables  */
 end_comment
 
 begin_define
@@ -432,7 +422,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * rpc_util routines   */
+comment|/*  * rpc_util routines  */
 end_comment
 
 begin_function_decl
@@ -467,6 +457,45 @@ begin_function_decl
 name|void
 name|storeval
 parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|xmalloc
+parameter_list|(
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|xrealloc
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|xstrdup
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -616,7 +645,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * rpc_cout routines   */
+comment|/*  * rpc_cout routines  */
 end_comment
 
 begin_function_decl
@@ -634,7 +663,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * rpc_hout routines   */
+comment|/*  * rpc_hout routines  */
 end_comment
 
 begin_function_decl
@@ -659,7 +688,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * rpc_svcout routines   */
+comment|/*  * rpc_svcout routines  */
 end_comment
 
 begin_function_decl

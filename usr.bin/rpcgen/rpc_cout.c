@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_empty
 empty|#ident	"@(#)rpc_cout.c	1.14	93/07/05 SMI"
 end_empty
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
 
 begin_if
 if|#
@@ -19,37 +13,40 @@ directive|if
 literal|0
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_endif
 unit|static char sccsid[] = "@(#)rpc_cout.c 1.13 89/02/22 (C) 1987 SMI";
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * rpc_cout.c, XDR routine outputter for the RPC protocol compiler  * Copyright (C) 1987, Sun Microsystems, Inc.  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<sys/cdefs.h>
 end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * rpc_cout.c, XDR routine outputter for the RPC protocol compiler  * Copyright (C) 1987, Sun Microsystems, Inc.  */
+end_comment
 
 begin_include
 include|#
@@ -1547,7 +1544,7 @@ condition|)
 block|{
 name|object
 operator|=
-name|alloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1699,7 +1696,7 @@ argument_list|)
 expr_stmt|;
 name|object
 operator|=
-name|alloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -2122,18 +2119,20 @@ name|sizestr
 operator|==
 name|NULL
 condition|)
+block|{
 name|sizestr
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|ptemp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|sizestr
 operator|=
-name|realloc
+name|xrealloc
 argument_list|(
 name|sizestr
 argument_list|,
@@ -2150,23 +2149,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sizestr
-operator|==
-name|NULL
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"fatal error: no memory"
-argument_list|)
-expr_stmt|;
-name|crash
-argument_list|()
-expr_stmt|;
-block|}
-empty_stmt|;
 name|sizestr
 operator|=
 name|strcat
@@ -3575,7 +3557,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -3583,23 +3565,6 @@ name|str
 argument_list|)
 operator|+
 literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ptr
-operator|==
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|hptr
