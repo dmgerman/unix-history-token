@@ -82,44 +82,26 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/* delete node with given key */
+comment|/*  * delete node with given key  *  * vkey:   key to be deleted  * vrootp: address of the root of the tree  * compar: function to carry out node comparisons  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 modifier|*
 name|tdelete
-argument_list|(
-name|vkey
-argument_list|,
-name|vrootp
-argument_list|,
-name|compar
-argument_list|)
-decl|const
+parameter_list|(
+specifier|const
 name|void
 modifier|*
+name|__restrict
 name|vkey
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* key to be deleted */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|void
 modifier|*
 modifier|*
+name|__restrict
 name|vrootp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* address of the root of tree */
-end_comment
-
-begin_function_decl
+parameter_list|,
 name|int
 function_decl|(
 modifier|*
@@ -134,10 +116,7 @@ specifier|const
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
+parameter_list|)
 block|{
 name|node_t
 modifier|*
@@ -385,7 +364,7 @@ return|return
 name|p
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
