@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1999, Traakan Software  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Principal Author: Matthew Jacob  * Copyright (c) 1999, 2001 by Traakan Software  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Additional Copyright (c) 2001 by Parag Patel  * under same licence for MII PHY code.  */
 end_comment
 
 begin_define
@@ -33,6 +33,13 @@ define|#
 directive|define
 name|WX_PRODUCT_82452_SC
 value|0x1003
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_PRODUCT_82543
+value|0x1004
 end_define
 
 begin_define
@@ -95,6 +102,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WX_LIVENGOOD_CU
+value|0x10040002
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_WISEMAN
 parameter_list|(
 name|sc
@@ -109,7 +123,17 @@ name|IS_LIVENGOOD
 parameter_list|(
 name|sc
 parameter_list|)
-value|(!IS_WISEMAN(sc))
+value|((sc)->wx_idnrev>= WX_LIVENGOOD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_LIVENGOOD_CU
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->wx_idnrev == WX_LIVENGOOD_CU)
 end_define
 
 begin_comment
@@ -388,7 +412,7 @@ comment|/*  * This device can only be accessed via memory space.  */
 end_comment
 
 begin_comment
-comment|/*  * Register access via offsets.  */
+comment|/*  * Register access via offsets.  *  * Our brilliant friends at Intel decided to move registers offsets  * around from chip version to chip version. It's amazing that some  * deity doesn't zap these suckers. Really.  */
 end_comment
 
 begin_define
@@ -526,8 +550,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|WXREG_RDTR0_LIVENGOOD
+value|0x00002820
+end_define
+
+begin_define
+define|#
+directive|define
 name|WXREG_RDBA0_LO
 value|0x00000110
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXREG_RDBA0_LO_LIVENGOOD
+value|0x00002800
 end_define
 
 begin_define
@@ -540,8 +578,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|WXREG_RDBA0_HI_LIVENGOOD
+value|0x00002804
+end_define
+
+begin_define
+define|#
+directive|define
 name|WXREG_RDLEN0
 value|0x00000118
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXREG_RDLEN0_LIVENGOOD
+value|0x00002808
 end_define
 
 begin_define
@@ -554,8 +606,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|WXREG_RDH0_LIVENGOOD
+value|0x00002810
+end_define
+
+begin_define
+define|#
+directive|define
 name|WXREG_RDT0
 value|0x00000128
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXREG_RDT0_LIVENGOOD
+value|0x00002818
 end_define
 
 begin_define
@@ -610,8 +676,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|WXREG_FLOW_RCV_HI_LIVENGOOD
+value|0x00002168
+end_define
+
+begin_define
+define|#
+directive|define
 name|WXREG_FLOW_RCV_LO
 value|0x00000168
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXREG_FLOW_RCV_LO_LIVENGOOD
+value|0x00002160
 end_define
 
 begin_define
@@ -687,8 +767,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|WXREG_TDBA_LO_LIVENGOOD
+value|0x00003800
+end_define
+
+begin_define
+define|#
+directive|define
 name|WXREG_TDBA_HI
 value|0x00000424
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXREG_TDBA_HI_LIVENGOOD
+value|0x00003804
 end_define
 
 begin_define
@@ -701,8 +795,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|WXREG_TDLEN_LIVENGOOD
+value|0x00003808
+end_define
+
+begin_define
+define|#
+directive|define
 name|WXREG_TDH
 value|0x00000430
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXREG_TDH_LIVENGOOD
+value|0x00003810
 end_define
 
 begin_define
@@ -715,8 +823,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|WXREG_TDT_LIVENGOOD
+value|0x00003818
+end_define
+
+begin_define
+define|#
+directive|define
 name|WXREG_TIDV
 value|0x00000440
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXREG_TIDV_LIVENGOOD
+value|0x00003820
 end_define
 
 begin_define
@@ -805,6 +927,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WXDCR_ASDE
+value|0x20
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDCR_SLE
+value|0x20
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WXDCR_SLU
 value|0x40
 end_define
@@ -822,6 +966,17 @@ end_define
 
 begin_comment
 comment|/* Invert Loss-of-Signal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDCR_10BT
+value|0x000
+end_define
+
+begin_comment
+comment|/* set 10BaseT */
 end_comment
 
 begin_define
@@ -845,6 +1000,13 @@ end_define
 begin_comment
 comment|/* LIVENGOOD: Set 1000BaseT */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDCR_SPEED_MASK
+value|0x300
+end_define
 
 begin_define
 define|#
@@ -904,12 +1066,20 @@ name|WXDCR_SWDPIN0
 value|(1<< 18)
 end_define
 
+begin_comment
+comment|/* 0x00040000 - PHY reset */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|WXDCR_SWDPIN1
 value|(1<< 19)
 end_define
+
+begin_comment
+comment|/* 0x00080000 */
+end_comment
 
 begin_define
 define|#
@@ -918,12 +1088,20 @@ name|WXDCR_SWDPIN2
 value|(1<< 20)
 end_define
 
+begin_comment
+comment|/* 0x00100000 - PHY data */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|WXDCR_SWDPIN3
 value|(1<< 21)
 end_define
+
+begin_comment
+comment|/* 0x00200000 - PHY clk */
+end_comment
 
 begin_define
 define|#
@@ -946,12 +1124,20 @@ name|WXDCR_SWDPIO0
 value|(1<< 22)
 end_define
 
+begin_comment
+comment|/* 0x00400000 - PHY rst dir */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|WXDCR_SWDPIO1
 value|(1<< 23)
 end_define
+
+begin_comment
+comment|/* 0x00800000 */
+end_comment
 
 begin_define
 define|#
@@ -960,12 +1146,20 @@ name|WXDCR_SWDPIO2
 value|(1<< 24)
 end_define
 
+begin_comment
+comment|/* 0x01000000 - PHY data dir */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|WXDCR_SWDPIO3
 value|(1<< 25)
 end_define
+
+begin_comment
+comment|/* 0x02000000 - PHY clk dir */
+end_comment
 
 begin_define
 define|#
@@ -1377,9 +1571,55 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WXISR_MDIAC
+value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXISR_RXCFG
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXISR_GPI_EN0
+value|0x800
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXISR_GPI_EN1
+value|0x1000
+end_define
+
+begin_comment
+comment|/* appears to be PHY intr line */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXISR_GPI_EN2
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXISR_GPI_EN3
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|WXIENABLE_DEFAULT
 define|\
-value|(WXISR_RXO|WXISR_RXT0|WXISR_RXDMT0|WXISR_RXSEQ|WXISR_LSC|WXISR_PCIE)
+value|(WXISR_RXO | WXISR_RXT0 | WXISR_RXDMT0 | WXISR_RXSEQ |	\ 		    WXISR_LSC | WXISR_PCIE | WXISR_GPI_EN1)
 end_define
 
 begin_define
@@ -1715,56 +1955,299 @@ value|512
 end_define
 
 begin_comment
-comment|/*  * Receive Configuration Word defines  */
+comment|/*  * MDI control register bits - (best-guess)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WXRXCW_CWMASK
-value|0x0000ffff
-end_define
-
-begin_define
-define|#
-directive|define
-name|WXRXCW_NC
+name|WXMDIC_WRITE
 value|0x04000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|WXRXCW_IV
+name|WXMDIC_READ
 value|0x08000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|WXRXCW_CC
+name|WXMDIC_READY
 value|0x10000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|WXRXCW_C
+name|WXMDIC_INTR
 value|0x20000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|WXRXCW_SYNCH
+name|WXMDIC_ERR
 value|0x40000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|WXRXCW_ANC
-value|0x80000000
+name|WXMDIC_REGADDR_MASK
+value|0x001F0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXMDIC_REGADDR_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXMDIC_PHYADDR_MASK
+value|0x03E00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXMDIC_PHYADDR_SHIFT
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXMDIC_DATA_MASK
+value|0x0000FFFF
+end_define
+
+begin_comment
+comment|/*  * EXCT control register bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_GPI_EN0
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_GPI_EN1
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_GPI_EN2
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_GPI_EN3
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_SWDPIN4
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_SWDPIN5
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_SWDPIN6
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_SWDPIN7
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_SWDPIO4
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_SWDPIO5
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_SWDPIO6
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_SWDPIO7
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_ASDCHK
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_EE_RST
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_IPS
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXEXCT_SPD_BYPS
+value|0x00008000
+end_define
+
+begin_comment
+comment|/*  * PHY access using GPIO pins  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXPHY_RESET_DIR
+value|WXDCR_SWDPIO0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHY_RESET
+value|WXDCR_SWDPIN0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHY_MDIO_DIR
+value|WXDCR_SWDPIO2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHY_MDIO
+value|WXDCR_SWDPIN2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHY_MDC_DIR
+value|WXDCR_SWDPIO3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHY_MDC
+value|WXDCR_SWDPIN3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHY_RESET_DIR4
+value|WXEXCT_SWDPIO4
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHY_RESET4
+value|WXEXCT_SWDPIN4
+end_define
+
+begin_comment
+comment|/*  * PHY commands  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXPHYC_PREAMBLE
+value|0xFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHYC_PREAMBLE_LEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHYC_SOF
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHYC_READ
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHYC_WRITE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXPHYC_TURNAROUND
+value|0x02
 end_define
 
 begin_comment
@@ -1917,6 +2400,13 @@ define|#
 directive|define
 name|WX_LIVENGOOD_TIPG_DFLT
 value|(6 | (8<< 10) | (6<< 20))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_LIVENGOOD_CU_TIPG_DFLT
+value|(8 | (8<< 10) | (6<< 20))
 end_define
 
 begin_define
