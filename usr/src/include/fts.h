@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.19 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|fts_array
 decl_stmt|;
 comment|/* sort array */
 name|dev_t
-name|rdev
+name|fts_dev
 decl_stmt|;
 comment|/* starting device # */
 name|char
@@ -170,14 +170,26 @@ name|int
 name|fts_errno
 decl_stmt|;
 comment|/* errno for this node */
-name|short
+name|u_short
 name|fts_pathlen
 decl_stmt|;
 comment|/* strlen(fts_path) */
-name|short
+name|u_short
 name|fts_namelen
 decl_stmt|;
 comment|/* strlen(fts_name) */
+name|ino_t
+name|fts_ino
+decl_stmt|;
+comment|/* inode */
+name|dev_t
+name|fts_dev
+decl_stmt|;
+comment|/* device */
+name|nlink_t
+name|fts_nlink
+decl_stmt|;
+comment|/* link count */
 define|#
 directive|define
 name|FTS_ROOTPARENTLEVEL
@@ -212,43 +224,48 @@ value|4
 comment|/* unreadable directory */
 define|#
 directive|define
-name|FTS_DP
+name|FTS_DOT
 value|5
+comment|/* dot or dot-dot */
+define|#
+directive|define
+name|FTS_DP
+value|6
 comment|/* postorder directory */
 define|#
 directive|define
 name|FTS_ERR
-value|6
+value|7
 comment|/* error; errno is set */
 define|#
 directive|define
 name|FTS_F
-value|7
+value|8
 comment|/* regular file */
 define|#
 directive|define
 name|FTS_INIT
-value|8
+value|9
 comment|/* initialized only */
 define|#
 directive|define
 name|FTS_NS
-value|8
+value|10
 comment|/* stat(2) failed */
 define|#
 directive|define
 name|FTS_NSOK
-value|9
+value|11
 comment|/* no stat(2) requested */
 define|#
 directive|define
 name|FTS_SL
-value|10
+value|12
 comment|/* symbolic link */
 define|#
 directive|define
 name|FTS_SLNONE
-value|11
+value|13
 comment|/* symbolic link without target */
 name|u_short
 name|fts_info
@@ -280,7 +297,8 @@ decl_stmt|;
 comment|/* fts_set() instructions */
 name|struct
 name|stat
-name|fts_statb
+modifier|*
+name|fts_statp
 decl_stmt|;
 comment|/* stat(2) information */
 name|char
