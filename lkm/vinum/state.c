@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: state.c,v 2.6 1998/08/19 08:04:47 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: state.c,v 2.7 1998/11/01 04:46:13 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -95,7 +95,11 @@ block|{
 comment|/* the drive's going down */
 if|if
 condition|(
+operator|(
 name|flags
+operator|&
+name|setstate_force
+operator|)
 operator|||
 operator|(
 name|drive
@@ -107,17 +111,36 @@ operator|)
 condition|)
 block|{
 comment|/* we can do it */
+comment|/* We can't call close() from an interrupt 		 * context.  Instead, we do it when we 		 * next call strategy().  This will change 		 * when the vinum daemon comes onto the scene */
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|setstate_noupdate
+operator|)
+condition|)
+comment|/* we can close it */
 name|close_drive
 argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+return|return
+literal|0
+return|;
+comment|/* don't do it */
+block|}
 name|drive
 operator|->
 name|state
 operator|=
 name|state
 expr_stmt|;
+comment|/* set the state */
 name|printf
 argument_list|(
 literal|"vinum: drive %s is %s\n"
@@ -136,20 +159,6 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-return|return
-literal|0
-return|;
-comment|/* don't do it */
-block|}
-name|drive
-operator|->
-name|state
-operator|=
-name|state
-expr_stmt|;
-comment|/* set the state */
 if|if
 condition|(
 operator|(
@@ -250,14 +259,29 @@ argument_list|)
 expr_stmt|;
 comment|/* take it down */
 block|}
+block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|setstate_noupdate
+condition|)
+comment|/* don't update now, */
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_DIRTYCONFIG
+expr_stmt|;
+comment|/* wait until later */
+else|else
 name|save_config
 argument_list|()
 expr_stmt|;
-comment|/* and save the updated configuration */
+comment|/* yes: save the updated configuration */
 return|return
 literal|1
 return|;
-block|}
 block|}
 return|return
 literal|0
@@ -422,7 +446,7 @@ name|state
 condition|)
 block|{
 case|case
-name|sd_obsolete
+name|sd_crashed
 case|:
 case|case
 name|sd_down
@@ -2079,40 +2103,135 @@ case|case
 name|volplex_otherupdown
 case|:
 comment|/* other plexes are up and down */
+block|{
+name|int
+name|sdno
+decl_stmt|;
+name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
+comment|/* Is the data in all subdisks valid? */
+comment|/* XXX At the moment, subdisks make false 		 * claims about their validity.  Replace this 		 * when they tell the truth */
+comment|/* No: we have invalid or down subdisks */
+for|for
+control|(
+name|sdno
+operator|=
+literal|0
+init|;
+name|sdno
+operator|<
+name|plex
+operator|->
+name|subdisks
+condition|;
+name|sdno
+operator|++
+control|)
+block|{
+comment|/* look at these subdisks more carefully */
+name|set_sd_state
+argument_list|(
+name|plex
+operator|->
+name|sdnos
+index|[
+name|sdno
+index|]
+argument_list|,
+comment|/* try to get it up */
+name|sd_up
+argument_list|,
+name|setstate_norecurse
+operator||
+name|setstate_noupdate
+argument_list|)
+expr_stmt|;
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|plex
+operator|->
+name|sdnos
+index|[
+name|sdno
+index|]
+index|]
+expr_stmt|;
+comment|/* point to subdisk */
+comment|/* we can make a stale subdisk up here, because 		     * we're in the process of bringing it up. 		     * This wouldn't work in set_sd_state, because 		     * it would allow bypassing the revive */
 if|if
 condition|(
 operator|(
-name|statemap
+operator|(
+name|sd
+operator|->
+name|state
 operator|==
-name|sd_upstate
+name|sd_stale
 operator|)
-comment|/* subdisks all up */
 operator|||
 operator|(
-name|statemap
+name|sd
+operator|->
+name|state
 operator|==
-name|sd_emptystate
+name|sd_obsolete
 operator|)
-comment|/* or all empty */
+operator|)
+operator|&&
+operator|(
+name|DRIVE
+index|[
+name|sd
+operator|->
+name|driveno
+index|]
+operator|.
+name|state
+operator|==
+name|drive_up
+operator|)
 condition|)
-block|{
-comment|/* Is the data in all subdisks valid? */
+name|sd
+operator|->
+name|state
+operator|=
+name|sd_up
+expr_stmt|;
+block|}
+name|statemap
+operator|=
+name|sdstatemap
+argument_list|(
+name|plex
+argument_list|,
+operator|&
+name|sddowncount
+argument_list|)
+expr_stmt|;
+comment|/* get the new state map */
+comment|/* Do we need reborn?  They should now all be up */
 if|if
 condition|(
 name|statemap
 operator|==
+operator|(
 name|statemap
 operator|&
 operator|(
-name|sd_downstate
+name|sd_upstate
 operator||
 name|sd_rebornstate
-operator||
-name|sd_upstate
+operator|)
 operator|)
 condition|)
-break|break;
-comment|/* yes, we can bring the plex up */
+block|{
+comment|/* got something we can use */
 name|plex
 operator|->
 name|state
@@ -2129,9 +2248,10 @@ name|plex
 operator|->
 name|state
 operator|=
-name|plex_faulty
+name|plex_down
 expr_stmt|;
 comment|/* still in error */
+block|}
 break|break;
 case|case
 name|volplex_allup
@@ -2405,10 +2525,28 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* save config now */
+if|if
+condition|(
+name|flags
+operator|&
+name|setstate_noupdate
+condition|)
+comment|/* don't update now, */
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_DIRTYCONFIG
+expr_stmt|;
+comment|/* wait until later */
+else|else
 name|save_config
 argument_list|()
 expr_stmt|;
+comment|/* yes: save the updated configuration */
+block|}
 return|return
 literal|1
 return|;
@@ -2623,10 +2761,28 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* save config now */
+if|if
+condition|(
+name|flags
+operator|&
+name|setstate_noupdate
+condition|)
+comment|/* don't update now, */
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_DIRTYCONFIG
+expr_stmt|;
+comment|/* wait until later */
+else|else
 name|save_config
 argument_list|()
 expr_stmt|;
+comment|/* yes: save the updated configuration */
+block|}
 return|return
 literal|1
 return|;
@@ -2699,10 +2855,28 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* save config now */
+if|if
+condition|(
+name|flags
+operator|&
+name|setstate_noupdate
+condition|)
+comment|/* don't update now, */
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_DIRTYCONFIG
+expr_stmt|;
+comment|/* wait until later */
+else|else
 name|save_config
 argument_list|()
 expr_stmt|;
+comment|/* yes: save the updated configuration */
+block|}
 return|return
 literal|1
 return|;
