@@ -10,7 +10,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.2.2.1 1995/06/06 04:51:22 jkh Exp $"
+literal|"$Id: main.c,v 1.4 1995/10/06 02:46:23 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -771,68 +771,13 @@ operator|&
 name|systime
 argument_list|)
 expr_stmt|;
-name|snprintf
-argument_list|(
-name|msg
-argument_list|,
-sizeof|sizeof
-name|msg
-argument_list|,
-literal|"Does %02d:%02d:%02d %d.%d.%04d %s look reasonable?"
-argument_list|,
-name|tm
-operator|->
-name|tm_hour
-argument_list|,
-name|tm
-operator|->
-name|tm_min
-argument_list|,
-name|tm
-operator|->
-name|tm_sec
-argument_list|,
-name|tm
-operator|->
-name|tm_mday
-argument_list|,
-name|tm
-operator|->
-name|tm_mon
-argument_list|,
-name|tm
-operator|->
-name|tm_year
-operator|+
-literal|1900
-argument_list|,
-name|tm
-operator|->
-name|tm_zone
-argument_list|)
-expr_stmt|;
-name|rv
-operator|=
-name|dialog_yesno
-argument_list|(
-literal|"Verifying timezone selection"
-argument_list|,
-name|msg
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rv
-condition|)
-return|return
-literal|1
-return|;
+if|#
+directive|if
+literal|0
+comment|/* This never prints the right value! :( */
+block|snprintf(msg, sizeof msg, 		 "Does %02d:%02d:%02d %d.%d.%04d %s look reasonable?", 		 tm->tm_hour, tm->tm_min, tm->tm_sec, tm->tm_mday, tm->tm_mon, 		 tm->tm_year + 1900, tm->tm_zone);  	rv = dialog_yesno("Verifying timezone selection", 			  msg, -1, -1); 	if (rv) 		return 1;
+endif|#
+directive|endif
 name|snprintf
 argument_list|(
 name|msg
