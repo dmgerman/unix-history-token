@@ -45,9 +45,6 @@ end_include
 
 begin_function
 name|int
-if|#
-directive|if
-name|__STDC__
 name|__creat
 parameter_list|(
 specifier|const
@@ -58,23 +55,6 @@ parameter_list|,
 name|mode_t
 name|mode
 parameter_list|)
-else|#
-directive|else
-function|__creat
-parameter_list|(
-name|path
-parameter_list|,
-name|mode
-parameter_list|)
-name|char
-modifier|*
-name|path
-decl_stmt|;
-name|mode_t
-name|mode
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 return|return
 operator|(
