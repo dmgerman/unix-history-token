@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mv.c,v 1.18 1998/05/15 06:25:17 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,6 +416,21 @@ index|[
 name|baselen
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|baselen
+operator|||
+operator|*
+operator|(
+name|endp
+operator|-
+literal|1
+operator|)
+operator|!=
+literal|'/'
+condition|)
+block|{
 operator|*
 name|endp
 operator|++
@@ -425,6 +440,7 @@ expr_stmt|;
 operator|++
 name|baselen
 expr_stmt|;
+block|}
 for|for
 control|(
 name|rval
