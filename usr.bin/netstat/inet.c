@@ -663,6 +663,7 @@ name|t_state
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|printf
 argument_list|(
 literal|" %s"
@@ -675,6 +676,39 @@ name|t_state
 index|]
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TF_NEEDSYN
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TF_NEEDSYN
+argument_list|)
+comment|/* Show T/TCP `hidden state' */
+if|if
+condition|(
+name|tcpcb
+operator|.
+name|t_flags
+operator|&
+operator|(
+name|TF_NEEDSYN
+operator||
+name|TF_NEEDFIN
+operator|)
+condition|)
+name|putchar
+argument_list|(
+literal|'*'
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(TF_NEEDSYN)&& defined(TF_NEEDSYN) */
+block|}
 block|}
 name|putchar
 argument_list|(
