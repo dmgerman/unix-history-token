@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -287,6 +287,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"st.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"rd.h"
 end_include
 
@@ -312,6 +318,14 @@ begin_expr_stmt
 name|bdev_decl
 argument_list|(
 name|ct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|bdev_decl
+argument_list|(
+name|st
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -403,6 +417,14 @@ name|vn
 argument_list|)
 block|,
 comment|/* 6: vnode disk driver (swap to files) */
+name|bdev_tape_init
+argument_list|(
+name|NST
+argument_list|,
+name|st
+argument_list|)
+block|,
+comment|/* 7: exabyte tape */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -763,6 +785,14 @@ begin_expr_stmt
 name|cdev_decl
 argument_list|(
 name|ct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|st
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1206,10 +1236,14 @@ name|vn
 argument_list|)
 block|,
 comment|/* 19: vnode disk */
-name|cdev_notdef
-argument_list|()
+name|cdev_tape_init
+argument_list|(
+name|NST
+argument_list|,
+name|st
+argument_list|)
 block|,
-comment|/* 20 */
+comment|/* 20: exabyte tape */
 name|cdev_fd_init
 argument_list|(
 literal|1
