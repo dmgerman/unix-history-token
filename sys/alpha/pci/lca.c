@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: lca.c,v 1.1 1998/08/10 07:53:59 dfr Exp $  */
 end_comment
 
 begin_include
@@ -801,7 +801,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|(((b)<< 16) | ((s)<< 11) | ((f)<< 8) | (r))
+value|((b) ? (((b)<< 16) | ((s)<< 11) | ((f)<< 8) | (r)) \ 	 : ((1<< ((s) + 11)) | ((f)<< 8) | (r)))
 end_define
 
 begin_define
@@ -846,7 +846,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|type val = ~0;							 \ 	int ipl = 0;							 \ 	vm_offset_t off = LCA_CFGOFF(b, s, f, r);			 \ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(LCA_PCI_CONF, off);	 \ 	alpha_mb();							 \ 	LCA_TYPE1_SETUP(b,ipl);						 \ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			 \ 		val = SPARSE_##width##_EXTRACT(off, SPARSE_READ(kv));	 \ 	}								 \         LCA_TYPE1_TEARDOWN(b,ipl);					 \ 	return val
+value|type val = ~0;							 \ 	int ipl = 0;							 \ 	vm_offset_t off = LCA_CFGOFF(b, s, f, r);			 \ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(KV(LCA_PCI_CONF), off); \ 	alpha_mb();							 \ 	LCA_TYPE1_SETUP(b,ipl);						 \ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			 \ 		val = SPARSE_##width##_EXTRACT(off, SPARSE_READ(kv));	 \ 	}								 \         LCA_TYPE1_TEARDOWN(b,ipl);					 \ 	return val
 end_define
 
 begin_define
@@ -869,7 +869,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|int ipl = 0;							\ 	vm_offset_t off = LCA_CFGOFF(b, s, f, r);			\ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(LCA_PCI_CONF, off);	\ 	alpha_mb();							\ 	LCA_TYPE1_SETUP(b,ipl);						\ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			\                 SPARSE_WRITE(kv, SPARSE_##width##_INSERT(off, data));	\ 		alpha_wmb();						\ 	}								\         LCA_TYPE1_TEARDOWN(b,ipl);					\ 	return
+value|int ipl = 0;							\ 	vm_offset_t off = LCA_CFGOFF(b, s, f, r);			\ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(KV(LCA_PCI_CONF), off); \ 	alpha_mb();							\ 	LCA_TYPE1_SETUP(b,ipl);						\ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			\                 SPARSE_WRITE(kv, SPARSE_##width##_INSERT(off, data));	\ 		alpha_wmb();						\ 	}								\         LCA_TYPE1_TEARDOWN(b,ipl);					\ 	return
 end_define
 
 begin_function
