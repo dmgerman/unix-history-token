@@ -241,7 +241,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_DIR_MODE
-value|0755
+value|0777
 end_define
 
 begin_comment
@@ -988,6 +988,9 @@ name|extract
 modifier|*
 name|extract
 decl_stmt|;
+name|mode_t
+name|mask
+decl_stmt|;
 comment|/* Sort dir list so directories are fixed up in depth-first order. */
 name|extract
 operator|=
@@ -1004,6 +1007,17 @@ operator|->
 name|fixup_list
 argument_list|)
 expr_stmt|;
+name|umask
+argument_list|(
+name|mask
+operator|=
+name|umask
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Read the current umask. */
 while|while
 condition|(
 name|p
@@ -1102,6 +1116,9 @@ argument_list|,
 name|p
 operator|->
 name|mode
+operator|&
+operator|~
+name|mask
 argument_list|)
 expr_stmt|;
 if|if
@@ -2010,7 +2027,11 @@ name|mkdirpath_recursive
 argument_list|(
 name|a
 argument_list|,
-name|p
+name|extract
+operator|->
+name|mkdirpath
+operator|.
+name|s
 argument_list|,
 name|NULL
 argument_list|,
