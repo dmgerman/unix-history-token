@@ -310,7 +310,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|sysent
-name|ia32_sysent
+name|freebsd32_sysent
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -323,7 +323,7 @@ init|=
 block|{
 name|SYS_MAXSYSCALL
 block|,
-name|ia32_sysent
+name|freebsd32_sysent
 block|,
 literal|0
 block|,
@@ -417,14 +417,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_ucode32sel
-decl_stmt|,
-name|_udatasel
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* XXX may be freebsd32 MI */
+end_comment
 
 begin_function
 specifier|static
@@ -837,8 +832,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Clear registers on exec  */
+comment|/*  * Clear registers on exec  * XXX backend MD  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_ucode32sel
+decl_stmt|,
+name|_udatasel
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void

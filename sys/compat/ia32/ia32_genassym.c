@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<amd64/ia32/ia32_signal.h>
+file|<compat/ia32/ia32_signal.h>
 end_include
 
 begin_expr_stmt
