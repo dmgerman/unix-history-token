@@ -1049,7 +1049,7 @@ name|ch
 operator|->
 name|ctrl
 operator|=
-name|VIA_RECORD_CONTROL
+name|VIA_PLAY_CONTROL
 expr_stmt|;
 name|ch
 operator|->
@@ -1076,7 +1076,7 @@ name|ch
 operator|->
 name|ctrl
 operator|=
-name|VIA_PLAY_CONTROL
+name|VIA_RECORD_CONTROL
 expr_stmt|;
 name|ch
 operator|->
