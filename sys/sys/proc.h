@@ -2940,7 +2940,7 @@ name|e
 parameter_list|,
 name|v
 parameter_list|)
-value|do {						\ 	PROC_LOCK(p);							\ 	_STOPEVENT((p), (e), (v));					\ 	PROC_UNLOCK(p);							\ } while (0)
+value|do {						\ 	if ((p)->p_stops& (e))	{					\ 		PROC_LOCK(p);						\ 		stopevent((p), (e), (v));				\ 		PROC_UNLOCK(p);						\ 	}								\ } while (0)
 end_define
 
 begin_define
