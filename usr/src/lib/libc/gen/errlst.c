@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)errlst.c	8.1 (Berkeley) %G%"
+literal|"@(#)errlst.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,7 +237,7 @@ comment|/* 58 - ESHUTDOWN */
 literal|"Too many references: can't splice"
 block|,
 comment|/* 59 - ETOOMANYREFS */
-literal|"Connection timed out"
+literal|"Operation timed out"
 block|,
 comment|/* 60 - ETIMEDOUT */
 literal|"Connection refused"
