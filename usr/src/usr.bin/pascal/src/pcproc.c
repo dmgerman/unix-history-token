@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.11 %G%"
+literal|"@(#)pcproc.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1986,7 +1986,7 @@ literal|' '
 expr_stmt|;
 name|fmtstart
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 break|break;
 case|case
