@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.12 %G%"
+literal|"@(#)collect.c	2.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1419,9 +1419,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|perror
 argument_list|(
-literal|"No help just now.\n"
+name|THELPFILE
 argument_list|)
 expr_stmt|;
 break|break;
