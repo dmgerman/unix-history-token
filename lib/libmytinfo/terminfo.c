@@ -52,7 +52,7 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|force
+name|_force_pick2
 init|=
 name|_mytinfo_version
 decl_stmt|;
