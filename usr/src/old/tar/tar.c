@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.18 (Berkeley) %G%"
+literal|"@(#)tar.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1775,6 +1775,9 @@ name|stat
 modifier|*
 name|sp
 decl_stmt|;
+name|long
+name|tempquad
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1880,10 +1883,14 @@ argument_list|,
 literal|"%lo"
 argument_list|,
 operator|&
+name|tempquad
+argument_list|)
+expr_stmt|;
 name|sp
 operator|->
 name|st_size
-argument_list|)
+operator|=
+name|tempquad
 expr_stmt|;
 name|sscanf
 argument_list|(
@@ -4326,7 +4333,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7ld"
+literal|"%7qd"
 argument_list|,
 name|st
 operator|->
@@ -5187,7 +5194,7 @@ name|dbuf
 operator|.
 name|size
 argument_list|,
-literal|"%11lo "
+literal|"%11qo "
 argument_list|,
 name|sp
 operator|->
@@ -6871,7 +6878,7 @@ argument_list|(
 name|mt
 argument_list|,
 operator|(
-name|daddr_t
+name|off_t
 operator|)
 operator|-
 name|TBLOCK
