@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.9 1999/01/22 00:36:46 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: uhci_pci.c,v 1.1 1999/02/18 21:42:19 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -495,6 +495,8 @@ parameter_list|)
 block|{
 name|int
 name|id
+decl_stmt|,
+name|legsup
 decl_stmt|;
 name|char
 modifier|*
@@ -651,7 +653,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"usb%d: USB version %s, interrupting at %d\n"
+literal|"usb%d: USB version %s, chip rev. %d\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -664,7 +666,7 @@ name|pci_conf_read
 argument_list|(
 name|config_id
 argument_list|,
-name|PCI_INTERRUPT_REG
+name|PCIR_REVID
 argument_list|)
 operator|&
 literal|0xff
@@ -763,25 +765,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: could not add USB device to root bus\n"
+literal|"usb%d: could not add USB device to root bus\n"
 argument_list|,
-name|device_get_name
-argument_list|(
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bdev
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bdev
-argument_list|)
+name|unit
 argument_list|)
 expr_stmt|;
 return|return;
@@ -853,6 +839,82 @@ operator|.
 name|bdev
 argument_list|,
 name|uhci_device_generic
+argument_list|)
+expr_stmt|;
+block|}
+name|legsup
+operator|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_LEGSUP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|legsup
+operator|&
+name|PCI_LEGSUP_USBPIRQDEN
+operator|)
+condition|)
+block|{
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|USBVERBOSE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USB_DEBUG
+argument_list|)
+operator|)
+if|if
+condition|(
+name|bootverbose
+condition|)
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|"%s%d: PIRQD enable not set\n"
+argument_list|,
+name|device_get_name
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|legsup
+operator||=
+name|PCI_LEGSUP_USBPIRQDEN
+expr_stmt|;
+name|pci_conf_write
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_LEGSUP
+argument_list|,
+name|legsup
 argument_list|)
 expr_stmt|;
 block|}
