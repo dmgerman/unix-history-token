@@ -3328,6 +3328,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 comment|/* We will notify the sender when we connect */
 name|priv
 operator|->
@@ -3361,6 +3362,7 @@ argument_list|(
 name|EINPROGRESS
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
 case|case
