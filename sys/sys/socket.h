@@ -1525,6 +1525,10 @@ parameter_list|)
 value|((struct cmsghdr *)(mhdr)->msg_control)
 end_define
 
+begin_comment
+comment|/* RFC 2292 additions */
+end_comment
+
 begin_define
 define|#
 directive|define
