@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.38 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -200,7 +200,7 @@ comment|/* offset to end directory search */
 name|int
 name|prevoff
 decl_stmt|;
-comment|/* prev entry ndp->ni_ufs.ufs_offset */
+comment|/* prev entry dp->i_offset */
 name|struct
 name|inode
 modifier|*
@@ -678,11 +678,9 @@ operator|->
 name|i_size
 condition|)
 block|{
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|=
 literal|0
 expr_stmt|;
@@ -693,11 +691,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|=
 name|dp
 operator|->
@@ -708,11 +704,9 @@ condition|(
 operator|(
 name|entryoffsetinblock
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|&
 name|bmask
 operator|)
@@ -724,11 +718,9 @@ name|VOP_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 argument_list|,
 name|NULL
 argument_list|,
@@ -771,11 +763,9 @@ name|searchloop
 label|:
 while|while
 condition|(
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|<
 name|endsearch
 condition|)
@@ -784,11 +774,9 @@ comment|/* 		 * If offset is on a block boundary, read the next directory 		 * b
 if|if
 condition|(
 operator|(
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|&
 name|bmask
 operator|)
@@ -815,11 +803,9 @@ name|VOP_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 argument_list|,
 name|NULL
 argument_list|,
@@ -910,11 +896,9 @@ name|ufs_dirbad
 argument_list|(
 name|dp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 argument_list|,
 literal|"mangled entry"
 argument_list|)
@@ -933,11 +917,9 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|+=
 name|i
 expr_stmt|;
@@ -997,11 +979,9 @@ name|FOUND
 expr_stmt|;
 name|slotoffset
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 expr_stmt|;
 name|slotsize
 operator|=
@@ -1031,11 +1011,9 @@ literal|1
 condition|)
 name|slotoffset
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 expr_stmt|;
 if|if
 condition|(
@@ -1050,11 +1028,9 @@ name|COMPACT
 expr_stmt|;
 name|slotsize
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|+
 name|ep
 operator|->
@@ -1105,21 +1081,17 @@ argument_list|)
 condition|)
 block|{
 comment|/* 				 * Save directory entry's inode number and 				 * reclen in ndp->ni_ufs area, and release 				 * directory buffer. 				 */
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_ino
+name|i_ino
 operator|=
 name|ep
 operator|->
 name|d_ino
 expr_stmt|;
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_reclen
+name|i_reclen
 operator|=
 name|ep
 operator|->
@@ -1137,17 +1109,13 @@ block|}
 block|}
 name|prevoff
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 expr_stmt|;
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|+=
 name|ep
 operator|->
@@ -1167,11 +1135,9 @@ name|d_ino
 condition|)
 name|enduseful
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 expr_stmt|;
 block|}
 comment|/* notfound: */
@@ -1186,11 +1152,9 @@ block|{
 name|numdirpasses
 operator|--
 expr_stmt|;
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|=
 literal|0
 expr_stmt|;
@@ -1272,7 +1236,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Return an indication of where the new directory 		 * entry should be put.  If we didn't find a slot, 		 * then set ndp->ni_ufs.ufs_count to 0 indicating 		 * that the new slot belongs at the end of the 		 * directory. If we found a slot, then the new entry 		 * can be put in the range from ndp->ni_ufs.ufs_offset 		 * to ndp->ni_ufs.ufs_offset + ndp->ni_ufs.ufs_count. 		 */
+comment|/* 		 * Return an indication of where the new directory 		 * entry should be put.  If we didn't find a slot, 		 * then set dp->i_count to 0 indicating 		 * that the new slot belongs at the end of the 		 * directory. If we found a slot, then the new entry 		 * can be put in the range from dp->i_offset to 		 * dp->i_offset + dp->i_count. 		 */
 if|if
 condition|(
 name|slotstatus
@@ -1280,11 +1244,9 @@ operator|==
 name|NONE
 condition|)
 block|{
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|=
 name|roundup
 argument_list|(
@@ -1295,38 +1257,30 @@ argument_list|,
 name|DIRBLKSIZ
 argument_list|)
 expr_stmt|;
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_count
+name|i_count
 operator|=
 literal|0
 expr_stmt|;
 name|enduseful
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 expr_stmt|;
 block|}
 else|else
 block|{
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|=
 name|slotoffset
 expr_stmt|;
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_count
+name|i_count
 operator|=
 name|slotsize
 expr_stmt|;
@@ -1345,11 +1299,9 @@ operator|+
 name|slotsize
 expr_stmt|;
 block|}
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_endoff
+name|i_endoff
 operator|=
 name|roundup
 argument_list|(
@@ -1448,11 +1400,9 @@ name|ufs_dirbad
 argument_list|(
 name|dp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 argument_list|,
 literal|"i_size too small"
 argument_list|)
@@ -1498,11 +1448,9 @@ name|dp
 operator|->
 name|i_diroff
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|&
 operator|~
 operator|(
@@ -1554,15 +1502,13 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Return pointer to current entry in cnp->cn_ufs.ufs_offset, 		 * and distance past previous entry (if there 		 * is a previous entry in this block) in ndp->ni_ufs.ufs_count. 		 * Save directory inode pointer in ndp->ni_dvp for dirremove(). 		 */
+comment|/* 		 * Return pointer to current entry in dp->i_offset, 		 * and distance past previous entry (if there 		 * is a previous entry in this block) in dp->i_count. 		 * Save directory inode pointer in ndp->ni_dvp for dirremove(). 		 */
 if|if
 condition|(
 operator|(
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|&
 operator|(
 name|DIRBLKSIZ
@@ -1573,26 +1519,20 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_count
+name|i_count
 operator|=
 literal|0
 expr_stmt|;
 else|else
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_count
+name|i_count
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|-
 name|prevoff
 expr_stmt|;
@@ -1602,11 +1542,9 @@ name|dp
 operator|->
 name|i_number
 operator|==
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_ino
+name|i_ino
 condition|)
 block|{
 name|VREF
@@ -1614,7 +1552,6 @@ argument_list|(
 name|vdp
 argument_list|)
 expr_stmt|;
-comment|/* NEEDSWORK: is vdp necessary? */
 operator|*
 name|vpp
 operator|=
@@ -1634,11 +1571,9 @@ name|VOP_VGET
 argument_list|(
 name|dvp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_ino
+name|i_ino
 argument_list|,
 operator|&
 name|tdp
@@ -1775,11 +1710,9 @@ name|dp
 operator|->
 name|i_number
 operator|==
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_ino
+name|i_ino
 condition|)
 return|return
 operator|(
@@ -1794,11 +1727,9 @@ name|VOP_VGET
 argument_list|(
 name|dvp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_ino
+name|i_ino
 argument_list|,
 operator|&
 name|tdp
@@ -1864,11 +1795,9 @@ name|VOP_VGET
 argument_list|(
 name|dvp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_ino
+name|i_ino
 argument_list|,
 operator|&
 name|tdp
@@ -1916,11 +1845,9 @@ name|dp
 operator|->
 name|i_number
 operator|==
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_ino
+name|i_ino
 condition|)
 block|{
 name|VREF
@@ -1945,11 +1872,9 @@ name|VOP_VGET
 argument_list|(
 name|dvp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_ino
+name|i_ino
 argument_list|,
 operator|&
 name|tdp
@@ -2264,7 +2189,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write a directory entry after a call to namei, using the parameters  * that it left in nameidata.  The argument ip is the inode which the new  * directory entry will refer to.  The nameidata field ndp->ni_dvp is a  * pointer to the directory to be written, which was left locked by namei.  * Remaining parameters (ndp->ni_ufs.ufs_offset, ndp->ni_ufs.ufs_count)  * indicate how the space for the new entry is to be obtained.  */
+comment|/*  * Write a directory entry after a call to namei, using the parameters  * that it left in nameidata.  The argument ip is the inode which the new  * directory entry will refer to.  Dvp is a pointer to the directory to  * be written, which was left locked by namei. Remaining parameters  * (dp->i_offset, dp->i_count) indicate how the space for the new  * entry is to be obtained.  */
 end_comment
 
 begin_function
@@ -2417,23 +2342,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_count
+name|i_count
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * If cnp->cn_ufs.ufs_count is 0, then namei could find no 		 * space in the directory. Here, ndp->ni_ufs.ufs_offset will 		 * be on a directory block boundary and we will write the 		 * new entry into a fresh block. 		 */
+comment|/* 		 * If dp->i_count is 0, then namei could find no 		 * space in the directory. Here, dp->i_offset will 		 * be on a directory block boundary and we will write the 		 * new entry into a fresh block. 		 */
 if|if
 condition|(
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|&
 operator|(
 name|DIRBLKSIZ
@@ -2450,11 +2371,9 @@ name|auio
 operator|.
 name|uio_offset
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 expr_stmt|;
 name|newdir
 operator|.
@@ -2592,21 +2511,17 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * If cnp->cn_ufs.ufs_count is non-zero, then namei found space 	 * for the new entry in the range cnp->cn_ufs.ufs_offset to 	 * cnp->cn_ufs.ufs_offset + cnp->cn_ufs.ufs_count in the directory. 	 * To use this space, we may have to compact the entries located 	 * there, by copying them together towards the beginning of the 	 * block, leaving the free space in one usable chunk at the end. 	 */
+comment|/* 	 * If dp->i_count is non-zero, then namei found space 	 * for the new entry in the range dp->i_offset to 	 * dp->i_offset + dp->i_count in the directory. 	 * To use this space, we may have to compact the entries located 	 * there, by copying them together towards the beginning of the 	 * block, leaving the free space in one usable chunk at the end. 	 */
 comment|/* 	 * Increase size of directory if entry eats into new space. 	 * This should never push the size past a new multiple of 	 * DIRBLKSIZE. 	 * 	 * N.B. - THIS IS AN ARTIFACT OF 4.2 AND SHOULD NEVER HAPPEN. 	 */
 if|if
 condition|(
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|+
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_count
+name|i_count
 operator|>
 name|dp
 operator|->
@@ -2616,17 +2531,13 @@ name|dp
 operator|->
 name|i_size
 operator|=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|+
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_count
+name|i_count
 expr_stmt|;
 comment|/* 	 * Get the block containing the space for the new directory entry. 	 */
 if|if
@@ -2637,11 +2548,9 @@ name|VOP_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 argument_list|,
 operator|&
 name|dirbuf
@@ -2655,7 +2564,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Find space for the new entry. In the simple case, the entry at 	 * offset base will have the space. If it does not, then namei 	 * arranged that compacting the region cnp->cn_ufs.ufs_offset to 	 * cnp->cn_ufs.ufs_offset + cnp->cn_ufs.ufs_count would yield the 	 * space. 	 */
+comment|/* 	 * Find space for the new entry. In the simple case, the entry at 	 * offset base will have the space. If it does not, then namei 	 * arranged that compacting the region dp->i_offset to 	 * dp->i_offset + dp->i_count would yield the 	 * space. 	 */
 name|ep
 operator|=
 operator|(
@@ -2690,11 +2599,9 @@ name|d_reclen
 init|;
 name|loc
 operator|<
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_count
+name|i_count
 condition|;
 control|)
 block|{
@@ -2902,17 +2809,13 @@ condition|(
 operator|!
 name|error
 operator|&&
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_endoff
+name|i_endoff
 operator|&&
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_endoff
+name|i_endoff
 operator|<
 name|dp
 operator|->
@@ -2927,11 +2830,9 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_endoff
+name|i_endoff
 argument_list|,
 name|IO_SYNC
 argument_list|)
@@ -2945,7 +2846,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a directory entry after a call to namei, using  * the parameters which it left in nameidata. The entry  * ni_ufs.ufs_offset contains the offset into the directory of the  * entry to be eliminated.  The ni_ufs.ufs_count field contains the  * size of the previous record in the directory.  If this  * is 0, the first entry is being deleted, so we need only  * zero the inode number to mark the entry as free.  If the  * entry is not the first in the directory, we must reclaim  * the space of the now empty record by adding the record size  * to the size of the previous entry.  */
+comment|/*  * Remove a directory entry after a call to namei, using  * the parameters which it left in nameidata. The entry  * dp->i_offset contains the offset into the directory of the  * entry to be eliminated.  The dp->i_count field contains the  * size of the previous record in the directory.  If this  * is 0, the first entry is being deleted, so we need only  * zero the inode number to mark the entry as free.  If the  * entry is not the first in the directory, we must reclaim  * the space of the now empty record by adding the record size  * to the size of the previous entry.  */
 end_comment
 
 begin_function
@@ -2995,11 +2896,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_count
+name|i_count
 operator|==
 literal|0
 condition|)
@@ -3013,11 +2912,9 @@ name|VOP_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 argument_list|,
 operator|(
 name|char
@@ -3072,17 +2969,13 @@ name|VOP_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 operator|-
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_count
+name|i_count
 argument_list|,
 operator|(
 name|char
@@ -3105,11 +2998,9 @@ name|ep
 operator|->
 name|d_reclen
 operator|+=
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_reclen
+name|i_reclen
 expr_stmt|;
 name|error
 operator|=
@@ -3148,7 +3039,6 @@ name|ip
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* old: ufs_dirrewrite(dp, ip, ndp) */
 name|struct
 name|inode
 modifier|*
@@ -3193,11 +3083,9 @@ argument_list|(
 name|dp
 argument_list|)
 argument_list|,
-name|cnp
+name|dp
 operator|->
-name|cn_ufs
-operator|.
-name|ufs_offset
+name|i_offset
 argument_list|,
 operator|(
 name|char
