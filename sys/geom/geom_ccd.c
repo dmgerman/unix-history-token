@@ -2337,7 +2337,7 @@ name|CCDB_INIT
 condition|)
 name|printf
 argument_list|(
-literal|"ccdinterleave(%x): ileave %d\n"
+literal|"ccdinterleave(%p): ileave %d\n"
 argument_list|,
 name|cs
 argument_list|,
@@ -2826,7 +2826,7 @@ name|CCDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"ccdopen(%x, %x)\n"
+literal|"ccdopen(%p, %x)\n"
 argument_list|,
 name|dev
 argument_list|,
@@ -3040,7 +3040,7 @@ name|CCDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"ccdclose(%x, %x)\n"
+literal|"ccdclose(%p, %x)\n"
 argument_list|,
 name|dev
 argument_list|,
@@ -3174,7 +3174,7 @@ name|CCDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"ccdstrategy(%x): unit %d\n"
+literal|"ccdstrategy(%p): unit %d\n"
 argument_list|,
 name|bp
 argument_list|,
@@ -3487,7 +3487,7 @@ name|CCDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"ccdstart(%x, %x)\n"
+literal|"ccdstart(%p, %p)\n"
 argument_list|,
 name|cs
 argument_list|,
@@ -3846,7 +3846,7 @@ name|CCDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"ccdbuffer(%x, %x, %d, %x, %d)\n"
+literal|"ccdbuffer(%p, %p, %d, %p, %ld)\n"
 argument_list|,
 name|cs
 argument_list|,
@@ -4354,17 +4354,23 @@ name|CCDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|" dev %x(u%d): cbp %x bn %d addr %x bcnt %d\n"
+literal|" dev %p(u%ld): cbp %p bn %d addr %p bcnt %ld\n"
 argument_list|,
 name|ci
 operator|->
 name|ci_dev
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|ci
 operator|-
 name|cs
 operator|->
 name|sc_cinfo
+argument_list|)
 argument_list|,
 name|cbp
 argument_list|,
@@ -4524,7 +4530,7 @@ name|CCDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"ccdintr(%x, %x)\n"
+literal|"ccdintr(%p, %p)\n"
 argument_list|,
 name|cs
 argument_list|,
@@ -4634,7 +4640,7 @@ name|CCDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"ccdiodone(%x)\n"
+literal|"ccdiodone(%p)\n"
 argument_list|,
 name|cbp
 argument_list|)
@@ -4648,7 +4654,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ccdiodone: bp %x bcount %d resid %d\n"
+literal|"ccdiodone: bp %p bcount %ld resid %ld\n"
 argument_list|,
 name|bp
 argument_list|,
@@ -4663,7 +4669,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" dev %x(u%d), cbp %x bn %d addr %x bcnt %d\n"
+literal|" dev %p(u%d), cbp %p bn %d addr %p bcnt %ld\n"
 argument_list|,
 name|cbp
 operator|->
@@ -5490,7 +5496,7 @@ name|i
 control|)
 name|printf
 argument_list|(
-literal|"ccdioctl: component %d: 0x%x\n"
+literal|"ccdioctl: component %d: %p\n"
 argument_list|,
 name|i
 argument_list|,
