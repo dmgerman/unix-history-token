@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.26 (Berkeley) %G%"
+literal|"@(#)main.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -896,16 +896,14 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|vmunix
-init|=
-name|_PATH_UNIX
+name|nlistf
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|kmemf
+name|memf
 decl_stmt|;
 end_decl_stmt
 
@@ -1265,7 +1263,7 @@ break|break;
 case|case
 literal|'M'
 case|:
-name|kmemf
+name|memf
 operator|=
 name|optarg
 expr_stmt|;
@@ -1285,7 +1283,7 @@ break|break;
 case|case
 literal|'N'
 case|:
-name|vmunix
+name|nlistf
 operator|=
 name|optarg
 expr_stmt|;
@@ -1450,7 +1448,7 @@ operator|*
 name|argv
 condition|)
 block|{
-name|vmunix
+name|nlistf
 operator|=
 operator|*
 name|argv
@@ -1462,7 +1460,7 @@ operator|++
 name|argv
 condition|)
 block|{
-name|kmemf
+name|memf
 operator|=
 operator|*
 name|argv
@@ -1476,13 +1474,30 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
+if|if
+condition|(
+name|nlistf
+operator|!=
+name|NULL
+operator|||
+name|memf
+operator|!=
+name|NULL
+condition|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kvm_openfiles
 argument_list|(
-name|vmunix
+name|nlistf
 argument_list|,
-name|kmemf
+name|memf
 argument_list|,
 name|NULL
 argument_list|)
@@ -1530,9 +1545,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: no namelist\n"
-argument_list|,
-name|vmunix
+literal|"netstat: no namelist\n"
 argument_list|)
 expr_stmt|;
 name|exit
