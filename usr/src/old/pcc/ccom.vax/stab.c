@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stab.c	1.11 (Berkeley) %G%"
+literal|"@(#)stab.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1709,6 +1709,25 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|NILINDEX
+operator|&&
+name|ISARY
+argument_list|(
+name|t
+argument_list|)
+condition|)
+block|{
+name|i
+operator|=
+name|p
+operator|->
+name|dimoff
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|t
