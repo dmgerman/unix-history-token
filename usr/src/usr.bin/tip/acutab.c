@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acutab.c	4.2	81/09/17	*/
+comment|/*	acutab.c	4.3	81/10/09	*/
 end_comment
 
 begin_include
@@ -12,7 +12,10 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|int
-name|df_dialer
+name|df02_dialer
+argument_list|()
+decl_stmt|,
+name|df03_dialer
 argument_list|()
 decl_stmt|,
 name|df_disconnect
@@ -109,7 +112,20 @@ directive|if
 name|DF02
 literal|"df02"
 block|,
-name|df_dialer
+name|df02_dialer
+block|,
+name|df_disconnect
+block|,
+name|df_abort
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|DF03
+literal|"df03"
+block|,
+name|df03_dialer
 block|,
 name|df_disconnect
 block|,
