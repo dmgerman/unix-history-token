@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.5 (Berkeley) 2/13/94  * $Id: nfs_vnops.c,v 1.15.4.1 1995/07/25 07:47:54 davidg Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.5 (Berkeley) 2/13/94  * $Id: nfs_vnops.c,v 1.15.4.2 1995/10/26 09:17:36 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -152,6 +152,594 @@ file|<nfs/nqnfs.h>
 end_include
 
 begin_comment
+comment|/*  * Prototypes for NFS vnode operations  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_lookup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lookup_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_create
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_create_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_mknod
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_mknod_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_open
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_open_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_close_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfsspec_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_close_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfsfifo_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_close_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_access
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_access_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfsspec_access
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_access_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_getattr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_getattr_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_setattr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_setattr_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_read
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_read_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfsspec_read
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_read_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfsspec_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_write_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfsfifo_read
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_read_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfsfifo_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_write_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|nfs_ioctl
+value|((int (*) __P((struct  vop_ioctl_args *)))enoioctl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfs_select
+value|((int (*) __P((struct  vop_select_args *)))seltrue)
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_mmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_mmap_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_fsync
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_fsync_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|nfs_seek
+value|((int (*) __P((struct  vop_seek_args *)))nullop)
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_remove
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_remove_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_link
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_link_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_rename
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_rename_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_mkdir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_mkdir_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_rmdir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_rmdir_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_symlink
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_symlink_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_readdir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_readdir_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_readlink
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_readlink_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_bmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bmap_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_strategy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_strategy_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_print
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_print_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_pathconf
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_pathconf_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_advlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_advlock_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_blkatoff
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_blkatoff_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_valloc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_valloc_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|nfs_reallocblks
+define|\
+value|((int (*) __P((struct  vop_reallocblks_args *)))eopnotsupp)
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_vfree
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_vfree_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_truncate
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_truncate_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_update
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_update_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_bwrite
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bwrite_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Defs */
 end_comment
 
@@ -185,6 +773,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|nfsv2_vnodeop_entries
@@ -547,6 +1136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|nfsv2_vnodeop_opv_desc
@@ -584,6 +1174,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|spec_nfsv2nodeop_entries
@@ -946,6 +1537,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|spec_nfsv2nodeop_opv_desc
@@ -979,6 +1571,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|fifo_nfsv2nodeop_entries
@@ -1341,6 +1934,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|fifo_nfsv2nodeop_opv_desc
@@ -1427,6 +2021,7 @@ comment|/*  * nfs null call from vfs.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_null
 parameter_list|(
@@ -1511,6 +2106,7 @@ comment|/*  * nfs access vnode op.  * For nfs, just return ok. File accesses may
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_access
 parameter_list|(
@@ -1772,6 +2368,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_open
 parameter_list|(
@@ -2184,6 +2781,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_close
 parameter_list|(
@@ -2320,6 +2918,7 @@ comment|/*  * nfs getattr call from vfs.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_getattr
 parameter_list|(
@@ -2483,6 +3082,7 @@ comment|/*  * nfs setattr call.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_setattr
 parameter_list|(
@@ -3276,6 +3876,7 @@ comment|/*  * nfs lookup call, one step at a time...  * First look in cache  * I
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_lookup
 parameter_list|(
@@ -4553,6 +5154,7 @@ comment|/*  * nfs read call.  * Just call nfs_bioread() to do the work.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_read
 parameter_list|(
@@ -4616,6 +5218,7 @@ comment|/*  * nfs readlink call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_readlink
 parameter_list|(
@@ -5560,6 +6163,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_mknod
 parameter_list|(
@@ -6069,6 +6673,7 @@ comment|/*  * nfs file create call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_create
 parameter_list|(
@@ -6518,6 +7123,7 @@ comment|/*  * nfs file remove call  * To try and make nfs semantics closer to uf
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_remove
 parameter_list|(
@@ -6997,6 +7603,7 @@ comment|/*  * nfs file rename call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_rename
 parameter_list|(
@@ -7366,6 +7973,7 @@ comment|/*  * nfs file rename rpc called from nfs_remove() above  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_renameit
 parameter_list|(
@@ -7562,6 +8170,7 @@ comment|/*  * nfs hard link create call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_link
 parameter_list|(
@@ -7832,6 +8441,7 @@ comment|/* start here */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_symlink
 parameter_list|(
@@ -8232,6 +8842,7 @@ comment|/*  * nfs make dir call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_mkdir
 parameter_list|(
@@ -8783,6 +9394,7 @@ comment|/*  * nfs remove directory call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_rmdir
 parameter_list|(
@@ -9029,6 +9641,7 @@ comment|/*  * nfs readdir call  * Although cookie is defined as opaque, I transl
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_readdir
 parameter_list|(
@@ -11108,6 +11721,7 @@ comment|/*  * Silly rename. To make the NFS filesystem that is stateless look a 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_sillyrename
 parameter_list|(
@@ -11453,6 +12067,7 @@ comment|/*  * Look up a file name for silly rename stuff.  * Just like nfs_looku
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_lookitup
 parameter_list|(
@@ -11690,6 +12305,7 @@ comment|/*  * Kludge City..  * - make nfs_bmap() essentially a no-op that does n
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_bmap
 parameter_list|(
@@ -11783,6 +12399,7 @@ comment|/*  * Strategy routine.  * For async requests when nfsiod(s) are running
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_strategy
 parameter_list|(
@@ -11936,6 +12553,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_mmap
 parameter_list|(
@@ -11965,6 +12583,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_fsync
 parameter_list|(
@@ -12386,6 +13005,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_pathconf
 parameter_list|(
@@ -12411,6 +13031,7 @@ comment|/*  * NFS advisory byte-level locks.  * Currently unsupported.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_advlock
 parameter_list|(
@@ -12464,6 +13085,7 @@ comment|/*  * Print out the contents of an nfsnode.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_print
 parameter_list|(
@@ -12545,6 +13167,7 @@ comment|/*  * NFS directory offset lookup.  * Currently unsupported.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_blkatoff
 parameter_list|(
@@ -12570,6 +13193,7 @@ comment|/*  * NFS flat namespace allocation.  * Currently unsupported.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_valloc
 parameter_list|(
@@ -12595,6 +13219,7 @@ comment|/*  * NFS flat namespace free.  * Currently unsupported.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_vfree
 parameter_list|(
@@ -12620,6 +13245,7 @@ comment|/*  * NFS file truncation.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_truncate
 parameter_list|(
@@ -12651,6 +13277,7 @@ comment|/*  * NFS update.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_update
 parameter_list|(
@@ -12683,6 +13310,7 @@ comment|/*  * nfs special file access vnode op.  * Essentially just get vattr an
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfsspec_access
 parameter_list|(
@@ -12916,6 +13544,7 @@ comment|/*  * Read wrapper for special devices.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfsspec_read
 parameter_list|(
@@ -12977,6 +13606,7 @@ comment|/*  * Write wrapper for special devices.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfsspec_write
 parameter_list|(
@@ -13038,6 +13668,7 @@ comment|/*  * Close wrapper for special devices.  *  * Update the times on the n
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfsspec_close
 parameter_list|(
@@ -13237,6 +13868,7 @@ comment|/*  * Read wrapper for fifos.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfsfifo_read
 parameter_list|(
@@ -13298,6 +13930,7 @@ comment|/*  * Write wrapper for fifos.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfsfifo_write
 parameter_list|(
@@ -13359,6 +13992,7 @@ comment|/*  * Close wrapper for fifos.  *  * Update the times on the nfsnode the
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfsfifo_close
 parameter_list|(
