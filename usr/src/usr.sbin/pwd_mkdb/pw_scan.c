@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pw_scan.c	8.1 (Berkeley) %G%"
+literal|"@(#)pw_scan.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -74,49 +80,42 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
-begin_macro
+begin_include
+include|#
+directive|include
+file|"pw_scan.h"
+end_include
+
+begin_function
+name|int
 name|pw_scan
-argument_list|(
-argument|bp
-argument_list|,
-argument|pw
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|bp
+parameter_list|,
+name|pw
+parameter_list|)
 name|char
 modifier|*
 name|bp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|long
 name|id
 decl_stmt|;
-specifier|register
 name|int
 name|root
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -124,11 +123,6 @@ decl_stmt|,
 modifier|*
 name|sh
 decl_stmt|;
-name|char
-modifier|*
-name|getusershell
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|!
@@ -216,16 +210,9 @@ operator|&&
 name|id
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: root uid should be 0"
-argument_list|,
-name|progname
+literal|"root uid should be 0"
 argument_list|)
 expr_stmt|;
 return|return
@@ -241,16 +228,9 @@ operator|>
 name|USHRT_MAX
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s> max uid value (%d)"
-argument_list|,
-name|progname
+literal|"%s> max uid value (%d)"
 argument_list|,
 name|p
 argument_list|,
@@ -302,16 +282,9 @@ operator|>
 name|USHRT_MAX
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s> max gid value (%d)"
-argument_list|,
-name|progname
+literal|"%s> max gid value (%d)"
 argument_list|,
 name|p
 argument_list|,
@@ -479,16 +452,9 @@ argument_list|()
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: warning, unknown root shell\n"
-argument_list|,
-name|progname
+literal|"warning, unknown root shell"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -521,16 +487,9 @@ block|{
 comment|/* too many */
 name|fmt
 label|:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: corrupted entry\n"
-argument_list|,
-name|progname
+literal|"corrupted entry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -545,7 +504,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
