@@ -2612,7 +2612,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|m
 argument_list|,
@@ -4199,7 +4199,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|m
 argument_list|,
@@ -4288,7 +4288,7 @@ name|PQ_CACHE
 condition|)
 return|return;
 comment|/* 	 * Remove all pmaps and indicate that the page is not 	 * writeable or mapped. 	 */
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|m
 argument_list|,

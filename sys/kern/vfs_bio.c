@@ -5608,7 +5608,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|m
 argument_list|,
@@ -11959,7 +11959,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * When readying a buffer for a read ( i.e 			 * clear_modify == 0 ), it is important to do 			 * bogus_page replacement for valid pages in  			 * partially instantiated buffers.  Partially  			 * instantiated buffers can, in turn, occur when 			 * reconstituting a buffer from its VM backing store 			 * base.  We only have to do this if B_CACHE is 			 * clear ( which causes the I/O to occur in the 			 * first place ).  The replacement prevents the read 			 * I/O from overwriting potentially dirty VM-backed 			 * pages.  XXX bogus page replacement is, uh, bogus. 			 * It may not work properly with small-block devices. 			 * We need to find a better way. 			 */
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|m
 argument_list|,

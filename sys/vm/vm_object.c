@@ -3598,7 +3598,7 @@ name|pindex
 operator|<
 name|end
 condition|)
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|p
 argument_list|,
@@ -4926,7 +4926,7 @@ comment|/* 				 * Page is out of the parent object's range, we  				 * can simpl
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|p
 argument_list|,
@@ -4978,7 +4978,7 @@ comment|/* 				 * page already exists in parent OR swap exists 				 * for this l
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|p
 argument_list|,
@@ -5762,7 +5762,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|p
 argument_list|,
@@ -5828,7 +5828,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|p
 argument_list|,
@@ -5877,7 +5877,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|p
 argument_list|,
@@ -5961,7 +5961,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|p
 argument_list|,
@@ -6538,7 +6538,7 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|m_in
 argument_list|,

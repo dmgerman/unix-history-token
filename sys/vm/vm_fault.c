@@ -1542,7 +1542,7 @@ operator|->
 name|dirty
 condition|)
 block|{
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|mt
 argument_list|,
@@ -2153,7 +2153,7 @@ comment|/* 				 * get rid of the unnecessary page 				 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|fs
 operator|.

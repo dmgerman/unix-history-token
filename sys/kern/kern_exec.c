@@ -3173,7 +3173,7 @@ block|{
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|ma
 index|[
