@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cluster.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cluster.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -150,16 +150,12 @@ name|buf
 operator|*
 operator|,
 name|long
-name|size
 operator|,
 name|daddr_t
-name|start_lbn
 operator|,
 name|int
-name|len
 operator|,
 name|daddr_t
-name|lbn
 operator|)
 argument_list|)
 decl_stmt|;
@@ -480,6 +476,11 @@ operator|&
 name|num_ra
 argument_list|)
 operator|)
+operator|&&
+name|blkno
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* 		 * Reading sequentially, and the next block is not in the 		 * cache.  We are going to try reading ahead. If this is 		 * the first read of a file, then limit read-ahead to a 		 * single block, else read as much as we're allowed. 		 */
@@ -597,6 +598,11 @@ operator|&
 name|num_ra
 argument_list|)
 operator|)
+operator|||
+name|blkno
+operator|==
+operator|-
+literal|1
 condition|)
 goto|goto
 name|skip_readahead
@@ -2064,6 +2070,13 @@ argument_list|,
 operator|&
 name|clen
 argument_list|)
+operator|||
+name|bp
+operator|->
+name|b_blkno
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|bawrite
@@ -2101,11 +2114,6 @@ name|lbn
 expr_stmt|;
 return|return;
 block|}
-else|else
-name|clen
-operator|=
-literal|0
-expr_stmt|;
 name|vp
 operator|->
 name|v_clen
