@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)token.h	3.4 %G%  */
+comment|/*  * @(#)token.h	3.5 %G%  */
 end_comment
 
 begin_comment
@@ -94,71 +94,85 @@ end_define
 begin_define
 define|#
 directive|define
-name|T_DOLLAR
+name|T_LB
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_COMMA
+name|T_RB
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_QUEST
+name|T_DOLLAR
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_COLON
+name|T_COMMA
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_CHAR
+name|T_QUEST
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_STR
+name|T_COLON
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_NUM
+name|T_CHAR
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_MOD
+name|T_STR
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_XOR
+name|T_NUM
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_DQ
+name|T_MOD
 value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_XOR
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_DQ
+value|21
 end_define
 
 begin_comment
@@ -169,133 +183,133 @@ begin_define
 define|#
 directive|define
 name|T_GE
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_RS
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_GT
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_LE
+name|T_RS
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_LS
+name|T_GT
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_LT
+name|T_LE
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_EQ
+name|T_LS
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ASSIGN
+name|T_LT
 value|27
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_NE
+name|T_EQ
 value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_NOT
+name|T_ASSIGN
 value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ANDAND
+name|T_NE
 value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_AND
+name|T_NOT
 value|31
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_OROR
+name|T_ANDAND
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_OR
+name|T_AND
 value|33
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_IF
+name|T_OROR
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_THEN
+name|T_OR
 value|35
 end_define
 
 begin_define
 define|#
 directive|define
+name|T_IF
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_THEN
+value|41
+end_define
+
+begin_define
+define|#
+directive|define
 name|T_ELSIF
-value|36
+value|42
 end_define
 
 begin_define
 define|#
 directive|define
 name|T_ELSE
-value|37
+value|43
 end_define
 
 begin_define
 define|#
 directive|define
 name|T_ENDIF
-value|38
+value|44
 end_define
 
 end_unit

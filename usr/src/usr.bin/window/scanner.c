@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanner.c	3.8 %G%"
+literal|"@(#)scanner.c	3.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -836,6 +836,36 @@ operator|.
 name|x_token
 operator|=
 name|T_COLON
+expr_stmt|;
+name|state
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'['
+case|:
+name|cx
+operator|.
+name|x_token
+operator|=
+name|T_LB
+expr_stmt|;
+name|state
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|']'
+case|:
+name|cx
+operator|.
+name|x_token
+operator|=
+name|T_RB
 expr_stmt|;
 name|state
 operator|=
