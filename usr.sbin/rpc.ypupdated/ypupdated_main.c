@@ -77,16 +77,6 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/ttycom.h>
-end_include
-
-begin_comment
-comment|/* TIOCNOTTY */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
