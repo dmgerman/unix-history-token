@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xi_src.c	7.1 (Berkeley) %G%"
+literal|"@(#)xi_src.c	7.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1200,17 +1200,15 @@ literal|1
 expr_stmt|;
 name|cplim
 operator|=
-name|cp
+name|data_msg
 operator|+
 sizeof|sizeof
 argument_list|(
 name|data_msg
 argument_list|)
 expr_stmt|;
+operator|*
 name|data_msg
-index|[
-literal|0
-index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -1356,7 +1354,7 @@ argument_list|)
 decl_stmt|;
 name|localsize
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 while|while
 condition|(

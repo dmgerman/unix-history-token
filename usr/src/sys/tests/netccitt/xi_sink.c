@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xi_sink.c	7.1 (Berkeley) %G%"
+literal|"@(#)xi_sink.c	7.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -565,9 +565,9 @@ argument_list|(
 name|socket
 argument_list|,
 operator|(
-name|AF_ISO
+name|AF_CCITT
 operator|,
-name|SOCK_SEQPACKET
+name|SOCK_STREAM
 operator|,
 literal|0
 operator|)
