@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -788,6 +788,54 @@ define|#
 directive|define
 name|PF_MAX
 value|AF_MAX
+end_define
+
+begin_comment
+comment|/*  * Definitions for network related sysctl, CTL_NET.  *  * Second level is protocol family.  * Third level is protocol number.  *  * Further levels are defined by the individual families below.  */
+end_comment
+
+begin_comment
+comment|/*  * PF_ROUTE - Routing table  *  * Three additional levels are defined:  *	Fourth: address family, 0 is wildcard  *	Fifth: type of info, defined below  *	Sixth: flag(s) to mask with for NET_RT_FLAGS  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NET_RT_DUMP
+value|1
+end_define
+
+begin_comment
+comment|/* dump; may limit to a.f. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NET_RT_FLAGS
+value|2
+end_define
+
+begin_comment
+comment|/* by flags, e.g. RESOLVING */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NET_RT_IFLIST
+value|3
+end_define
+
+begin_comment
+comment|/* survey interface list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_NET_RT_NAMES
+value|{ \ 	"unspec", \ 	"dump", \ 	"flags", \ 	"iflist", \ }
 end_define
 
 begin_comment
