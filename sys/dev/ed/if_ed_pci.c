@@ -456,7 +456,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|ed
+name|if_ed
 argument_list|,
 name|pci
 argument_list|,
