@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.15 1995/05/09 16:30:45 bde Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.16 1995/05/30 08:07:45 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -3792,12 +3792,6 @@ init|=
 literal|0
 decl_stmt|;
 name|u_long
-name|to_dirclust
-decl_stmt|;
-name|u_long
-name|to_diroffset
-decl_stmt|;
-name|u_long
 name|cn
 decl_stmt|;
 name|daddr_t
@@ -4261,18 +4255,6 @@ name|bad
 goto|;
 block|}
 block|}
-name|to_dirclust
-operator|=
-name|tdep
-operator|->
-name|de_dirclust
-expr_stmt|;
-name|to_diroffset
-operator|=
-name|tdep
-operator|->
-name|de_diroffset
-expr_stmt|;
 name|error
 operator|=
 name|removede
@@ -4299,19 +4281,6 @@ expr_stmt|;
 name|tdep
 operator|=
 name|NULL
-expr_stmt|;
-comment|/* 		 * Remember where the slot was for createde(). 		 */
-name|tddep
-operator|->
-name|de_fndclust
-operator|=
-name|to_dirclust
-expr_stmt|;
-name|tddep
-operator|->
-name|de_fndoffset
-operator|=
-name|to_diroffset
 expr_stmt|;
 block|}
 comment|/* 	 * If the source and destination are in the same directory then 	 * just read in the directory entry, change the name in the 	 * directory entry and write it back to disk. 	 */
