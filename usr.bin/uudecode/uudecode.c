@@ -302,11 +302,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-name|warnx
-argument_list|(
-literal|"-p is deprecated, use `-o /dev/stdout' instead."
-argument_list|)
-expr_stmt|;
 name|pflag
 operator|=
 literal|1
