@@ -2698,9 +2698,13 @@ modifier|*
 name|timeout
 parameter_list|)
 block|{
+comment|/* 	 * Insure that the file descriptor table is initialized for this 	 * entry:  	 */
 return|return
 operator|(
-literal|0
+name|_thread_fd_table_init
+argument_list|(
+name|fd
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2749,9 +2753,13 @@ name|int
 name|lineno
 parameter_list|)
 block|{
+comment|/* 	 * Insure that the file descriptor table is initialized for this 	 * entry:  	 */
 return|return
 operator|(
-literal|0
+name|_thread_fd_table_init
+argument_list|(
+name|fd
+argument_list|)
 operator|)
 return|;
 block|}
