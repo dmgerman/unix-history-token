@@ -303,7 +303,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|repeatcnt
+name|failures
 decl_stmt|;
 end_decl_stmt
 
@@ -418,9 +418,6 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|pp
 decl_stmt|;
 name|int
 name|ask
@@ -458,6 +455,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|ttyn
+decl_stmt|,
+modifier|*
+name|pp
 decl_stmt|;
 name|char
 name|tbuf
@@ -723,14 +723,14 @@ operator|*
 name|argv
 condition|)
 block|{
-name|ask
-operator|=
-literal|0
-expr_stmt|;
 name|username
 operator|=
 operator|*
 name|argv
+expr_stmt|;
+name|ask
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -954,14 +954,11 @@ name|getloginname
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* note if trying multiple login's */
+comment|/* 		 * Note if trying multiple user names; 		 * log failures for previous user name, 		 * but don't bother logging one failure 		 * for nonexistent name (mistyped username). 		 */
 if|if
 condition|(
-name|repeatcnt
-condition|)
-block|{
-if|if
-condition|(
+name|failures
+operator|&&
 name|strcmp
 argument_list|(
 name|tbuf
@@ -970,15 +967,28 @@ name|username
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|failures
+operator|>
+operator|(
+name|pwd
+condition|?
+literal|0
+else|:
+literal|1
+operator|)
+condition|)
 name|badlogin
 argument_list|(
 name|tbuf
 argument_list|)
 expr_stmt|;
-name|repeatcnt
+name|failures
 operator|=
-literal|1
+literal|0
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -989,29 +999,6 @@ argument_list|,
 name|username
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-operator|++
-name|repeatcnt
-expr_stmt|;
-block|}
-else|else
-block|{
-name|repeatcnt
-operator|=
-literal|1
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|tbuf
-argument_list|,
-name|username
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|pwd
@@ -1228,6 +1215,9 @@ argument_list|(
 literal|"Login incorrect\n"
 argument_list|)
 expr_stmt|;
+name|failures
+operator|++
+expr_stmt|;
 comment|/* we allow 10 tries, but after 3 we start backing off */
 if|if
 condition|(
@@ -1302,15 +1292,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* log any mistakes -- don't count last one */
-operator|--
-name|repeatcnt
-expr_stmt|;
-name|badlogin
-argument_list|(
-name|username
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If valid so far and root is logging in, see if root logins on 	 * this terminal are permitted. 	 */
 if|if
 condition|(
@@ -1322,7 +1303,9 @@ literal|0
 operator|&&
 operator|!
 name|rootterm
-argument_list|()
+argument_list|(
+name|tty
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1331,11 +1314,9 @@ name|hostname
 condition|)
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"ROOT LOGIN REFUSED ON %s FROM %s"
-argument_list|,
-name|tty
+literal|"ROOT LOGIN REFUSED FROM %s"
 argument_list|,
 name|hostname
 argument_list|)
@@ -1343,7 +1324,7 @@ expr_stmt|;
 else|else
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"ROOT LOGIN REFUSED ON %s"
 argument_list|,
@@ -1488,6 +1469,21 @@ name|struct
 name|utmp
 name|utmp
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|utmp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utmp
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1526,21 +1522,6 @@ operator|.
 name|ut_host
 argument_list|,
 name|hostname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|utmp
-operator|.
-name|ut_host
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|bzero
-argument_list|(
-name|utmp
-operator|.
-name|ut_host
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1810,7 +1791,9 @@ argument_list|(
 name|term
 argument_list|,
 name|stypeof
-argument_list|()
+argument_list|(
+name|tty
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1899,7 +1882,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"ROOT LOGIN %s FROM %s"
+literal|"ROOT LOGIN ON %s FROM %s"
 argument_list|,
 name|tty
 argument_list|,
@@ -1911,7 +1894,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"ROOT LOGIN %s"
+literal|"ROOT LOGIN ON %s"
 argument_list|,
 name|tty
 argument_list|)
@@ -2242,8 +2225,17 @@ end_block
 
 begin_macro
 name|rootterm
-argument_list|()
+argument_list|(
+argument|ttyn
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ttyn
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2259,7 +2251,7 @@ name|t
 operator|=
 name|getttynam
 argument_list|(
-name|tty
+name|ttyn
 argument_list|)
 operator|)
 operator|&&
@@ -2684,6 +2676,21 @@ name|L_SET
 argument_list|)
 expr_stmt|;
 block|}
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|ll
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ll
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2715,37 +2722,6 @@ if|if
 condition|(
 name|hostname
 condition|)
-name|strncpy
-argument_list|(
-name|ll
-operator|.
-name|ll_host
-argument_list|,
-name|hostname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ll
-operator|.
-name|ll_host
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|bzero
-argument_list|(
-name|ll
-operator|.
-name|ll_host
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ll
-operator|.
-name|ll_host
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|strncpy
 argument_list|(
 name|ll
@@ -2812,8 +2788,9 @@ begin_block
 block|{
 if|if
 condition|(
-operator|!
-name|repeatcnt
+name|failures
+operator|==
+literal|0
 condition|)
 return|return;
 if|if
@@ -2822,21 +2799,19 @@ name|hostname
 condition|)
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"%d LOGIN FAILURE%s ON %s FROM %s, %s"
+literal|"%d LOGIN FAILURE%s FROM %s, %s"
 argument_list|,
-name|repeatcnt
+name|failures
 argument_list|,
-name|repeatcnt
+name|failures
 operator|>
 literal|1
 condition|?
 literal|"S"
 else|:
 literal|""
-argument_list|,
-name|tty
 argument_list|,
 name|hostname
 argument_list|,
@@ -2846,13 +2821,13 @@ expr_stmt|;
 else|else
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"%d LOGIN FAILURE%s ON %s, %s"
 argument_list|,
-name|repeatcnt
+name|failures
 argument_list|,
-name|repeatcnt
+name|failures
 operator|>
 literal|1
 condition|?
@@ -2885,7 +2860,13 @@ begin_function
 name|char
 modifier|*
 name|stypeof
-parameter_list|()
+parameter_list|(
+name|ttyid
+parameter_list|)
+name|char
+modifier|*
+name|ttyid
+decl_stmt|;
 block|{
 name|struct
 name|ttyent
@@ -2894,14 +2875,14 @@ name|t
 decl_stmt|;
 return|return
 operator|(
-name|tty
+name|ttyid
 operator|&&
 operator|(
 name|t
 operator|=
 name|getttynam
 argument_list|(
-name|tty
+name|ttyid
 argument_list|)
 operator|)
 condition|?
