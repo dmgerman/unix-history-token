@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.8  */
+comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.9  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
 
 begin_include
 include|#
