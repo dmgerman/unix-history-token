@@ -1084,6 +1084,17 @@ name|switchticks
 operator|=
 name|ticks
 expr_stmt|;
+comment|/* 	 * notify interested parties of our demise. 	 */
+name|KNOTE
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_klist
+argument_list|,
+name|NOTE_EXIT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Notify parent that we're gone.  If parent has the PS_NOCLDWAIT 	 * flag set, notify process 1 instead (and hope it will handle 	 * this situation). 	 */
 if|if
 condition|(

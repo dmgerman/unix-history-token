@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/event.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1203,6 +1209,21 @@ literal|0
 index|]
 operator|=
 name|fd
+expr_stmt|;
+comment|/* connection has been removed from the listen queue */
+name|KNOTE
+argument_list|(
+operator|&
+name|head
+operator|->
+name|so_rcv
+operator|.
+name|sb_sel
+operator|.
+name|si_note
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|so
 operator|->

@@ -102,19 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/poll.h>
+file|<sys/event.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_zone.h>
 end_include
 
 begin_include
@@ -706,6 +700,19 @@ parameter_list|)
 value|{ \ 	union _qcvt tmp; \ 	tmp.qcvt = (q); \ 	tmp.val[_QUAD_LOWWORD] = (l); \ 	(q) = tmp.qcvt; \ }
 end_define
 
+begin_define
+define|#
+directive|define
+name|VN_KNOTE
+parameter_list|(
+name|vp
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|KNOTE(&vp->v_pollinfo.vpi_selinfo.si_note, (b))
+end_define
+
 begin_comment
 comment|/*  * A virgin directory (no blushing please).  */
 end_comment
@@ -1034,13 +1041,13 @@ operator|(
 name|error
 operator|)
 return|;
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|ap
 operator|->
 name|a_dvp
 argument_list|,
-name|POLLWRITE
+name|NOTE_WRITE
 argument_list|)
 expr_stmt|;
 return|return
@@ -1134,13 +1141,13 @@ operator|(
 name|error
 operator|)
 return|;
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|ap
 operator|->
 name|a_dvp
 argument_list|,
-name|POLLWRITE
+name|NOTE_WRITE
 argument_list|)
 expr_stmt|;
 name|ip
@@ -2766,11 +2773,11 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|vp
 argument_list|,
-name|POLLATTRIB
+name|NOTE_ATTRIB
 argument_list|)
 expr_stmt|;
 return|return
@@ -3773,18 +3780,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|vp
 argument_list|,
-name|POLLNLINK
+name|NOTE_DELETE
 argument_list|)
 expr_stmt|;
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|dvp
 argument_list|,
-name|POLLWRITE
+name|NOTE_WRITE
 argument_list|)
 expr_stmt|;
 name|out
@@ -4109,18 +4116,18 @@ argument_list|)
 expr_stmt|;
 name|out2
 label|:
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|vp
 argument_list|,
-name|POLLNLINK
+name|NOTE_LINK
 argument_list|)
 expr_stmt|;
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|tdvp
 argument_list|,
-name|POLLWRITE
+name|NOTE_WRITE
 argument_list|)
 expr_stmt|;
 return|return
@@ -5013,13 +5020,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|fdvp
 argument_list|,
-name|POLLWRITE
+name|NOTE_WRITE
 argument_list|)
 expr_stmt|;
+comment|/* XXX right place? */
 name|vrele
 argument_list|(
 name|fdvp
@@ -5461,11 +5469,11 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|tdvp
 argument_list|,
-name|POLLWRITE
+name|NOTE_WRITE
 argument_list|)
 expr_stmt|;
 name|vput
@@ -5728,13 +5736,6 @@ name|xp
 argument_list|)
 expr_stmt|;
 block|}
-name|VN_POLLEVENT
-argument_list|(
-name|tdvp
-argument_list|,
-name|POLLWRITE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|doingdirectory
@@ -5819,19 +5820,25 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|VN_KNOTE
+argument_list|(
+name|tdvp
+argument_list|,
+name|NOTE_WRITE
+argument_list|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|tdvp
 argument_list|)
 expr_stmt|;
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|tvp
 argument_list|,
-name|POLLNLINK
+name|NOTE_DELETE
 argument_list|)
 expr_stmt|;
-comment|/* XXX this right? */
 name|vput
 argument_list|(
 name|tvp
@@ -6028,6 +6035,13 @@ operator|~
 name|IN_RENAME
 expr_stmt|;
 block|}
+name|VN_KNOTE
+argument_list|(
+name|fvp
+argument_list|,
+name|NOTE_RENAME
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -6369,8 +6383,7 @@ name|cn_cred
 expr_stmt|;
 endif|#
 directive|endif
-endif|I
-comment|/* 		 * If we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * The new directory also inherits the SUID bit. 		 * If user's UID and dir UID are the same, 		 * 'give it away' so that the SUID is still forced on. 		 */
+comment|/* 		 * If we are hacking owners here, (only do this where told to) 		 * and we are not giving it TO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * The new directory also inherits the SUID bit. 		 * If user's UID and dir UID are the same, 		 * 'give it away' so that the SUID is still forced on. 		 */
 if|if
 condition|(
 operator|(
@@ -6935,14 +6948,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|VN_POLLEVENT
-argument_list|(
-name|dvp
-argument_list|,
-name|POLLWRITE
-argument_list|)
-expr_stmt|;
-comment|/* XXX right place? */
 comment|/* 	 * Directory set up, now install its entry in the parent directory. 	 * 	 * If we are not doing soft dependencies, then we must write out the 	 * buffer containing the new directory body before entering the new  	 * name in the parent. If we are doing soft dependencies, then the 	 * buffer containing the new directory body will be passed to and 	 * released in the soft dependency code after the code has attached 	 * an appropriate ordering dependency to the buffer which ensures that 	 * the buffer is written before the new name is written in the parent. 	 */
 if|if
 condition|(
@@ -7018,6 +7023,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|VN_KNOTE
+argument_list|(
+name|dvp
+argument_list|,
+name|NOTE_WRITE
+argument_list|)
+expr_stmt|;
 operator|*
 name|ap
 operator|->
@@ -7360,13 +7372,13 @@ goto|goto
 name|out
 goto|;
 block|}
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|dvp
 argument_list|,
-name|POLLWRITE
+name|NOTE_WRITE
 operator||
-name|POLLNLINK
+name|NOTE_LINK
 argument_list|)
 expr_stmt|;
 name|cache_purge
@@ -7447,11 +7459,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|vp
 argument_list|,
-name|POLLNLINK
+name|NOTE_DELETE
 argument_list|)
 expr_stmt|;
 return|return
@@ -7536,13 +7548,13 @@ operator|(
 name|error
 operator|)
 return|;
-name|VN_POLLEVENT
+name|VN_KNOTE
 argument_list|(
 name|ap
 operator|->
 name|a_dvp
 argument_list|,
-name|POLLWRITE
+name|NOTE_WRITE
 argument_list|)
 expr_stmt|;
 name|vp
@@ -9874,8 +9886,7 @@ name|cn_cred
 expr_stmt|;
 endif|#
 directive|endif
-endif|I
-comment|/* 		 * If we are not the owner of the directory, 		 * and we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * Note that this drops off the execute bits for security. 		 */
+comment|/* 		 * If we are not the owner of the directory, 		 * and we are hacking owners here, (only do this where told to) 		 * and we are not giving it TO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * Note that this drops off the execute bits for security. 		 */
 if|if
 condition|(
 operator|(

@@ -15,6 +15,16 @@ directive|define
 name|_SYS_SELECT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/event.h>
+end_include
+
+begin_comment
+comment|/* for struct klist */
+end_comment
+
 begin_comment
 comment|/*  * Used to maintain information about processes that wish to be  * notified when I/O becomes possible.  */
 end_comment
@@ -27,6 +37,11 @@ name|pid_t
 name|si_pid
 decl_stmt|;
 comment|/* process to be notified */
+name|struct
+name|klist
+name|si_note
+decl_stmt|;
+comment|/* kernel note list */
 name|short
 name|si_flags
 decl_stmt|;

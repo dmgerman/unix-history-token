@@ -132,12 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -187,12 +181,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_object.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_zone.h>
 end_include
 
 begin_include
@@ -1299,6 +1287,17 @@ operator|=
 name|ndp
 operator|->
 name|ni_vp
+expr_stmt|;
+comment|/* 	 * notify others that we exec'd 	 */
+name|KNOTE
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_klist
+argument_list|,
+name|NOTE_EXEC
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If tracing the process, trap to debugger so breakpoints 	 * 	can be set before the program executes. 	 */
 name|STOPEVENT

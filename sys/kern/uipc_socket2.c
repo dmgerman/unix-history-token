@@ -113,6 +113,12 @@ begin_comment
 comment|/* for aio_swake proto */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/event.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|maxsockets
@@ -1301,6 +1307,18 @@ argument_list|(
 name|so
 argument_list|,
 name|sb
+argument_list|)
+expr_stmt|;
+name|KNOTE
+argument_list|(
+operator|&
+name|sb
+operator|->
+name|sb_sel
+operator|.
+name|si_note
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -43,6 +43,12 @@ begin_comment
 comment|/* 250 bytes in 256-byte alloc. */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|klist
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|filedesc
@@ -97,6 +103,26 @@ name|u_short
 name|fd_refcnt
 decl_stmt|;
 comment|/* reference count */
+name|int
+name|fd_knlistsize
+decl_stmt|;
+comment|/* size of knlist */
+name|struct
+name|klist
+modifier|*
+name|fd_knlist
+decl_stmt|;
+comment|/* list of attached knotes */
+name|u_long
+name|fd_knhashmask
+decl_stmt|;
+comment|/* size of knhash */
+name|struct
+name|klist
+modifier|*
+name|fd_knhash
+decl_stmt|;
+comment|/* hash table for attached knotes */
 block|}
 struct|;
 end_struct
