@@ -186,31 +186,28 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-name|void
-name|getin
-parameter_list|(
-name|wrd1
-parameter_list|,
-name|wrd2
-parameter_list|)
+begin_comment
 comment|/* get command from user        */
-name|char
-modifier|*
-modifier|*
-name|wrd1
-decl_stmt|,
-decl|*
-modifier|*
-name|wrd2
-decl_stmt|;
-end_function
+end_comment
 
 begin_comment
 comment|/* no prompt, usually           */
 end_comment
 
-begin_block
+begin_function
+name|void
+name|getin
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|wrd1
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|wrd2
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -415,26 +412,22 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|int
 name|yes
 parameter_list|(
+name|int
 name|x
 parameter_list|,
+name|int
 name|y
 parameter_list|,
+name|int
 name|z
 parameter_list|)
 comment|/* confirm with rspeak          */
-name|int
-name|x
-decl_stmt|,
-name|y
-decl_stmt|,
-name|z
-decl_stmt|;
 block|{
 name|int
 name|result
@@ -556,20 +549,16 @@ begin_function
 name|int
 name|yesm
 parameter_list|(
+name|int
 name|x
 parameter_list|,
+name|int
 name|y
 parameter_list|,
+name|int
 name|z
 parameter_list|)
 comment|/* confirm with mspeak          */
-name|int
-name|x
-decl_stmt|,
-name|y
-decl_stmt|,
-name|z
-decl_stmt|;
 block|{
 name|int
 name|result
@@ -742,7 +731,9 @@ begin_function
 specifier|static
 name|int
 name|next
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* next virtual char, bump adr  */
 block|{
 name|int
@@ -814,7 +805,9 @@ end_comment
 begin_function
 name|void
 name|rdata
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* "read" data from virtual file*/
 block|{
 name|int
@@ -1077,7 +1070,9 @@ begin_function
 specifier|static
 name|int
 name|rnum
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* read initial location num    */
 block|{
 name|char
@@ -1179,12 +1174,10 @@ specifier|static
 name|void
 name|rdesc
 parameter_list|(
+name|int
 name|sect
 parameter_list|)
 comment|/* read description-format msgs */
-name|int
-name|sect
-decl_stmt|;
 block|{
 name|int
 name|locc
@@ -1533,7 +1526,9 @@ begin_function
 specifier|static
 name|void
 name|rtrav
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* read travel table            */
 block|{
 name|int
@@ -1870,12 +1865,10 @@ specifier|static
 name|void
 name|twrite
 parameter_list|(
+name|int
 name|loq
 parameter_list|)
 comment|/* travel options from this loc */
-name|int
-name|loq
-decl_stmt|;
 block|{
 name|struct
 name|travlist
@@ -2005,7 +1998,9 @@ begin_function
 specifier|static
 name|void
 name|rvoc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2123,7 +2118,9 @@ begin_function
 specifier|static
 name|void
 name|rlocs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* initial object locations     */
 block|{
 for|for
@@ -2184,7 +2181,9 @@ begin_function
 specifier|static
 name|void
 name|rdflt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* default verb messages        */
 block|{
 for|for
@@ -2221,7 +2220,9 @@ begin_function
 specifier|static
 name|void
 name|rliq
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* liquid assets&c: cond bits  */
 block|{
 name|int
@@ -2280,7 +2281,9 @@ begin_function
 specifier|static
 name|void
 name|rhints
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|hintnum
@@ -2351,11 +2354,9 @@ begin_function
 name|void
 name|rspeak
 parameter_list|(
-name|msg
-parameter_list|)
 name|int
 name|msg
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2379,11 +2380,9 @@ begin_function
 name|void
 name|mspeak
 parameter_list|(
-name|msg
-parameter_list|)
 name|int
 name|msg
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2403,20 +2402,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* read, decrypt, and print a message (not ptext)      */
+end_comment
+
+begin_comment
+comment|/* msg is a pointer to seek address and length of mess */
+end_comment
+
 begin_function
 name|void
 name|speak
 parameter_list|(
-name|msg
-parameter_list|)
-comment|/* read, decrypt, and print a message (not ptext)      */
 specifier|const
 name|struct
 name|text
 modifier|*
 name|msg
-decl_stmt|;
-comment|/* msg is a pointer to seek address and length of mess */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2577,23 +2580,28 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* read, decrypt an print a ptext message              */
+end_comment
+
+begin_comment
+comment|/* msg is the number of all the p msgs for this place  */
+end_comment
+
+begin_comment
+comment|/* assumes object 1 doesn't have prop 1, obj 2 no prop 2&c*/
+end_comment
+
 begin_function
 name|void
 name|pspeak
 parameter_list|(
+name|int
 name|m
 parameter_list|,
+name|int
 name|skip
 parameter_list|)
-comment|/* read, decrypt an print a ptext message              */
-name|int
-name|m
-decl_stmt|;
-comment|/* msg is the number of all the p msgs for this place  */
-name|int
-name|skip
-decl_stmt|;
-comment|/* assumes object 1 doesn't have prop 1, obj 2 no prop 2&c*/
 block|{
 name|char
 modifier|*

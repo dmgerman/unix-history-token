@@ -66,7 +66,9 @@ end_include
 begin_function
 name|int
 name|score
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* sort of like 20000   */
 block|{
 name|int
@@ -340,19 +342,29 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* entry=1 means goto 13000 */
+end_comment
+
+begin_comment
+comment|/* game is over         */
+end_comment
+
+begin_comment
+comment|/* entry=2 means goto 20000 */
+end_comment
+
+begin_comment
+comment|/* 3=19000 */
+end_comment
+
 begin_function
 name|void
 name|done
 parameter_list|(
-name|entry
-parameter_list|)
-comment|/* entry=1 means goto 13000 */
-comment|/* game is over         */
 name|int
 name|entry
-decl_stmt|;
-comment|/* entry=2 means goto 20000 */
-comment|/* 3=19000 */
+parameter_list|)
 block|{
 name|int
 name|i
@@ -527,12 +539,10 @@ begin_function
 name|void
 name|die
 parameter_list|(
+name|int
 name|entry
 parameter_list|)
 comment|/* label 90             */
-name|int
-name|entry
-decl_stmt|;
 block|{
 name|int
 name|i

@@ -149,11 +149,9 @@ begin_function
 name|int
 name|toting
 parameter_list|(
-name|objj
-parameter_list|)
 name|int
 name|objj
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -183,11 +181,9 @@ begin_function
 name|int
 name|here
 parameter_list|(
-name|objj
-parameter_list|)
 name|int
 name|objj
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -221,11 +217,9 @@ begin_function
 name|int
 name|at
 parameter_list|(
-name|objj
-parameter_list|)
 name|int
 name|objj
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -262,11 +256,9 @@ specifier|static
 name|int
 name|liq2
 parameter_list|(
-name|pbotl
-parameter_list|)
 name|int
 name|pbotl
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -297,7 +289,9 @@ end_function
 begin_function
 name|int
 name|liq
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -345,12 +339,9 @@ begin_function
 name|int
 name|liqloc
 parameter_list|(
-name|locc
-parameter_list|)
-comment|/* may want to clean this one up a bit */
 name|int
 name|locc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -417,15 +408,12 @@ specifier|static
 name|int
 name|bitset
 parameter_list|(
-name|l
-parameter_list|,
-name|n
-parameter_list|)
 name|int
 name|l
-decl_stmt|,
+parameter_list|,
+name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -456,11 +444,9 @@ begin_function
 name|int
 name|forced
 parameter_list|(
-name|locc
-parameter_list|)
 name|int
 name|locc
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -487,7 +473,9 @@ end_function
 begin_function
 name|int
 name|dark
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -534,11 +522,9 @@ begin_function
 name|int
 name|pct
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -565,7 +551,9 @@ end_function
 begin_function
 name|int
 name|fdwarf
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 71 */
 block|{
 name|int
@@ -1569,7 +1557,9 @@ end_function
 begin_function
 name|int
 name|march
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* label 8              */
 block|{
 name|int
@@ -2002,7 +1992,9 @@ begin_function
 specifier|static
 name|int
 name|mback
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 20                   */
 block|{
 name|struct
@@ -2189,7 +2181,9 @@ begin_function
 specifier|static
 name|int
 name|specials
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 30000                */
 block|{
 switch|switch
@@ -2294,7 +2288,9 @@ begin_function
 specifier|static
 name|int
 name|trbridge
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 30300                */
 block|{
 if|if
@@ -2487,7 +2483,9 @@ begin_function
 specifier|static
 name|void
 name|badmove
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 20                   */
 block|{
 name|spk
@@ -2604,11 +2602,9 @@ begin_function
 name|int
 name|bug
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -2628,7 +2624,9 @@ end_function
 begin_function
 name|void
 name|checkhints
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 2600&c              */
 block|{
 name|int
@@ -2935,7 +2933,9 @@ end_function
 begin_function
 name|int
 name|trsay
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 9030                 */
 block|{
 name|int
@@ -3019,7 +3019,9 @@ end_function
 begin_function
 name|int
 name|trtake
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 9010                 */
 block|{
 if|if
@@ -3352,7 +3354,9 @@ begin_function
 specifier|static
 name|int
 name|dropper
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 9021                 */
 block|{
 name|k
@@ -3438,7 +3442,9 @@ end_function
 begin_function
 name|int
 name|trdrop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 9020                 */
 block|{
 if|if
@@ -3781,7 +3787,9 @@ end_function
 begin_function
 name|int
 name|tropen
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 9040                 */
 block|{
 if|if
@@ -4227,7 +4235,9 @@ end_function
 begin_function
 name|int
 name|trkill
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 9120                         */
 block|{
 name|int
@@ -4776,7 +4786,9 @@ end_function
 begin_function
 name|int
 name|trtoss
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 9170: throw                  */
 block|{
 name|int
@@ -5133,7 +5145,9 @@ end_function
 begin_function
 name|int
 name|trfeed
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 9210                 */
 block|{
 if|if
@@ -5373,7 +5387,9 @@ end_function
 begin_function
 name|int
 name|trfill
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 9220 */
 block|{
 if|if
@@ -5579,7 +5595,9 @@ end_function
 begin_function
 name|void
 name|closing
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 10000 */
 block|{
 name|int
@@ -5731,7 +5749,9 @@ end_function
 begin_function
 name|void
 name|caveclose
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* 11000 */
 block|{
 name|int

@@ -101,20 +101,14 @@ begin_function
 name|void
 name|datime
 parameter_list|(
-name|d
-parameter_list|,
-name|t
-parameter_list|)
 name|int
 modifier|*
 name|d
-decl_stmt|,
-decl|*
+parameter_list|,
+name|int
+modifier|*
 name|t
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|tm
@@ -205,7 +199,7 @@ operator|->
 name|tm_min
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|char
@@ -219,7 +213,9 @@ end_decl_stmt
 begin_function
 name|void
 name|poof
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|strcpy
 argument_list|(
@@ -249,7 +245,9 @@ end_function
 begin_function
 name|int
 name|Start
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|d
@@ -377,7 +375,9 @@ begin_function
 specifier|static
 name|int
 name|wizard
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 comment|/* not as complex as advent/10 (for now)        */
 block|{
 name|char
@@ -457,7 +457,9 @@ end_function
 begin_function
 name|void
 name|ciao
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -559,11 +561,9 @@ begin_function
 name|int
 name|ran
 parameter_list|(
-name|range
-parameter_list|)
 name|int
 name|range
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i

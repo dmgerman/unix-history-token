@@ -594,7 +594,9 @@ end_decl_stmt
 begin_function
 name|void
 name|crc_start
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|crcval
 operator|=
@@ -605,23 +607,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Process nr bytes at a time; ptr points to them */
+end_comment
+
 begin_function
 name|u_long
 name|crc
 parameter_list|(
-name|ptr
-parameter_list|,
-name|nr
-parameter_list|)
-comment|/* Process nr bytes at a time; ptr points to them */
 specifier|const
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|,
 name|int
 name|nr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i

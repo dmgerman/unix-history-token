@@ -686,19 +686,23 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Two passes on data: first to get checksum, second */
+end_comment
+
+begin_comment
+comment|/* to output the data using checksum to start random #s */
+end_comment
+
 begin_function
 name|int
 name|save
 parameter_list|(
-name|outfile
-parameter_list|)
-comment|/* Two passes on data: first to get checksum, second */
 specifier|const
 name|char
 modifier|*
 name|outfile
-decl_stmt|;
-comment|/* to output the data using checksum to start random #s */
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -888,13 +892,11 @@ begin_function
 name|int
 name|restore
 parameter_list|(
-name|infile
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|infile
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
