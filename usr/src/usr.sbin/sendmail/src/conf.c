@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.27 (Berkeley) %G%"
+literal|"@(#)conf.c	8.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5016,6 +5016,8 @@ name|f_bavail
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
@@ -5196,8 +5198,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|TRUE
 return|;
