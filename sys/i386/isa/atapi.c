@@ -5975,7 +5975,7 @@ name|atapi_load
 argument_list|,
 name|atapi_unload
 argument_list|,
-name|nosys
+name|lkm_nullcmd
 argument_list|)
 expr_stmt|;
 block|}
