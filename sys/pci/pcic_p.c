@@ -225,6 +225,30 @@ literal|"TI PCI-1251B PCI-CardBus Bridge"
 operator|)
 return|;
 case|case
+name|PCI_DEVICE_ID_PCIC_TI1410
+case|:
+return|return
+operator|(
+literal|"TI PCI-1410 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1420
+case|:
+return|return
+operator|(
+literal|"TI PCI-1420 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1451
+case|:
+return|return
+operator|(
+literal|"TI PCI-1451 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
 name|PCI_DEVICE_ID_TOSHIBA_TOPIC95
 case|:
 return|return
