@@ -51,6 +51,9 @@ decl_stmt|;
 name|uint16_t
 name|ndis_did
 decl_stmt|;
+name|uint32_t
+name|ndis_subsys
+decl_stmt|;
 name|char
 modifier|*
 name|ndis_name
@@ -256,6 +259,9 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|ndis_tree
+decl_stmt|;
+name|int
+name|ndis_devidx
 decl_stmt|;
 name|interface_type
 name|ndis_iftype

@@ -33,6 +33,9 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|int
+name|nc_idx
+decl_stmt|;
 block|}
 struct|;
 end_struct
