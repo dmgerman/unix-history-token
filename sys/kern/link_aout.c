@@ -376,7 +376,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|_dynamic
-name|_DYNAMIC
+name|__DYNAMIC
 decl_stmt|;
 end_decl_stmt
 
@@ -399,7 +399,7 @@ modifier|*
 name|dp
 init|=
 operator|&
-name|_DYNAMIC
+name|__DYNAMIC
 decl_stmt|;
 endif|#
 directive|endif
@@ -425,8 +425,6 @@ operator|=
 name|linker_make_file
 argument_list|(
 name|kernelname
-argument_list|,
-name|af
 argument_list|,
 operator|&
 name|link_aout_class
