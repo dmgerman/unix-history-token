@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machine.c	5.1 (Berkeley) %G%"
+literal|"@(#)machine.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,43 +46,25 @@ directive|endif
 endif|not lint
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_comment
 comment|/*  * machine -- print machine type  */
 end_comment
 
 begin_function
 name|main
-parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
-name|char
-modifier|*
-name|argv
-index|[]
-decl_stmt|;
+parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|vax
-name|printf
+name|puts
 argument_list|(
-literal|"vax\n"
+name|MACHINE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|tahoe
-name|printf
-argument_list|(
-literal|"tahoe\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|0
