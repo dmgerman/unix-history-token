@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.26 (Berkeley) %G%"
+literal|"@(#)hash.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,8 +546,12 @@ name|save_errno
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|flags
 operator|&
+name|O_ACCMODE
+operator|)
+operator|==
 name|O_WRONLY
 condition|)
 block|{
