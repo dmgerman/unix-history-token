@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  */
+comment|/*   */
+end_comment
+
+begin_comment
+comment|/*  * HISTORY  *   *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *   */
 end_comment
 
 begin_include
@@ -393,7 +397,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Too many scsi changers..(%d> %d) reconfigure kernel"
+literal|"Too many scsi changers..(%d> %d) reconfigure kernel\n"
 argument_list|,
 operator|(
 name|unit
@@ -1552,7 +1556,7 @@ name|READ_ELEMENT_STATUS
 expr_stmt|;
 name|scsi_cmd
 operator|.
-name|element_type_code
+name|byte2
 operator|=
 name|type
 expr_stmt|;
@@ -2385,13 +2389,13 @@ name|MODE_SENSE
 expr_stmt|;
 name|scsi_cmd
 operator|.
-name|dbd
+name|byte2
 operator|=
-name|l
+name|SMS_DBD
 expr_stmt|;
 name|scsi_cmd
 operator|.
-name|page_code
+name|page
 operator|=
 literal|0x3f
 expr_stmt|;
@@ -3418,12 +3422,14 @@ switch|switch
 condition|(
 name|sense
 operator|->
-name|error_class
+name|error_code
+operator|&
+name|SSD_ERRCODE
 condition|)
 block|{
 comment|/***************************************************************\ 	* If it's class 7, use the extended stuff and interpret the key	* 	\***************************************************************/
 case|case
-literal|7
+literal|0x70
 case|:
 block|{
 name|key
@@ -3434,7 +3440,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|sense_key
+name|flags
+operator|&
+name|SSD_KEY
 expr_stmt|;
 if|if
 condition|(
@@ -3444,7 +3452,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|ili
+name|flags
+operator|&
+name|SSD_ILI
 condition|)
 if|if
 condition|(
@@ -3462,7 +3472,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 name|xs
 operator|->
@@ -3515,7 +3527,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|eom
+name|flags
+operator|&
+name|SSD_EOM
 condition|)
 if|if
 condition|(
@@ -3535,7 +3549,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|filemark
+name|flags
+operator|&
+name|SSD_FILEMARK
 condition|)
 if|if
 condition|(
@@ -3554,19 +3570,19 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"code%x class%x valid%x\n"
+literal|"code%x valid%x\n"
 argument_list|,
 name|sense
 operator|->
 name|error_code
+operator|&
+name|SSD_ERRCODE
 argument_list|,
 name|sense
 operator|->
-name|error_class
-argument_list|,
-name|sense
-operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3587,7 +3603,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|sense_key
+name|flags
+operator|&
+name|SSD_KEY
 argument_list|,
 name|sense
 operator|->
@@ -3595,7 +3613,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|ili
+name|flags
+operator|&
+name|SSD_ILI
 argument_list|,
 name|sense
 operator|->
@@ -3603,7 +3623,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|eom
+name|flags
+operator|&
+name|SSD_EOM
 argument_list|,
 name|sense
 operator|->
@@ -3611,7 +3633,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|filemark
+name|flags
+operator|&
+name|SSD_FILEMARK
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3886,7 +3910,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -4040,7 +4066,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -4325,7 +4353,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -4426,7 +4456,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -4620,7 +4652,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -4741,7 +4775,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -4846,27 +4882,7 @@ block|}
 break|break;
 block|}
 comment|/***************************************************************\ 	* If it's NOT class 7, just report it.				* 	\***************************************************************/
-case|case
-literal|0
-case|:
-case|case
-literal|1
-case|:
-case|case
-literal|2
-case|:
-case|case
-literal|3
-case|:
-case|case
-literal|4
-case|:
-case|case
-literal|5
-case|:
-case|case
-literal|6
-case|:
+default|default:
 block|{
 if|if
 condition|(
@@ -4875,24 +4891,24 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: error class %d code %d\n"
+literal|"st%d: error code %d\n"
 argument_list|,
 name|unit
 argument_list|,
 name|sense
 operator|->
-name|error_class
-argument_list|,
-name|sense
-operator|->
 name|error_code
+operator|&
+name|SSD_ERRCODE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 if|if
 condition|(
