@@ -7,105 +7,6 @@ begin_comment
 comment|/*  * m i d w a y r e g . h  *  * this file contains the description of the ENI ATM midway chip  * data structures.   see midway.c for more details.  *  * $FreeBSD$  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sparc
-argument_list|)
-end_if
-
-begin_comment
-comment|/* XXX: gross.   netbsd/sparc doesn't have machine/bus.h yet. */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|bus_space_tag_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|pci_chipset_tag_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|caddr_t
-name|bus_space_handle_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|bus_size_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|caddr_t
-name|bus_addr_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|bus_space_read_4
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|)
-value|((void) t,                            \     (*(volatile u_int32_t *)((h) + (o))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_write_4
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|((void) t, ((void)(*(volatile u_int32_t *)((h) + (o)) = (v))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|x
-parameter_list|)
-value|((u_int32_t)(x))
-end_define
-
-begin_comment
-comment|/* sun4c dvma */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -148,6 +49,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MID_VCI_BITS
+value|10
+end_define
+
+begin_comment
+comment|/* number of bits */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MID_NTX_CH
 value|8
 end_define
@@ -173,6 +85,17 @@ end_comment
 
 begin_comment
 comment|/* byte offsets from en_base of various items */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_SUNIOFF
+value|0x020000
+end_define
+
+begin_comment
+comment|/* SUNI offset */
 end_comment
 
 begin_define
@@ -331,6 +254,17 @@ end_define
 
 begin_comment
 comment|/* mac address offset (adaptec only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_NSUNI
+value|256
+end_define
+
+begin_comment
+comment|/* suni registers */
 end_comment
 
 begin_comment
@@ -910,11 +844,15 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|(((MIDX_LOC(X)<< MIDV_LOCTOPSHFT) * sizeof(u_int32_t)) + MID_RAMOFF)
+value|(((MIDX_LOC(X)<< MIDV_LOCTOPSHFT) * sizeof(uint32_t)) + MID_RAMOFF)
 end_define
 
 begin_comment
 comment|/* the following two regs are word offsets in the block */
+end_comment
+
+begin_comment
+comment|/* xmit read pointer (r/o) */
 end_comment
 
 begin_define
@@ -924,11 +862,11 @@ name|MIDX_READPTR
 parameter_list|(
 name|N
 parameter_list|)
-value|(0x40044+((N)*0x10))
+value|(0x40044 + ((N) * 0x10))
 end_define
 
 begin_comment
-comment|/* xmit read pointer (r/o) */
+comment|/* seg currently in DMA (r/o) */
 end_comment
 
 begin_define
@@ -938,12 +876,8 @@ name|MIDX_DESCSTART
 parameter_list|(
 name|N
 parameter_list|)
-value|(0x40048+((N)*0x10))
+value|(0x40048 + ((N) * 0x10))
 end_define
-
-begin_comment
-comment|/* seg currently in DMA (r/o) */
-end_comment
 
 begin_comment
 comment|/*  * obmem items  */
@@ -960,7 +894,7 @@ name|MID_VC
 parameter_list|(
 name|N
 parameter_list|)
-value|(MID_RAMOFF+((N)*0x10))
+value|(MID_RAMOFF + ((N) * 0x10))
 end_define
 
 begin_define
@@ -1291,6 +1225,10 @@ begin_comment
 comment|/* # of descriptors */
 end_comment
 
+begin_comment
+comment|/* convert byte offset to reg value */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1302,7 +1240,7 @@ value|(((N) - MID_DRQOFF)>> 3)
 end_define
 
 begin_comment
-comment|/* convert byte offset to reg value */
+comment|/* and back */
 end_comment
 
 begin_define
@@ -1314,10 +1252,6 @@ name|N
 parameter_list|)
 value|(((N)<< 3) + MID_DRQOFF)
 end_define
-
-begin_comment
-comment|/* and back */
-end_comment
 
 begin_comment
 comment|/* note: format of word 1 of RXQ is different beween ENI and ADP cards */
@@ -1337,7 +1271,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|( ((CNT)<< 16)|((VC)<< 6)|(END)|(TYPE) )
+value|(((CNT)<< 16) | ((VC)<< 6) | (END) | (TYPE))
 end_define
 
 begin_define
@@ -1354,7 +1288,7 @@ parameter_list|,
 name|JK
 parameter_list|)
 define|\
-value|( ((CNT)<< 12)|((VC)<< 2)|((END)>> 4)|(((JK) != 0) ? 1 : 0))
+value|(((CNT)<< 12) | ((VC)<< 2) | ((END)>> 4) | (((JK) != 0) ? 1 : 0))
 end_define
 
 begin_comment
@@ -1372,6 +1306,10 @@ begin_comment
 comment|/* # of descriptors */
 end_comment
 
+begin_comment
+comment|/* convert byte offset to reg value */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1383,7 +1321,7 @@ value|(((N) - MID_DTQOFF)>> 3)
 end_define
 
 begin_comment
-comment|/* convert byte offset to reg value */
+comment|/* and back */
 end_comment
 
 begin_define
@@ -1395,10 +1333,6 @@ name|N
 parameter_list|)
 value|(((N)<< 3) + MID_DTQOFF)
 end_define
-
-begin_comment
-comment|/* and back */
-end_comment
 
 begin_comment
 comment|/* note: format of word 1 of TXQ is different beween ENI and ADP cards */
@@ -1418,7 +1352,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|( ((CNT)<< 16)|((CHN)<< 6)|(END)|(TYPE) )
+value|(((CNT)<< 16) | ((CHN)<< 6) | (END) | (TYPE))
 end_define
 
 begin_define
@@ -1435,7 +1369,7 @@ parameter_list|,
 name|JK
 parameter_list|)
 define|\
-value|( ((CNT)<< 12)|((CHN)<< 2)|((END)>> 4)|(((JK) != 0) ? 1 : 0) )
+value|(((CNT)<< 12) | ((CHN)<< 2) | ((END)>> 4) | (((JK) != 0) ? 1 : 0))
 end_define
 
 begin_comment
@@ -1589,7 +1523,7 @@ begin_define
 define|#
 directive|define
 name|MIDDMA_MAXBURST
-value|(16 * sizeof(u_int32_t))
+value|(16 * sizeof(uint32_t))
 end_define
 
 begin_comment
@@ -1611,6 +1545,10 @@ begin_comment
 comment|/* max # entries on slist */
 end_comment
 
+begin_comment
+comment|/* convert byte offset to reg value */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1622,7 +1560,7 @@ value|(((N) - MID_SLOFF)>> 2)
 end_define
 
 begin_comment
-comment|/* convert byte offset to reg value */
+comment|/* and back */
 end_comment
 
 begin_define
@@ -1636,15 +1574,11 @@ value|(((N)<< 2) + MID_SLOFF)
 end_define
 
 begin_comment
-comment|/* and back */
-end_comment
-
-begin_comment
 comment|/*  * data in the buffer area of obmem  */
 end_comment
 
 begin_comment
-comment|/*  * recv buffer desc. (1 u_int32_t at start of buffer)  */
+comment|/*  * recv buffer desc. (1 uint32_t at start of buffer)  */
 end_comment
 
 begin_define
@@ -1753,7 +1687,7 @@ comment|/* cell count */
 end_comment
 
 begin_comment
-comment|/*  * xmit buffer desc. (2 u_int32_t's at start of buffer)  * (note we treat the PR& RATE as a single u_int8_t)  */
+comment|/*  * xmit buffer desc. (2 uint32_t's at start of buffer)  * (note we treat the PR& RATE as a single uint8_t)  */
 end_comment
 
 begin_define
@@ -1775,7 +1709,7 @@ parameter_list|,
 name|CNT
 parameter_list|)
 define|\
-value|(MID_TBD_STDID|(AAL)|((PR_RATE)<< 19)|(CNT))
+value|(MID_TBD_STDID | (AAL) | ((PR_RATE)<< 19) | (CNT))
 end_define
 
 begin_define
@@ -1823,7 +1757,7 @@ parameter_list|,
 name|CLP
 parameter_list|)
 define|\
-value|(((VCI)<< 4)|((PTI)<< 1)|(CLP))
+value|(((VCI)<< 4) | ((PTI)<< 1) | (CLP))
 end_define
 
 begin_comment
@@ -1849,7 +1783,7 @@ parameter_list|,
 name|LEN
 parameter_list|)
 define|\
-value|(((UU)<< 24)|((CPI)<< 16)|(LEN))
+value|(((UU)<< 24) | ((CPI)<< 16) | (LEN))
 end_define
 
 begin_define
