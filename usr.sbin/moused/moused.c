@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.16 1998/03/06 03:09:31 yokota Exp $"
+literal|"$Id: moused.c,v 1.17 1998/03/07 09:03:43 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3448,7 +3448,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: moused [-3DRcdfs] [-F rate] [-r resolution] [-S baudrate] [-C threshold]"
+literal|"usage: moused [-3DRcdfs] [-I file] [-F rate] [-r resolution] [-S baudrate] [-C threshold]"
 argument_list|,
 literal|"              [-m N=M] [-z N] [-t<mousetype>] -p<port>"
 argument_list|,
