@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.70.2.31 1995/06/05 12:04:01 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.70.2.32 1995/06/05 15:17:09 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1070,6 +1070,10 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|Device
+modifier|*
+name|dev
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1194,22 +1198,136 @@ argument_list|(
 literal|"Resurrecting /dev entries for slices.."
 argument_list|)
 expr_stmt|;
-comment|/* This gives us our slice entries back, which we saved for this */
+name|dev
+operator|=
+name|deviceFind
+argument_list|(
+name|NULL
+argument_list|,
+name|DEVICE_TYPE_DISK
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SystemWasInstalled
-operator|&&
+name|dev
+condition|)
+name|msgFatal
+argument_list|(
+literal|"Couldn't get a disk device list!"
+argument_list|)
+expr_stmt|;
+comment|/* Resurrect the slices that the former clobbered */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|devs
+index|[
+name|i
+index|]
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|Disk
+modifier|*
+name|disk
+init|=
+operator|(
+name|Disk
+operator|*
+operator|)
+name|devs
+index|[
+name|i
+index|]
+operator|->
+name|private
+decl_stmt|;
+name|Chunk
+modifier|*
+name|c1
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|disk
+operator|->
+name|chunks
+condition|)
+name|msgFatal
+argument_list|(
+literal|"No chunk list found for %s!"
+argument_list|,
+name|disk
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|c1
+operator|=
+name|disk
+operator|->
+name|chunks
+operator|->
+name|part
+init|;
+name|c1
+condition|;
+name|c1
+operator|=
+name|c1
+operator|->
+name|next
+control|)
+block|{
+if|if
+condition|(
+name|c1
+operator|->
+name|type
+operator|==
+name|freebsd
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Making slice entries for %s"
+argument_list|,
+name|c1
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|vsystem
 argument_list|(
-literal|"mv -f /tmp/dev/* /dev; rmdir /tmp/dev"
+literal|"cd /dev; sh MAKEDEV %sh"
+argument_list|,
+name|c1
+operator|->
+name|name
 argument_list|)
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Unable to move all the old devs back.  Hmmm!"
+literal|"Unable to make slice entries for %s!"
+argument_list|,
+name|c1
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+block|}
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -1841,30 +1959,6 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Couldn't clone the /dev files!"
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-name|Mkdir
-argument_list|(
-literal|"/mnt/tmp"
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vsystem
-argument_list|(
-literal|"find -x /dev | cpio -pdmv /mnt/tmp"
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Couldn't create a backup copy of the /dev files!"
 argument_list|)
 expr_stmt|;
 return|return
