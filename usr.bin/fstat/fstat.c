@@ -3117,9 +3117,6 @@ name|rdev
 operator|=
 name|dev2udev
 argument_list|(
-operator|(
-name|dev_t
-operator|)
 name|vnode
 operator|.
 name|v_rdev
@@ -4303,7 +4300,9 @@ name|dev2udev
 parameter_list|(
 name|dev
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 block|{

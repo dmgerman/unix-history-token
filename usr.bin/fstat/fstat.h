@@ -120,7 +120,9 @@ begin_function_decl
 name|udev_t
 name|dev2udev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;
