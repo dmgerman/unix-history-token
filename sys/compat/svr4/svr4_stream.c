@@ -1113,8 +1113,6 @@ condition|(
 name|KTRPOINT
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|KTR_GENIO
 argument_list|)
@@ -1592,8 +1590,6 @@ condition|(
 name|KTRPOINT
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|KTR_GENIO
 argument_list|)
