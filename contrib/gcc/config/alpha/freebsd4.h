@@ -79,6 +79,26 @@ name|TARGET_VERSION
 value|fprintf (stderr, " (FreeBSD/alpha ELF)");
 end_define
 
+begin_define
+define|#
+directive|define
+name|SWITCH_TAKES_ARG
+parameter_list|(
+name|CHAR
+parameter_list|)
+value|(FBSD_SWITCH_TAKES_ARG(CHAR))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORD_SWITCH_TAKES_ARG
+parameter_list|(
+name|STR
+parameter_list|)
+value|(FBSD_WORD_SWITCH_TAKES_ARG(STR))
+end_define
+
 begin_undef
 undef|#
 directive|undef
