@@ -385,7 +385,7 @@ case|:
 case|case
 name|ScopeValueError
 case|:
-comment|/* the following fails because "type" is defined as "Filing4_type".  Argh!! /*		problem = (int) (((ScopeTypeErrorArgs *) Message)->problem); /*		problemstr = sprintf(tempbuf,"problem: %s; type: %d", /*				argproblems[problem], /*				((ScopeTypeErrorArgs *) Message)->type); /*		break;  */
+comment|/* the following fails because "type" is defined as "Filing4_type".  Argh!! /*		problem = (int) (((ScopeTypeErrorArgs *) Message)->problem); /*		(void)sprintf(tempbuf,"problem: %s; type: %d", /*				argproblems[problem], /*				((ScopeTypeErrorArgs *) Message)->type); /*		problemstr = tempbuf; /*		break;  */
 case|case
 name|RangeError
 case|:
