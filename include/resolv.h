@@ -167,6 +167,28 @@ begin_comment
 comment|/* should reflect bit field size */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RES_MAXRETRANS
+value|30
+end_define
+
+begin_comment
+comment|/* only for resolv.conf/RES_OPTIONS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_MAXRETRY
+value|5
+end_define
+
+begin_comment
+comment|/* only for resolv.conf/RES_OPTIONS */
+end_comment
+
 begin_struct
 struct|struct
 name|__res_state
