@@ -584,6 +584,8 @@ name|memcpy
 argument_list|(
 name|aligned
 argument_list|,
+name|data
+operator|.
 name|misaligned
 argument_list|,
 sizeof|sizeof
