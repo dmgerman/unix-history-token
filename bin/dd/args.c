@@ -295,8 +295,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|off_t
+name|get_offset
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|arg
 block|{
@@ -828,6 +843,38 @@ name|cfunc
 operator|=
 name|def
 expr_stmt|;
+comment|/* 	 * Bail out if the calculation of a file offset would overflow. 	 */
+if|if
+condition|(
+name|in
+operator|.
+name|offset
+operator|>
+name|QUAD_MAX
+operator|/
+name|in
+operator|.
+name|dbsz
+operator|||
+name|out
+operator|.
+name|offset
+operator|>
+name|QUAD_MAX
+operator|/
+name|out
+operator|.
+name|dbsz
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"seek offsets cannot be larger than %qd"
+argument_list|,
+name|QUAD_MAX
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -897,12 +944,14 @@ decl_stmt|;
 block|{
 name|quad_t
 name|res
-init|=
+decl_stmt|;
+name|res
+operator|=
 name|get_num
 argument_list|(
 name|arg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|res
@@ -911,7 +960,7 @@ literal|1
 operator|||
 name|res
 operator|>
-name|INT_MAX
+name|SSIZE_MAX
 condition|)
 name|errx
 argument_list|(
@@ -919,7 +968,7 @@ literal|1
 argument_list|,
 literal|"bs must be between 1 and %d"
 argument_list|,
-name|INT_MAX
+name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
 name|in
@@ -931,7 +980,7 @@ operator|.
 name|dbsz
 operator|=
 operator|(
-name|int
+name|size_t
 operator|)
 name|res
 expr_stmt|;
@@ -952,12 +1001,14 @@ decl_stmt|;
 block|{
 name|quad_t
 name|res
-init|=
+decl_stmt|;
+name|res
+operator|=
 name|get_num
 argument_list|(
 name|arg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|res
@@ -966,7 +1017,7 @@ literal|1
 operator|||
 name|res
 operator|>
-name|INT_MAX
+name|SSIZE_MAX
 condition|)
 name|errx
 argument_list|(
@@ -974,13 +1025,13 @@ literal|1
 argument_list|,
 literal|"cbs must be between 1 and %d"
 argument_list|,
-name|INT_MAX
+name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
 name|cbsz
 operator|=
 operator|(
-name|int
+name|size_t
 operator|)
 name|res
 expr_stmt|;
@@ -1016,19 +1067,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cpy_cnt
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"count cannot be negative"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1051,19 +1089,6 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|files_cnt
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"files cannot be negative"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1079,6 +1104,9 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
+name|quad_t
+name|res
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1089,14 +1117,13 @@ name|C_BS
 operator|)
 condition|)
 block|{
-name|quad_t
 name|res
-init|=
+operator|=
 name|get_num
 argument_list|(
 name|arg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|res
@@ -1105,7 +1132,7 @@ literal|1
 operator|||
 name|res
 operator|>
-name|INT_MAX
+name|SSIZE_MAX
 condition|)
 name|errx
 argument_list|(
@@ -1162,6 +1189,9 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
+name|quad_t
+name|res
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1172,14 +1202,13 @@ name|C_BS
 operator|)
 condition|)
 block|{
-name|quad_t
 name|res
-init|=
+operator|=
 name|get_num
 argument_list|(
 name|arg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|res
@@ -1188,15 +1217,15 @@ literal|1
 operator|||
 name|res
 operator|>
-name|INT_MAX
+name|SSIZE_MAX
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"ibs must be between 1 and %d"
+literal|"obs must be between 1 and %d"
 argument_list|,
-name|INT_MAX
+name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
 name|out
@@ -1204,7 +1233,7 @@ operator|.
 name|dbsz
 operator|=
 operator|(
-name|int
+name|size_t
 operator|)
 name|res
 expr_stmt|;
@@ -1249,7 +1278,7 @@ name|out
 operator|.
 name|offset
 operator|=
-name|get_num
+name|get_offset
 argument_list|(
 name|arg
 argument_list|)
@@ -1273,7 +1302,7 @@ name|in
 operator|.
 name|offset
 operator|=
-name|get_num
+name|get_offset
 argument_list|(
 name|arg
 argument_list|)
@@ -1283,6 +1312,7 @@ end_function
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|conv
 block|{
@@ -1295,6 +1325,7 @@ name|set
 decl_stmt|,
 name|noset
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|ctab
@@ -1505,17 +1536,8 @@ argument_list|,
 literal|","
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|cp
 operator|=
-operator|(
-expr|struct
-name|conv
-operator|*
-operator|)
 name|bsearch
 argument_list|(
 operator|&
@@ -1542,7 +1564,12 @@ argument_list|)
 argument_list|,
 name|c_conv
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -1692,6 +1719,8 @@ expr_stmt|;
 if|if
 condition|(
 name|errno
+operator|!=
+literal|0
 condition|)
 comment|/* Overflow or underflow. */
 name|err
@@ -1709,7 +1738,7 @@ name|expr
 operator|==
 name|val
 condition|)
-comment|/* Not a valid number */
+comment|/* No valid digits. */
 name|errx
 argument_list|(
 literal|1
@@ -1921,6 +1950,60 @@ expr_stmt|;
 block|}
 return|return
 operator|(
+name|num
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|off_t
+name|get_offset
+parameter_list|(
+name|val
+parameter_list|)
+name|char
+modifier|*
+name|val
+decl_stmt|;
+block|{
+name|quad_t
+name|num
+decl_stmt|;
+name|num
+operator|=
+name|get_num
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|num
+operator|>
+name|QUAD_MAX
+operator|||
+name|num
+operator|<
+literal|0
+condition|)
+comment|/* XXX quad_t != off_t */
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: illegal offset"
+argument_list|,
+name|oper
+argument_list|)
+expr_stmt|;
+comment|/* Too big/negative. */
+return|return
+operator|(
+operator|(
+name|off_t
+operator|)
 name|num
 operator|)
 return|;

@@ -203,7 +203,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|cbsz
 decl_stmt|;
 end_decl_stmt
@@ -224,6 +224,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|u_char
 modifier|*
 name|ctab
@@ -232,20 +233,36 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|u_char
 name|a2e_32V
 index|[]
 decl_stmt|,
 name|a2e_POSIX
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|u_char
+name|e2a_32V
+index|[]
 decl_stmt|,
+name|e2a_POSIX
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u_char
 name|a2ibm_32V
 index|[]
 decl_stmt|,
 name|a2ibm_POSIX
-index|[]
-decl_stmt|,
-name|e2a_32V
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -253,13 +270,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_char
-name|e2a_POSIX
-index|[]
-decl_stmt|,
-name|l2u
-index|[]
-decl_stmt|,
-name|u2l
+name|casetab
 index|[]
 decl_stmt|;
 end_decl_stmt

@@ -21,15 +21,15 @@ modifier|*
 name|dbp
 decl_stmt|;
 comment|/* current buffer I/O address */
-name|int
+name|size_t
 name|dbcnt
 decl_stmt|;
 comment|/* current buffer byte count */
-name|int
+name|size_t
 name|dbrcnt
 decl_stmt|;
 comment|/* last read byte count */
-name|int
+name|size_t
 name|dbsz
 decl_stmt|;
 comment|/* buffer size */
@@ -74,19 +74,19 @@ name|off_t
 name|offset
 decl_stmt|;
 comment|/* # of blocks to skip */
-name|quad_t
+name|u_quad_t
 name|f_stats
 decl_stmt|;
 comment|/* # of full blocks processed */
-name|quad_t
+name|u_quad_t
 name|p_stats
 decl_stmt|;
 comment|/* # of partial blocks processed */
-name|quad_t
+name|u_quad_t
 name|s_stats
 decl_stmt|;
 comment|/* # of odd swab blocks */
-name|quad_t
+name|u_quad_t
 name|t_stats
 decl_stmt|;
 comment|/* # of truncations */
@@ -99,31 +99,31 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|quad_t
+name|u_quad_t
 name|in_full
 decl_stmt|;
 comment|/* # of full input blocks */
-name|quad_t
+name|u_quad_t
 name|in_part
 decl_stmt|;
 comment|/* # of partial input blocks */
-name|quad_t
+name|u_quad_t
 name|out_full
 decl_stmt|;
 comment|/* # of full output blocks */
-name|quad_t
+name|u_quad_t
 name|out_part
 decl_stmt|;
 comment|/* # of partial output blocks */
-name|quad_t
+name|u_quad_t
 name|trunc
 decl_stmt|;
 comment|/* # of truncated records */
-name|quad_t
+name|u_quad_t
 name|swab
 decl_stmt|;
 comment|/* # of odd-length swab blocks */
-name|quad_t
+name|u_quad_t
 name|bytes
 decl_stmt|;
 comment|/* # of bytes written */

@@ -92,16 +92,17 @@ name|void
 name|pos_in
 parameter_list|()
 block|{
+name|off_t
+name|cnt
+decl_stmt|;
 name|int
-name|bcnt
-decl_stmt|,
 name|warned
 decl_stmt|;
 name|ssize_t
 name|nr
 decl_stmt|;
-name|off_t
-name|cnt
+name|size_t
+name|bcnt
 decl_stmt|;
 comment|/* If not a character, pipe or tape device, try to seek on it. */
 if|if
@@ -155,6 +156,8 @@ operator|-
 literal|1
 operator|&&
 name|errno
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
@@ -170,21 +173,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Read the data.  If a pipe, read until satisfy the number of bytes 	 * being skipped.  No differentiation for reading complete and partial 	 * blocks for other devices. 	 */
-if|if
-condition|(
-name|in
-operator|.
-name|offset
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"skip must be positive"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|bcnt
@@ -407,6 +395,8 @@ operator|-
 literal|1
 operator|&&
 name|errno
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
@@ -476,21 +466,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Read it. */
-if|if
-condition|(
-name|out
-operator|.
-name|offset
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"seek must be positive"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|cnt
