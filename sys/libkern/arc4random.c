@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/random.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/libkern.h>
 end_include
 

@@ -375,7 +375,7 @@ parameter_list|()
 block|{
 name|tcp_iss
 operator|=
-name|random
+name|arc4random
 argument_list|()
 expr_stmt|;
 comment|/* wrong, but better than a constant */
