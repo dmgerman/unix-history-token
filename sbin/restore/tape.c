@@ -223,14 +223,14 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|long
-name|tpblksread
+name|tapeaddr
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* TP_BSIZE blocks read */
+comment|/* current TP_BSIZE tape record */
 end_comment
 
 begin_decl_stmt
@@ -1032,9 +1032,6 @@ comment|/* push back this block */
 name|blksread
 operator|--
 expr_stmt|;
-name|tpblksread
-operator|--
-expr_stmt|;
 name|cvtflag
 operator|++
 expr_stmt|;
@@ -1539,9 +1536,9 @@ block|{
 name|long
 name|newvol
 decl_stmt|,
-name|savecnt
+name|prevtapea
 decl_stmt|,
-name|savetpcnt
+name|savecnt
 decl_stmt|,
 name|i
 decl_stmt|;
@@ -1575,6 +1572,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|prevtapea
+operator|=
+name|tapeaddr
+expr_stmt|;
+name|savecnt
+operator|=
+name|blksread
+expr_stmt|;
 if|if
 condition|(
 name|pipein
@@ -1624,20 +1629,8 @@ goto|goto
 name|gethdr
 goto|;
 block|}
-name|savecnt
-operator|=
-name|blksread
-expr_stmt|;
-name|savetpcnt
-operator|=
-name|tpblksread
-expr_stmt|;
 name|again
 label|:
-name|tpblksread
-operator|=
-name|savetpcnt
-expr_stmt|;
 if|if
 condition|(
 name|pipein
@@ -2184,13 +2177,13 @@ name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"read %ld recs, tape starts with %ld\n"
+literal|"last rec %ld, tape starts with %ld\n"
 argument_list|,
-name|tpblksread
+name|prevtapea
 argument_list|,
 name|tmpbuf
 operator|.
-name|c_firstrec
+name|c_tapea
 argument_list|)
 expr_stmt|;
 if|if
@@ -2219,12 +2212,6 @@ operator|!=
 name|USING
 condition|)
 block|{
-name|tpblksread
-operator|=
-name|tmpbuf
-operator|.
-name|c_firstrec
-expr_stmt|;
 comment|/* 			 * XXX Dump incorrectly sets c_count to 1 in the 			 * volume header of the first tape, so ignore 			 * c_count when volno == 1. 			 */
 if|if
 condition|(
@@ -2258,29 +2245,21 @@ if|if
 condition|(
 name|tmpbuf
 operator|.
-name|c_firstrec
-operator|>
-literal|0
-operator|&&
-name|tmpbuf
-operator|.
-name|c_firstrec
-operator|<
-name|tpblksread
-operator|-
-literal|1
+name|c_tapea
+operator|<=
+name|prevtapea
 condition|)
 block|{
-comment|/* 			 * -1 since we've read the volume header 			 */
+comment|/* 			 * Normally the value of c_tapea in the volume 			 * header is the record number of the header itself. 			 * However in the volume header following an EOT- 			 * terminated tape, it is the record number of the 			 * first continuation data block (dump bug?). 			 * 			 * The next record we want is `prevtapea + 1'. 			 */
 name|i
 operator|=
-name|tpblksread
+name|prevtapea
+operator|+
+literal|1
 operator|-
 name|tmpbuf
 operator|.
-name|c_firstrec
-operator|-
-literal|1
+name|c_tapea
 expr_stmt|;
 name|dprintf
 argument_list|(
@@ -4263,7 +4242,7 @@ expr_stmt|;
 name|blksread
 operator|++
 expr_stmt|;
-name|tpblksread
+name|tapeaddr
 operator|++
 expr_stmt|;
 return|return;
@@ -4762,7 +4741,7 @@ expr_stmt|;
 name|blksread
 operator|++
 expr_stmt|;
-name|tpblksread
+name|tapeaddr
 operator|++
 expr_stmt|;
 block|}
@@ -5807,6 +5786,12 @@ operator|.
 name|di_ogid
 expr_stmt|;
 block|}
+name|tapeaddr
+operator|=
+name|buf
+operator|->
+name|c_tapea
+expr_stmt|;
 if|if
 condition|(
 name|dflag
