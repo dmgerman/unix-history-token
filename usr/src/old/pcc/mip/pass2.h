@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pass2.h	4.2	86/10/15	*/
+comment|/*	pass2.h	4.2	86/10/29	*/
 end_comment
 
 begin_ifndef
@@ -985,6 +985,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|NEVEN
+value|0100000
+end_define
+
+begin_comment
+comment|/* even register required */
+end_comment
 
 begin_comment
 comment|/* register allocation */
