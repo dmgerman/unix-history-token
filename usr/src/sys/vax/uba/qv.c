@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)qv.c	1.3 (Berkeley) %G%"
+literal|"@(#)qv.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1448,8 +1448,8 @@ name|unit
 argument_list|)
 operator|==
 name|QVSPARE
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|CONS_HACK
 operator|||
 name|QVCHAN
