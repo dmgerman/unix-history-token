@@ -29,6 +29,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<link.h>
 end_include
 
@@ -116,9 +122,48 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|stat
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|Struct_Obj_Entry
 struct_decl|;
 end_struct_decl
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|Struct_Objlist_Entry
+block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|Struct_Objlist_Entry
+argument_list|)
+name|link
+expr_stmt|;
+name|struct
+name|Struct_Obj_Entry
+modifier|*
+name|obj
+decl_stmt|;
+block|}
+name|Objlist_Entry
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|STAILQ_HEAD
+argument_list|(
+argument|Struct_Objlist
+argument_list|,
+argument|Struct_Objlist_Entry
+argument_list|)
+name|Objlist
+expr_stmt|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -146,7 +191,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Shared object descriptor.  *  * Items marked with "(%)" are dynamically allocated, and must be freed  * when the structure is destroyed.  */
+comment|/*  * Shared object descriptor.  *  * Items marked with "(%)" are dynamically allocated, and must be freed  * when the structure is destroyed.  *  * CAUTION: It appears that the JDK port peeks into these structures.  * It looks at "next" and "mapbase" at least.  Don't add new members  * near the front, until this can be straightened out.  */
 end_comment
 
 begin_typedef
@@ -221,6 +266,12 @@ name|size_t
 name|phsize
 decl_stmt|;
 comment|/* Size of program header in bytes */
+specifier|const
+name|char
+modifier|*
+name|interp
+decl_stmt|;
+comment|/* Pathname of the interpreter, if any */
 comment|/* Items from the dynamic section. */
 name|Elf_Addr
 modifier|*
@@ -366,6 +417,27 @@ name|link_map
 name|linkmap
 decl_stmt|;
 comment|/* for GDB */
+name|Objlist
+name|dldags
+decl_stmt|;
+comment|/* Object belongs to these dlopened DAGs (%) */
+name|Objlist
+name|dagmembers
+decl_stmt|;
+comment|/* DAG has these members (%) */
+name|dev_t
+name|dev
+decl_stmt|;
+comment|/* Object's filesystem's device */
+name|ino_t
+name|ino
+decl_stmt|;
+comment|/* Object's inode number */
+name|unsigned
+name|long
+name|mark
+decl_stmt|;
+comment|/* Set to "curmark" to avoid repeat visits */
 block|}
 name|Obj_Entry
 typedef|;
@@ -418,6 +490,11 @@ name|int
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|stat
 modifier|*
 parameter_list|)
 function_decl|;
@@ -501,7 +578,6 @@ parameter_list|(
 name|unsigned
 name|long
 parameter_list|,
-specifier|const
 name|Obj_Entry
 modifier|*
 parameter_list|,
@@ -521,6 +597,26 @@ name|init_pltgot
 parameter_list|(
 name|Obj_Entry
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|obj_free
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Obj_Entry
+modifier|*
+name|obj_new
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -137,7 +137,6 @@ name|Obj_Entry
 modifier|*
 name|obj_rtld
 parameter_list|,
-specifier|const
 name|Obj_Entry
 modifier|*
 name|obj
