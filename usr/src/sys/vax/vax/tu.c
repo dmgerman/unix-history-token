@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tu.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tu.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -73,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"rsp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_define
@@ -471,6 +465,9 @@ function_decl|;
 specifier|register
 name|s
 expr_stmt|;
+name|int
+name|error
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -581,6 +578,10 @@ comment|/*  	 * Must initialize, reset the cassette 	 * and wait for things to s
 name|tureset
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -589,15 +590,31 @@ operator|)
 operator|&
 name|tu
 argument_list|,
+operator|(
 name|PZERO
 operator|+
 literal|1
+operator|)
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_TU_OPN
+name|devopn
 argument_list|,
 literal|0
 argument_list|)
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|tutab
 operator|.
 name|b_active
