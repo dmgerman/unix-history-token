@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pf.c,v 1.389.2.3 2004/04/10 09:38:19 brad Exp $ */
+comment|/*	$OpenBSD: pf.c,v 1.389.2.4 2004/04/30 23:27:57 brad Exp $ */
 end_comment
 
 begin_comment
@@ -30900,8 +30900,8 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|mtag
-operator|=
+if|if
+condition|(
 name|m_tag_find
 argument_list|(
 name|m0
@@ -30910,19 +30910,12 @@ name|PACKET_TAG_PF_ROUTED
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mtag
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-name|struct
-name|m_tag
-modifier|*
-name|mtag
-decl_stmt|;
+goto|goto
+name|bad
+goto|;
 name|mtag
 operator|=
 name|m_tag_get
@@ -30950,16 +30943,11 @@ argument_list|,
 name|mtag
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|oifp
 operator|!=
 name|ifp
-operator|&&
-name|mtag
-operator|==
-name|NULL
 condition|)
 block|{
 if|if
