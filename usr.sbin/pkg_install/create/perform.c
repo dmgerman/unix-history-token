@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.7 1993/09/18 03:39:20 jkh Exp $"
+literal|"$Id: perform.c,v 1.8 1994/05/19 18:27:41 alm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,14 +248,15 @@ expr_stmt|;
 comment|/*      * Run down the list and see if we've named it, if not stick in a name      * at the top.      */
 if|if
 condition|(
-operator|!
-name|in_plist
+name|find_plist
 argument_list|(
 operator|&
 name|plist
 argument_list|,
 name|PLIST_NAME
 argument_list|)
+operator|==
+name|NULL
 condition|)
 name|add_plist_top
 argument_list|(
