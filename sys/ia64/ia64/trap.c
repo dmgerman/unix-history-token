@@ -1222,6 +1222,12 @@ name|ucode
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Make sure we have a sane floating-point state in case the 	 * user has trashed it. 	 */
+name|ia64_set_fpsr
+argument_list|(
+name|IA64_FPSR_DEFAULT
+argument_list|)
+expr_stmt|;
 name|user
 operator|=
 operator|(
