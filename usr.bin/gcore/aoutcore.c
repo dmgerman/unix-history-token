@@ -47,17 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -66,6 +55,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Originally written by Eric Cooper in Fall 1981.  * Inspired by a version 6 program by Len Levin, 1978.  * Several pieces of code lifted from Bill Joy's 4BSD ps.  * Most recently, hacked beyond recognition for 4.4BSD by Steven McCanne,  * Lawrence Berkeley Laboratory.  *  * Portions of this software were developed by the Computer Systems  * Engineering group at Lawrence Berkeley Laboratory under DARPA  * contract BG 91-66 and contributed to Berkeley.  */
@@ -1347,12 +1350,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"seek executable: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"seek executable"
 argument_list|)
 expr_stmt|;
 name|cc
