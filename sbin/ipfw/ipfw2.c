@@ -1511,7 +1511,7 @@ name|void
 modifier|*
 name|optval
 parameter_list|,
-name|socklen_t
+name|uintptr_t
 name|optlen
 parameter_list|)
 block|{
@@ -7827,7 +7827,7 @@ argument_list|,
 name|data
 argument_list|,
 operator|(
-name|socklen_t
+name|uintptr_t
 operator|)
 operator|&
 name|nbytes
@@ -9012,7 +9012,7 @@ argument_list|,
 name|data
 argument_list|,
 operator|(
-name|socklen_t
+name|uintptr_t
 operator|)
 operator|&
 name|nbytes
@@ -17995,7 +17995,7 @@ argument_list|,
 name|rule
 argument_list|,
 operator|(
-name|socklen_t
+name|uintptr_t
 operator|)
 operator|&
 name|i
