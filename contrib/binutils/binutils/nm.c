@@ -5533,9 +5533,6 @@ block|{
 if|if
 condition|(
 name|filename_per_file
-operator|&&
-operator|!
-name|filename_per_symbol
 condition|)
 name|printf
 argument_list|(
