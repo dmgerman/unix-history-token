@@ -4891,7 +4891,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|long
+name|time_t
 name|t
 decl_stmt|;
 if|if
