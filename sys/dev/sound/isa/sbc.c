@@ -21,22 +21,6 @@ directive|include
 file|<dev/sound/pcm/sound.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|__SB_MIXER_C__
-end_define
-
-begin_comment
-comment|/* XXX warning... */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SB_NOMIXER
-end_define
-
 begin_include
 include|#
 directive|include
