@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_subr.c	4.5	%G%	*/
+comment|/*	tty_subr.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"../h/tty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tr.h"
 end_include
 
 begin_struct
