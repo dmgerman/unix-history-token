@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t6.c	2.1 (CWI) 85/07/18"
+literal|"@(#)t6.c	2.2 (CWI) 87/07/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -1592,6 +1592,7 @@ return|;
 else|else
 block|{
 comment|/* 				fprintf(ptid, "x xxx installed %s on %d\n", name ,k); 				*/
+comment|/* now install the name */
 name|fontlab
 index|[
 name|k
@@ -1599,7 +1600,7 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-comment|/* install the name */
+comment|/* 					 * and remember accociated with 					 * this font, ligature info etc. 					*/
 return|return
 operator|(
 name|k
@@ -2938,6 +2939,7 @@ specifier|register
 name|int
 name|lf
 decl_stmt|;
+comment|/* remember to map the font */
 if|if
 condition|(
 operator|(
@@ -2949,6 +2951,15 @@ name|fbits
 argument_list|(
 name|i
 argument_list|)
+operator|>
+name|NFONT
+condition|?
+literal|0
+else|:
+name|fbits
+argument_list|(
+name|i
+argument_list|)
 index|]
 operator|->
 name|ligfont
@@ -2956,12 +2967,14 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* font lacks ligatures */
 return|return
 operator|(
 name|i
 operator|)
 return|;
+block|}
 name|j
 operator|=
 name|getch0
