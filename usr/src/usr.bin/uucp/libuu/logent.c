@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logent.c	5.7 (Berkeley) %G%"
+literal|"@(#)logent.c	5.8	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -563,7 +563,7 @@ argument|;  	if (Sp != NULL) 		fclose (Sp); 	Sp = NULL; 	Stried =
 literal|0
 argument|; }
 comment|/*  *	make system log entry  */
-argument|syslog(text) char *text; { 	register struct tm *tp; 	extern struct tm *localtime();
+argument|log_xferstats(text) char *text; { 	register struct tm *tp; 	extern struct tm *localtime();
 ifdef|#
 directive|ifdef
 name|LOGBYSITE
