@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_conv.c	5.9 (Berkeley) %G%"
+literal|"@(#)bt_conv.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,20 +60,6 @@ include|#
 directive|include
 file|"btree.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|void
-name|kdswap
-name|__P
-argument_list|(
-operator|(
-name|PAGE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -144,7 +130,7 @@ operator|)
 name|t
 operator|)
 argument_list|,
-name|BTF_NEEDSWAP
+name|B_NEEDSWAP
 argument_list|)
 condition|)
 return|return;
@@ -540,7 +526,7 @@ operator|)
 name|t
 operator|)
 argument_list|,
-name|BTF_NEEDSWAP
+name|B_NEEDSWAP
 argument_list|)
 condition|)
 return|return;
