@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: cksum.c,v 1.5 1997/07/06 03:18:13 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -339,6 +339,24 @@ expr_stmt|;
 name|pfncn
 operator|=
 name|psum2
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|optarg
+operator|==
+literal|'3'
+condition|)
+block|{
+name|cfncn
+operator|=
+name|crc32
+expr_stmt|;
+name|pfncn
+operator|=
+name|pcrc
 expr_stmt|;
 block|}
 else|else
