@@ -738,7 +738,7 @@ begin_define
 define|#
 directive|define
 name|VAR_ROUTERFLAGS
-value|"routerflags"
+value|"router_flags"
 end_define
 
 begin_define
