@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"card.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sio.h"
 end_include
 
@@ -995,6 +1001,10 @@ name|resource
 modifier|*
 name|ioportres
 decl_stmt|;
+name|void
+modifier|*
+name|cookie
+decl_stmt|;
 comment|/* 	 * Data area for output buffers.  Someday we should build the output 	 * buffer queue without copying data. 	 */
 name|u_char
 name|obuf1
@@ -1349,7 +1359,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|int
 name|sio_pccard_detach
 name|__P
 argument_list|(
@@ -2261,9 +2271,8 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
-comment|/* Do not probe IRQ - pccardd has not arranged for it yet */
-comment|/* XXX Actually it has been asigned to you, but isn't activated   */
-comment|/* XXX until you specifically activate the resource for your use. */
+comment|/* Do not probe IRQ - pccard doesn't turn on the interrupt line */
+comment|/* until bus_setup_intr */
 name|SET_FLAG
 argument_list|(
 name|dev
@@ -2349,7 +2358,11 @@ argument_list|,
 literal|"NULL com in siounload\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -2366,8 +2379,71 @@ argument_list|,
 literal|"already unloaded!\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
+name|com
+operator|->
+name|gone
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|com
+operator|->
+name|irqres
+condition|)
+block|{
+name|bus_teardown_intr
+argument_list|(
+name|dev
+argument_list|,
+name|com
+operator|->
+name|irqres
+argument_list|,
+name|com
+operator|->
+name|cookie
+argument_list|)
+expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+literal|0
+argument_list|,
+name|com
+operator|->
+name|irqres
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|com
+operator|->
+name|ioportres
+condition|)
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
+argument_list|,
+name|com
+operator|->
+name|ioportres
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|com
@@ -2385,12 +2461,6 @@ name|TS_ISOPEN
 operator|)
 condition|)
 block|{
-name|com
-operator|->
-name|gone
-operator|=
-literal|1
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -2426,6 +2496,13 @@ operator|->
 name|tp
 argument_list|)
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Was busy, so crash likely\n"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2446,18 +2523,11 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|com
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unload,gone\n"
+literal|"unload, gone\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3907,10 +3977,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-name|void
-modifier|*
-name|ih
-decl_stmt|;
 name|u_int
 name|flags
 decl_stmt|;
@@ -5156,7 +5222,9 @@ argument_list|,
 name|com
 argument_list|,
 operator|&
-name|ih
+name|com
+operator|->
+name|cookie
 argument_list|)
 expr_stmt|;
 if|if
@@ -5186,7 +5254,9 @@ argument_list|,
 name|com
 argument_list|,
 operator|&
-name|ih
+name|com
+operator|->
+name|cookie
 argument_list|)
 expr_stmt|;
 if|if
