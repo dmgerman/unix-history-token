@@ -386,7 +386,7 @@ argument_list|)
 condition|)
 name|vsystem
 argument_list|(
-literal|"ldconfig /usr/lib /usr/local/lib /usr/X11R6/lib"
+literal|"ldconfig /usr/lib /usr/lib/compat /usr/local/lib /usr/X11R6/lib"
 argument_list|)
 expr_stmt|;
 comment|/* Be initially optimistic */
