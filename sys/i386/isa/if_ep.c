@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.61 1997/10/14 06:56:08 itojun Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.63 1997/10/26 04:53:53 nate Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -49,6 +49,12 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
 
 begin_include
 include|#
@@ -683,6 +689,16 @@ name|net_imask
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pccarddrv_set
+argument_list|,
+name|ep_info
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Initialize the device - called from Slot manager.  */
@@ -2082,19 +2098,6 @@ decl_stmt|;
 name|u_short
 name|k
 decl_stmt|;
-if|#
-directive|if
-name|NCARD
-operator|>
-literal|0
-name|pccard_add_driver
-argument_list|(
-operator|&
-name|ep_info
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(

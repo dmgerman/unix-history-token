@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.32 1997/10/21 17:57:31 nate Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.34 1997/10/26 04:53:49 nate Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3934,6 +3934,16 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pccarddrv_set
+argument_list|,
+name|aic_info
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Initialize the device - called from Slot manager.  */
 end_comment
@@ -4195,10 +4205,6 @@ index|[
 name|NAIC
 index|]
 decl_stmt|;
-specifier|static
-name|int
-name|aic_already_init
-decl_stmt|;
 else|#
 directive|else
 name|int
@@ -4252,24 +4258,6 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If PC-Card probe required, then register with  slot manager. */
-if|if
-condition|(
-operator|!
-name|aic_already_init
-condition|)
-block|{
-name|pccard_add_driver
-argument_list|(
-operator|&
-name|aic_info
-argument_list|)
-expr_stmt|;
-name|aic_already_init
-operator|=
-literal|1
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* 	 * Allocate a storage area for us 	 */

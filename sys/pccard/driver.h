@@ -28,6 +28,14 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|linker_set
+name|pccarddrv_set
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|pccard_add_driver
 name|__P

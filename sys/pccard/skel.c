@@ -159,6 +159,16 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pccarddrv_set
+argument_list|,
+name|skel_info
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
