@@ -2931,7 +2931,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static  u_int32_t ncr_info	(int unit);
+unit|static  u_int32_t ncr_info(int unit);
 endif|#
 directive|endif
 end_endif
@@ -3009,7 +3009,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static	void	ncr_min_phys	(struct buf *bp);
+unit|static	void	ncr_min_phys(struct buf *bp);
 endif|#
 directive|endif
 end_endif
@@ -9175,7 +9175,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}

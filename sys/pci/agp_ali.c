@@ -191,6 +191,14 @@ argument_list|)
 condition|)
 block|{
 case|case
+literal|0x167110b9
+case|:
+return|return
+operator|(
+literal|"Ali M1671 host to AGP bridge"
+operator|)
+return|;
+case|case
 literal|0x154110b9
 case|:
 return|return
@@ -270,7 +278,7 @@ name|desc
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 return|return

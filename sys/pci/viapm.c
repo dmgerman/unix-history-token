@@ -980,7 +980,9 @@ literal|"VIA VT82C586B Power Management Unit"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
 return|;
 default|default:
 break|break;
@@ -1252,7 +1254,9 @@ name|desc
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
 return|;
 default|default:
 break|break;
@@ -2636,7 +2640,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown QUICK command (%x)!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|how
 argument_list|)

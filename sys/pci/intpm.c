@@ -826,7 +826,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 comment|/* XXX don't know what to return else */
@@ -4202,7 +4202,9 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX setup intr resource */
 return|return
-literal|0
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
 return|;
 block|}
 else|else
