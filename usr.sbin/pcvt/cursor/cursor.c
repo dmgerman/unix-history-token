@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|id
 init|=
-literal|"@(#)cursor.c, 3.20, Last Edit-Date: [Mon Dec 19 20:26:38 1994]"
+literal|"@(#)cursor.c, 3.20, Last Edit-Date: [Thu Feb 23 16:02:33 1995]"
 decl_stmt|;
 end_decl_stmt
 

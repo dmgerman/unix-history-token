@@ -9,12 +9,12 @@ name|char
 modifier|*
 name|id
 init|=
-literal|"@(#)ispcvt.c, 3.20, Last Edit-Date: [Mon Dec 19 14:15:37 1994]"
+literal|"@(#)ispcvt.c, 3.20, Last Edit-Date: [Sun Feb 19 13:17:57 1995]"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	history:  *  *	-hm	upgraded to report pcvt compile time configuration  *	-hm	PCVT_INHIBIT_NUMLOCK patch from Joerg  *	-hm	PCVT_META_ESC patch from Joerg  *	-hm	PCVT_PCBURST  *	-hm	new ioctl VGAPCVTINFO  *	-hm	new CONF_ values for 3.10  *	-hm	new CONF_ values for 3.20   *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	history:  *  *	-hm	upgraded to report pcvt compile time configuration  *	-hm	PCVT_INHIBIT_NUMLOCK patch from Joerg  *	-hm	PCVT_META_ESC patch from Joerg  *	-hm	PCVT_PCBURST  *	-hm	new ioctl VGAPCVTINFO  *	-hm	new CONF_ values for 3.10  *	-hm	new CONF_ values for 3.20  *	-hm	removed PCVT_FAKE_SYSCONS10  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -862,26 +862,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PCVT_FAKE_SYSCONS10  = %s\t\t"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_FAKE_SYSCONS10
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PCVT_INHIBIT_NUMLOCK = %s\n"
+literal|"PCVT_INHIBIT_NUMLOCK = %s\t\t"
 argument_list|,
 operator|(
 name|pcvtinfo
@@ -900,7 +881,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PCVT_META_ESC        = %s\t\t"
+literal|"PCVT_META_ESC        = %s\n"
 argument_list|,
 operator|(
 name|pcvtinfo
@@ -919,7 +900,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PCVT_NOFASTSCROLL    = %s\n"
+literal|"PCVT_NOFASTSCROLL    = %s\t\t"
 argument_list|,
 operator|(
 name|pcvtinfo
@@ -938,7 +919,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PCVT_SLOW_INTERRUPT  = %s\t\t"
+literal|"PCVT_SLOW_INTERRUPT  = %s\n"
 argument_list|,
 operator|(
 name|pcvtinfo
@@ -957,7 +938,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PCVT_KBD_FIFO        = %s\n"
+literal|"PCVT_KBD_FIFO        = %s\t\t"
 argument_list|,
 operator|(
 name|pcvtinfo
