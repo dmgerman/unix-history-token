@@ -556,25 +556,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|void
-name|Debugger
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|msg
-parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
 name|int
 name|dumpstatus
 parameter_list|(
@@ -731,15 +712,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-name|void
-name|backtrace
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
