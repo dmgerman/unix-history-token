@@ -347,11 +347,9 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|unused
-end_ifdef
+begin_comment
+comment|/* #ifdef unused */
+end_comment
 
 begin_macro
 name|in_netof
@@ -438,10 +436,9 @@ return|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #endif */
+end_comment
 
 begin_comment
 comment|/*  * hash an internet address for routing lookups  * host part of the address is byte-swapped to put host-specific  * bits in the low byte (only the low LOG2(RTHASHSIZ) bits are used by rtalloc)  */
@@ -2483,11 +2480,9 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|unused
-end_ifdef
+begin_comment
+comment|/* #ifdef unused */
+end_comment
 
 begin_comment
 comment|/*  * Return address info for specified internet network.  */
@@ -2551,10 +2546,9 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #endif */
+end_comment
 
 begin_endif
 endif|#
