@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.49 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1307,6 +1307,18 @@ argument_list|(
 name|LogName
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SUN_LEN
+define|#
+directive|define
+name|SUN_LEN
+parameter_list|(
+name|unp
+parameter_list|)
+value|(strlen((unp)->sun_path) + 2)
+endif|#
+directive|endif
 name|bzero
 argument_list|(
 operator|(
@@ -1374,25 +1386,10 @@ operator|)
 operator|&
 name|sunx
 argument_list|,
-sizeof|sizeof
+name|SUN_LEN
 argument_list|(
+operator|&
 name|sunx
-operator|.
-name|sun_family
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|sunx
-operator|.
-name|sun_len
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|sunx
-operator|.
-name|sun_path
 argument_list|)
 argument_list|)
 operator|<
