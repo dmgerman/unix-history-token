@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)res_debug.c	5.34 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)res_debug.c	5.35 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.34 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,25 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_function_decl
+name|void
+name|__fp_query
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__p_class
+argument_list|()
+decl_stmt|,
+modifier|*
+name|__p_type
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -196,10 +215,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|void
-name|__fp_query
-parameter_list|()
-function_decl|;
 name|__fp_query
 argument_list|(
 name|msg
