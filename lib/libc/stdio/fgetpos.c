@@ -71,6 +71,7 @@ block|{
 return|return
 operator|(
 operator|(
+operator|(
 operator|*
 name|pos
 operator|=
@@ -83,6 +84,12 @@ operator|!=
 operator|(
 name|fpos_t
 operator|)
+operator|-
+literal|1
+operator|)
+condition|?
+literal|0
+else|:
 operator|-
 literal|1
 operator|)
