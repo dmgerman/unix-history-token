@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn11.c	4.4	81/06/16	*/
+comment|/*	dn11.c	4.5	81/06/21	*/
 end_comment
 
 begin_if
@@ -52,6 +52,18 @@ name|jmpbuf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|child
+init|=
+operator|-
+literal|1
+decl_stmt|,
+name|dn
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|dn_dialer
 argument_list|(
@@ -87,13 +99,6 @@ literal|40
 index|]
 decl_stmt|;
 name|int
-name|child
-init|=
-operator|-
-literal|1
-decl_stmt|,
-name|dn
-decl_stmt|,
 name|lt
 decl_stmt|,
 name|nw
@@ -516,6 +521,30 @@ block|{
 name|sleep
 argument_list|(
 literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|child
+operator|>
+literal|0
+condition|)
+name|kill
+argument_list|(
+name|child
+argument_list|,
+name|SIGKILL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dn
+operator|>
+literal|0
+condition|)
+name|close
+argument_list|(
+name|dn
 argument_list|)
 expr_stmt|;
 ifdef|#
