@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: extract.c,v 1.16 1997/07/01 06:13:35 jkh Exp $"
+literal|"$Id: extract.c,v 1.17 1997/10/08 07:45:35 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -900,6 +900,35 @@ name|PLIST_CMD
 case|:
 if|if
 condition|(
+operator|(
+name|strstr
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|,
+literal|"%B"
+argument_list|)
+operator|||
+name|strstr
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|,
+literal|"%F"
+argument_list|)
+operator|||
+name|strstr
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|,
+literal|"%f"
+argument_list|)
+operator|)
+operator|&&
 name|last_file
 operator|==
 name|NULL
@@ -914,6 +943,37 @@ argument_list|(
 literal|2
 argument_list|,
 literal|"no last file specified for '%s' command"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|,
+literal|"%D"
+argument_list|)
+operator|&&
+name|Directory
+operator|==
+name|NULL
+condition|)
+name|cleanup
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"no directory specified for '%s' command"
 argument_list|,
 name|p
 operator|->
