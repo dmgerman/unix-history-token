@@ -269,7 +269,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_spintrylock
+name|THR_TRYLOCK
 argument_list|(
 operator|&
 name|joined
@@ -299,7 +299,7 @@ name|joiner
 operator|=
 name|NULL
 expr_stmt|;
-name|_spinunlock
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|joined

@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
 
@@ -117,7 +123,7 @@ operator|==
 name|pthread
 condition|)
 block|{
-name|_SPINLOCK
+name|THR_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -149,7 +155,7 @@ operator|==
 name|pthread
 condition|)
 block|{
-name|_SPINLOCK
+name|THR_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -187,7 +193,7 @@ name|thread
 operator|!=
 name|NULL
 condition|)
-name|_SPINUNLOCK
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|pthread
@@ -218,7 +224,7 @@ condition|)
 block|{
 comment|/* Multiple joiners are not supported. */
 comment|/* XXXTHR - support multiple joiners. */
-name|_SPINUNLOCK
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|pthread
@@ -255,7 +261,7 @@ name|joiner
 operator|=
 name|curthread
 expr_stmt|;
-name|_SPINUNLOCK
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|pthread
@@ -394,7 +400,7 @@ name|flags
 operator||=
 name|PTHREAD_DETACHED
 expr_stmt|;
-name|_SPINUNLOCK
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|pthread

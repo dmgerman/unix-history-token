@@ -361,7 +361,7 @@ name|curthread
 operator|->
 name|joiner
 expr_stmt|;
-name|_SPINLOCK
+name|THR_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -410,7 +410,7 @@ name|thread
 operator|=
 name|NULL
 expr_stmt|;
-name|_SPINUNLOCK
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|pthread

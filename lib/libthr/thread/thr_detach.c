@@ -62,7 +62,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|_SPINLOCK
+name|THR_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -81,7 +81,7 @@ operator|&
 name|PTHREAD_DETACHED
 condition|)
 block|{
-name|_SPINUNLOCK
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|pthread
@@ -173,7 +173,7 @@ name|joiner
 argument_list|)
 expr_stmt|;
 block|}
-name|_SPINUNLOCK
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|pthread

@@ -3845,7 +3845,7 @@ decl_stmt|;
 comment|/* 	 * Defer signals to protect the scheduling queues from 	 * access by the signal handler: 	 */
 comment|/* _thread_kern_sig_defer();*/
 comment|/* XXX - Necessary to obey lock order */
-name|_SPINLOCK
+name|THR_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -3861,7 +3861,7 @@ name|data
 operator|.
 name|mutex
 expr_stmt|;
-name|_SPINUNLOCK
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|pthread

@@ -228,7 +228,7 @@ operator|==
 name|_thread_initial
 condition|)
 continue|continue;
-name|_SPINLOCK
+name|THR_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -300,7 +300,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_SPINUNLOCK
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|pthread
@@ -326,7 +326,7 @@ name|pthread_cln
 operator|=
 name|pthread
 expr_stmt|;
-name|_SPINUNLOCK
+name|THR_UNLOCK
 argument_list|(
 operator|&
 name|pthread
