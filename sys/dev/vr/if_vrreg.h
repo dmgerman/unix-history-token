@@ -372,6 +372,24 @@ value|0x83
 end_define
 
 begin_comment
+comment|/* Misc Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VR_MISC_CR1
+value|0x81
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_MISCCR1_FORSRST
+value|0x40
+end_define
+
+begin_comment
 comment|/*  * RX config bits.  */
 end_comment
 
@@ -2444,6 +2462,10 @@ comment|/* interface number */
 name|u_int8_t
 name|vr_type
 decl_stmt|;
+name|u_int8_t
+name|vr_revid
+decl_stmt|;
+comment|/* Rhine chip revision */
 name|struct
 name|vr_list_data
 modifier|*
@@ -2668,6 +2690,81 @@ value|0x1320
 end_define
 
 begin_comment
+comment|/*  * VIA Rhine revision IDs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REV_ID_VT3043_E
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|REV_ID_VT3071_A
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|REV_ID_VT3071_B
+value|0x21
+end_define
+
+begin_define
+define|#
+directive|define
+name|REV_ID_VT3065_A
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|REV_ID_VT3065_B
+value|0x41
+end_define
+
+begin_define
+define|#
+directive|define
+name|REV_ID_VT3065_C
+value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
+name|REV_ID_VT3106
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|REV_ID_VT3106_J
+value|0x80
+end_define
+
+begin_comment
+comment|/* 0x80-0x8F */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REV_ID_VT3106_S
+value|0x90
+end_define
+
+begin_comment
+comment|/* 0x90-0xA0 */
+end_comment
+
+begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
 
@@ -2697,6 +2794,13 @@ define|#
 directive|define
 name|VR_PCI_STATUS
 value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_PCI_REVID
+value|0x08
 end_define
 
 begin_define
