@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.56 1999/06/30 23:47:46 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.57 1999/07/02 16:21:13 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,7 +313,7 @@ parameter_list|(
 name|sep
 parameter_list|)
 define|\
-value|( ((wrap&& !(sep)->se_bi) || (wrap_bi&& (sep)->se_bi)) \&& ( ((sep)->se_accept&& (sep)->se_socktype == SOCK_STREAM) \ 	    || (sep)->se_socktype == SOCK_DGRAM))
+value|( ((wrap_ex&& !(sep)->se_bi) || (wrap_bi&& (sep)->se_bi)) \&& ( ((sep)->se_accept&& (sep)->se_socktype == SOCK_STREAM) \ 	    || (sep)->se_socktype == SOCK_DGRAM))
 end_define
 
 begin_ifdef
@@ -459,7 +459,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|wrap
+name|wrap_ex
 init|=
 literal|0
 decl_stmt|;
@@ -1830,7 +1830,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dlwR:a:c:C:p:"
+literal|"dlwWR:a:c:C:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -1946,11 +1946,13 @@ break|break;
 case|case
 literal|'w'
 case|:
-if|if
-condition|(
-name|wrap
+name|wrap_ex
 operator|++
-condition|)
+expr_stmt|;
+break|break;
+case|case
+literal|'W'
+case|:
 name|wrap_bi
 operator|++
 expr_stmt|;
@@ -1963,8 +1965,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: inetd [-dl] [-w [-w]] [-a address]"
-literal|" [-R rate]"
+literal|"usage: inetd [-dlwW] [-a address] [-R rate]"
 literal|" [-c maximum] [-C rate]"
 literal|" [-p pidfile] [conf-file]"
 argument_list|)
