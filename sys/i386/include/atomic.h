@@ -791,7 +791,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_acq_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile("lock; addl $0,0(%esp)" : : : "memory");\ 	atomic_##NAME##_##TYPE(p, v);			\ }							\ 							\ static __inline void					\ atomic_##NAME##_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	atomic_##NAME##_##TYPE(p, v);			\ }
+value|static __inline void					\ atomic_##NAME##_acq_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	atomic_##NAME##_##TYPE(p, v);			\ }							\ 							\ static __inline void					\ atomic_##NAME##_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	atomic_##NAME##_##TYPE(p, v);			\ }
 name|ATOMIC_ACQ_REL
 argument_list|(
 argument|set
@@ -899,7 +899,7 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	__asm __volatile("lock; addl $0,0(%esp)" : : : "memory");\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	*p = v;						\ 	__asm __volatile("" : : : "memory");		\ }
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	*p = v;						\ 	__asm __volatile("" : : : "memory");		\ }
 name|ATOMIC_STORE_LOAD
 argument_list|(
 argument|char
