@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.12 (Berkeley) %G%"
+literal|"@(#)main.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,6 +442,18 @@ name|bool
 name|canrename
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Enforce use of local time */
+end_comment
+
+begin_expr_stmt
+name|unsetenv
+argument_list|(
+literal|"TZ"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	**  Be sure we have enough file descriptors. 	**	But also be sure that 0, 1,& 2 are open. 	*/
