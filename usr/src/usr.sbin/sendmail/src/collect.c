@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.38 (Berkeley) %G%"
+literal|"@(#)collect.c	8.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,32 +461,6 @@ expr_stmt|;
 name|CollectProgress
 operator|=
 name|FALSE
-expr_stmt|;
-comment|/* if transmitting binary, don't map NL to EOL */
-if|if
-condition|(
-name|e
-operator|->
-name|e_bodytype
-operator|!=
-name|NULL
-operator|&&
-name|strcasecmp
-argument_list|(
-name|e
-operator|->
-name|e_bodytype
-argument_list|,
-literal|"8BITMIME"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|e
-operator|->
-name|e_flags
-operator||=
-name|EF_NL_NOT_EOL
 expr_stmt|;
 if|if
 condition|(
