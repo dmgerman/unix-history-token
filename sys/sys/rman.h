@@ -453,6 +453,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|rman_get_size
+parameter_list|(
+name|r
+parameter_list|)
+value|(((r)->r_end - (r)->r_start) + 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|rman_get_flags
 parameter_list|(
 name|r
