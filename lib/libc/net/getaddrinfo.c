@@ -1592,6 +1592,9 @@ operator|->
 name|str
 return|;
 block|}
+return|return
+literal|"Unknown error"
+return|;
 block|}
 end_function
 
