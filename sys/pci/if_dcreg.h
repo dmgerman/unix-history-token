@@ -1190,6 +1190,12 @@ name|DC_OPMODE_EXTLOOP
 value|0x00000800
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1215,6 +1221,32 @@ begin_define
 define|#
 directive|define
 name|DC_TXTHRESH_160BYTES
+value|0x0000C000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|DC_TXTHRESH_MIN
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_TXTHRESH_INC
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_TXTHRESH_MAX
 value|0x0000C000
 end_define
 
