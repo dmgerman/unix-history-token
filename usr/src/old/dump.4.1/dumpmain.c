@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpmain.c	1.2 (Berkeley) %G%"
+literal|"@(#)dumpmain.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -367,8 +367,10 @@ operator|++
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"bad key '%c%'\n"
 argument_list|,
 name|arg
@@ -382,6 +384,26 @@ name|Exit
 argument_list|(
 name|X_ABORT
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|tape
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|pipeout
+operator|++
+expr_stmt|;
+name|tape
+operator|=
+literal|"standard output"
 expr_stmt|;
 block|}
 if|if
@@ -873,6 +895,12 @@ expr_stmt|;
 name|putitime
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pipeout
+condition|)
+block|{
 name|close
 argument_list|(
 name|to
@@ -881,6 +909,7 @@ expr_stmt|;
 name|rewind
 argument_list|()
 expr_stmt|;
+block|}
 name|broadcast
 argument_list|(
 literal|"DUMP IS DONE!\7\7\n"
@@ -1062,6 +1091,10 @@ name|char
 modifier|*
 name|dp
 init|=
+operator|(
+name|char
+operator|*
+operator|)
 name|rindex
 argument_list|(
 name|cp

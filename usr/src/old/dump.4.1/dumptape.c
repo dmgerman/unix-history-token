@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumptape.c	1.2 (Berkeley) %G%"
+literal|"@(#)dumptape.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -310,6 +310,28 @@ name|tblock
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|pipeout
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"Tape write error on %s\n"
+argument_list|,
+name|tape
+argument_list|)
+expr_stmt|;
+name|msg
+argument_list|(
+literal|"Cannot recover\n"
+argument_list|)
+expr_stmt|;
+name|dumpabort
+argument_list|()
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|msg
 argument_list|(
 literal|"Tape write error on tape %d\n"
@@ -396,6 +418,9 @@ name|NTREC
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|pipeout
+operator|&&
 name|asize
 operator|>
 name|tsize
@@ -488,6 +513,11 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|pipeout
+condition|)
+return|return;
 name|close
 argument_list|(
 name|to
@@ -581,6 +611,11 @@ name|interrupt
 parameter_list|()
 function_decl|;
 comment|/* 	 *	Force the tape to be closed 	 */
+if|if
+condition|(
+operator|!
+name|pipeout
+condition|)
 name|close
 argument_list|(
 name|to
@@ -854,6 +889,15 @@ endif|#
 directive|endif
 do|do
 block|{
+if|if
+condition|(
+name|pipeout
+condition|)
+name|to
+operator|=
+literal|1
+expr_stmt|;
+else|else
 name|to
 operator|=
 name|creat
