@@ -2495,6 +2495,17 @@ operator|=
 name|rgs
 argument_list|()
 expr_stmt|;
+name|sf
+operator|.
+name|sf_uc
+operator|.
+name|uc_mcontext
+operator|.
+name|mc_flags
+operator|=
+name|__UC_MC_VALID
+expr_stmt|;
+comment|/* no FP regs */
 name|bcopy
 argument_list|(
 name|regs
