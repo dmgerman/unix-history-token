@@ -4376,7 +4376,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* We'll be mpsafe once the vm is locked. */
 name|callout_init
 argument_list|(
 operator|&
@@ -5149,6 +5148,7 @@ name|uz_fills
 operator|>=
 name|mp_ncpus
 condition|)
+block|{
 else|#
 directive|else
 if|if
@@ -5159,13 +5159,20 @@ name|uz_fills
 operator|>
 literal|1
 condition|)
+block|{
 endif|#
 directive|endif
+name|ZONE_UNLOCK
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 name|zone
 operator|->
 name|uz_fills
@@ -5635,13 +5642,7 @@ name|item
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* See uma.h */
-end_comment
-
-begin_function
 name|void
 name|uma_zfree_arg
 parameter_list|(
@@ -6067,13 +6068,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Frees an item to an INTERNAL zone or allocates a free bucket  *  * Arguments:  *	zone   The zone to free to  *	item   The item we're freeing  *	udata  User supplied data for the dtor  *	skip   Skip the dtor, it was done in uma_zfree_arg  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|uma_zfree_internal
@@ -6438,13 +6433,7 @@ name|zone
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* See uma.h */
-end_comment
-
-begin_function
 name|void
 name|uma_zone_set_max
 parameter_list|(
@@ -6495,13 +6484,7 @@ name|zone
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* See uma.h */
-end_comment
-
-begin_function
 name|void
 name|uma_zone_set_freef
 parameter_list|(
@@ -6529,13 +6512,7 @@ name|zone
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* See uma.h */
-end_comment
-
-begin_function
 name|void
 name|uma_zone_set_allocf
 parameter_list|(
@@ -6569,13 +6546,7 @@ name|zone
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* See uma.h */
-end_comment
-
-begin_function
 name|int
 name|uma_zone_set_obj
 parameter_list|(
@@ -6737,13 +6708,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* See uma.h */
-end_comment
-
-begin_function
 name|void
 name|uma_prealloc
 parameter_list|(
@@ -6824,13 +6789,7 @@ name|zone
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* See uma.h */
-end_comment
-
-begin_function
 name|void
 name|uma_reclaim
 parameter_list|(
@@ -6874,9 +6833,6 @@ name|bucketzone
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 modifier|*
 name|uma_large_malloc
@@ -6991,9 +6947,6 @@ name|mem
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|uma_large_free
 parameter_list|(
@@ -7039,9 +6992,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|uma_print_stats
 parameter_list|(
@@ -7054,9 +7004,6 @@ name|uma_print_zone
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|uma_print_zone
 parameter_list|(
@@ -7114,13 +7061,7 @@ name|uz_free
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Sysctl handler for vm.zone   *  * stolen from vm_zone.c  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|sysctl_vm_zone
