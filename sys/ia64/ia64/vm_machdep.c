@@ -757,28 +757,6 @@ block|{ }
 end_function
 
 begin_comment
-comment|/* Temporary helper */
-end_comment
-
-begin_function
-name|void
-name|cpu_throw
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|cpu_switch
-argument_list|()
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"cpu_throw() didn't"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Dump the machine specific header information at the start of a core dump.  */
 end_comment
 
