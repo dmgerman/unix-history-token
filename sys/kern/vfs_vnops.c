@@ -255,7 +255,6 @@ name|cmode
 parameter_list|,
 name|fdidx
 parameter_list|)
-specifier|register
 name|struct
 name|nameidata
 modifier|*
@@ -320,7 +319,6 @@ name|cred
 parameter_list|,
 name|fdidx
 parameter_list|)
-specifier|register
 name|struct
 name|nameidata
 modifier|*
@@ -1081,8 +1079,7 @@ name|cred
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+name|fdidx
 argument_list|)
 operator|)
 operator|!=
