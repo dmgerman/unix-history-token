@@ -397,15 +397,8 @@ begin_comment
 comment|/* message confirmed */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RTF_DELCLONE
-value|0x80
-end_define
-
 begin_comment
-comment|/* delete cloned route */
+comment|/*			0x80		   unused, was RTF_DELCLONE */
 end_comment
 
 begin_define

@@ -112,21 +112,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|struct
 name|rtentry
 modifier|*
 name|tcp_rtlookup6
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|inpcb
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern

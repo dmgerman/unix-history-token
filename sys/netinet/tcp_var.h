@@ -15,9 +15,33 @@ directive|define
 name|_NETINET_TCP_VAR_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<netinet/in_pcb.h>
+end_include
+
+begin_comment
+comment|/* needed for in_conninfo, inp_gen_t */
+end_comment
+
 begin_comment
 comment|/*  * Kernel variables for tcp.  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_do_rfc1323
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_do_rfc1644
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* TCP segment queue entry */
@@ -269,8 +293,13 @@ value|0x20000
 comment|/* listen queue overflow */
 define|#
 directive|define
-name|TF_RXWIN0SENT
+name|TF_LASTIDLE
 value|0x40000
+comment|/* connection was previously idle */
+define|#
+directive|define
+name|TF_RXWIN0SENT
+value|0x80000
 comment|/* sent a receiver win 0 in response */
 name|int
 name|t_force
@@ -475,7 +504,7 @@ struct|struct
 name|tcpopt
 block|{
 name|u_long
-name|to_flag
+name|to_flags
 decl_stmt|;
 comment|/* which options are present */
 define|#
@@ -496,10 +525,18 @@ define|#
 directive|define
 name|TOF_CCECHO
 value|0x0008
-name|u_long
+define|#
+directive|define
+name|TOF_MSS
+value|0x0010
+define|#
+directive|define
+name|TOF_SCALE
+value|0x0020
+name|u_int32_t
 name|to_tsval
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|to_tsecr
 decl_stmt|;
 name|tcp_cc
@@ -508,6 +545,158 @@ decl_stmt|;
 comment|/* holds CC or CCnew */
 name|tcp_cc
 name|to_ccecho
+decl_stmt|;
+name|u_int16_t
+name|to_mss
+decl_stmt|;
+name|u_int8_t
+name|to_requested_s_scale
+decl_stmt|;
+name|u_int8_t
+name|to_pad
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|syncache
+block|{
+name|inp_gen_t
+name|sc_inp_gencnt
+decl_stmt|;
+comment|/* pointer check */
+name|struct
+name|tcpcb
+modifier|*
+name|sc_tp
+decl_stmt|;
+comment|/* tcb for listening socket */
+name|struct
+name|mbuf
+modifier|*
+name|sc_ipopts
+decl_stmt|;
+comment|/* source route */
+name|struct
+name|in_conninfo
+name|sc_inc
+decl_stmt|;
+comment|/* addresses */
+define|#
+directive|define
+name|sc_route
+value|sc_inc.inc_route
+define|#
+directive|define
+name|sc_route6
+value|sc_inc.inc6_route
+name|u_int32_t
+name|sc_tsrecent
+decl_stmt|;
+name|tcp_cc
+name|sc_cc_send
+decl_stmt|;
+comment|/* holds CC or CCnew */
+name|tcp_cc
+name|sc_cc_recv
+decl_stmt|;
+name|tcp_seq
+name|sc_irs
+decl_stmt|;
+comment|/* seq from peer */
+name|tcp_seq
+name|sc_iss
+decl_stmt|;
+comment|/* our ISS */
+name|u_long
+name|sc_rxttime
+decl_stmt|;
+comment|/* retransmit time */
+name|u_int16_t
+name|sc_rxtslot
+decl_stmt|;
+comment|/* retransmit counter */
+name|u_int16_t
+name|sc_peer_mss
+decl_stmt|;
+comment|/* peer's MSS */
+name|u_int16_t
+name|sc_wnd
+decl_stmt|;
+comment|/* advertised window */
+name|u_int8_t
+name|sc_requested_s_scale
+range|:
+literal|4
+decl_stmt|,
+name|sc_request_r_scale
+range|:
+literal|4
+decl_stmt|;
+name|u_int8_t
+name|sc_flags
+decl_stmt|;
+define|#
+directive|define
+name|SCF_NOOPT
+value|0x01
+comment|/* no TCP options */
+define|#
+directive|define
+name|SCF_WINSCALE
+value|0x02
+comment|/* negotiated window scaling */
+define|#
+directive|define
+name|SCF_TIMESTAMP
+value|0x04
+comment|/* negotiated timestamps */
+define|#
+directive|define
+name|SCF_CC
+value|0x08
+comment|/* negotiated CC */
+define|#
+directive|define
+name|SCF_UNREACH
+value|0x10
+comment|/* icmp unreachable received */
+define|#
+directive|define
+name|SCF_KEEPROUTE
+value|0x20
+comment|/* keep cloned route */
+name|TAILQ_ENTRY
+argument_list|(
+argument|syncache
+argument_list|)
+name|sc_hash
+expr_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|syncache
+argument_list|)
+name|sc_timerq
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|syncache_head
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|syncache
+argument_list|)
+name|sch_bucket
+expr_stmt|;
+name|u_int
+name|sch_length
 decl_stmt|;
 block|}
 struct|;
@@ -917,6 +1106,66 @@ name|u_long
 name|tcps_listendrop
 decl_stmt|;
 comment|/* listen queue overflows */
+name|u_long
+name|tcps_sc_added
+decl_stmt|;
+comment|/* entry added to syncache */
+name|u_long
+name|tcps_sc_retransmitted
+decl_stmt|;
+comment|/* syncache entry was retransmitted */
+name|u_long
+name|tcps_sc_dupsyn
+decl_stmt|;
+comment|/* duplicate SYN packet */
+name|u_long
+name|tcps_sc_dropped
+decl_stmt|;
+comment|/* could not reply to packet */
+name|u_long
+name|tcps_sc_completed
+decl_stmt|;
+comment|/* successful extraction of entry */
+name|u_long
+name|tcps_sc_bucketoverflow
+decl_stmt|;
+comment|/* syncache per-bucket limit hit */
+name|u_long
+name|tcps_sc_cacheoverflow
+decl_stmt|;
+comment|/* syncache cache limit hit */
+name|u_long
+name|tcps_sc_reset
+decl_stmt|;
+comment|/* RST removed entry from syncache */
+name|u_long
+name|tcps_sc_stale
+decl_stmt|;
+comment|/* timed out or listen socket gone */
+name|u_long
+name|tcps_sc_aborted
+decl_stmt|;
+comment|/* syncache entry aborted */
+name|u_long
+name|tcps_sc_badack
+decl_stmt|;
+comment|/* removed due to bad ACK */
+name|u_long
+name|tcps_sc_unreach
+decl_stmt|;
+comment|/* ICMP unreachable received */
+name|u_long
+name|tcps_sc_zonefail
+decl_stmt|;
+comment|/* zalloc() failed */
+name|u_long
+name|tcps_sc_sendcookie
+decl_stmt|;
+comment|/* SYN cookie sent */
+name|u_long
+name|tcps_sc_recvcookie
+decl_stmt|;
+comment|/* SYN cookie received */
 block|}
 struct|;
 end_struct
@@ -1345,7 +1594,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|inpcb
+name|in_conninfo
 operator|*
 operator|)
 argument_list|)
@@ -1530,7 +1779,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|inpcb
+name|in_conninfo
 operator|*
 operator|)
 argument_list|)
@@ -1643,6 +1892,108 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|syncache_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|syncache_unreach
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|syncache_expand
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|syncache_add
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|,
+name|struct
+name|tcpopt
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|syncache_chkrst
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|syncache_badack
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
