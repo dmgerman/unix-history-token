@@ -532,14 +532,7 @@ name|CBAUD
 expr_stmt|;
 else|#
 directive|else
-name|ospeed
-operator|=
-name|cfgetospeed
-argument_list|(
-operator|&
-name|s
-argument_list|)
-expr_stmt|;
+comment|/* more work needed here */
 endif|#
 directive|endif
 name|erase_char

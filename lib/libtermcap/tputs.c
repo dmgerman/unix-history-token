@@ -31,13 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"termcap.h"
 end_include
 
 begin_comment
@@ -80,6 +80,12 @@ block|,
 literal|10
 block|,
 literal|5
+block|,
+literal|3
+block|,
+literal|2
+block|,
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -100,37 +106,16 @@ begin_comment
 comment|/*  * Put the character string cp out, with padding.  * The number of affected lines is affcnt, and the routine  * used to output one character is outc.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|tputs
 argument_list|(
-name|cp
+argument|const char *cp
 argument_list|,
-name|affcnt
+argument|int affcnt
 argument_list|,
-name|outc
+argument|int (*outc)(int)
 argument_list|)
-specifier|register
-name|char
-operator|*
-name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|affcnt
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|outc
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+end_macro
 
 begin_block
 block|{

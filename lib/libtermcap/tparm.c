@@ -27,6 +27,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"termcap.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

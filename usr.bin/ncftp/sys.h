@@ -1929,17 +1929,6 @@ name|U_WAIT
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|NO_CONST
-value|1
-end_define
-
-begin_comment
-comment|/* avoid prototype conflict */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -2065,6 +2054,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2076,11 +2070,6 @@ define|#
 directive|define
 name|SGTTYB
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

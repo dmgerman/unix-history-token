@@ -28,6 +28,12 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"termcap.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -68,21 +74,17 @@ name|char
 modifier|*
 name|tgoto
 parameter_list|(
-name|CM
-parameter_list|,
-name|destcol
-parameter_list|,
-name|destline
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|CM
-decl_stmt|;
+parameter_list|,
 name|int
 name|destcol
-decl_stmt|,
+parameter_list|,
+name|int
 name|destline
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -98,6 +100,7 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp

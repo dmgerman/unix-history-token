@@ -309,13 +309,6 @@ parameter_list|()
 value|nocbreak()
 end_define
 
-begin_define
-define|#
-directive|define
-name|ospeed
-value|(cfgetospeed(&__baset))
-end_define
-
 begin_comment
 comment|/* WINDOW structure members name compatibility */
 end_comment

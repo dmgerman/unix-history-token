@@ -733,6 +733,12 @@ begin_comment
 comment|/*  *	int  *	baudrate()  *  *	Returns the current terminal's baud rate.  *  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TERMIOS
+end_ifndef
+
 begin_struct
 struct|struct
 name|speed
@@ -918,16 +924,26 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|baudrate
 parameter_list|()
 block|{
+ifndef|#
+directive|ifndef
+name|TERMIOS
 name|int
 name|i
 decl_stmt|,
 name|ret
 decl_stmt|;
+endif|#
+directive|endif
 name|T
 argument_list|(
 operator|(
@@ -938,8 +954,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TERMIOS
-name|ret
-operator|=
+return|return
 name|cfgetospeed
 argument_list|(
 operator|&
@@ -947,7 +962,7 @@ name|cur_term
 operator|->
 name|Nttyb
 argument_list|)
-expr_stmt|;
+return|;
 else|#
 directive|else
 name|ret
@@ -958,8 +973,6 @@ name|Nttyb
 operator|.
 name|sg_ospeed
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ret
@@ -1019,6 +1032,8 @@ return|;
 return|return
 name|ERR
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
