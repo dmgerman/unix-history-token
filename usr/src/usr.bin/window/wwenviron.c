@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwenviron.c	3.11 %G%"
+literal|"@(#)wwenviron.c	3.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"ww.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
 end_include
 
 begin_comment
@@ -214,6 +220,16 @@ argument_list|(
 name|pgrp
 argument_list|,
 name|pgrp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 operator|(
