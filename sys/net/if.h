@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if.h	8.1 (Berkeley) 6/10/93  * $Id: if.h,v 1.30 1996/07/22 20:06:01 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if.h	8.1 (Berkeley) 6/10/93  * $Id: if.h,v 1.31 1996/07/23 14:44:46 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -116,6 +116,14 @@ name|u_char
 name|ifi_hdrlen
 decl_stmt|;
 comment|/* media header length */
+name|u_char
+name|ifi_recvquota
+decl_stmt|;
+comment|/* polling quota for receive intrs */
+name|u_char
+name|ifi_xmitquota
+decl_stmt|;
+comment|/* polling quota for xmit intrs */
 name|u_long
 name|ifi_mtu
 decl_stmt|;
@@ -173,6 +181,14 @@ name|u_long
 name|ifi_noproto
 decl_stmt|;
 comment|/* destined for unsupported protocol */
+name|u_long
+name|ifi_recvtiming
+decl_stmt|;
+comment|/* usec spent receiving when timing */
+name|u_long
+name|ifi_xmittiming
+decl_stmt|;
+comment|/* usec spent xmitting when timing */
 name|struct
 name|timeval
 name|ifi_lastchange
@@ -269,16 +285,19 @@ name|short
 name|if_flags
 decl_stmt|;
 comment|/* up/down, broadcast, etc. */
-name|u_char
-name|if_recvquota
-decl_stmt|,
-name|if_sendquota
-decl_stmt|;
-comment|/* quotas for send, receive */
-name|u_char
+name|int
 name|if_ipending
 decl_stmt|;
 comment|/* interrupts pending */
+name|void
+modifier|*
+name|if_linkmib
+decl_stmt|;
+comment|/* link-type-specific MIB data */
+name|size_t
+name|if_linkmiblen
+decl_stmt|;
+comment|/* length of above data */
 name|struct
 name|if_data
 name|if_data
@@ -371,7 +390,7 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|void
+name|int
 argument_list|(
 argument|*if_poll_recv
 argument_list|)
@@ -388,7 +407,7 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|void
+name|int
 argument_list|(
 argument|*if_poll_xmit
 argument_list|)
@@ -583,6 +602,20 @@ define|#
 directive|define
 name|if_lastchange
 value|if_data.ifi_lastchange
+end_define
+
+begin_define
+define|#
+directive|define
+name|if_recvquota
+value|if_data.ifi_recvquota
+end_define
+
+begin_define
+define|#
+directive|define
+name|if_xmitquota
+value|if_data.ifi_xmitquota
 end_define
 
 begin_define
@@ -841,7 +874,7 @@ comment|/* I want to transmit */
 end_comment
 
 begin_comment
-comment|/*  * Output queues (ifp->if_snd) and internetwork datagram level (pup level 1)  * input routines have queues of messages stored on ifqueue structures  * (defined above).  Entries are added to and deleted from these structures  * by these macros, which should be called with ipl raised to splimp().  */
+comment|/*  * Output queues (ifp->if_snd) and slow device input queues (*ifp->if_slowq)  * are queues of messages stored on ifqueue structures  * (defined above).  Entries are added to and deleted from these structures  * by these macros, which should be called with ipl raised to splimp().  */
 end_comment
 
 begin_define
@@ -1466,6 +1499,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|if_index
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ifaddr
+modifier|*
+modifier|*
+name|ifnet_addrs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|ether_ifattach
 name|__P
@@ -1648,6 +1698,93 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|if_poll_recv_slow
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+name|ifp
+operator|,
+name|int
+operator|*
+name|quotap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|if_poll_xmit_slow
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+name|ifp
+operator|,
+name|int
+operator|*
+name|quotap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|if_poll_throttle
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|if_poll_unthrottle
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|if_poll_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|if_poll
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
