@@ -556,6 +556,28 @@ name|int
 name|sc_rnghz
 decl_stmt|;
 comment|/* RNG polling frequency */
+name|struct
+name|rndtest_state
+modifier|*
+name|sc_rndtest
+decl_stmt|;
+comment|/* RNG test state */
+name|void
+function_decl|(
+modifier|*
+name|sc_harvest
+function_decl|)
+parameter_list|(
+name|struct
+name|rndtest_state
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
 name|int
 name|sc_c_busy
 decl_stmt|;
