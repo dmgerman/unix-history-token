@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)specdev.h	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)specdev.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -449,12 +449,19 @@ name|spec_abortop
 value|((int (*) __P((struct  vop_abortop_args *)))spec_badop)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|spec_inactive
-value|((int (*) __P((struct  vop_inactive_args *)))nullop)
-end_define
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_inactive_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
