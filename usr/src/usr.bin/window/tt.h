@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tt.h	3.3 83/08/15  */
+comment|/*  *	@(#)tt.h	3.4 83/08/17  */
 end_comment
 
 begin_struct
@@ -110,6 +110,9 @@ name|tt_nrow
 decl_stmt|;
 name|int
 name|tt_ncol
+decl_stmt|;
+name|char
+name|tt_availmodes
 decl_stmt|;
 name|char
 modifier|*
