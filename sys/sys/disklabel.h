@@ -1479,17 +1479,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DIOCGDVIRGIN
-value|_IOR('d', 105, struct disklabel)
-end_define
-
-begin_comment
-comment|/* get virgin label */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DIOCWLABEL
 value|_IOW('d', 109, int)
 end_define
