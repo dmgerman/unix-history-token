@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	8.1 (Berkeley) %G%"
+literal|"@(#)file.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -556,11 +556,6 @@ name|struct
 name|termios
 name|tchars
 decl_stmt|;
-if|if
-condition|(
-name|on
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -572,6 +567,11 @@ operator|&
 name|tchars
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|on
+condition|)
+block|{
 name|tchars
 operator|.
 name|c_cc
@@ -606,19 +606,6 @@ operator||=
 name|ICANON
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|tcsetattr
-argument_list|(
-name|SHIN
-argument_list|,
-name|on
-argument_list|,
-operator|&
-name|tchars
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -631,6 +618,11 @@ index|]
 operator|=
 name|_POSIX_VDISABLE
 expr_stmt|;
+name|on
+operator|=
+name|TCSANOW
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -644,7 +636,6 @@ operator|&
 name|tchars
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
