@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb1.c,v 1.1.1.5 2002/04/10 03:04:59 gshapiro Exp $"
+literal|"@(#)$Id: smdb1.c,v 8.58 2002/05/24 23:09:11 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1690,7 +1690,7 @@ decl_stmt|;
 name|char
 name|db_file_name
 index|[
-name|SMDB_MAX_NAME_LEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 if|if
@@ -1732,7 +1732,8 @@ name|smdb_add_extension
 argument_list|(
 name|db_file_name
 argument_list|,
-name|SMDB_MAX_NAME_LEN
+sizeof|sizeof
+name|db_file_name
 argument_list|,
 name|db_name
 argument_list|,
@@ -2012,7 +2013,7 @@ name|db_file_name
 argument_list|,
 name|mode
 argument_list|,
-literal|0644
+name|DBMMODE
 argument_list|,
 name|db_type
 argument_list|,

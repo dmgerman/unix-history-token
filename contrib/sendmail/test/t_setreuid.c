@@ -37,7 +37,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: t_setreuid.c,v 1.1.1.3 2002/02/17 21:56:43 gshapiro Exp $"
+literal|"@(#)$Id: t_setreuid.c,v 8.9 2001/10/12 03:04:46 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smndbm.c,v 1.1.1.5 2002/04/10 03:04:59 gshapiro Exp $"
+literal|"@(#)$Id: smndbm.c,v 8.52 2002/05/21 22:30:30 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2120,7 +2120,7 @@ name|db_name
 argument_list|,
 name|mode
 argument_list|,
-literal|0644
+name|DBMMODE
 argument_list|)
 expr_stmt|;
 if|if

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 1.1.1.7 2002/04/10 03:04:50 gshapiro Exp $"
+literal|"@(#)$Id: mci.c,v 8.205 2002/05/24 18:53:48 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2386,8 +2386,6 @@ name|char
 name|fname
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 if|if
@@ -2789,8 +2787,6 @@ name|char
 name|fname
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 if|if
@@ -3924,8 +3920,6 @@ name|char
 name|newpath
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 if|if

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 1.1.1.11 2002/04/10 03:04:51 gshapiro Exp $"
+literal|"@(#)$Id: queue.c,v 8.862 2002/05/09 23:51:53 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1524,6 +1524,9 @@ literal|"queueup: cannot create %s, uid=%d: %s"
 argument_list|,
 name|tf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|,
@@ -1708,6 +1711,9 @@ literal|"!queueup: cannot create queue temp file %s, uid=%d"
 argument_list|,
 name|tf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -1939,6 +1945,9 @@ argument_list|,
 name|DATAFL_LETTER
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -2149,6 +2158,9 @@ literal|"!queueup: cannot create data temp file %s, uid=%d"
 argument_list|,
 name|df
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -2326,6 +2338,9 @@ literal|"!queueup: cannot save data temp file %s, uid=%d"
 argument_list|,
 name|df
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -4092,6 +4107,9 @@ name|tf
 argument_list|,
 name|qf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -16428,6 +16446,40 @@ argument_list|(
 name|st
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"%ld"
+argument_list|,
+name|e
+operator|->
+name|e_msgsize
+argument_list|)
+expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_TEMP
+argument_list|,
+name|macid
+argument_list|(
+literal|"{msg_size}"
+argument_list|)
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|RELEASE_QUEUE
@@ -20469,6 +20521,9 @@ name|buf
 argument_list|,
 name|p
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -21676,7 +21731,10 @@ condition|(
 name|i
 operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|tTd
 argument_list|(
 literal|41
@@ -21696,6 +21754,35 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_CHK_QUEUE
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"queue directory \"%s\": Not safe: %s"
+argument_list|,
+name|name
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_CHK_QUEUE */
+block|}
 return|return
 name|true
 return|;
@@ -21922,6 +22009,27 @@ name|sff
 operator||=
 name|SFF_ROOTOK
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_CHK_QUEUE
+name|sff
+operator||=
+name|SFF_SAFEDIRPATH
+operator||
+name|SFF_NOWWFILES
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|UseMSP
+condition|)
+name|sff
+operator||=
+name|SFF_NOGWFILES
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_CHK_QUEUE */
 if|if
 condition|(
 operator|!
@@ -25712,7 +25820,7 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"sh_shmstop failed=%s"
+literal|"sm_shmstop failed=%s"
 argument_list|,
 name|sm_errstring
 argument_list|(
@@ -31340,7 +31448,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-literal|'R'
+literal|'S'
 case|:
 comment|/* 			**  If we are quarantining an unquarantined item, 			**  need to put in a new 'q' line before it's 			**  too late. 			*/
 if|if

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 1.1.1.10 2002/04/10 03:04:52 gshapiro Exp $"
+literal|"@(#)$Id: util.c,v 8.363 2002/05/24 20:44:05 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1458,8 +1458,6 @@ name|char
 name|pidpath
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 specifier|extern
@@ -1514,7 +1512,7 @@ name|O_WRONLY
 operator||
 name|O_TRUNC
 argument_list|,
-literal|0644
+name|FileMode
 argument_list|,
 name|sff
 argument_list|)
@@ -6562,9 +6560,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAXLINE
-operator|+
-literal|1
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 specifier|extern

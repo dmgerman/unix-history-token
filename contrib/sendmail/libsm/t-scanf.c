@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: t-scanf.c,v 1.1.1.1 2002/02/17 21:56:43 gshapiro Exp $"
+literal|"@(#)$Id: t-scanf.c,v 1.5 2001/11/13 00:51:28 ca Exp $"
 argument_list|)
 end_macro
 

@@ -18,7 +18,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: udb.c,v 1.1.1.7 2002/02/17 21:56:42 gshapiro Exp $ (with USERDB)"
+literal|"@(#)$Id: udb.c,v 8.153 2001/09/11 04:05:17 gshapiro Exp $ (with USERDB)"
 argument_list|)
 end_macro
 
@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: udb.c,v 1.1.1.7 2002/02/17 21:56:42 gshapiro Exp $ (without USERDB)"
+literal|"@(#)$Id: udb.c,v 8.153 2001/09/11 04:05:17 gshapiro Exp $ (without USERDB)"
 argument_list|)
 end_macro
 

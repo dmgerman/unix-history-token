@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: safefile.c,v 1.1.1.4 2002/02/17 21:56:42 gshapiro Exp $"
+literal|"@(#)$Id: safefile.c,v 8.124 2002/05/24 20:50:15 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -109,8 +109,6 @@ name|char
 name|fbuf
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 if|if
@@ -1778,8 +1776,6 @@ name|char
 name|s
 index|[
 name|MAXLINKPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -2109,6 +2105,9 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
+name|int
+name|linklen
+decl_stmt|;
 name|char
 modifier|*
 name|target
@@ -2117,8 +2116,6 @@ name|char
 name|buf
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|memset
@@ -2131,8 +2128,8 @@ sizeof|sizeof
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|linklen
+operator|=
 name|readlink
 argument_list|(
 name|s
@@ -2142,6 +2139,10 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|linklen
 operator|<
 literal|0
 condition|)
@@ -2149,6 +2150,23 @@ block|{
 name|ret
 operator|=
 name|errno
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|linklen
+operator|>=
+sizeof|sizeof
+name|buf
+condition|)
+block|{
+comment|/* file name too long for buffer */
+name|ret
+operator|=
+name|errno
+operator|=
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -2299,8 +2317,6 @@ name|char
 name|fullbuf
 index|[
 name|MAXLINKPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|sptr

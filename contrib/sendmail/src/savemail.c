@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: savemail.c,v 1.1.1.9 2002/02/17 21:56:41 gshapiro Exp $"
+literal|"@(#)$Id: savemail.c,v 8.299 2002/05/24 20:50:17 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -203,6 +203,12 @@ index|[
 name|MAXLINE
 operator|+
 literal|1
+index|]
+decl_stmt|;
+name|char
+name|dlbuf
+index|[
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|SM_MBDB_T
@@ -1136,10 +1142,10 @@ name|expand
 argument_list|(
 literal|"\201z/dead.letter"
 argument_list|,
-name|buf
+name|dlbuf
 argument_list|,
 sizeof|sizeof
-name|buf
+name|dlbuf
 argument_list|,
 name|e
 argument_list|)
@@ -1166,13 +1172,13 @@ name|e
 operator|->
 name|e_to
 operator|=
-name|buf
+name|dlbuf
 expr_stmt|;
 if|if
 condition|(
 name|writable
 argument_list|(
-name|buf
+name|dlbuf
 argument_list|,
 name|NULL
 argument_list|,
@@ -1181,7 +1187,7 @@ argument_list|)
 operator|&&
 name|mailfile
 argument_list|(
-name|buf
+name|dlbuf
 argument_list|,
 name|FileMailer
 argument_list|,
@@ -1224,7 +1230,7 @@ name|message
 argument_list|(
 literal|"Saved message in %s"
 argument_list|,
-name|buf
+name|dlbuf
 argument_list|)
 expr_stmt|;
 name|Verbose

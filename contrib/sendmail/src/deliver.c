@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 1.1.1.11 2002/04/10 03:04:49 gshapiro Exp $"
+literal|"@(#)$Id: deliver.c,v 8.939 2002/05/25 00:46:00 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -4844,6 +4844,12 @@ index|[
 name|MAXNAME
 operator|+
 literal|1
+index|]
+decl_stmt|;
+name|char
+name|cbuf
+index|[
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|errno
@@ -9733,10 +9739,10 @@ name|m
 operator|->
 name|m_rootdir
 argument_list|,
-name|buf
+name|cbuf
 argument_list|,
 sizeof|sizeof
-name|buf
+name|cbuf
 argument_list|,
 name|e
 argument_list|)
@@ -9754,14 +9760,14 @@ name|sm_dprintf
 argument_list|(
 literal|"openmailer: chroot %s\n"
 argument_list|,
-name|buf
+name|cbuf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|chroot
 argument_list|(
-name|buf
+name|cbuf
 argument_list|)
 operator|<
 literal|0
@@ -9771,7 +9777,7 @@ name|syserr
 argument_list|(
 literal|"openmailer: Cannot chroot(%s)"
 argument_list|,
-name|buf
+name|cbuf
 argument_list|)
 expr_stmt|;
 name|exit
@@ -10328,10 +10334,10 @@ name|expand
 argument_list|(
 name|p
 argument_list|,
-name|buf
+name|cbuf
 argument_list|,
 sizeof|sizeof
-name|buf
+name|cbuf
 argument_list|,
 name|e
 argument_list|)
@@ -10361,12 +10367,12 @@ name|sm_dprintf
 argument_list|(
 literal|"openmailer: trydir %s\n"
 argument_list|,
-name|buf
+name|cbuf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|buf
+name|cbuf
 index|[
 literal|0
 index|]
@@ -10375,7 +10381,7 @@ literal|'\0'
 operator|&&
 name|chdir
 argument_list|(
-name|buf
+name|cbuf
 argument_list|)
 operator|>=
 literal|0
@@ -12162,7 +12168,13 @@ name|mci_conn
 argument_list|,
 name|SASL_SSF
 argument_list|,
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20000
 operator|(
+specifier|const
 name|void
 operator|*
 operator|*
@@ -12171,6 +12183,21 @@ operator|&
 name|ssf
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* SASL>= 20000 */
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|ssf
+block|)
+empty_stmt|;
+endif|#
+directive|endif
+comment|/* SASL>= 20000 */
 comment|/* XXX authid? */
 if|if
 condition|(
@@ -14063,7 +14090,13 @@ name|cleanup
 label|:
 empty_stmt|;
 block|}
+end_function
+
+begin_macro
 name|SM_FINALLY
+end_macro
+
+begin_block
 block|{
 comment|/* 		**  Restore state and return. 		*/
 if|#
@@ -14148,52 +14181,73 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+end_block
+
+begin_macro
 name|SM_END_TRY
+end_macro
+
+begin_return
 return|return
 name|rcode
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/* **  MARKFAILURE -- mark a failure on a specific address. ** **	Parameters: **		e -- the envelope we are sending. **		q -- the address to mark. **		mci -- mailer connection information. **		rcode -- the code signifying the particular failure. **		ovr -- override an existing code? ** **	Returns: **		none. ** **	Side Effects: **		marks the address (and possibly the envelope) with the **			failure so that an error will be returned or **			the message will be queued, as appropriate. */
 end_comment
 
-begin_function
-name|void
+begin_expr_stmt
+unit|void
 name|markfailure
-parameter_list|(
+argument_list|(
 name|e
-parameter_list|,
+argument_list|,
 name|q
-parameter_list|,
+argument_list|,
 name|mci
-parameter_list|,
+argument_list|,
 name|rcode
-parameter_list|,
+argument_list|,
 name|ovr
-parameter_list|)
+argument_list|)
 specifier|register
 name|ENVELOPE
-modifier|*
+operator|*
 name|e
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|register
 name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|MCI
 modifier|*
 name|mci
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|rcode
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|ovr
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|int
 name|save_errno
@@ -14594,7 +14648,7 @@ operator|=
 name|save_errno
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* **  ENDMAILER -- Wait for mailer to terminate. ** **	We should never get fatal errors (e.g., segmentation **	violation), so we report those specially.  For other **	errors, we choose a status message (into statmsg), **	and if it represents an error, we print it. ** **	Parameters: **		mci -- the mailer connection info. **		e -- the current envelope. **		pv -- the parameter vector that invoked the mailer **			(for error messages). ** **	Returns: **		exit code of mailer. ** **	Side Effects: **		none. */
@@ -19952,17 +20006,13 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAXLINE
-operator|+
-literal|1
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|char
 name|targetfile
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 if|if

@@ -204,7 +204,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 1.1.1.13 2002/04/10 03:04:51 gshapiro Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.918 2002/05/23 20:01:56 gshapiro Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -673,11 +673,59 @@ begin_comment
 comment|/* include the sasl include files if we have them */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SASL
+operator|==
+literal|2
+operator|||
+name|SASL
+operator|>=
+literal|20000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sasl/sasl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sasl/saslutil.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SASL == 2 || SASL>= 20000 */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<sasl.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<saslutil.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SASL == 2 || SASL>= 20000 */
+end_comment
 
 begin_if
 if|#
@@ -711,6 +759,10 @@ directive|if
 name|SASL
 operator|==
 literal|1
+operator|||
+name|SASL
+operator|==
+literal|2
 end_if
 
 begin_undef
@@ -732,7 +784,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* SASL == 1 */
+comment|/* SASL == 1 || SASL == 2 */
 end_comment
 
 begin_if
@@ -776,7 +828,7 @@ directive|endif
 comment|/* SASL != SASL_VERSION */
 endif|#
 directive|endif
-comment|/* SASL == 1 */
+comment|/* SASL == 1 || SASL == 2 */
 else|#
 directive|else
 comment|/* defined(SASL_VERSION_MAJOR)&& defined(SASL_VERSION_MINOR)&& defined(SASL_VERSION_STEP) */
@@ -3429,6 +3481,34 @@ begin_comment
 comment|/* use auth= only if authenticated */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20101
+end_if
+
+begin_define
+define|#
+directive|define
+name|SASL_SEC_MASK
+value|SASL_SEC_MAXIMUM
+end_define
+
+begin_comment
+comment|/* mask for SASL_SEC_* values: sasl.h */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SASL>= 20101 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3513,6 +3593,9 @@ operator|!
 endif|#
 directive|endif
 comment|/* SASL_SEC_NOPLAINTEXT& SASL_SEC_MASK) == 0 ... */
+endif|#
+directive|endif
+comment|/* SASL>= 20101 */
 define|#
 directive|define
 name|MAXOUTLEN
@@ -3559,6 +3642,82 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20000
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|proxy_policy
+name|__P
+argument_list|(
+operator|(
+name|sasl_conn_t
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+expr|struct
+name|propctx
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|safesaslfile
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|sasl_verify_type_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SASL>= 20000 */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -3654,53 +3813,14 @@ begin_comment
 comment|/* SASL> 10515 */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|sasl_decode64
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|sasl_encode64
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|unsigned
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* SASL>= 20000 */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -10074,6 +10194,44 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20000
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|iptostring
+name|__P
+argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|,
+name|SOCKADDR_LEN_T
+operator|,
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SASL>= 20000 */
+end_comment
 
 begin_endif
 endif|#

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 1.1.1.12 2002/04/10 03:04:47 gshapiro Exp $"
+literal|"@(#)$Id: collect.c,v 8.242 2002/05/10 15:40:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3566,9 +3566,15 @@ name|dfname
 argument_list|,
 name|msg
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getegid
 argument_list|()
 argument_list|)

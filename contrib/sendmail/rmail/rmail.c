@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: rmail.c,v 1.1.1.8 2002/02/17 21:56:45 gshapiro Exp $"
+literal|"@(#)$Id: rmail.c,v 8.61 2001/09/18 21:45:29 gshapiro Exp $"
 argument_list|)
 end_macro
 
