@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)stdio.h	1.3 (Berkeley) %G%	*/
+comment|/*	@(#)stdio.h	1.4 (Berkeley) %G%	*/
 end_comment
 
 begin_define
@@ -275,6 +275,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_function_decl
 name|char
 modifier|*
@@ -282,6 +288,15 @@ name|sprintf
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* too painful to do right */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
