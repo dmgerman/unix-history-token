@@ -1023,17 +1023,21 @@ expr_stmt|;
 comment|/* Turn on highlighting */
 while|while
 condition|(
+operator|(
 operator|!
 name|IsStartField
 argument_list|(
 name|pointer
 argument_list|)
+operator|)
 operator|&&
+operator|(
 operator|!
 name|TermIsStartField
 argument_list|(
 name|pointer
 argument_list|)
+operator|)
 condition|)
 block|{
 name|c
@@ -1151,6 +1155,14 @@ operator|>
 name|pointer
 condition|)
 block|{
+comment|/* 			 * pointer is guaranteed to be higher than Highest... 			 */
+name|pointer
+operator|=
+name|Highest
+operator|+
+literal|1
+expr_stmt|;
+comment|/* We did the highest thing */
 break|break;
 block|}
 block|}
