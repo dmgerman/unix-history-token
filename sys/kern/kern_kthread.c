@@ -128,6 +128,8 @@ name|global_procpp
 argument_list|,
 literal|0
 argument_list|,
+literal|"%s"
+argument_list|,
 name|kp
 operator|->
 name|arg0
