@@ -1255,6 +1255,7 @@ name|struct
 name|servtab
 modifier|*
 name|sep
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -3669,6 +3670,7 @@ name|struct
 name|servtab
 modifier|*
 name|sep
+name|__unused
 parameter_list|)
 block|{
 name|unsigned

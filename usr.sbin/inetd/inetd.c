@@ -4120,6 +4120,7 @@ name|flag_reapchild
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|flag_signal
@@ -4307,6 +4308,7 @@ name|flag_config
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|flag_signal
@@ -5583,6 +5585,7 @@ name|flag_retry
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|flag_signal
