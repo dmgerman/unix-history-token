@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|G_MIRROR_VERSION
-value|0
+value|1
 end_define
 
 begin_define
@@ -79,6 +79,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_MIRROR_BALANCE_PREFER
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_MIRROR_BALANCE_MIN
 value|G_MIRROR_BALANCE_NONE
 end_define
@@ -87,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|G_MIRROR_BALANCE_MAX
-value|G_MIRROR_BALANCE_SPLIT
+value|G_MIRROR_BALANCE_PREFER
 end_define
 
 begin_define
@@ -1269,6 +1276,12 @@ operator|=
 literal|"split"
 block|,
 index|[
+name|G_MIRROR_BALANCE_PREFER
+index|]
+operator|=
+literal|"prefer"
+block|,
+index|[
 name|G_MIRROR_BALANCE_MAX
 operator|+
 literal|1
@@ -1343,6 +1356,12 @@ name|G_MIRROR_BALANCE_SPLIT
 index|]
 operator|=
 literal|"split"
+block|,
+index|[
+name|G_MIRROR_BALANCE_PREFER
+index|]
+operator|=
+literal|"prefer"
 block|}
 decl_stmt|;
 name|int
