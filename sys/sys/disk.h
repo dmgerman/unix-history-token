@@ -134,26 +134,6 @@ name|disk
 block|{
 comment|/* Fields which are private to geom_disk */
 name|struct
-name|cdevsw
-modifier|*
-name|d_devsw
-decl_stmt|;
-name|d_open_t
-modifier|*
-name|d_copen
-decl_stmt|;
-comment|/* Compat */
-name|d_close_t
-modifier|*
-name|d_cclose
-decl_stmt|;
-comment|/* Compat */
-name|d_ioctl_t
-modifier|*
-name|d_cioctl
-decl_stmt|;
-comment|/* Compat */
-name|struct
 name|g_geom
 modifier|*
 name|d_geom
@@ -170,10 +150,6 @@ decl_stmt|;
 name|u_int
 name|d_unit
 decl_stmt|;
-name|dev_t
-name|d_dev
-decl_stmt|;
-comment|/* Compat */
 comment|/* Disk methods  */
 name|disk_open_t
 modifier|*
@@ -248,7 +224,7 @@ value|0x4
 end_define
 
 begin_function_decl
-name|dev_t
+name|void
 name|disk_create
 parameter_list|(
 name|int
@@ -262,14 +238,13 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|struct
-name|cdevsw
-modifier|*
-name|cdevsw
-parameter_list|,
 name|void
 modifier|*
 name|unused
+parameter_list|,
+name|void
+modifier|*
+name|unused2
 parameter_list|)
 function_decl|;
 end_function_decl

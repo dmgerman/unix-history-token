@@ -213,11 +213,6 @@ struct|;
 struct|struct
 block|{
 name|struct
-name|disk
-modifier|*
-name|__sid_disk
-decl_stmt|;
-name|struct
 name|mount
 modifier|*
 name|__sid_mountpoint
@@ -281,13 +276,6 @@ define|#
 directive|define
 name|si_tty
 value|__si_u.__si_tty.__sit_tty
-end_define
-
-begin_define
-define|#
-directive|define
-name|si_disk
-value|__si_u.__si_disk.__sid_disk
 end_define
 
 begin_define
