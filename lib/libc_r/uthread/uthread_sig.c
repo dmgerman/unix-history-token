@@ -3222,7 +3222,7 @@ name|curframe
 operator|->
 name|ctxtype
 operator|=
-name|CTX_JB
+name|CTX_JB_NOSIG
 expr_stmt|;
 name|thread
 operator|->
