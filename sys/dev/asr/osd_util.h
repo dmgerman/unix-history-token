@@ -995,7 +995,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* netware */
-comment|/*-------------------------------------*  * Network order swap functions	       *  *				       *  * These functions/macros will be used *  * by the structure insert()/extract() *  * functions.			       *  *  * We will enclose all structure       *  * portability modifications inside    *  * #ifdefs.  When we are ready, we     *  * will #define DPT_PORTABLE to begin  *  * using the modifications.	       *  *-------------------------------------*/
+comment|/*-------------------------------------*  * Network order swap functions	       *  *				       *  * These functions/macros will be used *  * by the structure insert()/extract() *  * functions.			       *  *  * We will enclose all structure       *  * portability modifications inside    *  * #ifdefs.  When we are ready, we     *  * will #define	DPT_PORTABLE to begin  *  * using the modifications.	       *  *-------------------------------------*/
 name|uLONG
 name|netSwap4
 parameter_list|(
