@@ -157,6 +157,9 @@ case|case
 name|ESC
 case|:
 case|case
+literal|'\r'
+case|:
+case|case
 literal|'\n'
 case|:
 for|for
@@ -192,6 +195,16 @@ name|i
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|key
+operator|==
+literal|'\r'
+condition|)
+name|key
+operator|=
+literal|'\n'
 expr_stmt|;
 goto|goto
 name|ret

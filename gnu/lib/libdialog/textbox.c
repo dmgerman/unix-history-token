@@ -788,6 +788,12 @@ name|key
 operator|!=
 literal|'\n'
 operator|)
+operator|&&
+operator|(
+name|key
+operator|!=
+literal|'\r'
+operator|)
 condition|)
 block|{
 name|key
