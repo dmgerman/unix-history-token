@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	4.27 (Berkeley) %G%"
+literal|"@(#)lpr.c	4.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<grp.h>
 end_include
 
 begin_include
@@ -420,6 +426,17 @@ comment|/* lock file name */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|RG
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* restrict group */
+end_comment
+
+begin_decl_stmt
 name|short
 name|SC
 decl_stmt|;
@@ -491,6 +508,11 @@ name|struct
 name|passwd
 modifier|*
 name|pw
+decl_stmt|;
+name|struct
+name|group
+modifier|*
+name|gptr
 decl_stmt|;
 specifier|extern
 name|char
@@ -1094,6 +1116,80 @@ name|pw
 operator|->
 name|pw_name
 expr_stmt|;
+comment|/* 	 * Check for restricted group access. 	 */
+if|if
+condition|(
+name|RG
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|gptr
+operator|=
+name|getgrnam
+argument_list|(
+name|RG
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"Restricted group specified incorrectly"
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|gptr
+operator|->
+name|gr_mem
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|strcmp
+argument_list|(
+name|person
+argument_list|,
+operator|*
+name|gptr
+operator|->
+name|gr_mem
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+break|break;
+name|gptr
+operator|->
+name|gr_mem
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|gptr
+operator|->
+name|gr_mem
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"Not a member of the restricted group"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Check to make sure queuing is enabled if userid is not root. 	 */
 operator|(
 name|void
@@ -3094,6 +3190,16 @@ condition|)
 name|LO
 operator|=
 name|DEFLOCK
+expr_stmt|;
+name|RG
+operator|=
+name|pgetstr
+argument_list|(
+literal|"rg"
+argument_list|,
+operator|&
+name|bp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
