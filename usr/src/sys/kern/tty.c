@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.16	82/01/15	*/
+comment|/*	tty.c	4.17	82/01/17	*/
 end_comment
 
 begin_comment
@@ -661,8 +661,6 @@ argument_list|(
 name|tp
 argument_list|,
 name|FREAD
-operator||
-name|FWRITE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -776,6 +774,8 @@ name|d_stop
 operator|)
 operator|(
 name|tp
+operator|,
+name|rw
 operator|)
 expr_stmt|;
 while|while
