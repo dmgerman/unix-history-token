@@ -234,119 +234,95 @@ begin_comment
 comment|/*  * Routines for dealing with the cache.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|cache_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|phandle_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* turn it on */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|icache_flush
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|vm_offset_t
-operator|,
+parameter_list|,
 name|vm_offset_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|icache_inval_phys
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|vm_offset_t
-operator|,
+parameter_list|,
 name|vm_offset_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|dcache_flush
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|vm_offset_t
-operator|,
+parameter_list|,
 name|vm_offset_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|dcache_inval
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|pmap_t
-operator|,
+parameter_list|,
 name|vm_offset_t
-operator|,
+parameter_list|,
 name|vm_offset_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|dcache_inval_phys
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|vm_offset_t
-operator|,
+parameter_list|,
 name|vm_offset_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|dcache_blast
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ecache_flush
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|vm_offset_t
-operator|,
+parameter_list|,
 name|vm_offset_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -355,7 +331,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void	ecache_inval_phys __P((vm_offset_t, vm_offset_t));
+unit|void	ecache_inval_phys(vm_offset_t, vm_offset_t);
 endif|#
 directive|endif
 end_endif
