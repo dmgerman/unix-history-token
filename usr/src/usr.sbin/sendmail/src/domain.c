@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.17 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.18 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.17 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.18 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1303,13 +1303,98 @@ block|}
 block|}
 end_block
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not NAMED_BIND */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_macro
+name|getcanonname
+argument_list|(
+argument|host
+argument_list|,
+argument|hbsize
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|host
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|hbsize
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|struct
+name|hostent
+modifier|*
+name|hp
+decl_stmt|;
+name|hp
+operator|=
+name|gethostbyname
+argument_list|(
+name|host
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hp
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|hp
+operator|->
+name|h_name
+argument_list|)
+operator|>=
+name|hbsize
+condition|)
+return|return;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|host
+argument_list|,
+name|hp
+operator|->
+name|h_name
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* NAMED_BIND */
+comment|/* not NAMED_BIND */
 end_comment
 
 end_unit
