@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stat.c	1.2 (Berkeley) %G%"
+literal|"@(#)stat.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -407,18 +407,6 @@ name|indent
 argument_list|()
 expr_stmt|;
 name|withop
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|T_ASRT
-case|:
-name|ppitem
-argument_list|()
-expr_stmt|;
-name|asrtop
 argument_list|(
 name|s
 argument_list|)
@@ -1303,43 +1291,6 @@ name|l
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
-
-begin_macro
-name|asrtop
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-modifier|*
-name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|ppkw
-argument_list|(
-literal|"assert"
-argument_list|)
-expr_stmt|;
-name|ppspac
-argument_list|()
-expr_stmt|;
-name|rvalue
-argument_list|(
-name|s
-index|[
-literal|2
-index|]
-argument_list|,
-name|NIL
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
