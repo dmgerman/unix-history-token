@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	8.4 (Berkeley) %G%"
+literal|"@(#)find.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,11 +163,18 @@ name|new
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * if the user didn't specify one of -print, -ok or -exec, then -print 	 * is assumed so we add a -print node on the end.  It is possible that 	 * the user might want the -print someplace else on the command line, 	 * but there's no way to know that. 	 */
+comment|/* 	 * if the user didn't specify one of -print, -ok or -exec, then -print 	 * is assumed so we bracket the current expression with parens, if 	 * necessary, and add a -print node on the end. 	 */
 if|if
 condition|(
 operator|!
 name|isoutput
+condition|)
+block|{
+if|if
+condition|(
+name|plan
+operator|==
+name|NULL
 condition|)
 block|{
 name|new
@@ -175,20 +182,50 @@ operator|=
 name|c_print
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|plan
-operator|==
-name|NULL
-condition|)
 name|tail
 operator|=
 name|plan
 operator|=
 name|new
 expr_stmt|;
+block|}
 else|else
 block|{
+name|new
+operator|=
+name|c_openparen
+argument_list|()
+expr_stmt|;
+name|new
+operator|->
+name|next
+operator|=
+name|plan
+expr_stmt|;
+name|plan
+operator|=
+name|new
+expr_stmt|;
+name|new
+operator|=
+name|c_closeparen
+argument_list|()
+expr_stmt|;
+name|tail
+operator|->
+name|next
+operator|=
+name|new
+expr_stmt|;
+name|tail
+operator|=
+name|new
+expr_stmt|;
+name|new
+operator|=
+name|c_print
+argument_list|()
+expr_stmt|;
 name|tail
 operator|->
 name|next
@@ -395,10 +432,16 @@ operator|=
 literal|1
 expr_stmt|;
 continue|continue;
+ifdef|#
+directive|ifdef
+name|FTS_W
 case|case
 name|FTS_W
 case|:
 continue|continue;
+endif|#
+directive|endif
+comment|/* FTS_W */
 block|}
 define|#
 directive|define
