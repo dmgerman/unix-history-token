@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_dblookup.c,v 1.9 1996/05/01 02:33:52 wpaul Exp $  *  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_dblookup.c,v 1.13 1996/06/04 04:08:21 wpaul Exp $  *  */
 end_comment
 
 begin_include
@@ -94,7 +94,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_dblookup.c,v 1.9 1996/05/01 02:33:52 wpaul Exp $"
+literal|"$Id: yp_dblookup.c,v 1.13 1996/06/04 04:08:21 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ comment|/* bsize */
 literal|32
 block|,
 comment|/* ffactor */
-literal|512
+literal|256
 block|,
 comment|/* nelem */
 literal|2048
@@ -263,7 +263,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|yp_flush
 parameter_list|(
@@ -425,7 +424,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|yp_add_db
 parameter_list|(
@@ -612,7 +610,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|DB
 modifier|*
 name|yp_find_db
@@ -729,9 +726,7 @@ index|]
 operator|->
 name|size
 condition|)
-block|{
 continue|continue;
-block|}
 block|}
 if|if
 condition|(
@@ -851,6 +846,7 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
+comment|/* 	snprintf(buf, sizeof(buf), "%s/%s", domain, map); */
 name|strcpy
 argument_list|(
 name|buf
@@ -1805,37 +1801,9 @@ operator|!
 name|all
 condition|)
 block|{
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|DB_CACHE
-if|if
-condition|(
-name|key
-operator|->
-name|size
-operator|!=
-name|lkey
-operator|.
-name|size
-operator|||
-name|strncmp
-argument_list|(
-name|key
-operator|->
-name|data
-argument_list|,
-name|lkey
-operator|.
-name|data
-argument_list|,
-name|key
-operator|->
-name|size
-argument_list|)
-condition|)
-block|{
-else|#
-directive|else
 if|if
 condition|(
 operator|!
@@ -1844,7 +1812,7 @@ index|[
 literal|0
 index|]
 operator|->
-name|size
+name|key
 condition|)
 block|{
 endif|#
@@ -1898,6 +1866,8 @@ name|lkey
 operator|.
 name|size
 condition|)
+if|if
+condition|(
 call|(
 name|dbp
 operator|->
@@ -1914,8 +1884,34 @@ name|ldata
 argument_list|,
 name|R_NEXT
 argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DB_CACHE
+name|dbs
+index|[
+literal|0
+index|]
+operator|->
+name|size
+operator|=
+literal|0
 expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+name|YP_NOKEY
+operator|)
+return|;
 block|}
+ifdef|#
+directive|ifdef
+name|DB_CACHE
+block|}
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
