@@ -445,7 +445,7 @@ index|[
 name|i
 index|]
 operator|=
-name|bus_alloc_resource_any
+name|bus_alloc_resource
 argument_list|(
 name|child
 argument_list|,
@@ -455,6 +455,16 @@ operator|&
 name|i
 argument_list|,
 literal|0
+argument_list|,
+operator|~
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|rman_make_alignment_flags
+argument_list|(
+name|align
+argument_list|)
 comment|/* !RF_ACTIVE */
 argument_list|)
 expr_stmt|;
@@ -814,7 +824,7 @@ index|[
 name|i
 index|]
 operator|=
-name|bus_alloc_resource_any
+name|bus_alloc_resource
 argument_list|(
 name|child
 argument_list|,
@@ -824,6 +834,16 @@ operator|&
 name|i
 argument_list|,
 literal|0
+argument_list|,
+operator|~
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|rman_make_alignment_flags
+argument_list|(
+name|align
+argument_list|)
 comment|/* !RF_ACTIVE */
 argument_list|)
 expr_stmt|;
