@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)libcpats.c	1.4 (Berkeley) %G%"
+literal|"@(#)libcpats.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,14 +61,6 @@ block|,
 literal|"	sobgeq	*4(sp),1f\n\ 	calls	$2,__flsbuf\n\ 	jbr	2f\n\ 1:\n\ 	movq	(sp)+,r0\n\ 	movb	r0,*4(r1)\n\ 	incl	4(r1)\n\ 2:\n"
 block|}
 block|,
-block|{
-literal|1
-block|,
-literal|"_strlen\n"
-block|,
-literal|"	movl	(sp)+,r5\n\ 	movl	r5,r1\n\ 1:\n\ 	locc	$0,$65535,(r1)\n\ 	jeql	1b\n\ 	subl3	r5,r1,r0\n"
-block|}
-block|,
 endif|#
 directive|endif
 endif|vax
@@ -79,6 +71,58 @@ comment|/* someday... */
 endif|#
 directive|endif
 endif|mc68000
+block|{
+literal|0
+block|,
+literal|""
+block|,
+literal|""
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pats
+name|vaxsubset_libc_ptab
+index|[]
+init|=
+block|{
+block|{
+literal|1
+block|,
+literal|"_strlen\n"
+block|,
+literal|"	movl	(sp)+,r5\n\ 	movl	r5,r1\n\ 1:\n\ 	tstb	(r1)+\n\ 	jneq	1b\n\ 	decl	r1\n\ 	subl3	r5,r1,r0\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|""
+block|,
+literal|""
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pats
+name|vax_libc_ptab
+index|[]
+init|=
+block|{
+block|{
+literal|1
+block|,
+literal|"_strlen\n"
+block|,
+literal|"	movl	(sp)+,r5\n\ 	movl	r5,r1\n\ 1:\n\ 	locc	$0,$65535,(r1)\n\ 	jeql	1b\n\ 	subl3	r5,r1,r0\n"
+block|}
+block|,
 block|{
 literal|0
 block|,

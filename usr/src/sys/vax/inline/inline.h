@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)inline.h	1.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)inline.h	1.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -161,6 +161,30 @@ name|libc_ptab
 index|[]
 decl_stmt|,
 name|machine_ptab
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pats
+name|vax_libc_ptab
+index|[]
+decl_stmt|,
+name|vaxsubset_libc_ptab
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pats
+name|vax_ptab
+index|[]
+decl_stmt|,
+name|vaxsubset_ptab
 index|[]
 decl_stmt|;
 end_decl_stmt
