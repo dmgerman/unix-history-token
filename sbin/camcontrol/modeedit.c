@@ -386,7 +386,7 @@ argument_list|(
 literal|"%d "
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|arg
 argument_list|)
@@ -1194,12 +1194,9 @@ operator|.
 name|can_edit
 operator|=
 operator|(
-operator|(
-name|int
-operator|)
 name|arg
 operator|!=
-literal|0
+name|NULL
 operator|)
 expr_stmt|;
 name|editind
@@ -1259,12 +1256,11 @@ operator|.
 name|default_value
 operator|=
 operator|(
-operator|(
-name|int
+name|intptr_t
 operator|)
 name|arg
-operator|)
 expr_stmt|;
+comment|/* truncated */
 name|editind
 operator|++
 expr_stmt|;
@@ -1333,7 +1329,7 @@ argument_list|,
 name|name
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|arg
 argument_list|)
