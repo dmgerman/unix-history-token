@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	5.5 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -809,11 +809,11 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-name|hostbuf
+name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hostbuf
+name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -924,11 +924,11 @@ name|len
 argument_list|,
 name|NULL
 argument_list|,
-name|hostbuf
+name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hostbuf
+name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
