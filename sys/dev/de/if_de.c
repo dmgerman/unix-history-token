@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (matt@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.28.2.1 1995/06/02 10:44:24 davidg Exp $  *  */
+comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (matt@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.29 1995/06/11 19:31:49 rgrimes Exp $  *  */
 end_comment
 
 begin_comment
@@ -4055,6 +4055,9 @@ name|m
 decl_stmt|,
 modifier|*
 name|m0
+decl_stmt|,
+modifier|*
+name|next_m0
 decl_stmt|;
 if|if
 condition|(
@@ -4375,6 +4378,12 @@ literal|1
 operator|)
 operator|)
 decl_stmt|;
+name|next_m0
+operator|=
+name|m0
+operator|->
+name|m_next
+expr_stmt|;
 while|while
 condition|(
 name|len
@@ -4406,7 +4415,7 @@ name|recopy
 operator|=
 literal|1
 expr_stmt|;
-name|m0
+name|next_m0
 operator|=
 name|NULL
 expr_stmt|;
@@ -4534,21 +4543,11 @@ do|while
 condition|(
 operator|(
 name|m0
-operator|!=
-name|NULL
-operator|)
-operator|&&
-operator|(
-operator|(
-name|m0
 operator|=
-name|m0
-operator|->
-name|m_next
+name|next_m0
 operator|)
 operator|!=
 name|NULL
-operator|)
 condition|)
 do|;
 comment|/* 	 * The packet exceeds the number of transmit buffer 	 * entries that we can use for one packet, so we have 	 * recopy it into one mbuf and then try again. 	 */
