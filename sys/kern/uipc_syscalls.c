@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * sendfile(2) and related extensions:  * Copyright (c) 1998, David Greenman. All rights reserved.   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_syscalls.c	8.4 (Berkeley) 2/21/94  * $Id: uipc_syscalls.c,v 1.50 1999/01/21 08:29:04 dillon Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * sendfile(2) and related extensions:  * Copyright (c) 1998, David Greenman. All rights reserved.   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_syscalls.c	8.4 (Berkeley) 2/21/94  * $Id: uipc_syscalls.c,v 1.51 1999/01/21 09:00:26 dillon Exp $  */
 end_comment
 
 begin_include
@@ -7790,7 +7790,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* 		 * Attempt to look up the page. If the page doesn't exist or the 		 * part we're interested in isn't valid, then read it from disk. 		 * If some other part of the kernel has this page (i.e. it's busy), 		 * then disk I/O may be occuring on it, so wait and retry. 		 */
+comment|/* 		 * Attempt to look up the page.   		 * 		 *	Allocate if not found 		 * 		 *	Wait and loop if busy. 		 */
 name|pg
 operator|=
 name|vm_page_lookup
@@ -7800,50 +7800,6 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pg
-operator|==
-name|NULL
-operator|||
-operator|(
-operator|!
-operator|(
-name|pg
-operator|->
-name|flags
-operator|&
-name|PG_BUSY
-operator|)
-operator|&&
-operator|!
-name|pg
-operator|->
-name|busy
-operator|&&
-operator|!
-name|vm_page_is_valid
-argument_list|(
-name|pg
-argument_list|,
-name|pgoff
-argument_list|,
-name|xfsize
-argument_list|)
-operator|)
-condition|)
-block|{
-name|struct
-name|uio
-name|auio
-decl_stmt|;
-name|struct
-name|iovec
-name|aiov
-decl_stmt|;
-name|int
-name|bsize
-decl_stmt|;
 if|if
 condition|(
 name|pg
@@ -7875,20 +7831,67 @@ goto|goto
 name|retry_lookup
 goto|;
 block|}
-comment|/* 				 * don't just clear PG_BUSY manually - 				 * vm_page_alloc() should be considered opaque, 				 * use the VM routine provided to clear 				 * PG_BUSY. 				 */
 name|vm_page_wakeup
 argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Ensure that our page is still around when the I/O completes. 			 */
-name|vm_page_io_start
+elseif|else
+if|if
+condition|(
+name|vm_page_sleep_busy
+argument_list|(
+name|pg
+argument_list|,
+name|TRUE
+argument_list|,
+literal|"sfpbsy"
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|retry_lookup
+goto|;
+block|}
+comment|/* 		 * Wire the page so it does not get ripped out from under 		 * us.  		 */
+name|vm_page_wire
 argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
-name|vm_page_wire
+comment|/* 		 * If page is not valid for what we need, initiate I/O 		 */
+if|if
+condition|(
+operator|!
+name|pg
+operator|->
+name|valid
+operator|||
+operator|!
+name|vm_page_is_valid
+argument_list|(
+name|pg
+argument_list|,
+name|pgoff
+argument_list|,
+name|xfsize
+argument_list|)
+condition|)
+block|{
+name|struct
+name|uio
+name|auio
+decl_stmt|;
+name|struct
+name|iovec
+name|aiov
+decl_stmt|;
+name|int
+name|bsize
+decl_stmt|;
+comment|/* 			 * Ensure that our page is still around when the I/O  			 * completes. 			 */
+name|vm_page_io_start
 argument_list|(
 name|pg
 argument_list|)
@@ -8087,29 +8090,6 @@ goto|goto
 name|done
 goto|;
 block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|vm_page_sleep_busy
-argument_list|(
-name|pg
-argument_list|,
-name|TRUE
-argument_list|,
-literal|"sfpbsy"
-argument_list|)
-condition|)
-goto|goto
-name|retry_lookup
-goto|;
-comment|/* 			 * Protect from having the page ripped out from  			 * beneath us. 			 */
-name|vm_page_wire
-argument_list|(
-name|pg
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 		 * Allocate a kernel virtual page and insert the physical page 		 * into it. 		 */
 name|sf
