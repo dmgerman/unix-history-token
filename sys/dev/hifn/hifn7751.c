@@ -7170,15 +7170,6 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)<(b)?(a):(b))
 name|u_int8_t
 modifier|*
 name|buf_pos
@@ -7730,9 +7721,6 @@ operator|-
 name|buf
 operator|)
 return|;
-undef|#
-directive|undef
-name|MIN
 block|}
 end_function
 

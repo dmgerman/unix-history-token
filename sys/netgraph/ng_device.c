@@ -303,22 +303,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* helper definition */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)< (b) ? (a) : (b))
-end_define
-
-begin_comment
 comment|/* the per connection receiving queue maximum */
 end_comment
 

@@ -100,18 +100,6 @@ directive|include
 file|<sys/bus.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)<(b)?(a):(b))
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

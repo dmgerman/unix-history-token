@@ -145,18 +145,6 @@ directive|ifdef
 name|UFS_EXTATTR
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)<(b))?(a):(b))
-end_define
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
