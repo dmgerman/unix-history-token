@@ -913,6 +913,14 @@ operator|&
 name|frame
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|forward_hardclock
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 break|break;
 case|case
