@@ -950,6 +950,7 @@ expr_stmt|;
 if|if
 condition|(
 name|tty_istrapsig
+argument_list|()
 condition|)
 name|useeditmode
 operator||=
