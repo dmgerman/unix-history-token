@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Paycounter, Inc.  * Author: Alfred Perlstein<alfred@paycounter.com>,<alfred@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2000 Paycounter, Inc.  * Copyright (c) 2005 Robert N. M. Watson  * Author: Alfred Perlstein<alfred@paycounter.com>,<alfred@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -625,16 +625,14 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|newaf
-operator|=
+comment|/* 	 * Handle the simple delete case first. 	 */
+if|if
+condition|(
+name|sopt
+operator|==
 name|NULL
-expr_stmt|;
-name|afap
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* 	 * XXXRW: Configuring accept filters should be an atomic test-and-set 	 * operation to prevent races during setup and attach.  There may be 	 * more general issues of racing and ordering here that are not yet 	 * addressed by locking. 	 */
-comment|/* do not set/remove accept filters on non listen sockets */
+condition|)
+block|{
 name|SOCK_LOCK
 argument_list|(
 name|so
@@ -664,14 +662,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* removing the filter */
-if|if
-condition|(
-name|sopt
-operator|==
-name|NULL
-condition|)
-block|{
 if|if
 condition|(
 name|so
@@ -725,7 +715,6 @@ name|so_accept_filter_str
 operator|!=
 name|NULL
 condition|)
-block|{
 name|FREE
 argument_list|(
 name|af
@@ -735,7 +724,6 @@ argument_list|,
 name|M_ACCF
 argument_list|)
 expr_stmt|;
-block|}
 name|FREE
 argument_list|(
 name|af
@@ -765,6 +753,45 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+name|newaf
+operator|=
+name|NULL
+expr_stmt|;
+name|afap
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 	 * XXXRW: Configuring accept filters should be an atomic test-and-set 	 * operation to prevent races during setup and attach.  There may be 	 * more general issues of racing and ordering here that are not yet 	 * addressed by locking. 	 */
+comment|/* do not set/remove accept filters on non listen sockets */
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
 operator|)
 return|;
 block|}
