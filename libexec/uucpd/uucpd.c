@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: uucpd.c,v 1.14 1997/12/04 07:20:45 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1173,6 +1173,9 @@ name|line
 argument_list|,
 literal|"uucp%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pid
 argument_list|)
 expr_stmt|;
@@ -1309,6 +1312,9 @@ name|line
 argument_list|,
 literal|"uucp%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|getpid
 argument_list|()
 argument_list|)

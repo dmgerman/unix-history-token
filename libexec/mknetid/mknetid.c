@@ -94,7 +94,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mknetid.c,v 1.8 1997/11/24 07:31:31 charnier Exp $"
+literal|"$Id: mknetid.c,v 1.9 1997/12/15 07:19:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -875,6 +875,9 @@ name|printf
 argument_list|(
 literal|",%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|glist
 operator|->
 name|groupid
