@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.24 %G%"
+literal|"@(#)routed.c	4.25 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1758,7 +1758,7 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-comment|/* format: dst {net | host} XX gateway XX metric DD [passive]\n */
+comment|/* format: {net | host} XX gateway XX metric DD [passive]\n */
 define|#
 directive|define
 name|readentry
@@ -1766,7 +1766,7 @@ parameter_list|(
 name|fp
 parameter_list|)
 define|\
-value|fscanf((fp), "dst %s %s gateway %s metric %d %s\n", \ 		type, dname, gname,&metric, qual)
+value|fscanf((fp), "%s %s gateway %s metric %d %s\n", \ 		type, dname, gname,&metric, qual)
 for|for
 control|(
 init|;
