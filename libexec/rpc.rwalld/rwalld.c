@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rwalld.c,v 1.6 1997/12/02 12:20:17 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -674,16 +674,29 @@ end_function
 begin_function
 name|void
 modifier|*
-name|wallproc_wall_1
+name|wallproc_wall_1_svc
 parameter_list|(
 name|s
+parameter_list|,
+name|rqstp
 parameter_list|)
-name|char
-modifier|*
+name|wrapstring
 modifier|*
 name|s
 decl_stmt|;
+name|struct
+name|svc_req
+modifier|*
+name|rqstp
+decl_stmt|;
 block|{
+specifier|static
+name|void
+modifier|*
+name|dummy
+init|=
+name|NULL
+decl_stmt|;
 comment|/* fork, popen wall with special option, and send the message */
 if|if
 condition|(
@@ -737,7 +750,8 @@ block|}
 block|}
 return|return
 operator|(
-name|NULL
+operator|&
+name|dummy
 operator|)
 return|;
 block|}
@@ -845,7 +859,7 @@ modifier|*
 call|)
 argument_list|()
 operator|)
-name|wallproc_wall_1
+name|wallproc_wall_1_svc
 expr_stmt|;
 break|break;
 default|default:
@@ -882,6 +896,9 @@ name|transp
 argument_list|,
 name|xdr_argument
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|argument
 argument_list|)
@@ -941,6 +958,9 @@ name|transp
 argument_list|,
 name|xdr_argument
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|argument
 argument_list|)
