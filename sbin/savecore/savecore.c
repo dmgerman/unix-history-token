@@ -291,6 +291,11 @@ argument_list|,
 name|md5
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
