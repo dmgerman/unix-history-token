@@ -4,11 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*      BSDI dptsig.h,v 1.7 1998/06/03 19:15:00 karels Exp      */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1996-2000 Distributed Processing Technology Corporation  * Copyright (c) 2000 Adaptec Corporation.  * All rights reserved.  *  * Redistribution and use in source form, with or without modification, are  * permitted provided that redistributions of source code must retain the  * above copyright notice, this list of conditions and the following disclaimer.  *  * This software is provided `as is' by Distributed Processing Technology and  * any express or implied warranties, including, but not limited to, the  * implied warranties of merchantability and fitness for a particular purpose,  * are disclaimed. In no event shall Distributed Processing Technology be  * liable for any direct, indirect, incidental, special, exemplary or  * consequential damages (including, but not limited to, procurement of  * substitute goods or services; loss of use, data, or profits; or business  * interruptions) however caused and on any theory of liability, whether in  * contract, strict liability, or tort (including negligence or otherwise)  * arising in any way out of the use of this driver software, even if advised  * of the possibility of such damage.  *  */
+comment|/*  * Copyright (c) 1996-2000 Distributed Processing Technology Corporation  * Copyright (c) 2000-2001 Adaptec Corporation.  * All rights reserved.  *  * Redistribution and use in source form, with or without modification, are  * permitted provided that redistributions of source code must retain the  * above copyright notice, this list of conditions and the following disclaimer.  *  * This software is provided `as is' by Distributed Processing Technology and  * any express or implied warranties, including, but not limited to, the  * implied warranties of merchantability and fitness for a particular purpose,  * are disclaimed. In no event shall Distributed Processing Technology be  * liable for any direct, indirect, incidental, special, exemplary or  * consequential damages (including, but not limited to, procurement of  * substitute goods or services; loss of use, data, or profits; or business  * interruptions) however caused and on any theory of liability, whether in  * contract, strict liability, or tort (including negligence or otherwise)  * arising in any way out of the use of this driver software, even if advised  * of the possibility of such damage.  *  */
 end_comment
 
 begin_ifndef
@@ -482,6 +478,17 @@ begin_comment
 comment|/* Intel 686 aka P6 aka Pentium Pro or MMX */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PROC_ITANIUM
+value|0x40
+end_define
+
+begin_comment
+comment|/* Intel Itanium 64 bit */
+end_comment
+
 begin_comment
 comment|/* PROC_i960: */
 end_comment
@@ -528,6 +535,17 @@ end_define
 
 begin_comment
 comment|/* Intel 80960RS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROC_80303
+value|0x05
+end_define
+
+begin_comment
+comment|/* Intel 80303 (ZION) */
 end_comment
 
 begin_comment
@@ -845,6 +863,17 @@ end_define
 
 begin_comment
 comment|/* Storage Manager Modem Database */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FT_DMI
+value|17
+end_define
+
+begin_comment
+comment|/* DMI component interface */
 end_comment
 
 begin_comment
@@ -1397,6 +1426,17 @@ end_define
 
 begin_comment
 comment|/* Microsoft Windows '98     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OS_NW5x
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Novell Netware 5x */
 end_comment
 
 begin_define
@@ -2079,12 +2119,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|FW_DNLDSIZE0
+name|FW_DNLDSIZE16_OLD
 value|0x0000
 end_define
 
 begin_comment
-comment|/* 0..2 DownLoader Size - NONE      */
+comment|/* 0..3 DownLoader Size 16K - TO SUPPORT OLD IMAGES */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FW_DNLDSIZE16k
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 0..3 DownLoader Size 16k             */
 end_comment
 
 begin_define
@@ -2095,7 +2146,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* 0..2 DownLoader Size 16K         */
+comment|/* 0..3 DownLoader Size 16K         */
 end_comment
 
 begin_define
@@ -2106,7 +2157,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* 0..2 DownLoader Size 32K         */
+comment|/* 0..3 DownLoader Size 32K         */
 end_comment
 
 begin_define
@@ -2117,29 +2168,77 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* 0..2 DownLoader Size 64K         */
+comment|/* 0..3 DownLoader Size 64K         */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FW_DNLDSIZE0
+value|0x000f
+end_define
+
+begin_comment
+comment|/* 0..3 DownLoader Size 0K - NONE   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FW_DNLDSIZE_NONE
+value|0x000F
+end_define
+
+begin_comment
+comment|/* 0..3 DownLoader Size - NONE      */
+end_comment
+
+begin_comment
+comment|/* Code Offset is position of the code within the ROM CODE Segment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FW_DNLDR_TOP
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 12 DownLoader Position (0=Top, 1=Bottom) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FW_DNLDR_BTM
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 12 DownLoader Position (0=Top, 1=Bottom) Dominator */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FW_LOAD_BTM
-value|0x2000
+value|0x0000
 end_define
 
 begin_comment
-comment|/* 13 Load Offset (1=Btm, 0=Top)    */
+comment|/* 13 Code Offset (0=Btm, 1=Top) MIPS   */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FW_LOAD_TOP
-value|0x0000
+value|0x2000
 end_define
 
 begin_comment
-comment|/* 13 Load Offset (1=Btm, 0=Top)    */
+comment|/* 13 Code Offset (0=Btm, 1=Top) i960   */
 end_comment
 
 begin_define
@@ -2150,12 +2249,291 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* 15..14 Version Bits 0=Ver1       */
+comment|/* 15..14 Version Bits 0=Ver1               */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FW_SIG_VERSION2
+value|0x4000
+end_define
+
+begin_comment
+comment|/* 15..14 Version Bits 1=Ver2       */
 end_comment
 
 begin_comment
-comment|/*                                 0..2  Downloader Size (Value * 16K)                                 3                                  4                                 5                                 6                                 7                                  8                                 9                                 10                                 11                                  12                                 13              Load Offset (1=BTM  0=TOP)                                 14..15  F/W Sig Version (0=Ver1) */
+comment|/*                                 0..3   Downloader Size (Value * 16K)                                  4                                 5                                 6                                 7                                  8                                 9                                 10                                 11                                  12              Downloader Position (0=Top of Image  1= Bottom of Image (Dominator) )                                 13              Load Offset (0=BTM (MIPS) -- 1=TOP (960) )                                 14..15  F/W Sig Version (0=Ver1) */
 end_comment
+
+begin_comment
+comment|/* ------------------------------------------------------------------   */
+end_comment
+
+begin_comment
+comment|/* Sub System Vendor IDs - The PCI Sub system and vendor IDs for each   */
+end_comment
+
+begin_comment
+comment|/* Adaptec Raid controller                                              */
+end_comment
+
+begin_comment
+comment|/* ------------------------------------------------------------------   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PM1554U2_SUB_ID
+value|0xC0011044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM1654U2_SUB_ID
+value|0xC0021044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM1564U3_1_SUB_ID
+value|0xC0031044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM1564U3_2_SUB_ID
+value|0xC0041044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM1554U2_NOACPI_SUB_ID
+value|0xC0051044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM2554U2_SUB_ID
+value|0xC00A1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM2654U2_SUB_ID
+value|0xC00B1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM2664U3_1_SUB_ID
+value|0xC00C1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM2664U3_2_SUB_ID
+value|0xC00D1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM2554U2_NOACPI_SUB_ID
+value|0xC00E1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM2654U2_NOACPI_SUB_ID
+value|0xC00F1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM3754U2_SUB_ID
+value|0xC0141044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM3755U2B_SUB_ID
+value|0xC0151044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM3755F_SUB_ID
+value|0xC0161044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM3757U2_1_SUB_ID
+value|0xC01E1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM3757U2_2_SUB_ID
+value|0xC01F1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM3767U3_2_SUB_ID
+value|0xC0201044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM3767U3_4_SUB_ID
+value|0xC0211044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM2865U3_1_SUB_ID
+value|0xC0281044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM2865U3_2_SUB_ID
+value|0xC0291044
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM2865F_SUB_ID
+value|0xC02A1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT2000S_1_SUB_ID
+value|0xC03C1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT2000S_2_SUB_ID
+value|0xC03D1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT2000F_SUB_ID
+value|0xC03E1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT3000S_1_SUB_ID
+value|0xC0461044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT3000S_2_SUB_ID
+value|0xC0471044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT3000F_SUB_ID
+value|0xC0481044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT5000S_1_SUB_ID
+value|0xC0501044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT5000S_2_SUB_ID
+value|0xC0511044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT5000F_SUB_ID
+value|0xC0521044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT1000UDMA_SUB_ID
+value|0xC05A1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPT1000UDMA_DAC_SUB_ID
+value|0xC05B1044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPTI2O_DEVICE_ID
+value|0xa501
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPTDOMINATOR_DEVICE_ID
+value|0xa511
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPTDOMINATOR_SUB_ID_START
+value|0xC0321044
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPTDOMINATOR_SUB_ID_END
+value|0xC03b1044
+end_define
 
 begin_comment
 comment|/* ------------------------------------------------------------------   */
