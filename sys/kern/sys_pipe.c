@@ -487,7 +487,7 @@ parameter_list|(
 name|pipe
 parameter_list|)
 define|\
-value|do {								\ 		PIPE_UNLOCK(wpipe);					\ 		mtx_lock(&Giant);					\ 	} while (0)
+value|do {								\ 		KASSERT(((pipe)->pipe_state& PIPE_LOCKFL) != 0,	\ 		    ("%s:%d PIPE_GET_GIANT: line pipe not locked",	\ 		     __FILE__, __LINE__));				\ 		PIPE_UNLOCK(pipe);					\ 		mtx_lock(&Giant);					\ 	} while (0)
 end_define
 
 begin_define
@@ -498,7 +498,7 @@ parameter_list|(
 name|pipe
 parameter_list|)
 define|\
-value|do {								\ 		mtx_unlock(&Giant);					\ 		PIPE_LOCK(wpipe);					\ 	} while (0)
+value|do {								\ 		mtx_unlock(&Giant);					\ 		PIPE_LOCK(pipe);					\ 	} while (0)
 end_define
 
 begin_comment
@@ -3415,6 +3415,13 @@ name|pipe_state
 operator||=
 name|PIPE_DIRECTW
 expr_stmt|;
+name|pipelock
+argument_list|(
+name|wpipe
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|PIPE_GET_GIANT
 argument_list|(
 name|wpipe
@@ -3430,6 +3437,11 @@ name|uio
 argument_list|)
 expr_stmt|;
 name|PIPE_DROP_GIANT
+argument_list|(
+name|wpipe
+argument_list|)
+expr_stmt|;
+name|pipeunlock
 argument_list|(
 name|wpipe
 argument_list|)
@@ -3813,7 +3825,7 @@ condition|)
 block|{
 name|PIPE_GET_GIANT
 argument_list|(
-name|rpipe
+name|wpipe
 argument_list|)
 expr_stmt|;
 if|if
@@ -3832,7 +3844,7 @@ operator|++
 expr_stmt|;
 name|PIPE_DROP_GIANT
 argument_list|(
-name|rpipe
+name|wpipe
 argument_list|)
 expr_stmt|;
 name|pipeunlock
