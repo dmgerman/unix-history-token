@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uusnap.c	5.6 (Berkeley) %G%"
+literal|"@(#)uusnap.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1461,9 +1461,13 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
+operator|&
 name|dentp
 operator|->
 name|d_name
+index|[
+literal|5
+index|]
 argument_list|,
 name|X_LOCK
 argument_list|)
