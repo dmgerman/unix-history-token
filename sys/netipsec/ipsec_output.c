@@ -1478,8 +1478,6 @@ modifier|*
 name|ip
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|,
 name|i
@@ -1508,10 +1506,13 @@ literal|"ipsec4_process_packet: null isr"
 operator|)
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
+name|mtx_lock
+argument_list|(
+operator|&
+name|isr
+operator|->
+name|lock
+argument_list|)
 expr_stmt|;
 comment|/* insure SA contents don't change */
 name|isr
@@ -2112,9 +2113,12 @@ name|isr
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
+name|mtx_unlock
 argument_list|(
-name|s
+operator|&
+name|isr
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2122,9 +2126,12 @@ name|error
 return|;
 name|bad
 label|:
-name|splx
+name|mtx_unlock
 argument_list|(
-name|s
+operator|&
+name|isr
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 if|if

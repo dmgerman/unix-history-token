@@ -326,8 +326,6 @@ name|u_int32_t
 name|spi
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 name|IPSEC_ISTAT
@@ -729,11 +727,6 @@ return|return
 name|EPFNOSUPPORT
 return|;
 block|}
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 comment|/* NB: only pass dst since key_allocsa follows RFC2401 */
 name|sav
 operator|=
@@ -793,11 +786,6 @@ argument_list|,
 name|ipcompstat
 operator|.
 name|ipcomps_notdb
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -865,11 +853,6 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -904,11 +887,6 @@ name|KEY_FREESAV
 argument_list|(
 operator|&
 name|sav
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return

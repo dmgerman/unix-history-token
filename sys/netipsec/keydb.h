@@ -195,6 +195,11 @@ argument|secasvar
 argument_list|)
 name|chain
 expr_stmt|;
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
+comment|/* update/access lock */
 name|u_int
 name|refcnt
 decl_stmt|;

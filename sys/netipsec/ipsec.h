@@ -152,6 +152,10 @@ argument|secpolicy
 argument_list|)
 name|chain
 expr_stmt|;
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
 name|u_int
 name|refcnt
 decl_stmt|;
@@ -246,6 +250,11 @@ modifier|*
 name|sp
 decl_stmt|;
 comment|/* back pointer to SP */
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
+comment|/* to interlock updates */
 block|}
 struct|;
 end_struct
@@ -1043,6 +1052,30 @@ name|x
 parameter_list|)
 value|do { if (ipsec_debug) printf x; } while (0)
 end_define
+
+begin_function_decl
+specifier|extern
+name|struct
+name|ipsecrequest
+modifier|*
+name|ipsec_newisr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ipsec_delisr
+parameter_list|(
+name|struct
+name|ipsecrequest
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct_decl
 struct_decl|struct
