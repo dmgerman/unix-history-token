@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mac.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -1638,6 +1644,29 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* XXX: MUTEX */
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_ifnet_transmit
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|senderr
+argument_list|(
+name|error
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * gif may cause infinite recursion calls when misconfigured. 	 * We'll prevent this by introducing upper limit. 	 * XXX: this mechanism may introduce another problem about 	 *      mutual exclusion of the variable CALLED, especially if we 	 *      use kernel thread. 	 */
 if|if
 condition|(
@@ -1937,6 +1966,18 @@ name|rcvif
 operator|=
 name|gifp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_from_ifnet
+argument_list|(
+name|gifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|gifp
