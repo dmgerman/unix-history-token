@@ -6919,6 +6919,15 @@ literal|"ESS1869"
 expr_stmt|;
 break|break;
 case|case
+literal|0x79187316
+case|:
+comment|/* ESS1879 */
+name|s
+operator|=
+literal|"ESS1879"
+expr_stmt|;
+break|break;
+case|case
 literal|0x88187316
 case|:
 comment|/* ESS1888 */
