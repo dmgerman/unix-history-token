@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kinit.c,v 1.15 1997/03/30 18:58:46 assar Exp $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -715,6 +715,14 @@ argument_list|(
 literal|"Kerberos realm %s:\n"
 argument_list|,
 name|realm
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Ticket file: %s\n"
+argument_list|,
+name|tkt_string
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|printf
