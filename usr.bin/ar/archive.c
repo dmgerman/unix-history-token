@@ -480,7 +480,8 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 name|buf
 index|[
 literal|20
