@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.17 1996/01/15 10:28:32 phk Exp $ */
+comment|/* $Id: scd.c,v 1.18 1996/03/28 14:28:50 scrappy Exp $ */
 end_comment
 
 begin_comment
@@ -525,7 +525,7 @@ name|short
 name|audio_status
 decl_stmt|;
 name|struct
-name|buf
+name|buf_queue_head
 name|head
 decl_stmt|;
 comment|/* head of buf queue */
@@ -1856,11 +1856,6 @@ name|scd_data
 modifier|*
 name|cd
 decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|qp
-decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -2073,21 +2068,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* queue it */
-name|qp
-operator|=
-operator|&
-name|cd
-operator|->
-name|head
-expr_stmt|;
 name|s
 operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|disksort
+name|tqdisksort
 argument_list|(
-name|qp
+operator|&
+name|cd
+operator|->
+name|head
 argument_list|,
 name|bp
 argument_list|)
@@ -2153,14 +2144,6 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|,
-modifier|*
-name|qp
-init|=
-operator|&
-name|cd
-operator|->
-name|head
 decl_stmt|;
 name|struct
 name|partition
@@ -2189,27 +2172,35 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-operator|(
 name|bp
 operator|=
-name|qp
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|cd
 operator|->
-name|b_actf
-operator|)
+name|head
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
 operator|!=
 literal|0
 condition|)
 block|{
 comment|/* block found to process, dequeue */
-name|qp
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|cd
 operator|->
-name|b_actf
-operator|=
+name|head
+argument_list|,
 name|bp
-operator|->
-name|b_actf
+argument_list|,
+name|b_act
+argument_list|)
 expr_stmt|;
 name|cd
 operator|->
