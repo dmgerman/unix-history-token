@@ -350,7 +350,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|PC98
-block|{
 name|int
 name|i
 decl_stmt|;
@@ -399,7 +398,7 @@ if|if
 condition|(
 name|bios_geom
 operator|==
-literal|0x4f010f
+literal|0x4f020f
 condition|)
 continue|continue;
 name|printf
@@ -464,7 +463,6 @@ operator|.
 name|bi_n_bios_used
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|printf
