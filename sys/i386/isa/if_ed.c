@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 1.31 1994/02/02 02:24:38 davidg Exp $  */
+comment|/*  * $Id: if_ed.c,v 1.32 1994/02/02 14:05:53 davidg Exp $  */
 end_comment
 
 begin_include
@@ -89,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|"net/if_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"net/netisr.h"
 end_include
 
 begin_ifdef
