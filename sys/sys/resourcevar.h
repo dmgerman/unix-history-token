@@ -220,7 +220,7 @@ name|UIDINFO_LOCK
 parameter_list|(
 name|ui
 parameter_list|)
-value|mtx_lock((ui)->ui_mtxp);
+value|mtx_lock((ui)->ui_mtxp)
 end_define
 
 begin_define
@@ -230,7 +230,7 @@ name|UIDINFO_UNLOCK
 parameter_list|(
 name|ui
 parameter_list|)
-value|mtx_unlock((ui)->ui_mtxp);
+value|mtx_unlock((ui)->ui_mtxp)
 end_define
 
 begin_struct_decl
