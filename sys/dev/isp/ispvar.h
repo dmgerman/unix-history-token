@@ -1642,7 +1642,7 @@ comment|/* insist on {N/F}L-Port connection */
 end_comment
 
 begin_comment
-comment|/*  * Prior to calling isp_reset for the first time, the outer layer  * should set isp_role to one of NONE, INITIATOR, TARGET, BOTH.  *  * If you set ISP_ROLE_NONE, the cards will be reset, new firmware loaded,  * NVRAM read, and defaults set, but any further initialization (e.g.  * INITIALIZE CONTROL BLOCK commands for 2X00 cards) won't be done.  *  * If INITIATOR MODE isn't set, attempts to run commands will be stopped  * at isp_start and completed with the moral equivalent of SELECTION TIMEOUT.  *  * If TARGET MODE is set, it doesn't mean that the rest of target mode support  * needs to be enabled, or will even work. What happens with the 2X00 cards  * here is that if you have enabled it with TARGET MODE as part of the ICB  * options, but you haven't given the f/w any ram resources for ATIOs or  * Immediate Notifies, the f/w just handles what it can and you never see  * anything. Basically, it sends a single byte of data (the first byte,  * which you can set as part of the INITIALIZE CONTROL BLOCK command) for  * INQUIRY, and sends back QUEUE FULL status for any other command.  *   */
+comment|/*  * Prior to calling isp_reset for the first time, the outer layer  * should set isp_role to one of NONE, INITIATOR, TARGET, BOTH.  *  * If you set ISP_ROLE_NONE, the cards will be reset, new firmware loaded,  * NVRAM read, and defaults set, but any further initialization (e.g.  * INITIALIZE CONTROL BLOCK commands for 2X00 cards) won't be done.  *  * If INITIATOR MODE isn't set, attempts to run commands will be stopped  * at isp_start and completed with the moral equivalent of SELECTION TIMEOUT.  *  * If TARGET MODE is set, it doesn't mean that the rest of target mode support  * needs to be enabled, or will even work. What happens with the 2X00 cards  * here is that if you have enabled it with TARGET MODE as part of the ICB  * options, but you haven't given the f/w any ram resources for ATIOs or  * Immediate Notifies, the f/w just handles what it can and you never see  * anything. Basically, it sends a single byte of data (the first byte,  * which you can set as part of the INITIALIZE CONTROL BLOCK command) for  * INQUIRY, and sends back QUEUE FULL status for any other command.  *  */
 end_comment
 
 begin_define
@@ -2295,7 +2295,10 @@ name|ISPASYNC_CONF_CHANGE
 block|,
 comment|/* Platform Configuration Change */
 name|ISPASYNC_UNHANDLED_RESPONSE
+block|,
 comment|/* Unhandled Response Entry */
+name|ISPASYNC_FW_CRASH
+comment|/* Firmware has crashed */
 block|}
 name|ispasync_t
 typedef|;
@@ -2503,6 +2506,17 @@ begin_define
 define|#
 directive|define
 name|ISP_LOGDEBUG3
+value|0x80
+end_define
+
+begin_comment
+comment|/* log high frequency debug messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGDEBUG4
 value|0x100
 end_define
 
