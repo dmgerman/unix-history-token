@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.215 1999/06/22 01:39:53 mckusick Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.216 1999/06/26 02:46:06 mckusick Exp $  */
 end_comment
 
 begin_comment
@@ -175,22 +175,6 @@ begin_comment
 comment|/* I/O operation notification */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* replaced bu sched_sync */
-end_comment
-
-begin_endif
-unit|static void vfs_update __P((void)); static struct	proc *updateproc; static struct kproc_desc up_kp = { 	"update", 	vfs_update,&updateproc }; SYSINIT_KT(update, SI_SUB_KTHREAD_UPDATE, SI_ORDER_FIRST, kproc_start,&up_kp)
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|struct
 name|buf
@@ -332,16 +316,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Internal update daemon, process 3  *	The variable vfs_update_wakeup allows for internal syncs.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|vfs_update_wakeup
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * bogus page -- for I/O to/from partially complete buffers  * this is a temporary solution to the problem, but it is not  * really that bad.  it would be better to split the buffer  * for input in the case of buffers partially already in memory,  * but the code is intricate enough already.  */
@@ -9762,22 +9736,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* not with kirks code */
-end_comment
-
-begin_endif
-unit|static int vfs_update_interval = 30;  static void vfs_update() { 	while (1) { 		tsleep(&vfs_update_wakeup, PUSER, "update", 		    hz * vfs_update_interval); 		vfs_update_wakeup = 0; 		sync(curproc, NULL); 	} }  static int sysctl_kern_updateinterval SYSCTL_HANDLER_ARGS { 	int error = sysctl_handle_int(oidp, 		oidp->oid_arg1, oidp->oid_arg2, req); 	if (!error) 		wakeup(&vfs_update_wakeup); 	return error; }  SYSCTL_PROC(_kern, KERN_UPDATEINTERVAL, update, CTLTYPE_INT|CTLFLAG_RW,&vfs_update_interval, 0, sysctl_kern_updateinterval, "I", "");
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * This routine is called in lieu of iodone in the case of  * incomplete I/O.  This keeps the busy status for pages  * consistant.  */
