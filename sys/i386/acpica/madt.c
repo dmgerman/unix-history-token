@@ -217,6 +217,24 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+name|int
+name|force_sci_lo
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.acpi.force_sci_lo"
+argument_list|,
+operator|&
+name|force_sci_lo
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
 name|MULTIPLE_APIC_TABLE
 modifier|*
 name|madt
@@ -2475,7 +2493,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If the SCI is remapped to a non-ISA global interrupt, 	 * force it to level trigger and active-lo polarity. 	 * If the SCI is identity mapped but has edge trigger and 	 * active-hi polarity, also force it to use level/lo.  	 */
+comment|/* 	 * If the SCI is identity mapped but has edge trigger and 	 * active-hi polarity or the force_sci_lo tunable is set, 	 * force it to use level/lo. 	 */
 name|force_lo
 operator|=
 literal|0
@@ -2492,11 +2510,7 @@ name|SciInt
 condition|)
 if|if
 condition|(
-name|intr
-operator|->
-name|Interrupt
-operator|>
-literal|15
+name|force_sci_lo
 operator|||
 operator|(
 name|intr
