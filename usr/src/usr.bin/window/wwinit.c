@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.13 83/12/17"
+literal|"@(#)wwinit.c	3.14 84/01/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -333,6 +333,39 @@ condition|)
 name|wwcursormodes
 operator|=
 name|WWM_UL
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|wwib
+operator|=
+name|malloc
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+literal|512
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+name|wwibe
+operator|=
+name|wwib
+operator|+
+literal|512
+expr_stmt|;
+name|wwibp
+operator|=
+name|wwib
+expr_stmt|;
+name|wwibc
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.19 83/12/09"
+literal|"@(#)cmd.c	3.20 84/01/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|bgetc
+name|wwgetc
 argument_list|()
 operator|)
 operator|>=
@@ -875,12 +875,12 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-name|bpeekc
+name|wwpeekc
 argument_list|()
 operator|<
 literal|0
 condition|)
-name|bread
+name|wwiomux
 argument_list|()
 expr_stmt|;
 block|}
@@ -959,13 +959,13 @@ condition|(
 operator|(
 name|c
 operator|=
-name|bgetc
+name|wwgetc
 argument_list|()
 operator|)
 operator|<
 literal|0
 condition|)
-name|bread
+name|wwiomux
 argument_list|()
 expr_stmt|;
 if|if

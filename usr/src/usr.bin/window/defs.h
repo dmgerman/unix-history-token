@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.7 83/11/30	  */
+comment|/*  *	@(#)defs.h	3.8 84/01/16	  */
 end_comment
 
 begin_include
@@ -45,30 +45,6 @@ name|NWINDOW
 value|9
 end_define
 
-begin_decl_stmt
-name|int
-name|nread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nreade
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nreadz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nreadc
-decl_stmt|;
-end_decl_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -86,58 +62,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* things for handling input */
-end_comment
-
-begin_decl_stmt
-name|char
-name|ibuf
-index|[
-literal|512
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|ibufp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ibufc
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|bgetc
-parameter_list|()
-value|(ibufc ? ibufc--, *ibufp++&0x7f : -1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bpeekc
-parameter_list|()
-value|(ibufc ? *ibufp&0x7f : -1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bungetc
-parameter_list|(
-name|c
-parameter_list|)
-value|(ibufp> ibuf ? ibufc++, *--ibufp = (c) : -1)
-end_define
 
 begin_decl_stmt
 name|struct

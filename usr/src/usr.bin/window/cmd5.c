@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd5.c	3.8 83/11/29"
+literal|"@(#)cmd5.c	3.9 84/01/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,12 +182,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|bpeekc
+name|wwpeekc
 argument_list|()
 operator|<
 literal|0
 condition|)
-name|bread
+name|wwiomux
 argument_list|()
 expr_stmt|;
 switch|switch

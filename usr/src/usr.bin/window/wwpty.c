@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwpty.c	3.5 83/12/08"
+literal|"@(#)wwpty.c	3.6 84/01/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,11 @@ name|i
 decl_stmt|;
 name|int
 name|tty
+decl_stmt|;
+name|int
+name|on
+init|=
+literal|1
 decl_stmt|;
 define|#
 directive|define
@@ -237,6 +242,38 @@ argument_list|(
 name|tty
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|w
+operator|->
+name|ww_pty
+argument_list|,
+operator|(
+name|int
+operator|)
+name|TIOCPKT
+argument_list|,
+operator|&
+name|on
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|w
+operator|->
+name|ww_pty
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 return|return
 literal|0
 return|;

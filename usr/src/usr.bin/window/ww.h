@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.24 84/01/11	  */
+comment|/*  *	@(#)ww.h	3.25 84/01/16	  */
 end_comment
 
 begin_include
@@ -21,6 +21,10 @@ directive|define
 name|NWW
 value|30
 end_define
+
+begin_comment
+comment|/* maximum number of windows */
+end_comment
 
 begin_comment
 comment|/* a rectangle */
@@ -199,6 +203,29 @@ literal|11
 index|]
 decl_stmt|;
 comment|/* "/dev/ttyp?" */
+name|char
+modifier|*
+name|ww_ob
+decl_stmt|;
+comment|/* output buffer */
+name|char
+modifier|*
+name|ww_obe
+decl_stmt|;
+comment|/* end of ww_ob */
+name|char
+modifier|*
+name|ww_obp
+decl_stmt|;
+comment|/* current position in ww_ob */
+name|int
+name|ww_obc
+decl_stmt|;
+comment|/* character count */
+name|char
+name|ww_stopped
+decl_stmt|;
+comment|/* flow control */
 comment|/* things for the user, they really don't belong here */
 name|char
 name|ww_center
@@ -655,6 +682,10 @@ begin_comment
 comment|/* major change */
 end_comment
 
+begin_comment
+comment|/* the window structures */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|ww
@@ -685,6 +716,10 @@ name|ww
 name|wwnobody
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* tty things */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -754,6 +789,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* termcap fields for the function keys */
+end_comment
+
+begin_comment
+comment|/* generally useful variables */
 end_comment
 
 begin_decl_stmt
@@ -926,6 +965,44 @@ name|wwnmajmiss
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|wwnread
+decl_stmt|,
+name|wwnreade
+decl_stmt|,
+name|wwnreadz
+decl_stmt|,
+name|wwnreadc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wwnwread
+decl_stmt|,
+name|wwnwreade
+decl_stmt|,
+name|wwnwreadz
+decl_stmt|,
+name|wwnwreadd
+decl_stmt|,
+name|wwnwreadc
+decl_stmt|,
+name|wwnwreadp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wwnselect
+decl_stmt|,
+name|wwnselecte
+decl_stmt|,
+name|wwnselectz
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* quicky macros */
 end_comment
@@ -992,6 +1069,79 @@ parameter_list|(
 name|w
 parameter_list|)
 value|wwredrawwin1((w), (w)->ww_i.t, (w)->ww_i.b, 0)
+end_define
+
+begin_comment
+comment|/* things for handling input */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|wwib
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* input (keyboard) buffer */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|wwibe
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* wwib + sizeof buffer */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|wwibp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current position in buffer */
+end_comment
+
+begin_decl_stmt
+name|int
+name|wwibc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* character count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wwgetc
+parameter_list|()
+value|(wwibc ? wwibc--, *wwibp++&0x7f : -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wwpeekc
+parameter_list|()
+value|(wwibc ? *wwibp&0x7f : -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wwungetc
+parameter_list|(
+name|c
+parameter_list|)
+value|(wwibp> wwib ? wwibc++, *--wwibp = (c) : -1)
 end_define
 
 begin_comment

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	3.6 83/12/02"
+literal|"@(#)cmd4.c	3.7 84/01/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,7 +141,7 @@ control|)
 block|{
 switch|switch
 condition|(
-name|bgetc
+name|wwgetc
 argument_list|()
 condition|)
 block|{
@@ -170,7 +170,7 @@ case|case
 operator|-
 literal|1
 case|:
-name|bread
+name|wwiomux
 argument_list|()
 expr_stmt|;
 continue|continue;
@@ -298,7 +298,7 @@ argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
-name|bgets
+name|wwgets
 argument_list|(
 name|buf
 argument_list|,
