@@ -844,6 +844,12 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+name|rpipe
+operator|=
+name|wpipe
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|pipe_create
