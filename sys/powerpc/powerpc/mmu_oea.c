@@ -3205,8 +3205,6 @@ init|;
 name|phys_avail
 index|[
 name|i
-operator|+
-literal|2
 index|]
 operator|!=
 literal|0
@@ -3227,6 +3225,7 @@ index|]
 operator|>=
 name|sz
 condition|)
+block|{
 name|translations
 operator|=
 operator|(
@@ -3239,6 +3238,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
+break|break;
+block|}
 block|}
 end_for
 
