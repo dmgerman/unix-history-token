@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.363.2.10 2003/10/15 17:19:14 ca Exp $"
+literal|"@(#)$Id: util.c,v 8.382 2004/03/26 19:01:10 ca Exp $"
 argument_list|)
 end_macro
 
@@ -27,6 +27,72 @@ include|#
 directive|include
 file|<sm/xtrap.h>
 end_include
+
+begin_comment
+comment|/* **  NEWSTR -- Create a copy of a C string ** **	Parameters: **		s -- the string to copy. ** **	Returns: **		pointer to newly allocated string. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|newstr
+parameter_list|(
+name|s
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
+block|{
+name|size_t
+name|l
+decl_stmt|;
+name|char
+modifier|*
+name|n
+decl_stmt|;
+name|l
+operator|=
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|l
+operator|+
+literal|1
+operator|>
+name|l
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|xalloc
+argument_list|(
+name|l
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|sm_strlcpy
+argument_list|(
+name|n
+argument_list|,
+name|s
+argument_list|,
+name|l
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+return|return
+name|n
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* **  ADDQUOTES -- Adds quotes& quote bits to a string. ** **	Runs through a string and adds backslashes and quote bits. ** **	Parameters: **		s -- the string to modify. **		rpool -- resource pool from which to allocate result ** **	Returns: **		pointer to quoted string. */
@@ -188,12 +254,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|_FFR_STRIPBACKSL
-end_if
-
 begin_comment
 comment|/* **  STRIPBACKSLASH -- Strip leading backslash from a string. ** **	This is done in place. ** **	Parameters: **		s -- the string to strip. ** **	Returns: **		none. */
 end_comment
@@ -295,15 +355,6 @@ condition|)
 do|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_STRIPBACKSL */
-end_comment
 
 begin_comment
 comment|/* **  RFC822_STRING -- Checks string for proper RFC822 string quoting. ** **	Runs through a string and verifies RFC822 special characters **	are only found inside comments, quoted strings, or backslash **	escaped.  Also verified balanced quotes and parenthesis. ** **	Parameters: **		s -- the string to modify. ** **	Returns: **		true iff the string is RFC822 compliant, false otherwise. */
@@ -1553,8 +1604,18 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  LOG_SENDMAIL_PID -- record sendmail pid and command line. ** **	Parameters: **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		writes pidfile, logs command line. */
+comment|/* **  LOG_SENDMAIL_PID -- record sendmail pid and command line. ** **	Parameters: **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		writes pidfile, logs command line. **		keeps file open and locked to prevent overwrite of active file */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|SM_FILE_T
+modifier|*
+name|Pidf
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -1569,10 +1630,6 @@ decl_stmt|;
 block|{
 name|long
 name|sff
-decl_stmt|;
-name|SM_FILE_T
-modifier|*
-name|pidf
 decl_stmt|;
 name|char
 name|pidpath
@@ -1595,6 +1652,8 @@ operator||
 name|SFF_REGONLY
 operator||
 name|SFF_CREAT
+operator||
+name|SFF_NBLOCK
 expr_stmt|;
 if|if
 condition|(
@@ -1622,7 +1681,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|pidf
+name|Pidf
 operator|=
 name|safefopen
 argument_list|(
@@ -1639,18 +1698,36 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pidf
+name|Pidf
 operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EWOULDBLOCK
+condition|)
 name|sm_syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"unable to write %s: %s"
+literal|"unable to write pid to %s: file in use by another process"
+argument_list|,
+name|pidpath
+argument_list|)
+expr_stmt|;
+else|else
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"unable to write pid to %s: %s"
 argument_list|,
 name|pidpath
 argument_list|,
@@ -1663,10 +1740,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|pid_t
-name|pid
-decl_stmt|;
-name|pid
+name|PidFilePid
 operator|=
 name|getpid
 argument_list|()
@@ -1677,7 +1751,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|pidf
+name|Pidf
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -1686,7 +1760,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|pid
+name|PidFilePid
 argument_list|)
 expr_stmt|;
 comment|/* line 2 contains all command line flags */
@@ -1695,7 +1769,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|pidf
+name|Pidf
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -1704,17 +1778,18 @@ argument_list|,
 name|CommandLineArgs
 argument_list|)
 expr_stmt|;
-comment|/* flush and close */
+comment|/* flush */
 operator|(
 name|void
 operator|)
-name|sm_io_close
+name|sm_io_flush
 argument_list|(
-name|pidf
+name|Pidf
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
+comment|/* 		**  Leave pid file open until process ends 		**  so it's not overwritten by another 		**  process. 		*/
 block|}
 if|if
 condition|(
@@ -1732,6 +1807,39 @@ literal|"started as: %s"
 argument_list|,
 name|CommandLineArgs
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* **  CLOSE_SENDMAIL_PID -- close sendmail pid file ** **	Parameters: **		none. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|close_sendmail_pid
+parameter_list|()
+block|{
+if|if
+condition|(
+name|Pidf
+operator|==
+name|NULL
+condition|)
+return|return;
+operator|(
+name|void
+operator|)
+name|sm_io_close
+argument_list|(
+name|Pidf
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|)
+expr_stmt|;
+name|Pidf
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -1874,15 +1982,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  PRINTAV -- print argument vector. ** **	Parameters: **		av -- argument vector. ** **	Returns: **		none. ** **	Side Effects: **		prints av. */
+comment|/* **  PRINTAV -- print argument vector. ** **	Parameters: **		fp -- output file pointer. **		av -- argument vector. ** **	Returns: **		none. ** **	Side Effects: **		prints av. */
 end_comment
 
 begin_function
 name|void
 name|printav
 parameter_list|(
+name|fp
+parameter_list|,
 name|av
 parameter_list|)
+name|SM_FILE_T
+modifier|*
+name|fp
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -1925,7 +2039,7 @@ name|void
 operator|)
 name|sm_io_putc
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -1934,6 +2048,8 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|fp
+argument_list|,
 operator|*
 name|av
 operator|++
@@ -1945,7 +2061,7 @@ name|void
 operator|)
 name|sm_io_putc
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -1956,15 +2072,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  XPUTS -- put string doing control escapes. ** **	Parameters: **		s -- string to put. ** **	Returns: **		none. ** **	Side Effects: **		output to stdout */
+comment|/* **  XPUTS -- put string doing control escapes. ** **	Parameters: **		fp -- output file pointer. **		s -- string to put. ** **	Returns: **		none. ** **	Side Effects: **		output to stdout */
 end_comment
 
 begin_function
 name|void
 name|xputs
 parameter_list|(
+name|fp
+parameter_list|,
 name|s
 parameter_list|)
+name|SM_FILE_T
+modifier|*
+name|fp
+decl_stmt|;
 specifier|register
 specifier|const
 name|char
@@ -2066,7 +2188,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2110,7 +2232,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2147,7 +2269,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2198,7 +2320,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2220,7 +2342,7 @@ name|void
 operator|)
 name|sm_io_putc
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2256,7 +2378,7 @@ name|void
 operator|)
 name|sm_io_putc
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2280,7 +2402,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2303,7 +2425,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2349,7 +2471,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2397,7 +2519,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2427,7 +2549,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2454,7 +2576,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2489,7 +2611,7 @@ name|void
 operator|)
 name|sm_io_putc
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2540,7 +2662,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2569,7 +2691,7 @@ name|void
 operator|)
 name|sm_io_putc
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2581,7 +2703,7 @@ name|void
 operator|)
 name|sm_io_putc
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2596,7 +2718,7 @@ name|void
 operator|)
 name|sm_io_putc
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2608,7 +2730,7 @@ name|void
 operator|)
 name|sm_io_putc
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2628,7 +2750,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2644,7 +2766,7 @@ name|void
 operator|)
 name|sm_io_flush
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
@@ -5408,7 +5530,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  DUMPFD -- dump a file descriptor ** **	Parameters: **		fd -- the file descriptor to dump. **		printclosed -- if set, print a notification even if **			it is closed; otherwise print nothing. **		logit -- if set, send output to syslog instead of stdout. ** **	Returns: **		none. */
+comment|/* **  DUMPFD -- dump a file descriptor ** **	Parameters: **		fd -- the file descriptor to dump. **		printclosed -- if set, print a notification even if **			it is closed; otherwise print nothing. **		logit -- if set, use sm_syslog instead of sm_dprintf() ** **	Returns: **		none. */
 end_comment
 
 begin_function
@@ -6423,15 +6545,8 @@ name|buf
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|"%s\n"
 argument_list|,
 name|buf
@@ -6651,9 +6766,6 @@ decl_stmt|;
 block|{
 name|pid_t
 name|pid
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|int
 name|save_errno
@@ -7319,57 +7431,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* arrange for all the files to be closed */
-for|for
-control|(
-name|i
-operator|=
-literal|3
-init|;
-name|i
-operator|<
-name|DtableSize
-condition|;
-name|i
-operator|++
-control|)
-block|{
-specifier|register
-name|int
-name|j
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|j
-operator|=
-name|fcntl
+name|sm_close_on_exec
 argument_list|(
-name|i
-argument_list|,
-name|F_GETFD
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|!=
-operator|-
+name|STDERR_FILENO
+operator|+
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|i
 argument_list|,
-name|F_SETFD
-argument_list|,
-name|j
-operator||
-name|FD_CLOEXEC
+name|DtableSize
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* now exec the process */
 operator|(
 name|void
@@ -8647,6 +8717,9 @@ decl_stmt|;
 name|int
 name|proc_other
 decl_stmt|;
+name|SOCKADDR
+name|proc_hostaddr
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -8684,6 +8757,8 @@ parameter_list|,
 name|count
 parameter_list|,
 name|other
+parameter_list|,
+name|hostaddr
 parameter_list|)
 name|pid_t
 name|pid
@@ -8700,6 +8775,10 @@ name|count
 decl_stmt|;
 name|int
 name|other
+decl_stmt|;
+name|SOCKADDR
+modifier|*
+name|hostaddr
 decl_stmt|;
 block|{
 name|int
@@ -8946,6 +9025,46 @@ operator|.
 name|proc_other
 operator|=
 name|other
+expr_stmt|;
+if|if
+condition|(
+name|hostaddr
+operator|!=
+name|NULL
+condition|)
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_hostaddr
+operator|=
+operator|*
+name|hostaddr
+expr_stmt|;
+else|else
+name|memset
+argument_list|(
+operator|&
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_hostaddr
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_hostaddr
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* if process adding itself, it's not a child */
 if|if
@@ -9657,6 +9776,179 @@ argument_list|(
 name|SIGCHLD
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* **  COUNT_OPEN_CONNECTIONS ** **	Parameters: **		hostaddr - ClientAddress ** **	Returns: **		the number of open connections for this client ** */
+end_comment
+
+begin_function
+name|int
+name|count_open_connections
+parameter_list|(
+name|hostaddr
+parameter_list|)
+name|SOCKADDR
+modifier|*
+name|hostaddr
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|,
+name|n
+decl_stmt|;
+if|if
+condition|(
+name|hostaddr
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+name|n
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ProcListSize
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_pid
+operator|==
+name|NO_PID
+condition|)
+continue|continue;
+if|if
+condition|(
+name|hostaddr
+operator|->
+name|sa
+operator|.
+name|sa_family
+operator|!=
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_hostaddr
+operator|.
+name|sa
+operator|.
+name|sa_family
+condition|)
+continue|continue;
+if|#
+directive|if
+name|NETINET
+if|if
+condition|(
+name|hostaddr
+operator|->
+name|sa
+operator|.
+name|sa_family
+operator|==
+name|AF_INET
+operator|&&
+operator|(
+name|hostaddr
+operator|->
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|==
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_hostaddr
+operator|.
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|)
+condition|)
+name|n
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET */
+if|#
+directive|if
+name|NETINET6
+if|if
+condition|(
+name|hostaddr
+operator|->
+name|sa
+operator|.
+name|sa_family
+operator|==
+name|AF_INET6
+operator|&&
+name|IN6_ARE_ADDR_EQUAL
+argument_list|(
+operator|&
+operator|(
+name|hostaddr
+operator|->
+name|sin6
+operator|.
+name|sin6_addr
+operator|)
+argument_list|,
+operator|&
+operator|(
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_hostaddr
+operator|.
+name|sin6
+operator|.
+name|sin6_addr
+operator|)
+argument_list|)
+condition|)
+name|n
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+block|}
+return|return
+name|n
+return|;
 block|}
 end_function
 

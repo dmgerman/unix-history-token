@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: macro.c,v 8.86 2001/09/11 04:05:14 gshapiro Exp $"
+literal|"@(#)$Id: macro.c,v 8.88 2003/09/05 23:11:18 ca Exp $"
 argument_list|)
 end_macro
 
@@ -455,6 +455,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
@@ -781,6 +784,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|xbuf
 argument_list|)
 expr_stmt|;
@@ -990,6 +996,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
@@ -1079,6 +1088,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|#
+directive|if
+name|SM_HEAP_CHECK
 name|newvalue
 operator|=
 name|sm_strdup_tagged_x
@@ -1092,6 +1104,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* SM_HEAP_CHECK */
+name|newvalue
+operator|=
+name|sm_strdup_x
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SM_HEAP_CHECK */
 name|setbitn
 argument_list|(
 name|id
@@ -1257,6 +1282,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
@@ -1540,6 +1568,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: errstring.h,v 1.4.4.3 2003/06/24 17:16:10 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: errstring.h,v 1.9 2003/12/10 03:19:06 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -25,12 +25,27 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|NEEDINTERRNO
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEEDINTERRNO */
+end_comment
 
 begin_comment
 comment|/* **  These are used in a few cases where we need some special **  error codes, but where the system doesn't provide something **  reasonable.  They are printed in sm_errstring. */
@@ -221,6 +236,17 @@ end_define
 
 begin_comment
 comment|/* base for LDAP errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_LDAPURLBASE
+value|(E_PSEUDOBASE + 200)
+end_define
+
+begin_comment
+comment|/* base for LDAP URL errors */
 end_comment
 
 begin_comment

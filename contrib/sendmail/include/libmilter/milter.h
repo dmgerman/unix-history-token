@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: milter.h,v 8.37.2.3 2003/12/02 00:19:51 msk Exp $  */
+comment|/*  * Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: milter.h,v 8.39 2003/12/02 00:21:42 msk Exp $  */
 end_comment
 
 begin_comment
@@ -56,12 +56,6 @@ name|socket_t
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER_MACROS_EOM
-end_if
-
 begin_define
 define|#
 directive|define
@@ -71,35 +65,6 @@ end_define
 
 begin_comment
 comment|/* max size of macro pointer array */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _FFR_MILTER_MACROS_EOM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_MACROS_ENTRIES
-value|4
-end_define
-
-begin_comment
-comment|/* max size of macro pointer array */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER_MACROS_EOM */
 end_comment
 
 begin_comment

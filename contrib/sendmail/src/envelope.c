@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: envelope.c,v 8.282.2.2 2002/12/04 15:44:08 ca Exp $"
+literal|"@(#)$Id: envelope.c,v 8.293 2004/02/18 00:46:18 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -415,9 +415,6 @@ name|parent
 operator|->
 name|e_msgsize
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 name|parent
@@ -486,9 +483,6 @@ name|e_quarmsg
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 block|}
 name|e
 operator|->
@@ -743,6 +737,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|e
 operator|->
 name|e_id
@@ -775,6 +772,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|e
 operator|->
 name|e_sendqueue
@@ -2346,9 +2346,6 @@ name|DATAFL_LETTER
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 name|panic
@@ -2362,9 +2359,6 @@ comment|/* 			**  leave the Qf file behind as 			**  the delivery attempt failed
 comment|/* EMPTY */
 block|}
 elseif|else
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 if|if
 condition|(
 name|xunlink
@@ -2849,9 +2843,6 @@ name|e_message
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|e
 operator|->
 name|e_qfletter
@@ -2881,9 +2872,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* 	**  Copy the macro table. 	**  We might be able to avoid this by zeroing the macro table 	**  and always searching BlankEnvelope.e_macro after e->e_macro 	**  in macvalue(). 	*/
 for|for
 control|(
@@ -3096,36 +3084,12 @@ operator|=
 name|curtime
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|e
 operator|->
 name|e_qfletter
 operator|=
 literal|'\0'
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-name|e
-operator|->
-name|e_queuealg
-operator|=
-name|QueueAlg
-expr_stmt|;
-name|e
-operator|->
-name|e_queuedelay
-operator|=
-name|QueueInitDelay
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
 comment|/* 	**  Set OutChannel to something useful if stdout isn't it. 	**	This arranges that any extra stuff the mailer produces 	**	gets sent back to the user on error (because it is 	**	tucked away in the transcript). 	*/
 if|if
 condition|(
@@ -3358,6 +3322,41 @@ name|now
 operator|=
 name|curtime
 argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"%ld"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|now
+argument_list|)
+expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_TEMP
+argument_list|,
+name|macid
+argument_list|(
+literal|"{time}"
+argument_list|)
+argument_list|,
+name|buf
+argument_list|)
 expr_stmt|;
 name|tm
 operator|=
@@ -4326,6 +4325,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 operator|&
 name|e
 operator|->
@@ -4822,6 +4824,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -5131,6 +5135,7 @@ condition|;
 name|pvp
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|strcmp
@@ -5147,6 +5152,7 @@ name|lastat
 operator|=
 name|pvp
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|lastat
@@ -5186,6 +5192,9 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|e
 operator|->
 name|e_fromdomain
@@ -5425,15 +5434,8 @@ name|first
 init|=
 name|true
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|"%lx"
 argument_list|,
 name|e
@@ -5476,15 +5478,8 @@ if|if
 condition|(
 name|first
 condition|)
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|"<%s"
 argument_list|,
 name|ef
@@ -5493,15 +5488,8 @@ name|ef_name
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|",%s"
 argument_list|,
 name|ef
@@ -5519,15 +5507,8 @@ condition|(
 operator|!
 name|first
 condition|)
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;

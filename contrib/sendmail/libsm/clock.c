@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: clock.c,v 1.35.2.10 2003/06/26 16:36:49 ca Exp $"
+literal|"@(#)$Id: clock.c,v 1.45 2004/01/19 19:32:08 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2114,6 +2114,18 @@ literal|0
 name|int
 name|r
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_SLEEP_USE_SELECT
+operator|>
+literal|0
+name|struct
+name|timeval
+name|sm_io_to
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_SLEEP_USE_SELECT> 0 */
 endif|#
 directive|endif
 comment|/* _FFR_SLEEP_USE_SELECT> 0 */
@@ -2135,8 +2147,6 @@ operator|>
 literal|0
 name|struct
 name|timeval
-name|sm_io_to
-decl_stmt|,
 name|slpv
 decl_stmt|;
 endif|#
@@ -2442,7 +2452,7 @@ literal|1
 expr_stmt|;
 name|sm_io_to
 operator|.
-name|utv_sec
+name|tv_usec
 operator|=
 literal|0
 expr_stmt|;

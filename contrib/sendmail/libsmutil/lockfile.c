@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: lockfile.c,v 8.19 2001/09/11 04:04:55 gshapiro Exp $"
+literal|"@(#)$Id: lockfile.c,v 8.21 2003/11/10 22:57:38 ca Exp $"
 argument_list|)
 end_macro
 
@@ -57,10 +57,6 @@ decl_stmt|;
 name|struct
 name|flock
 name|lfd
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|memset
 argument_list|(

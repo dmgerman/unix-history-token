@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_define
@@ -42,7 +42,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 expr_stmt|;
 end_expr_stmt
 
@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.887.2.29 2003/11/07 00:09:31 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.939 2004/06/17 16:39:21 ca Exp $"
 argument_list|)
 end_macro
 
@@ -691,9 +691,6 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* queue group to process */
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|char
 modifier|*
 name|quarantining
@@ -701,9 +698,6 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* quarantine queue items? */
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|bool
 name|extraprivs
 decl_stmt|;
@@ -732,6 +726,10 @@ name|int
 name|cftype
 decl_stmt|;
 comment|/* which cf file to use? */
+name|SM_FILE_T
+modifier|*
+name|smdebug
+decl_stmt|;
 specifier|static
 name|time_t
 name|starttime
@@ -1010,44 +1008,22 @@ name|fill_errno
 operator|=
 name|errno
 expr_stmt|;
-name|i
-operator|=
-name|DtableSize
-expr_stmt|;
-while|while
-condition|(
-operator|--
-name|i
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|i
-operator|!=
-name|STDIN_FILENO
-operator|&&
-name|i
-operator|!=
-name|STDOUT_FILENO
-operator|&&
-name|i
-operator|!=
-name|STDERR_FILENO
-condition|)
-operator|(
-name|void
-operator|)
-name|close
+name|sm_closefrom
 argument_list|(
-name|i
+name|STDERR_FILENO
+operator|+
+literal|1
+argument_list|,
+name|DtableSize
 argument_list|)
 expr_stmt|;
-block|}
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+name|smdebug
+operator|=
+name|NULL
 expr_stmt|;
 if|#
 directive|if
@@ -1387,9 +1363,6 @@ name|MD_PURGESTAT
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_QUARANTINE
-if|#
-directive|if
 name|defined
 argument_list|(
 name|__osf__
@@ -1402,7 +1375,7 @@ argument_list|)
 define|#
 directive|define
 name|OPTIONS
-value|"A:B:b:C:cd:e:F:f:Gh:IiL:M:mN:nO:o:p:q:R:r:sTtV:vX:xQ:"
+value|"A:B:b:C:cD:d:e:F:f:Gh:IiL:M:mN:nO:o:p:Q:q:R:r:sTtV:vX:x"
 endif|#
 directive|endif
 comment|/* defined(__osf__) || defined(_AIX3) */
@@ -1415,7 +1388,7 @@ argument_list|)
 define|#
 directive|define
 name|OPTIONS
-value|"A:B:b:C:cd:E:e:F:f:Gh:IiJ:L:M:mN:nO:o:p:q:R:r:sTtV:vX:Q:"
+value|"A:B:b:C:cD:d:E:e:F:f:Gh:IiJ:L:M:mN:nO:o:p:Q:q:R:r:sTtV:vX:"
 endif|#
 directive|endif
 comment|/* defined(sony_news) */
@@ -1425,57 +1398,10 @@ name|OPTIONS
 define|#
 directive|define
 name|OPTIONS
-value|"A:B:b:C:cd:e:F:f:Gh:IiL:M:mN:nO:o:p:q:R:r:sTtV:vX:Q:"
+value|"A:B:b:C:cD:d:e:F:f:Gh:IiL:M:mN:nO:o:p:Q:q:R:r:sTtV:vX:"
 endif|#
 directive|endif
 comment|/* ! OPTIONS */
-else|#
-directive|else
-comment|/* _FFR_QUARANTINE */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__osf__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_AIX3
-argument_list|)
-define|#
-directive|define
-name|OPTIONS
-value|"A:B:b:C:cd:e:F:f:Gh:IiL:M:mN:nO:o:p:q:R:r:sTtV:vX:x"
-endif|#
-directive|endif
-comment|/* defined(__osf__) || defined(_AIX3) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sony_news
-argument_list|)
-define|#
-directive|define
-name|OPTIONS
-value|"A:B:b:C:cd:E:e:F:f:Gh:IiJ:L:M:mN:nO:o:p:q:R:r:sTtV:vX:"
-endif|#
-directive|endif
-comment|/* defined(sony_news) */
-ifndef|#
-directive|ifndef
-name|OPTIONS
-define|#
-directive|define
-name|OPTIONS
-value|"A:B:b:C:cd:e:F:f:Gh:IiL:M:mN:nO:o:p:q:R:r:sTtV:vX:"
-endif|#
-directive|endif
-comment|/* ! OPTIONS */
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* Set to 0 to allow -b; need to check optarg before using it! */
 name|opterr
 operator|=
@@ -1607,6 +1533,82 @@ return|;
 block|}
 break|break;
 case|case
+literal|'D'
+case|:
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"-D file must be before -d"
+argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
+expr_stmt|;
+break|break;
+block|}
+name|dp
+operator|=
+name|drop_privileges
+argument_list|(
+name|true
+argument_list|)
+expr_stmt|;
+name|setstat
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
+name|smdebug
+operator|=
+name|sm_io_open
+argument_list|(
+name|SmFtStdio
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+name|optarg
+argument_list|,
+name|SM_IO_APPEND
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|smdebug
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"cannot open %s"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_CANTCREAT
+expr_stmt|;
+break|break;
+block|}
+name|sm_debug_setfile
+argument_list|(
+name|smdebug
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'d'
 case|:
 name|debug
@@ -1623,7 +1625,8 @@ name|void
 operator|)
 name|sm_io_setvbuf
 argument_list|(
-name|smioout
+name|sm_debug_file
+argument_list|()
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -1688,7 +1691,7 @@ argument_list|(
 name|optarg
 argument_list|)
 argument_list|,
-literal|24
+literal|32
 argument_list|)
 operator|+
 literal|1
@@ -1727,15 +1730,9 @@ operator|+
 name|j
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 case|case
 literal|'Q'
 case|:
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 case|case
 literal|'q'
 case|:
@@ -1772,6 +1769,9 @@ name|SM_TIME_DEFAULT
 argument_list|,
 literal|"WARNING: Can not use -d with -q.  Disabling debugging.\n"
 argument_list|)
+expr_stmt|;
+name|sm_debug_close
+argument_list|()
 expr_stmt|;
 name|sm_debug_setfile
 argument_list|(
@@ -2621,21 +2621,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RES_NOALIASES
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|RES_NOALIASES
-argument_list|,
-name|_res
-operator|.
-name|options
-argument_list|)
-condition|)
-name|ResNoAliases
-operator|=
-name|true
-expr_stmt|;
 name|_res
 operator|.
 name|options
@@ -2834,10 +2819,7 @@ condition|(
 name|p
 operator|!=
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|p
 index|[
 literal|1
@@ -2845,7 +2827,6 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-block|{
 name|macdefine
 argument_list|(
 operator|&
@@ -2864,72 +2845,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-while|while
-condition|(
-name|p
-operator|!=
-name|NULL
-operator|&&
-name|strchr
-argument_list|(
-operator|&
-name|p
-index|[
-literal|1
-index|]
-argument_list|,
-literal|'.'
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-operator|*
-name|p
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|0
-argument_list|,
-literal|4
-argument_list|)
-condition|)
-name|sm_dprintf
-argument_list|(
-literal|"\ta.k.a.: %s\n"
-argument_list|,
-name|jbuf
-argument_list|)
-expr_stmt|;
-name|setclass
-argument_list|(
-literal|'w'
-argument_list|,
-name|jbuf
-argument_list|)
-expr_stmt|;
-operator|*
-name|p
-operator|++
-operator|=
-literal|'.'
-expr_stmt|;
-name|p
-operator|=
-name|strchr
-argument_list|(
-name|p
-argument_list|,
-literal|'.'
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 name|uname
@@ -3378,9 +3293,6 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|QueueLimitQuarantine
 operator|=
 operator|(
@@ -3389,9 +3301,6 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* 	**  Crack argv. 	*/
 name|optind
 operator|=
@@ -3502,6 +3411,9 @@ operator|=
 name|false
 expr_stmt|;
 break|break;
+case|case
+literal|'D'
+case|:
 case|case
 literal|'d'
 case|:
@@ -4019,9 +3931,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 case|case
 literal|'Q'
 case|:
@@ -4074,9 +3983,6 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 case|case
 literal|'q'
 case|:
@@ -4366,9 +4272,6 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 case|case
 literal|'Q'
 case|:
@@ -4440,9 +4343,6 @@ operator|=
 name|QM_LOST
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 case|case
 literal|'p'
 case|:
@@ -5447,7 +5347,7 @@ directive|if
 name|NAMED_BIND
 if|if
 condition|(
-name|FallBackMX
+name|FallbackMX
 operator|!=
 name|NULL
 condition|)
@@ -5456,7 +5356,7 @@ name|void
 operator|)
 name|getfallbackmxrr
 argument_list|(
-name|FallBackMX
+name|FallbackMX
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5934,6 +5834,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|macvalue
 argument_list|(
 literal|'w'
@@ -5950,6 +5853,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|macvalue
 argument_list|(
 literal|'j'
@@ -5966,6 +5872,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|macvalue
 argument_list|(
 literal|'m'
@@ -5982,6 +5891,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|macvalue
 argument_list|(
 literal|'k'
@@ -6138,25 +6050,6 @@ name|QPINGONFAILURE
 operator||
 name|QPINGONDELAY
 expr_stmt|;
-comment|/* be sure we don't pick up bogus HOSTALIASES environment variable */
-if|if
-condition|(
-name|OpMode
-operator|==
-name|MD_QUEUERUN
-operator|&&
-name|RealUid
-operator|!=
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|unsetenv
-argument_list|(
-literal|"HOSTALIASES"
-argument_list|)
-expr_stmt|;
 comment|/* check for sane configuration level */
 if|if
 condition|(
@@ -6259,9 +6152,6 @@ block|{
 case|case
 name|MD_QUEUERUN
 case|:
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 name|quarantining
@@ -6272,10 +6162,8 @@ name|action
 operator|=
 literal|"quarantine jobs"
 expr_stmt|;
-elseif|else
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
+else|else
+block|{
 comment|/* Normal users can do a single queue run */
 if|if
 condition|(
@@ -6284,6 +6172,7 @@ operator|==
 literal|0
 condition|)
 break|break;
+block|}
 comment|/* but not persistent queue runners */
 if|if
 condition|(
@@ -7185,7 +7074,7 @@ name|NULL
 condition|)
 name|message
 argument_list|(
-literal|"WARNING: local host name (%s) is not qualified; fix $j in config file"
+literal|"WARNING: local host name (%s) is not qualified; see cf/README: WHO AM I?"
 argument_list|,
 name|MyHostName
 argument_list|)
@@ -7934,15 +7823,9 @@ argument_list|,
 name|MAXFILTERS
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_MILTER_PERDAEMON
 name|setup_daemon_milters
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_PERDAEMON */
 block|}
 endif|#
 directive|endif
@@ -8185,9 +8068,6 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 break|break;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 case|case
 name|MD_QUEUERUN
 case|:
@@ -8253,9 +8133,6 @@ name|EX_OK
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 case|case
 name|MD_HOSTSTAT
 case|:
@@ -8464,6 +8341,9 @@ name|NULL
 condition|)
 name|printmailer
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|Mailer
 index|[
 name|i
@@ -9216,6 +9096,8 @@ literal|0
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* clean up background delivery children */
@@ -9548,6 +9430,13 @@ operator|&&
 name|queuepersistent
 condition|)
 block|{
+comment|/* 				**  Write the pid to file 				**  XXX Overwrites sendmail.pid 				*/
+name|log_sendmail_pid
+argument_list|(
+operator|&
+name|MainEnvelope
+argument_list|)
+expr_stmt|;
 comment|/* set the title to make it easier to find */
 name|sm_setproctitle
 argument_list|(
@@ -10076,6 +9965,23 @@ name|BlankEnvelope
 operator|.
 name|e_macro
 argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
+literal|"{client_ptr}"
+argument_list|)
+argument_list|,
+name|RealHostName
+argument_list|)
+expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
+name|BlankEnvelope
+operator|.
+name|e_macro
+argument_list|,
 name|A_TEMP
 argument_list|,
 name|macid
@@ -10212,7 +10118,16 @@ argument_list|(
 operator|&
 name|RealHostAddr
 argument_list|,
-name|RealHostName
+name|macvalue
+argument_list|(
+name|macid
+argument_list|(
+literal|"{client_name}"
+argument_list|)
+argument_list|,
+operator|&
+name|MainEnvelope
+argument_list|)
 argument_list|,
 operator|&
 name|MainEnvelope
@@ -11030,9 +10945,6 @@ operator|.
 name|q_paddr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 comment|/* Check if quarantining stats should be updated */
 if|if
 condition|(
@@ -11052,9 +10964,6 @@ argument_list|,
 name|STATS_QUARANTINE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* 	**  Actually send everything. 	**	If verifying, just ack. 	*/
 if|if
 condition|(
@@ -11149,6 +11058,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 operator|&
 name|e
 operator|->
@@ -11303,6 +11215,12 @@ name|int
 name|exitstat
 decl_stmt|;
 block|{
+name|char
+name|pidpath
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 comment|/* Still want to process new timeouts added below */
 name|sm_clear_events
 argument_list|()
@@ -11518,6 +11436,45 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SM_CONF_SHM */
+comment|/* close locked pid file */
+name|close_sendmail_pid
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|DaemonPid
+operator|==
+name|getpid
+argument_list|()
+operator|||
+name|PidFilePid
+operator|==
+name|getpid
+argument_list|()
+condition|)
+block|{
+comment|/* blow away the pid file */
+name|expand
+argument_list|(
+name|PidFile
+argument_list|,
+name|pidpath
+argument_list|,
+sizeof|sizeof
+name|pidpath
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|pidpath
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* reset uid for process accounting */
 name|endpwent
 argument_list|()
@@ -12436,9 +12393,6 @@ operator|==
 literal|'-'
 condition|)
 return|return;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 comment|/* Don't allow users to use "-Q." or "-Q ." */
 if|if
 condition|(
@@ -12513,9 +12467,6 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* skip over options that do have a value */
 name|op
 operator|=
@@ -12683,9 +12634,6 @@ name|argv
 operator|=
 literal|"-q0"
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 comment|/* If -Q doesn't have an argument, disable quarantining */
 if|if
 condition|(
@@ -12708,9 +12656,6 @@ name|argv
 operator|=
 literal|"-Q."
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* if -d doesn't have an argument, use 0-99.1 */
 if|if
 condition|(
@@ -13438,6 +13383,8 @@ argument_list|)
 expr_stmt|;
 name|mci_dump_all
 argument_list|(
+name|smioout
+argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
@@ -15073,6 +15020,8 @@ condition|)
 block|{
 name|xputs
 argument_list|(
+name|smioout
+argument_list|,
 operator|*
 name|s
 operator|++
@@ -15131,6 +15080,8 @@ condition|)
 block|{
 name|xputs
 argument_list|(
+name|smioout
+argument_list|,
 operator|*
 name|s
 operator|++
@@ -15204,6 +15155,8 @@ name|NULL
 condition|)
 name|printmailer
 argument_list|(
+name|smioout
+argument_list|,
 name|Mailer
 index|[
 name|i
@@ -15393,6 +15346,8 @@ else|else
 block|{
 name|xputs
 argument_list|(
+name|smioout
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -16528,6 +16483,8 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|smioout
+argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
@@ -16822,6 +16779,8 @@ condition|?
 name|TokTypeNoC
 else|:
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: sendmail.h,v 8.67 2001/09/08 01:20:57 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: sendmail.h,v 8.68 2002/07/01 22:18:53 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -289,6 +289,17 @@ end_define
 
 begin_comment
 comment|/* executable files are ok (E_SM_ISEXEC) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_NBLOCK
+value|0x00080000L
+end_define
+
+begin_comment
+comment|/* use a non-blocking lock */
 end_comment
 
 begin_define

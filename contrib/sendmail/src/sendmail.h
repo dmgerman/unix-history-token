@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -19,6 +19,32 @@ directive|define
 name|_SENDMAIL_H
 value|1
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MILTER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MILTER
+value|1
+end_define
+
+begin_comment
+comment|/* turn on MILTER by default */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MILTER */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -204,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.919.2.29 2003/11/07 00:08:02 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.984 2004/07/14 21:54:22 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -2009,6 +2035,8 @@ operator|,
 name|unsigned
 name|char
 operator|*
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2021,6 +2049,9 @@ name|printaddr
 name|__P
 argument_list|(
 operator|(
+name|SM_FILE_T
+operator|*
+operator|,
 name|ADDRESS
 operator|*
 operator|,
@@ -2386,12 +2417,6 @@ begin_comment
 comment|/* ensure blank line at end of message */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_STRIPBACKSL
-end_if
-
 begin_define
 define|#
 directive|define
@@ -2401,15 +2426,6 @@ end_define
 
 begin_comment
 comment|/* strip leading backslash from user */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_STRIPBACKSL */
 end_comment
 
 begin_define
@@ -2760,6 +2776,17 @@ end_define
 
 begin_comment
 comment|/* check for /etc/passwd entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NOHOSTSTAT
+value|'W'
+end_define
+
+begin_comment
+comment|/* ignore long term host status information */
 end_comment
 
 begin_comment
@@ -3917,6 +3944,18 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
+name|AuthRealm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* AUTH realm */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
 name|SASLInfo
 decl_stmt|;
 end_decl_stmt
@@ -4628,6 +4667,9 @@ name|mci_dump
 name|__P
 argument_list|(
 operator|(
+name|SM_FILE_T
+operator|*
+operator|,
 name|MCI
 operator|*
 operator|,
@@ -4644,6 +4686,9 @@ name|mci_dump_all
 name|__P
 argument_list|(
 operator|(
+name|SM_FILE_T
+operator|*
+operator|,
 name|bool
 operator|)
 argument_list|)
@@ -5346,6 +5391,30 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|insheader
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|bool
 name|isheader
 name|__P
@@ -5643,9 +5712,6 @@ modifier|*
 name|e_statmsg
 decl_stmt|;
 comment|/* stat msg (changes per delivery). 					 * readonly. NULL or allocated from 					 * e_rpool. */
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|char
 modifier|*
 name|e_quarmsg
@@ -5655,9 +5721,6 @@ name|char
 name|e_qfletter
 decl_stmt|;
 comment|/* queue file letter on disk */
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|char
 modifier|*
 name|e_msgboundary
@@ -5712,20 +5775,6 @@ name|TIMERS
 name|e_timers
 decl_stmt|;
 comment|/* per job timers */
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-name|int
-name|e_queuealg
-decl_stmt|;
-comment|/* algorithm for queue delay */
-name|time_t
-name|e_queuedelay
-decl_stmt|;
-comment|/* current delay */
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
 name|long
 name|e_deliver_by
 decl_stmt|;
@@ -8360,6 +8409,270 @@ comment|/* PH_MAP */
 end_comment
 
 begin_comment
+comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETINET6
+operator|||
+name|NETUNIX
+operator|||
+name|NETISO
+operator|||
+name|NETNS
+operator|||
+name|NETX25
+end_if
+
+begin_union
+union|union
+name|bigsockaddr
+block|{
+name|struct
+name|sockaddr
+name|sa
+decl_stmt|;
+comment|/* general version */
+if|#
+directive|if
+name|NETUNIX
+name|struct
+name|sockaddr_un
+name|sunix
+decl_stmt|;
+comment|/* UNIX family */
+endif|#
+directive|endif
+comment|/* NETUNIX */
+if|#
+directive|if
+name|NETINET
+name|struct
+name|sockaddr_in
+name|sin
+decl_stmt|;
+comment|/* INET family */
+endif|#
+directive|endif
+comment|/* NETINET */
+if|#
+directive|if
+name|NETINET6
+name|struct
+name|sockaddr_in6
+name|sin6
+decl_stmt|;
+comment|/* INET/IPv6 */
+endif|#
+directive|endif
+comment|/* NETINET6 */
+if|#
+directive|if
+name|NETISO
+name|struct
+name|sockaddr_iso
+name|siso
+decl_stmt|;
+comment|/* ISO family */
+endif|#
+directive|endif
+comment|/* NETISO */
+if|#
+directive|if
+name|NETNS
+name|struct
+name|sockaddr_ns
+name|sns
+decl_stmt|;
+comment|/* XNS family */
+endif|#
+directive|endif
+comment|/* NETNS */
+if|#
+directive|if
+name|NETX25
+name|struct
+name|sockaddr_x25
+name|sx25
+decl_stmt|;
+comment|/* X.25 family */
+endif|#
+directive|endif
+comment|/* NETX25 */
+block|}
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|SOCKADDR
+value|union bigsockaddr
+end_define
+
+begin_comment
+comment|/* functions */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|anynet_ntoa
+name|__P
+argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|NETINET6
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|anynet_ntop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in6_addr
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|anynet_pton
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET6 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|hostnamebyanyaddr
+name|__P
+argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|validate_connection
+name|__P
+argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20000
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|iptostring
+name|__P
+argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|,
+name|SOCKADDR_LEN_T
+operator|,
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SASL>= 20000 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET || NETINET6 || NETUNIX || NETISO || NETNS || NETX25 */
+end_comment
+
+begin_comment
 comment|/* **  Process List (proclist) */
 end_comment
 
@@ -8470,6 +8783,9 @@ operator|,
 name|int
 operator|,
 name|int
+operator|,
+name|SOCKADDR
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8663,6 +8979,17 @@ comment|/* Maps for LDAP connection */
 endif|#
 directive|endif
 comment|/* LDAPMAP */
+if|#
+directive|if
+name|SOCKETMAP
+name|MAP
+modifier|*
+name|sv_socketmap
+decl_stmt|;
+comment|/* Maps for SOCKET connection */
+endif|#
+directive|endif
+comment|/* SOCKETMAP */
 if|#
 directive|if
 name|MILTER
@@ -8905,6 +9232,32 @@ begin_comment
 comment|/* a queue entry */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SOCKETMAP
+end_if
+
+begin_define
+define|#
+directive|define
+name|ST_SOCKETMAP
+value|16
+end_define
+
+begin_comment
+comment|/* List head of maps for SOCKET connection */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOCKETMAP */
+end_comment
+
 begin_comment
 comment|/* This entry must be last */
 end_comment
@@ -8913,7 +9266,7 @@ begin_define
 define|#
 directive|define
 name|ST_MCI
-value|16
+value|17
 end_define
 
 begin_comment
@@ -9031,6 +9384,28 @@ end_endif
 
 begin_comment
 comment|/* LDAPMAP */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SOCKETMAP
+end_if
+
+begin_define
+define|#
+directive|define
+name|s_socketmap
+value|s_value.sv_socketmap
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOCKETMAP */
 end_comment
 
 begin_if
@@ -10101,270 +10476,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|NETINET
-operator|||
-name|NETINET6
-operator|||
-name|NETUNIX
-operator|||
-name|NETISO
-operator|||
-name|NETNS
-operator|||
-name|NETX25
-end_if
-
-begin_union
-union|union
-name|bigsockaddr
-block|{
-name|struct
-name|sockaddr
-name|sa
-decl_stmt|;
-comment|/* general version */
-if|#
-directive|if
-name|NETUNIX
-name|struct
-name|sockaddr_un
-name|sunix
-decl_stmt|;
-comment|/* UNIX family */
-endif|#
-directive|endif
-comment|/* NETUNIX */
-if|#
-directive|if
-name|NETINET
-name|struct
-name|sockaddr_in
-name|sin
-decl_stmt|;
-comment|/* INET family */
-endif|#
-directive|endif
-comment|/* NETINET */
-if|#
-directive|if
-name|NETINET6
-name|struct
-name|sockaddr_in6
-name|sin6
-decl_stmt|;
-comment|/* INET/IPv6 */
-endif|#
-directive|endif
-comment|/* NETINET6 */
-if|#
-directive|if
-name|NETISO
-name|struct
-name|sockaddr_iso
-name|siso
-decl_stmt|;
-comment|/* ISO family */
-endif|#
-directive|endif
-comment|/* NETISO */
-if|#
-directive|if
-name|NETNS
-name|struct
-name|sockaddr_ns
-name|sns
-decl_stmt|;
-comment|/* XNS family */
-endif|#
-directive|endif
-comment|/* NETNS */
-if|#
-directive|if
-name|NETX25
-name|struct
-name|sockaddr_x25
-name|sx25
-decl_stmt|;
-comment|/* X.25 family */
-endif|#
-directive|endif
-comment|/* NETX25 */
-block|}
-union|;
-end_union
-
-begin_define
-define|#
-directive|define
-name|SOCKADDR
-value|union bigsockaddr
-end_define
-
-begin_comment
-comment|/* functions */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|anynet_ntoa
-name|__P
-argument_list|(
-operator|(
-name|SOCKADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|NETINET6
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|anynet_ntop
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|in6_addr
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|anynet_pton
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NETINET6 */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|hostnamebyanyaddr
-name|__P
-argument_list|(
-operator|(
-name|SOCKADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|validate_connection
-name|__P
-argument_list|(
-operator|(
-name|SOCKADDR
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|SASL
-operator|>=
-literal|20000
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|iptostring
-name|__P
-argument_list|(
-operator|(
-name|SOCKADDR
-operator|*
-operator|,
-name|SOCKADDR_LEN_T
-operator|,
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SASL>= 20000 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NETINET || NETINET6 || NETUNIX || NETISO || NETNS || NETX25 */
-end_comment
-
-begin_comment
 comment|/* **  Mail Filters (milter) */
 end_comment
 
@@ -10623,12 +10734,6 @@ name|MilterLogLevel
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER_PERDAEMON
-end_if
-
 begin_comment
 comment|/* functions */
 end_comment
@@ -10645,15 +10750,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER_PERDAEMON */
-end_comment
 
 begin_endif
 endif|#
@@ -10861,12 +10957,6 @@ begin_comment
 comment|/* fq recipient address required (cf) */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_SMTP_SSL
-end_if
-
 begin_define
 define|#
 directive|define
@@ -10876,15 +10966,6 @@ end_define
 
 begin_comment
 comment|/* SMTP over SSL (smtps) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_SMTP_SSL */
 end_comment
 
 begin_define
@@ -11264,6 +11345,28 @@ begin_comment
 comment|/* Key must be other unreadable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TLS_I_CRLF_EX
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* CRL file must exist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLS_I_CRLF_UNR
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* CRL file must be g/o unreadable */
+end_comment
+
 begin_comment
 comment|/* require server cert */
 end_comment
@@ -11601,6 +11704,45 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|char
+modifier|*
+name|CRLFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file CRLs */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_CRLPATH
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|CRLPath
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* path to CRLs (dir. with hashes) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_CRLPATH */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|unsigned
 name|long
 name|TLS_Srv_Opts
@@ -11628,12 +11770,6 @@ begin_comment
 comment|/* queue file names */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
-
 begin_define
 define|#
 directive|define
@@ -11647,35 +11783,6 @@ directive|define
 name|QUARQF_LETTER
 value|'h'
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
-
-begin_comment
-comment|/* Before quarantining, ANYQF == NORMQF */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ANYQFL_LETTER
-value|'q'
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
 
 begin_define
 define|#
@@ -11789,6 +11896,17 @@ begin_comment
 comment|/* sort by modification time */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|QSO_NONE
+value|6
+end_define
+
+begin_comment
+comment|/* do not sort */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -11799,7 +11917,7 @@ begin_define
 define|#
 directive|define
 name|QSO_BYSHUFFLE
-value|6
+value|7
 end_define
 
 begin_comment
@@ -11813,43 +11931,6 @@ end_endif
 
 begin_comment
 comment|/* _FFR_RHS */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-end_if
-
-begin_define
-define|#
-directive|define
-name|QD_LINEAR
-value|0
-end_define
-
-begin_comment
-comment|/* linear (old) delay alg */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QD_EXP
-value|1
-end_define
-
-begin_comment
-comment|/* exponential delay alg */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUEUEDELAY */
 end_comment
 
 begin_define
@@ -12005,11 +12086,16 @@ begin_comment
 comment|/* always fsync() */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
+begin_define
+define|#
+directive|define
+name|SAFE_REALLY_POSTMILTER
+value|3
+end_define
+
+begin_comment
+comment|/* fsync() if milter says OK */
+end_comment
 
 begin_comment
 comment|/* QueueMode bits */
@@ -12035,15 +12121,6 @@ directive|define
 name|QM_LOST
 value|'L'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
 
 begin_comment
 comment|/* Queue Run Limitations */
@@ -12203,12 +12280,6 @@ begin_comment
 comment|/* mode on files in mail queue */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
-
 begin_decl_stmt
 name|EXTERN
 name|int
@@ -12218,15 +12289,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* which queue items to act upon */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
 end_comment
 
 begin_decl_stmt
@@ -12274,54 +12336,6 @@ begin_comment
 comment|/* location of queue directory */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-end_if
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|QueueAlg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* algorithm for queue delays */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|QueueInitDelay
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* initial queue delay */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|QueueMaxDelay
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum queue delay */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUEUEDELAY */
-end_comment
-
 begin_decl_stmt
 name|EXTERN
 name|QUEUE_CHAR
@@ -12334,12 +12348,6 @@ begin_comment
 comment|/* limit queue run to id */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
-
 begin_decl_stmt
 name|EXTERN
 name|QUEUE_CHAR
@@ -12350,15 +12358,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* limit queue run to quarantine reason */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
 end_comment
 
 begin_decl_stmt
@@ -12540,12 +12539,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -12561,15 +12554,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -12979,12 +12963,6 @@ begin_comment
 comment|/* non-urgent delivery */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUEUERETURN_DSN
-end_if
-
 begin_define
 define|#
 directive|define
@@ -12994,15 +12972,6 @@ end_define
 
 begin_comment
 comment|/* DSN delivery */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUEUERETURN_DSN */
 end_comment
 
 begin_comment
@@ -13202,20 +13171,6 @@ parameter_list|)
 value|{ \ 				if (ExitStat == EX_OK || ExitStat == EX_TEMPFAIL) \ 					ExitStat = s; \ 			}
 end_define
 
-begin_comment
-comment|/* make a copy of a string */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|newstr
-parameter_list|(
-name|s
-parameter_list|)
-value|strcpy(xalloc(strlen(s) + 1), s)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -13273,6 +13228,31 @@ define|#
 directive|define
 name|CHECK_RESTART
 value|_CHECK_RESTART
+end_define
+
+begin_comment
+comment|/* reply types (text in SmtpMsgBuffer) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XS_DEFAULT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_STARTTLS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_AUTH
+value|2
 end_define
 
 begin_comment
@@ -13583,7 +13563,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|_FFR_REQ_DIR_FSYNC_OPT
+name|REQUIRES_DIR_FSYNC
 end_if
 
 begin_decl_stmt
@@ -13603,18 +13583,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_REQ_DIR_FSYNC_OPT */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|ResNoAliases
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* don't use $HOSTALIASES */
+comment|/* REQUIRES_DIR_FSYNC */
 end_comment
 
 begin_decl_stmt
@@ -14209,12 +14178,6 @@ begin_comment
 comment|/* load average refusing connections */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_REJECT_LOG
-end_if
-
 begin_decl_stmt
 name|EXTERN
 name|time_t
@@ -14224,15 +14187,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* time btwn log msgs while refusing */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_REJECT_LOG */
 end_comment
 
 begin_decl_stmt
@@ -14385,6 +14339,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* process id of daemon */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|pid_t
+name|PidFilePid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* daemon/queue runner who wrote pid file */
 end_comment
 
 begin_decl_stmt
@@ -14662,12 +14627,24 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|FallBackMX
+name|FallbackMX
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* fall back MX host */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|FallbackSmartHost
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fall back smart host */
 end_comment
 
 begin_decl_stmt
@@ -14692,6 +14669,33 @@ end_decl_stmt
 
 begin_comment
 comment|/* path to search for .forward files */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_HELONAME
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|HeloName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* hostname to announce in HELO */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_HELONAME */
 end_comment
 
 begin_decl_stmt
@@ -15180,6 +15184,13 @@ begin_comment
 comment|/* type of a QuickAbort exception */
 end_comment
 
+begin_decl_stmt
+name|EXTERN
+name|int
+name|ConnectionRateWindowSize
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  Declarations of useful functions */
 end_comment
@@ -15667,6 +15678,8 @@ operator|,
 name|char
 operator|*
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -16076,27 +16089,12 @@ name|STATS_NORMAL
 value|'n'
 end_define
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
-
 begin_define
 define|#
 directive|define
 name|STATS_QUARANTINE
 value|'q'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
 
 begin_define
 define|#
@@ -16409,6 +16407,24 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+name|milter_data_cmd
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
 name|milter_envrcpt
 name|__P
 argument_list|(
@@ -16435,6 +16451,27 @@ name|milter_data
 name|__P
 argument_list|(
 operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|milter_unknown
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
 name|ENVELOPE
 operator|*
 operator|,
@@ -16779,6 +16816,19 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
+name|close_sendmail_pid
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|clrdaemon
 name|__P
 argument_list|(
@@ -16809,6 +16859,23 @@ name|ENVELOPE
 operator|*
 operator|,
 name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|connection_rate_check
+name|__P
+argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -16869,6 +16936,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|count_open_connections
+name|__P
+argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|time_t
 name|curtime
 name|__P
@@ -16909,6 +16990,27 @@ operator|,
 name|bool
 operator|,
 name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dferror
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+specifier|volatile
+operator|,
+name|char
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -17713,6 +17815,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|newstr
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -17807,6 +17925,9 @@ name|printav
 name|__P
 argument_list|(
 operator|(
+name|SM_FILE_T
+operator|*
+operator|,
 name|char
 operator|*
 operator|*
@@ -17822,6 +17943,9 @@ name|printmailer
 name|__P
 argument_list|(
 operator|(
+name|SM_FILE_T
+operator|*
+operator|,
 name|MAILER
 operator|*
 operator|)
@@ -18350,6 +18474,40 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|sm_closefrom
+name|__P
+argument_list|(
+operator|(
+name|int
+name|lowest
+operator|,
+name|int
+name|highest
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sm_close_on_exec
+name|__P
+argument_list|(
+operator|(
+name|int
+name|lowest
+operator|,
+name|int
+name|highest
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|hostent
 modifier|*
@@ -18509,12 +18667,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|_FFR_STRIPBACKSL
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -18528,15 +18680,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_STRIPBACKSL */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -18986,6 +19129,9 @@ name|xputs
 name|__P
 argument_list|(
 operator|(
+name|SM_FILE_T
+operator|*
+operator|,
 specifier|const
 name|char
 operator|*

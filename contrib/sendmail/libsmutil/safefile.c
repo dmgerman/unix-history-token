@@ -24,7 +24,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: safefile.c,v 8.124 2002/05/24 20:50:15 gshapiro Exp $"
+literal|"@(#)$Id: safefile.c,v 8.127 2004/05/27 22:37:51 msk Exp $"
 argument_list|)
 end_macro
 
@@ -1338,7 +1338,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"\t[exec bits %lo]\tE_SM_ISEXEC]\n"
+literal|"\t[exec bits %lo]\tE_SM_ISEXEC\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -2894,6 +2894,16 @@ name|long
 name|sff
 decl_stmt|;
 block|{
+if|#
+directive|if
+operator|!
+name|NOFTRUNCATE
+name|bool
+name|truncate
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* !NOFTRUNCATE */
 name|int
 name|rval
 decl_stmt|;
@@ -3117,6 +3127,31 @@ operator|-
 literal|1
 return|;
 block|}
+if|#
+directive|if
+operator|!
+name|NOFTRUNCATE
+name|truncate
+operator|=
+name|bitset
+argument_list|(
+name|O_TRUNC
+argument_list|,
+name|omode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|truncate
+condition|)
+name|omode
+operator|&=
+operator|~
+name|O_TRUNC
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !NOFTRUNCATE */
 name|fd
 operator|=
 name|dfopen
@@ -3176,6 +3211,61 @@ operator|-
 literal|1
 return|;
 block|}
+if|#
+directive|if
+operator|!
+name|NOFTRUNCATE
+if|if
+condition|(
+name|truncate
+operator|&&
+name|ftruncate
+argument_list|(
+name|fd
+argument_list|,
+operator|(
+name|off_t
+operator|)
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|int
+name|save_errno
+decl_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"554 5.3.0 cannot open: file %s could not be truncated"
+argument_list|,
+name|fn
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* !NOFTRUNCATE */
 return|return
 name|fd
 return|;
@@ -3916,6 +4006,19 @@ else|else
 name|locktype
 operator|=
 name|LOCK_SH
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|SFF_NBLOCK
+argument_list|,
+name|sff
+argument_list|)
+condition|)
+name|locktype
+operator||=
+name|LOCK_NB
 expr_stmt|;
 if|if
 condition|(

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: engine.c,v 8.109.2.8 2003/12/01 23:57:45 msk Exp $"
+literal|"@(#)$Id: engine.c,v 8.119 2003/12/02 18:53:57 ca Exp $"
 argument_list|)
 end_macro
 
@@ -307,12 +307,6 @@ name|CI_RCPT
 value|3
 end_define
 
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER_MACROS_EOM
-end_if
-
 begin_define
 define|#
 directive|define
@@ -343,28 +337,6 @@ operator|>=
 name|MAX_MACROS_ENTRIES
 endif|#
 directive|endif
-else|#
-directive|else
-comment|/* _FFR_MILTER_MACROS_EOM */
-if|#
-directive|if
-name|CI_RCPT
-operator|>=
-name|MAX_MACROS_ENTRIES
-name|ERROR
-operator|:
-do|do
-name|not
-name|compile
-name|with
-name|CI_RCPT
-operator|>=
-name|MAX_MACROS_ENTRIES
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_MACROS_EOM */
 comment|/* function prototypes */
 specifier|static
 name|int
@@ -496,6 +468,68 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>
+literal|2
+end_if
+
+begin_decl_stmt
+specifier|static
+name|int
+name|st_unknown
+name|__P
+argument_list|(
+operator|(
+name|genarg
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMFI_VERSION> 2 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>
+literal|3
+end_if
+
+begin_decl_stmt
+specifier|static
+name|int
+name|st_data
+name|__P
+argument_list|(
+operator|(
+name|genarg
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMFI_VERSION> 3 */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -696,8 +730,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ST_HDRS
+name|ST_DATA
 value|6
+end_define
+
+begin_comment
+comment|/* data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_HDRS
+value|7
 end_define
 
 begin_comment
@@ -708,7 +753,7 @@ begin_define
 define|#
 directive|define
 name|ST_EOHS
-value|7
+value|8
 end_define
 
 begin_comment
@@ -719,7 +764,7 @@ begin_define
 define|#
 directive|define
 name|ST_BODY
-value|8
+value|9
 end_define
 
 begin_comment
@@ -730,7 +775,7 @@ begin_define
 define|#
 directive|define
 name|ST_ENDM
-value|9
+value|10
 end_define
 
 begin_comment
@@ -741,7 +786,7 @@ begin_define
 define|#
 directive|define
 name|ST_QUIT
-value|10
+value|11
 end_define
 
 begin_comment
@@ -752,7 +797,7 @@ begin_define
 define|#
 directive|define
 name|ST_ABRT
-value|11
+value|12
 end_define
 
 begin_comment
@@ -762,9 +807,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ST_LAST
-value|ST_ABRT
+name|ST_UNKN
+value|13
 end_define
+
+begin_comment
+comment|/* unknown SMTP command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_LAST
+value|ST_UNKN
+end_define
+
+begin_comment
+comment|/* last valid state */
+end_comment
 
 begin_define
 define|#
@@ -820,35 +880,42 @@ begin_define
 define|#
 directive|define
 name|NX_OPTS
-value|(MI_MASK(ST_CONN))
+value|(MI_MASK(ST_CONN) | MI_MASK(ST_UNKN))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_CONN
-value|(MI_MASK(ST_HELO) | MI_MASK(ST_MAIL))
+value|(MI_MASK(ST_HELO) | MI_MASK(ST_MAIL) | MI_MASK(ST_UNKN))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_HELO
-value|(MI_MASK(ST_HELO) | MI_MASK(ST_MAIL))
+value|(MI_MASK(ST_HELO) | MI_MASK(ST_MAIL) | MI_MASK(ST_UNKN))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_MAIL
-value|(MI_MASK(ST_RCPT) | MI_MASK(ST_ABRT))
+value|(MI_MASK(ST_RCPT) | MI_MASK(ST_ABRT) | MI_MASK(ST_UNKN))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_RCPT
-value|(MI_MASK(ST_HDRS) | MI_MASK(ST_EOHS) | \ 		 MI_MASK(ST_BODY) | MI_MASK(ST_ENDM) | \ 		 MI_MASK(ST_RCPT) | MI_MASK(ST_ABRT))
+value|(MI_MASK(ST_HDRS) | MI_MASK(ST_EOHS) | MI_MASK(ST_DATA) | \ 		 MI_MASK(ST_BODY) | MI_MASK(ST_ENDM) | \ 		 MI_MASK(ST_RCPT) | MI_MASK(ST_ABRT) | MI_MASK(ST_UNKN))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NX_DATA
+value|(MI_MASK(ST_EOHS) | MI_MASK(ST_HDRS) | MI_MASK(ST_ABRT))
 end_define
 
 begin_define
@@ -876,7 +943,7 @@ begin_define
 define|#
 directive|define
 name|NX_ENDM
-value|(MI_MASK(ST_QUIT) | MI_MASK(ST_MAIL))
+value|(MI_MASK(ST_QUIT) | MI_MASK(ST_MAIL) | MI_MASK(ST_UNKN))
 end_define
 
 begin_define
@@ -891,6 +958,13 @@ define|#
 directive|define
 name|NX_ABRT
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NX_UNKN
+value|(MI_MASK(ST_HELO) | MI_MASK(ST_MAIL) | \ 		 MI_MASK(ST_RCPT) | MI_MASK(ST_ABRT) | \ 		 MI_MASK(ST_DATA) | \ 		 MI_MASK(ST_BODY) | MI_MASK(ST_UNKN) | \ 		 MI_MASK(ST_ABRT) | MI_MASK(ST_QUIT))
 end_define
 
 begin_define
@@ -919,6 +993,8 @@ name|NX_MAIL
 block|,
 name|NX_RCPT
 block|,
+name|NX_DATA
+block|,
 name|NX_HDRS
 block|,
 name|NX_EOHS
@@ -930,6 +1006,8 @@ block|,
 name|NX_QUIT
 block|,
 name|NX_ABRT
+block|,
+name|NX_UNKN
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1001,9 +1079,6 @@ block|,
 name|st_connectinfo
 block|}
 block|,
-if|#
-directive|if
-name|_FFR_MILTER_MACROS_EOM
 block|{
 name|SMFIC_BODYEOB
 block|,
@@ -1018,26 +1093,6 @@ block|,
 name|st_bodyend
 block|}
 block|,
-else|#
-directive|else
-comment|/* _FFR_MILTER_MACROS_EOM */
-block|{
-name|SMFIC_BODYEOB
-block|,
-name|CM_ARG1
-block|,
-name|ST_ENDM
-block|,
-name|CT_CONT
-block|,
-name|CI_NONE
-block|,
-name|st_bodyend
-block|}
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_MACROS_EOM */
 block|{
 name|SMFIC_HELO
 block|,
@@ -1122,6 +1177,28 @@ block|,
 name|st_quit
 block|}
 block|,
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>
+literal|3
+block|{
+name|SMFIC_DATA
+block|,
+name|CM_ARG0
+block|,
+name|ST_DATA
+block|,
+name|CT_CONT
+block|,
+name|CI_NONE
+block|,
+name|st_data
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* SMFI_VERSION> 3 */
 block|{
 name|SMFIC_RCPT
 block|,
@@ -1135,6 +1212,28 @@ name|CI_RCPT
 block|,
 name|st_rcpt
 block|}
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>
+literal|2
+block|,
+block|{
+name|SMFIC_UNKNOWN
+block|,
+name|CM_ARG1
+block|,
+name|ST_UNKN
+block|,
+name|CT_IGNO
+block|,
+name|CI_NONE
+block|,
+name|st_unknown
+block|}
+endif|#
+directive|endif
+comment|/* SMFI_VERSION> 2 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3540,6 +3639,101 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>
+literal|3
+end_if
+
+begin_comment
+comment|/* **  ST_DATA -- DATA command ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|st_data
+parameter_list|(
+name|g
+parameter_list|)
+name|genarg
+modifier|*
+name|g
+decl_stmt|;
+block|{
+name|sfsistat
+argument_list|(
+argument|*fi_data
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SMFICTX
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|g
+operator|==
+name|NULL
+condition|)
+return|return
+name|_SMFIS_ABORT
+return|;
+if|if
+condition|(
+name|g
+operator|->
+name|a_ctx
+operator|->
+name|ctx_smfi
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|fi_data
+operator|=
+name|g
+operator|->
+name|a_ctx
+operator|->
+name|ctx_smfi
+operator|->
+name|xxfi_data
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+call|(
+modifier|*
+name|fi_data
+call|)
+argument_list|(
+name|g
+operator|->
+name|a_ctx
+argument_list|)
+return|;
+return|return
+name|SMFIS_CONTINUE
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMFI_VERSION> 3 */
+end_comment
+
 begin_comment
 comment|/* **  ST_HELO -- helo/ehlo command ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value */
 end_comment
@@ -3854,6 +4048,121 @@ argument_list|)
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>
+literal|2
+end_if
+
+begin_comment
+comment|/* **  ST_UNKNOWN -- unrecognized or unimplemented command ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|st_unknown
+parameter_list|(
+name|g
+parameter_list|)
+name|genarg
+modifier|*
+name|g
+decl_stmt|;
+block|{
+name|sfsistat
+argument_list|(
+argument|*fi_unknown
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SMFICTX
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|g
+operator|==
+name|NULL
+condition|)
+return|return
+name|_SMFIS_ABORT
+return|;
+name|mi_clr_macros
+argument_list|(
+name|g
+operator|->
+name|a_ctx
+argument_list|,
+name|g
+operator|->
+name|a_idx
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|g
+operator|->
+name|a_ctx
+operator|->
+name|ctx_smfi
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|fi_unknown
+operator|=
+name|g
+operator|->
+name|a_ctx
+operator|->
+name|ctx_smfi
+operator|->
+name|xxfi_unknown
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+call|(
+modifier|*
+name|fi_unknown
+call|)
+argument_list|(
+name|g
+operator|->
+name|a_ctx
+argument_list|,
+name|g
+operator|->
+name|a_buf
+argument_list|)
+return|;
+return|return
+name|SMFIS_CONTINUE
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMFI_VERSION> 2 */
+end_comment
+
 begin_comment
 comment|/* **  ST_MACROS -- deal with macros received from the MTA ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue/keep ** **	Side effects: **		set pointer in macro array to current values. */
 end_comment
@@ -3961,9 +4270,6 @@ operator|=
 name|CI_RCPT
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_MILTER_MACROS_EOM
 case|case
 name|SMFIC_BODYEOB
 case|:
@@ -3972,9 +4278,6 @@ operator|=
 name|CI_EOM
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_MACROS_EOM */
 default|default:
 name|free
 argument_list|(

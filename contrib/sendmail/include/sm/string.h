@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: string.h,v 1.36 2001/06/17 21:31:11 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: string.h,v 1.38 2003/10/10 17:56:57 ca Exp $  */
 end_comment
 
 begin_comment
@@ -141,6 +141,90 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|DO_NOT_USE_STRCPY
+end_if
+
+begin_comment
+comment|/* for "normal" data (free'd before end of process) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sm_strdup_x
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|_str
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for data that is supposed to be persistent. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sm_pstrdup_x
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|_str
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sm_strdup_tagged_x
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|str
+operator|,
+name|char
+operator|*
+name|file
+operator|,
+name|int
+name|line
+operator|,
+name|int
+name|group
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* DO_NOT_USE_STRCPY */
+end_comment
+
 begin_comment
 comment|/* for "normal" data (free'd before end of process) */
 end_comment
@@ -185,6 +269,15 @@ parameter_list|)
 define|\
 value|strcpy(sm_malloc_tagged_x(strlen(str) + 1, file, line, group), str)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DO_NOT_USE_STRCPY */
+end_comment
 
 begin_decl_stmt
 specifier|extern

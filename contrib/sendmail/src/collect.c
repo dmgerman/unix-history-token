@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.242.2.8 2003/07/08 01:16:35 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.254 2004/04/05 18:41:38 ca Exp $"
 argument_list|)
 end_macro
 
@@ -24,27 +24,6 @@ name|__P
 argument_list|(
 operator|(
 name|time_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|dferror
-name|__P
-argument_list|(
-operator|(
-name|SM_FILE_T
-operator|*
-specifier|volatile
-operator|,
-name|char
-operator|*
-operator|,
-name|ENVELOPE
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2531,8 +2510,20 @@ elseif|else
 if|if
 condition|(
 name|SuperSafe
-operator|!=
-name|SAFE_REALLY
+operator|==
+name|SAFE_NO
+operator|||
+name|SuperSafe
+operator|==
+name|SAFE_INTERACTIVE
+operator|||
+operator|(
+name|SuperSafe
+operator|==
+name|SAFE_REALLY_POSTMILTER
+operator|&&
+name|smtpmode
+operator|)
 condition|)
 block|{
 comment|/* skip next few clauses */
@@ -2614,7 +2605,7 @@ name|EEXIST
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"@collect: bfcommit(%s): already on disk, size = %ld"
+literal|"@collect: bfcommit(%s): already on disk, size=%ld"
 argument_list|,
 name|dfile
 argument_list|,
@@ -2698,9 +2689,38 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|)
-operator|>=
+operator|<
 literal|0
-operator|&&
+condition|)
+block|{
+name|dferror
+argument_list|(
+name|df
+argument_list|,
+literal|"sm_io_getinfo"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|true
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|(
+name|true
+argument_list|,
+name|true
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+elseif|else
+if|if
+condition|(
 name|fsync
 argument_list|(
 name|afd
@@ -3247,7 +3267,7 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|dfname
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -3311,34 +3331,6 @@ operator|->
 name|e_nrcpts
 operator|*
 name|WkRecipFact
-expr_stmt|;
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|90
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-name|sm_syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-literal|"collect: at end: msgsize=%ld, msgpriority=%ld"
-argument_list|,
-name|e
-operator|->
-name|e_msgsize
-argument_list|,
-name|e
-operator|->
-name|e_msgpriority
-argument_list|)
 expr_stmt|;
 name|markstats
 argument_list|(
@@ -3436,7 +3428,6 @@ comment|/* **  DFERROR -- signal error on writing the data file. ** **	Called by
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|dferror
 parameter_list|(
@@ -3570,7 +3561,7 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|dfname
 argument_list|,
-name|SM_IO_WRONLY
+name|SM_IO_WRONLY_B
 argument_list|,
 name|NULL
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.613.2.20 2003/11/25 19:02:24 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.649 2004/07/14 21:57:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -353,9 +353,6 @@ comment|/* user-supplied name */
 if|#
 directive|if
 name|MILTER
-if|#
-directive|if
-name|_FFR_MILTER_PERDAEMON
 name|char
 modifier|*
 name|d_inputfilterlist
@@ -368,9 +365,6 @@ index|[
 name|MAXFILTERS
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_PERDAEMON */
 endif|#
 directive|endif
 comment|/* MILTER */
@@ -811,6 +805,8 @@ literal|0
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1871,6 +1867,44 @@ name|errno
 operator|=
 name|save_errno
 expr_stmt|;
+comment|/* let's ignore these temporary errors */
+if|if
+condition|(
+name|save_errno
+operator|==
+name|EINTR
+ifdef|#
+directive|ifdef
+name|EAGAIN
+operator|||
+name|save_errno
+operator|==
+name|EAGAIN
+endif|#
+directive|endif
+comment|/* EAGAIN */
+ifdef|#
+directive|ifdef
+name|ECONNABORTED
+operator|||
+name|save_errno
+operator|==
+name|ECONNABORTED
+endif|#
+directive|endif
+comment|/* ECONNABORTED */
+ifdef|#
+directive|ifdef
+name|EWOULDBLOCK
+operator|||
+name|save_errno
+operator|==
+name|EWOULDBLOCK
+endif|#
+directive|endif
+comment|/* EWOULDBLOCK */
+condition|)
+continue|continue;
 name|syserr
 argument_list|(
 literal|"getrequests: accept"
@@ -2206,6 +2240,15 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		**  If connection rate is exceeded here, connection shall be 		**  refused later by a new call after fork() by the 		**  validate_connection() function. Closing the connection 		**  at this point violates RFC 2821. 		**  Do NOT remove this call, its side effects are needed. 		*/
+name|connection_rate_check
+argument_list|(
+operator|&
+name|RealHostAddr
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 		**  Create a subprocess to process the mail. 		*/
 if|if
 condition|(
@@ -2287,10 +2330,10 @@ comment|/* STARTTLS */
 if|#
 directive|if
 name|NAMED_BIND
-comment|/* 		**  Update MX records for FallBackMX. 		**  Let's hope this is fast otherwise we screw up the 		**  response time. 		*/
+comment|/* 		**  Update MX records for FallbackMX. 		**  Let's hope this is fast otherwise we screw up the 		**  response time. 		*/
 if|if
 condition|(
-name|FallBackMX
+name|FallbackMX
 operator|!=
 name|NULL
 condition|)
@@ -2299,7 +2342,7 @@ name|void
 operator|)
 name|getfallbackmxrr
 argument_list|(
-name|FallBackMX
+name|FallbackMX
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2486,6 +2529,9 @@ expr_stmt|;
 name|CurrentPid
 operator|=
 name|getpid
+argument_list|()
+expr_stmt|;
+name|close_sendmail_pid
 argument_list|()
 expr_stmt|;
 operator|(
@@ -2686,6 +2732,8 @@ literal|0
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2718,6 +2766,8 @@ literal|0
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* don't schedule queue runs if ETRN */
@@ -2892,6 +2942,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|macdefine
 argument_list|(
 operator|&
@@ -2909,6 +2960,7 @@ argument_list|,
 literal|"OK"
 argument_list|)
 expr_stmt|;
+block|}
 name|sm_setproctitle
 argument_list|(
 name|true
@@ -2947,7 +2999,7 @@ operator|)
 operator|&
 name|t
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -2982,7 +3034,7 @@ operator|)
 operator|&
 name|t
 argument_list|,
-name|SM_IO_WRONLY
+name|SM_IO_WRONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -3365,6 +3417,8 @@ literal|0
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -3401,6 +3455,9 @@ literal|0
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+operator|&
+name|RealHostAddr
 argument_list|)
 expr_stmt|;
 block|}
@@ -3503,9 +3560,6 @@ expr_stmt|;
 if|#
 directive|if
 name|MILTER
-if|#
-directive|if
-name|_FFR_MILTER_PERDAEMON
 comment|/* set the filters for this daemon */
 if|if
 condition|(
@@ -3577,9 +3631,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_PERDAEMON */
 endif|#
 directive|endif
 comment|/* MILTER */
@@ -5718,9 +5769,6 @@ break|break;
 if|#
 directive|if
 name|MILTER
-if|#
-directive|if
-name|_FFR_MILTER_PERDAEMON
 case|case
 literal|'I'
 case|:
@@ -5731,9 +5779,6 @@ operator|=
 name|v
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_PERDAEMON */
 endif|#
 directive|endif
 comment|/* MILTER */
@@ -6710,18 +6755,12 @@ block|,
 name|D_FQRCPT
 block|}
 block|,
-if|#
-directive|if
-name|_FFR_SMTP_SSL
 block|{
 literal|"SMTPS"
 block|,
 name|D_SMTPS
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_SMTP_SSL */
 block|{
 literal|"UNQUALOK"
 block|,
@@ -6843,15 +6882,8 @@ if|if
 condition|(
 name|first
 condition|)
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|"<%s"
 argument_list|,
 name|df
@@ -6860,15 +6892,8 @@ name|d_name
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|",%s"
 argument_list|,
 name|df
@@ -6886,15 +6911,8 @@ condition|(
 operator|!
 name|first
 condition|)
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|">"
 argument_list|)
 expr_stmt|;
@@ -6965,9 +6983,6 @@ expr_stmt|;
 if|#
 directive|if
 name|MILTER
-if|#
-directive|if
-name|_FFR_MILTER_PERDAEMON
 if|if
 condition|(
 name|Daemons
@@ -6996,9 +7011,6 @@ operator|.
 name|d_inputfilterlist
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_PERDAEMON */
 endif|#
 directive|endif
 comment|/* MILTER */
@@ -7572,12 +7584,6 @@ directive|if
 name|MILTER
 end_if
 
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER_PERDAEMON
-end_if
-
 begin_comment
 comment|/* **  SETUP_DAEMON_FILTERS -- Parse per-socket filters ** **	Parameters: **		none ** **	Returns: **		none */
 end_comment
@@ -7649,15 +7655,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER_PERDAEMON */
-end_comment
 
 begin_endif
 endif|#
@@ -10532,7 +10529,7 @@ operator|)
 operator|&
 name|s
 argument_list|,
-name|SM_IO_WRONLY
+name|SM_IO_WRONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -10569,7 +10566,7 @@ operator|)
 operator|&
 name|s
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -10971,6 +10968,35 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_HELONAME
+comment|/* Use the configured HeloName as appropriate */
+if|if
+condition|(
+name|HeloName
+operator|!=
+name|NULL
+operator|&&
+name|HeloName
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|mci
+operator|->
+name|mci_heloname
+operator|=
+name|newstr
+argument_list|(
+name|HeloName
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_HELONAME */
 name|mci_setstat
 argument_list|(
 name|mci
@@ -11093,7 +11119,9 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"makeconnection_ds: unsafe domain socket"
+literal|"makeconnection_ds: unsafe domain socket %s"
+argument_list|,
+name|mux_path
 argument_list|)
 expr_stmt|;
 name|mci_setstat
@@ -11148,7 +11176,9 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"makeconnection_ds: domain socket name too long"
+literal|"makeconnection_ds: domain socket name %s too long"
+argument_list|,
+name|mux_path
 argument_list|)
 expr_stmt|;
 comment|/* XXX why TEMPFAIL but 5.x.y ? */
@@ -11214,7 +11244,9 @@ name|errno
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"makeconnection_ds: could not create domain socket"
+literal|"makeconnection_ds: could not create domain socket %s"
+argument_list|,
+name|mux_path
 argument_list|)
 expr_stmt|;
 name|mci_setstat
@@ -11326,7 +11358,7 @@ operator|)
 operator|&
 name|sock
 argument_list|,
-name|SM_IO_WRONLY
+name|SM_IO_WRONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -11363,7 +11395,7 @@ operator|)
 operator|&
 name|sock
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -11508,17 +11540,17 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|79
+literal|9
 condition|)
 name|sm_syslog
 argument_list|(
-name|LOG_DEBUG
+name|LOG_INFO
 argument_list|,
 name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-literal|"interrupt (%s)"
+literal|"stopping daemon, reason=%s"
 argument_list|,
 name|reason
 operator|==
@@ -11775,9 +11807,6 @@ name|bool
 name|drop
 decl_stmt|;
 name|int
-name|i
-decl_stmt|;
-name|int
 name|save_errno
 decl_stmt|;
 name|char
@@ -11902,6 +11931,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SM_CONF_SHM */
+comment|/* close locked pid file */
+name|close_sendmail_pid
+argument_list|()
+expr_stmt|;
 comment|/* 	**  Want to drop to the user who started the process in all cases 	**  *but* when running as "smmsp" for the clientmqueue queue run 	**  daemon.  In that case, UseMSP will be true, RunAsUid should not 	**  be root, and RealUid should be either 0 or RunAsUid. 	*/
 name|drop
 operator|=
@@ -11965,58 +11998,15 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-comment|/* arrange for all the files to be closed */
-for|for
-control|(
-name|i
-operator|=
-literal|3
-init|;
-name|i
-operator|<
-name|DtableSize
-condition|;
-name|i
-operator|++
-control|)
-block|{
-specifier|register
-name|int
-name|j
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|j
-operator|=
-name|fcntl
+name|sm_close_on_exec
 argument_list|(
-name|i
-argument_list|,
-name|F_GETFD
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|!=
-operator|-
+name|STDERR_FILENO
+operator|+
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|i
 argument_list|,
-name|F_SETFD
-argument_list|,
-name|j
-operator||
-name|FD_CLOEXEC
+name|DtableSize
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	**  Need to allow signals before execve() to make them "harmless". 	**  However, the default action can be "terminate", so it isn't 	**  really harmless.  Setting signals to IGN will cause them to be 	**  ignored in the new process to, so that isn't a good alternative. 	*/
 name|SM_NOOP_SIGNAL
 argument_list|(
@@ -13125,6 +13115,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* XXX: Could be a temporary error on forward lookup */
 operator|*
 name|may_be_forged
 operator|=
@@ -15122,7 +15113,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"host_map_lookup(%s): bogus NULL cache entry, errno = %d, h_errno = %d"
+literal|"host_map_lookup(%s): bogus NULL cache entry, errno=%d, h_errno=%d"
 argument_list|,
 name|name
 argument_list|,

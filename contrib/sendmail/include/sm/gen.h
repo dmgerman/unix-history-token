@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: gen.h,v 1.22 2002/04/03 00:40:42 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: gen.h,v 1.23 2003/11/04 18:51:54 ca Exp $  */
 end_comment
 
 begin_comment
@@ -150,6 +150,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! NULL */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -223,10 +227,21 @@ name|true
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|__bool_true_false_are_defined
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! __cplusplus */
+end_comment
 
 begin_endif
 endif|#

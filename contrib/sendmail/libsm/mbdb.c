@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mbdb.c,v 1.38.2.1 2002/11/20 22:59:06 gshapiro Exp $"
+literal|"@(#)$Id: mbdb.c,v 1.40 2003/12/10 03:19:07 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1575,7 +1575,7 @@ name|MBDB_DEFAULT_LDAP_BASEDN
 expr_stmt|;
 name|LDAPLMAP
 operator|.
-name|ldap_target
+name|ldap_host
 operator|=
 name|MBDB_DEFAULT_LDAP_SERVER
 expr_stmt|;
@@ -1592,7 +1592,7 @@ name|ldap_sizelimit
 operator|=
 literal|1
 expr_stmt|;
-comment|/* interpolate new ldap_base and ldap_target from arg if given */
+comment|/* interpolate new ldap_base and ldap_host from arg if given */
 if|if
 condition|(
 name|arg
@@ -1677,7 +1677,7 @@ literal|'\0'
 expr_stmt|;
 name|LDAPLMAP
 operator|.
-name|ldap_target
+name|ldap_host
 operator|=
 name|sep
 expr_stmt|;

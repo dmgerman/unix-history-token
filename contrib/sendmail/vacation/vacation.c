@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vacation.c,v 8.137.2.2 2002/11/01 16:48:55 ca Exp $"
+literal|"@(#)$Id: vacation.c,v 8.141 2002/11/01 16:49:40 ca Exp $"
 argument_list|)
 end_macro
 
@@ -948,9 +948,6 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_RESPOND_ALL
 case|case
 literal|'j'
 case|:
@@ -959,9 +956,6 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_RESPOND_ALL */
 case|case
 literal|'l'
 case|:
@@ -980,9 +974,6 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_RETURN_ADDR
 case|case
 literal|'R'
 case|:
@@ -991,9 +982,6 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_RETURN_ADDR */
 case|case
 literal|'r'
 case|:
@@ -4174,50 +4162,14 @@ name|void
 name|usage
 parameter_list|()
 block|{
-name|char
-modifier|*
-name|retusage
-init|=
-literal|""
-decl_stmt|;
-name|char
-modifier|*
-name|respusage
-init|=
-literal|""
-decl_stmt|;
-if|#
-directive|if
-name|_FFR_RETURN_ADDR
-name|retusage
-operator|=
-literal|"[-R returnaddr] "
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_RETURN_ADDR */
-if|#
-directive|if
-name|_FFR_RESPOND_ALL
-name|respusage
-operator|=
-literal|"[-j] "
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_RESPOND_ALL */
 name|msglog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"uid %u: usage: vacation [-a alias] [-C cfpath] [-d] [-f db] [-i] %s[-l] [-m msg] %s[-r interval] [-s sender] [-t time] [-U] [-x] [-z] login\n"
+literal|"uid %u: usage: vacation [-a alias] [-C cfpath] [-d] [-f db] [-i] [-j] [-l] [-m msg] [-R returnaddr] [-r interval] [-s sender] [-t time] [-U] [-x] [-z] login\n"
 argument_list|,
 name|getuid
 argument_list|()
-argument_list|,
-name|respusage
-argument_list|,
-name|retusage
 argument_list|)
 expr_stmt|;
 name|exit

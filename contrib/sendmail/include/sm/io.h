@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990  * 	 The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: io.h,v 1.23.2.2 2003/09/05 20:35:28 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2002, 2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990  * 	 The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: io.h,v 1.24 2004/03/03 19:14:49 ca Exp $  */
 end_comment
 
 begin_comment
@@ -125,7 +125,7 @@ name|SM_IS_BINARY
 parameter_list|(
 name|mode
 parameter_list|)
-value|((mode)& SM_IO_BINARY != 0)
+value|(((mode)& SM_IO_BINARY) != 0)
 end_define
 
 begin_define
