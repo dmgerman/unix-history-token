@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -362,10 +368,27 @@ argument_list|)
 expr_stmt|;
 name|mfsp
 operator|=
-name|VTOMFS
+operator|(
+expr|struct
+name|mfsnode
+operator|*
+operator|)
+name|malloc
 argument_list|(
-name|devvp
+sizeof|sizeof
+expr|*
+name|mfsp
+argument_list|,
+name|M_MFSNODE
+argument_list|,
+name|M_WAITOK
 argument_list|)
+expr_stmt|;
+name|devvp
+operator|->
+name|v_data
+operator|=
+name|mfsp
 expr_stmt|;
 name|mfsp
 operator|->
