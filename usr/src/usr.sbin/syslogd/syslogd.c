@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.8 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,17 @@ directive|define
 name|DEFSPRI
 value|(LOG_KERN|LOG_CRIT)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MARKCOUNT
+value|10
+end_define
+
+begin_comment
+comment|/* ratio of minor to major marks */
+end_comment
 
 begin_include
 include|#
@@ -373,6 +384,17 @@ begin_comment
 comment|/* add a date to the message */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MARK
+value|0x010
+end_define
+
+begin_comment
+comment|/* this message is a mark */
+end_comment
+
 begin_comment
 comment|/*  * This structure represents the files that will have log  * copies printed.  */
 end_comment
@@ -389,6 +411,10 @@ name|short
 name|f_file
 decl_stmt|;
 comment|/* file descriptor */
+name|time_t
+name|f_time
+decl_stmt|;
+comment|/* time this was last written */
 name|u_char
 name|f_pmask
 index|[
@@ -583,6 +609,17 @@ comment|/* our hostname */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|LocalDomain
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* our local domain name */
+end_comment
+
+begin_decl_stmt
 name|int
 name|InetInuse
 init|=
@@ -668,6 +705,30 @@ end_decl_stmt
 
 begin_comment
 comment|/* set when we have initialized ourselves */
+end_comment
+
+begin_decl_stmt
+name|int
+name|MarkInterval
+init|=
+literal|20
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* interval between marks in minutes */
+end_comment
+
+begin_decl_stmt
+name|int
+name|MarkSeq
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mark sequence number */
 end_comment
 
 begin_decl_stmt
@@ -1075,6 +1136,31 @@ literal|2
 index|]
 expr_stmt|;
 break|break;
+case|case
+literal|'m'
+case|:
+comment|/* mark interval */
+if|if
+condition|(
+name|p
+index|[
+literal|2
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|MarkInterval
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|usage
 argument_list|()
@@ -1161,6 +1247,45 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|gethostname
+argument_list|(
+name|LocalHostName
+argument_list|,
+sizeof|sizeof
+name|LocalHostName
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|=
+name|index
+argument_list|(
+name|LocalHostName
+argument_list|,
+literal|'.'
+argument_list|)
+condition|)
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|LocalDomain
+operator|=
+name|p
+expr_stmt|;
+block|}
+else|else
+name|LocalDomain
+operator|=
+literal|""
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM
@@ -1209,6 +1334,28 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|domark
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+name|MarkInterval
+operator|*
+literal|60
+operator|/
+name|MARKCOUNT
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|LogName
@@ -1235,17 +1382,6 @@ sizeof|sizeof
 name|sun
 operator|.
 name|sun_path
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|gethostname
-argument_list|(
-name|LocalHostName
-argument_list|,
-sizeof|sizeof
-name|LocalHostName
 argument_list|)
 expr_stmt|;
 name|funix
@@ -1895,7 +2031,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: syslogd [-d] [-ppath] [-fconffile]\n"
+literal|"usage: syslogd [-d] [-mmarkinterval] [-ppath] [-fconffile]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2629,14 +2765,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-name|line
-index|[
-name|MAXLINE
-operator|+
-literal|1
-index|]
-decl_stmt|;
 specifier|register
 name|struct
 name|filed
@@ -2651,6 +2779,12 @@ name|int
 name|fac
 decl_stmt|,
 name|prilev
+decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
+name|int
+name|omask
 decl_stmt|;
 name|struct
 name|iovec
@@ -2667,8 +2801,13 @@ name|v
 init|=
 name|iov
 decl_stmt|;
-name|int
-name|omask
+name|char
+name|line
+index|[
+name|MAXLINE
+operator|+
+literal|1
+index|]
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -2691,19 +2830,16 @@ name|sigmask
 argument_list|(
 name|SIGHUP
 argument_list|)
+operator||
+name|sigmask
+argument_list|(
+name|SIGALRM
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check to see if msg looks non-standard. 	 */
 if|if
 condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|ADDDATE
-operator|)
-operator|&&
-operator|(
 name|strlen
 argument_list|(
 name|msg
@@ -2745,7 +2881,6 @@ literal|15
 index|]
 operator|!=
 literal|' '
-operator|)
 condition|)
 name|flags
 operator||=
@@ -2753,20 +2888,23 @@ name|ADDDATE
 expr_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
 name|flags
 operator|&
 name|NOCOPY
 operator|)
-operator|==
-literal|0
 condition|)
 block|{
 if|if
 condition|(
 name|flags
 operator|&
+operator|(
 name|ADDDATE
+operator||
+name|MARK
+operator|)
 condition|)
 name|flushmsg
 argument_list|()
@@ -2849,16 +2987,6 @@ name|pri
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|flags
-operator|&
-name|ADDDATE
-condition|)
-block|{
-name|time_t
-name|now
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -2868,6 +2996,12 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|ADDDATE
+condition|)
 name|v
 operator|->
 name|iov_base
@@ -2880,7 +3014,6 @@ argument_list|)
 operator|+
 literal|4
 expr_stmt|;
-block|}
 else|else
 name|v
 operator|->
@@ -3109,6 +3242,32 @@ operator|==
 name|NOPRI
 condition|)
 continue|continue;
+comment|/* don't output marks to recently written files */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|MARK
+operator|)
+operator|&&
+operator|(
+name|now
+operator|-
+name|f
+operator|->
+name|f_time
+operator|)
+operator|<
+operator|(
+name|MarkInterval
+operator|*
+literal|60
+operator|/
+literal|2
+operator|)
+condition|)
+continue|continue;
 name|dprintf
 argument_list|(
 literal|"Logging to %s"
@@ -3120,6 +3279,12 @@ operator|->
 name|f_type
 index|]
 argument_list|)
+expr_stmt|;
+name|f
+operator|->
+name|f_time
+operator|=
+name|now
 expr_stmt|;
 switch|switch
 condition|(
@@ -3817,6 +3982,15 @@ name|iov_len
 operator|=
 name|len
 expr_stmt|;
+name|iov
+index|[
+literal|1
+index|]
+operator|.
+name|iov_len
+operator|=
+literal|0
+expr_stmt|;
 block|}
 operator|(
 name|void
@@ -3870,12 +4044,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* avoid having them all pile up at once */
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* close the user login file */
 operator|(
@@ -3948,6 +4116,11 @@ name|struct
 name|hostent
 modifier|*
 name|hp
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
 decl_stmt|;
 specifier|extern
 name|char
@@ -4037,6 +4210,37 @@ argument_list|)
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|index
+argument_list|(
+name|hp
+operator|->
+name|h_name
+argument_list|,
+literal|'.'
+argument_list|)
+operator|)
+operator|&&
+name|strcmp
+argument_list|(
+name|p
+operator|+
+literal|1
+argument_list|,
+name|LocalDomain
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
 operator|(
 name|hp
@@ -4046,6 +4250,58 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|domark
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|int
+name|pri
+decl_stmt|;
+if|if
+condition|(
+operator|(
+operator|++
+name|MarkSeq
+operator|%
+name|MARKCOUNT
+operator|)
+operator|==
+literal|0
+condition|)
+name|logmsg
+argument_list|(
+name|LOG_SYSLOG
+operator||
+name|LOG_INFO
+argument_list|,
+literal|"-- MARK --"
+argument_list|,
+name|LocalHostName
+argument_list|,
+name|ADDDATE
+operator||
+name|MARK
+argument_list|)
+expr_stmt|;
+else|else
+name|flushmsg
+argument_list|()
+expr_stmt|;
+name|alarm
+argument_list|(
+name|MarkInterval
+operator|*
+literal|60
+operator|/
+name|MARKCOUNT
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_macro
 name|flushmsg
@@ -4207,7 +4463,7 @@ argument_list|)
 expr_stmt|;
 name|logmsg
 argument_list|(
-name|LOG_DAEMON
+name|LOG_SYSLOG
 operator||
 name|LOG_ERR
 argument_list|,
@@ -4683,7 +4939,7 @@ block|}
 block|}
 name|logmsg
 argument_list|(
-name|LOG_DAEMON
+name|LOG_SYSLOG
 operator||
 name|LOG_INFO
 argument_list|,
@@ -4772,6 +5028,10 @@ literal|"debug"
 block|,
 name|LOG_DEBUG
 block|,
+literal|"none"
+block|,
+name|NOPRI
+block|,
 name|NULL
 block|,
 operator|-
@@ -4810,6 +5070,14 @@ block|,
 literal|"security"
 block|,
 name|LOG_AUTH
+block|,
+literal|"mark"
+block|,
+name|LOG_SYSLOG
+block|,
+literal|"syslog"
+block|,
+name|LOG_SYSLOG
 block|,
 literal|"local0"
 block|,
