@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_file.c	8.1 (Berkeley) %G%"
+literal|"@(#)kvm_file.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,8 +241,9 @@ modifier|*
 name|fp
 decl_stmt|,
 name|file
-decl_stmt|,
-modifier|*
+decl_stmt|;
+name|struct
+name|filelist
 name|filehead
 decl_stmt|;
 specifier|register
@@ -318,8 +319,7 @@ expr_stmt|;
 operator|*
 operator|(
 expr|struct
-name|file
-operator|*
+name|filelist
 operator|*
 operator|)
 name|kd
@@ -335,16 +335,20 @@ control|(
 name|fp
 operator|=
 name|filehead
+operator|.
+name|lh_first
 init|;
 name|fp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|fp
 operator|=
 name|fp
 operator|->
-name|f_filef
+name|f_list
+operator|.
+name|le_next
 control|)
 block|{
 if|if
@@ -501,13 +505,14 @@ decl_stmt|;
 name|struct
 name|file
 modifier|*
-name|filehead
-decl_stmt|,
-modifier|*
 name|fp
 decl_stmt|,
 modifier|*
 name|fplim
+decl_stmt|;
+name|struct
+name|filelist
+name|filehead
 decl_stmt|;
 if|if
 condition|(
@@ -705,8 +710,7 @@ operator|=
 operator|*
 operator|(
 expr|struct
-name|file
-operator|*
+name|filelist
 operator|*
 operator|)
 name|kd
@@ -753,6 +757,8 @@ operator|=
 literal|0
 init|;
 name|filehead
+operator|.
+name|lh_first
 operator|&&
 operator|(
 name|fp
@@ -767,10 +773,14 @@ name|fp
 operator|++
 control|)
 name|filehead
+operator|.
+name|lh_first
 operator|=
 name|fp
 operator|->
-name|f_filef
+name|f_list
+operator|.
+name|le_next
 expr_stmt|;
 block|}
 else|else

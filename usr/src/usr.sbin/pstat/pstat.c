@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.11 (Berkeley) %G%"
+literal|"@(#)pstat.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4594,16 +4594,16 @@ return|return;
 comment|/* 	 * Getfiles returns in malloc'd memory a pointer to the first file 	 * structure, and then an array of file structs (whose addresses are 	 * derivable from the previous entry). 	 */
 name|addr
 operator|=
-operator|*
 operator|(
 operator|(
 expr|struct
-name|file
-operator|*
+name|filelist
 operator|*
 operator|)
 name|buf
 operator|)
+operator|->
+name|lh_first
 expr_stmt|;
 name|fp
 operator|=
@@ -4618,8 +4618,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|file
-operator|*
+name|filelist
 argument_list|)
 operator|)
 expr_stmt|;
@@ -4631,8 +4630,7 @@ operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|file
-operator|*
+name|filelist
 argument_list|)
 operator|)
 operator|/
@@ -4679,7 +4677,9 @@ name|addr
 operator|=
 name|fp
 operator|->
-name|f_filef
+name|f_list
+operator|.
+name|le_next
 operator|,
 name|fp
 operator|++
