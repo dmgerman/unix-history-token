@@ -100,34 +100,39 @@ begin_struct
 struct|struct
 name|bpf_if
 block|{
-comment|/* List of descriptors listening on this interface. */
+name|struct
+name|bpf_if
+modifier|*
+name|bif_next
+decl_stmt|;
+comment|/* list of all interfaces */
 name|struct
 name|bpf_d
 modifier|*
 name|bif_dlist
 decl_stmt|;
-comment|/* Pointer to the device driver's softc bpf field. */
+comment|/* descriptor list */
 name|struct
 name|bpf_if
 modifier|*
 modifier|*
 name|bif_driverp
 decl_stmt|;
-comment|/* Device parameters, see bpf.h. */
-name|struct
-name|bpf_devp
-name|bif_devp
+comment|/* pointer into softc */
+name|u_int
+name|bif_dlt
 decl_stmt|;
-comment|/* Length of bpf header (bpf_hdr + padding). */
+comment|/* link layer type */
 name|u_int
 name|bif_hdrlen
 decl_stmt|;
-comment|/* 'ifnet' of associated interface. */
+comment|/* length of header (with padding) */
 name|struct
 name|ifnet
 modifier|*
 name|bif_ifp
 decl_stmt|;
+comment|/* correspoding interface */
 block|}
 struct|;
 end_struct
