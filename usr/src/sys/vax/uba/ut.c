@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.26	83/02/20	*/
+comment|/*	ut.c	4.27	83/02/20	*/
 end_comment
 
 begin_include
@@ -2563,7 +2563,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_errreg
+name|sc_erreg
 operator|&
 name|UTER_COR
 operator|&&
