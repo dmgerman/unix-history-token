@@ -6218,6 +6218,10 @@ name|retval
 operator|=
 name|pwd
 expr_stmt|;
+name|rv
+operator|=
+name|NS_SUCCESS
+expr_stmt|;
 block|}
 return|return
 operator|(
