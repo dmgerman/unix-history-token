@@ -623,6 +623,19 @@ expr_stmt|;
 name|jflag
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|av
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"must specify jid"
+argument_list|)
+expr_stmt|;
 name|jid
 operator|=
 name|strtol
