@@ -57,6 +57,18 @@ directive|include
 file|<vm/vm_map.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/sr.h>
+end_include
+
 begin_function_decl
 name|int
 name|setfault

@@ -21,6 +21,32 @@ directive|include
 file|<machine/sr.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NPMAPS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NPMAPS
+value|32768
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(NPMAPS) */
+end_comment
+
 begin_struct
 struct|struct
 name|pmap

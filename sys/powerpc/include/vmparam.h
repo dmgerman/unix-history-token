@@ -232,6 +232,17 @@ name|VM_MAX_KERNEL_ADDRESS
 value|(VM_MIN_KERNEL_ADDRESS + SEGMENT_LENGTH - 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|0x100000
+end_define
+
+begin_comment
+comment|/* start of kernel virtual */
+end_comment
+
 begin_comment
 comment|/* XXX max. amount of KVM to be used by buffers. */
 end_comment

@@ -74,6 +74,66 @@ begin_comment
 comment|/* Virtual Segment ID mask */
 end_comment
 
+begin_comment
+comment|/* Kernel segment register usage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_SR
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL_SR
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL_VSIDBITS
+value|0xfffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL_SEGMENT
+value|(0xfffff0 + KERNEL_SR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMPTY_SEGMENT
+value|0xfffff0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USER_ADDR
+value|((void *)(USER_SR<< ADDR_SR_SHFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEGMENT_LENGTH
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEGMENT_MASK
+value|0xf0000000
+end_define
+
 begin_endif
 endif|#
 directive|endif
