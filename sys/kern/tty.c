@@ -11878,8 +11878,11 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|"%ld.%02ldu "
+literal|"%lld.%02ldu "
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|utime
 operator|.
 name|tv_sec
@@ -11896,8 +11899,11 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|"%ld.%02lds "
+literal|"%lld.%02lds "
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|stime
 operator|.
 name|tv_sec
