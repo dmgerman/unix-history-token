@@ -286,7 +286,7 @@ operator|=
 literal|'/'
 expr_stmt|;
 block|}
-comment|/* copy second string plus EOS into place */
+comment|/* copy second string into place */
 if|if
 condition|(
 name|len2
@@ -300,9 +300,17 @@ argument_list|,
 name|s2
 argument_list|,
 name|len2
-operator|+
-literal|1
 argument_list|)
+expr_stmt|;
+comment|/* Terminate. */
+name|result
+index|[
+name|len1
+operator|+
+name|len2
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 comment|/* free original strings */
 if|if
