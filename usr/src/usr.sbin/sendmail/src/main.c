@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.12 (Berkeley) %G%"
+literal|"@(#)main.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1680,6 +1680,15 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
+name|define
+argument_list|(
+literal|'j'
+argument_list|,
+name|p
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
 name|setclass
 argument_list|(
 literal|'w'
@@ -3132,6 +3141,20 @@ begin_expr_stmt
 name|MyHostName
 operator|=
 name|jbuf
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* make certain that this name is part of the $=w class */
+end_comment
+
+begin_expr_stmt
+name|setclass
+argument_list|(
+literal|'w'
+argument_list|,
+name|MyHostName
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
