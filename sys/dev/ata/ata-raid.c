@@ -8412,7 +8412,6 @@ literal|1
 return|;
 block|}
 block|}
-block|}
 name|free
 argument_list|(
 name|config
@@ -8420,6 +8419,7 @@ argument_list|,
 name|M_AR
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -10596,7 +10596,6 @@ literal|1
 return|;
 block|}
 block|}
-block|}
 name|free
 argument_list|(
 name|config
@@ -10604,6 +10603,7 @@ argument_list|,
 name|M_AR
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
