@@ -8601,12 +8601,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Buffer is not in-core, create new buffer.  The buffer 		 * returned by getnewbuf() is locked.  Note that the returned 		 * buffer is also considered valid (not marked B_INVAL). 		 */
 name|int
 name|bsize
 decl_stmt|,
@@ -8617,6 +8611,12 @@ decl_stmt|;
 name|off_t
 name|offset
 decl_stmt|;
+comment|/* 		 * Buffer is not in-core, create new buffer.  The buffer 		 * returned by getnewbuf() is locked.  Note that the returned 		 * buffer is also considered valid (not marked B_INVAL). 		 */
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vn_isdisk
