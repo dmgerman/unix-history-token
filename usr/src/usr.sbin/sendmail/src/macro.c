@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)macro.c	3.6	%G%"
+literal|"@(#)macro.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -286,7 +286,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DEFINE -- define a macro. ** **	this would be better done using a #define macro. ** **	Parameters: **		n -- the macro name. **		v -- the macro value. ** **	Returns: **		none. ** **	Side Effects: **		Macro[n] is defined. ** **	Notes: **		There is one macro for each ASCII character, **		although they are not all used.  The currently **		defined macros are: ** **		$a   date in ARPANET format (preferring the Date: line **		     of the message) **		$b   the current date (as opposed to the date as found **		     the message) in ARPANET format **		$c   hop count **		$d   (current) date in UNIX (ctime) format **		$f   raw from address **		$g   translated from address **		$h   to host **		$i   official SMTP hostname, used in messages+ **		$l   UNIX-style from line+ **		$n   name of sendmail ("MAILER-DAEMON" on local **		     net typically)+ **		$o   delimiters ("operators") for address tokens+ **		$p   my process id in decimal **		$t   the current time in seconds since 1/1/1970 **		$u   to user **		$v   version number of sendmail **		$x   signature (full name) of from person **		$y   the tty id of our terminal **		$z   home directory of to person ** **		Macros marked with + must be defined in the **		configuration file and are used internally, but **		are not set. ** **		There are also some macros that can be used **		arbitrarily to make the configuration file **		cleaner.  In general all upper-case letters **		are available. */
+comment|/* **  DEFINE -- define a macro. ** **	this would be better done using a #define macro. ** **	Parameters: **		n -- the macro name. **		v -- the macro value. ** **	Returns: **		none. ** **	Side Effects: **		Macro[n] is defined. ** **	Notes: **		There is one macro for each ASCII character, **		although they are not all used.  The currently **		defined macros are: ** **		$a   date in ARPANET format (preferring the Date: line **		     of the message) **		$b   the current date (as opposed to the date as found **		     the message) in ARPANET format **		$c   hop count **		$d   (current) date in UNIX (ctime) format **		$f   raw from address **		$g   translated from address **		$h   to host **		$i   official SMTP hostname, used in messages+ **		$l   UNIX-style from line+ **		$n   name of sendmail ("MAILER-DAEMON" on local **		     net typically)+ **		$o   delimiters ("operators") for address tokens+ **		$p   my process id in decimal **		$r   protocol used to talk to sender **		$s   sender's host name **		$t   the current time in seconds since 1/1/1970 **		$u   to user **		$v   version number of sendmail **		$x   signature (full name) of from person **		$y   the tty id of our terminal **		$z   home directory of to person ** **		Macros marked with + must be defined in the **		configuration file and are used internally, but **		are not set. ** **		There are also some macros that can be used **		arbitrarily to make the configuration file **		cleaner.  In general all upper-case letters **		are available. */
 end_comment
 
 begin_macro

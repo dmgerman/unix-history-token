@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	3.12	%G%"
+literal|"@(#)headers.c	3.13	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,21 +320,6 @@ name|h
 operator|->
 name|h_flags
 argument_list|)
-operator|&&
-operator|!
-operator|(
-name|bitset
-argument_list|(
-name|H_FORCE
-argument_list|,
-name|h
-operator|->
-name|h_flags
-argument_list|)
-operator|&&
-operator|!
-name|QueueRun
-operator|)
 condition|)
 break|break;
 block|}
@@ -389,18 +374,49 @@ operator|->
 name|hi_flags
 operator|)
 return|;
+comment|/* don't put timestamps in every queue run */
+if|if
+condition|(
+name|QueueRun
+operator|&&
+name|h
+operator|!=
+name|NULL
+operator|&&
+name|bitset
+argument_list|(
+name|H_FORCE
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+condition|)
+return|return
+operator|(
+name|h
+operator|->
+name|h_flags
+operator|)
+return|;
 comment|/* create/fill in a new node */
 if|if
 condition|(
 name|h
 operator|==
 name|NULL
+operator|||
+name|bitset
+argument_list|(
+name|H_FORCE
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
 condition|)
 block|{
 comment|/* create a new node */
-operator|*
-name|hp
-operator|=
 name|h
 operator|=
 operator|(
@@ -433,7 +449,8 @@ name|h
 operator|->
 name|h_link
 operator|=
-name|NULL
+operator|*
+name|hp
 expr_stmt|;
 name|h
 operator|->
@@ -452,6 +469,11 @@ operator||
 name|hi
 operator|->
 name|hi_mflags
+expr_stmt|;
+operator|*
+name|hp
+operator|=
+name|h
 expr_stmt|;
 block|}
 if|if

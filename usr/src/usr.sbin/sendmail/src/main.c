@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.56	%G%"
+literal|"@(#)main.c	3.57	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1652,6 +1652,36 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|V6
+comment|/* 	**  Set up the $r and $s macros to show who it came from. 	*/
+if|if
+condition|(
+name|From
+operator|.
+name|q_host
+operator|!=
+name|NULL
+operator|&&
+name|From
+operator|.
+name|q_host
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|define
+argument_list|(
+literal|'s'
+argument_list|,
+name|From
+operator|.
+name|q_host
+argument_list|)
+expr_stmt|;
+comment|/* should determine network type here */
+block|}
 comment|/* 	**  Rewrite the from person to dispose of possible implicit 	**	links in the net. 	*/
 name|pvp
 operator|=

@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.40	%G%"
+literal|"@(#)conf.c	3.41	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,6 +134,12 @@ block|,
 literal|"precedence"
 block|,
 literal|0
+block|,
+literal|0
+block|,
+literal|"mail-from"
+block|,
+name|H_FORCE
 block|,
 literal|0
 block|,

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	3.11	%G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	3.12	%G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	3.11	%G%"
+literal|"@(#)srvrsmtp.c	3.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -494,6 +494,16 @@ case|case
 name|CMDHELO
 case|:
 comment|/* hello -- introduce yourself */
+name|define
+argument_list|(
+literal|'s'
+argument_list|,
+name|newstr
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|message
 argument_list|(
 literal|"250"

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.29	%G%"
+literal|"@(#)collect.c	3.30	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,68 @@ name|InFileName
 operator|=
 name|tempfname
 expr_stmt|;
+comment|/* 	**  Create the Mail-From line if we want to. 	*/
+if|if
+condition|(
+name|macvalue
+argument_list|(
+literal|'s'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|char
+name|xbuf
+index|[
+literal|50
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|xbuf
+argument_list|,
+literal|"Mail-From: %s$s received by $i at $b"
+argument_list|,
+name|macvalue
+argument_list|(
+literal|'r'
+argument_list|)
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+literal|"$r host "
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+name|xbuf
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|chompheader
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
 if|if
 condition|(
@@ -252,7 +314,7 @@ block|}
 endif|#
 directive|endif
 endif|NOTUNIX
-comment|/* 	**  Copy stdin to temp file& do message editting. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header, 	**	and prepended with ">" in the body. 	*/
+comment|/* 	**  Copy stdin to temp file& do message editing. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header, 	**	and prepended with ">" in the body. 	*/
 for|for
 control|(
 init|;
