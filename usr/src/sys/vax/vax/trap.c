@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.27	83/01/22	*/
+comment|/*	trap.c	4.28	83/06/02	*/
 end_comment
 
 begin_include
@@ -867,6 +867,23 @@ name|u_ar0
 operator|=
 name|locr0
 expr_stmt|;
+if|if
+condition|(
+name|code
+operator|==
+literal|139
+condition|)
+block|{
+comment|/* XXX */
+name|sigcleanup
+argument_list|()
+expr_stmt|;
+comment|/* XXX */
+goto|goto
+name|done
+goto|;
+comment|/* XXX */
+block|}
 name|params
 operator|=
 operator|(
@@ -1231,6 +1248,9 @@ name|pc
 operator|=
 name|opc
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 elseif|else
 if|if
 condition|(
@@ -1243,6 +1263,8 @@ condition|)
 name|dorti
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -1301,6 +1323,8 @@ operator|.
 name|r_val2
 expr_stmt|;
 block|}
+name|done
+label|:
 name|p
 operator|=
 name|u

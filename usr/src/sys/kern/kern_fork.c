@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_fork.c	4.1	83/05/27	*/
+comment|/*	kern_fork.c	4.2	83/06/02	*/
 end_comment
 
 begin_include
@@ -622,7 +622,7 @@ operator|&
 operator|(
 name|SPAGI
 operator||
-name|SNUSIG
+name|SOUSIG
 operator|)
 operator|)
 expr_stmt|;
@@ -765,21 +765,29 @@ literal|0
 expr_stmt|;
 name|rpp
 operator|->
-name|p_siga0
+name|p_sigmask
 operator|=
 name|rip
 operator|->
-name|p_siga0
+name|p_sigmask
 expr_stmt|;
 name|rpp
 operator|->
-name|p_siga1
+name|p_sigcatch
 operator|=
 name|rip
 operator|->
-name|p_siga1
+name|p_sigcatch
 expr_stmt|;
-comment|/* take along any pending signals, like stops? */
+name|rpp
+operator|->
+name|p_sigignore
+operator|=
+name|rip
+operator|->
+name|p_sigignore
+expr_stmt|;
+comment|/* take along any pending signals like stops? */
 if|if
 condition|(
 name|isvfork

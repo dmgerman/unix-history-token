@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exit.c	4.2	83/05/31	*/
+comment|/*	kern_exit.c	4.3	83/06/02	*/
 end_comment
 
 begin_include
@@ -221,31 +221,12 @@ name|p_flag
 operator||=
 name|SWEXIT
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl6
-argument_list|()
-expr_stmt|;
-comment|/* we know SIG_IGN is 1 */
 name|p
 operator|->
-name|p_siga0
+name|p_sigignore
 operator|=
 operator|~
 literal|0
-expr_stmt|;
-name|p
-operator|->
-name|p_siga1
-operator|=
-literal|0
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
 expr_stmt|;
 name|p
 operator|->
@@ -1266,13 +1247,19 @@ literal|0
 expr_stmt|;
 name|p
 operator|->
-name|p_siga0
+name|p_sigcatch
 operator|=
 literal|0
 expr_stmt|;
 name|p
 operator|->
-name|p_siga1
+name|p_sigignore
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
+name|p_sigmask
 operator|=
 literal|0
 expr_stmt|;
@@ -1382,13 +1369,11 @@ name|f
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|ECHILD
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|options
@@ -1419,8 +1404,10 @@ name|u_procp
 operator|->
 name|p_flag
 operator|&
-name|SNUSIG
+name|SOUSIG
 operator|)
+operator|==
+literal|0
 operator|&&
 name|setjmp
 argument_list|(
