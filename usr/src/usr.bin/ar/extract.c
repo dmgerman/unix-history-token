@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)extract.c	5.3 (Berkeley) %G%"
+literal|"@(#)extract.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,13 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dirent.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -79,7 +79,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -221,20 +233,18 @@ name|chdr
 operator|.
 name|name
 expr_stmt|;
-else|else
-block|{
-name|file
-operator|=
-operator|*
-name|argv
-expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|!
+operator|(
+name|file
+operator|=
 name|files
 argument_list|(
 name|argv
 argument_list|)
+operator|)
 condition|)
 block|{
 name|skipobj
@@ -243,7 +253,6 @@ name|afd
 argument_list|)
 expr_stmt|;
 continue|continue;
-block|}
 block|}
 if|if
 condition|(
@@ -471,16 +480,31 @@ name|argv
 condition|)
 break|break;
 block|}
-name|ORPHANS
-expr_stmt|;
 name|close_archive
 argument_list|(
 name|afd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|argv
+condition|)
+block|{
+name|orphans
+argument_list|(
+name|argv
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|eval
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
