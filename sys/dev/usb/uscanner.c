@@ -531,12 +531,6 @@ block|,
 name|USB_PRODUCT_EPSON_1600
 block|}
 block|,
-block|{
-name|USB_VENDOR_EPSON
-block|,
-name|USB_PRODUCT_EPSON_1640
-block|}
-block|,
 comment|/* UMAX */
 block|{
 name|USB_VENDOR_UMAX
