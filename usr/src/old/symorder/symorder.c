@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symorder.c	5.1 (Berkeley) %G%"
+literal|"@(#)symorder.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -723,6 +723,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Need to subtract four from symsize here since 	 * symsize includes itself, and we've already read 	 * it.  (6/30/85 chris@maryland) 	 */
 if|if
 condition|(
 name|fread
@@ -732,11 +733,15 @@ argument_list|,
 literal|1
 argument_list|,
 name|symsize
+operator|-
+literal|4
 argument_list|,
 name|f
 argument_list|)
 operator|!=
 name|symsize
+operator|-
+literal|4
 condition|)
 block|{
 name|fprintf
@@ -1099,9 +1104,13 @@ argument_list|,
 name|newstrings
 argument_list|,
 name|symsize
+operator|-
+literal|4
 argument_list|)
 operator|!=
 name|symsize
+operator|-
+literal|4
 condition|)
 block|{
 name|fprintf
