@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -426,6 +426,13 @@ name|MNAMELEN
 index|]
 decl_stmt|;
 comment|/* name mounted on */
+name|int32_t
+name|lfs_pad
+index|[
+literal|40
+index|]
+decl_stmt|;
+comment|/* round to 512 bytes */
 block|}
 struct|;
 end_struct
