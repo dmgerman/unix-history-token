@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exec.c	5.4 (Berkeley) %G%"
+literal|"@(#)exec.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syspaths.h>
 end_include
 
 begin_comment
@@ -819,9 +825,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|OTHERSH
 specifier|register
 name|int
 name|ff
@@ -836,8 +839,6 @@ decl_stmt|;
 name|char
 name|ch
 decl_stmt|;
-endif|#
-directive|endif
 name|vp
 operator|=
 name|lastsh
@@ -857,7 +858,7 @@ argument_list|(
 literal|"shell"
 argument_list|)
 else|:
-name|SHELLPATH
+name|_PATH_CSHELL
 expr_stmt|;
 name|vp
 index|[
@@ -870,9 +871,6 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OTHERSH
 if|if
 condition|(
 name|ff
@@ -901,7 +899,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|OTHERSH
+name|_PATH_BSHELL
 expr_stmt|;
 operator|(
 name|void
@@ -911,8 +909,6 @@ argument_list|(
 name|ff
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 name|vp
