@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -433,28 +433,6 @@ parameter_list|(
 name|q
 parameter_list|)
 value|_remque((caddr_t)q)
-end_define
-
-begin_define
-define|#
-directive|define
-name|queue
-parameter_list|(
-name|q
-parameter_list|,
-name|p
-parameter_list|)
-value|_queue((caddr_t)q,(caddr_t)p)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dequeue
-parameter_list|(
-name|q
-parameter_list|)
-value|_dequeue((caddr_t)q)
 end_define
 
 end_unit
