@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egrep.c	5.6 (Berkeley) %G%"
+literal|"@(#)egrep.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -743,6 +743,8 @@ decl_stmt|;
 block|{
 name|int
 name|c
+decl_stmt|,
+name|oflag
 decl_stmt|;
 name|int
 name|errflag
@@ -796,6 +798,7 @@ condition|)
 name|grepflag
 operator|++
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|strcmp
@@ -810,6 +813,10 @@ condition|)
 name|fgrepflag
 operator|++
 expr_stmt|;
+name|oflag
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -821,7 +828,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bchie:f:lnsvwxy1"
+literal|"bchie:f:lnosvwxy1"
 argument_list|)
 operator|)
 operator|!=
@@ -877,6 +884,13 @@ case|case
 literal|'h'
 case|:
 name|hflag
+operator|++
+expr_stmt|;
+continue|continue;
+case|case
+literal|'o'
+case|:
+name|oflag
 operator|++
 expr_stmt|;
 continue|continue;
@@ -984,7 +998,7 @@ name|grepflag
 condition|)
 name|oops
 argument_list|(
-literal|"usage: grep [-bchilnsvwy] [-e] pattern [file ...]"
+literal|"usage: grep [-bchilnosvwy] [-e] pattern [file ...]"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -994,14 +1008,14 @@ name|fgrepflag
 condition|)
 name|oops
 argument_list|(
-literal|"usage: fgrep [-bchilnv] {-f patfile | [-e] strings} [file ...]"
+literal|"usage: fgrep [-bchilnov] {-f patfile | [-e] strings} [file ...]"
 argument_list|)
 expr_stmt|;
 else|else
 comment|/* encourage SVID options, though we provide 				 * others */
 name|oops
 argument_list|(
-literal|"usage: egrep [-bchilnv] {-f patfile | [-e] pattern} [file ...]"
+literal|"usage: egrep [-bchilnov] {-f patfile | [-e] pattern} [file ...]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1040,6 +1054,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|oflag
+operator|&&
 operator|(
 name|argc
 operator|-
