@@ -957,9 +957,9 @@ operator|=
 operator|(
 name|PptpMsgHead
 operator|)
-name|ip_next
+name|tcp_next
 argument_list|(
-name|pip
+name|tc
 argument_list|)
 expr_stmt|;
 comment|/* Return the control message type */

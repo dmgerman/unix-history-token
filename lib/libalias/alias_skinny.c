@@ -754,9 +754,9 @@ expr|struct
 name|skinny_header
 operator|*
 operator|)
-name|ip_next
+name|tcp_next
 argument_list|(
-name|pip
+name|tc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX This direction is reserved for future use.  I still need to 	 * handle the scenario where the call manager is on the inside, and 	 * the calling phone is on the global outside. 	 */
