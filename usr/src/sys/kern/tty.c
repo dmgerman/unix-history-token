@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.8	81/07/05	*/
+comment|/*	tty.c	4.9	81/07/06	*/
 end_comment
 
 begin_comment
@@ -1946,6 +1946,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 comment|/* 	 * Set and fetch special characters 	 */
 case|case
 name|TIOCSETC
