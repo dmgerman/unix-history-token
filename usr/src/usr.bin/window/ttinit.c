@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttinit.c	3.16 %G%"
+literal|"@(#)ttinit.c	3.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,20 @@ end_function_decl
 begin_function_decl
 name|int
 name|tt_tvi925
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tt_wyse75
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tt_wyse60
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -115,6 +129,30 @@ block|,
 literal|6
 block|,
 name|tt_tvi925
+block|}
+block|,
+block|{
+literal|"wyse75"
+block|,
+literal|6
+block|,
+name|tt_wyse75
+block|}
+block|,
+block|{
+literal|"wyse60"
+block|,
+literal|6
+block|,
+name|tt_wyse60
+block|}
+block|,
+block|{
+literal|"w60"
+block|,
+literal|3
+block|,
+name|tt_wyse60
 block|}
 block|,
 block|{
