@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.17 1997/03/29 11:07:12 phk Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.18 1997/06/15 02:02:53 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -1020,10 +1020,14 @@ name|INITIALIZER
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * Old apm_info structure, returned by the APMIO_GETINFO_OLD ioctl.  This  * is for backward compatibility with old executables.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
-name|apm_info
+name|apm_info_old
 block|{
 name|u_int
 name|ai_major
@@ -1049,6 +1053,60 @@ name|u_int
 name|ai_status
 decl_stmt|;
 comment|/* Status of APM support (enabled/disabled) */
+block|}
+typedef|*
+name|apm_info_old_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Structure returned by the APMIO_GETINFO ioctl.  *  * In the comments below, the parenthesized numbers indicate the minimum  * value of ai_infoversion for which each field is valid.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|apm_info
+block|{
+name|u_int
+name|ai_infoversion
+decl_stmt|;
+comment|/* Indicates which fields are valid */
+name|u_int
+name|ai_major
+decl_stmt|;
+comment|/* APM major version (0) */
+name|u_int
+name|ai_minor
+decl_stmt|;
+comment|/* APM minor version (0) */
+name|u_int
+name|ai_acline
+decl_stmt|;
+comment|/* AC line status (0) */
+name|u_int
+name|ai_batt_stat
+decl_stmt|;
+comment|/* Battery status (0) */
+name|u_int
+name|ai_batt_life
+decl_stmt|;
+comment|/* Remaining battery life in percent (0) */
+name|int
+name|ai_batt_time
+decl_stmt|;
+comment|/* Remaining battery time in seconds (0) */
+name|u_int
+name|ai_status
+decl_stmt|;
+comment|/* True if enabled (0) */
+name|u_int
+name|ai_spare
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* For future expansion */
 block|}
 typedef|*
 name|apm_info_t
@@ -1091,8 +1149,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|APMIO_GETINFO
-value|_IOR('P', 2, struct apm_info)
+name|APMIO_GETINFO_OLD
+value|_IOR('P', 2, struct apm_info_old)
 end_define
 
 begin_define
@@ -1135,6 +1193,13 @@ define|#
 directive|define
 name|APMIO_BIOS
 value|_IOWR('P', 10, struct apm_bios_arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APMIO_GETINFO
+value|_IOR('P', 11, struct apm_info)
 end_define
 
 begin_endif
