@@ -132,7 +132,7 @@ name|__GNUC__
 operator|==
 literal|2
 operator|&&
-name|__GNUC_MINOR_
+name|__GNUC_MINOR__
 operator|>
 literal|9
 operator|)
