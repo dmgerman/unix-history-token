@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_input.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_input.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -158,7 +158,7 @@ block|{
 case|case
 name|CTRL
 argument_list|(
-name|h
+literal|'h'
 argument_list|)
 case|:
 case|case
@@ -184,7 +184,7 @@ break|break;
 case|case
 name|CTRL
 argument_list|(
-name|u
+literal|'u'
 argument_list|)
 case|:
 while|while
@@ -207,7 +207,7 @@ break|break;
 case|case
 name|CTRL
 argument_list|(
-name|r
+literal|'r'
 argument_list|)
 case|:
 name|kdbwrite
@@ -236,7 +236,7 @@ break|break;
 case|case
 name|CTRL
 argument_list|(
-name|w
+literal|'w'
 argument_list|)
 case|:
 if|if
