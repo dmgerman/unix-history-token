@@ -88,7 +88,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.21 1997/04/10 14:12:51 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.22 1997/04/28 14:18:38 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -679,12 +679,31 @@ condition|)
 block|{
 endif|#
 directive|endif
+name|char
+name|nbuf
+index|[
+name|YPMAXRECORD
+index|]
+decl_stmt|;
 comment|/* NUL terminate! NUL terminate!! NUL TERMINATE!!! */
+name|bcopy
+argument_list|(
 name|argp
 operator|->
 name|key
 operator|.
 name|keydat_val
+argument_list|,
+name|nbuf
+argument_list|,
+name|argp
+operator|->
+name|key
+operator|.
+name|keydat_len
+argument_list|)
+expr_stmt|;
+name|nbuf
 index|[
 name|argp
 operator|->
@@ -701,19 +720,9 @@ name|debug
 condition|)
 name|yp_error
 argument_list|(
-literal|"Doing DNS lookup of %.*s"
+literal|"Doing DNS lookup of %s"
 argument_list|,
-name|argp
-operator|->
-name|key
-operator|.
-name|keydat_len
-argument_list|,
-name|argp
-operator|->
-name|key
-operator|.
-name|keydat_val
+name|nbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -736,15 +745,7 @@ name|yp_async_lookup_name
 argument_list|(
 name|rqstp
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|argp
-operator|->
-name|key
-operator|.
-name|keydat_val
+name|nbuf
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -768,15 +769,7 @@ name|yp_async_lookup_addr
 argument_list|(
 name|rqstp
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|argp
-operator|->
-name|key
-operator|.
-name|keydat_val
+name|nbuf
 argument_list|)
 expr_stmt|;
 if|if
