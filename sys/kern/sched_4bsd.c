@@ -2186,5 +2186,25 @@ return|;
 block|}
 end_function
 
+begin_function
+name|fixpt_t
+name|sched_pctcpu
+parameter_list|(
+name|struct
+name|kse
+modifier|*
+name|ke
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ke
+operator|->
+name|ke_pctcpu
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

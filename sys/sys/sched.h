@@ -224,6 +224,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * and they use up cpu time.  */
+end_comment
+
+begin_function_decl
+name|fixpt_t
+name|sched_pctcpu
+parameter_list|(
+name|struct
+name|kse
+modifier|*
+name|ke
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * These procedures tell the process data structure allocation code how  * many bytes to actually allocate.  */
 end_comment
 

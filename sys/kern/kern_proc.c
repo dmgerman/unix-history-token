@@ -3636,9 +3636,10 @@ name|kp
 operator|->
 name|ki_pctcpu
 operator|=
+name|sched_pctcpu
+argument_list|(
 name|ke
-operator|->
-name|ke_pctcpu
+argument_list|)
 expr_stmt|;
 block|}
 else|else
