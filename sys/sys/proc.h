@@ -1690,6 +1690,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|PROC_TRYLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_trylock(&(p)->p_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PROC_UNLOCK
 parameter_list|(
 name|p
