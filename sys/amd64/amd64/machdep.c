@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -319,12 +325,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bootinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
 end_include
 
 begin_include
@@ -4855,17 +4855,15 @@ condition|(
 name|procrunnable
 argument_list|()
 condition|)
-block|{
 name|enable_intr
 argument_list|()
 expr_stmt|;
-block|}
 else|else
 block|{
 name|enable_intr
 argument_list|()
 expr_stmt|;
-asm|__asm__ ("hlt");
+asm|__asm __volatile("hlt");
 block|}
 block|}
 block|}
