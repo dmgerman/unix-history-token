@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -819,6 +819,16 @@ begin_expr_stmt
 name|SendBody
 operator|=
 name|sendbody
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|define
+argument_list|(
+literal|'g'
+argument_list|,
+literal|"$f"
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 

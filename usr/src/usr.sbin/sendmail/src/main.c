@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.109
+literal|3.110
 operator|%
 name|G
 operator|%
@@ -1332,12 +1332,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|initsys
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* our name for SMTP codes */
 end_comment
@@ -1571,6 +1565,12 @@ endif|#
 directive|endif
 endif|DEBUG
 end_endif
+
+begin_expr_stmt
+name|initsys
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -3411,6 +3411,20 @@ specifier|auto
 name|time_t
 name|now
 decl_stmt|;
+comment|/* 	**  Set OutChannel to something useful if stdout isn't it. 	*/
+if|if
+condition|(
+name|Mode
+operator|==
+name|MD_DAEMON
+operator|||
+name|HoldErrs
+condition|)
+name|OutChannel
+operator|=
+name|Xscript
+expr_stmt|;
+comment|/* 	**  Set up some basic system macros. 	*/
 comment|/* process id */
 operator|(
 name|void
