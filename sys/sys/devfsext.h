@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $Id: devfsext.h,v 1.6 1996/01/21 09:03:04 julian Exp $  */
+comment|/*  * $Id: devfsext.h,v 1.7 1996/01/25 07:17:05 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -150,6 +150,70 @@ define|#
 directive|define
 name|DV_DEV
 value|2
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UID_ROOT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UID_BIN
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|UID_UUCP
+value|66
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GID_WHEEL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GID_KMEM
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|GID_OPERATOR
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|GID_BIN
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|GID_DIALER
+value|68
 end_define
 
 begin_endif
