@@ -188,19 +188,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* #define PAREN_MATCHING */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PAREN_MATCHING
-argument_list|)
-end_if
-
 begin_function_decl
 specifier|extern
 name|int
@@ -208,15 +195,6 @@ name|rl_insert_close
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PAREN_MATCHING */
-end_comment
 
 begin_comment
 comment|/* These are *both* defined even when VI_MODE is not. */
@@ -253,15 +231,6 @@ name|rl_noninc_reverse_search_again
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VI_MODE
-argument_list|)
-end_if
 
 begin_comment
 comment|/* Things for vi mode. */
@@ -391,15 +360,6 @@ name|rl_vi_fetch_history
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* VI_MODE */
-end_comment
 
 begin_comment
 comment|/* Keyboard macro commands. */
