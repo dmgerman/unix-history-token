@@ -540,6 +540,7 @@ condition|(
 operator|!
 name|tte_match
 argument_list|(
+operator|&
 name|tte
 argument_list|,
 name|va
@@ -551,11 +552,10 @@ goto|;
 operator|*
 name|pa
 operator|=
-name|TD_PA
+name|TTE_GET_PA
 argument_list|(
+operator|&
 name|tte
-operator|.
-name|tte_data
 argument_list|)
 operator|+
 name|offset
