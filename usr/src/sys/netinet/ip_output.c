@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_output.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_output.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -224,6 +224,9 @@ name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -241,6 +244,8 @@ argument_list|(
 literal|"ip_output no HDR"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|opt
@@ -2042,6 +2047,9 @@ block|{
 case|case
 name|IP_OPTIONS
 case|:
+ifdef|#
+directive|ifdef
+name|notyet
 case|case
 name|IP_RETOPTS
 case|:
@@ -2060,6 +2068,23 @@ name|m
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|ip_pcbopts
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|inp_options
+argument_list|,
+name|m
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
 case|case
 name|IP_TOS
 case|:
@@ -2105,7 +2130,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|op
+name|optname
 condition|)
 block|{
 case|case
@@ -2203,6 +2228,9 @@ condition|)
 block|{
 case|case
 name|IP_OPTIONS
+case|:
+case|case
+name|IP_RETOPTS
 case|:
 operator|*
 name|mp
@@ -2306,7 +2334,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|op
+name|optname
 condition|)
 block|{
 case|case
@@ -2407,6 +2435,34 @@ begin_comment
 comment|/*  * Set up IP options in pcb for insertion in output packets.  * Store in mbuf with pointer in pcbopt, adding pseudo-option  * with destination address if source routed.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_macro
+name|ip_pcbopts
+argument_list|(
+argument|optname
+argument_list|,
+argument|pcbopt
+argument_list|,
+argument|m
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|optname
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|ip_pcbopts
 argument_list|(
@@ -2415,6 +2471,11 @@ argument_list|,
 argument|m
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
