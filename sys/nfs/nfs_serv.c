@@ -15860,26 +15860,13 @@ argument_list|,
 name|procp
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* 		 * XXX This check may be too strict for Solaris 2.5 clients. 		 */
-if|if
-condition|(
-operator|!
-name|error
-operator|&&
-name|toff
-operator|&&
-name|verf
-operator|&&
-name|verf
-operator|!=
-name|at
-operator|.
-name|va_filerev
-condition|)
-name|error
-operator|=
-name|NFSERR_BAD_COOKIE
-expr_stmt|;
+block|if (!error&& toff&& verf&& verf != at.va_filerev) 			error = NFSERR_BAD_COOKIE;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -17404,25 +17391,12 @@ name|procp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX This check may be too strict for Solaris 2.5 clients. 	 */
-if|if
-condition|(
-operator|!
-name|error
-operator|&&
-name|toff
-operator|&&
-name|verf
-operator|&&
-name|verf
-operator|!=
-name|at
-operator|.
-name|va_filerev
-condition|)
-name|error
-operator|=
-name|NFSERR_BAD_COOKIE
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (!error&& toff&& verf&& verf != at.va_filerev) 		error = NFSERR_BAD_COOKIE;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
