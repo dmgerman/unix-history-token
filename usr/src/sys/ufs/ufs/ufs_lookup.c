@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_lookup.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_lookup.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -75,6 +75,29 @@ directive|include
 file|"malloc.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTRACE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ktrace.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|struct
 name|buf
@@ -88,7 +111,7 @@ begin_decl_stmt
 name|int
 name|dirchk
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -524,6 +547,33 @@ goto|goto
 name|bad
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|KTRACE
+if|if
+condition|(
+name|KTRPOINT
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|KTR_NAMEI
+argument_list|)
+condition|)
+name|ktrnamei
+argument_list|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_tracep
+argument_list|,
+name|nbp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Get starting directory. 	 */
 name|cp
 operator|=
@@ -1615,6 +1665,22 @@ name|enduseful
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMEI_DIAGNOSTIC
+name|printf
+argument_list|(
+literal|"{%s}:\n"
+argument_list|,
+name|ndp
+operator|->
+name|ni_dent
+operator|.
+name|d_name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|searchloop
 label|:
 while|while
@@ -1908,6 +1974,20 @@ operator|->
 name|d_ino
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NAMEI_DIAGNOSTIC
+name|printf
+argument_list|(
+literal|"{%s} "
+argument_list|,
+name|ep
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ep
@@ -1978,6 +2058,16 @@ operator|->
 name|ni_offset
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|NAMEI_DIAGNOSTIC
+name|printf
+argument_list|(
+literal|"\nnotfound\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* notfound: */
 comment|/* 	 * If we started in the middle of the directory and failed 	 * to find our target, we must check the beginning as well. 	 */
 if|if
@@ -2162,6 +2252,16 @@ name|bad
 goto|;
 name|found
 label|:
+ifdef|#
+directive|ifdef
+name|NAMEI_DIAGNOSTIC
+name|printf
+argument_list|(
+literal|"\nfound\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|numdirpasses
