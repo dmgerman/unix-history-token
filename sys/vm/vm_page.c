@@ -1608,27 +1608,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_undirty:  *  *	Set page to not be dirty.  Note: does not clear pmap modify bits  */
-end_comment
-
-begin_function
-name|void
-name|vm_page_undirty
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-block|{
-name|m
-operator|->
-name|dirty
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  *	vm_page_splay:  *  *	Implements Sleator and Tarjan's top-down splay algorithm.  Returns  *	the vm_page containing the given pindex.  If, however, that  *	pindex is not found in the vm_object, returns a vm_page that is  *	adjacent to the pindex, coming before or after it.  */
 end_comment
 

@@ -1250,16 +1250,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_undirty
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_page_wakeup
 parameter_list|(
 name|vm_page_t
@@ -1659,6 +1649,29 @@ name|vm_page_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  *	vm_page_undirty:  *  *	Set page to not be dirty.  Note: does not clear pmap modify bits  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vm_page_undirty
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+name|m
+operator|->
+name|dirty
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#
