@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.30 %G%"
+literal|"@(#)main.c	3.31 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,7 +465,13 @@ name|cmdwin
 operator|=
 name|wwopen
 argument_list|(
+name|wwbaud
+operator|>
+literal|2400
+condition|?
 name|WWO_REVERSE
+else|:
+literal|0
 argument_list|,
 literal|1
 argument_list|,
