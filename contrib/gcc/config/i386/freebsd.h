@@ -785,6 +785,16 @@ value|do {									\     if (!(TARGET_ELF))							\       emit_library_call (gen
 end_define
 
 begin_comment
+comment|/* Use dollar signs in special g++ assembler names.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_DOLLAR_IN_LABEL
+end_undef
+
+begin_comment
 comment|/* Map i386 registers to the numbers dwarf expects.  Of course this is different    from what stabs expects.  */
 end_comment
 
