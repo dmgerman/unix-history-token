@@ -2670,7 +2670,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* 	 * Turn off the power to the slot before we do anything 	 * with it. 	 */
+comment|/* 	 * Turn off the power to the slot in an attempt to 	 * keep the system from hanging on reboot.  We also turn off 	 * card interrupts in an attempt to control interrupt storms. 	 * on some (all?) this has the effect of also turning off 	 * card status change interrupts.  A side effect of writing 0 	 * to INT_GEN is that the card is placed into "reset" mode 	 * where nothing happens until it is taken out of "reset" 	 * mode. 	 */
 name|sp
 operator|->
 name|putb
@@ -2693,7 +2693,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Ack any pending interrupts */
+comment|/* 	 * Writing to INT_GEN can cause an interrupt, so we blindly 	 * ack all possible interrupts here.  Reading the stat change 	 * shouldn't be necessary, but some TI chipsets need it in the 	 * normal course of operations, so we do it here too.  We can't 	 * lose any interrupts after this point, so go ahead and ack 	 * everything.  The bits in INT_GEN clear upon reading them. 	 */
 name|bus_space_write_4
 argument_list|(
 name|sp
@@ -3172,11 +3172,6 @@ operator|->
 name|func_route
 operator|=
 name|pcic_intr_path
-expr_stmt|;
-name|pcic_pci_shutdown
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
