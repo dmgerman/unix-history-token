@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -548,6 +548,12 @@ name|nameidata
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -772,10 +778,25 @@ operator|*
 name|fhp
 operator|,
 expr|struct
+name|mbuf
+operator|*
+name|nam
+operator|,
+expr|struct
 name|vnode
 operator|*
 operator|*
 name|vpp
+operator|,
+name|int
+operator|*
+name|exflagsp
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|*
+name|credanonp
 operator|)
 argument_list|)
 expr_stmt|;
@@ -943,9 +964,16 @@ name|MP
 parameter_list|,
 name|FIDP
 parameter_list|,
+name|NAM
+parameter_list|,
 name|VPP
+parameter_list|,
+name|EXFLG
+parameter_list|,
+name|CRED
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, VPP)
+define|\
+value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, NAM, VPP, EXFLG, CRED)
 end_define
 
 begin_define
