@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.146 (Berkeley) %G%"
+literal|"@(#)conf.c	8.147 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,6 +225,10 @@ block|,
 literal|"content-type"
 block|,
 name|H_CTYPE
+block|,
+literal|"content-length"
+block|,
+name|H_ACHECK
 block|,
 name|NULL
 block|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.57 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -926,6 +926,9 @@ operator|.
 name|q_paddr
 argument_list|)
 operator|<=
+operator|(
+name|SIZE_T
+operator|)
 literal|8
 operator|||
 name|strcasecmp

@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.41 (Berkeley) %G%"
+literal|"@(#)alias.c	8.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,6 +110,12 @@ name|char
 modifier|*
 name|owner
 decl_stmt|;
+specifier|auto
+name|int
+name|stat
+init|=
+name|EX_OK
+decl_stmt|;
 name|char
 name|obuf
 index|[
@@ -178,7 +184,7 @@ name|a
 operator|->
 name|q_paddr
 expr_stmt|;
-comment|/* 	**  Look up this name 	*/
+comment|/* 	**  Look up this name. 	** 	**	If the map was unavailable, we will queue this message 	**	until the map becomes available; otherwise, we could 	**	bounce messages inappropriately. 	*/
 name|p
 operator|=
 name|aliaslookup
@@ -187,9 +193,45 @@ name|a
 operator|->
 name|q_user
 argument_list|,
+operator|&
+name|stat
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stat
+operator|==
+name|EX_TEMPFAIL
+operator|||
+name|stat
+operator|==
+name|EX_UNAVAILABLE
+condition|)
+block|{
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QQUEUEUP
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_message
+operator|==
+name|NULL
+condition|)
+name|e
+operator|->
+name|e_message
+operator|=
+literal|"alias database unavailable"
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|p
@@ -439,6 +481,9 @@ name|aliaslookup
 argument_list|(
 name|obuf
 argument_list|,
+operator|&
+name|stat
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -517,7 +562,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ALIASLOOKUP -- look up a name in the alias file. ** **	Parameters: **		name -- the name to look up. ** **	Returns: **		the value of name. **		NULL if unknown. ** **	Side Effects: **		none. ** **	Warnings: **		The return value will be trashed across calls. */
+comment|/* **  ALIASLOOKUP -- look up a name in the alias file. ** **	Parameters: **		name -- the name to look up. **		pstat -- a pointer to a place to put the status. **		e -- the current envelope. ** **	Returns: **		the value of name. **		NULL if unknown. ** **	Side Effects: **		none. ** **	Warnings: **		The return value will be trashed across calls. */
 end_comment
 
 begin_function
@@ -527,11 +572,17 @@ name|aliaslookup
 parameter_list|(
 name|name
 parameter_list|,
+name|pstat
+parameter_list|,
 name|e
 parameter_list|)
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|int
+modifier|*
+name|pstat
 decl_stmt|;
 name|ENVELOPE
 modifier|*
@@ -607,8 +658,7 @@ name|name
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
-name|stat
+name|pstat
 argument_list|)
 expr_stmt|;
 if|if

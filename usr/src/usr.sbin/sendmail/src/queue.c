@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.75 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.76 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.75 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.76 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3264,6 +3264,9 @@ operator|->
 name|d_name
 argument_list|)
 operator|>
+operator|(
+name|SIZE_T
+operator|)
 name|MAXNAME
 condition|)
 name|d

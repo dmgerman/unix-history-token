@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.141 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.142 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8386,6 +8386,9 @@ argument_list|(
 name|p
 argument_list|)
 operator|>=
+operator|(
+name|SIZE_T
+operator|)
 name|l
 condition|)
 block|{
@@ -11786,6 +11789,9 @@ argument_list|(
 name|msg
 argument_list|)
 operator|>
+operator|(
+name|SIZE_T
+operator|)
 literal|4
 condition|)
 block|{
