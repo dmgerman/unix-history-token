@@ -553,7 +553,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|BUFFALO
 argument_list|,
-name|WLI_PCM_S11
+name|WLI_CF_S11G
 argument_list|,
 literal|0
 argument_list|)
@@ -562,7 +562,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|BUFFALO
 argument_list|,
-name|WLI_CF_S11G
+name|WLI_PCM_S11
 argument_list|,
 literal|0
 argument_list|)
@@ -724,7 +724,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|IODATA2
 argument_list|,
-name|WNB11PCM
+name|WCF12
 argument_list|,
 literal|0
 argument_list|)
@@ -733,7 +733,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|IODATA2
 argument_list|,
-name|WCF12
+name|WNB11PCM
 argument_list|,
 literal|0
 argument_list|)
@@ -796,7 +796,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|PROXIM
 argument_list|,
-name|RANGELANDS_8430
+name|HARMONY
 argument_list|,
 literal|0
 argument_list|)
@@ -805,7 +805,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|PROXIM
 argument_list|,
-name|HARMONY
+name|RANGELANDS_8430
 argument_list|,
 literal|0
 argument_list|)
