@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.3 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1026,6 +1026,20 @@ block|,
 literal|1
 block|,
 name|help
+block|}
+block|,
+block|{
+literal|"image"
+block|,
+name|binaryhelp
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|setbinary
 block|}
 block|,
 block|{
