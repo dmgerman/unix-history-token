@@ -638,12 +638,6 @@ operator|->
 name|p_md
 operator|.
 name|md_regs
-operator|-
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
 expr_stmt|;
 name|pcb2
 operator|->
