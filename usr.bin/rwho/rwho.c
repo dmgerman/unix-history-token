@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<locale.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -98,7 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_decl_stmt
@@ -261,10 +267,6 @@ name|n
 decl_stmt|,
 name|i
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
@@ -722,11 +724,13 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s:%-.8s"
+literal|"%s:%-.*s"
 argument_list|,
 name|mp
 operator|->
 name|myhost
+argument_list|,
+name|UT_LINESIZE
 argument_list|,
 name|mp
 operator|->
@@ -737,7 +741,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-8.8s %-*s %.12s"
+literal|"%-*.*s %-*s %.12s"
+argument_list|,
+name|UT_NAMESIZE
+argument_list|,
+name|UT_NAMESIZE
 argument_list|,
 name|mp
 operator|->
@@ -894,7 +902,7 @@ name|myutmp
 operator|.
 name|out_name
 argument_list|,
-literal|8
+name|UT_NAMESIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -918,7 +926,7 @@ name|u2
 operator|->
 name|myhost
 argument_list|,
-literal|8
+name|UT_HOSTSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -946,7 +954,7 @@ name|myutmp
 operator|.
 name|out_line
 argument_list|,
-literal|8
+name|UT_LINESIZE
 argument_list|)
 operator|)
 return|;
