@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, 1997 Shigio Yamaguchi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shigio Yamaguchi.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	global.h				16-Oct-97  *  */
+comment|/*  * Copyright (c) 1996, 1997, 1998 Shigio Yamaguchi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shigio Yamaguchi.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	global.h				2-May-98  *  */
 end_comment
 
 begin_ifndef
@@ -18,37 +18,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"gparam.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dbname.h"
+file|"dbop.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"makepath.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dbio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"locatestring.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mgets.h"
+file|"defined.h"
 end_include
 
 begin_include
@@ -72,19 +54,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"strop.h"
+file|"gparam.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"gtagsopen.h"
+file|"gtagsop.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lookup.h"
+file|"locatestring.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"makepath.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mgets.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathop.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"strbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"strmake.h"
 end_include
 
 begin_include
@@ -96,13 +108,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tag.h"
+file|"test.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"test.h"
+file|"token.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"usable.h"
 end_include
 
 begin_endif

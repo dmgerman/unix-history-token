@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, 1997 Shigio Yamaguchi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Shigio Yamaguchi.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	mgets.c					8-Nov-97  *  */
+comment|/*  * Copyright (c) 1996, 1997, 1998 Shigio Yamaguchi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Shigio Yamaguchi.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	mgets.c					29-Aug-98  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_include
 include|#
@@ -18,20 +24,27 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mgets.h"
+file|"die.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"die.h"
+file|"mgets.h"
 end_include
 
 begin_define
 define|#
 directive|define
 name|EXPANDSIZE
-value|512
+value|127
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINSIZE
+value|16
 end_define
 
 begin_decl_stmt
@@ -52,7 +65,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * mgets: read whole record into allocated buffer  *  *	i)	ip	input stream  *	i)	flags	flags  *			MGETS_CONT		\\ + \n -> \n  *			MGETS_SKIPCOM		skip line which start with '#'.  *	o)	length	length of record  *	r)		record buffer (NULL at end of file)  *  * Returned buffer has whole record.  * The buffer end with '\0' and doesn't include '\r' and '\n'.  */
+comment|/*  * mgets: read whole record into allocated buffer  *  *	i)	ip	input stream  *	o)	length	record length  *	i)	flags	flags  *			MGETS_CONT		\\ + \n -> ''  *			MGETS_SKIPCOM		skip line which start with '#'.  *			MGETS_TAILCUT		remove following blanks   *	r)		record buffer (NULL at end of file)  *  * Returned buffer has whole record.  * The buffer end with '\0' and doesn't include '\r' and '\n'.  */
 end_comment
 
 begin_function
@@ -62,20 +75,20 @@ name|mgets
 parameter_list|(
 name|ip
 parameter_list|,
-name|flags
-parameter_list|,
 name|length
+parameter_list|,
+name|flags
 parameter_list|)
 name|FILE
 modifier|*
 name|ip
 decl_stmt|;
 name|int
-name|flags
-decl_stmt|;
-name|int
 modifier|*
 name|length
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 name|char
@@ -125,11 +138,7 @@ name|ip
 argument_list|)
 condition|)
 return|return
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 return|;
 if|if
 condition|(
@@ -157,11 +166,7 @@ name|ip
 argument_list|)
 condition|)
 return|return
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 return|;
 name|p
 operator|=
@@ -191,7 +196,7 @@ operator|!=
 literal|'\n'
 condition|)
 block|{
-comment|/* 			 * expand and read additionally. 			 */
+comment|/* 			 * expand buffer and read additionally. 			 */
 name|int
 name|count
 init|=
@@ -199,6 +204,15 @@ name|p
 operator|-
 name|mbuf
 decl_stmt|;
+if|if
+condition|(
+name|mbufsize
+operator|-
+name|count
+operator|<
+name|MINSIZE
+condition|)
+block|{
 name|mbufsize
 operator|+=
 name|EXPANDSIZE
@@ -234,6 +248,7 @@ name|mbuf
 operator|+
 name|count
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -248,11 +263,15 @@ argument_list|,
 name|ip
 argument_list|)
 condition|)
-name|die
-argument_list|(
-literal|"illegal end of file."
-argument_list|)
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\n'
 expr_stmt|;
+break|break;
+block|}
 name|p
 operator|+=
 name|strlen
@@ -318,6 +337,29 @@ expr_stmt|;
 else|else
 break|break;
 block|}
+comment|/* 	if (flags& MGETS_SKIPCOM) 		for (p = mbuf; *p; p++) 			if (*p == '#') { 				*p = 0; 				break; 			} */
+if|if
+condition|(
+name|flags
+operator|&
+name|MGETS_TAILCUT
+condition|)
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+operator|(
+operator|--
+name|p
+operator|)
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|length

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, 1997 Shigio Yamaguchi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Shigio Yamaguchi.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	tab.c					20-Oct-97  *  */
+comment|/*  * Copyright (c) 1996, 1997, 1998 Shigio Yamaguchi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Shigio Yamaguchi.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	tab.c					8-Oct-98  *  */
 end_comment
 
 begin_include
@@ -15,6 +15,15 @@ directive|include
 file|"tab.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|tabs
+init|=
+literal|8
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -22,8 +31,40 @@ name|TABPOS
 parameter_list|(
 name|i
 parameter_list|)
-value|((i)%8 == 0)
+value|((i)%tabs == 0)
 end_define
+
+begin_comment
+comment|/*  * settabs: set default tab stop  *  *	i)	n	tab stop  */
+end_comment
+
+begin_function
+name|void
+name|settabs
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|n
+operator|<
+literal|1
+operator|||
+name|n
+operator|>
+literal|32
+condition|)
+return|return;
+name|tabs
+operator|=
+name|n
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * detab: convert tabs into spaces and print  *  *	i)	op	FILE *  *	i)	buf	string including tabs  */
@@ -214,12 +255,21 @@ expr_stmt|;
 comment|/* count blanks */
 continue|continue;
 block|}
+comment|/* don't convert single blank into tab */
 name|buf
 index|[
 name|dst
 operator|++
 index|]
 operator|=
+operator|(
+name|blanks
+operator|==
+literal|0
+operator|)
+condition|?
+literal|' '
+else|:
 literal|'\t'
 expr_stmt|;
 block|}
@@ -282,6 +332,25 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|blanks
+operator|>
+literal|0
+condition|)
+while|while
+condition|(
+name|blanks
+operator|--
+condition|)
+name|buf
+index|[
+name|dst
+operator|++
+index|]
+operator|=
+literal|' '
+expr_stmt|;
 name|buf
 index|[
 name|dst
