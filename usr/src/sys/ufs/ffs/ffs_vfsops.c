@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1933,9 +1933,12 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|size
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ronly
+decl_stmt|;
+name|int32_t
+modifier|*
+name|lp
 decl_stmt|;
 specifier|extern
 name|struct
@@ -2328,6 +2331,37 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|size
+operator|=
+name|fs
+operator|->
+name|fs_cssize
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_contigsumsize
+operator|>
+literal|0
+condition|)
+name|size
+operator|+=
+name|fs
+operator|->
+name|fs_ncg
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int32_t
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|base
 operator|=
 name|space
@@ -2337,9 +2371,7 @@ argument_list|(
 operator|(
 name|u_long
 operator|)
-name|fs
-operator|->
-name|fs_cssize
+name|size
 argument_list|,
 name|M_UFSMNT
 argument_list|,
@@ -2514,6 +2546,54 @@ expr_stmt|;
 block|}
 end_for
 
+begin_if
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_contigsumsize
+operator|>
+literal|0
+condition|)
+block|{
+name|fs
+operator|->
+name|fs_maxcluster
+operator|=
+name|lp
+operator|=
+operator|(
+name|int32_t
+operator|*
+operator|)
+name|space
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|fs
+operator|->
+name|fs_ncg
+condition|;
+name|i
+operator|++
+control|)
+operator|*
+name|lp
+operator|++
+operator|=
+name|fs
+operator|->
+name|fs_contigsumsize
+expr_stmt|;
+block|}
+end_if
+
 begin_expr_stmt
 name|mp
 operator|->
@@ -2682,6 +2762,53 @@ name|fs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|ump
+operator|->
+name|um_savedmaxfilesize
+operator|=
+name|fs
+operator|->
+name|fs_maxfilesize
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_maxfilesize
+operator|>
+operator|(
+name|quad_t
+operator|)
+literal|1
+operator|<<
+literal|39
+condition|)
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_maxfilesize
+operator|=
+operator|(
+name|quad_t
+operator|)
+literal|1
+operator|<<
+literal|39
+expr_stmt|;
+end_if
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_return
 return|return
@@ -4507,6 +4634,9 @@ specifier|register
 name|struct
 name|fs
 modifier|*
+name|dfs
+decl_stmt|,
+modifier|*
 name|fs
 init|=
 name|mp
@@ -4619,6 +4749,18 @@ name|fs_sbsize
 argument_list|)
 expr_stmt|;
 comment|/* Restore compatibility to old file systems.		   XXX */
+name|dfs
+operator|=
+operator|(
+expr|struct
+name|fs
+operator|*
+operator|)
+name|bp
+operator|->
+name|b_data
+expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|fs
@@ -4628,16 +4770,7 @@ operator|==
 name|FS_42POSTBLFMT
 condition|)
 comment|/* XXX */
-operator|(
-operator|(
-expr|struct
-name|fs
-operator|*
-operator|)
-name|bp
-operator|->
-name|b_data
-operator|)
+name|dfs
 operator|->
 name|fs_nrpos
 operator|=
@@ -4670,16 +4803,7 @@ name|long
 operator|*
 operator|)
 operator|&
-operator|(
-operator|(
-expr|struct
-name|fs
-operator|*
-operator|)
-name|bp
-operator|->
-name|b_data
-operator|)
+name|dfs
 operator|->
 name|fs_qbmask
 expr_stmt|;
@@ -4728,6 +4852,15 @@ name|tmp
 expr_stmt|;
 comment|/* XXX */
 block|}
+comment|/* XXX */
+name|dfs
+operator|->
+name|fs_maxfilesize
+operator|=
+name|mp
+operator|->
+name|um_savedmaxfilesize
+expr_stmt|;
 comment|/* XXX */
 ifdef|#
 directive|ifdef
