@@ -175,7 +175,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ef:pqs:"
+literal|"ef:pqs:t"
 argument_list|)
 operator|)
 operator|!=
@@ -240,6 +240,11 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|argc
