@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.18	82/01/19	*/
+comment|/*	uipc_socket2.c	4.19	82/01/19	*/
 end_comment
 
 begin_include
@@ -186,6 +186,16 @@ operator|&
 name|so
 operator|->
 name|so_timeo
+argument_list|)
+expr_stmt|;
+name|sorwakeup
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|sowwakeup
+argument_list|(
+name|so
 argument_list|)
 expr_stmt|;
 block|}
@@ -412,6 +422,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|s
+init|=
+name|splnet
+argument_list|()
+decl_stmt|;
 switch|switch
 condition|(
 name|rw
@@ -427,11 +443,18 @@ argument_list|(
 name|so
 argument_list|)
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 name|sbselqueue
 argument_list|(
 operator|&
@@ -451,11 +474,18 @@ argument_list|(
 name|so
 argument_list|)
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 name|sbselqueue
 argument_list|(
 operator|&
@@ -466,6 +496,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
