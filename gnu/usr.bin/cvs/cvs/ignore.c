@@ -112,7 +112,7 @@ name|char
 modifier|*
 name|ign_default
 init|=
-literal|". .. core RCSLOG tags TAGS RCS SCCS .make.state .nse_depinfo #* .#* cvslog.* ,* CVS* .del-* *.a *.o *.so *.Z *~ *.old *.elc *.ln *.bak *.BAK *.orig *.rej"
+literal|". .. core RCSLOG tags TAGS RCS SCCS .make.state .nse_depinfo #* .#* cvslog.* ,* CVS* .del-* *.a *.o *.so *.Z *~ *.old *.elc *.ln *.bak *.BAK *.orig *.rej *.info *.db"
 decl_stmt|;
 end_decl_stmt
 
