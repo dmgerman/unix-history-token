@@ -14,16 +14,23 @@ literal|"Copyright (C) 1997, Massachusetts Institute of Technology\r\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_include
+include|#
+directive|include
+file|"lp.cdefs.h"
+end_include
+
+begin_comment
+comment|/* A cross-platform version of<sys/cdefs.h> */
+end_comment
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
