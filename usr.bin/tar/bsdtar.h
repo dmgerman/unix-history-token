@@ -156,6 +156,12 @@ name|matching
 decl_stmt|;
 comment|/* for matching.c */
 name|struct
+name|security
+modifier|*
+name|security
+decl_stmt|;
+comment|/* for read.c */
+name|struct
 name|uname_cache
 modifier|*
 name|uname_cache
