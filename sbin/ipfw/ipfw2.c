@@ -231,6 +231,9 @@ comment|/* display dynamic rules */
 name|do_expired
 decl_stmt|,
 comment|/* display expired dynamic rules */
+name|do_compact
+decl_stmt|,
+comment|/* show rules in compact mode */
 name|show_sets
 decl_stmt|,
 comment|/* display rule sets */
@@ -4413,9 +4416,14 @@ literal|1
 condition|)
 block|{
 comment|/* empty rules before options */
+if|if
+condition|(
+operator|!
+name|do_compact
+condition|)
 name|printf
 argument_list|(
-literal|" all from any to any"
+literal|" ip from any to any"
 argument_list|)
 expr_stmt|;
 name|flags
@@ -12323,7 +12331,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"MAC dst src [not] type"
+literal|"MAC dst src"
 argument_list|)
 expr_stmt|;
 name|cmd
@@ -12566,15 +12574,9 @@ operator|->
 name|p_proto
 expr_stmt|;
 else|else
-name|errx
-argument_list|(
-name|EX_DATAERR
-argument_list|,
-literal|"invalid protocol ``%s''"
-argument_list|,
-name|av
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 name|proto
@@ -13946,119 +13948,21 @@ name|first_cmd
 operator|=
 name|cmd
 expr_stmt|;
-comment|/* 	 * MAC addresses, optional. 	 * If we have this, we skip the part "proto from src to dst" 	 * and jump straight to the option parsing. 	 */
-name|NOT_BLOCK
-expr_stmt|;
-name|NEED1
-argument_list|(
-literal|"missing protocol"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|strncmp
-argument_list|(
-operator|*
-name|av
-argument_list|,
-literal|"MAC"
-argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
-argument_list|)
-operator|||
-operator|!
-name|strncmp
-argument_list|(
-operator|*
-name|av
-argument_list|,
-literal|"mac"
-argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|ac
-operator|--
-expr_stmt|;
-name|av
-operator|++
-expr_stmt|;
-comment|/* the "MAC" keyword */
-name|add_mac
-argument_list|(
-name|cmd
-argument_list|,
-name|ac
-argument_list|,
-name|av
-argument_list|)
-expr_stmt|;
-comment|/* exits in case of errors */
-name|cmd
-operator|=
-name|next_cmd
-argument_list|(
-name|cmd
-argument_list|)
-expr_stmt|;
-name|ac
-operator|-=
-literal|2
-expr_stmt|;
-name|av
-operator|+=
-literal|2
-expr_stmt|;
-comment|/* dst-mac and src-mac */
-name|NOT_BLOCK
-expr_stmt|;
-name|NEED1
-argument_list|(
-literal|"missing mac type"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|add_mactype
-argument_list|(
-name|cmd
-argument_list|,
-name|ac
-argument_list|,
-name|av
-index|[
+if|#
+directive|if
 literal|0
-index|]
-argument_list|)
-condition|)
-name|cmd
-operator|=
-name|next_cmd
-argument_list|(
-name|cmd
-argument_list|)
-expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
-name|av
-operator|++
-expr_stmt|;
+comment|/* 	 * MAC addresses, optional. 	 * If we have this, we skip the part "proto from src to dst" 	 * and jump straight to the option parsing. 	 */
+block|NOT_BLOCK; 	NEED1("missing protocol"); 	if (!strncmp(*av, "MAC", strlen(*av)) || 	    !strncmp(*av, "mac", strlen(*av))) { 		ac--; av++;
+comment|/* the "MAC" keyword */
+block|add_mac(cmd, ac, av);
+comment|/* exits in case of errors */
+block|cmd = next_cmd(cmd); 		ac -= 2; av += 2;
+comment|/* dst-mac and src-mac */
+block|NOT_BLOCK; 		NEED1("missing mac type"); 		if (add_mactype(cmd, ac, av[0])) 			cmd = next_cmd(cmd); 		ac--; av++;
 comment|/* any or mac-type */
-goto|goto
-name|read_options
-goto|;
-block|}
+block|goto read_options; 	}
+endif|#
+directive|endif
 comment|/* 	 * protocol, mandatory 	 */
 name|OR_START
 argument_list|(
@@ -14124,6 +14028,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|first_cmd
+operator|!=
+name|cmd
+condition|)
+block|{
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"invalid protocol ``%s''"
+argument_list|,
+name|av
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+goto|goto
+name|read_options
+goto|;
 name|OR_BLOCK
 argument_list|(
 name|get_proto
@@ -15692,6 +15618,16 @@ name|av
 operator|++
 expr_stmt|;
 block|}
+else|else
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"invalid protocol ``%s''"
+argument_list|,
+name|av
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|TOK_SRCIP
@@ -16843,7 +16779,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"hs:adefNqStv"
+literal|"hs:acdefNqStv"
 argument_list|)
 operator|)
 operator|!=
@@ -16880,6 +16816,14 @@ case|case
 literal|'a'
 case|:
 name|do_acct
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|do_compact
 operator|=
 literal|1
 expr_stmt|;
