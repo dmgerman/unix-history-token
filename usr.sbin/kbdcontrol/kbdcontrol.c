@@ -642,7 +642,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|int
+name|get_accent_definition_line
+name|__P
+argument_list|(
+operator|(
+name|accentmap_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|get_key_definition_line
+name|__P
+argument_list|(
+operator|(
+name|keymap_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|usage
 name|__P
@@ -774,6 +799,7 @@ name|f
 operator|>
 name|bufl
 condition|)
+block|{
 if|if
 condition|(
 name|buf
@@ -803,6 +829,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1211,6 +1238,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_definition_line
 parameter_list|(
@@ -4520,7 +4548,7 @@ name|badopt
 label|:
 name|warnx
 argument_list|(
-literal|"argument to -b must be DURATION.PITCH"
+literal|"argument to -b must be duration.pitch or [quiet.]visual|normal|off"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4771,7 +4799,7 @@ name|badopt
 label|:
 name|warnx
 argument_list|(
-literal|"argument to -r must be delay.repeat"
+literal|"argument to -r must be delay.repeat or slow|normal|fast"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5094,6 +5122,9 @@ name|printf
 argument_list|(
 literal|"    %.*s%d, type:%s (%d)\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|info
@@ -5223,6 +5254,9 @@ name|printf
 argument_list|(
 literal|"    %.*s%d, type:%s (%d)\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|info
@@ -5326,6 +5360,9 @@ name|printf
 argument_list|(
 literal|"    %.*s%d, type:%s (%d)\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|info
@@ -5378,7 +5415,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -5389,7 +5425,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: kbdcontrol [-dFKix] [-b  duration.pitch | [quiet.]belltype]"
+literal|"usage: kbdcontrol [-dFKix] [-b duration.pitch | [quiet.]belltype]"
 argument_list|,
 literal|"                  [-r delay.repeat | speed] [-l mapfile] [-f # string]"
 argument_list|,
