@@ -3277,12 +3277,14 @@ name|sa
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|suser
 argument_list|(
 name|p
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -3291,6 +3293,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -3307,6 +3310,7 @@ argument_list|(
 name|sa
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -3315,6 +3319,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vm86_intcall
@@ -3328,6 +3333,7 @@ name|sa
 operator|.
 name|vmf
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
