@@ -59,15 +59,8 @@ value|USRSTACK
 end_define
 
 begin_comment
-comment|/* BSDI defines this too (PST) */
+comment|/* Leave HOST_DATA_START_ADDR undefined, since the default when it is not    defined sort of works, and FreeBSD-2.0 through FreeBSD-2.2.2 do not    set u.u_kproc.kp_eproc.e_vm.vm_daddr.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|HOST_DATA_START_ADDR
-value|((bfd_vma)u.u_kproc.kp_eproc.e_vm.vm_daddr)
-end_define
 
 begin_define
 define|#
