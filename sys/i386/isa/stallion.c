@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * stallion.c  -- stallion multiport serial driver.  *  * Copyright (c) 1995-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * stallion.c  -- stallion multiport serial driver.  *  * Copyright (c) 1995-1999 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Id: stallion.c,v 1.4 2000/10/01 10:23:03 wayne Exp  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
@@ -127,12 +133,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
-name|STLDEBUG
-end_undef
-
 begin_comment
 comment|/*****************************************************************************/
 end_comment
@@ -145,16 +145,8 @@ begin_define
 define|#
 directive|define
 name|VFREEBSD
-value|220
+value|410
 end_define
-
-begin_if
-if|#
-directive|if
-name|VFREEBSD
-operator|>=
-literal|220
-end_if
 
 begin_define
 define|#
@@ -162,22 +154,6 @@ directive|define
 name|STATIC
 value|static
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STATIC
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*****************************************************************************/
@@ -339,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|STL_DEFSPEED
-value|TTYDEF_SPEED
+value|9600
 end_define
 
 begin_define
@@ -404,7 +380,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|stl_longdrvname
+name|stl_drvtitle
 index|[]
 init|=
 literal|"Stallion Multiport Serial Driver"
@@ -418,7 +394,7 @@ name|char
 name|stl_drvversion
 index|[]
 init|=
-literal|"2.0.0"
+literal|"5.6.0b1"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,6 +610,24 @@ decl_stmt|;
 name|stlrq_t
 name|rxstatus
 decl_stmt|;
+name|dev_t
+name|dev_ttyE
+decl_stmt|;
+name|dev_t
+name|dev_ttyiE
+decl_stmt|;
+name|dev_t
+name|dev_ttylE
+decl_stmt|;
+name|dev_t
+name|dev_cue
+decl_stmt|;
+name|dev_t
+name|dev_cuie
+decl_stmt|;
+name|dev_t
+name|dev_cule
+decl_stmt|;
 block|}
 name|stlport_t
 typedef|;
@@ -806,6 +800,9 @@ index|[
 name|STL_PORTSPERBRD
 index|]
 decl_stmt|;
+name|dev_t
+name|dev_staliomem
+decl_stmt|;
 block|}
 name|stlbrd_t
 typedef|;
@@ -911,7 +908,7 @@ begin_define
 define|#
 directive|define
 name|ASY_ACTIVE
-value|(ASY_TXLOW | ASY_RXDATA | ASY_DCDCHANGE)
+value|(ASY_TXEMPTY | ASY_TXLOW | ASY_RXDATA | ASY_DCDCHANGE)
 end_define
 
 begin_comment
@@ -1084,7 +1081,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *	Hardware ID bits for the EasyIO and ECH boards. These defines apply  *	to the directly accessable io ports of these boards (not the cd1400  *	uarts - they are in scd1400.h).  */
+comment|/*  *	Hardware ID bits for the EasyIO and ECH boards. These defines apply  *	to the directly accessable io ports of these boards (not the cd1400  *	or 26198 uarts - they are in scd1400.h and sc26198.h).  */
 end_comment
 
 begin_define
@@ -1326,7 +1323,11 @@ value|EIO_CLK
 end_define
 
 begin_comment
-comment|/*  *      Define the PCI vendor and device ID for Stallion PCI boards.  */
+comment|/*****************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  *	Define the PCI vendor and device ID for Stallion PCI boards.  */
 end_comment
 
 begin_define
@@ -1538,7 +1539,7 @@ value|if (stl_brds[(brdnr)]->brdtype == BRD_ECH)			\ 		outb(stl_brds[(brdnr)]->i
 end_define
 
 begin_comment
-comment|/*  *      Define some spare buffer space for un-wanted received characters.  */
+comment|/*  *	Define some spare buffer space for un-wanted received characters.  */
 end_comment
 
 begin_decl_stmt
@@ -1901,6 +1902,9 @@ parameter_list|,
 name|stlpanel_t
 modifier|*
 name|panelp
+parameter_list|,
+name|int
+name|strtport
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2050,13 +2054,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|ointhand2_t
-name|stlintr
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
@@ -2111,6 +2108,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|void
+name|stlintr
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  *	CD1400 uart specific handling functions.  */
@@ -2372,7 +2379,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|stl_cd1400txisr
 parameter_list|(
@@ -2822,7 +2828,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Generic UART support structure.  */
+comment|/*  *	Generic UART support structure.  */
 end_comment
 
 begin_typedef
@@ -3122,7 +3128,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      CD1400 UART specific data initialization.  */
+comment|/*  *	CD1400 UART specific data initialization.  */
 end_comment
 
 begin_decl_stmt
@@ -3161,7 +3167,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *      Define the offsets within the register bank of a cd1400 based panel.  *      These io address offsets are common to the EasyIO board as well.  */
+comment|/*  *	Define the offsets within the register bank of a cd1400 based panel.  *	These io address offsets are common to the EasyIO board as well.  */
 end_comment
 
 begin_define
@@ -3221,7 +3227,7 @@ value|20000000
 end_define
 
 begin_comment
-comment|/*  *      Define the cd1400 baud rate clocks. These are used when calculating  *      what clock and divisor to use for the required baud rate. Also  *      define the maximum baud rate allowed, and the default base baud.  */
+comment|/*  *	Define the cd1400 baud rate clocks. These are used when calculating  *	what clock and divisor to use for the required baud rate. Also  *	define the maximum baud rate allowed, and the default base baud.  */
 end_comment
 
 begin_decl_stmt
@@ -3245,7 +3251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *      Define the maximum baud rate of the cd1400 devices.  */
+comment|/*  *	Define the maximum baud rate of the cd1400 devices.  */
 end_comment
 
 begin_define
@@ -3260,7 +3266,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      SC26198 UART specific data initization.  */
+comment|/*  *	SC26198 UART specific data initization.  */
 end_comment
 
 begin_decl_stmt
@@ -3299,7 +3305,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *      Define the offsets within the register bank of a sc26198 based panel.  */
+comment|/*  *	Define the offsets within the register bank of a sc26198 based panel.  */
 end_comment
 
 begin_define
@@ -3345,7 +3351,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*  *      Define the sc26198 baud rate table. Offsets within the table  *      represent the actual baud rate selector of sc26198 registers.  */
+comment|/*  *	Define the sc26198 baud rate table. Offsets within the table  *	represent the actual baud rate selector of sc26198 registers.  */
 end_comment
 
 begin_decl_stmt
@@ -3413,7 +3419,7 @@ value|(sizeof(sc26198_baudtable) / sizeof(unsigned int))
 end_define
 
 begin_comment
-comment|/*  *      Define the maximum baud rate of the sc26198 devices.  */
+comment|/*  *	Define the maximum baud rate of the sc26198 devices.  */
 end_comment
 
 begin_define
@@ -3510,14 +3516,6 @@ begin_comment
 comment|/*****************************************************************************/
 end_comment
 
-begin_if
-if|#
-directive|if
-name|VFREEBSD
-operator|>=
-literal|220
-end_if
-
 begin_comment
 comment|/*  *	FreeBSD-2.2+ kernel linkage.  */
 end_comment
@@ -3574,16 +3572,11 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_TTY
-operator||
-name|D_KQFILTER
 block|,
 comment|/* bmaj */
 operator|-
 literal|1
-block|,
-comment|/* kqfilter */
-name|ttykqfilter
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3621,11 +3614,6 @@ argument|NULL
 argument_list|)
 end_macro
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*****************************************************************************/
 end_comment
@@ -3651,7 +3639,7 @@ name|status
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stlprobe(idp=%x): unit=%d iobase=%x\n"
@@ -3866,16 +3854,9 @@ name|stlbrd_t
 modifier|*
 name|brdp
 decl_stmt|;
-name|int
-name|boardnr
-decl_stmt|,
-name|portnr
-decl_stmt|,
-name|minor_dev
-decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stlattach(idp=%p): unit=%d iobase=%x\n"
@@ -3897,7 +3878,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*	idp->id_ointr = stlintr; */
+name|idp
+operator|->
+name|id_ointr
+operator|=
+name|stlintr
+expr_stmt|;
 name|brdp
 operator|=
 operator|(
@@ -4053,775 +4039,6 @@ argument_list|(
 name|brdp
 argument_list|)
 expr_stmt|;
-comment|/* register devices for DEVFS */
-name|boardnr
-operator|=
-name|brdp
-operator|->
-name|brdnr
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|boardnr
-operator|+
-literal|0x1000000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"staliomem%d"
-argument_list|,
-name|boardnr
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|portnr
-operator|=
-literal|0
-operator|,
-name|minor_dev
-operator|=
-name|boardnr
-operator|*
-literal|0x100000
-init|;
-name|portnr
-operator|<
-literal|32
-condition|;
-name|portnr
-operator|++
-operator|,
-name|minor_dev
-operator|++
-control|)
-block|{
-comment|/* hw ports */
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|32
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyiE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|64
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttylE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|128
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cue%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|160
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cuie%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|192
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cule%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* sw ports */
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|32
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyiE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|64
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttylE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|128
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cue%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|160
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cuie%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|192
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cule%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-block|}
-name|boardnr
-operator|=
-name|brdp
-operator|->
-name|brdnr
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|boardnr
-operator|+
-literal|0x1000000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"staliomem%d"
-argument_list|,
-name|boardnr
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|portnr
-operator|=
-literal|0
-operator|,
-name|minor_dev
-operator|=
-name|boardnr
-operator|*
-literal|0x100000
-init|;
-name|portnr
-operator|<
-literal|32
-condition|;
-name|portnr
-operator|++
-operator|,
-name|minor_dev
-operator|++
-control|)
-block|{
-comment|/* hw ports */
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|32
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyiE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|64
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttylE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|128
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cue%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|160
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cuie%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|192
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cule%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* sw ports */
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|32
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyiE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|64
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttylE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|128
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cue%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|160
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cuie%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|192
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cule%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|1
@@ -4871,7 +4088,7 @@ name|brdtype
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stlpciprobe(tag=%x,type=%x)\n"
@@ -5050,16 +4267,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
-name|boardnr
-decl_stmt|,
-name|portnr
-decl_stmt|,
-name|minor_dev
-decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stlpciattach(tag=%x,unit=%x)\n"
@@ -5190,7 +4400,7 @@ name|brdnr
 operator|+
 literal|1
 expr_stmt|;
-comment|/*  *      Determine what type of PCI board this is...  */
+comment|/*  *	Determine what type of PCI board this is...  */
 name|id
 operator|=
 operator|(
@@ -5416,11 +4626,8 @@ name|brdp
 operator|->
 name|unitid
 operator|=
-name|brdp
-operator|->
-name|brdnr
+literal|0
 expr_stmt|;
-comment|/* PCI units auto-assigned */
 name|brdp
 operator|->
 name|irq
@@ -5486,391 +4693,6 @@ argument_list|(
 name|brdp
 argument_list|)
 expr_stmt|;
-comment|/* register devices for DEVFS */
-name|boardnr
-operator|=
-name|brdp
-operator|->
-name|brdnr
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|boardnr
-operator|+
-literal|0x1000000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"staliomem%d"
-argument_list|,
-name|boardnr
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|portnr
-operator|=
-literal|0
-operator|,
-name|minor_dev
-operator|=
-name|boardnr
-operator|*
-literal|0x100000
-init|;
-name|portnr
-operator|<
-literal|32
-condition|;
-name|portnr
-operator|++
-operator|,
-name|minor_dev
-operator|++
-control|)
-block|{
-comment|/* hw ports */
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|32
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyiE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|64
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttylE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|128
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cue%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|160
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cuie%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|192
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cule%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* sw ports */
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|32
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttyiE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|64
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"ttylE%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|128
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cue%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|160
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cuie%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|stl_cdevsw
-argument_list|,
-name|minor_dev
-operator|+
-literal|192
-operator|+
-literal|0x10000
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"cule%d"
-argument_list|,
-name|portnr
-operator|+
-operator|(
-name|boardnr
-operator|*
-literal|64
-operator|)
-operator|+
-literal|32
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -5921,7 +4743,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stlopen(dev=%x,flag=%x,mode=%x,p=%x)\n"
@@ -6250,10 +5072,15 @@ operator|&
 name|TS_XCLUDE
 operator|)
 operator|&&
-name|suser
-argument_list|(
+operator|(
 name|p
-argument_list|)
+operator|->
+name|p_ucred
+operator|->
+name|cr_uid
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|error
@@ -6476,7 +5303,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stlclose(dev=%s,flag=%x,mode=%x,p=%p)\n"
@@ -6615,14 +5442,6 @@ begin_comment
 comment|/*****************************************************************************/
 end_comment
 
-begin_if
-if|#
-directive|if
-name|VFREEBSD
-operator|>=
-literal|220
-end_if
-
 begin_function
 name|STATIC
 name|void
@@ -6639,57 +5458,7 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|STLDEBUG
-name|printf
-argument_list|(
-literal|"stl_stop(tp=%x,rw=%x)\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|tp
-argument_list|,
-name|rw
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|stl_flush
-argument_list|(
-operator|(
-name|stlport_t
-operator|*
-operator|)
-name|tp
-argument_list|,
-name|rw
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-name|STATIC
-name|int
-name|stlstop
-parameter_list|(
-name|struct
-name|tty
-modifier|*
-name|tp
-parameter_list|,
-name|int
-name|rw
-parameter_list|)
-block|{
-if|#
-directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stlstop(tp=%x,rw=%x)\n"
@@ -6715,18 +5484,8 @@ argument_list|,
 name|rw
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*****************************************************************************/
@@ -6782,7 +5541,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stlioctl(dev=%s,cmd=%lx,data=%p,flag=%x,p=%p)\n"
@@ -7842,7 +6601,7 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_rawopen(portp=%p): brdnr=%d panelnr=%d portnr=%d\n"
@@ -7949,7 +6708,7 @@ name|tp
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_rawclose(portp=%p): brdnr=%d panelnr=%d portnr=%d\n"
@@ -8153,7 +6912,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *	Start (or continue) the transfer of TX data on this port. If the  *	port is not currently busy then load up the interrupt ring queue  *	buffer and kick of the transmitter. If the port is running low on  *	TX data then refill the ring queue. This routine is also used to  *	activate input flow control!  */
+comment|/*  *	Start (or continue) the transfer of TX data on this port. If the  *	port is not currently busy then load up the interrupt ring queue  *	buffer and kick of the transmitter. If the port is running low on  *	TX data then refill the ring queue. This routine is also used to  *	activate input flow control.  */
 end_comment
 
 begin_function
@@ -8199,7 +6958,7 @@ name|tp
 expr_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_start(tp=%x): brdnr=%d portnr=%d\n"
@@ -8289,61 +7048,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|VFREEBSD
-operator|==
-literal|205
-comment|/*  *	Check if the output cooked clist buffers are near empty, wake up  *	the line discipline to fill it up.  */
-if|if
-condition|(
-name|tp
-operator|->
-name|t_outq
-operator|.
-name|c_cc
-operator|<=
-name|tp
-operator|->
-name|t_lowat
-condition|)
-block|{
-if|if
-condition|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ASLEEP
-condition|)
-block|{
-name|tp
-operator|->
-name|t_state
-operator|&=
-operator|~
-name|TS_ASLEEP
-expr_stmt|;
-name|wakeup
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|t_outq
-argument_list|)
-expr_stmt|;
-block|}
-name|selwakeup
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|t_wsel
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|tp
@@ -8558,19 +7262,12 @@ operator||=
 name|TS_BUSY
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|VFREEBSD
-operator|!=
-literal|205
 comment|/*  *	Do any writer wakeups.  */
 name|ttwwakeup
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|x
@@ -8610,7 +7307,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_flush(portp=%x,flag=%x)\n"
@@ -8765,6 +7462,13 @@ operator|=
 name|head
 expr_stmt|;
 block|}
+name|stl_uartflush
+argument_list|(
+name|portp
+argument_list|,
+name|FREAD
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8813,7 +7517,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Interrupt handler for host based boards. Interrupts for all boards  *      are vectored through here.  */
+comment|/*  *	Interrupt handler for host based boards. Interrupts for all boards  *	are vectored through here.  */
 end_comment
 
 begin_function
@@ -8833,7 +7537,7 @@ name|i
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stlintr(unit=%d)\n"
@@ -8912,6 +7616,14 @@ operator|>
 literal|0
 end_if
 
+begin_if
+if|#
+directive|if
+name|VFREEBSD
+operator|>=
+literal|220
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -8930,6 +7642,39 @@ expr_stmt|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+name|int
+name|stlpciintr
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|stlintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -8940,7 +7685,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Interrupt service routine for EasyIO boards.  */
+comment|/*  *	Interrupt service routine for EasyIO boards.  */
 end_comment
 
 begin_function
@@ -8962,10 +7707,10 @@ name|iobase
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
-literal|"stl_eiointr(brdp=%p)\n"
+literal|"stl_eiointr(brdp=%x)\n"
 argument_list|,
 name|brdp
 argument_list|)
@@ -9018,7 +7763,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *      Interrupt service routine for ECH-AT board types.  */
+comment|/*****************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  *	Interrupt service routine for ECH-AT board types.  */
 end_comment
 
 begin_function
@@ -9157,7 +7906,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Interrupt service routine for ECH-MCA board types.  */
+comment|/*  *	Interrupt service routine for ECH-MCA board types.  */
 end_comment
 
 begin_function
@@ -9266,7 +8015,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Interrupt service routine for ECH-PCI board types.  */
+comment|/*  *	Interrupt service routine for ECH-PCI board types.  */
 end_comment
 
 begin_function
@@ -9294,7 +8043,7 @@ name|recheck
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_echpciintr(brdp=%x)\n"
@@ -9413,7 +8162,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Interrupt service routine for EC8/64-PCI board types.  */
+comment|/*  *	Interrupt service routine for EC8/64-PCI board types.  */
 end_comment
 
 begin_function
@@ -9439,11 +8188,14 @@ name|bnknr
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
-literal|"stl_echpci64intr(brdp=%p)\n"
+literal|"stl_echpci64intr(brdp=%x)\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|brdp
 argument_list|)
 expr_stmt|;
@@ -9490,7 +8242,7 @@ index|]
 expr_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"    --> ioaddr=%x status=%x(%x)\n"
@@ -9569,7 +8321,7 @@ parameter_list|()
 block|{
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_dotimeout()\n"
@@ -9642,7 +8394,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_poll()\n"
@@ -9973,7 +8725,7 @@ name|ch
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_rxprocess(portp=%x): brdnr=%d portnr=%d\n"
@@ -10301,6 +9053,9 @@ operator|.
 name|tail
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|status
 operator|=
 operator|*
@@ -10313,10 +9068,7 @@ name|tail
 operator|+
 name|STL_RXBUFSIZE
 operator|)
-expr_stmt|;
-if|if
-condition|(
-name|status
+operator|)
 condition|)
 block|{
 operator|*
@@ -10448,7 +9200,7 @@ name|state
 operator||=
 name|ASY_RXDATA
 expr_stmt|;
-comment|/*  *	If we were flow controled then maybe the buffer is low enough that  *	we can re-activate it.  */
+comment|/*  *	If we where flow controled then maybe the buffer is low enough that  *	we can re-activate it.  */
 if|if
 condition|(
 operator|(
@@ -10583,7 +9335,7 @@ name|hwflow
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_flowcontrol(portp=%x,hw=%d,sw=%d)\n"
@@ -10885,18 +9637,41 @@ operator|&=
 operator|~
 name|TS_CAN_BYPASS_L_RINT
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_line
+operator|==
+name|SLIPDISC
+condition|)
 name|portp
 operator|->
 name|hotchar
 operator|=
-name|linesw
-index|[
+literal|0xc0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|tp
 operator|->
 name|t_line
-index|]
-operator|.
-name|l_hotchar
+operator|==
+name|PPPDISC
+condition|)
+name|portp
+operator|->
+name|hotchar
+operator|=
+literal|0x7e
+expr_stmt|;
+else|else
+name|portp
+operator|->
+name|hotchar
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -10921,6 +9696,9 @@ parameter_list|,
 name|stlpanel_t
 modifier|*
 name|panelp
+parameter_list|,
+name|int
+name|strtport
 parameter_list|)
 block|{
 name|stlport_t
@@ -10936,9 +9714,15 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|unsigned
+name|int
+name|mindev
+decl_stmt|,
+name|unit
+decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_initports(panelp=%x)\n"
@@ -10960,7 +9744,7 @@ argument_list|,
 name|panelp
 argument_list|)
 expr_stmt|;
-comment|/*  *      All UART's are initialized if found. Now go through and setup  *      each ports data structures. Also initialize each individual  *      UART port.  */
+comment|/*  *	All UART's are initialized if found. Now go through and setup  *	each ports data structures. Also initialize each individual  *	UART port.  */
 for|for
 control|(
 name|i
@@ -11386,6 +10170,211 @@ argument_list|,
 name|portp
 argument_list|)
 expr_stmt|;
+comment|/*  *		If using the device file system then set up the device  *		nodes for this port. Ports above 32 use the extended minor  *		number bits (in the upper 2 bytes of the device number).  */
+name|unit
+operator|=
+name|strtport
+operator|+
+name|portp
+operator|->
+name|portnr
+expr_stmt|;
+name|mindev
+operator|=
+operator|(
+operator|(
+name|portp
+operator|->
+name|brdnr
+operator|&
+literal|0x7
+operator|)
+operator|<<
+literal|20
+operator|)
+operator||
+operator|(
+name|unit
+operator|&
+literal|0x1f
+operator|)
+operator||
+operator|(
+operator|(
+name|unit
+operator|&
+literal|0x20
+operator|)
+operator|<<
+literal|11
+operator|)
+expr_stmt|;
+name|unit
+operator|+=
+operator|(
+name|portp
+operator|->
+name|brdnr
+operator|*
+name|STL_PORTSPERBRD
+operator|)
+expr_stmt|;
+name|portp
+operator|->
+name|dev_ttyE
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|stl_cdevsw
+argument_list|,
+name|mindev
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+literal|0600
+argument_list|,
+literal|"ttyE%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|portp
+operator|->
+name|dev_ttyiE
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|stl_cdevsw
+argument_list|,
+operator|(
+name|mindev
+operator||
+name|STL_CTRLINIT
+operator|)
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+literal|0600
+argument_list|,
+literal|"ttyiE%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|portp
+operator|->
+name|dev_ttylE
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|stl_cdevsw
+argument_list|,
+operator|(
+name|mindev
+operator||
+name|STL_CTRLLOCK
+operator|)
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+literal|0600
+argument_list|,
+literal|"ttylE%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|portp
+operator|->
+name|dev_cue
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|stl_cdevsw
+argument_list|,
+operator|(
+name|mindev
+operator||
+name|STL_CALLOUTDEV
+operator|)
+argument_list|,
+name|UID_UUCP
+argument_list|,
+name|GID_DIALER
+argument_list|,
+literal|0660
+argument_list|,
+literal|"cue%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|portp
+operator|->
+name|dev_cuie
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|stl_cdevsw
+argument_list|,
+operator|(
+name|mindev
+operator||
+name|STL_CTRLINIT
+operator||
+name|STL_CALLOUTDEV
+operator|)
+argument_list|,
+name|UID_UUCP
+argument_list|,
+name|GID_DIALER
+argument_list|,
+literal|0660
+argument_list|,
+literal|"cuie%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|portp
+operator|->
+name|dev_cule
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|stl_cdevsw
+argument_list|,
+operator|(
+name|mindev
+operator||
+name|STL_CTRLLOCK
+operator||
+name|STL_CALLOUTDEV
+operator|)
+argument_list|,
+name|UID_UUCP
+argument_list|,
+name|GID_DIALER
+argument_list|,
+literal|0660
+argument_list|,
+literal|"cule%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -11423,7 +10412,7 @@ name|status
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_initeio(brdp=%x)\n"
@@ -11602,7 +10591,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  *	Check that the supplied IRQ is good and then use it to setup the  *	programmable interrupt bits on EIO board. Also set the edge/level  *	triggered interrupt bit.  */
+comment|/*  *		Check that the supplied IRQ is good and then use it to  *		setup the programmable interrupt bits on EIO board.  *		Also set the edge/level triggered interrupt bit.  */
 if|if
 condition|(
 operator|(
@@ -11899,7 +10888,7 @@ name|i
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_initech(brdp=%x)\n"
@@ -12838,7 +11827,7 @@ name|k
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_brdinit(brdp=%x): unit=%d type=%d io1=%x io2=%x irq=%d\n"
@@ -13007,6 +11996,8 @@ argument_list|(
 name|brdp
 argument_list|,
 name|panelp
+argument_list|,
+name|k
 argument_list|)
 expr_stmt|;
 for|for
@@ -13073,6 +12064,36 @@ operator|->
 name|nrports
 argument_list|)
 expr_stmt|;
+name|brdp
+operator|->
+name|dev_staliomem
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|stl_cdevsw
+argument_list|,
+operator|(
+literal|0x1000000
+operator|+
+name|brdp
+operator|->
+name|brdnr
+operator|)
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+literal|0600
+argument_list|,
+literal|"staliomem%d"
+argument_list|,
+name|brdp
+operator|->
+name|brdnr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -13130,7 +12151,6 @@ name|STL_MAXBRDS
 condition|)
 return|return
 operator|(
-operator|-
 name|ENODEV
 operator|)
 return|;
@@ -13155,7 +12175,6 @@ name|NULL
 condition|)
 return|return
 operator|(
-operator|-
 name|ENODEV
 operator|)
 return|;
@@ -13579,7 +12598,6 @@ name|NULL
 condition|)
 return|return
 operator|(
-operator|-
 name|ENODEV
 operator|)
 return|;
@@ -13937,50 +12955,81 @@ begin_comment
 comment|/*  *	The "staliomem" device is used for stats collection in this driver.  */
 end_comment
 
-begin_function
+begin_if
+if|#
+directive|if
+name|VFREEBSD
+operator|>=
+literal|310
+end_if
+
+begin_decl_stmt
 specifier|static
 name|int
 name|stl_memioctl
-parameter_list|(
+argument_list|(
 name|dev_t
 name|dev
-parameter_list|,
-name|unsigned
-name|long
+argument_list|,
+name|u_long
 name|cmd
-parameter_list|,
+argument_list|,
 name|caddr_t
 name|data
-parameter_list|,
+argument_list|,
 name|int
 name|flag
-parameter_list|,
-name|struct
+argument_list|,
+expr|struct
 name|proc
-modifier|*
+operator|*
 name|p
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+decl|static
+name|int
+name|stl_memioctl
+argument_list|(
+name|dev_t
+name|dev
+argument_list|,
+name|int
+name|cmd
+argument_list|,
+name|caddr_t
+name|data
+argument_list|,
+name|int
+name|flag
+argument_list|,
+expr|struct
+name|proc
+operator|*
+name|p
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|int
 name|rc
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
-literal|"stl_memioctl(dev=%s,cmd=%lx,data=%p,flag=%x)\n"
+literal|"stl_memioctl(dev=%x,cmd=%x,data=%x,flag=%x)\n"
 argument_list|,
-name|devtoname
-argument_list|(
+operator|(
+name|int
+operator|)
 name|dev
-argument_list|)
 argument_list|,
 name|cmd
 argument_list|,
 operator|(
-name|void
-operator|*
+name|int
 operator|)
 name|data
 argument_list|,
@@ -14056,11 +13105,7 @@ name|rc
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/*****************************************************************************/
-end_comment
+end_decl_stmt
 
 begin_comment
 comment|/*****************************************************************************/
@@ -14075,7 +13120,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      These functions get/set/update the registers of the cd1400 UARTs.  *      Access to the cd1400 registers is via an address/data io port pair.  */
+comment|/*  *	These functions get/set/update the registers of the cd1400 UARTs.  *	Access to the cd1400 registers is via an address/data io port pair.  */
 end_comment
 
 begin_function
@@ -14270,7 +13315,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400flush(portp=%x,flag=%x)\n"
@@ -14449,12 +13494,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Transmit interrupt handler. This has gotta be fast!  Handling TX  *      chars is pretty simple, stuff as many as possible from the TX buffer  *      into the cd1400 FIFO. Must also handle TX breaks here, since they  *      are embedded as commands in the data stream. Oh no, had to use a goto!  */
+comment|/*  *	Transmit interrupt handler. This has gotta be fast!  Handling TX  *	chars is pretty simple, stuff as many as possible from the TX buffer  *	into the cd1400 FIFO. Must also handle TX breaks here, since they  *	are embedded as commands in the data stream. Oh no, had to use a goto!  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|stl_cd1400txisr
 parameter_list|(
@@ -14495,7 +13539,7 @@ name|stlen
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400txisr(panelp=%x,ioaddr=%x)\n"
@@ -14573,7 +13617,7 @@ name|portp
 operator|->
 name|tty
 expr_stmt|;
-comment|/*  *      Unfortunately we need to handle breaks in the data stream, since  *      this is the only way to generate them on the cd1400. Do it now if  *      a break is to be sent. Some special cases here: brklen is -1 then  *      start sending an un-timed break, if brklen is -2 then stop sending  *      an un-timed break, if brklen is -3 then we have just sent an  *      un-timed break and do not want any data to go out, if brklen is -4  *      then a break has just completed so clean up the port settings.  */
+comment|/*  *	Unfortunately we need to handle breaks in the data stream, since  *	this is the only way to generate them on the cd1400. Do it now if  *	a break is to be sent. Some special cases here: brklen is -1 then  *	start sending an un-timed break, if brklen is -2 then stop sending  *	an un-timed break, if brklen is -3 then we have just sent an  *	un-timed break and do not want any data to go out, if brklen is -4  *	then a break has just completed so clean up the port settings.  */
 if|if
 condition|(
 name|portp
@@ -15188,12 +14232,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Receive character interrupt handler. Determine if we have good chars  *      or bad chars and then process appropriately.  */
+comment|/*  *	Receive character interrupt handler. Determine if we have good chars  *	or bad chars and then process appropriately.  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|stl_cd1400rxisr
 parameter_list|(
@@ -15240,7 +14283,7 @@ name|tail
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400rxisr(panelp=%x,ioaddr=%x)\n"
@@ -15306,7 +14349,7 @@ name|portp
 operator|->
 name|tty
 expr_stmt|;
-comment|/*  *      First up, calculate how much room there is in the RX ring queue.  *      We also want to keep track of the longest possible copy length,  *      this has to allow for the wrapping of the ring queue.  */
+comment|/*  *	First up, calculate how much room there is in the RX ring queue.  *	We also want to keep track of the longest possible copy length,  *	this has to allow for the wrapping of the ring queue.  */
 name|head
 operator|=
 name|portp
@@ -15368,7 +14411,7 @@ operator|=
 name|buflen
 expr_stmt|;
 block|}
-comment|/*  *      Check if the input buffer is near full. If so then we should take  *      some flow control action... It is very easy to do hardware and  *      software flow control from here since we have the port selected on  *      the UART.  */
+comment|/*  *	Check if the input buffer is near full. If so then we should take  *	some flow control action... It is very easy to do hardware and  *	software flow control from here since we have the port selected on  *	the UART.  */
 if|if
 condition|(
 name|buflen
@@ -15445,7 +14488,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/*  *      OK we are set, process good data... If the RX ring queue is full  *      just chuck the chars - don't leave them in the UART.  */
+comment|/*  *	OK we are set, process good data... If the RX ring queue is full  *	just chuck the chars - don't leave them in the UART.  */
 if|if
 condition|(
 operator|(
@@ -15486,6 +14529,18 @@ operator|==
 literal|0
 condition|)
 block|{
+name|len
+operator|=
+name|MIN
+argument_list|(
+name|len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|stl_unwanted
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|ioaddr
@@ -15946,12 +15001,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Modem interrupt handler. The is called when the modem signal line  *      (DCD) has changed state.  */
+comment|/*  *	Modem interrupt handler. The is called when the modem signal line  *	(DCD) has changed state.  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|stl_cd1400mdmisr
 parameter_list|(
@@ -15977,7 +15031,7 @@ name|misr
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400mdmisr(panelp=%x,ioaddr=%x)\n"
@@ -16126,7 +15180,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Interrupt service routine for cd1400 EasyIO boards.  */
+comment|/*  *	Interrupt service routine for cd1400 EasyIO boards.  */
 end_comment
 
 begin_function
@@ -16149,7 +15203,7 @@ name|svrtype
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400eiointr(panelp=%x,iobase=%x)\n"
@@ -16212,7 +15266,7 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400eiointr(panelp=%x,iobase=%x): svrr=%x\n"
@@ -16278,7 +15332,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Interrupt service routine for cd1400 panels.  */
+comment|/*  *	Interrupt service routine for cd1400 panels.  */
 end_comment
 
 begin_function
@@ -16301,7 +15355,7 @@ name|svrtype
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400echintr(panelp=%x,iobase=%x)\n"
@@ -16401,7 +15455,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Set up the cd1400 registers for a port based on the termios port  *      settings.  */
+comment|/*  *	Set up the cd1400 registers for a port based on the termios port  *	settings.  */
 end_comment
 
 begin_function
@@ -16466,7 +15520,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400setport(portp=%x,tiosp=%x): brdnr=%d portnr=%d\n"
@@ -16544,7 +15598,7 @@ name|sreroff
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  *      Set up the RX char ignore mask with those RX error types we  *      can ignore. We could have used some special modes of the cd1400  *      UART to help, but it is better this way because we can keep stats  *      on the number of each type of RX exception event.  */
+comment|/*  *	Set up the RX char ignore mask with those RX error types we  *	can ignore. We could have used some special modes of the cd1400  *	UART to help, but it is better this way because we can keep stats  *	on the number of each type of RX exception event.  */
 name|portp
 operator|->
 name|rxignoremsk
@@ -16627,7 +15681,7 @@ name|rxmarkmsk
 operator||=
 name|ST_BREAK
 expr_stmt|;
-comment|/*  *      Go through the char size, parity and stop bits and set all the  *      option registers appropriately.  */
+comment|/*  *	Go through the char size, parity and stop bits and set all the  *	option registers appropriately.  */
 switch|switch
 condition|(
 name|tiosp
@@ -16727,7 +15781,7 @@ operator||=
 name|COR1_PARNONE
 expr_stmt|;
 block|}
-comment|/*  *      Set the RX FIFO threshold at 6 chars. This gives a bit of breathing  *      space for hardware flow control and the like. This should be set to  *      VMIN. Also here we will set the RX data timeout to 10ms - this should  *      really be based on VTIME...  */
+comment|/*  *	Set the RX FIFO threshold at 6 chars. This gives a bit of breathing  *	space for hardware flow control and the like. This should be set to  *	VMIN. Also here we will set the RX data timeout to 10ms - this should  *	really be based on VTIME...  */
 name|cor3
 operator||=
 name|FIFO_RXTHRESHOLD
@@ -16736,7 +15790,7 @@ name|rtpr
 operator|=
 literal|2
 expr_stmt|;
-comment|/*  *      Calculate the baud rate timers. For now we will just assume that  *      the input and output baud are the same. Could have used a baud  *      table here, but this way we can generate virtually any baud rate  *      we like!  */
+comment|/*  *	Calculate the baud rate timers. For now we will just assume that  *	the input and output baud are the same. Could have used a baud  *	table here, but this way we can generate virtually any baud rate  *	we like!  */
 if|if
 condition|(
 name|tiosp
@@ -16837,7 +15891,7 @@ operator|)
 name|clkdiv
 expr_stmt|;
 block|}
-comment|/*  *      Check what form of modem signaling is required and set it up.  */
+comment|/*  *	Check what form of modem signaling is required and set it up.  */
 if|if
 condition|(
 operator|(
@@ -16864,7 +15918,7 @@ operator||=
 name|SRER_MODEM
 expr_stmt|;
 block|}
-comment|/*  *      Setup cd1400 enhanced modes if we can. In particular we want to  *      handle as much of the flow control as possbile automatically. As  *      well as saving a few CPU cycles it will also greatly improve flow  *      control reliablilty.  */
+comment|/*  *	Setup cd1400 enhanced modes if we can. In particular we want to  *	handle as much of the flow control as possbile automatically. As  *	well as saving a few CPU cycles it will also greatly improve flow  *	control reliablilty.  */
 if|if
 condition|(
 name|tiosp
@@ -16919,10 +15973,10 @@ name|mcor1
 operator||=
 name|FIFO_RTSTHRESHOLD
 expr_stmt|;
-comment|/*  *      All cd1400 register values calculated so go through and set them  *      all up.  */
+comment|/*  *	All cd1400 register values calculated so go through and set them  *	all up.  */
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"SETPORT: portnr=%d panelnr=%d brdnr=%d\n"
@@ -17414,7 +16468,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Action the flow control as required. The hw and sw args inform the  *      routine what flow control methods it should try.  */
+comment|/*  *	Action the flow control as required. The hw and sw args inform the  *	routine what flow control methods it should try.  */
 end_comment
 
 begin_function
@@ -17438,7 +16492,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400sendflow(portp=%x,hw=%d,sw=%d)\n"
@@ -17663,7 +16717,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Return the current state of data flow on this port. This is only  *      really interresting when determining if data has fully completed  *      transmission or not... This is easy for the cd1400, it accurately  *      maintains the busy port flag.  */
+comment|/*  *	Return the current state of data flow on this port. This is only  *	really interresting when determining if data has fully completed  *	transmission or not... This is easy for the cd1400, it accurately  *	maintains the busy port flag.  */
 end_comment
 
 begin_function
@@ -17678,7 +16732,7 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400datastate(portp=%x)\n"
@@ -17729,7 +16783,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Set the state of the DTR and RTS signals. Got to do some extra  *      work here to deal hardware flow control.  */
+comment|/*  *	Set the state of the DTR and RTS signals. Got to do some extra  *	work here to deal hardware flow control.  */
 end_comment
 
 begin_function
@@ -17759,7 +16813,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400setsignals(portp=%x,dtr=%d,rts=%d)\n"
@@ -17960,7 +17014,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Get the state of the signals.  */
+comment|/*  *	Get the state of the signals.  */
 end_comment
 
 begin_function
@@ -17986,7 +17040,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400getsignals(portp=%x)\n"
@@ -18115,7 +17169,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|sigs |= (msvr1& MSVR1_RI) ? TIOCM_RI : 0;         sigs |= (msvr1& MSVR1_DSR) ? TIOCM_DSR : 0;
+block|sigs |= (msvr1& MSVR1_RI) ? TIOCM_RI : 0; 	sigs |= (msvr1& MSVR1_DSR) ? TIOCM_DSR : 0;
 else|#
 directive|else
 name|sigs
@@ -18137,7 +17191,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Enable or disable the Transmitter and/or Receiver.  */
+comment|/*  *	Enable or disable the Transmitter and/or Receiver.  */
 end_comment
 
 begin_function
@@ -18165,7 +17219,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400enablerxtx(portp=%x,rx=%d,tx=%d)\n"
@@ -18298,7 +17352,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Start or stop the Transmitter and/or Receiver.  */
+comment|/*  *	Start or stop the Transmitter and/or Receiver.  */
 end_comment
 
 begin_function
@@ -18328,7 +17382,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400startrxtx(portp=%x,rx=%d,tx=%d)\n"
@@ -18506,7 +17560,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Disable all interrupts from this port.  */
+comment|/*  *	Disable all interrupts from this port.  */
 end_comment
 
 begin_function
@@ -18524,7 +17578,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400disableintrs(portp=%x)\n"
@@ -18614,7 +17668,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400sendbreak(portp=%x,len=%d)\n"
@@ -18768,7 +17822,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Try and find and initialize all the ports on a panel. We don't care  *      what sort of board these ports are on - since the port io registers  *      are almost identical when dealing with ports.  */
+comment|/*  *	Try and find and initialize all the ports on a panel. We don't care  *	what sort of board these ports are on - since the port io registers  *	are almost identical when dealing with ports.  */
 end_comment
 
 begin_function
@@ -18791,7 +17845,7 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400portinit(brdp=%x,panelp=%x,portp=%x)\n"
@@ -18976,7 +18030,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Inbitialize the UARTs in a panel. We don't care what sort of board  *      these ports are on - since the port io registers are almost  *      identical when dealing with ports.  */
+comment|/*  *	Inbitialize the UARTs in a panel. We don't care what sort of board  *	these ports are on - since the port io registers are almost  *	identical when dealing with ports.  */
 end_comment
 
 begin_function
@@ -19013,7 +18067,7 @@ name|ioaddr
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_cd1400panelinit(brdp=%x,panelp=%x)\n"
@@ -19042,7 +18096,7 @@ operator|->
 name|pagenr
 argument_list|)
 expr_stmt|;
-comment|/*  *      Check that each chip is present and started up OK.  */
+comment|/*  *	Check that each chip is present and started up OK.  */
 name|chipmask
 operator|=
 literal|0
@@ -19334,7 +18388,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      These functions get/set/update the registers of the sc26198 UARTs.  *      Access to the sc26198 registers is via an address/data io port pair.  *      (Maybe should make this inline...)  */
+comment|/*  *	These functions get/set/update the registers of the sc26198 UARTs.  *	Access to the sc26198 registers is via an address/data io port pair.  *	(Maybe should make this inline...)  */
 end_comment
 
 begin_function
@@ -19516,7 +18570,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Functions to get and set the sc26198 global registers.  */
+comment|/*  *	Functions to get and set the sc26198 global registers.  */
 end_comment
 
 begin_function
@@ -19567,7 +18621,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void stl_sc26198setglobreg(stlport_t *portp, int regnr, int value) {         outb((portp->ioaddr + XP_ADDR), regnr);         outb((portp->ioaddr + XP_DATA), value); }
+unit|static void stl_sc26198setglobreg(stlport_t *portp, int regnr, int value) { 	outb((portp->ioaddr + XP_ADDR), regnr); 	outb((portp->ioaddr + XP_DATA), value); }
 endif|#
 directive|endif
 end_endif
@@ -19577,7 +18631,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Inbitialize the UARTs in a panel. We don't care what sort of board  *      these ports are on - since the port io registers are almost  *      identical when dealing with ports.  */
+comment|/*  *	Inbitialize the UARTs in a panel. We don't care what sort of board  *	these ports are on - since the port io registers are almost  *	identical when dealing with ports.  */
 end_comment
 
 begin_function
@@ -19606,7 +18660,7 @@ name|ioaddr
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198panelinit(brdp=%x,panelp=%x)\n"
@@ -19635,7 +18689,7 @@ operator|->
 name|pagenr
 argument_list|)
 expr_stmt|;
-comment|/*  *      Check that each chip is present and started up OK.  */
+comment|/*  *	Check that each chip is present and started up OK.  */
 name|chipmask
 operator|=
 literal|0
@@ -19835,7 +18889,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Initialize hardware specific port registers.  */
+comment|/*  *	Initialize hardware specific port registers.  */
 end_comment
 
 begin_function
@@ -19858,7 +18912,7 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198portinit(brdp=%x,panelp=%x,portp=%x)\n"
@@ -19999,7 +19053,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Set up the sc26198 registers for a port based on the termios port  *      settings.  */
+comment|/*  *	Set up the sc26198 registers for a port based on the termios port  *	settings.  */
 end_comment
 
 begin_function
@@ -20042,7 +19096,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198setport(portp=%x,tiosp=%x): brdnr=%d portnr=%d\n"
@@ -20096,7 +19150,7 @@ name|imroff
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  *      Set up the RX char ignore mask with those RX error types we  *      can ignore.  */
+comment|/*  *	Set up the RX char ignore mask with those RX error types we  *	can ignore.  */
 name|portp
 operator|->
 name|rxignoremsk
@@ -20179,7 +19233,7 @@ name|rxmarkmsk
 operator||=
 name|SR_RXBREAK
 expr_stmt|;
-comment|/*  *      Go through the char size, parity and stop bits and set all the  *      option registers appropriately.  */
+comment|/*  *	Go through the char size, parity and stop bits and set all the  *	option registers appropriately.  */
 switch|switch
 condition|(
 name|tiosp
@@ -20283,12 +19337,12 @@ name|mr1
 operator||=
 name|MR1_ERRBLOCK
 expr_stmt|;
-comment|/*  *      Set the RX FIFO threshold at 8 chars. This gives a bit of breathing  *      space for hardware flow control and the like. This should be set to  *      VMIN.  */
+comment|/*  *	Set the RX FIFO threshold at 8 chars. This gives a bit of breathing  *	space for hardware flow control and the like. This should be set to  *	VMIN.  */
 name|mr2
 operator||=
 name|MR2_RXFIFOHALF
 expr_stmt|;
-comment|/*  *      Calculate the baud rate timers. For now we will just assume that  *      the input and output baud are the same. The sc26198 has a fixed  *      baud rate table, so only discrete baud rates possible.  */
+comment|/*  *	Calculate the baud rate timers. For now we will just assume that  *	the input and output baud are the same. The sc26198 has a fixed  *	baud rate table, so only discrete baud rates possible.  */
 if|if
 condition|(
 name|tiosp
@@ -20367,7 +19421,7 @@ condition|)
 break|break;
 block|}
 block|}
-comment|/*  *      Check what form of modem signaling is required and set it up.  */
+comment|/*  *	Check what form of modem signaling is required and set it up.  */
 if|if
 condition|(
 operator|(
@@ -20390,7 +19444,7 @@ operator||=
 name|IR_IOPORT
 expr_stmt|;
 block|}
-comment|/*  *      Setup sc26198 enhanced modes if we can. In particular we want to  *      handle as much of the flow control as possible automatically. As  *      well as saving a few CPU cycles it will also greatly improve flow  *      control reliability.  */
+comment|/*  *	Setup sc26198 enhanced modes if we can. In particular we want to  *	handle as much of the flow control as possible automatically. As  *	well as saving a few CPU cycles it will also greatly improve flow  *	control reliability.  */
 if|if
 condition|(
 name|tiosp
@@ -20421,7 +19475,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (tiosp->c_iflag& IXOFF)                 mr0 |= MR0_SWFRX;
+block|if (tiosp->c_iflag& IXOFF) 		mr0 |= MR0_SWFRX;
 endif|#
 directive|endif
 if|if
@@ -20448,10 +19502,10 @@ name|mr1
 operator||=
 name|MR1_AUTORTS
 expr_stmt|;
-comment|/*  *      All sc26198 register values calculated so go through and set  *      them all up.  */
+comment|/*  *	All sc26198 register values calculated so go through and set  *	them all up.  */
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"SETPORT: portnr=%d panelnr=%d brdnr=%d\n"
@@ -20816,7 +19870,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Set the state of the DTR and RTS signals.  */
+comment|/*  *	Set the state of the DTR and RTS signals.  */
 end_comment
 
 begin_function
@@ -20846,7 +19900,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198setsignals(portp=%x,dtr=%d,rts=%d)\n"
@@ -21054,7 +20108,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Return the state of the signals.  */
+comment|/*  *	Return the state of the signals.  */
 end_comment
 
 begin_function
@@ -21078,7 +20132,7 @@ name|sigs
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198getsignals(portp=%x)\n"
@@ -21193,7 +20247,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Enable/Disable the Transmitter and/or Receiver.  */
+comment|/*  *	Enable/Disable the Transmitter and/or Receiver.  */
 end_comment
 
 begin_function
@@ -21221,7 +20275,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198enablerxtx(portp=%x,rx=%d,tx=%d)\n"
@@ -21339,7 +20393,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Start/stop the Transmitter and/or Receiver.  */
+comment|/*  *	Start/stop the Transmitter and/or Receiver.  */
 end_comment
 
 begin_function
@@ -21367,7 +20421,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198startrxtx(portp=%x,rx=%d,tx=%d)\n"
@@ -21517,7 +20571,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Disable all interrupts from this port.  */
+comment|/*  *	Disable all interrupts from this port.  */
 end_comment
 
 begin_function
@@ -21535,7 +20589,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198disableintrs(portp=%x)\n"
@@ -21616,7 +20670,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198sendbreak(portp=%x,len=%d)\n"
@@ -21707,7 +20761,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Take flow control actions...  */
+comment|/*  *	Take flow control actions...  */
 end_comment
 
 begin_function
@@ -21735,7 +20789,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198sendflow(portp=%x,hw=%d,sw=%d)\n"
@@ -22014,7 +21068,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Return the current state of data flow on this port. This is only  *      really interresting when determining if data has fully completed  *      transmission or not... The sc26198 interrupt scheme cannot  *      determine when all data has actually drained, so we need to  *      check the port statusy register to be sure.  */
+comment|/*  *	Return the current state of data flow on this port. This is only  *	really interresting when determining if data has fully completed  *	transmission or not... The sc26198 interrupt scheme cannot  *	determine when all data has actually drained, so we need to  *	check the port statusy register to be sure.  */
 end_comment
 
 begin_function
@@ -22036,7 +21090,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198datastate(portp=%x)\n"
@@ -22152,7 +21206,7 @@ name|x
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198flush(portp=%x,flag=%x)\n"
@@ -22268,7 +21322,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      If we are TX flow controlled and in IXANY mode then we may  *      need to unflow control here. We gotta do this because of the  *      automatic flow control modes of the sc26198 - which downs't  *      support any concept of an IXANY mode.  */
+comment|/*  *	If we are TX flow controlled and in IXANY mode then we may  *	need to unflow control here. We gotta do this because of the  *	automatic flow control modes of the sc26198 - which downs't  *	support any concept of an IXANY mode.  */
 end_comment
 
 begin_function
@@ -22341,7 +21395,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Delay for a small amount of time, to give the sc26198 a chance  *      to process a command...  */
+comment|/*  *	Delay for a small amount of time, to give the sc26198 a chance  *	to process a command...  */
 end_comment
 
 begin_function
@@ -22359,7 +21413,7 @@ name|i
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198wait(portp=%x)\n"
@@ -22413,12 +21467,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Transmit interrupt handler. This has gotta be fast!  Handling TX  *      chars is pretty simple, stuff as many as possible from the TX buffer  *      into the sc26198 FIFO.  */
+comment|/*  *	Transmit interrupt handler. This has gotta be fast!  Handling TX  *	chars is pretty simple, stuff as many as possible from the TX buffer  *	into the sc26198 FIFO.  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|stl_sc26198txisr
 parameter_list|(
@@ -22449,7 +21502,7 @@ name|stlen
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198txisr(portp=%x)\n"
@@ -22798,12 +21851,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Receive character interrupt handler. Determine if we have good chars  *      or bad chars and then process appropriately. Good chars are easy  *      just shove the lot into the RX buffer and set all status byte to 0.  *      If a bad RX char then process as required. This routine needs to be  *      fast!  */
+comment|/*  *	Receive character interrupt handler. Determine if we have good chars  *	or bad chars and then process appropriately. Good chars are easy  *	just shove the lot into the RX buffer and set all status byte to 0.  *	If a bad RX char then process as required. This routine needs to be  *	fast!  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|stl_sc26198rxisr
 parameter_list|(
@@ -22818,7 +21870,7 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198rxisr(portp=%x,iack=%x)\n"
@@ -22854,7 +21906,7 @@ argument_list|(
 name|portp
 argument_list|)
 expr_stmt|;
-comment|/*  *      If we are TX flow controlled and in IXANY mode then we may need  *      to unflow control here. We gotta do this because of the automatic  *      flow control modes of the sc26198.  */
+comment|/*  *	If we are TX flow controlled and in IXANY mode then we may need  *	to unflow control here. We gotta do this because of the automatic  *	flow control modes of the sc26198.  */
 if|if
 condition|(
 operator|(
@@ -22888,7 +21940,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Process the good received characters from RX FIFO.  */
+comment|/*  *	Process the good received characters from RX FIFO.  */
 end_comment
 
 begin_function
@@ -22920,7 +21972,7 @@ name|tail
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198rxgoodchars(port=%x)\n"
@@ -22939,7 +21991,7 @@ name|portp
 operator|->
 name|ioaddr
 expr_stmt|;
-comment|/*  *      First up, calculate how much room there is in the RX ring queue.  *      We also want to keep track of the longest possible copy length,  *      this has to allow for the wrapping of the ring queue.  */
+comment|/*  *	First up, calculate how much room there is in the RX ring queue.  *	We also want to keep track of the longest possible copy length,  *	this has to allow for the wrapping of the ring queue.  */
 name|head
 operator|=
 name|portp
@@ -23001,7 +22053,7 @@ operator|=
 name|buflen
 expr_stmt|;
 block|}
-comment|/*  *      Check if the input buffer is near full. If so then we should take  *      some flow control action... It is very easy to do hardware and  *      software flow control from here since we have the port selected on  *      the UART.  */
+comment|/*  *	Check if the input buffer is near full. If so then we should take  *	some flow control action... It is very easy to do hardware and  *	software flow control from here since we have the port selected on  *	the UART.  */
 if|if
 condition|(
 name|buflen
@@ -23089,7 +22141,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/*  *      OK we are set, process good data... If the RX ring queue is full  *      just chuck the chars - don't leave them in the UART.  */
+comment|/*  *	OK we are set, process good data... If the RX ring queue is full  *	just chuck the chars - don't leave them in the UART.  */
 name|outb
 argument_list|(
 operator|(
@@ -23119,6 +22171,18 @@ operator|==
 literal|0
 condition|)
 block|{
+name|len
+operator|=
+name|MIN
+argument_list|(
+name|len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|stl_unwanted
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 operator|(
@@ -23295,7 +22359,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Process all characters in the RX FIFO of the UART. Check all char  *      status bytes as well, and process as required. We need to check  *      all bytes in the FIFO, in case some more enter the FIFO while we  *      are here. To get the exact character error type we need to switch  *      into CHAR error mode (that is why we need to make sure we empty  *      the FIFO).  */
+comment|/*  *	Process all characters in the RX FIFO of the UART. Check all char  *	status bytes as well, and process as required. We need to check  *	all bytes in the FIFO, in case some more enter the FIFO while we  *	are here. To get the exact character error type we need to switch  *	into CHAR error mode (that is why we need to make sure we empty  *	the FIFO).  */
 end_comment
 
 begin_function
@@ -23329,7 +22393,7 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-comment|/*  *      First up, calculate how much room there is in the RX ring queue.  *      We also want to keep track of the longest possible copy length,  *      this has to allow for the wrapping of the ring queue.  */
+comment|/*  *	First up, calculate how much room there is in the RX ring queue.  *	We also want to keep track of the longest possible copy length,  *	this has to allow for the wrapping of the ring queue.  */
 name|head
 operator|=
 name|portp
@@ -23374,7 +22438,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/*  *      To get the precise error type for each character we must switch  *      back into CHAR error mode.  */
+comment|/*  *	To get the precise error type for each character we must switch  *	back into CHAR error mode.  */
 name|mr1
 operator|=
 name|stl_sc26198getreg
@@ -23601,7 +22665,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*  *      To get correct interrupt class we must switch back into BLOCK  *      error mode.  */
+comment|/*  *	To get correct interrupt class we must switch back into BLOCK  *	error mode.  */
 name|stl_sc26198setreg
 argument_list|(
 name|portp
@@ -23636,7 +22700,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Other interrupt handler. This includes modem signals, flow  *      control actions, etc.  */
+comment|/*  *	Other interrupt handler. This includes modem signals, flow  *	control actions, etc.  */
 end_comment
 
 begin_function
@@ -23663,7 +22727,7 @@ name|xisr
 decl_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
 literal|"stl_sc26198otherisr(portp=%x,iack=%x)\n"
@@ -23816,7 +22880,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *      Interrupt service routine for sc26198 panels.  */
+comment|/*  *	Interrupt service routine for sc26198 panels.  */
 end_comment
 
 begin_function
@@ -23841,7 +22905,7 @@ name|unsigned
 name|int
 name|iack
 decl_stmt|;
-comment|/*   *      Work around bug in sc26198 chip... Cannot have A6 address  *      line of UART high, else iack will be returned as 0.  */
+comment|/*   *	Work around bug in sc26198 chip... Cannot have A6 address  *	line of UART high, else iack will be returned as 0.  */
 name|outb
 argument_list|(
 operator|(
@@ -23864,10 +22928,10 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|STLDEBUG
+name|DEBUG
 name|printf
 argument_list|(
-literal|"stl_sc26198intr(panelp=%p,iobase=%x): iack=%x\n"
+literal|"stl_sc26198intr(panelp=%x,iobase=%x): iack=%x\n"
 argument_list|,
 name|panelp
 argument_list|,
