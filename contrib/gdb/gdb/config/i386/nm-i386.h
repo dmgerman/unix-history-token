@@ -317,6 +317,16 @@ name|DECR_PC_AFTER_HW_BREAK
 value|0
 end_define
 
+begin_comment
+comment|/* child_post_startup_inferior used to    reset all debug registers by calling i386_cleanup_dregs ().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHILD_POST_STARTUP_INFERIOR
+end_define
+
 begin_endif
 endif|#
 directive|endif

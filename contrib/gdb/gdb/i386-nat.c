@@ -634,6 +634,24 @@ block|}
 end_function
 
 begin_comment
+comment|/* Reset all debug registers at each new startup    to avoid missing watchpoints after restart.  */
+end_comment
+
+begin_function
+name|void
+name|child_post_startup_inferior
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|)
+block|{
+name|i386_cleanup_dregs
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Print the values of the mirrored debug registers.    This is called when maint_show_dr is non-zero.  To set that    up, type "maint show-debug-regs" at GDB's prompt.  */
 end_comment
 

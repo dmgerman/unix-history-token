@@ -38,6 +38,23 @@ directive|include
 file|"i386/nm-i386.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PARAM_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Provide access to the i386 hardware debugging registers.  */
 end_comment
