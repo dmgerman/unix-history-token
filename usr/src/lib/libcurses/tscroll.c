@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tscroll.c	8.2 (Berkeley) %G%"
+literal|"@(#)tscroll.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<curses.h>
+file|"curses.h"
 end_include
 
 begin_define
