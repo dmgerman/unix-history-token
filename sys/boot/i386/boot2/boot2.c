@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.15 1998/11/08 18:29:29 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.16 1998/11/08 18:37:28 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -245,7 +245,7 @@ begin_define
 define|#
 directive|define
 name|ARGS
-value|0x800
+value|0x900
 end_define
 
 begin_define
@@ -4508,8 +4508,9 @@ name|v86
 operator|.
 name|addr
 operator|=
-literal|0x604
+literal|0x704
 expr_stmt|;
+comment|/* call to xread in boot1 */
 name|v86
 operator|.
 name|es
