@@ -129,6 +129,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pccard/driver.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pccard/slot.h>
 end_include
 
@@ -495,12 +501,6 @@ name|NPCIC
 operator|>
 literal|0
 block|{
-specifier|extern
-name|void
-name|pcic_probe
-parameter_list|()
-function_decl|;
-comment|/* XXX Should be linker set */
 name|pcic_probe
 argument_list|()
 expr_stmt|;

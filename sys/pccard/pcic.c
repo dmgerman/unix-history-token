@@ -149,6 +149,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pccard/driver.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pccard/slot.h>
 end_include
 
@@ -311,6 +317,25 @@ name|pcictimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pcic_handle
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lkm_table
+operator|*
+name|lkmtp
+operator|,
+name|int
+name|cmd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -336,13 +361,6 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pcic_probe
-parameter_list|()
 function_decl|;
 end_function_decl
 
