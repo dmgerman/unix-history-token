@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.30 (Berkeley) %G%"
+literal|"@(#)table.c	1.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -731,6 +731,60 @@ name|RESCC
 block|,
 literal|"	cmpf	AL,AR\nZP"
 block|,
+ifdef|#
+directive|ifdef
+name|FORT
+comment|/* this really ought to be taken care of farther upstream... XXX */
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TDOUBLE
+block|,
+name|NAREG
+operator||
+name|NASL
+block|,
+name|RESCC
+block|,
+literal|"	cvtfd	AL,A1\n	cmpd	A1,AR\nZP"
+block|,
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TDOUBLE
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+block|,
+name|NAREG
+operator||
+name|NASR
+block|,
+name|RESCC
+block|,
+literal|"	cvtfd	AR,A1\n	cmpd	AL,A1\nZP"
+block|,
+endif|#
+directive|endif
 name|CCODES
 block|,
 name|INAREG
