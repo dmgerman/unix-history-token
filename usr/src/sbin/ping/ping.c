@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	5.9 (Berkeley) %G%"
+literal|"@(#)ping.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,10 +517,10 @@ comment|/* flag to do timing */
 end_comment
 
 begin_decl_stmt
-name|long
+name|double
 name|tmin
 init|=
-name|LONG_MAX
+literal|999999999.0
 decl_stmt|;
 end_decl_stmt
 
@@ -529,8 +529,10 @@ comment|/* minimum round trip time */
 end_comment
 
 begin_decl_stmt
-name|long
+name|double
 name|tmax
+init|=
+literal|0.0
 decl_stmt|;
 end_decl_stmt
 
@@ -539,8 +541,10 @@ comment|/* maximum round trip time */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|double
 name|tsum
+init|=
+literal|0.0
 decl_stmt|;
 end_decl_stmt
 
@@ -1782,7 +1786,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * catcher --  *	This routine causes another PING to be transmitted, and then  * schedules another SIGALRM for 1 second from now.  *   * bug --  *	Our sense of time will slowly skew (i.e., packets will not be  * launched exactly at 1-second intervals).  This does not affect the  * quality of the delay and loss statistics.  */
+comment|/*  * catcher --  *	This routine causes another PING to be transmitted, and then  * schedules another SIGALRM for 1 second from now.  *  * bug --  *	Our sense of time will slowly skew (i.e., packets will not be  * launched exactly at 1-second intervals).  This does not affect the  * quality of the delay and loss statistics.  */
 end_comment
 
 begin_function
@@ -1879,7 +1883,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pinger --  * 	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in VAX  * byte-order, to compute the round-trip time.  */
+comment|/*  * pinger --  *	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in VAX  * byte-order, to compute the round-trip time.  */
 end_comment
 
 begin_macro
@@ -2180,7 +2184,7 @@ decl_stmt|,
 modifier|*
 name|tp
 decl_stmt|;
-name|long
+name|double
 name|triptime
 decl_stmt|;
 name|int
@@ -2352,19 +2356,27 @@ argument_list|)
 expr_stmt|;
 name|triptime
 operator|=
+operator|(
+operator|(
+name|double
+operator|)
 name|tv
 operator|.
 name|tv_sec
+operator|)
 operator|*
-literal|1000
+literal|1000.0
 operator|+
 operator|(
+operator|(
+name|double
+operator|)
 name|tv
 operator|.
 name|tv_usec
-operator|/
-literal|1000
 operator|)
+operator|/
+literal|1000.0
 expr_stmt|;
 name|tsum
 operator|+=
@@ -2509,7 +2521,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" time=%ld ms"
+literal|" time=%g ms"
 argument_list|,
 name|triptime
 argument_list|)
@@ -3401,6 +3413,10 @@ name|void
 name|finish
 parameter_list|()
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -3529,15 +3545,12 @@ name|nreceived
 operator|&&
 name|timing
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"round-trip min/avg/max = %ld/%lu/%ld ms\n"
-argument_list|,
-name|tmin
-argument_list|,
+block|{
+comment|/* Only display average to microseconds */
+name|i
+operator|=
+literal|1000.0
+operator|*
 name|tsum
 operator|/
 operator|(
@@ -3545,10 +3558,29 @@ name|nreceived
 operator|+
 name|nrepeats
 operator|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"round-trip min/avg/max = %g/%g/%g ms\n"
+argument_list|,
+name|tmin
+argument_list|,
+operator|(
+operator|(
+name|double
+operator|)
+name|i
+operator|)
+operator|/
+literal|1000.0
 argument_list|,
 name|tmax
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
