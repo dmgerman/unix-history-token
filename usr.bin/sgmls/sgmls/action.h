@@ -445,6 +445,17 @@ begin_comment
 comment|/* Start tag ended prolog */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ETE_
+value|78
+end_define
+
+begin_comment
+comment|/* End tag ended prolog */
+end_comment
+
 begin_comment
 comment|/* GRPACT.H: Symbols for group tokenization action names (all alpha).              There must be no conflict with PARSEACT.H, which              uses 0 - 19. */
 end_comment

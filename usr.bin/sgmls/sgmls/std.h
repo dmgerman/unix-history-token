@@ -237,34 +237,6 @@ begin_comment
 comment|/* not BSD_STRINGS */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STRERROR_MISSING
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_PROTOTYPES
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strerror
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 specifier|extern
 name|char
@@ -273,20 +245,6 @@ name|strerror
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STRERROR_MISSING */
-end_comment
 
 begin_ifdef
 ifdef|#

@@ -67,6 +67,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|Tstart
+value|pos[P].tstart
+end_define
+
+begin_comment
+comment|/* Index of starting token in its group 				 for AND group testing. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|H
 value|pos[P].h
 end_define

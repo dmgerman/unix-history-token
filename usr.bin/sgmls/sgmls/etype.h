@@ -237,7 +237,7 @@ block|{
 name|int
 name|tnum
 decl_stmt|;
-comment|/* Group token: tokens in group. 				 Model header: content tokens at any level. */
+comment|/* Group token: tokens in group.  				 Model header: content tokens at any level. */
 name|struct
 name|etd
 modifier|*
@@ -452,6 +452,10 @@ name|UNCH
 name|t
 decl_stmt|;
 comment|/* Index of the current token in this group. */
+name|UNCH
+name|tstart
+decl_stmt|;
+comment|/* Index of starting token for AND group 				 testing. */
 name|unsigned
 name|long
 modifier|*

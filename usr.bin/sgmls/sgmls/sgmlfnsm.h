@@ -1372,6 +1372,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|UNIV
+name|savmderr
+name|P
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|,
+name|UNCH
+operator|*
+operator|,
+name|UNCH
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|VOID
 name|scbset
 name|P

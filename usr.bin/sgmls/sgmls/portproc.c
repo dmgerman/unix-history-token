@@ -33,6 +33,12 @@ directive|include
 file|"appl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"alloc.h"
+end_include
+
 begin_comment
 comment|/* This code shows how you might use system() to implement run_process(). ANSI C says very little about the behaviour of system(), and so this is necessarily system dependent. */
 end_comment

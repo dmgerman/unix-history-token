@@ -39,6 +39,12 @@ directive|include
 file|"msgcat.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"catalog.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -771,7 +777,11 @@ comment|/* 1=check content model ambiguity */
 name|int
 name|swundef
 decl_stmt|;
-comment|/* 1=warn about undefined elements and notations. */
+comment|/* 1=warn about undefined elements. */
+name|int
+name|swcap
+decl_stmt|;
+comment|/* 1=report capcity errors */
 name|char
 modifier|*
 name|prog
@@ -823,6 +833,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Function to call on fatal error. */
+name|CATALOG
+name|catalog
+decl_stmt|;
+comment|/* Catalog for generating system identifiers. */
 block|}
 struct|;
 end_struct

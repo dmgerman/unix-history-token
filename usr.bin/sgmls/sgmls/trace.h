@@ -235,8 +235,6 @@ operator|,
 name|int
 operator|,
 name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -312,8 +310,6 @@ operator|,
 expr|struct
 name|mpos
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -654,11 +650,9 @@ parameter_list|,
 name|rc
 parameter_list|,
 name|opt
-parameter_list|,
-name|Tstart
 parameter_list|)
 define|\
-value|((void)(ctrace&& (traceend(stagenm, mod, pos, rc, opt, Tstart), 1)))
+value|((void)(ctrace&& (traceend(stagenm, mod, pos, rc, opt), 1)))
 end_define
 
 begin_define
@@ -711,11 +705,9 @@ parameter_list|,
 name|mod
 parameter_list|,
 name|pos
-parameter_list|,
-name|Tstart
 parameter_list|)
 define|\
-value|((void)(ctrace&& (tracegi(stagenm, gi, mod, pos, Tstart), 1)))
+value|((void)(ctrace&& (tracegi(stagenm, gi, mod, pos), 1)))
 end_define
 
 begin_define
@@ -1015,8 +1007,6 @@ parameter_list|,
 name|rc
 parameter_list|,
 name|opt
-parameter_list|,
-name|Tstart
 parameter_list|)
 end_define
 
@@ -1081,8 +1071,6 @@ parameter_list|,
 name|mod
 parameter_list|,
 name|pos
-parameter_list|,
-name|Tstart
 parameter_list|)
 end_define
 

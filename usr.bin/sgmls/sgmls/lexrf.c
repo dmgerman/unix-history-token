@@ -724,6 +724,9 @@ comment|/* LEXLMS: Free character not an entity ref.*/
 name|LITC
 block|,
 comment|/* LEXLMS: Literal close delimiter enabled. */
+name|MINLITC
+block|,
+comment|/* LEXMIN: Literal close delimiter enabled. */
 name|MSC3
 block|,
 comment|/* LEXLMS: Marked section close delim enabled. */
@@ -766,6 +769,8 @@ block|,
 name|lexsd
 block|,
 name|lextoke
+block|,
+name|lexmin
 block|,
 literal|0
 block|}
