@@ -7659,6 +7659,7 @@ operator|.
 name|argument
 operator|)
 condition|)
+block|{
 name|ctlr
 operator|->
 name|interrupt
@@ -7680,6 +7681,7 @@ argument_list|,
 literal|0x00000001
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
