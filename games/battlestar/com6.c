@@ -44,6 +44,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"externs.h"
 end_include
 
@@ -53,12 +59,25 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_macro
-name|launch
-argument_list|()
-end_macro
+begin_decl_stmt
+specifier|static
+name|void
+name|post
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|int
+name|ch
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_block
+begin_function
+name|int
+name|launch
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -158,14 +177,12 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|land
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -252,19 +269,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|die
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|(
+name|sig
+parameter_list|)
 comment|/* endgame */
-end_comment
-
-begin_block
+name|int
+name|sig
+decl_stmt|;
 block|{
+name|sig
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"bye.\nYour rating was %s.\n"
@@ -284,14 +305,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|live
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|puts
 argument_list|(
@@ -309,7 +328,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_include
 include|#
@@ -325,12 +344,10 @@ name|score_fp
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|open_score_file
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -353,22 +370,19 @@ name|_PATH_SCORE
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|post
-argument_list|(
-argument|ch
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
+parameter_list|(
+name|ch
+parameter_list|)
+name|unsigned
+name|int
 name|ch
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|timeval
@@ -492,7 +506,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|const
@@ -676,12 +690,10 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|drive
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -780,14 +792,12 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ride
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -954,18 +964,13 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|light
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* synonyms = {strike, smoke} */
-end_comment
-
-begin_block
 block|{
 comment|/* for matches, cigars */
 if|if
@@ -1008,7 +1013,9 @@ literal|"The whole bungalow explodes with an intense blast."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1019,7 +1026,7 @@ literal|"You're out of matches."
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

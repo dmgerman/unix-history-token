@@ -515,10 +515,10 @@ expr_stmt|;
 name|fread
 argument_list|(
 operator|&
-name|win
+name|bs_win
 argument_list|,
 sizeof|sizeof
-name|win
+name|bs_win
 argument_list|,
 literal|1
 argument_list|,
@@ -1178,10 +1178,10 @@ expr_stmt|;
 name|fwrite
 argument_list|(
 operator|&
-name|win
+name|bs_win
 argument_list|,
 sizeof|sizeof
-name|win
+name|bs_win
 argument_list|,
 literal|1
 argument_list|,

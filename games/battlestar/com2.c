@@ -47,16 +47,11 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_macro
+begin_function
+name|int
 name|wearit
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* synonyms = {sheathe, sheath} */
-end_comment
-
-begin_block
 block|{
 name|int
 name|n
@@ -360,18 +355,13 @@ name|firstnumber
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|put
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* synonyms = {buckle, strap, tie} */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -439,18 +429,13 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|draw
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* synonyms = {pull, carry} */
-end_comment
-
-begin_block
 block|{
 return|return
 operator|(
@@ -461,14 +446,12 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|use
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 while|while
 condition|(
@@ -691,14 +674,12 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|murder
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|n
@@ -1093,7 +1074,9 @@ literal|"Your fantasy is over."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 case|case
@@ -1138,14 +1121,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|ravage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 while|while
 condition|(
@@ -1234,7 +1215,7 @@ expr_stmt|;
 name|murder
 argument_list|()
 expr_stmt|;
-name|win
+name|bs_win
 operator|=
 operator|-
 literal|30000
@@ -1447,14 +1428,12 @@ literal|"Who?"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|follow
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1579,7 +1558,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

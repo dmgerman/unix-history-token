@@ -47,12 +47,10 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|dig
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -162,14 +160,12 @@ literal|"You don't have a shovel."
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|jump
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|n
@@ -324,14 +320,12 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|bury
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|value
@@ -723,14 +717,12 @@ literal|"You aren't holding a shovel."
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|drink
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|n
@@ -809,14 +801,12 @@ literal|"I'm not thirsty."
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|shoot
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|firstnumber
@@ -988,7 +978,9 @@ operator|==
 name|BOMB
 condition|)
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1149,7 +1141,9 @@ literal|"so rapidly that we have no chance to escape."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 default|default:
 name|puts
@@ -1413,7 +1407,9 @@ literal|"Your fantasy is over."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1531,7 +1527,7 @@ name|firstnumber
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

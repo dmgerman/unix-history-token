@@ -61,6 +61,7 @@ block|,
 block|{
 literal|"You are in the main hangar."
 block|,
+block|{
 literal|5
 block|,
 literal|2
@@ -76,6 +77,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This is a huge bay where many fighters and cargo craft lie.  Alarms are \n\ sounding and fighter pilots are running to their ships.  Above is a gallery\n\ overlooking the bay. The scream of turbo engines is coming from +. The rest\n\ of the hangar is +. There is an exit +.*\n"
 block|}
@@ -83,6 +85,7 @@ block|,
 block|{
 literal|"This is the landing bay."
 block|,
+block|{
 literal|1
 block|,
 literal|0
@@ -98,6 +101,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Ships are landing here, some heavily damaged. Enemy fighters continually\n\ strafe this vulnerable port. The main hangar is +, *\n\ There is an exit +.*\n"
 block|}
@@ -105,6 +109,7 @@ block|,
 block|{
 literal|"You are in the gallery."
 block|,
+block|{
 literal|4
 block|,
 literal|0
@@ -120,6 +125,7 @@ block|,
 literal|1
 block|,
 literal|0
+block|}
 block|,
 literal|"From here a view of the entire landing bay reveals that our battlestar\n\ is near destruction. Fires are spreading out of control and laser blasts\n\ lick at the shadows. The control room is +. ***\n"
 block|}
@@ -127,6 +133,7 @@ block|,
 block|{
 literal|"You are in the control room."
 block|,
+block|{
 literal|0
 block|,
 literal|3
@@ -142,6 +149,7 @@ block|,
 literal|5
 block|,
 literal|0
+block|}
 block|,
 literal|"Several frantic technicians are flipping switches wildly but otherwise\n\ this room seems fairly deserted.  A weapons locker has been left open.\n\ A staircase leads down. * There is a way -. **        \n"
 block|}
@@ -149,6 +157,7 @@ block|,
 block|{
 literal|"This is the launch room."
 block|,
+block|{
 literal|6
 block|,
 literal|1
@@ -164,6 +173,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"From the launch tubes here fighters blast off into space. Only one is left,\n\ and it is guarded by two fierce men. A staircase leads up from here.\n\ There is a cluttered workbench +. From the main hangar come sounds of great\n\ explosions.  The main hangar is +. The viper launch tubes are to the -.*\n"
 block|}
@@ -171,6 +181,7 @@ block|,
 block|{
 literal|"You are at the workbench."
 block|,
+block|{
 literal|0
 block|,
 literal|5
@@ -186,6 +197,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Strange and unwieldy tools are arranged here including a lunch box \n\ and pneumatic wrenches and turbo sprocket rockets.*\n\ The launch room is +. The remaining viper is +.*\n"
 block|}
@@ -193,6 +205,7 @@ block|,
 block|{
 literal|"You are in the viper launch tube."
 block|,
+block|{
 literal|0
 block|,
 literal|5
@@ -208,6 +221,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The two guards are eyeing you warily! ****\n"
 block|}
@@ -215,6 +229,7 @@ block|,
 block|{
 literal|"This is a walk in closet."
 block|,
+block|{
 literal|22
 block|,
 literal|0
@@ -230,6 +245,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"A wardrobe of immense magnitude greets the eye.  Furs and robes of kings\n\ hang on rack after rack.  Silken gowns, capes woven with spun gold, and \n\ delicate synthetic fabrics are stowed here.  The bedroom is +.***\n"
 block|}
@@ -237,6 +253,7 @@ block|,
 block|{
 literal|"You are in a wide hallway leading to the main hangar."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -252,6 +269,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The walls and ceiling here have been blasted through in several places.\n\ It looks as if quite a battle has been fought for possession of the landing bay\n\ Gaping corpses litter the floor.**  The hallway continues +.\n\ The main hangar is +.\n"
 block|}
@@ -259,6 +277,7 @@ block|,
 block|{
 literal|"You are in a wide hallway leading to the landing bay."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -274,6 +293,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Most of the men and supplies needed in the main hangar come through this\n\ corridor, but the wounded are forced to use it too. It very dank and\n\ crowded here, and the floor is slippery with blood.**\n\ The hallway continues -. The landing bay is +.\n"
 block|}
@@ -281,6 +301,7 @@ block|,
 block|{
 literal|"The hallway is very congested with rubble here."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -296,6 +317,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"It is too choked with broken steel girders and other debris to continue\n\ on much farther. Above, the ceiling has caved in and it is possible to \n\ climb up. There is not much chance to go -, -, or -.\n\ But the hallway seems clearer +.\n"
 block|}
@@ -303,6 +325,7 @@ block|,
 block|{
 literal|"A wide hallway and a more narrow walkway meet here."
 block|,
+block|{
 literal|14
 block|,
 literal|15
@@ -318,6 +341,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The intersection is crowded with the many wounded who have come up\n\ the wide hallway and continued +. The walkway is less crowded +.\n\ The wide hallway goes *-.\n"
 block|}
@@ -325,6 +349,7 @@ block|,
 block|{
 literal|"You are in what was once an elegant stateroom."
 block|,
+block|{
 literal|16
 block|,
 literal|0
@@ -340,6 +365,7 @@ block|,
 literal|11
 block|,
 literal|0
+block|}
 block|,
 literal|"Whoever lived in this stateroom, he and his female companion\n\ were mercilessly slain in their sleep. Clothes, trinkets and personal\n\ belongings are scattered all across the floor. Through a hole in the\n\ collapsed floor I can see a hallway below.  A door is +.***\n"
 block|}
@@ -347,6 +373,7 @@ block|,
 block|{
 literal|"You're at the entrance to the sick bay."
 block|,
+block|{
 literal|17
 block|,
 literal|12
@@ -362,6 +389,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The wounded are entering the sick bay in loudly moaning files.\n\ The walkway continues - and +. A doctor is motioning for you to \n\ come to the -. *\n"
 block|}
@@ -369,6 +397,7 @@ block|,
 block|{
 literal|"You're in the walkway."
 block|,
+block|{
 literal|12
 block|,
 literal|19
@@ -384,6 +413,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Most of the men and supplies were coming from the armory. The walkway\n\ continues -. The armory is +.**\n"
 block|}
@@ -391,6 +421,7 @@ block|,
 block|{
 literal|"These are the executive suites of the battlestar."
 block|,
+block|{
 literal|20
 block|,
 literal|13
@@ -406,6 +437,7 @@ block|,
 literal|24
 block|,
 literal|0
+block|}
 block|,
 literal|"Luxurious staterooms carpeted with crushed velvet and adorned with beaten\n\ gold open onto this parlor. A wide staircase with ivory banisters leads\n\ up or down. This parlor leads into a hallway +. The bridal suite is +.\n\ Other rooms lie - and +.\n"
 block|}
@@ -413,6 +445,7 @@ block|,
 block|{
 literal|"You're in a long dimly lit hallway."
 block|,
+block|{
 literal|0
 block|,
 literal|14
@@ -428,6 +461,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This part of the walkway is deserted. There is a dead end +. The\n\ entrance to the sickbay is +. The walkway turns sharply -.*\n"
 block|}
@@ -435,6 +469,7 @@ block|,
 block|{
 literal|"This is the sick bay."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -450,6 +485,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Sinister nurses with long needles and pitiful aim probe the depths of suffering\n\ here. Only the mortally wounded receive medical attention on a battlestar,\n\ but afterwards they are thrown into the incinerators along with the rest.**\n\ Nothing but death and suffering +.  The walkway is +.\n"
 block|}
@@ -457,6 +493,7 @@ block|,
 block|{
 literal|"You're in the armory."
 block|,
+block|{
 literal|15
 block|,
 literal|26
@@ -472,6 +509,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"An armed guard is stationed here 365 sectars a yarn to protect the magazine.\n\ The walkway is +. The magazine is +.**\n"
 block|}
@@ -479,6 +517,7 @@ block|,
 block|{
 literal|"The hallway ends here at the presidential suite."
 block|,
+block|{
 literal|27
 block|,
 literal|16
@@ -494,6 +533,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The door to this suite is made from solid magnesium, and the entryway is\n\ inlaid with diamonds and fire opals. The door is ajar +. The hallway\n\ goes -.**\n"
 block|}
@@ -501,6 +541,7 @@ block|,
 block|{
 literal|"This is the maid's utility room."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -516,6 +557,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"What a gruesome sight! The maid has been brutally drowned in a bucket of\n\ Pine Sol and repeatedly stabbed in the back with a knife.***\n\ The hallway is +.\n"
 block|}
@@ -523,6 +565,7 @@ block|,
 block|{
 literal|"This is a luxurious stateroom."
 block|,
+block|{
 literal|0
 block|,
 literal|8
@@ -538,6 +581,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The floor is carpeted with a soft animal fur and the great wooden furniture\n\ is inlaid with strips of platinum and gold.  Electronic equipment built\n\ into the walls and ceiling is flashing wildly.  The floor shudders and\n\ the sounds of dull explosions rumble though the room.  From a window in\n\ the wall + comes a view of darkest space.  There is a small adjoining\n\ room +, and a doorway +.*\n"
 block|}
@@ -545,6 +589,7 @@ block|,
 block|{
 literal|"You are at the entrance to the dining hall."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -560,6 +605,7 @@ block|,
 literal|16
 block|,
 literal|0
+block|}
 block|,
 literal|"A wide staircase with ebony banisters leads down here.**\n\ The dining hall is to the -.*\n"
 block|}
@@ -567,6 +613,7 @@ block|,
 block|{
 literal|"This was once the first class lounge."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -582,6 +629,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There is much rubble and destruction here that was not apparent elsewhere.\n\ The walls and ceilings have broken in in some places. A staircase with\n\ red coral banisters leads up. It is impossible to go - or -.\n\ It seems a little clearer +.*\n"
 block|}
@@ -589,6 +637,7 @@ block|,
 block|{
 literal|"You are in a narrow stairwell."
 block|,
+block|{
 literal|0
 block|,
 literal|17
@@ -604,6 +653,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"These dusty and decrepit stairs lead up.  There is no way -.  The\n\ hallway turns sharply -.**\n"
 block|}
@@ -611,6 +661,7 @@ block|,
 block|{
 literal|"You are in the magazine."
 block|,
+block|{
 literal|19
 block|,
 literal|0
@@ -626,6 +677,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Rows and rows of neatly stacked ammunition for laser pistols and grenade\n\ launchers are here. The armory is +.***\n"
 block|}
@@ -633,6 +685,7 @@ block|,
 block|{
 literal|"You're in the presidential suite."
 block|,
+block|{
 literal|0
 block|,
 literal|20
@@ -648,6 +701,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Apparently the president has been assassinated. A scorched figure lies\n\ face downward on the carpet clutching his chest.*\n\ The hallway leads -.**\n"
 block|}
@@ -655,6 +709,7 @@ block|,
 block|{
 literal|"You are in the dining hall."
 block|,
+block|{
 literal|0
 block|,
 literal|30
@@ -670,6 +725,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This was the scene of a mass suicide. Hundreds of ambassadors and assorted\n\ dignitaries sit slumped over their breakfast cereal. I suppose the news\n\ of the cylon attack killed them. There is a strange chill in this room.  I\n\ would not linger here. * The kitchen is +. Entrances + and +.\n"
 block|}
@@ -677,6 +733,7 @@ block|,
 block|{
 literal|"The debris is very thick here."
 block|,
+block|{
 literal|0
 block|,
 literal|11
@@ -692,6 +749,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Broken furniture, fallen girders, and other rubble block the way.\n\ There is not much chance to continue -, -, or -.\n\ It would be best to go -.\n"
 block|}
@@ -699,6 +757,7 @@ block|,
 block|{
 literal|"You are in the kitchen."
 block|,
+block|{
 literal|28
 block|,
 literal|0
@@ -714,6 +773,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This room is full of shining stainless steel and burnished bronze cookware. An \n\ assortment of tropical fruits and vegetables as well as fine meats and cheeses \n\ lies on a sterling platter. The chef, unfortunately, has been skewered like a \n\ side of beef. The dining room is +. ** There is a locked door +.\n"
 block|}
@@ -721,6 +781,7 @@ block|,
 block|{
 literal|"You are in an arched entry leading to the dining room."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -736,6 +797,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The door leading out is bolted shut from the outside and is very strong.***\n\ The dining room is +.\n"
 block|}
@@ -743,6 +805,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|33
 block|,
 literal|34
@@ -758,6 +821,7 @@ block|,
 literal|33
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -765,6 +829,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|38
 block|,
 literal|32
@@ -780,6 +845,7 @@ block|,
 literal|42
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -787,6 +853,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|32
 block|,
 literal|44
@@ -802,6 +869,7 @@ block|,
 literal|48
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -809,6 +877,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|40
 block|,
 literal|45
@@ -824,6 +893,7 @@ block|,
 literal|51
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -831,6 +901,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|41
 block|,
 literal|46
@@ -846,6 +917,7 @@ block|,
 literal|54
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -853,6 +925,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|42
 block|,
 literal|47
@@ -868,6 +941,7 @@ block|,
 literal|32
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -875,6 +949,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|43
 block|,
 literal|48
@@ -890,6 +965,7 @@ block|,
 literal|56
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -897,6 +973,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|57
 block|,
 literal|33
@@ -912,6 +989,7 @@ block|,
 literal|43
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -919,6 +997,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|39
 block|,
 literal|35
@@ -934,6 +1013,7 @@ block|,
 literal|59
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -941,6 +1021,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|39
 block|,
 literal|36
@@ -956,6 +1037,7 @@ block|,
 literal|61
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -963,6 +1045,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|39
 block|,
 literal|37
@@ -978,6 +1061,7 @@ block|,
 literal|33
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -985,6 +1069,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|39
 block|,
 literal|38
@@ -1000,6 +1085,7 @@ block|,
 literal|63
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1007,6 +1093,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|34
 block|,
 literal|64
@@ -1022,6 +1109,7 @@ block|,
 literal|48
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1029,6 +1117,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|35
 block|,
 literal|44
@@ -1044,6 +1133,7 @@ block|,
 literal|51
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1051,6 +1141,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|36
 block|,
 literal|44
@@ -1066,6 +1157,7 @@ block|,
 literal|54
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1073,6 +1165,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|37
 block|,
 literal|44
@@ -1088,6 +1181,7 @@ block|,
 literal|34
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1095,6 +1189,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|38
 block|,
 literal|44
@@ -1110,6 +1205,7 @@ block|,
 literal|56
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1117,6 +1213,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|49
 block|,
 literal|49
@@ -1132,6 +1229,7 @@ block|,
 literal|49
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1139,6 +1237,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|58
 block|,
 literal|47
@@ -1154,6 +1253,7 @@ block|,
 literal|35
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1161,6 +1261,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|59
 block|,
 literal|48
@@ -1176,6 +1277,7 @@ block|,
 literal|56
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1183,6 +1285,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|52
 block|,
 literal|52
@@ -1198,6 +1301,7 @@ block|,
 literal|52
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1205,6 +1309,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|60
 block|,
 literal|46
@@ -1220,6 +1325,7 @@ block|,
 literal|36
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1227,6 +1333,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|61
 block|,
 literal|48
@@ -1242,6 +1349,7 @@ block|,
 literal|56
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1249,6 +1357,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|62
 block|,
 literal|55
@@ -1264,6 +1373,7 @@ block|,
 literal|37
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1271,6 +1381,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|56
 block|,
 literal|56
@@ -1286,6 +1397,7 @@ block|,
 literal|55
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1293,6 +1405,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|65
 block|,
 literal|39
@@ -1308,6 +1421,7 @@ block|,
 literal|57
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1315,6 +1429,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|39
 block|,
 literal|50
@@ -1330,6 +1445,7 @@ block|,
 literal|40
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1337,6 +1453,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|39
 block|,
 literal|51
@@ -1352,6 +1469,7 @@ block|,
 literal|63
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1359,6 +1477,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|39
 block|,
 literal|53
@@ -1374,6 +1493,7 @@ block|,
 literal|41
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1381,6 +1501,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|39
 block|,
 literal|54
@@ -1396,6 +1517,7 @@ block|,
 literal|56
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1403,6 +1525,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|39
 block|,
 literal|55
@@ -1418,6 +1541,7 @@ block|,
 literal|42
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1425,6 +1549,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|39
 block|,
 literal|56
@@ -1440,6 +1565,7 @@ block|,
 literal|55
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1447,6 +1573,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|44
 block|,
 literal|66
@@ -1462,6 +1589,7 @@ block|,
 literal|66
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1469,6 +1597,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|67
 block|,
 literal|57
@@ -1484,6 +1613,7 @@ block|,
 literal|67
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1491,6 +1621,7 @@ block|,
 block|{
 literal|"You are in space."
 block|,
+block|{
 literal|64
 block|,
 literal|68
@@ -1506,6 +1637,7 @@ block|,
 literal|68
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1513,6 +1645,7 @@ block|,
 block|{
 literal|"You are orbiting a small blue planet."
 block|,
+block|{
 literal|67
 block|,
 literal|67
@@ -1528,6 +1661,7 @@ block|,
 literal|69
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1535,6 +1669,7 @@ block|,
 block|{
 literal|"You are orbiting a tropical planet."
 block|,
+block|{
 literal|68
 block|,
 literal|68
@@ -1550,6 +1685,7 @@ block|,
 literal|70
 block|,
 literal|1
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -1557,6 +1693,7 @@ block|,
 block|{
 literal|"You are flying through a dense fog."
 block|,
+block|{
 literal|69
 block|,
 literal|69
@@ -1572,6 +1709,7 @@ block|,
 literal|69
 block|,
 literal|1
+block|}
 block|,
 literal|"A cold grey sea of mist is swirling around the windshield and water droplets\n\ are spewing from the wingtips. Ominous shadows loom in the darkness and it\n\ feels as if a trap is closing around us. I have lost all sense of direction.\n\ ****\n"
 block|}
@@ -1579,6 +1717,7 @@ block|,
 block|{
 literal|"You are approaching an island."
 block|,
+block|{
 literal|71
 block|,
 literal|72
@@ -1594,6 +1733,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"Feather palms outlined by mellow moonlight and a silvery black ocean line\n\ the perimeter of the island.  Mighty mountains of emerald and amethyst rise\n\ like jagged teeth from black gums.  The land rises sharply +.  The shore\n\ line stretches on *+.*\n"
 block|}
@@ -1601,6 +1741,7 @@ block|,
 block|{
 literal|"You are flying over a mountainous region."
 block|,
+block|{
 literal|75
 block|,
 literal|73
@@ -1616,6 +1757,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"Below is a shadow filled canyon with luminous waterfalls plummeting down beyond sight and looming spires and pinnacles.  **The ocean is +.*\n"
 block|}
@@ -1623,6 +1765,7 @@ block|,
 block|{
 literal|"You are flying over the ocean."
 block|,
+block|{
 literal|74
 block|,
 literal|78
@@ -1638,6 +1781,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"You bank over the water and your wingtips dip low to the green waves.  The\n\ sea is very shallow here and the white coral beds beneath us teem with \n\ shadowy fish.****\n"
 block|}
@@ -1645,6 +1789,7 @@ block|,
 block|{
 literal|"You are flying over the beach."
 block|,
+block|{
 literal|71
 block|,
 literal|72
@@ -1660,6 +1805,7 @@ block|,
 literal|80
 block|,
 literal|1
+block|}
 block|,
 literal|"A warm gentle surf caresses the beach here. The land rises\n\ sharply +.* The beach is lost in low cliffs +.*\n"
 block|}
@@ -1667,6 +1813,7 @@ block|,
 block|{
 literal|"You are flying over a large lagoon."
 block|,
+block|{
 literal|81
 block|,
 literal|72
@@ -1682,6 +1829,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"The water's brink winds tortuously inland.  There are some lights +.***\n"
 block|}
@@ -1689,6 +1837,7 @@ block|,
 block|{
 literal|"You are flying over a gently sloping plane."
 block|,
+block|{
 literal|83
 block|,
 literal|71
@@ -1704,6 +1853,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"The ground appears to be choked with vegetation.*  The terrain is more\n\ rugged +.**\n"
 block|}
@@ -1711,6 +1861,7 @@ block|,
 block|{
 literal|"You are flying through a gorge."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -1726,6 +1877,7 @@ block|,
 literal|102
 block|,
 literal|1
+block|}
 block|,
 literal|"This is a narrow, steep sided canyon lined with plants.  The stars above\n\ glisten through the over hanging trees.  The gorge leads to the\n\ sea** +, and to a tumultuous origin +.\n"
 block|}
@@ -1733,6 +1885,7 @@ block|,
 block|{
 literal|"You are flying over a plantation."
 block|,
+block|{
 literal|85
 block|,
 literal|81
@@ -1748,6 +1901,7 @@ block|,
 literal|89
 block|,
 literal|1
+block|}
 block|,
 literal|"It might be possible to land here, but not in the dark.*  There are some lights\n\ + and *+.\n"
 block|}
@@ -1755,6 +1909,7 @@ block|,
 block|{
 literal|"You are over the ocean."
 block|,
+block|{
 literal|72
 block|,
 literal|78
@@ -1770,6 +1925,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"The deep green swells foam and roll into the shore **+*.\n"
 block|}
@@ -1777,6 +1933,7 @@ block|,
 block|{
 literal|"You are flying along the coast."
 block|,
+block|{
 literal|86
 block|,
 literal|72
@@ -1792,6 +1949,7 @@ block|,
 literal|91
 block|,
 literal|1
+block|}
 block|,
 literal|"The coastline here is very rocky. The surf in some places is violent\n\ and explodes in a shower of sparkling, moonlit spray. ****\n"
 block|}
@@ -1799,6 +1957,7 @@ block|,
 block|{
 literal|"This is a beautiful coral beach."
 block|,
+block|{
 literal|106
 block|,
 literal|0
@@ -1814,6 +1973,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Fine silver sand kissed lightly by warm tropical waters and illuminated\n\ by a huge tropical moon stretches at least 30 meters inland.\n\ Gently swaying palm trees are +.***\n"
 block|}
@@ -1821,6 +1981,7 @@ block|,
 block|{
 literal|"You are flying over a small fishing village."
 block|,
+block|{
 literal|77
 block|,
 literal|74
@@ -1836,6 +1997,7 @@ block|,
 literal|92
 block|,
 literal|1
+block|}
 block|,
 literal|"A few thatched huts lit with torches and bonfires line a road below.\n\ The road continues on ***+.\n"
 block|}
@@ -1843,6 +2005,7 @@ block|,
 block|{
 literal|"You are flying over a clearing."
 block|,
+block|{
 literal|88
 block|,
 literal|72
@@ -1858,6 +2021,7 @@ block|,
 literal|93
 block|,
 literal|1
+block|}
 block|,
 literal|"There is a dock here (big enough for a seaplane) leading to a clearing.\n\ The still waters of the lagoon reflects our orange turbo thrusters.****\n"
 block|}
@@ -1865,6 +2029,7 @@ block|,
 block|{
 literal|"You are flying over the shore."
 block|,
+block|{
 literal|94
 block|,
 literal|75
@@ -1880,6 +2045,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"Rocky lava flows have overtaken the beach here.****\n"
 block|}
@@ -1887,6 +2053,7 @@ block|,
 block|{
 literal|"You are flying in a wide valley."
 block|,
+block|{
 literal|95
 block|,
 literal|97
@@ -1902,6 +2069,7 @@ block|,
 literal|98
 block|,
 literal|1
+block|}
 block|,
 literal|"This is a shallow valley yet the floor is obscured by a thick mist.\n\ The valley opens into blackness +. The mist grows thicker +.**\n"
 block|}
@@ -1909,6 +2077,7 @@ block|,
 block|{
 literal|"You are flying near the shore."
 block|,
+block|{
 literal|96
 block|,
 literal|77
@@ -1924,6 +2093,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"Very tall trees growing in neatly planted rows march off from the \n\ water here towards the hills and down to the flat lands *+.**\n"
 block|}
@@ -1931,6 +2101,7 @@ block|,
 block|{
 literal|"You are flying around the very tip of the island."
 block|,
+block|{
 literal|95
 block|,
 literal|79
@@ -1946,6 +2117,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"Sheer cliffs rise several hundred feet to a tree covered summit. Far below,\n\ the grey sea gnaws voraciously at the roots of these cliffs. The island bends\n\ around +** and +.\n"
 block|}
@@ -1953,6 +2125,7 @@ block|,
 block|{
 literal|"You are flying along the coastline."
 block|,
+block|{
 literal|99
 block|,
 literal|82
@@ -1968,6 +2141,7 @@ block|,
 literal|101
 block|,
 literal|1
+block|}
 block|,
 literal|"This is a narrow strip of sand lined with very few trees. The stars above\n\ flicker through wisps of clouds.  The beach continues on -.* There\n\ are some lights +.*\n"
 block|}
@@ -1975,6 +2149,7 @@ block|,
 block|{
 literal|"You are flying over several cottages and buildings"
 block|,
+block|{
 literal|99
 block|,
 literal|82
@@ -1990,6 +2165,7 @@ block|,
 literal|103
 block|,
 literal|1
+block|}
 block|,
 literal|"Directly below is small ornate house lit up with spot lights and decorative\n\ bulbs.  A bell tower and a spurting fountain are nearby.  Small dirt roads go\n\ + and +.**\n"
 block|}
@@ -1997,6 +2173,7 @@ block|,
 block|{
 literal|"You are in a field of sugar cane."
 block|,
+block|{
 literal|109
 block|,
 literal|110
@@ -2012,6 +2189,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"These strong, thick canes give little shelter but many cuts and scrapes.\n\ There are some large trees ***+.\n"
 block|}
@@ -2019,6 +2197,7 @@ block|,
 block|{
 literal|"You are flying over the ocean."
 block|,
+block|{
 literal|95
 block|,
 literal|78
@@ -2034,6 +2213,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"The water is a placid ebony.****\n"
 block|}
@@ -2041,6 +2221,7 @@ block|,
 block|{
 literal|"You are on the coast road."
 block|,
+block|{
 literal|113
 block|,
 literal|114
@@ -2056,6 +2237,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road winds close to the shore here.  The trees on either side press close\n\ in the darkness and seem to be watching us.**  The road continues -\n\ and -.\n"
 block|}
@@ -2063,6 +2245,7 @@ block|,
 block|{
 literal|"You are on the main street of the village."
 block|,
+block|{
 literal|117
 block|,
 literal|118
@@ -2078,6 +2261,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The natives are having a festive luau here.  Beautiful dancers gyrate in the\n\ torchlight to the rhythm of wooden drums.  A suckling pig is sizzling in a\n\ bed of coals and ti leaves are spread with poi and tropical fruits.  Several\n\ natives have come over to you and want you to join in the festivities.\n\ There is a light burning in a bungalow +.***\n"
 block|}
@@ -2085,6 +2269,7 @@ block|,
 block|{
 literal|"You are at the sea plane dock."
 block|,
+block|{
 literal|121
 block|,
 literal|122
@@ -2100,6 +2285,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The clearing is deserted.  The grass is wet with the evening dew +.*\n\ There is something set up +.*\n"
 block|}
@@ -2107,6 +2293,7 @@ block|,
 block|{
 literal|"You are flying over the ocean."
 block|,
+block|{
 literal|94
 block|,
 literal|83
@@ -2122,6 +2309,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"The black waves surge off shore here.  The ocean becomes much calmer +.***\n"
 block|}
@@ -2129,6 +2317,7 @@ block|,
 block|{
 literal|"You are flying along the coast."
 block|,
+block|{
 literal|94
 block|,
 literal|84
@@ -2144,6 +2333,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"The land is very low here with a river running into the sea +. There\n\ is a wide valley opening up +, but a strange mist is flowing out of it.\n\ The very tip of the island is +.*\n"
 block|}
@@ -2151,6 +2341,7 @@ block|,
 block|{
 literal|"You are flying along the coast."
 block|,
+block|{
 literal|94
 block|,
 literal|85
@@ -2166,6 +2357,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"The coast here is cluttered with rocky outcroppings.****\n"
 block|}
@@ -2173,6 +2365,7 @@ block|,
 block|{
 literal|"You are lost in a sea of fog."
 block|,
+block|{
 literal|97
 block|,
 literal|104
@@ -2188,6 +2381,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"What have you gotten us into?\n\ I can't see a thing! ****\n"
 block|}
@@ -2195,6 +2389,7 @@ block|,
 block|{
 literal|"You are on a gravel wash."
 block|,
+block|{
 literal|125
 block|,
 literal|126
@@ -2210,6 +2405,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"It is very dark here.  A cool breeze is blowing from +.  No moonlight can\n\ reach below a thick canopy of fog above.  The sound of cascading water is\n\ coming from +.**\n"
 block|}
@@ -2217,6 +2413,7 @@ block|,
 block|{
 literal|"You are flying over a wide beach."
 block|,
+block|{
 literal|96
 block|,
 literal|88
@@ -2232,6 +2429,7 @@ block|,
 literal|105
 block|,
 literal|1
+block|}
 block|,
 literal|"There are some lighted buildings *+.  Some trees are growing +.*\n"
 block|}
@@ -2239,6 +2437,7 @@ block|,
 block|{
 literal|"You are flying over the ocean."
 block|,
+block|{
 literal|100
 block|,
 literal|100
@@ -2254,6 +2453,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"The black waves surge and splash against the rocky shore.****\n"
 block|}
@@ -2261,6 +2461,7 @@ block|,
 block|{
 literal|"You are on a narrow strip of sand."
 block|,
+block|{
 literal|129
 block|,
 literal|130
@@ -2276,6 +2477,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Rather coarse sand makes this beach very steep and only a few meters wide.\n\ A fresh ocean breeze is rustling the ferns **+.*\n"
 block|}
@@ -2283,6 +2485,7 @@ block|,
 block|{
 literal|"This is Fern Canyon."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -2298,6 +2501,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Delicate waving ferns flourish here, suckled by warm water dripping from \n\ every fissure and crevice in the solid rock walls.  The stars above sparkle\n\ through a thin mist.  The canyon winds **-, and -.\n"
 block|}
@@ -2305,6 +2509,7 @@ block|,
 block|{
 literal|"This is the front lawn."
 block|,
+block|{
 literal|134
 block|,
 literal|135
@@ -2320,6 +2525,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There is a small fountain lighted with green and yellow bulbs here where\n\ the driveway meets the lawn.  Across the driveway, +, is an ornate white\n\ house lit with gas lamps.  A bell tower here is awash in pale blue.*  There\n\ is a road + which turns into the driveway.*\n"
 block|}
@@ -2327,6 +2533,7 @@ block|,
 block|{
 literal|"You have just crossed the crest of a mountain."
 block|,
+block|{
 literal|97
 block|,
 literal|79
@@ -2342,6 +2549,7 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
 literal|"The fog vanished mysteriously as we flew over the crest.*\n\ Far + I can see the ocean sparkling in the moonlight.**\n"
 block|}
@@ -2349,6 +2557,7 @@ block|,
 block|{
 literal|"You are on a sandy beach."
 block|,
+block|{
 literal|138
 block|,
 literal|139
@@ -2364,6 +2573,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Fine coral sand, a fresh sea breeze, and dramatic surf add to this beach's\n\ appeal.**  Stone steps lead to a lighted path in the gardens +.*\n"
 block|}
@@ -2371,6 +2581,7 @@ block|,
 block|{
 literal|"You are among palm trees near the shore."
 block|,
+block|{
 literal|141
 block|,
 literal|80
@@ -2386,6 +2597,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Arching coconut palms laden with fruit provide a canopy for the glistening\n\ white sand and sparse, dew covered grasses growing here. The forest grows\n\ denser +.  Crickets are chirping loudly here.  The ocean is +.**\n"
 block|}
@@ -2393,6 +2605,7 @@ block|,
 block|{
 literal|"You are walking along the beach."
 block|,
+block|{
 literal|144
 block|,
 literal|0
@@ -2408,6 +2621,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The warm tropical waters nuzzle your ankles as you walk. Above is a gorgeous\n\ starscape.  The battlestar must be up there somewhere.  The slope of the sand\n\ is so gentle that the surf only slides up the sand.** There are some rocks\n\ +.*\n"
 block|}
@@ -2415,6 +2629,7 @@ block|,
 block|{
 literal|"You are walking along the beach."
 block|,
+block|{
 literal|146
 block|,
 literal|0
@@ -2430,6 +2645,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The tide is out very far tonight, and it is possible to explore hidden rocks\n\ and caves not ordinarily accessible.  Rich beds of seaweed have been exposed\n\ to the cool night air.****\n"
 block|}
@@ -2437,6 +2653,7 @@ block|,
 block|{
 literal|"You are in a papaya grove."
 block|,
+block|{
 literal|148
 block|,
 literal|89
@@ -2452,6 +2669,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Slender trees with their large seven lobed leaves bulge with succulent fruit.\n\ There are some tall trees +.***\n"
 block|}
@@ -2459,6 +2677,7 @@ block|,
 block|{
 literal|"You are in a field of pineapple."
 block|,
+block|{
 literal|89
 block|,
 literal|151
@@ -2474,6 +2693,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The sharp dagger like pineapple leaves can pierce the flesh and hold fast\n\ a skewered victim with tiny barbs.* The field ends +.**\n"
 block|}
@@ -2481,6 +2701,7 @@ block|,
 block|{
 literal|"You are in a field of kiwi plants."
 block|,
+block|{
 literal|149
 block|,
 literal|154
@@ -2496,6 +2717,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Round hairy fruit hang from staked vines here. There are some trees +\n\ and +. The field ends in a road +.*\n"
 block|}
@@ -2503,6 +2725,7 @@ block|,
 block|{
 literal|"You are in a large grove of coconuts."
 block|,
+block|{
 literal|150
 block|,
 literal|153
@@ -2518,6 +2741,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"These trees are much taller than any growing near the shore and the shadows\n\ are also deeper.  It's hard to keep my sense of direction.****\n"
 block|}
@@ -2525,6 +2749,7 @@ block|,
 block|{
 literal|"You are in the woods."
 block|,
+block|{
 literal|157
 block|,
 literal|91
@@ -2540,6 +2765,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Tropical undergrowth makes the going rough here. Sword ferns give no strong\n\ foot hold and the dangling vines would gladly throttle one. The darkness is\n\ so intense here that we stand in utter blackness.****\n"
 block|}
@@ -2547,6 +2773,7 @@ block|,
 block|{
 literal|"You are at the shore."
 block|,
+block|{
 literal|91
 block|,
 literal|0
@@ -2562,6 +2789,7 @@ block|,
 literal|160
 block|,
 literal|0
+block|}
 block|,
 literal|"The low minus tide tonight might make it possible to climb down to a\n\ small cave entrance below.  Large rocks would usually churn the waves\n\ asunder.***  The beach goes -.\n"
 block|}
@@ -2569,6 +2797,7 @@ block|,
 block|{
 literal|"You are on the coast road."
 block|,
+block|{
 literal|158
 block|,
 literal|161
@@ -2584,6 +2813,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road is beginning to turn slightly -.  I can hear the surf +.  The road\n\ continues into the dark forest +.*\n"
 block|}
@@ -2591,6 +2821,7 @@ block|,
 block|{
 literal|"The road winds deeper into the trees."
 block|,
+block|{
 literal|163
 block|,
 literal|142
@@ -2606,6 +2837,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Only narrow moonbeams filter through the dense foliage above. The moist rich\n\ earth has nurtured a myriad of slugs, snakes, and spiders to grow here. The\n\ road continues - and *- into the shadows.*\n"
 block|}
@@ -2613,6 +2845,7 @@ block|,
 block|{
 literal|"This is the front porch of the bungalow."
 block|,
+block|{
 literal|165
 block|,
 literal|92
@@ -2628,6 +2861,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The veranda is lit by a small yellow bug light.  The door leads -.\n\ The stone walk down to the luau is lined with burning torches +.  That\n\ roast pig smells good.**\n"
 block|}
@@ -2635,6 +2869,7 @@ block|,
 block|{
 literal|"You are on a path leading to the lagoon."
 block|,
+block|{
 literal|92
 block|,
 literal|166
@@ -2650,6 +2885,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This path winds through the underbrush and towards the lagoon *+.  The\n\ broad faced moon peeps though the branches above.  The sound of drums echos\n\ in the woods.**\n"
 block|}
@@ -2657,6 +2893,7 @@ block|,
 block|{
 literal|"This is a dirt road."
 block|,
+block|{
 literal|169
 block|,
 literal|118
@@ -2672,6 +2909,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"**The road continues on - here for some distance. A bonfire and party light\n\ up the night sky +.\n"
 block|}
@@ -2679,6 +2917,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|171
 block|,
 literal|118
@@ -2694,6 +2933,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"**There is a village +. A huge bonfire licks at the trees, and a celebration\n\ of some sort is going on there.  The smell of luscious cooking is tantalizing\n\ my flared nostrils.  The road continues +.\n"
 block|}
@@ -2701,6 +2941,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|173
 block|,
 literal|93
@@ -2716,6 +2957,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This is a wide grassy clearing bedewed with droplets of evening mist.  The\n\ trees alongside the road moan and whisper as we pass.  They seem annoyed at\n\ our presence.  **The road continues - and -.\n"
 block|}
@@ -2723,6 +2965,7 @@ block|,
 block|{
 literal|"You are at the seaplane dock."
 block|,
+block|{
 literal|93
 block|,
 literal|0
@@ -2738,6 +2981,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Not a living thing stirs the calm surface of the lagoon.  The wooden planks\n\ creak unnaturally as we tread on them.  The dock reaches a clearing +.\n\ A dark trail leads around the lagoon **+.\n"
 block|}
@@ -2745,6 +2989,7 @@ block|,
 block|{
 literal|"There are some tables on the lawn here."
 block|,
+block|{
 literal|121
 block|,
 literal|122
@@ -2760,6 +3005,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Some tables are strewn on the wet lawn.****\n"
 block|}
@@ -2767,6 +3013,7 @@ block|,
 block|{
 literal|"You are nosing around in the bushes."
 block|,
+block|{
 literal|124
 block|,
 literal|124
@@ -2782,6 +3029,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There is little here but some old beer cans. It is damp and dirty in here.\n\ I think I stepped in something unpleasant. It would be best to go **-.*\n"
 block|}
@@ -2789,6 +3037,7 @@ block|,
 block|{
 literal|"You are walking in a dry stream bed."
 block|,
+block|{
 literal|178
 block|,
 literal|98
@@ -2804,6 +3053,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The large cobblestones are difficult to walk on.  No starlight reaches\n\ below a black canopy of fog seemingly engulfing the whole island.  A dirt\n\ path along the wash is **+.  The high bank is impossible to climb +.\n"
 block|}
@@ -2811,6 +3061,7 @@ block|,
 block|{
 literal|"You are at the thermal pools."
 block|,
+block|{
 literal|98
 block|,
 literal|0
@@ -2826,6 +3077,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Odd spluttering and belching water splashes up around the rocks here.\n\ A spectacular waterfall nearby tumbles down as a river of effervescent\n\ bubbles.  The air is quite warm and a cave entrance ***+ spews steam.\n"
 block|}
@@ -2833,6 +3085,7 @@ block|,
 block|{
 literal|"You are in the woods."
 block|,
+block|{
 literal|127
 block|,
 literal|180
@@ -2848,6 +3101,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"It is pitch black in the forest here and my pant leg is caught on something.\n\ There may be poison oak here.  What was that?  A lantern just flickered by in\n\ the dark!  The sound of rushing water is coming from *+.**\n"
 block|}
@@ -2855,6 +3109,7 @@ block|,
 block|{
 literal|"You are on a dirt trail."
 block|,
+block|{
 literal|179
 block|,
 literal|181
@@ -2870,6 +3125,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The trail seems to start here and head towards the forest +.**  High, dark\n\ cliffs border the trail +.  Some crickets are chirping noisily.\n"
 block|}
@@ -2877,6 +3133,7 @@ block|,
 block|{
 literal|"You are  walking along the beach."
 block|,
+block|{
 literal|183
 block|,
 literal|101
@@ -2892,6 +3149,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The surf is rather tame tonight.  The beach continues + and +.**\n"
 block|}
@@ -2899,6 +3157,7 @@ block|,
 block|{
 literal|"You are walking along the beach."
 block|,
+block|{
 literal|101
 block|,
 literal|185
@@ -2914,6 +3173,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This is not a very nice beach. The coarse sand hurts my feet.****\n"
 block|}
@@ -2921,6 +3181,7 @@ block|,
 block|{
 literal|"You are walking through some ferns."
 block|,
+block|{
 literal|184
 block|,
 literal|186
@@ -2936,6 +3197,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This is a wide field growing only ferns and small shrubs.**  In the dark\n\ it would be all to easy to stumble into a venomous snake.  The ocean is\n\ *+.\n"
 block|}
@@ -2943,6 +3205,7 @@ block|,
 block|{
 literal|"You are in a narrow canyon."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -2958,6 +3221,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The steep sides here squeeze a little freshet through a gauntlet like\n\ series of riffles and pools.  The cool mountain air is refreshing.****\n"
 block|}
@@ -2965,6 +3229,7 @@ block|,
 block|{
 literal|"The canyon is much wider here."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -2980,6 +3245,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The sheer rock walls rise 10 meters into darkness. A slender waterfall\n\ careens away from the face of the rock high above and showers the gravel\n\ floor with sparkling raindrops.**  The canyon continues -\n\ and -.\n"
 block|}
@@ -2987,6 +3253,7 @@ block|,
 block|{
 literal|"You are on the front porch of the cottage."
 block|,
+block|{
 literal|190
 block|,
 literal|103
@@ -3002,6 +3269,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The veranda is deserted.  A table and chair are the only things on the porch.\n\ Inside the house is a parlor lighted with an elegant chandelier.  The door\n\ leads -.  The lawn and fountain are +.**\n"
 block|}
@@ -3009,6 +3277,7 @@ block|,
 block|{
 literal|"You are in a palm grove."
 block|,
+block|{
 literal|103
 block|,
 literal|191
@@ -3024,6 +3293,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Crickets are chirping in the cool night air.****\n"
 block|}
@@ -3031,6 +3301,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|193
 block|,
 literal|192
@@ -3046,6 +3317,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There are many bright lights +.  The road cleaves the darkness +.\n\ A small dirt road goes -, and a drive way peals off +.\n"
 block|}
@@ -3053,6 +3325,7 @@ block|,
 block|{
 literal|"You are in a field of small shrubs."
 block|,
+block|{
 literal|184
 block|,
 literal|186
@@ -3068,6 +3341,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"**Pine and other coniferous saplings are growing here.  The rich brown\n\ soil is well watered.  Across a large lawn +, there is a small cottage lighted\n\ with spot lights and gas lamps.  A cool land breeze is blowing.*\n"
 block|}
@@ -3075,6 +3349,7 @@ block|,
 block|{
 literal|"The beach is pretty rocky here."
 block|,
+block|{
 literal|194
 block|,
 literal|105
@@ -3090,6 +3365,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The tide is very low tonight.  The beach is nicer *+.**\n"
 block|}
@@ -3097,6 +3373,7 @@ block|,
 block|{
 literal|"The beach is almost 10 meters wide here."
 block|,
+block|{
 literal|105
 block|,
 literal|183
@@ -3112,6 +3389,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The sand has become more coarse and the beach steeper.****\n"
 block|}
@@ -3119,6 +3397,7 @@ block|,
 block|{
 literal|"You are in the gardens."
 block|,
+block|{
 literal|195
 block|,
 literal|196
@@ -3134,6 +3413,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Shadowy expanses of lawn and leaf have been groomed and manicured here.\n\ The night sky is glowing with a full moon.**  A lighted path leads -.\n\ Stone steps lead down to the beach +.\n"
 block|}
@@ -3141,6 +3421,7 @@ block|,
 block|{
 literal|"You are on the coast road."
 block|,
+block|{
 literal|198
 block|,
 literal|106
@@ -3156,6 +3437,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The forest is dense on either side.  The trees seem to be actually squeezing\n\ together to keep us from passing.  A feeling of enmity is in the air.**\n\ The road continues - and -.\n"
 block|}
@@ -3163,6 +3445,7 @@ block|,
 block|{
 literal|"You are in the forest."
 block|,
+block|{
 literal|116
 block|,
 literal|107
@@ -3178,6 +3461,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"I suppose there are trees and ferns all around, but it is too dark to see.****\n"
 block|}
@@ -3185,6 +3469,7 @@ block|,
 block|{
 literal|"You are in the forest."
 block|,
+block|{
 literal|199
 block|,
 literal|108
@@ -3200,6 +3485,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There are shadowy trees and ferns all around.****\n"
 block|}
@@ -3207,6 +3493,7 @@ block|,
 block|{
 literal|"You are in a copse."
 block|,
+block|{
 literal|142
 block|,
 literal|107
@@ -3222,6 +3509,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This is a secret hidden thicket only noticeable from the beach.  In the\n\ moonlight, I can tell that someone has been digging here recently.****\n"
 block|}
@@ -3229,6 +3517,7 @@ block|,
 block|{
 literal|"You are at the tide pools."
 block|,
+block|{
 literal|91
 block|,
 literal|0
@@ -3244,6 +3533,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"These rocks and pools are the home for many sea anemones and crustaceans.\n\ They are exposed because of the low tide.  There is a beach ***+.\n"
 block|}
@@ -3251,6 +3541,7 @@ block|,
 block|{
 literal|"You are in the forest."
 block|,
+block|{
 literal|199
 block|,
 literal|108
@@ -3266,6 +3557,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This is a shallow depression sheltered from the wind by a thick growth of \n\ thorny shrubs.  It looks like someone is camping here.  There is a fire pit\n\ with warm, crackling flames and coals here.*  The beach is +.*  The thorny\n\ shrubs block the way -.\n"
 block|}
@@ -3273,6 +3565,7 @@ block|,
 block|{
 literal|"You are at the mouth of the lagoon."
 block|,
+block|{
 literal|200
 block|,
 literal|0
@@ -3288,6 +3581,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The beach ends here where the coral reef rises to form a wide lagoon.\n\ A path winds around the lagoon to the -.* The beach continues\n\ on -. Only water lies +.\n"
 block|}
@@ -3295,6 +3589,7 @@ block|,
 block|{
 literal|"You are in a breadfruit grove."
 block|,
+block|{
 literal|202
 block|,
 literal|109
@@ -3310,6 +3605,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The tall trees bend leisurely in the breeze, holding many round breadfruits\n\ close to their large serrated leaves.  There are coconut palms +,\n\ *+, and +.\n"
 block|}
@@ -3317,6 +3613,7 @@ block|,
 block|{
 literal|"You are in a grove of mango trees."
 block|,
+block|{
 literal|203
 block|,
 literal|111
@@ -3332,6 +3629,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The trees are not tall enough to obscure the view and the bright moonlight\n\ makes it fairly easy to see.****\n"
 block|}
@@ -3339,6 +3637,7 @@ block|,
 block|{
 literal|"You are in a grove of coconut palms."
 block|,
+block|{
 literal|204
 block|,
 literal|112
@@ -3354,6 +3653,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"All I can see around us are trees and ominous shapes darting in and out of the\n\ shadows.****\n"
 block|}
@@ -3361,6 +3661,7 @@ block|,
 block|{
 literal|"You are in a coconut grove."
 block|,
+block|{
 literal|110
 block|,
 literal|207
@@ -3376,6 +3677,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There are countless trees here.****\n"
 block|}
@@ -3383,6 +3685,7 @@ block|,
 block|{
 literal|"You are in a field of pineapple."
 block|,
+block|{
 literal|154
 block|,
 literal|208
@@ -3398,6 +3701,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The sharp leaves are cutting me to ribbons. There is a road **+.*\n"
 block|}
@@ -3405,6 +3709,7 @@ block|,
 block|{
 literal|"You are in a coconut grove."
 block|,
+block|{
 literal|112
 block|,
 literal|209
@@ -3420,6 +3725,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There is a field of something **+.*\n"
 block|}
@@ -3427,6 +3733,7 @@ block|,
 block|{
 literal|"You are on the edge of a kiwi and pineapple field."
 block|,
+block|{
 literal|111
 block|,
 literal|152
@@ -3442,6 +3749,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"An irrigation ditch separates the two fields here. There is a road **+.*\n"
 block|}
@@ -3449,6 +3757,7 @@ block|,
 block|{
 literal|"This is a dirt road."
 block|,
+block|{
 literal|205
 block|,
 literal|210
@@ -3464,6 +3773,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road runs - and - here.  It is very dark in the forest.**\n"
 block|}
@@ -3471,6 +3781,7 @@ block|,
 block|{
 literal|"You are in a palm grove."
 block|,
+block|{
 literal|206
 block|,
 literal|211
@@ -3486,6 +3797,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There are trees all around us.****\n"
 block|}
@@ -3493,6 +3805,7 @@ block|,
 block|{
 literal|"You are on the edge of a small clearing."
 block|,
+block|{
 literal|157
 block|,
 literal|113
@@ -3508,6 +3821,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The ground is rather marshy here and the darkness is intense.  A swarm of\n\ ravenous mosquitoes has descended upon you and has sent you quaking to your\n\ knees.****\n"
 block|}
@@ -3515,6 +3829,7 @@ block|,
 block|{
 literal|"You are in the woods."
 block|,
+block|{
 literal|158
 block|,
 literal|115
@@ -3530,6 +3845,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"You have walked a long way and found only spider webs. ****\n"
 block|}
@@ -3537,6 +3853,7 @@ block|,
 block|{
 literal|"You are walking along the shore."
 block|,
+block|{
 literal|115
 block|,
 literal|0
@@ -3552,6 +3869,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"You are now about 10 meters above the surf on a gently rising cliffside.**\n\ The land rises +. There is a beach far +.\n"
 block|}
@@ -3559,6 +3877,7 @@ block|,
 block|{
 literal|"You are just inside the entrance to the sea cave."
 block|,
+block|{
 literal|246
 block|,
 literal|114
@@ -3574,6 +3893,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The sound of water dripping in darkness and the roar of the ocean just outside\n\ create a very unwelcoming atmosphere inside this cave. Only on rare occasions\n\ such as this is it possible to enter the forbidden catacombs... The cave\n\ continues -.***\n"
 block|}
@@ -3581,6 +3901,7 @@ block|,
 block|{
 literal|"You are in a secret nook beside the road."
 block|,
+block|{
 literal|115
 block|,
 literal|159
@@ -3596,6 +3917,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This little thicket is hidden from the road in the shadows of the forest.\n\ From here we have a clear view of any traffic along the road. A great hollow\n\ tree stuffed with something is nearby.  The road is +.***\n"
 block|}
@@ -3603,6 +3925,7 @@ block|,
 block|{
 literal|"You are on the coast road."
 block|,
+block|{
 literal|215
 block|,
 literal|214
@@ -3618,6 +3941,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road turns abruptly - here, wandering deeper into the black forest.***\n"
 block|}
@@ -3625,6 +3949,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|216
 block|,
 literal|116
@@ -3640,6 +3965,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"We are walking through a tunnel of unfriendly trees and shrubs.  The tall\n\ ones bend over the roadway and reach down with their branches to grab us.\n\ Broad leafed plants at the roadside whisper in the darkness.  Something\n\ just darted across the road and into the bushes *+.  Let's go *-.\n"
 block|}
@@ -3647,6 +3973,7 @@ block|,
 block|{
 literal|"You have discovered a hidden thicket near the road."
 block|,
+block|{
 literal|163
 block|,
 literal|142
@@ -3662,6 +3989,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"I would think it best to stay n the road.  The forest seems very unfriendly\n\ at night.  The road is **+.*\n"
 block|}
@@ -3669,6 +3997,7 @@ block|,
 block|{
 literal|"You are in the living room."
 block|,
+block|{
 literal|0
 block|,
 literal|117
@@ -3684,6 +4013,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"A decorative entry with fresh flowers and wall to wall carpeting leads into\n\ the living room here where a couch and two chairs converse with an end table.\n\ *The exit is +.* The bedroom is +.\n"
 block|}
@@ -3691,6 +4021,7 @@ block|,
 block|{
 literal|"You are at the lagoon."
 block|,
+block|{
 literal|118
 block|,
 literal|0
@@ -3706,6 +4037,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"A small beach here is deserted except for some fishing nets.  It is very\n\ peaceful at the lagoon at night.  The sound of native drums is carried on\n\ the night breeze.  There are paths leading off into darkness +,\n\ *+, and +.\n"
 block|}
@@ -3713,6 +4045,7 @@ block|,
 block|{
 literal|"You are at the lagoon."
 block|,
+block|{
 literal|118
 block|,
 literal|0
@@ -3728,6 +4061,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The grass near the water is moist with the refreshing evening dew.  Far away,\n\ drums reverberate in the forest.**  The path continues + and +.\n"
 block|}
@@ -3735,6 +4069,7 @@ block|,
 block|{
 literal|"You are at the lagoon."
 block|,
+block|{
 literal|118
 block|,
 literal|0
@@ -3750,6 +4085,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The path meanders through shadows of tussocks of grass, ferns, and thorny\n\ bushes here and continues on **- and -.\n"
 block|}
@@ -3757,6 +4093,7 @@ block|,
 block|{
 literal|"You are in the woods."
 block|,
+block|{
 literal|219
 block|,
 literal|119
@@ -3772,6 +4109,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There are plenty of ferns and thorny bushes here! Spider webs and probing\n\ branches snare us as we stumble along in the pitch black night.****\n"
 block|}
@@ -3779,6 +4117,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|220
 block|,
 literal|167
@@ -3794,6 +4133,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road winds rather close to a large lagoon here and many sedges and tall\n\ loom in the darkness *+. The road continues - and -.\n"
 block|}
@@ -3801,6 +4141,7 @@ block|,
 block|{
 literal|"You are in the woods beside the road."
 block|,
+block|{
 literal|221
 block|,
 literal|120
@@ -3816,6 +4157,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The forest grows darker +. The road is +.**\n"
 block|}
@@ -3823,6 +4165,7 @@ block|,
 block|{
 literal|"The road crosses the lagoon here."
 block|,
+block|{
 literal|222
 block|,
 literal|0
@@ -3838,6 +4181,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Strange mists rising from the water engulf a rickety old enclosed bridge here.\n\ Spider webs catch our hair as we pass through its rotting timbers.  I felt\n\ something drop on my neck.  The road delves into the accursed forest\n\ **+ and +.\n"
 block|}
@@ -3845,6 +4189,7 @@ block|,
 block|{
 literal|"You are in a coconut palm grove."
 block|,
+block|{
 literal|223
 block|,
 literal|121
@@ -3860,6 +4205,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The tall palms are planted about 30 feet apart and the stary sky is clearly\n\ visible above.  A low growing grass carpets the ground all around.  The grove\n\ continues +.***\n"
 block|}
@@ -3867,6 +4213,7 @@ block|,
 block|{
 literal|"You are walking along a dirt road."
 block|,
+block|{
 literal|224
 block|,
 literal|176
@@ -3882,6 +4229,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"You are near misty patch of the roadway **+.  The road continues -.\n"
 block|}
@@ -3889,6 +4237,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|225
 block|,
 literal|177
@@ -3904,6 +4253,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road turns abruptly - here, splitting a grove of palm trees.* In the\n\ starlight I can also discern that the road continues - toward the lagoon.*\n"
 block|}
@@ -3911,6 +4261,7 @@ block|,
 block|{
 literal|"You are on a trail running around the lagoon."
 block|,
+block|{
 literal|172
 block|,
 literal|0
@@ -3926,6 +4277,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The dark waters brush the trail here and the path crosses an old  bridge\n\ +.  There is deep water + and +. The trail continues -.\n"
 block|}
@@ -3933,6 +4285,7 @@ block|,
 block|{
 literal|"This is the mouth of the lagoon."
 block|,
+block|{
 literal|175
 block|,
 literal|0
@@ -3948,6 +4301,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The coral reef wraps around a natural bay here to create a wide lagoon which\n\ winds tortuously inland.**  A trail goes around the lagoon +.\n\ The beach is -.\n"
 block|}
@@ -3955,6 +4309,7 @@ block|,
 block|{
 literal|"You are in a dry stream bed."
 block|,
+block|{
 literal|0
 block|,
 literal|125
@@ -3970,6 +4325,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The dry wash drains over a tall precipice here into a turbid morass below. The\n\ most noisome stench imaginable is wafting up to defile our nostrils. Above,\n\ the blackness is intense and a strange mist engulfs the island.*  Let's go\n\ -.**\n"
 block|}
@@ -3977,6 +4333,7 @@ block|,
 block|{
 literal|"You are on a dirt path along the wash."
 block|,
+block|{
 literal|0
 block|,
 literal|128
@@ -3992,6 +4349,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The trail winds along the gravel wash and delves into the forest ***+.\n"
 block|}
@@ -3999,6 +4357,7 @@ block|,
 block|{
 literal|"The thermal pools flow into a stream here."
 block|,
+block|{
 literal|127
 block|,
 literal|0
@@ -4014,6 +4373,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The gurgling hot waters pour over boulders into a swiftly flowing\n\ stream **+. The pools are +.\n"
 block|}
@@ -4021,6 +4381,7 @@ block|,
 block|{
 literal|"You are at the entrance to a cave."
 block|,
+block|{
 literal|128
 block|,
 literal|230
@@ -4036,6 +4397,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"A torch lights the entrance to the cave.  Deep inside I can see shadows moving.\n\ A path goes + from here.  The entrance is +.**\n"
 block|}
@@ -4043,6 +4405,7 @@ block|,
 block|{
 literal|"You are in the woods."
 block|,
+block|{
 literal|182
 block|,
 literal|229
@@ -4058,6 +4421,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Thorns tangle your every effort to proceed.*  The sound of rushing water is\n\ +.**\n"
 block|}
@@ -4065,6 +4429,7 @@ block|,
 block|{
 literal|"You are walking along the beach."
 block|,
+block|{
 literal|139
 block|,
 literal|129
@@ -4080,6 +4445,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Some dunes here progress inland and make it impossible to get very far in that\n\ direction.  The beach continues - and -.*  The ocean is +.\n"
 block|}
@@ -4087,6 +4453,7 @@ block|,
 block|{
 literal|"You are in the dunes."
 block|,
+block|{
 literal|183
 block|,
 literal|101
@@ -4102,6 +4469,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The endless rolling and pitching sand dunes are enough to make one very queasy!\n\ The sand is cool and the stars are bright at the ocean.  The only way I'm going\n\ is ***+.\n"
 block|}
@@ -4109,6 +4477,7 @@ block|,
 block|{
 literal|"This is a lousy beach."
 block|,
+block|{
 literal|130
 block|,
 literal|0
@@ -4124,6 +4493,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Volcanic and viciously sharp bitted grains of sand here bite like cold steel\n\ into my tender feet. I refuse to continue on. Let's get out of here. The\n\ beach is better +.***\n"
 block|}
@@ -4131,6 +4501,7 @@ block|,
 block|{
 literal|"You are in a field of sparse ferns."
 block|,
+block|{
 literal|131
 block|,
 literal|185
@@ -4146,6 +4517,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The lava rock outcroppings here will support few plants. There is more \n\ vegetation +.**  The ocean is +.\n"
 block|}
@@ -4153,6 +4525,7 @@ block|,
 block|{
 literal|"You are in the woods."
 block|,
+block|{
 literal|131
 block|,
 literal|131
@@ -4168,6 +4541,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Young trees and tall shrubs grow densely together here.\n\ They grow thicker **+.*\n"
 block|}
@@ -4175,6 +4549,7 @@ block|,
 block|{
 literal|"The canyon is no wider than a foot here."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -4190,6 +4565,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The freshet is gushing through the narrow trough, but the canyon has grown\n\ too narrow to follow it any farther.***  I guess we'll have to go -.\n"
 block|}
@@ -4197,6 +4573,7 @@ block|,
 block|{
 literal|"You are in a narrow part of the canyon."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -4212,6 +4589,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The two sheer sides are no more than a few meters apart here. There is a stone\n\ door in the wall +. The gravelly floor runs with tiny rivulets seeping \n\ from the ground itself.* The canyon continues - and -.\n"
 block|}
@@ -4219,6 +4597,7 @@ block|,
 block|{
 literal|"You are in the drawing room."
 block|,
+block|{
 literal|0
 block|,
 literal|134
@@ -4234,6 +4613,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Exquisitely decorated with plants and antique furniture of superb\n\ craftsmanship, the parlor reflects its owners impeccable taste.  The tropical\n\ night air pours in through open shutters *+.  There doesn't seem \n\ to be anybody around.  A large immaculate oaken desk is visible in the\n\ study and it even has a old fashioned telephone to complete the decor.**\n"
 block|}
@@ -4241,6 +4621,7 @@ block|,
 block|{
 literal|"You are in a palm grove."
 block|,
+block|{
 literal|135
 block|,
 literal|191
@@ -4256,6 +4637,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Grassy rows of dew covered palms stretch as far as I can see.**\n\ There is a road +.*\n"
 block|}
@@ -4263,6 +4645,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|136
 block|,
 literal|233
@@ -4278,6 +4661,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road winds through a coconut palm grove here. It continues on - \n\ and -.**\n"
 block|}
@@ -4285,6 +4669,7 @@ block|,
 block|{
 literal|"The road leads to several large buildings here."
 block|,
+block|{
 literal|235
 block|,
 literal|136
@@ -4300,6 +4685,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There is a lighted clubhouse +,* a large barn and stable +, and a\n\ garage of similar construct to the barn +.\n"
 block|}
@@ -4307,6 +4693,7 @@ block|,
 block|{
 literal|"This part of the beach is impassable."
 block|,
+block|{
 literal|0
 block|,
 literal|138
@@ -4322,6 +4709,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The see is calm tonight.  The beach goes *-.**\n"
 block|}
@@ -4329,6 +4717,7 @@ block|,
 block|{
 literal|"You are in the gardens."
 block|,
+block|{
 literal|195
 block|,
 literal|140
@@ -4344,6 +4733,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Dew beaded grass sparkles in the moonlight.  Tiny lamps beside the path light\n\ the way to the ocean ***+.\n"
 block|}
@@ -4351,6 +4741,7 @@ block|,
 block|{
 literal|"You are in the gardens."
 block|,
+block|{
 literal|140
 block|,
 literal|183
@@ -4366,6 +4757,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Beautiful flowers and shrubs surround a lighted goldfish pond.****\n"
 block|}
@@ -4373,6 +4765,7 @@ block|,
 block|{
 literal|"You are on a stone walk in the garden."
 block|,
+block|{
 literal|195
 block|,
 literal|196
@@ -4388,6 +4781,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The walk leads to a road **+.*\n"
 block|}
@@ -4395,6 +4789,7 @@ block|,
 block|{
 literal|"You are in the forest near the road."
 block|,
+block|{
 literal|198
 block|,
 literal|141
@@ -4410,6 +4805,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There are many thorny bushes here!****\n"
 block|}
@@ -4417,6 +4813,7 @@ block|,
 block|{
 literal|"You are at a fork in the road."
 block|,
+block|{
 literal|239
 block|,
 literal|146
@@ -4432,6 +4829,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Two roads come together in the darkness here. One runs -,* the other \n\ runs - and -.\n"
 block|}
@@ -4439,6 +4837,7 @@ block|,
 block|{
 literal|"You are on a dirt path around the lagoon."
 block|,
+block|{
 literal|170
 block|,
 literal|147
@@ -4454,6 +4853,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The still waters reflect bending palms and a stary sky. It looks like\n\ the path runs into a clearing +. The path continues -.**\n"
 block|}
@@ -4461,6 +4861,7 @@ block|,
 block|{
 literal|"You are drowning in the lagoon."
 block|,
+block|{
 literal|201
 block|,
 literal|201
@@ -4476,6 +4877,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"I suggest you get out before you become waterlogged.****\n"
 block|}
@@ -4483,6 +4885,7 @@ block|,
 block|{
 literal|"You are in a coconut palm grove."
 block|,
+block|{
 literal|202
 block|,
 literal|148
@@ -4498,6 +4901,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -4505,6 +4909,7 @@ block|,
 block|{
 literal|"You are in a palm grove."
 block|,
+block|{
 literal|202
 block|,
 literal|149
@@ -4520,6 +4925,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -4527,6 +4933,7 @@ block|,
 block|{
 literal|"You are in a palm grove."
 block|,
+block|{
 literal|202
 block|,
 literal|150
@@ -4542,6 +4949,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -4549,6 +4957,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|203
 block|,
 literal|155
@@ -4564,6 +4973,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"*This road ends here at a palm grove but continues on - for quite\n\ some way.**\n"
 block|}
@@ -4571,6 +4981,7 @@ block|,
 block|{
 literal|"You are in a coconut palm grove."
 block|,
+block|{
 literal|204
 block|,
 literal|156
@@ -4586,6 +4997,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -4593,6 +5005,7 @@ block|,
 block|{
 literal|"You are in a coconut grove."
 block|,
+block|{
 literal|151
 block|,
 literal|219
@@ -4608,6 +5021,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"*The grove ends +.**\n"
 block|}
@@ -4615,6 +5029,7 @@ block|,
 block|{
 literal|"You are in a coconut grove."
 block|,
+block|{
 literal|152
 block|,
 literal|207
@@ -4630,6 +5045,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"**There is a dirt road +.*\n"
 block|}
@@ -4637,6 +5053,7 @@ block|,
 block|{
 literal|"You are in a coconut grove."
 block|,
+block|{
 literal|153
 block|,
 literal|207
@@ -4652,6 +5069,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -4659,6 +5077,7 @@ block|,
 block|{
 literal|"This is a dirt road."
 block|,
+block|{
 literal|205
 block|,
 literal|239
@@ -4674,6 +5093,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road continues - and -.**\n"
 block|}
@@ -4681,6 +5101,7 @@ block|,
 block|{
 literal|"You are in a coconut grove."
 block|,
+block|{
 literal|153
 block|,
 literal|209
@@ -4696,6 +5117,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"****\n"
 block|}
@@ -4703,6 +5125,7 @@ block|,
 block|{
 literal|"You are in the woods near the road."
 block|,
+block|{
 literal|205
 block|,
 literal|210
@@ -4718,6 +5141,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"There are many thorny bushes here!****\n"
 block|}
@@ -4725,6 +5149,7 @@ block|,
 block|{
 literal|"You are in a coconut grove."
 block|,
+block|{
 literal|213
 block|,
 literal|213
@@ -4740,6 +5165,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"***The grove ends in a clearing +.\n"
 block|}
@@ -4747,6 +5173,7 @@ block|,
 block|{
 literal|"You are walking along some high cliffs."
 block|,
+block|{
 literal|162
 block|,
 literal|0
@@ -4762,6 +5189,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The island bends sharply + here with high cliffs -\n\ and -. The cliffs are lower +.\n"
 block|}
@@ -4769,6 +5197,7 @@ block|,
 block|{
 literal|"You are at the coast road turn around."
 block|,
+block|{
 literal|0
 block|,
 literal|162
@@ -4784,6 +5213,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The coast road ends here in a lookout with a view of the ocean.\n\ Far below, the waves crash against the rocks.\n\ ****\n"
 block|}
@@ -4791,6 +5221,7 @@ block|,
 block|{
 literal|"You are in the woods near the road."
 block|,
+block|{
 literal|216
 block|,
 literal|163
@@ -4806,6 +5237,7 @@ block|,
 literal|257
 block|,
 literal|0
+block|}
 block|,
 literal|"These thorny bushes are killing me.****\n"
 block|}
@@ -4813,6 +5245,7 @@ block|,
 block|{
 literal|"You are in the kitchen."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -4828,6 +5261,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"A small gas stove and a refrigerator are all the only appliances here. The\n\ gas oven has been left on and the whole room is reeking with natural gas.\n\ One spark from a match and.... The door out is ***+.\n"
 block|}
@@ -4835,6 +5269,7 @@ block|,
 block|{
 literal|"You are in the bedroom."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -4850,6 +5285,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"A soft feather comforter on top of layers of Answer blankets make this a very\n\ luxurious place to sleep indeed. There are also some end tables and a dresser\n\ here.** The living room is +.*\n"
 block|}
@@ -4857,6 +5293,7 @@ block|,
 block|{
 literal|"You are in the woods."
 block|,
+block|{
 literal|207
 block|,
 literal|169
@@ -4872,6 +5309,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The darkness is intense, but there seems to be a clearing +.***\n"
 block|}
@@ -4879,6 +5317,7 @@ block|,
 block|{
 literal|"You are in the woods near the road."
 block|,
+block|{
 literal|219
 block|,
 literal|170
@@ -4894,6 +5333,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"*As far as I can tell, there are two roads + and +.*\n"
 block|}
@@ -4901,6 +5341,7 @@ block|,
 block|{
 literal|"You are in the woods."
 block|,
+block|{
 literal|207
 block|,
 literal|171
@@ -4916,6 +5357,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The spider webs thin out and the forest is clearer +.***\n"
 block|}
@@ -4923,6 +5365,7 @@ block|,
 block|{
 literal|"You are on the lagoon's inland finger."
 block|,
+block|{
 literal|0
 block|,
 literal|172
@@ -4938,6 +5381,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"It is impossible to follow the lagoon any farther inland because of sharp\n\ and very painful sedges.* The road is +.**\n"
 block|}
@@ -4945,6 +5389,7 @@ block|,
 block|{
 literal|"You are in a grassy coconut grove."
 block|,
+block|{
 literal|240
 block|,
 literal|173
@@ -4960,6 +5405,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The tall palms provide a ghostly canopy for the sandy ground covering.****\n"
 block|}
@@ -4967,6 +5413,7 @@ block|,
 block|{
 literal|"You are near the lagoon's inland finger."
 block|,
+block|{
 literal|0
 block|,
 literal|174
@@ -4982,6 +5429,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Very sharp sedges make it impossible to follow the lagoon any farther inland.\n\ *There is a road +.**\n"
 block|}
@@ -4989,6 +5437,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|241
 block|,
 literal|175
@@ -5004,6 +5453,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road winds through a coconut grove here and continues - and -.**\n"
 block|}
@@ -5011,6 +5461,7 @@ block|,
 block|{
 literal|"You are in the woods near the road."
 block|,
+block|{
 literal|226
 block|,
 literal|226
@@ -5026,6 +5477,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"**The road is +.*\n"
 block|}
@@ -5033,6 +5485,7 @@ block|,
 block|{
 literal|"This is a beach?"
 block|,
+block|{
 literal|227
 block|,
 literal|227
@@ -5048,6 +5501,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Hard jagged rocks that pierce with every footstep hardly comprise a beach.**\n\ Let's go -.*\n"
 block|}
@@ -5055,6 +5509,7 @@ block|,
 block|{
 literal|"The trail is lost in the woods here."
 block|,
+block|{
 literal|241
 block|,
 literal|241
@@ -5070,6 +5525,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The trail goes **-.*\n"
 block|}
@@ -5077,6 +5533,7 @@ block|,
 block|{
 literal|"You are on the bank of a stream."
 block|,
+block|{
 literal|182
 block|,
 literal|0
@@ -5092,6 +5549,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The stream falls over several small boulders here and continues on **-.*\n"
 block|}
@@ -5099,6 +5557,7 @@ block|,
 block|{
 literal|"You are just inside the cave."
 block|,
+block|{
 literal|181
 block|,
 literal|267
@@ -5114,6 +5573,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"A steamy hot breath is belching from the depths of the earth within.* The\n\ cave  continues -.**\n"
 block|}
@@ -5121,6 +5581,7 @@ block|,
 block|{
 literal|"You are just inside the cave entrance."
 block|,
+block|{
 literal|274
 block|,
 literal|0
@@ -5136,6 +5597,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The air is hot and sticky inside. The cave continues -. There is a \n\ stone door in the wall +.  A wooden sign in the dust warns in old elven\n\ runes, \"GSRF KDIRE NLVEMP!\".**\n"
 block|}
@@ -5143,6 +5605,7 @@ block|,
 block|{
 literal|"You are at the edge of a huge chasm."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5158,6 +5621,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Several hundred feet down I can see the glimmer of placid water. The\n\ rivulets drain over the edge and trickle down into the depths. It is \n\ impossible to climb down.**  The canyon continues -.*\n"
 block|}
@@ -5165,6 +5629,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|192
 block|,
 literal|241
@@ -5180,6 +5645,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road winds through a coconut grove here. The road continues on into the\n\ shadows - and -.**\n"
 block|}
@@ -5187,6 +5653,7 @@ block|,
 block|{
 literal|"You are in a coconut palm grove near the road."
 block|,
+block|{
 literal|193
 block|,
 literal|233
@@ -5202,6 +5669,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"***The road is +.\n"
 block|}
@@ -5209,6 +5677,7 @@ block|,
 block|{
 literal|"You are at the clubhouse."
 block|,
+block|{
 literal|0
 block|,
 literal|193
@@ -5224,6 +5693,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The clubhouse is built over the most inland part of the lagoon.  Tropical\n\ bananas and fragrant frangipani grow along the grassy shore.  Walking across\n\ the short wooden bridge, we enter. Along one wall is a bar crowded with people.\n\ The restaurant and disco dance floor are filled to capacity.  A rock group\n\ electrocutes itself to the satisfaction of the audience.****\n"
 block|}
@@ -5231,6 +5701,7 @@ block|,
 block|{
 literal|"You are in the stables."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5246,6 +5717,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Neighing horses snacking on hay and oats fill the stalls on both sides of\n\ the barn.  It is rather warm in here but that is not the most offensive\n\ part.****\n"
 block|}
@@ -5253,6 +5725,7 @@ block|,
 block|{
 literal|"You are in the old garage."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5268,6 +5741,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This is an old wooden building of the same vintage as the stables.  Beneath\n\ a sagging roof stand gardening tools and greasy rags.  Parked in the center\n\ is an underpowered Plymouth Volare' with a red and white striped golf cart\n\ roof. ****\n"
 block|}
@@ -5275,6 +5749,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|197
 block|,
 literal|197
@@ -5290,6 +5765,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road leads to a formal garden laced with lighted stone walks and tropical\n\ flowers and trees.** The road continues -. A walk leads -.\n"
 block|}
@@ -5297,6 +5773,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|210
 block|,
 literal|199
@@ -5312,6 +5789,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road runs - and -.**\n"
 block|}
@@ -5319,6 +5797,7 @@ block|,
 block|{
 literal|"You are in a coconut grove near the road."
 block|,
+block|{
 literal|234
 block|,
 literal|223
@@ -5334,6 +5813,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"***The road is +.\n"
 block|}
@@ -5341,6 +5821,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|233
 block|,
 literal|225
@@ -5356,6 +5837,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road continues - and -.**\n"
 block|}
@@ -5363,6 +5845,7 @@ block|,
 block|{
 literal|"The stream plummets over a cliff here."
 block|,
+block|{
 literal|182
 block|,
 literal|0
@@ -5378,6 +5861,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Falling 10 agonizing meters into darkness, only droplets of the stream must\n\ be left to dance off the floor below.  There is no way down, even with a\n\ strong rope. ****\n"
 block|}
@@ -5385,6 +5869,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5400,6 +5885,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"**The road continues - and -.\n"
 block|}
@@ -5407,6 +5893,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|0
 block|,
 literal|245
@@ -5422,6 +5909,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"*The road continues -* and -.\n"
 block|}
@@ -5429,6 +5917,7 @@ block|,
 block|{
 literal|"You are on a dirt road."
 block|,
+block|{
 literal|244
 block|,
 literal|234
@@ -5444,6 +5933,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The road goes -* and *-.\n"
 block|}
@@ -5451,6 +5941,7 @@ block|,
 block|{
 literal|"You are in a low passage."
 block|,
+block|{
 literal|247
 block|,
 literal|160
@@ -5466,6 +5957,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The ceiling here sparkles with iridescent gems and minerals. Colorful starfish\n\ and sea anemones cling to the slippery walls and floor.  The passage continues\n\ +.***\n"
 block|}
@@ -5473,6 +5965,7 @@ block|,
 block|{
 literal|"The walls are very close together here."
 block|,
+block|{
 literal|248
 block|,
 literal|246
@@ -5488,6 +5981,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"I can barely squeeze through the jagged opening. Slimy sea weeds provide\n\ no footing at all. This tunnel seems to be an ancient lava tube.  There is\n\ a large room +.***\n"
 block|}
@@ -5495,6 +5989,7 @@ block|,
 block|{
 literal|"You are in the cathedral room."
 block|,
+block|{
 literal|249
 block|,
 literal|247
@@ -5510,6 +6005,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Your light casts ghostly shadows on the walls but cannot pierce the \n\ engulfing darkness overhead. The sound of water dripping echoes in the void.\n\ *I can see no passages leading out of this room.*** \n"
 block|}
@@ -5517,6 +6013,7 @@ block|,
 block|{
 literal|"You are walking through a very round tunnel."
 block|,
+block|{
 literal|252
 block|,
 literal|248
@@ -5532,6 +6029,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The round walls of this tunnel are amazingly smooth to the touch. A little\n\ trickle of water flows down the center.  The tunnel climbs steadily +.\n\ There is a large room +.**\n"
 block|}
@@ -5539,6 +6037,7 @@ block|,
 block|{
 literal|"You are in the cathedral anteroom."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5554,6 +6053,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This small chamber with a flat stone floor is to one side of the cathedral \n\ room. We appear to be at the bottom of a tall narrow shaft. There are many \n\ puddles of water here. A staircase hewn from solid rock and black lava \n\ leads up.***  The cathedral room is -.\n"
 block|}
@@ -5561,6 +6061,7 @@ block|,
 block|{
 literal|"You are in a wide chamber."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5576,6 +6077,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Water is sprinkling from the ceiling here. A shallow pool populated by a \n\ myriad of blind white creatures sparkles in your light. Tiny shrimp and\n\ crabs scurry away, frightened by the blinding rays.**  The cave \n\ continues + and +.\n"
 block|}
@@ -5583,6 +6085,7 @@ block|,
 block|{
 literal|"You are at the top of a sloping passage."
 block|,
+block|{
 literal|0
 block|,
 literal|249
@@ -5598,6 +6101,7 @@ block|,
 literal|249
 block|,
 literal|0
+block|}
 block|,
 literal|"There is much algae growing here, both green and brown specimens. I suspect\n\ that we are near the high tide zone, but no light can get in here. The walls\n\ glisten with shiny minerals.**  A hallway here runs + and -.\n"
 block|}
@@ -5605,6 +6109,7 @@ block|,
 block|{
 literal|"You are in an elaborately tiled room."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5620,6 +6125,7 @@ block|,
 literal|250
 block|,
 literal|0
+block|}
 block|,
 literal|"Large colorful tiles plate the floor and walls.  The ceiling is a mosaic\n\ of gems set in gold.  Hopefully it is only our footsteps that are echoing in\n\ this hollow chamber.**  The room continues -.  A stone staircase leads\n\ down.*\n"
 block|}
@@ -5627,6 +6133,7 @@ block|,
 block|{
 literal|"You are at a dead end."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5642,6 +6149,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The walls here are alive with dark mussels.  They click their shells menacingly\n\ if we disturb them.**  The only exit is +.*\n"
 block|}
@@ -5649,6 +6157,7 @@ block|,
 block|{
 literal|"The tunnel is very low here."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5664,6 +6173,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"You practically have to crawl on your knees to pass through this opening.  The\n\ air is stiflingly damp, but you can't hear any sounds of water dripping.**\n\ The crawlspace continues -.  The tunnel seems wider +.\n"
 block|}
@@ -5671,6 +6181,7 @@ block|,
 block|{
 literal|"This is the supply room."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5686,6 +6197,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Picks and shovels line the walls here, as well as hard hats, boxes of\n\ dynamite, and a cartload of very high grade gold and silver ore.** \n\ A tunnel leads off +.*\n"
 block|}
@@ -5693,6 +6205,7 @@ block|,
 block|{
 literal|"You have found a secret entrance to the catacombs"
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5708,6 +6221,7 @@ block|,
 literal|252
 block|,
 literal|0
+block|}
 block|,
 literal|"Below is a wet, seaweed covered floor.  Above is a way out.****\n"
 block|}
@@ -5715,6 +6229,7 @@ block|,
 block|{
 literal|"You are in the catacombs."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5730,6 +6245,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Ornate tombs and piles of treasure line the walls.  Long spears with many\n\ blades, fine swords and coats of mail, heaps of coins, jewelry, pottery, \n\ and golden statues are tribute past kings and queens.** The catacombs\n\ continue - and -.\n"
 block|}
@@ -5737,6 +6253,7 @@ block|,
 block|{
 literal|"You are crawling on your stomach."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5752,6 +6269,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The passage is quite narrow and jagged, but the rock is no longer lava.\n\ It appears to be a form of granite.**  The crawlspace continues -, \n\ but I would just as soon go -.\n"
 block|}
@@ -5759,6 +6277,7 @@ block|,
 block|{
 literal|"You are in the Sepulcher."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5774,6 +6293,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"A single tomb is here.  Encrusted with diamonds and opals, and secured with \n\ straps of a very hard, untarnished silver, this tomb must be of a great king.\n\ Vases overflowing with gold coins stand nearby.  A line of verse on the wall\n\ reads, \"Three he made and gave them to his daughters.\"****\n"
 block|}
@@ -5781,6 +6301,7 @@ block|,
 block|{
 literal|"The passage is wider here."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5796,6 +6317,7 @@ block|,
 literal|262
 block|,
 literal|0
+block|}
 block|,
 literal|"A ladder goes down into darkness here.***  A small crawlspace goes -.\n"
 block|}
@@ -5803,6 +6325,7 @@ block|,
 block|{
 literal|"You are at the bottom of a ladder."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5818,6 +6341,7 @@ block|,
 literal|263
 block|,
 literal|0
+block|}
 block|,
 literal|"This is a narrow platform to rest on before we continue either up or down this\n\ rickety wooden ladder.****\n"
 block|}
@@ -5825,6 +6349,7 @@ block|,
 block|{
 literal|"You are standing in several inches of water."
 block|,
+block|{
 literal|264
 block|,
 literal|0
@@ -5840,6 +6365,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"This seems to be a working mine. Many different tunnels wander off following\n\ glowing veins of precious metal.  The floor is flooded here since we must\n\ be nearly at sea level.  A ladder leads up.****\n"
 block|}
@@ -5847,6 +6373,7 @@ block|,
 block|{
 literal|"The tunnel here is blocked by broken rocks."
 block|,
+block|{
 literal|0
 block|,
 literal|263
@@ -5862,6 +6389,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The way is blocked, but if you had some dynamite, we might be able to blast our\n\ way through.*  The passage goes -.**\n"
 block|}
@@ -5869,6 +6397,7 @@ block|,
 block|{
 literal|"The tunnel is too flooded to proceed."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5884,6 +6413,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"Hidden shafts could swallow us if we tried to continue on down this tunnel.\n\ The flooding is already up to my waist.  Large crystals overhead shimmer\n\ rainbows of reflected light.***  Let's go -.\n"
 block|}
@@ -5891,6 +6421,7 @@ block|,
 block|{
 literal|"The mine is less flooded here."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5906,6 +6437,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"A meandering gold laden vein of quartz and blooming crystals of diamonds\n\ and topaz burst from the walls of the cave.  A passage goes -.***\n"
 block|}
@@ -5913,6 +6445,7 @@ block|,
 block|{
 literal|"You are inside the cave."
 block|,
+block|{
 literal|230
 block|,
 literal|268
@@ -5928,6 +6461,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"A hot steam swirls around our heads, and the walls are warm to the touch.\n\ The trail winds - and -.**\n"
 block|}
@@ -5935,6 +6469,7 @@ block|,
 block|{
 literal|"You are in a rather large chamber."
 block|,
+block|{
 literal|267
 block|,
 literal|0
@@ -5950,6 +6485,7 @@ block|,
 literal|269
 block|,
 literal|0
+block|}
 block|,
 literal|"Beds of ferns and palm leaves make several cozy nests along the walls. In the\n\ center of the room is a throne of gold and silver.***  A passageway leads\n\ down and +.\n"
 block|}
@@ -5957,6 +6493,7 @@ block|,
 block|{
 literal|"You are walking along the edge of a huge abyss."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5972,6 +6509,7 @@ block|,
 literal|270
 block|,
 literal|0
+block|}
 block|,
 literal|"Steam is rising in great clouds from the immeasurable depths.  A very narrow\n\ trail winds down.**  There is a tunnel -.*\n"
 block|}
@@ -5979,6 +6517,7 @@ block|,
 block|{
 literal|"You are on the edge of a huge abyss."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -5994,6 +6533,7 @@ block|,
 literal|271
 block|,
 literal|0
+block|}
 block|,
 literal|"The trail winds farther down.****\n"
 block|}
@@ -6001,6 +6541,7 @@ block|,
 block|{
 literal|"You are winding your way along the abyss."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -6016,6 +6557,7 @@ block|,
 literal|272
 block|,
 literal|0
+block|}
 block|,
 literal|"The trail continues up and down.****\n"
 block|}
@@ -6023,6 +6565,7 @@ block|,
 block|{
 literal|"You are on a wide shelf near the steamy abyss."
 block|,
+block|{
 literal|0
 block|,
 literal|273
@@ -6038,6 +6581,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The stifling hot cave seems even hotter to me, staring down into this misty \n\ abyss.  A trail winds up.*  A passageway leads -.**\n"
 block|}
@@ -6045,6 +6589,7 @@ block|,
 block|{
 literal|"You are in a wide tunnel leading to a fuming abyss."
 block|,
+block|{
 literal|272
 block|,
 literal|274
@@ -6060,6 +6605,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"The passageway winds through many beautiful formations of crystals and\n\ sparkling minerals.  The tunnel continues - and -.**\n"
 block|}
@@ -6067,6 +6613,7 @@ block|,
 block|{
 literal|"You are in a tunnel."
 block|,
+block|{
 literal|273
 block|,
 literal|231
@@ -6082,6 +6629,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"It is very warm in here.  The smell of steam and hot rocks permeates the place.\n\ The cave continues - and -.**\n"
 block|}
@@ -6089,6 +6637,7 @@ block|,
 block|{
 literal|"You are at the bottom of a pit."
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -6104,6 +6653,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 literal|"At the top of the pit, a single star can be seen in the night sky.  There\n\ doesn't appear to be any way to get out without a rope.  I don't remember\n\ how we got here.****\n"
 block|}

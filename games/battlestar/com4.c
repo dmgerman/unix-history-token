@@ -53,22 +53,17 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_macro
+begin_function
+name|int
 name|take
-argument_list|(
-argument|from
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|from
+parameter_list|)
 name|unsigned
 name|int
 name|from
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|firstnumber
@@ -292,7 +287,7 @@ name|value
 operator|==
 name|MEDALION
 condition|)
-name|win
+name|bs_win
 operator|--
 expr_stmt|;
 block|}
@@ -989,24 +984,19 @@ name|firstnumber
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|throw
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|n
@@ -1345,7 +1335,9 @@ literal|"You are blown into shreds when your grenade explodes."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1386,24 +1378,19 @@ name|first
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|drop
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|firstnumber
@@ -1509,7 +1496,9 @@ literal|"The bomb explodes.  A blinding white light and immense concussion oblit
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1674,14 +1663,12 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|takeoff
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|wordnumber
 operator|=
@@ -1699,14 +1686,12 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|puton
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|wordnumber
 operator|=
@@ -1727,14 +1712,12 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|eat
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|firstnumber
@@ -2008,7 +1991,7 @@ name|firstnumber
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -47,12 +47,56 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_macro
-name|wordinit
-argument_list|()
-end_macro
+begin_decl_stmt
+specifier|static
+name|int
+name|hash
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_block
+begin_decl_stmt
+specifier|static
+name|void
+name|install
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|wlist
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|wlist
+modifier|*
+name|lookup
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|wordinit
+parameter_list|()
 block|{
 name|struct
 name|wlist
@@ -78,7 +122,7 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -195,22 +239,17 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|install
-argument_list|(
-argument|wp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|wp
+parameter_list|)
 name|struct
 name|wlist
 modifier|*
 name|wp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|hashval
@@ -264,14 +303,12 @@ name|string
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|parse
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|wlist
@@ -357,7 +394,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
