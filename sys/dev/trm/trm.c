@@ -5697,17 +5697,23 @@ name|pACB
 operator|->
 name|pActiveDCB
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pDCB
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"no active DCB"
+operator|)
+argument_list|)
+expr_stmt|;
 name|pSRB
 operator|=
 name|pDCB
 operator|->
 name|pActiveSRB
 expr_stmt|;
-if|if
-condition|(
-name|pDCB
-condition|)
-block|{
 if|if
 condition|(
 name|pDCB
@@ -5723,7 +5729,6 @@ argument_list|,
 name|pSRB
 argument_list|)
 expr_stmt|;
-block|}
 name|phase
 operator|=
 operator|(
