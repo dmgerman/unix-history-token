@@ -1382,6 +1382,12 @@ parameter_list|)
 value|(u)
 end_define
 
+begin_if
+if|#
+directive|if
+name|experimental
+end_if
+
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -1484,6 +1490,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -1508,12 +1519,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|cdevsw_add
-argument_list|(
-operator|&
-name|fb_cdevsw
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -1741,6 +1746,12 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|experimental
+end_if
 
 begin_function
 specifier|static
@@ -2194,12 +2205,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|experimental
-end_if
 
 begin_expr_stmt
 name|DEV_DRIVER_MODULE
