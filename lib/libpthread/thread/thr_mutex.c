@@ -2963,6 +2963,15 @@ name|ret
 operator|==
 literal|0
 operator|&&
+operator|(
+operator|*
+name|m
+operator|)
+operator|->
+name|m_owner
+operator|!=
+name|curthread
+operator|&&
 name|curthread
 operator|->
 name|timeout
