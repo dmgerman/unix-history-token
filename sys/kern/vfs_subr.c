@@ -1127,12 +1127,23 @@ begin_comment
 comment|/*  * Initialize the vnode management data structures.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXVNODES_MAX
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|MAX_SAFE_MAXVNODES
+name|MAXVNODES_MAX
 value|100000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1185,7 +1196,7 @@ if|if
 condition|(
 name|desiredvnodes
 operator|>
-name|MAX_SAFE_MAXVNODES
+name|MAXVNODES_MAX
 condition|)
 block|{
 if|if
@@ -1198,12 +1209,12 @@ literal|"Reducing kern.maxvnodes %d -> %d\n"
 argument_list|,
 name|desiredvnodes
 argument_list|,
-name|MAX_SAFE_MAXVNODES
+name|MAXVNODES_MAX
 argument_list|)
 expr_stmt|;
 name|desiredvnodes
 operator|=
-name|MAX_SAFE_MAXVNODES
+name|MAXVNODES_MAX
 expr_stmt|;
 block|}
 name|minvnodes
