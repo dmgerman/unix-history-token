@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stand.h>
+file|"stand.h"
 end_include
 
 begin_comment
