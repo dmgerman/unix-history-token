@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 119 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 126 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -92,7 +92,7 @@ argument_list|(
 literal|"NsRootInitialize"
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -118,12 +118,12 @@ operator|&
 name|AcpiGbl_RootNodeStruct
 expr_stmt|;
 comment|/* Enter the pre-defined names in the name table */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Entering predefined name table entries into namespace\n"
+literal|"Entering predefined entries into namespace\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -151,9 +151,6 @@ name|InitVal
 operator|->
 name|Name
 argument_list|,
-operator|(
-name|OBJECT_TYPE_INTERNAL
-operator|)
 name|InitVal
 operator|->
 name|Type
@@ -182,7 +179,7 @@ operator|)
 condition|)
 comment|/* Must be on same line for code converter */
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -193,7 +190,7 @@ name|InitVal
 operator|->
 name|Name
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -212,11 +209,8 @@ block|{
 comment|/*              * Entry requests an initial value, allocate a              * descriptor for it.              */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
-operator|(
-name|OBJECT_TYPE_INTERNAL
-operator|)
 name|InitVal
 operator|->
 name|Type
@@ -277,9 +271,6 @@ name|String
 operator|.
 name|Length
 operator|=
-operator|(
-name|UINT16
-operator|)
 name|STRLEN
 argument_list|(
 name|InitVal
@@ -294,7 +285,7 @@ name|String
 operator|.
 name|Pointer
 operator|=
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 operator|(
 name|ObjDesc
@@ -317,7 +308,7 @@ operator|.
 name|Pointer
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -465,7 +456,7 @@ name|Type
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -494,7 +485,7 @@ block|}
 block|}
 name|UnlockAndExit
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -523,7 +514,7 @@ name|NATIVE_CHAR
 modifier|*
 name|Pathname
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|OPERATING_MODE
@@ -578,10 +569,10 @@ name|NullNamePath
 init|=
 name|FALSE
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|TypeToCheckFor
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|ThisSearchType
 decl_stmt|;
 name|UINT32
@@ -651,12 +642,12 @@ name|Node
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsLookup: Null scope prefix, using root node (%p)\n"
+literal|"Null scope prefix, using root node (%p)\n"
 operator|,
 name|AcpiGbl_RootNode
 operator|)
@@ -678,10 +669,10 @@ operator|.
 name|Node
 expr_stmt|;
 block|}
-comment|/*      * This check is explicitly split provide relax the TypeToCheckFor      * conditions for BankFieldDefn.  Originally, both BankFieldDefn and      * DefFieldDefn caused TypeToCheckFor to be set to ACPI_TYPE_REGION,      * but the BankFieldDefn may also check for a Field definition as well      * as an OperationRegion.      */
+comment|/*      * This check is explicitly split to relax the TypeToCheckFor      * conditions for BankFieldDefn.  Originally, both BankFieldDefn and      * DefFieldDefn caused TypeToCheckFor to be set to ACPI_TYPE_REGION,      * but the BankFieldDefn may also check for a Field definition as well      * as an OperationRegion.      */
 if|if
 condition|(
-name|INTERNAL_TYPE_DEF_FIELD_DEFN
+name|INTERNAL_TYPE_FIELD_DEFN
 operator|==
 name|Type
 condition|)
@@ -734,12 +725,12 @@ name|ThisNode
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsLookup: Null Pathname (Zero segments),  Flags=%x\n"
+literal|"Null Pathname (Zero segments),  Flags=%x\n"
 operator|,
 name|Flags
 operator|)
@@ -766,12 +757,12 @@ comment|/* point to segment part */
 name|Pathname
 operator|++
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsLookup: Searching from root [%p]\n"
+literal|"Searching from root [%p]\n"
 operator|,
 name|CurrentNode
 operator|)
@@ -803,12 +794,12 @@ name|CurrentNode
 operator|=
 name|PrefixNode
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsLookup: Searching relative to pfx scope [%p]\n"
+literal|"Searching relative to pfx scope [%p]\n"
 operator|,
 name|PrefixNode
 operator|)
@@ -878,12 +869,12 @@ comment|/* point to first segment */
 name|Pathname
 operator|++
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsLookup: Dual Pathname (2 segments, Flags=%X)\n"
+literal|"Dual Pathname (2 segments, Flags=%X)\n"
 operator|,
 name|Flags
 operator|)
@@ -916,12 +907,12 @@ comment|/* point to first segment */
 name|Pathname
 operator|++
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsLookup: Multi Pathname (%d Segments, Flags=%X) \n"
+literal|"Multi Pathname (%d Segments, Flags=%X) \n"
 operator|,
 name|NumSegments
 operator|,
@@ -937,12 +928,12 @@ name|NumSegments
 operator|=
 literal|1
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsLookup: Simple Pathname (1 segment, Flags=%X)\n"
+literal|"Simple Pathname (1 segment, Flags=%X)\n"
 operator|,
 name|Flags
 operator|)
@@ -954,12 +945,12 @@ directive|ifdef
 name|ACPI_DEBUG
 comment|/* TBD: [Restructure] Make this a procedure */
 comment|/* Debug only: print the entire name that we are about to lookup */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsLookup: ["
+literal|"["
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1082,12 +1073,12 @@ name|AE_NOT_FOUND
 condition|)
 block|{
 comment|/* Name not found in ACPI namespace  */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsLookup: Name [%4.4s] not found in scope %X\n"
+literal|"Name [%4.4s] not found in scope %X\n"
 operator|,
 operator|&
 name|SimpleName
@@ -1221,12 +1212,12 @@ operator|)
 condition|)
 block|{
 comment|/*              * More segments or the type implies enclosed scope,              * and the next scope has not been allocated.              */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsLookup: Load mode=%X  ThisNode=%X\n"
+literal|"Load mode=%X  ThisNode=%X\n"
 operator|,
 name|InterpreterMode
 operator|,
@@ -1315,12 +1306,12 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsLookup: Set global scope to %p\n"
+literal|"Set global scope to %p\n"
 operator|,
 name|ScopeToPush
 operator|)

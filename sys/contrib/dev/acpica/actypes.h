@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 165 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 178 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -731,6 +731,10 @@ name|ACPI_ROOT_OBJECT
 value|(ACPI_HANDLE)(-1)
 end_define
 
+begin_comment
+comment|/*  * Initialization sequence  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -781,7 +785,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/*  * Sleep state constants  */
+comment|/*  * System states  */
 end_comment
 
 begin_define
@@ -842,6 +846,66 @@ define|#
 directive|define
 name|ACPI_S_STATES_MAX
 value|ACPI_STATE_S5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_S_STATE_COUNT
+value|6
+end_define
+
+begin_comment
+comment|/*  * Device power states  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_STATE_D0
+value|(UINT8) 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STATE_D1
+value|(UINT8) 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STATE_D2
+value|(UINT8) 2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STATE_D3
+value|(UINT8) 3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_D_STATES_MAX
+value|ACPI_STATE_D3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_D_STATE_COUNT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STATE_UNKNOWN
+value|(UINT8) 0xFF
 end_define
 
 begin_comment
@@ -932,188 +996,9 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|UINT8
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_ANY
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_INTEGER
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_STRING
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_BUFFER
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_PACKAGE
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_FIELD_UNIT
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DEVICE
-value|0x00000020
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_EVENT
-value|0x00000040
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_METHOD
-value|0x00000080
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_MUTEX
-value|0x00000100
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_REGION
-value|0x00000200
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_POWER
-value|0x00000400
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_PROCESSOR
-value|0x00000800
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_THERMAL
-value|0x00001000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_BUFFER_FIELD
-value|0x00002000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DDB_HANDLE
-value|0x00004000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DEBUG_OBJECT
-value|0x00008000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_REFERENCE
-value|0x00010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_RESOURCE
-value|0x00020000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_COMPUTE_DATA
-value|(ACPI_BTYPE_INTEGER | ACPI_BTYPE_STRING | ACPI_BTYPE_BUFFER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DATA
-value|(ACPI_BTYPE_COMPUTE_DATA  | ACPI_BTYPE_PACKAGE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DATA_REFERENCE
-value|(ACPI_BTYPE_DATA | ACPI_BTYPE_REFERENCE | ACPI_BTYPE_DDB_HANDLE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DEVICE_OBJECTS
-value|(ACPI_BTYPE_DEVICE | ACPI_BTYPE_THERMAL | ACPI_BTYPE_PROCESSOR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_OBJECTS_AND_REFS
-value|0x00017FFF
-end_define
-
-begin_comment
-comment|/* ARG or LOCAL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_ALL_OBJECTS
-value|0x00007FFF
-end_define
 
 begin_define
 define|#
@@ -1323,7 +1208,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_DEF_FIELD
+name|INTERNAL_TYPE_REGION_FIELD
 value|17
 end_define
 
@@ -1422,7 +1307,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_DEF_FIELD_DEFN
+name|INTERNAL_TYPE_FIELD_DEFN
 value|25
 end_define
 
@@ -1460,7 +1345,7 @@ value|28
 end_define
 
 begin_comment
-comment|/* 0x1C  OpCode, multiple Code */
+comment|/* 0x1C  */
 end_comment
 
 begin_define
@@ -1471,7 +1356,7 @@ value|29
 end_define
 
 begin_comment
-comment|/* 0x1D  multiple Code */
+comment|/* 0x1D  */
 end_comment
 
 begin_define
@@ -1482,7 +1367,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* 0x1E  OpCode, multiple Code */
+comment|/* 0x1E  */
 end_comment
 
 begin_define
@@ -1537,6 +1422,189 @@ define|#
 directive|define
 name|ACPI_TYPE_NOT_FOUND
 value|0xFF
+end_define
+
+begin_comment
+comment|/*  * Bitmapped ACPI types  * Used internally only  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_ANY
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_INTEGER
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_STRING
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_BUFFER
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_PACKAGE
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_FIELD_UNIT
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_DEVICE
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_EVENT
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_METHOD
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_MUTEX
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_REGION
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_POWER
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_PROCESSOR
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_THERMAL
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_BUFFER_FIELD
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_DDB_HANDLE
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_DEBUG_OBJECT
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_REFERENCE
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_RESOURCE
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_COMPUTE_DATA
+value|(ACPI_BTYPE_INTEGER | ACPI_BTYPE_STRING | ACPI_BTYPE_BUFFER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_DATA
+value|(ACPI_BTYPE_COMPUTE_DATA  | ACPI_BTYPE_PACKAGE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_DATA_REFERENCE
+value|(ACPI_BTYPE_DATA | ACPI_BTYPE_REFERENCE | ACPI_BTYPE_DDB_HANDLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_DEVICE_OBJECTS
+value|(ACPI_BTYPE_DEVICE | ACPI_BTYPE_THERMAL | ACPI_BTYPE_PROCESSOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_OBJECTS_AND_REFS
+value|0x0001FFFF
+end_define
+
+begin_comment
+comment|/* ARG or LOCAL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_ALL_OBJECTS
+value|0x0000FFFF
 end_define
 
 begin_comment
@@ -1631,7 +1699,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NUM_FIXED_EVENTS
+name|ACPI_NUM_FIXED_EVENTS
 value|(ACPI_EVENT_TYPE) 7
 end_define
 
@@ -1652,7 +1720,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NUM_GPE
+name|ACPI_NUM_GPE
 value|256
 end_define
 
@@ -1741,57 +1809,57 @@ end_comment
 begin_typedef
 typedef|typedef
 name|UINT8
-name|ACPI_ADDRESS_SPACE_TYPE
+name|ACPI_ADR_SPACE_TYPE
 typedef|;
 end_typedef
 
 begin_define
 define|#
 directive|define
-name|ADDRESS_SPACE_SYSTEM_MEMORY
-value|(ACPI_ADDRESS_SPACE_TYPE) 0
+name|ACPI_ADR_SPACE_SYSTEM_MEMORY
+value|(ACPI_ADR_SPACE_TYPE) 0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADDRESS_SPACE_SYSTEM_IO
-value|(ACPI_ADDRESS_SPACE_TYPE) 1
+name|ACPI_ADR_SPACE_SYSTEM_IO
+value|(ACPI_ADR_SPACE_TYPE) 1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADDRESS_SPACE_PCI_CONFIG
-value|(ACPI_ADDRESS_SPACE_TYPE) 2
+name|ACPI_ADR_SPACE_PCI_CONFIG
+value|(ACPI_ADR_SPACE_TYPE) 2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADDRESS_SPACE_EC
-value|(ACPI_ADDRESS_SPACE_TYPE) 3
+name|ACPI_ADR_SPACE_EC
+value|(ACPI_ADR_SPACE_TYPE) 3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADDRESS_SPACE_SMBUS
-value|(ACPI_ADDRESS_SPACE_TYPE) 4
+name|ACPI_ADR_SPACE_SMBUS
+value|(ACPI_ADR_SPACE_TYPE) 4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADDRESS_SPACE_CMOS
-value|(ACPI_ADDRESS_SPACE_TYPE) 5
+name|ACPI_ADR_SPACE_CMOS
+value|(ACPI_ADR_SPACE_TYPE) 5
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADDRESS_SPACE_PCI_BAR_TARGET
-value|(ACPI_ADDRESS_SPACE_TYPE) 6
+name|ACPI_ADR_SPACE_PCI_BAR_TARGET
+value|(ACPI_ADR_SPACE_TYPE) 6
 end_define
 
 begin_comment
@@ -1894,7 +1962,7 @@ decl_stmt|;
 name|UINT32
 name|ProcId
 decl_stmt|;
-name|UINT32
+name|ACPI_IO_ADDRESS
 name|PblkAddress
 decl_stmt|;
 name|UINT32
@@ -2174,7 +2242,7 @@ typedef|typedef
 name|UINT32
 function_decl|(
 modifier|*
-name|FIXED_EVENT_HANDLER
+name|ACPI_EVENT_HANDLER
 function_decl|)
 parameter_list|(
 name|void
@@ -2189,7 +2257,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|GPE_HANDLER
+name|ACPI_GPE_HANDLER
 function_decl|)
 parameter_list|(
 name|void
@@ -2204,7 +2272,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|NOTIFY_HANDLER
+name|ACPI_NOTIFY_HANDLER
 function_decl|)
 parameter_list|(
 name|ACPI_HANDLE
@@ -2220,17 +2288,21 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/* Address Spaces (Operation Regions */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ADDRESS_SPACE_READ
+name|ACPI_READ_ADR_SPACE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADDRESS_SPACE_WRITE
+name|ACPI_WRITE_ADR_SPACE
 value|2
 end_define
 
@@ -2239,7 +2311,7 @@ typedef|typedef
 name|ACPI_STATUS
 function_decl|(
 modifier|*
-name|ADDRESS_SPACE_HANDLER
+name|ACPI_ADR_SPACE_HANDLER
 function_decl|)
 parameter_list|(
 name|UINT32
@@ -2270,7 +2342,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DEFAULT_HANDLER
-value|((ADDRESS_SPACE_HANDLER) NULL)
+value|((ACPI_ADR_SPACE_HANDLER) NULL)
 end_define
 
 begin_typedef
@@ -2278,7 +2350,7 @@ typedef|typedef
 name|ACPI_STATUS
 function_decl|(
 modifier|*
-name|ADDRESS_SPACE_SETUP
+name|ACPI_ADR_SPACE_SETUP
 function_decl|)
 parameter_list|(
 name|ACPI_HANDLE
@@ -2318,7 +2390,7 @@ typedef|typedef
 name|ACPI_STATUS
 function_decl|(
 modifier|*
-name|WALK_CALLBACK
+name|ACPI_WALK_CALLBACK
 function_decl|)
 parameter_list|(
 name|ACPI_HANDLE
@@ -2469,7 +2541,7 @@ name|UINT32
 name|DevFunc
 decl_stmt|;
 block|}
-name|PCI_HANDLER_CONTEXT
+name|ACPI_PCI_SPACE_CONTEXT
 typedef|;
 end_typedef
 
@@ -2488,7 +2560,7 @@ name|UINT32
 name|MappedLength
 decl_stmt|;
 block|}
-name|MEM_HANDLER_CONTEXT
+name|ACPI_MEM_SPACE_CONTEXT
 typedef|;
 end_typedef
 
@@ -2845,7 +2917,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|IRQ_RESOURCE
+name|ACPI_RESOURCE_IRQ
 typedef|;
 end_typedef
 
@@ -2872,7 +2944,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|DMA_RESOURCE
+name|ACPI_RESOURCE_DMA
 typedef|;
 end_typedef
 
@@ -2887,7 +2959,7 @@ name|UINT32
 name|PerformanceRobustness
 decl_stmt|;
 block|}
-name|START_DEPENDENT_FUNCTIONS_RESOURCE
+name|ACPI_RESOURCE_START_DPF
 typedef|;
 end_typedef
 
@@ -2915,7 +2987,7 @@ name|UINT32
 name|RangeLength
 decl_stmt|;
 block|}
-name|IO_RESOURCE
+name|ACPI_RESOURCE_IO
 typedef|;
 end_typedef
 
@@ -2930,7 +3002,7 @@ name|UINT32
 name|RangeLength
 decl_stmt|;
 block|}
-name|FIXED_IO_RESOURCE
+name|ACPI_RESOURCE_FIXED_IO
 typedef|;
 end_typedef
 
@@ -2948,7 +3020,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|VENDOR_RESOURCE
+name|ACPI_RESOURCE_VENDOR
 typedef|;
 end_typedef
 
@@ -2972,7 +3044,7 @@ name|UINT32
 name|RangeLength
 decl_stmt|;
 block|}
-name|MEMORY24_RESOURCE
+name|ACPI_RESOURCE_MEM24
 typedef|;
 end_typedef
 
@@ -2996,7 +3068,7 @@ name|UINT32
 name|RangeLength
 decl_stmt|;
 block|}
-name|MEMORY32_RESOURCE
+name|ACPI_RESOURCE_MEM32
 typedef|;
 end_typedef
 
@@ -3014,7 +3086,7 @@ name|UINT32
 name|RangeLength
 decl_stmt|;
 block|}
-name|FIXED_MEMORY32_RESOURCE
+name|ACPI_RESOURCE_FIXED_MEM32
 typedef|;
 end_typedef
 
@@ -3029,7 +3101,7 @@ name|UINT16
 name|ReadWriteAttribute
 decl_stmt|;
 block|}
-name|MEMORY_ATTRIBUTE
+name|ACPI_MEMORY_ATTRIBUTE
 typedef|;
 end_typedef
 
@@ -3044,7 +3116,7 @@ name|UINT16
 name|Reserved
 decl_stmt|;
 block|}
-name|IO_ATTRIBUTE
+name|ACPI_IO_ATTRIBUTE
 typedef|;
 end_typedef
 
@@ -3059,7 +3131,7 @@ name|UINT16
 name|Reserved2
 decl_stmt|;
 block|}
-name|BUS_ATTRIBUTE
+name|ACPI_BUS_ATTRIBUTE
 typedef|;
 end_typedef
 
@@ -3067,17 +3139,36 @@ begin_typedef
 typedef|typedef
 union|union
 block|{
-name|MEMORY_ATTRIBUTE
+name|ACPI_MEMORY_ATTRIBUTE
 name|Memory
 decl_stmt|;
-name|IO_ATTRIBUTE
+name|ACPI_IO_ATTRIBUTE
 name|Io
 decl_stmt|;
-name|BUS_ATTRIBUTE
+name|ACPI_BUS_ATTRIBUTE
 name|Bus
 decl_stmt|;
 block|}
-name|ATTRIBUTE_DATA
+name|ACPI_RESOURCE_ATTRIBUTE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|UINT32
+name|Index
+decl_stmt|;
+name|UINT32
+name|StringLength
+decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|StringPtr
+decl_stmt|;
+block|}
+name|ACPI_RESOURCE_SOURCE
 typedef|;
 end_typedef
 
@@ -3100,7 +3191,7 @@ decl_stmt|;
 name|UINT32
 name|MaxAddressFixed
 decl_stmt|;
-name|ATTRIBUTE_DATA
+name|ACPI_RESOURCE_ATTRIBUTE
 name|Attribute
 decl_stmt|;
 name|UINT32
@@ -3118,20 +3209,11 @@ decl_stmt|;
 name|UINT32
 name|AddressLength
 decl_stmt|;
-name|UINT32
-name|ResourceSourceIndex
-decl_stmt|;
-name|UINT32
-name|ResourceSourceStringLength
-decl_stmt|;
-name|NATIVE_CHAR
+name|ACPI_RESOURCE_SOURCE
 name|ResourceSource
-index|[
-literal|1
-index|]
 decl_stmt|;
 block|}
-name|ADDRESS16_RESOURCE
+name|ACPI_RESOURCE_ADDRESS16
 typedef|;
 end_typedef
 
@@ -3154,7 +3236,7 @@ decl_stmt|;
 name|UINT32
 name|MaxAddressFixed
 decl_stmt|;
-name|ATTRIBUTE_DATA
+name|ACPI_RESOURCE_ATTRIBUTE
 name|Attribute
 decl_stmt|;
 name|UINT32
@@ -3172,20 +3254,56 @@ decl_stmt|;
 name|UINT32
 name|AddressLength
 decl_stmt|;
-name|UINT32
-name|ResourceSourceIndex
-decl_stmt|;
-name|UINT32
-name|ResourceSourceStringLength
-decl_stmt|;
-name|NATIVE_CHAR
+name|ACPI_RESOURCE_SOURCE
 name|ResourceSource
-index|[
-literal|1
-index|]
 decl_stmt|;
 block|}
-name|ADDRESS32_RESOURCE
+name|ACPI_RESOURCE_ADDRESS32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|UINT32
+name|ResourceType
+decl_stmt|;
+name|UINT32
+name|ProducerConsumer
+decl_stmt|;
+name|UINT32
+name|Decode
+decl_stmt|;
+name|UINT32
+name|MinAddressFixed
+decl_stmt|;
+name|UINT32
+name|MaxAddressFixed
+decl_stmt|;
+name|ACPI_RESOURCE_ATTRIBUTE
+name|Attribute
+decl_stmt|;
+name|UINT64
+name|Granularity
+decl_stmt|;
+name|UINT64
+name|MinAddressRange
+decl_stmt|;
+name|UINT64
+name|MaxAddressRange
+decl_stmt|;
+name|UINT64
+name|AddressTranslationOffset
+decl_stmt|;
+name|UINT64
+name|AddressLength
+decl_stmt|;
+name|ACPI_RESOURCE_SOURCE
+name|ResourceSource
+decl_stmt|;
+block|}
+name|ACPI_RESOURCE_ADDRESS64
 typedef|;
 end_typedef
 
@@ -3208,62 +3326,133 @@ decl_stmt|;
 name|UINT32
 name|NumberOfInterrupts
 decl_stmt|;
+name|ACPI_RESOURCE_SOURCE
+name|ResourceSource
+decl_stmt|;
 name|UINT32
 name|Interrupts
 index|[
 literal|1
 index|]
 decl_stmt|;
-name|UINT32
-name|ResourceSourceIndex
-decl_stmt|;
-name|UINT32
-name|ResourceSourceStringLength
-decl_stmt|;
-name|NATIVE_CHAR
-name|ResourceSource
-index|[
-literal|1
-index|]
-decl_stmt|;
 block|}
-name|EXTENDED_IRQ_RESOURCE
+name|ACPI_RESOURCE_EXT_IRQ
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* ACPI_RESOURCE_TYPEs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_IRQ
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_DMA
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_START_DPF
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_END_DPF
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_IO
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_FIXED_IO
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_VENDOR
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_END_TAG
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_MEM24
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_MEM32
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_FIXED_MEM32
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_ADDRESS16
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_ADDRESS32
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_ADDRESS64
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RSTYPE_EXT_IRQ
+value|14
+end_define
+
 begin_typedef
 typedef|typedef
-enum|enum
-block|{
-name|Irq
-block|,
-name|Dma
-block|,
-name|StartDependentFunctions
-block|,
-name|EndDependentFunctions
-block|,
-name|Io
-block|,
-name|FixedIo
-block|,
-name|VendorSpecific
-block|,
-name|EndTag
-block|,
-name|Memory24
-block|,
-name|Memory32
-block|,
-name|FixedMemory32
-block|,
-name|Address16
-block|,
-name|Address32
-block|,
-name|ExtendedIrq
-block|}
-name|RESOURCE_TYPE
+name|UINT32
+name|ACPI_RESOURCE_TYPE
 typedef|;
 end_typedef
 
@@ -3271,78 +3460,95 @@ begin_typedef
 typedef|typedef
 union|union
 block|{
-name|IRQ_RESOURCE
+name|ACPI_RESOURCE_IRQ
 name|Irq
 decl_stmt|;
-name|DMA_RESOURCE
+name|ACPI_RESOURCE_DMA
 name|Dma
 decl_stmt|;
-name|START_DEPENDENT_FUNCTIONS_RESOURCE
-name|StartDependentFunctions
+name|ACPI_RESOURCE_START_DPF
+name|StartDpf
 decl_stmt|;
-name|IO_RESOURCE
+name|ACPI_RESOURCE_IO
 name|Io
 decl_stmt|;
-name|FIXED_IO_RESOURCE
+name|ACPI_RESOURCE_FIXED_IO
 name|FixedIo
 decl_stmt|;
-name|VENDOR_RESOURCE
+name|ACPI_RESOURCE_VENDOR
 name|VendorSpecific
 decl_stmt|;
-name|MEMORY24_RESOURCE
+name|ACPI_RESOURCE_MEM24
 name|Memory24
 decl_stmt|;
-name|MEMORY32_RESOURCE
+name|ACPI_RESOURCE_MEM32
 name|Memory32
 decl_stmt|;
-name|FIXED_MEMORY32_RESOURCE
+name|ACPI_RESOURCE_FIXED_MEM32
 name|FixedMemory32
 decl_stmt|;
-name|ADDRESS16_RESOURCE
+name|ACPI_RESOURCE_ADDRESS16
 name|Address16
 decl_stmt|;
-name|ADDRESS32_RESOURCE
+name|ACPI_RESOURCE_ADDRESS32
 name|Address32
 decl_stmt|;
-name|EXTENDED_IRQ_RESOURCE
+name|ACPI_RESOURCE_ADDRESS64
+name|Address64
+decl_stmt|;
+name|ACPI_RESOURCE_EXT_IRQ
 name|ExtendedIrq
 decl_stmt|;
 block|}
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|_resource_tag
+name|AcpiResource
 block|{
-name|RESOURCE_TYPE
+name|ACPI_RESOURCE_TYPE
 name|Id
 decl_stmt|;
 name|UINT32
 name|Length
 decl_stmt|;
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 name|Data
 decl_stmt|;
 block|}
-name|RESOURCE
+name|ACPI_RESOURCE
 typedef|;
 end_typedef
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_LENGTH
+name|ACPI_RESOURCE_LENGTH
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_LENGTH_NO_DATA
+name|ACPI_RESOURCE_LENGTH_NO_DATA
 value|8
+end_define
+
+begin_comment
+comment|/* Id + Length fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_RESOURCE
+parameter_list|(
+name|Type
+parameter_list|)
+value|(ACPI_RESOURCE_LENGTH_NO_DATA + sizeof (Type))
 end_define
 
 begin_define
@@ -3352,7 +3558,7 @@ name|NEXT_RESOURCE
 parameter_list|(
 name|Res
 parameter_list|)
-value|(RESOURCE*)((UINT8*) Res + Res->length)
+value|(ACPI_RESOURCE *)((UINT8 *) Res + Res->length)
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 37 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 40 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DEBUGGER
+value|ACPI_DEBUGGER
 end_define
 
 begin_macro
@@ -738,7 +738,7 @@ name|PARSER_ONLY
 case|case
 name|CMD_ALLOCATIONS
 case|:
-name|AcpiCmDumpAllocationInfo
+name|AcpiUtDumpAllocationInfo
 argument_list|()
 expr_stmt|;
 break|break;
@@ -809,7 +809,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%16.16s % 10ld% 10ld\n"
 argument_list|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|i
 argument_list|)
@@ -1125,9 +1125,9 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%-20s:       % 7ld\n"
+literal|"%-28s:       % 7ld\n"
 argument_list|,
-name|AcpiCmGetMutexName
+name|AcpiUtGetMutexName
 argument_list|(
 name|i
 argument_list|)
@@ -1202,11 +1202,11 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"FieldUnit        %3d\n"
+literal|"BufferField      %3d\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ACPI_OBJECT_FIELD_UNIT
+name|ACPI_OBJECT_BUFFER_FIELD
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1292,11 +1292,11 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Field            %3d\n"
+literal|"RegionField      %3d\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ACPI_OBJECT_FIELD
+name|ACPI_OBJECT_REGION_FIELD
 argument_list|)
 argument_list|)
 expr_stmt|;

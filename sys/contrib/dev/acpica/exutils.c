@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amutils - interpreter/scanner utilities  *              $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMUTILS_C__
+name|__EXUTILS_C__
 end_define
 
 begin_include
@@ -53,33 +53,67 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amutils"
+literal|"exutils"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlEnterInterpreter  *  * PARAMETERS:  None  *  * DESCRIPTION: Enter the interpreter execution region  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEnterInterpreter  *  * PARAMETERS:  None  *  * DESCRIPTION: Enter the interpreter execution region  *              TBD: should be a macro  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiExEnterInterpreter
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+literal|"ExEnterInterpreter"
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_EXECUTE
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExitInterpreter  *  * PARAMETERS:  None  *  * DESCRIPTION: Exit the interpreter execution region  *  * Cases where the interpreter is unlocked:  *      1) Completion of the execution of a control method  *      2) Method blocked on a Sleep() AML opcode  *      3) Method blocked on an Acquire() AML opcode  *      4) Method blocked on a Wait() AML opcode  *      5) Method blocked to acquire the global lock  *      6) Method blocked to execute a serialized control method that is  *          already executing  *      7) About to invoke a user-installed opregion handler  *  *              TBD: should be a macro  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiAmlEnterInterpreter
+name|AcpiExExitInterpreter
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlEnterInterpreter"
+literal|"ExExitInterpreter"
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_EXECUTE
 argument_list|)
@@ -90,38 +124,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExitInterpreter  *  * PARAMETERS:  None  *  * DESCRIPTION: Exit the interpreter execution region  *  * Cases where the interpreter is unlocked:  *      1) Completion of the execution of a control method  *      2) Method blocked on a Sleep() AML opcode  *      3) Method blocked on an Acquire() AML opcode  *      4) Method blocked on a Wait() AML opcode  *      5) Method blocked to acquire the global lock  *      6) Method blocked to execute a serialized control method that is  *          already executing  *      7) About to invoke a user-installed opregion handler  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiAmlExitInterpreter
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|FUNCTION_TRACE
-argument_list|(
-literal|"AmlExitInterpreter"
-argument_list|)
-expr_stmt|;
-name|AcpiCmReleaseMutex
-argument_list|(
-name|ACPI_MTX_EXECUTE
-argument_list|)
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlValidateObjectType  *  * PARAMETERS:  Type            Object type to validate  *  * DESCRIPTION: Determine if a type is a valid ACPI object type  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExValidateObjectType  *  * PARAMETERS:  Type            Object type to validate  *  * DESCRIPTION: Determine if a type is a valid ACPI object type  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|BOOLEAN
-name|AcpiAmlValidateObjectType
+name|AcpiExValidateObjectType
 parameter_list|(
 name|ACPI_OBJECT_TYPE
 name|Type
@@ -161,12 +169,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlTruncateFor32bitTable  *  * PARAMETERS:  ObjDesc         - Object to be truncated  *              WalkState       - Current walk state  *                                (A method must be executing)  *  * RETURN:      none  *  * DESCRIPTION: Truncate a number to 32-bits if the currently executing method  *              belongs to a 32-bit ACPI table.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExTruncateFor32bitTable  *  * PARAMETERS:  ObjDesc         - Object to be truncated  *              WalkState       - Current walk state  *                                (A method must be executing)  *  * RETURN:      none  *  * DESCRIPTION: Truncate a number to 32-bits if the currently executing method  *              belongs to a 32-bit ACPI table.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiAmlTruncateFor32bitTable
+name|AcpiExTruncateFor32bitTable
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -233,12 +241,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlAcquireGlobalLock  *  * PARAMETERS:  Rule            - Lock rule: AlwaysLock, NeverLock  *  * RETURN:      TRUE/FALSE indicating whether the lock was actually acquired  *  * DESCRIPTION: Obtain the global lock and keep track of this fact via two  *              methods.  A global variable keeps the state of the lock, and  *              the state is returned to the caller.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireGlobalLock  *  * PARAMETERS:  Rule            - Lock rule: AlwaysLock, NeverLock  *  * RETURN:      TRUE/FALSE indicating whether the lock was actually acquired  *  * DESCRIPTION: Obtain the global lock and keep track of this fact via two  *              methods.  A global variable keeps the state of the lock, and  *              the state is returned to the caller.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|BOOLEAN
-name|AcpiAmlAcquireGlobalLock
+name|AcpiExAcquireGlobalLock
 parameter_list|(
 name|UINT32
 name|Rule
@@ -254,10 +262,10 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlAcquireGlobalLock"
+literal|"ExAcquireGlobalLock"
 argument_list|)
 expr_stmt|;
-comment|/*  Only attempt lock if the Rule says so */
+comment|/* Only attempt lock if the Rule says so */
 if|if
 condition|(
 name|Rule
@@ -268,30 +276,12 @@ operator|)
 name|GLOCK_ALWAYS_LOCK
 condition|)
 block|{
-comment|/*  OK to get the lock   */
+comment|/* We should attempt to get the lock */
 name|Status
 operator|=
 name|AcpiEvAcquireGlobalLock
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"Get Global Lock Failed!!\n"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ACPI_SUCCESS
@@ -300,13 +290,26 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiGbl_GlobalLockSet
-operator|=
-name|TRUE
-expr_stmt|;
 name|Locked
 operator|=
 name|TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"Could not acquire Global Lock, %s\n"
+operator|,
+name|AcpiUtFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -319,12 +322,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlReleaseGlobalLock  *  * PARAMETERS:  LockedByMe      - Return value from corresponding call to  *                                AcquireGlobalLock.  *  * RETURN:      Status  *  * DESCRIPTION: Release the global lock if it is locked.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseGlobalLock  *  * PARAMETERS:  LockedByMe      - Return value from corresponding call to  *                                AcquireGlobalLock.  *  * RETURN:      Status  *  * DESCRIPTION: Release the global lock if it is locked.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlReleaseGlobalLock
+name|AcpiExReleaseGlobalLock
 parameter_list|(
 name|BOOLEAN
 name|LockedByMe
@@ -332,7 +335,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlReleaseGlobalLock"
+literal|"ExReleaseGlobalLock"
 argument_list|)
 expr_stmt|;
 comment|/* Only attempt unlock if the caller locked it */
@@ -341,33 +344,10 @@ condition|(
 name|LockedByMe
 condition|)
 block|{
-comment|/* Double check against the global flag */
-if|if
-condition|(
-name|AcpiGbl_GlobalLockSet
-condition|)
-block|{
 comment|/* OK, now release the lock */
 name|AcpiEvReleaseGlobalLock
 argument_list|()
 expr_stmt|;
-name|AcpiGbl_GlobalLockSet
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
-else|else
-block|{
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"Global lock was not set\n"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|return_ACPI_STATUS
 argument_list|(
@@ -378,12 +358,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlDigitsNeeded  *  * PARAMETERS:  val             - Value to be represented  *              base            - Base of representation  *  * RETURN:      the number of digits needed to represent val in base  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDigitsNeeded  *  * PARAMETERS:  val             - Value to be represented  *              base            - Base of representation  *  * RETURN:      the number of digits needed to represent val in base  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|UINT32
-name|AcpiAmlDigitsNeeded
+name|AcpiExDigitsNeeded
 parameter_list|(
 name|ACPI_INTEGER
 name|val
@@ -399,7 +379,7 @@ literal|0
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlDigitsNeeded"
+literal|"ExDigitsNeeded"
 argument_list|)
 expr_stmt|;
 if|if
@@ -412,24 +392,19 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AmlDigitsNeeded: Internal error - Invalid base\n"
+literal|"ExDigitsNeeded: Internal error - Invalid base\n"
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
+comment|/*          * ACPI_INTEGER is unsigned, which is why we don't worry about the '-'          */
 for|for
 control|(
 name|NumDigits
 operator|=
 literal|1
-operator|+
-operator|(
-name|val
-operator|<
-literal|0
-operator|)
 init|;
 operator|(
 name|val
@@ -571,12 +546,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlEisaIdToString  *  * PARAMETERS:  NumericId       - EISA ID to be converted  *              OutString       - Where to put the converted string (8 bytes)  *  * DESCRIPTION: Convert a numeric EISA ID to string representation  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEisaIdToString  *  * PARAMETERS:  NumericId       - EISA ID to be converted  *              OutString       - Where to put the converted string (8 bytes)  *  * DESCRIPTION: Convert a numeric EISA ID to string representation  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlEisaIdToString
+name|AcpiExEisaIdToString
 parameter_list|(
 name|UINT32
 name|NumericId
@@ -739,12 +714,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlUnsignedIntegerToString  *  * PARAMETERS:  Value           - Value to be converted  *              OutString       - Where to put the converted string (8 bytes)  *  * RETURN:      Convert a number to string representation  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExUnsignedIntegerToString  *  * PARAMETERS:  Value           - Value to be converted  *              OutString       - Where to put the converted string (8 bytes)  *  * RETURN:      Convert a number to string representation  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlUnsignedIntegerToString
+name|AcpiExUnsignedIntegerToString
 parameter_list|(
 name|ACPI_INTEGER
 name|Value
@@ -762,7 +737,7 @@ name|DigitsNeeded
 decl_stmt|;
 name|DigitsNeeded
 operator|=
-name|AcpiAmlDigitsNeeded
+name|AcpiExDigitsNeeded
 argument_list|(
 name|Value
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amresop - AML Interpreter operand/object resolution  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 29 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMRESOP_C__
+name|__EXRESOP_C__
 end_define
 
 begin_include
@@ -65,23 +65,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amresop"
+literal|"exresop"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlCheckObjectType  *  * PARAMETERS:  TypeNeeded          Object type needed  *              ThisType            Actual object type  *              Object              Object pointer  *  * RETURN:      Status  *  * DESCRIPTION: Check required type against actual type  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExCheckObjectType  *  * PARAMETERS:  TypeNeeded          Object type needed  *              ThisType            Actual object type  *              Object              Object pointer  *  * RETURN:      Status  *  * DESCRIPTION: Check required type against actual type  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlCheckObjectType
+name|AcpiExCheckObjectType
 parameter_list|(
 name|ACPI_OBJECT_TYPE
 name|TypeNeeded
@@ -120,14 +120,14 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Needed [%s], found [%s] %p\n"
+literal|"ExCheckObjectType: Needed [%s], found [%s] %p\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|TypeNeeded
 argument_list|)
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|ThisType
 argument_list|)
@@ -151,12 +151,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlResolveOperands  *  * PARAMETERS:  Opcode              Opcode being interpreted  *              StackPtr            Top of operand stack  *  * RETURN:      Status  *  * DESCRIPTION: Convert stack entries to required types  *  *      Each nibble in ArgTypes represents one required operand  *      and indicates the required Type:  *  *      The corresponding stack entry will be converted to the  *      required type if possible, else return an exception  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveOperands  *  * PARAMETERS:  Opcode              Opcode being interpreted  *              StackPtr            Top of operand stack  *  * RETURN:      Status  *  * DESCRIPTION: Convert stack entries to required types  *  *      Each nibble in ArgTypes represents one required operand  *      and indicates the required Type:  *  *      The corresponding stack entry will be converted to the  *      required type if possible, else return an exception  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -183,8 +183,9 @@ decl_stmt|;
 name|UINT8
 name|ObjectType
 decl_stmt|;
-name|ACPI_HANDLE
-name|TempHandle
+name|void
+modifier|*
+name|TempNode
 decl_stmt|;
 name|UINT32
 name|ArgTypes
@@ -201,7 +202,7 @@ name|TypeNeeded
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-literal|"AmlResolveOperands"
+literal|"ExResolveOperands"
 argument_list|,
 name|Opcode
 argument_list|)
@@ -242,12 +243,12 @@ operator|==
 name|ARGI_INVALID_OPCODE
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Internal error - %X is not a valid AML opcode\n"
+literal|"Internal - %X is not a valid AML opcode\n"
 operator|,
 name|Opcode
 operator|)
@@ -259,12 +260,12 @@ name|AE_AML_INTERNAL
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Opcode %X OperandTypes=%X \n"
+literal|"Opcode %X OperandTypes=%X \n"
 operator|,
 name|Opcode
 operator|,
@@ -272,7 +273,7 @@ name|ArgTypes
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Normal exit is with *Types == '\0' at end of string.      * Function will return an exception from within the loop upon      * finding an entry which is not, and cannot be converted      * to, the required type; if stack underflows; or upon      * finding a NULL stack entry (which "should never happen").      */
+comment|/*      * Normal exit is with (ArgTypes == 0) at end of argument list.      * Function will return an exception from within the loop upon      * finding an entry which is not (or cannot be converted      * to) the required type; if stack underflows; or upon      * finding a NULL stack entry (which should not happen).      */
 while|while
 condition|(
 name|GET_CURRENT_ARG_TYPE
@@ -291,12 +292,12 @@ operator|*
 name|StackPtr
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Internal error - null stack entry at %X\n"
+literal|"Internal - null stack entry at %X\n"
 operator|,
 name|StackPtr
 operator|)
@@ -363,18 +364,18 @@ comment|/* Check for bad ACPI_OBJECT_TYPE */
 if|if
 condition|(
 operator|!
-name|AcpiAmlValidateObjectType
+name|AcpiExValidateObjectType
 argument_list|(
 name|ObjectType
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Bad operand object type [%X]\n"
+literal|"Bad operand object type [%X]\n"
 operator|,
 name|ObjectType
 operator|)
@@ -426,7 +427,7 @@ name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 condition|)
 block|{
 case|case
@@ -482,7 +483,7 @@ name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -583,7 +584,7 @@ goto|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlCheckObjectType
+name|AcpiExCheckObjectType
 argument_list|(
 name|INTERNAL_TYPE_REFERENCE
 argument_list|,
@@ -614,11 +615,11 @@ name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 condition|)
 block|{
 comment|/*                  * Convert an indirect name ptr to direct name ptr and put                  * it on the stack                  */
-name|TempHandle
+name|TempNode
 operator|=
 name|ObjDesc
 operator|->
@@ -626,7 +627,7 @@ name|Reference
 operator|.
 name|Object
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -636,7 +637,7 @@ operator|*
 name|StackPtr
 operator|)
 operator|=
-name|TempHandle
+name|TempNode
 expr_stmt|;
 block|}
 goto|goto
@@ -676,7 +677,7 @@ operator|)
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|==
 name|AML_INDEX_OP
 operator|)
@@ -691,7 +692,7 @@ block|}
 comment|/*          * Resolve this object to a value          */
 name|Status
 operator|=
-name|AcpiAmlResolveToValue
+name|AcpiExResolveToValue
 argument_list|(
 name|StackPtr
 argument_list|,
@@ -783,7 +784,7 @@ comment|/* Number */
 comment|/*              * Need an operand of type ACPI_TYPE_INTEGER,              * But we can implicitly convert from a STRING or BUFFER              */
 name|Status
 operator|=
-name|AcpiAmlConvertToInteger
+name|AcpiExConvertToInteger
 argument_list|(
 name|StackPtr
 argument_list|,
@@ -805,14 +806,14 @@ operator|==
 name|AE_TYPE
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Needed [Integer/String/Buffer], found [%s] %p\n"
+literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -851,7 +852,7 @@ case|:
 comment|/*              * Need an operand of type ACPI_TYPE_BUFFER,              * But we can implicitly convert from a STRING or INTEGER              */
 name|Status
 operator|=
-name|AcpiAmlConvertToBuffer
+name|AcpiExConvertToBuffer
 argument_list|(
 name|StackPtr
 argument_list|,
@@ -873,14 +874,14 @@ operator|==
 name|AE_TYPE
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Needed [Integer/String/Buffer], found [%s] %p\n"
+literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -919,7 +920,7 @@ case|:
 comment|/*              * Need an operand of type ACPI_TYPE_STRING,              * But we can implicitly convert from a BUFFER or INTEGER              */
 name|Status
 operator|=
-name|AcpiAmlConvertToString
+name|AcpiExConvertToString
 argument_list|(
 name|StackPtr
 argument_list|,
@@ -941,14 +942,14 @@ operator|==
 name|AE_TYPE
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Needed [Integer/String/Buffer], found [%s] %p\n"
+literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -1027,14 +1028,14 @@ name|Type
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Needed [Integer/String/Buffer], found [%s] %p\n"
+literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -1121,14 +1122,14 @@ name|INTERNAL_TYPE_REFERENCE
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Needed [Buf/Str/Pkg/Ref], found [%s] %p\n"
+literal|"Needed [Buf/Str/Pkg/Ref], found [%s] %p\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -1179,12 +1180,12 @@ operator|.
 name|Node
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Needed [Node Reference], found [%p]\n"
+literal|"Needed [Node Reference], found [%p]\n"
 operator|,
 operator|*
 name|StackPtr
@@ -1205,7 +1206,7 @@ break|break;
 case|case
 name|ARGI_COMPLEXOBJ
 case|:
-comment|/* Need a buffer or package */
+comment|/* Need a buffer or package or (ACPI 2.0) String */
 if|if
 condition|(
 operator|(
@@ -1231,18 +1232,31 @@ name|Common
 operator|.
 name|Type
 operator|!=
+name|ACPI_TYPE_STRING
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|*
+name|StackPtr
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+operator|!=
 name|ACPI_TYPE_PACKAGE
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Needed [Buf/Pkg], found [%s] %p\n"
+literal|"Needed [Buf/Pkg], found [%s] %p\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -1271,12 +1285,12 @@ goto|;
 break|break;
 default|default:
 comment|/* Unknown type */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveOperands: Internal error - Unknown ARGI type %X\n"
+literal|"Internal - Unknown ARGI type %X\n"
 operator|,
 name|ThisArgType
 operator|)
@@ -1291,7 +1305,7 @@ block|}
 comment|/*          * Make sure that the original object was resolved to the          * required object type (Simple cases only).          */
 name|Status
 operator|=
-name|AcpiAmlCheckObjectType
+name|AcpiExCheckObjectType
 argument_list|(
 name|TypeNeeded
 argument_list|,

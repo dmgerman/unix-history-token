@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nswalk - Functions for walking the APCI namespace  *              $Revision: 19 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nswalk - Functions for walking the APCI namespace  *              $Revision: 22 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -54,7 +54,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|AcpiNsGetNextObject
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|ACPI_NAMESPACE_NODE
@@ -168,7 +168,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiNsWalkNamespace
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|ACPI_HANDLE
@@ -180,7 +180,7 @@ parameter_list|,
 name|BOOLEAN
 name|UnlockBeforeCallback
 parameter_list|,
-name|WALK_CALLBACK
+name|ACPI_WALK_CALLBACK
 name|UserFunction
 parameter_list|,
 name|void
@@ -204,7 +204,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|ParentNode
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|ChildType
 decl_stmt|;
 name|UINT32
@@ -302,7 +302,7 @@ condition|(
 name|UnlockBeforeCallback
 condition|)
 block|{
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -326,7 +326,7 @@ condition|(
 name|UnlockBeforeCallback
 condition|)
 block|{
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)

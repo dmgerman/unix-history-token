@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 29 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|HARDWARE
+value|ACPI_HARDWARE
 end_define
 
 begin_macro

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 49 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 55 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -73,7 +73,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|Object
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|)
 block|{
@@ -85,7 +85,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|PreviousObjDesc
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|ObjType
 init|=
 name|ACPI_TYPE_ANY
@@ -203,12 +203,12 @@ operator|==
 name|Object
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"NsAttachObject: Obj %p already installed in NameObj %p\n"
+literal|"Obj %p already installed in NameObj %p\n"
 operator|,
 name|Object
 operator|,
@@ -368,7 +368,7 @@ argument_list|,
 name|Object
 argument_list|)
 expr_stmt|;
-comment|/* Check for a recognized OpCode */
+comment|/* Check for a recognized Opcode */
 switch|switch
 condition|(
 operator|(
@@ -447,7 +447,7 @@ name|ACPI_TYPE_PACKAGE
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -499,7 +499,7 @@ name|Object
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -565,12 +565,12 @@ name|INTERNAL_TYPE_DEF_ANY
 expr_stmt|;
 block|}
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"NsAttachObject: Installing obj %p into NameObj %p [%4.4s]\n"
+literal|"Installing obj %p into NameObj %p [%4.4s]\n"
 operator|,
 name|ObjDesc
 operator|,
@@ -584,7 +584,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Must increment the new value's reference count      * (if it is an internal object)      */
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -625,13 +625,13 @@ name|PreviousObjDesc
 condition|)
 block|{
 comment|/* One for the attach to the Node */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|PreviousObjDesc
 argument_list|)
 expr_stmt|;
 comment|/* Now delete */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|PreviousObjDesc
 argument_list|)
@@ -690,12 +690,12 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Found a valid value */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsDetachObject: Object=%p Value=%p Name %4.4s\n"
+literal|"Object=%p Value=%p Name %4.4s\n"
 operator|,
 name|Node
 operator|,
@@ -708,7 +708,7 @@ name|Name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Not every value is an object allocated via AcpiCmCallocate,      * - must check      */
+comment|/*      * Not every value is an object allocated via AcpiUtCallocate,      * - must check      */
 if|if
 condition|(
 operator|!
@@ -719,7 +719,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Attempt to delete the object (and all subobjects) */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -731,7 +731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetAttachedObject  *  * PARAMETERS:  Handle              - Parent Node to be examined  *  * RETURN:      Current value of the object field from the Node whose  *              handle is passed  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetAttachedObject  *  * PARAMETERS:  Node             - Parent Node to be examined  *  * RETURN:      Current value of the object field from the Node whose  *              handle is passed  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -739,30 +739,31 @@ name|void
 modifier|*
 name|AcpiNsGetAttachedObject
 parameter_list|(
-name|ACPI_HANDLE
-name|Handle
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|)
 block|{
 name|FUNCTION_TRACE_PTR
 argument_list|(
 literal|"NsGetAttachedObject"
 argument_list|,
-name|Handle
+name|Node
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|Handle
+name|Node
 condition|)
 block|{
 comment|/* handle invalid */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_WARN
 argument_list|,
 operator|(
-literal|"NsGetAttachedObject: Null handle\n"
+literal|"Null Node ptr\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -774,13 +775,7 @@ expr_stmt|;
 block|}
 name|return_PTR
 argument_list|(
-operator|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
-name|Handle
-operator|)
+name|Node
 operator|->
 name|Object
 argument_list|)

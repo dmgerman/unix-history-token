@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amdyadic - ACPI AML (p-code) execution for dyadic operators  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdyadic - ACPI AML (p-code) execution for dyadic operators  *              $Revision: 77 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMDYADIC_C__
+name|__EXDYADIC_C__
 end_define
 
 begin_include
@@ -59,23 +59,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amdyadic"
+literal|"exdyadic"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlDoConcatenate  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *  * RETURN:      Status  *  * DESCRIPTION: Concatenate two objects OF THE SAME TYPE.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDoConcatenate  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *  * RETURN:      Status  *  * DESCRIPTION: Concatenate two objects OF THE SAME TYPE.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlDoConcatenate
+name|AcpiExDoConcatenate
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -157,7 +157,7 @@ block|}
 comment|/* Result of two integers is a buffer */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_BUFFER
 argument_list|)
@@ -187,7 +187,7 @@ literal|2
 expr_stmt|;
 name|NewBuf
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|RetDesc
 operator|->
@@ -205,7 +205,7 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AmlExecDyadic2R/ConcatOp: Buffer allocation failure\n"
+literal|"ExDoConcatenate: Buffer allocation failure\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -312,7 +312,7 @@ name|ACPI_TYPE_STRING
 case|:
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_STRING
 argument_list|)
@@ -332,7 +332,7 @@ block|}
 comment|/* Operand1 is string  */
 name|NewBuf
 operator|=
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 name|ObjDesc
 operator|->
@@ -358,7 +358,7 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AmlExecDyadic2R/ConcatOp: String allocation failure\n"
+literal|"ExDoConcatenate: String allocation failure\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -432,7 +432,7 @@ case|:
 comment|/* Operand1 is a buffer */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_BUFFER
 argument_list|)
@@ -451,7 +451,7 @@ return|;
 block|}
 name|NewBuf
 operator|=
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 name|ObjDesc
 operator|->
@@ -475,7 +475,7 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AmlExecDyadic2R/ConcatOp: Buffer allocation failure\n"
+literal|"ExDoConcatenate: Buffer allocation failure\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -581,7 +581,7 @@ operator|)
 return|;
 name|Cleanup
 label|:
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -595,12 +595,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecDyadic1  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 dyadic operator with numeric operands:  *              NotifyOp  *  * ALLOCATION:  Deletes both operands  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic1  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 dyadic operator with numeric operands:  *              NotifyOp  *  * ALLOCATION:  Deletes both operands  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecDyadic1
+name|AcpiExDyadic1
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -633,7 +633,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecDyadic1"
+literal|"ExDyadic1"
 argument_list|,
 name|WALK_OPERANDS
 argument_list|)
@@ -641,7 +641,7 @@ expr_stmt|;
 comment|/* Resolve all operands */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|Opcode
 argument_list|,
@@ -663,7 +663,7 @@ argument_list|)
 argument_list|,
 literal|2
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get the operands */
@@ -696,19 +696,22 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecDyadic1/%s: bad operand(s) (Status=%X)\n"
+literal|"(%s) bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
+name|AcpiUtFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -760,9 +763,10 @@ case|:
 case|case
 name|ACPI_TYPE_THERMAL
 case|:
-comment|/*                  * Requires that Device and ThermalZone be compatible                  * mappings                  */
-comment|/* Dispatch the notify to the appropriate handler */
-name|AcpiEvNotifyDispatch
+comment|/*                  * Dispatch the notify to the appropriate handler                  * NOTE: the request is queued for execution after this method                  * completes.  The notify handlers are NOT invoked synchronously                  * from this thread -- because handlers may in turn run other                  * control methods.                  */
+name|Status
+operator|=
+name|AcpiEvQueueNotifyRequest
 argument_list|(
 name|Node
 argument_list|,
@@ -778,12 +782,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecDyadic1/NotifyOp: unexpected notify object type %X\n"
+literal|"Unexpected notify object type %X\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -797,6 +801,7 @@ name|Status
 operator|=
 name|AE_AML_OPERAND_TYPE
 expr_stmt|;
+break|break;
 block|}
 block|}
 break|break;
@@ -804,7 +809,7 @@ default|default:
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiAmlExecDyadic1: Unknown dyadic opcode %X\n"
+literal|"AcpiExDyadic1: Unknown dyadic opcode %X\n"
 operator|,
 name|Opcode
 operator|)
@@ -818,12 +823,12 @@ block|}
 name|Cleanup
 label|:
 comment|/* Always delete both operands */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ValDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -837,12 +842,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecDyadic2R  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              one or two result operands.  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2R  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              one or two result operands.  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecDyadic2R
+name|AcpiExDyadic2R
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -905,7 +910,7 @@ literal|3
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-literal|"AmlExecDyadic2R"
+literal|"ExDyadic2R"
 argument_list|,
 name|Opcode
 argument_list|)
@@ -913,7 +918,7 @@ expr_stmt|;
 comment|/* Resolve all operands */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|Opcode
 argument_list|,
@@ -935,7 +940,7 @@ argument_list|)
 argument_list|,
 name|NumOperands
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get all operands */
@@ -999,19 +1004,22 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecDyadic2R/%s: bad operand(s) (Status=%X)\n"
+literal|"(%s) bad operand(s) (%s)\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
+name|AcpiUtFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1060,7 +1068,7 @@ name|AML_SUBTRACT_OP
 case|:
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -1248,7 +1256,7 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AmlExecDyadic2R/DivideOp: Divide by zero\n"
+literal|"ExDyadic2R/DivideOp: Divide by zero\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1262,7 +1270,7 @@ goto|;
 block|}
 name|RetDesc2
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -1437,7 +1445,7 @@ name|ACPI_TYPE_INTEGER
 case|:
 name|Status
 operator|=
-name|AcpiAmlConvertToInteger
+name|AcpiExConvertToInteger
 argument_list|(
 operator|&
 name|ObjDesc2
@@ -1451,7 +1459,7 @@ name|ACPI_TYPE_STRING
 case|:
 name|Status
 operator|=
-name|AcpiAmlConvertToString
+name|AcpiExConvertToString
 argument_list|(
 operator|&
 name|ObjDesc2
@@ -1465,7 +1473,7 @@ name|ACPI_TYPE_BUFFER
 case|:
 name|Status
 operator|=
-name|AcpiAmlConvertToBuffer
+name|AcpiExConvertToBuffer
 argument_list|(
 operator|&
 name|ObjDesc2
@@ -1495,7 +1503,7 @@ block|}
 comment|/*          * Both operands are now known to be the same object type          * (Both are Integer, String, or Buffer), and we can now perform the          * concatenation.          */
 name|Status
 operator|=
-name|AcpiAmlDoConcatenate
+name|AcpiExDoConcatenate
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -1524,7 +1532,7 @@ default|default:
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiAmlExecDyadic2R: Unknown dyadic opcode %X\n"
+literal|"AcpiExDyadic2R: Unknown dyadic opcode %X\n"
 operator|,
 name|Opcode
 operator|)
@@ -1541,7 +1549,7 @@ block|}
 comment|/*      * Store the result of the operation (which is now in ObjDesc) into      * the result descriptor, or the location pointed to by the result      * descriptor (ResDesc).      */
 name|Status
 operator|=
-name|AcpiAmlExecStore
+name|AcpiExStore
 argument_list|(
 name|RetDesc
 argument_list|,
@@ -1571,7 +1579,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiAmlExecStore
+name|AcpiExStore
 argument_list|(
 name|RetDesc2
 argument_list|,
@@ -1581,7 +1589,7 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 comment|/*          * Since the remainder is not returned, remove a reference to          * the object we created earlier          */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc2
 argument_list|)
@@ -1590,12 +1598,12 @@ block|}
 name|Cleanup
 label|:
 comment|/* Always delete the operands */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc2
 argument_list|)
@@ -1610,12 +1618,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* On failure, delete the result ops */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ResDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ResDesc2
 argument_list|)
@@ -1626,7 +1634,7 @@ name|RetDesc
 condition|)
 block|{
 comment|/* And delete the internal return object */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -1652,12 +1660,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecDyadic2S  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic synchronization operator  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2S  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic synchronization operator  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecDyadic2S
+name|AcpiExDyadic2S
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -1691,7 +1699,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecDyadic2S"
+literal|"ExDyadic2S"
 argument_list|,
 name|WALK_OPERANDS
 argument_list|)
@@ -1699,7 +1707,7 @@ expr_stmt|;
 comment|/* Resolve all operands */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|Opcode
 argument_list|,
@@ -1721,7 +1729,7 @@ argument_list|)
 argument_list|,
 literal|2
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get all operands */
@@ -1754,19 +1762,22 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecDyadic2S/%s: bad operand(s) (Status=%X)\n"
+literal|"(%s) bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
+name|AcpiUtFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1777,7 +1788,7 @@ block|}
 comment|/* Create the internal return object */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -1817,11 +1828,13 @@ name|AML_ACQUIRE_OP
 case|:
 name|Status
 operator|=
-name|AcpiAmlSystemAcquireMutex
+name|AcpiExAcquireMutex
 argument_list|(
 name|TimeDesc
 argument_list|,
 name|ObjDesc
+argument_list|,
+name|WalkState
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1831,7 +1844,7 @@ name|AML_WAIT_OP
 case|:
 name|Status
 operator|=
-name|AcpiAmlSystemWaitEvent
+name|AcpiExSystemWaitEvent
 argument_list|(
 name|TimeDesc
 argument_list|,
@@ -1843,7 +1856,7 @@ default|default:
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiAmlExecDyadic2S: Unknown dyadic synchronization opcode %X\n"
+literal|"AcpiExDyadic2S: Unknown dyadic synchronization opcode %X\n"
 operator|,
 name|Opcode
 operator|)
@@ -1882,12 +1895,12 @@ block|}
 name|Cleanup
 label|:
 comment|/* Delete params */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|TimeDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1905,7 +1918,7 @@ name|RetDesc
 operator|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -1930,12 +1943,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecDyadic2  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              no result operands  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *              containing result value  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              no result operands  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *              containing result value  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecDyadic2
+name|AcpiExDyadic2
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -1972,7 +1985,7 @@ name|Lboolean
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecDyadic2"
+literal|"ExDyadic2"
 argument_list|,
 name|WALK_OPERANDS
 argument_list|)
@@ -1980,7 +1993,7 @@ expr_stmt|;
 comment|/* Resolve all operands */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|Opcode
 argument_list|,
@@ -2002,7 +2015,7 @@ argument_list|)
 argument_list|,
 literal|2
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get all operands */
@@ -2035,19 +2048,22 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecDyadic2/%s: bad operand(s) (Status=%X)\n"
+literal|"(%s) bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
+name|AcpiUtFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2058,7 +2074,7 @@ block|}
 comment|/* Create the internal return object */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -2211,7 +2227,7 @@ default|default:
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiAmlExecDyadic2: Unknown dyadic opcode %X\n"
+literal|"AcpiExDyadic2: Unknown dyadic opcode %X\n"
 operator|,
 name|Opcode
 operator|)
@@ -2255,12 +2271,12 @@ block|}
 name|Cleanup
 label|:
 comment|/* Always delete operands */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc2
 argument_list|)
@@ -2278,7 +2294,7 @@ name|RetDesc
 operator|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)

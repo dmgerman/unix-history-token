@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 78 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 89 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_OBJECT_COMMON_HEADER
-comment|/* 32-bits plus 8-bit flag */
+comment|/* SIZE/ALIGNMENT: 32-bits plus trailing 8-bit flag */
 define|\
 value|UINT8                       DataType;
 comment|/* To differentiate various internal objs */
@@ -73,22 +73,51 @@ value|0x4
 end_define
 
 begin_comment
-comment|/*  * Common bitfield for the field objects  */
+comment|/*  * Common bitfield for the field objects  * "Field Datum"    -- a datum from the actual field object  * "Buffer Datum"   -- a datum from a user buffer, read from or to be written to the field  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_COMMON_FIELD_INFO
-comment|/* Three 32-bit values plus 8*/
+comment|/* SIZE/ALIGNMENT: 24 bits + three 32-bit values */
 define|\
-value|UINT8                       Granularity;\     UINT16                      Length; \     UINT32                      Offset;
+value|UINT8                       AccessFlags;\     UINT16                      BitLength;
+comment|/* Length of field in bits */
+value|\     UINT32                      BaseByteOffset;
 comment|/* Byte offset within containing object */
-value|\     UINT8                       BitOffset;
-comment|/* Bit offset within min read/write data unit */
-value|\     UINT8                       Access;
-comment|/* AccessType */
-value|\     UINT8                       LockRule;\     UINT8                       UpdateRule;\     UINT8                       AccessAttribute;
+value|\     UINT8                       AccessBitWidth;
+comment|/* Read/Write size in bits (from ASL AccessType)*/
+value|\     UINT8                       AccessByteWidth;
+comment|/* Read/Write size in bytes */
+value|\     UINT8                       UpdateRule;
+comment|/* How neighboring field bits are handled */
+value|\     UINT8                       LockRule;
+comment|/* Global Lock: 1 = "Must Lock" */
+value|\     UINT8                       StartFieldBitOffset;
+comment|/* Bit offset within first field datum (0-63) */
+value|\     UINT8                       DatumValidBits;
+comment|/* Valid bit in first "Field datum" */
+value|\     UINT8                       EndFieldValidBits;
+comment|/* Valid bits in the last "field datum" */
+value|\     UINT8                       EndBufferValidBits;
+comment|/* Valid bits in the last "buffer datum" */
+value|\     UINT32                      Value;
+end_define
+
+begin_comment
+comment|/* Value to store into the Bank or Index register */
+end_comment
+
+begin_comment
+comment|/* Access flag bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFIELD_SINGLE_DATUM
+value|0x1
 end_define
 
 begin_comment
@@ -207,35 +236,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* FIELD UNIT */
-block|{
-name|ACPI_OBJECT_COMMON_HEADER
-name|ACPI_COMMON_FIELD_INFO
-expr|union
-name|acpi_operand_obj
-operator|*
-name|Extra
-expr_stmt|;
-comment|/* Pointer to executable AML (in field definition) */
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-decl_stmt|;
-comment|/* containing object */
-name|union
-name|acpi_operand_obj
-modifier|*
-name|Container
-decl_stmt|;
-comment|/* Containing object (Buffer) */
-block|}
-name|ACPI_OBJECT_FIELD_UNIT
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
 comment|/* DEVICE - has handle and notification handler/context */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
@@ -324,16 +324,36 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
+name|acpi_obj_mutex
 comment|/* MUTEX */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|UINT16
 name|SyncLevel
 decl_stmt|;
+name|UINT16
+name|AcquisitionDepth
+decl_stmt|;
 name|void
 modifier|*
 name|Semaphore
 decl_stmt|;
+name|void
+modifier|*
+name|Owner
+decl_stmt|;
+name|union
+name|acpi_operand_obj
+modifier|*
+name|Prev
+decl_stmt|;
+comment|/* Link for list of acquired mutexes */
+name|union
+name|acpi_operand_obj
+modifier|*
+name|Next
+decl_stmt|;
+comment|/* Link for list of acquired mutexes */
 block|}
 name|ACPI_OBJECT_MUTEX
 typedef|;
@@ -478,24 +498,43 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Internal types  */
+comment|/*  * Fields.  All share a common header/info field.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* FIELD */
+comment|/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
 expr|union
 name|acpi_operand_obj
 operator|*
-name|Container
+name|RegionObj
 expr_stmt|;
-comment|/* Containing object */
+comment|/* Containing Operation Region object */
+comment|/* (REGION/BANK fields only) */
 block|}
-name|ACPI_OBJECT_FIELD
+name|ACPI_OBJECT_FIELD_COMMON
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+comment|/* REGION FIELD */
+block|{
+name|ACPI_OBJECT_COMMON_HEADER
+name|ACPI_COMMON_FIELD_INFO
+expr|union
+name|acpi_operand_obj
+operator|*
+name|RegionObj
+expr_stmt|;
+comment|/* Containing OpRegion object */
+block|}
+name|ACPI_OBJECT_REGION_FIELD
 typedef|;
 end_typedef
 
@@ -506,20 +545,18 @@ comment|/* BANK FIELD */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
-name|UINT32
-name|Value
-decl_stmt|;
-comment|/* Value to store into BankSelect */
-name|ACPI_HANDLE
-name|BankSelect
-decl_stmt|;
-comment|/* Bank select register */
+expr|union
+name|acpi_operand_obj
+operator|*
+name|RegionObj
+expr_stmt|;
+comment|/* Containing OpRegion object */
 name|union
 name|acpi_operand_obj
 modifier|*
-name|Container
+name|BankRegisterObj
 decl_stmt|;
-comment|/* Containing object */
+comment|/* BankSelect Register object */
 block|}
 name|ACPI_OBJECT_BANK_FIELD
 typedef|;
@@ -530,25 +567,62 @@ typedef|typedef
 struct|struct
 comment|/* INDEX FIELD */
 block|{
-comment|/*      * No container pointer needed since the index and data register definitions      * will define how to access the respective registers      */
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
-name|UINT32
-name|Value
-decl_stmt|;
-comment|/* Value to store into Index register */
-name|ACPI_HANDLE
-name|Index
-decl_stmt|;
+comment|/*      * No "RegionObj" pointer needed since the Index and Data registers      * are each field definitions unto themselves.      */
+expr|union
+name|acpi_operand_obj
+operator|*
+name|IndexObj
+expr_stmt|;
 comment|/* Index register */
-name|ACPI_HANDLE
-name|Data
+name|union
+name|acpi_operand_obj
+modifier|*
+name|DataObj
 decl_stmt|;
 comment|/* Data register */
 block|}
 name|ACPI_OBJECT_INDEX_FIELD
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* The BufferField is different in that it is part of a Buffer, not an OpRegion */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+comment|/* BUFFER FIELD */
+block|{
+name|ACPI_OBJECT_COMMON_HEADER
+name|ACPI_COMMON_FIELD_INFO
+expr|union
+name|acpi_operand_obj
+operator|*
+name|Extra
+expr_stmt|;
+comment|/* Pointer to executable AML (in field definition) */
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
+comment|/* Parent (containing) object node */
+name|union
+name|acpi_operand_obj
+modifier|*
+name|BufferObj
+decl_stmt|;
+comment|/* Containing Buffer object */
+block|}
+name|ACPI_OBJECT_BUFFER_FIELD
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Handlers  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -561,7 +635,7 @@ modifier|*
 name|Node
 decl_stmt|;
 comment|/* Parent device */
-name|NOTIFY_HANDLER
+name|ACPI_NOTIFY_HANDLER
 name|Handler
 decl_stmt|;
 name|void
@@ -596,7 +670,7 @@ decl_stmt|;
 name|UINT16
 name|Hflags
 decl_stmt|;
-name|ADDRESS_SPACE_HANDLER
+name|ACPI_ADR_SPACE_HANDLER
 name|Handler
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
@@ -608,7 +682,7 @@ name|void
 modifier|*
 name|Context
 decl_stmt|;
-name|ADDRESS_SPACE_SETUP
+name|ACPI_ADR_SPACE_SETUP
 name|Setup
 decl_stmt|;
 name|union
@@ -642,7 +716,7 @@ name|TargetType
 decl_stmt|;
 comment|/* Used for IndexOp */
 name|UINT16
-name|OpCode
+name|Opcode
 decl_stmt|;
 name|UINT32
 name|Offset
@@ -733,8 +807,8 @@ decl_stmt|;
 name|ACPI_OBJECT_PACKAGE
 name|Package
 decl_stmt|;
-name|ACPI_OBJECT_FIELD_UNIT
-name|FieldUnit
+name|ACPI_OBJECT_BUFFER_FIELD
+name|BufferField
 decl_stmt|;
 name|ACPI_OBJECT_DEVICE
 name|Device
@@ -760,7 +834,10 @@ decl_stmt|;
 name|ACPI_OBJECT_THERMAL_ZONE
 name|ThermalZone
 decl_stmt|;
-name|ACPI_OBJECT_FIELD
+name|ACPI_OBJECT_FIELD_COMMON
+name|CommonField
+decl_stmt|;
+name|ACPI_OBJECT_REGION_FIELD
 name|Field
 decl_stmt|;
 name|ACPI_OBJECT_BANK_FIELD

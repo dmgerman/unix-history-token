@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 89 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMPREP_C__
+name|__EXPREP_C__
 end_define
 
 begin_include
@@ -47,24 +47,24 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amprep"
+literal|"exprep"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlDecodeFieldAccessType  *  * PARAMETERS:  Access          - Encoded field access bits  *  * RETURN:      Field granularity (8, 16, or 32)  *  * DESCRIPTION: Decode the AccessType bits of a field definition.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDecodeFieldAccessType  *  * PARAMETERS:  Access          - Encoded field access bits  *              Length          - Field length.  *  * RETURN:      Field granularity (8, 16, or 32)  *  * DESCRIPTION: Decode the AccessType bits of a field definition.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|UINT32
-name|AcpiAmlDecodeFieldAccessType
+name|AcpiExDecodeFieldAccessType
 parameter_list|(
 name|UINT32
 name|Access
@@ -81,6 +81,7 @@ block|{
 case|case
 name|ACCESS_ANY_ACC
 case|:
+comment|/* Use the length to set the access type */
 if|if
 condition|(
 name|Length
@@ -122,14 +123,26 @@ literal|32
 operator|)
 return|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|Length
+operator|<=
+literal|64
+condition|)
 block|{
+return|return
+operator|(
+literal|64
+operator|)
+return|;
+block|}
+comment|/* Default is 8 (byte) */
 return|return
 operator|(
 literal|8
 operator|)
 return|;
-block|}
 break|break;
 case|case
 name|ACCESS_BYTE_ACC
@@ -158,6 +171,16 @@ literal|32
 operator|)
 return|;
 break|break;
+case|case
+name|ACCESS_QWORD_ACC
+case|:
+comment|/* ACPI 2.0 */
+return|return
+operator|(
+literal|64
+operator|)
+return|;
+break|break;
 default|default:
 comment|/* Invalid field access type */
 name|DEBUG_PRINT
@@ -165,7 +188,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlDecodeFieldAccessType: Unknown field access type %x\n"
+literal|"ExDecodeFieldAccessType: Unknown field access type %x\n"
 operator|,
 name|Access
 operator|)
@@ -181,13 +204,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlPrepCommonFieldObjec  *  * PARAMETERS:  ObjDesc             - The field object  *              FieldFlags          - Access, LockRule, or UpdateRule.  *                                    The format of a FieldFlag is described  *                                    in the ACPI specification  *              FieldPosition       - Field position  *              FieldLength         - Field length  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the areas of the field object that are common  *              to the various types of fields.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepCommonFieldObject  *  * PARAMETERS:  ObjDesc             - The field object  *              FieldFlags          - Access, LockRule, and UpdateRule.  *                                    The format of a FieldFlag is described  *                                    in the ACPI specification  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the areas of the field object that are common  *              to the various types of fields.  *  ******************************************************************************/
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_STATUS
-name|AcpiAmlPrepCommonFieldObject
+name|AcpiExPrepCommonFieldObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -196,48 +218,29 @@ parameter_list|,
 name|UINT8
 name|FieldFlags
 parameter_list|,
-name|UINT8
-name|FieldAttribute
+name|UINT32
+name|FieldBitPosition
 parameter_list|,
 name|UINT32
-name|FieldPosition
-parameter_list|,
-name|UINT32
-name|FieldLength
+name|FieldBitLength
 parameter_list|)
 block|{
 name|UINT32
-name|Granularity
+name|AccessBitWidth
+decl_stmt|;
+name|UINT32
+name|NearestByteAddress
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlPrepCommonFieldObject"
+literal|"ExPrepCommonFieldObject"
 argument_list|)
 expr_stmt|;
-comment|/*      * Note: the structure being initialized is the      * ACPI_COMMON_FIELD_INFO;  Therefore, we can just use the Field union to      * access this common area.  No structure fields outside of the common area      * are initialized by this procedure.      */
-comment|/* Decode the FieldFlags */
+comment|/*      * Note: the structure being initialized is the      * ACPI_COMMON_FIELD_INFO;  No structure fields outside of the common area      * are initialized by this procedure.      */
+comment|/* Demultiplex the FieldFlags byte */
 name|ObjDesc
 operator|->
-name|Field
-operator|.
-name|Access
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-operator|(
-name|FieldFlags
-operator|&
-name|ACCESS_TYPE_MASK
-operator|)
-operator|>>
-name|ACCESS_TYPE_SHIFT
-argument_list|)
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|Field
+name|CommonField
 operator|.
 name|LockRule
 operator|=
@@ -256,7 +259,7 @@ argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|->
-name|Field
+name|CommonField
 operator|.
 name|UpdateRule
 operator|=
@@ -276,45 +279,41 @@ expr_stmt|;
 comment|/* Other misc fields */
 name|ObjDesc
 operator|->
-name|Field
+name|CommonField
 operator|.
-name|Length
+name|BitLength
 operator|=
 operator|(
 name|UINT16
 operator|)
-name|FieldLength
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|Field
-operator|.
-name|AccessAttribute
-operator|=
-name|FieldAttribute
+name|FieldBitLength
 expr_stmt|;
 comment|/* Decode the access type so we can compute offsets */
-name|Granularity
+name|AccessBitWidth
 operator|=
-name|AcpiAmlDecodeFieldAccessType
+name|AcpiExDecodeFieldAccessType
 argument_list|(
-name|ObjDesc
-operator|->
-name|Field
-operator|.
-name|Access
+operator|(
+operator|(
+name|FieldFlags
+operator|&
+name|ACCESS_TYPE_MASK
+operator|)
+operator|>>
+name|ACCESS_TYPE_SHIFT
+operator|)
 argument_list|,
 name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|Length
+name|BitLength
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|Granularity
+name|AccessBitWidth
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -323,46 +322,189 @@ name|AE_AML_OPERAND_VALUE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Access granularity based fields */
+comment|/* Setup granularity-based fields */
 name|ObjDesc
 operator|->
-name|Field
+name|CommonField
 operator|.
-name|Granularity
+name|AccessBitWidth
 operator|=
 operator|(
 name|UINT8
 operator|)
-name|Granularity
+name|AccessBitWidth
+expr_stmt|;
+comment|/* 8, 16, 32, 64 */
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|DIV_8
+argument_list|(
+name|AccessBitWidth
+argument_list|)
+expr_stmt|;
+comment|/* 1,  2,  4,  8 */
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|==
+name|ACPI_TYPE_BUFFER_FIELD
+condition|)
+block|{
+comment|/*          * BufferField access can be on any byte boundary, so the          * granularity is always 8          */
+name|AccessBitWidth
+operator|=
+literal|8
+expr_stmt|;
+block|}
+comment|/*       * BaseByteOffset is the address of the start of the field within the region.  It is      * the byte address of the first *datum* (field-width data unit) of the field.      * (i.e., the first datum that contains at least the first *bit* of the field.)      */
+name|NearestByteAddress
+operator|=
+name|ROUND_BITS_DOWN_TO_BYTES
+argument_list|(
+name|FieldBitPosition
+argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|->
-name|Field
+name|CommonField
 operator|.
-name|BitOffset
+name|BaseByteOffset
+operator|=
+name|ROUND_DOWN
+argument_list|(
+name|NearestByteAddress
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+argument_list|)
+expr_stmt|;
+comment|/*      * StartFieldBitOffset is the offset of the first bit of the field within a field datum.      * This is calculated as the number of bits from the BaseByteOffset.  In other words,      * the start of the field is relative to a byte address, regardless of the access type      * of the field.      */
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
 operator|=
 call|(
 name|UINT8
 call|)
 argument_list|(
-name|FieldPosition
+name|MOD_8
+argument_list|(
+name|FieldBitPosition
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*      * DatumValidBits is the number of valid field bits in the first field datum.      */
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|DatumValidBits
+operator|=
+call|(
+name|UINT8
+call|)
+argument_list|(
+name|AccessBitWidth
+operator|-
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+argument_list|)
+expr_stmt|;
+comment|/*       * Valid bits -- the number of bits that compose a partial datum,      * 1) At the end of the field within the region (arbitrary starting bit offset)      * 2) At the end of a buffer used to contain the field (starting offset always zero)      */
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|EndFieldValidBits
+operator|=
+call|(
+name|UINT8
+call|)
+argument_list|(
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+operator|+
+name|FieldBitLength
+operator|)
 operator|%
-name|Granularity
+name|AccessBitWidth
 argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|->
-name|Field
+name|CommonField
 operator|.
-name|Offset
+name|EndBufferValidBits
 operator|=
-operator|(
-name|UINT32
-operator|)
-name|FieldPosition
-operator|/
-name|Granularity
+call|(
+name|UINT8
+call|)
+argument_list|(
+name|FieldBitLength
+operator|%
+name|AccessBitWidth
+argument_list|)
 expr_stmt|;
+comment|/* StartBufferBitOffset always = 0 */
+comment|/*      * Does the entire field fit within a single field access element      * (datum)?  (without crossing a datum boundary)      */
+if|if
+condition|(
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+operator|+
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|BitLength
+operator|)
+operator|<=
+operator|(
+name|UINT16
+operator|)
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessBitWidth
+condition|)
+block|{
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessFlags
+operator||=
+name|AFIELD_SINGLE_DATUM
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -372,31 +514,28 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlPrepDefFieldValue  *  * PARAMETERS:  Node            - Owning Node  *              Region              - Region in which field is being defined  *              FieldFlags          - Access, LockRule, or UpdateRule.  *                                    The format of a FieldFlag is described  *                                    in the ACPI specification  *              FieldPosition       - Field position  *              FieldLength         - Field length  *  * RETURN:      Status  *  * DESCRIPTION: Construct an ACPI_OPERAND_OBJECT  of type DefField and  *              connect it to the parent Node.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepRegionFieldValue  *  * PARAMETERS:  Node                - Owning Node  *              RegionNode          - Region in which field is being defined  *              FieldFlags          - Access, LockRule, and UpdateRule.  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Construct an ACPI_OPERAND_OBJECT  of type DefField and  *              connect it to the parent Node.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlPrepDefFieldValue
+name|AcpiExPrepRegionFieldValue
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 parameter_list|,
 name|ACPI_HANDLE
-name|Region
+name|RegionNode
 parameter_list|,
 name|UINT8
 name|FieldFlags
 parameter_list|,
-name|UINT8
-name|FieldAttribute
+name|UINT32
+name|FieldBitPosition
 parameter_list|,
 name|UINT32
-name|FieldPosition
-parameter_list|,
-name|UINT32
-name|FieldLength
+name|FieldBitLength
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
@@ -411,22 +550,22 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlPrepDefFieldValue"
+literal|"ExPrepRegionFieldValue"
 argument_list|)
 expr_stmt|;
 comment|/* Parameter validation */
 if|if
 condition|(
 operator|!
-name|Region
+name|RegionNode
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlPrepDefFieldValue: null Region\n"
+literal|"Null RegionNode\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -440,7 +579,7 @@ name|Type
 operator|=
 name|AcpiNsGetType
 argument_list|(
-name|Region
+name|RegionNode
 argument_list|)
 expr_stmt|;
 if|if
@@ -450,16 +589,16 @@ operator|!=
 name|ACPI_TYPE_REGION
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlPrepDefFieldValue: Needed Region, found type %X %s\n"
+literal|"Needed Region, found type %X %s\n"
 operator|,
 name|Type
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|Type
 argument_list|)
@@ -475,9 +614,9 @@ block|}
 comment|/* Allocate a new object */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
-name|INTERNAL_TYPE_DEF_FIELD
+name|INTERNAL_TYPE_REGION_FIELD
 argument_list|)
 expr_stmt|;
 if|if
@@ -505,11 +644,11 @@ name|Node
 argument_list|,
 name|IMODE_EXECUTE
 argument_list|,
-literal|"AmlPrepDefFieldValue"
+literal|"ExPrepRegionFieldValue"
 argument_list|,
 literal|1
 argument_list|,
-literal|"case DefField"
+literal|"case RegionField"
 argument_list|)
 expr_stmt|;
 name|DUMP_OPERANDS
@@ -520,31 +659,29 @@ operator|*
 operator|*
 operator|)
 operator|&
-name|Region
+name|RegionNode
 argument_list|,
 name|IMODE_EXECUTE
 argument_list|,
-literal|"AmlPrepDefFieldValue"
+literal|"ExPrepRegionFieldValue"
 argument_list|,
 literal|1
 argument_list|,
-literal|"case DefField"
+literal|"case RegionField"
 argument_list|)
 expr_stmt|;
 comment|/* Initialize areas of the object that are common to all fields */
 name|Status
 operator|=
-name|AcpiAmlPrepCommonFieldObject
+name|AcpiExPrepCommonFieldObject
 argument_list|(
 name|ObjDesc
 argument_list|,
 name|FieldFlags
 argument_list|,
-name|FieldAttribute
+name|FieldBitPosition
 argument_list|,
-name|FieldPosition
-argument_list|,
-name|FieldLength
+name|FieldBitLength
 argument_list|)
 expr_stmt|;
 if|if
@@ -566,57 +703,63 @@ name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|Container
+name|RegionObj
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-name|Region
+name|RegionNode
 argument_list|)
 expr_stmt|;
 comment|/* An additional reference for the container */
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|Container
+name|RegionObj
 argument_list|)
 expr_stmt|;
 comment|/* Debug info */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlPrepDefFieldValue: bitoff=%X off=%X gran=%X\n"
+literal|"Bitoff=%X Off=%X Gran=%X Region %p\n"
 operator|,
 name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|BitOffset
+name|StartFieldBitOffset
 operator|,
 name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|Offset
+name|BaseByteOffset
 operator|,
 name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|Granularity
+name|AccessBitWidth
+operator|,
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|RegionObj
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlPrepDefFieldValue: set NamedObj %p (%4.4s) val = %p\n"
+literal|"set NamedObj %p (%4.4s) val = %p\n"
 operator|,
 name|Node
 operator|,
@@ -631,69 +774,11 @@ name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-name|DUMP_STACK_ENTRY
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-name|DUMP_ENTRY
-argument_list|(
-name|Region
-argument_list|,
-name|ACPI_INFO
-argument_list|)
-expr_stmt|;
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_INFO
-argument_list|,
-operator|(
-literal|"\t%p \n"
-operator|,
-name|ObjDesc
-operator|->
-name|Field
-operator|.
-name|Container
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ObjDesc
-operator|->
-name|Field
-operator|.
-name|Container
-condition|)
-block|{
-name|DUMP_STACK_ENTRY
-argument_list|(
-name|ObjDesc
-operator|->
-name|Field
-operator|.
-name|Container
-argument_list|)
-expr_stmt|;
-block|}
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_INFO
-argument_list|,
-operator|(
-literal|"============================================================\n"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*      * Store the constructed descriptor (ObjDesc) into the NamedObj whose      * handle is on TOS, preserving the current type of that NamedObj.      */
+comment|/*      * Store the constructed descriptor (ObjDesc) into the parent Node,      * preserving the current type of that NamedObj.      */
 name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|,
 name|ObjDesc
@@ -703,9 +788,6 @@ name|UINT8
 operator|)
 name|AcpiNsGetType
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|)
 argument_list|)
@@ -719,22 +801,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlPrepBankFieldValue  *  * PARAMETERS:  Node            - Owning Node  *              Region              - Region in which field is being defined  *              BankReg             - Bank selection register  *              BankVal             - Value to store in selection register  *              FieldFlags          - Access, LockRule, or UpdateRule  *              FieldPosition       - Field position  *              FieldLength         - Field length  *  * RETURN:      Status  *  * DESCRIPTION: Construct an ACPI_OPERAND_OBJECT  of type BankField and  *              connect it to the parent Node.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepBankFieldValue  *  * PARAMETERS:  Node                - Owning Node  *              RegionNode          - Region in which field is being defined  *              BankRegisterNode    - Bank selection register node  *              BankVal             - Value to store in selection register  *              FieldFlags          - Access, LockRule, and UpdateRule  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Construct an object of type BankField and attach it to the  *              parent Node.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlPrepBankFieldValue
+name|AcpiExPrepBankFieldValue
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 parameter_list|,
-name|ACPI_HANDLE
-name|Region
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|RegionNode
 parameter_list|,
-name|ACPI_HANDLE
-name|BankReg
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|BankRegisterNode
 parameter_list|,
 name|UINT32
 name|BankVal
@@ -742,14 +826,11 @@ parameter_list|,
 name|UINT8
 name|FieldFlags
 parameter_list|,
-name|UINT8
-name|FieldAttribute
+name|UINT32
+name|FieldBitPosition
 parameter_list|,
 name|UINT32
-name|FieldPosition
-parameter_list|,
-name|UINT32
-name|FieldLength
+name|FieldBitLength
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
@@ -764,22 +845,22 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlPrepBankFieldValue"
+literal|"ExPrepBankFieldValue"
 argument_list|)
 expr_stmt|;
 comment|/* Parameter validation */
 if|if
 condition|(
 operator|!
-name|Region
+name|RegionNode
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlPrepBankFieldValue: null Region\n"
+literal|"Null RegionNode\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -793,7 +874,7 @@ name|Type
 operator|=
 name|AcpiNsGetType
 argument_list|(
-name|Region
+name|RegionNode
 argument_list|)
 expr_stmt|;
 if|if
@@ -803,16 +884,16 @@ operator|!=
 name|ACPI_TYPE_REGION
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlPrepBankFieldValue: Needed Region, found type %X %s\n"
+literal|"Needed Region, found type %X %s\n"
 operator|,
 name|Type
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|Type
 argument_list|)
@@ -828,7 +909,7 @@ block|}
 comment|/* Allocate a new object */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|INTERNAL_TYPE_BANK_FIELD
 argument_list|)
@@ -858,7 +939,7 @@ name|Node
 argument_list|,
 name|IMODE_EXECUTE
 argument_list|,
-literal|"AmlPrepBankFieldValue"
+literal|"ExPrepBankFieldValue"
 argument_list|,
 literal|1
 argument_list|,
@@ -873,11 +954,11 @@ operator|*
 operator|*
 operator|)
 operator|&
-name|Region
+name|RegionNode
 argument_list|,
 name|IMODE_EXECUTE
 argument_list|,
-literal|"AmlPrepBankFieldValue"
+literal|"ExPrepBankFieldValue"
 argument_list|,
 literal|1
 argument_list|,
@@ -887,17 +968,15 @@ expr_stmt|;
 comment|/* Initialize areas of the object that are common to all fields */
 name|Status
 operator|=
-name|AcpiAmlPrepCommonFieldObject
+name|AcpiExPrepCommonFieldObject
 argument_list|(
 name|ObjDesc
 argument_list|,
 name|FieldFlags
 argument_list|,
-name|FieldAttribute
+name|FieldBitPosition
 argument_list|,
-name|FieldPosition
-argument_list|,
-name|FieldLength
+name|FieldBitLength
 argument_list|)
 expr_stmt|;
 if|if
@@ -927,78 +1006,89 @@ name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|Container
+name|RegionObj
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-name|Region
+name|RegionNode
 argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|BankSelect
+name|BankRegisterObj
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-name|BankReg
+name|BankRegisterNode
 argument_list|)
 expr_stmt|;
-comment|/* An additional reference for the container and bank select */
-comment|/* TBD: [Restructure] is "BankSelect" ever a real internal object?? */
-name|AcpiCmAddReference
+comment|/* An additional reference for the attached objects */
+name|AcpiUtAddReference
 argument_list|(
 name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|Container
+name|RegionObj
 argument_list|)
 expr_stmt|;
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|BankSelect
+name|BankRegisterObj
 argument_list|)
 expr_stmt|;
 comment|/* Debug info */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlPrepBankFieldValue: bitoff=%X off=%X gran=%X\n"
+literal|"BitOff=%X Off=%X Gran=%X Region %p BankReg %p\n"
 operator|,
 name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|BitOffset
+name|StartFieldBitOffset
 operator|,
 name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|Offset
+name|BaseByteOffset
 operator|,
 name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|Granularity
+name|AccessBitWidth
+operator|,
+name|ObjDesc
+operator|->
+name|BankField
+operator|.
+name|RegionObj
+operator|,
+name|ObjDesc
+operator|->
+name|BankField
+operator|.
+name|BankRegisterObj
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlPrepBankFieldValue: set NamedObj %p (%4.4s) val = %p\n"
+literal|"Set NamedObj %p (%4.4s) val=%p\n"
 operator|,
 name|Node
 operator|,
@@ -1013,42 +1103,11 @@ name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-name|DUMP_STACK_ENTRY
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-name|DUMP_ENTRY
-argument_list|(
-name|Region
-argument_list|,
-name|ACPI_INFO
-argument_list|)
-expr_stmt|;
-name|DUMP_ENTRY
-argument_list|(
-name|BankReg
-argument_list|,
-name|ACPI_INFO
-argument_list|)
-expr_stmt|;
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_INFO
-argument_list|,
-operator|(
-literal|"============================================================\n"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*      * Store the constructed descriptor (ObjDesc) into the NamedObj whose      * handle is on TOS, preserving the current type of that NamedObj.      */
+comment|/*      * Store the constructed descriptor (ObjDesc) into the parent Node,      * preserving the current type of that NamedObj.      */
 name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|,
 name|ObjDesc
@@ -1058,9 +1117,6 @@ name|UINT8
 operator|)
 name|AcpiNsGetType
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|)
 argument_list|)
@@ -1074,34 +1130,33 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlPrepIndexFieldValue  *  * PARAMETERS:  Node            - Owning Node  *              IndexReg            - Index register  *              DataReg             - Data register  *              FieldFlags          - Access, LockRule, or UpdateRule  *              FieldPosition       - Field position  *              FieldLength         - Field length  *  * RETURN:      Status  *  * DESCRIPTION: Construct an ACPI_OPERAND_OBJECT  of type IndexField and  *              connect it to the parent Node.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepIndexFieldValue  *  * PARAMETERS:  Node                - Owning Node  *              IndexReg            - Index register  *              DataReg             - Data register  *              FieldFlags          - Access, LockRule, and UpdateRule  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Construct an ACPI_OPERAND_OBJECT  of type IndexField and  *              connect it to the parent Node.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlPrepIndexFieldValue
+name|AcpiExPrepIndexFieldValue
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 parameter_list|,
-name|ACPI_HANDLE
+name|ACPI_NAMESPACE_NODE
+modifier|*
 name|IndexReg
 parameter_list|,
-name|ACPI_HANDLE
+name|ACPI_NAMESPACE_NODE
+modifier|*
 name|DataReg
 parameter_list|,
 name|UINT8
 name|FieldFlags
 parameter_list|,
-name|UINT8
-name|FieldAttribute
+name|UINT32
+name|FieldBitPosition
 parameter_list|,
 name|UINT32
-name|FieldPosition
-parameter_list|,
-name|UINT32
-name|FieldLength
+name|FieldBitLength
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
@@ -1113,7 +1168,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlPrepIndexFieldValue"
+literal|"ExPrepIndexFieldValue"
 argument_list|)
 expr_stmt|;
 comment|/* Parameter validation */
@@ -1126,12 +1181,12 @@ operator|!
 name|DataReg
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlPrepIndexFieldValue: null handle\n"
+literal|"Null handle\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1144,7 +1199,7 @@ block|}
 comment|/* Allocate a new object descriptor */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|INTERNAL_TYPE_INDEX_FIELD
 argument_list|)
@@ -1164,17 +1219,15 @@ block|}
 comment|/* Initialize areas of the object that are common to all fields */
 name|Status
 operator|=
-name|AcpiAmlPrepCommonFieldObject
+name|AcpiExPrepCommonFieldObject
 argument_list|(
 name|ObjDesc
 argument_list|,
 name|FieldFlags
 argument_list|,
-name|FieldAttribute
+name|FieldBitPosition
 argument_list|,
-name|FieldPosition
-argument_list|,
-name|FieldLength
+name|FieldBitLength
 argument_list|)
 expr_stmt|;
 if|if
@@ -1196,71 +1249,108 @@ name|ObjDesc
 operator|->
 name|IndexField
 operator|.
+name|DataObj
+operator|=
+name|AcpiNsGetAttachedObject
+argument_list|(
+name|DataReg
+argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|IndexField
+operator|.
+name|IndexObj
+operator|=
+name|AcpiNsGetAttachedObject
+argument_list|(
+name|IndexReg
+argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|IndexField
+operator|.
 name|Value
 operator|=
 call|(
 name|UINT32
 call|)
 argument_list|(
-name|FieldPosition
+name|FieldBitPosition
 operator|/
 name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|Granularity
+name|AccessBitWidth
 argument_list|)
 expr_stmt|;
+comment|/* An additional reference for the attached objects */
+name|AcpiUtAddReference
+argument_list|(
 name|ObjDesc
 operator|->
 name|IndexField
 operator|.
-name|Index
-operator|=
-name|IndexReg
+name|DataObj
+argument_list|)
 expr_stmt|;
+name|AcpiUtAddReference
+argument_list|(
 name|ObjDesc
 operator|->
 name|IndexField
 operator|.
-name|Data
-operator|=
-name|DataReg
+name|IndexObj
+argument_list|)
 expr_stmt|;
 comment|/* Debug info */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlPrepIndexFieldValue: bitoff=%X off=%X gran=%X\n"
+literal|"bitoff=%X off=%X gran=%X Index %p Data %p\n"
 operator|,
 name|ObjDesc
 operator|->
 name|IndexField
 operator|.
-name|BitOffset
+name|StartFieldBitOffset
 operator|,
 name|ObjDesc
 operator|->
 name|IndexField
 operator|.
-name|Offset
+name|BaseByteOffset
 operator|,
 name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|Granularity
+name|AccessBitWidth
+operator|,
+name|ObjDesc
+operator|->
+name|IndexField
+operator|.
+name|IndexObj
+operator|,
+name|ObjDesc
+operator|->
+name|IndexField
+operator|.
+name|DataObj
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlPrepIndexFieldValue: set NamedObj %p (%4.4s) val = %p\n"
+literal|"set NamedObj %p (%4.4s) val = %p\n"
 operator|,
 name|Node
 operator|,
@@ -1275,42 +1365,11 @@ name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-name|DUMP_STACK_ENTRY
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-name|DUMP_ENTRY
-argument_list|(
-name|IndexReg
-argument_list|,
-name|ACPI_INFO
-argument_list|)
-expr_stmt|;
-name|DUMP_ENTRY
-argument_list|(
-name|DataReg
-argument_list|,
-name|ACPI_INFO
-argument_list|)
-expr_stmt|;
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_INFO
-argument_list|,
-operator|(
-literal|"============================================================\n"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*      * Store the constructed descriptor (ObjDesc) into the NamedObj whose      * handle is on TOS, preserving the current type of that NamedObj.      */
+comment|/*      * Store the constructed descriptor (ObjDesc) into the parent Node,      * preserving the current type of that NamedObj.      */
 name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|,
 name|ObjDesc
@@ -1320,9 +1379,6 @@ name|UINT8
 operator|)
 name|AcpiNsGetType
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|)
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DISPATCHER
+value|ACPI_DISPATCHER
 end_define
 
 begin_macro
@@ -125,12 +125,12 @@ name|AE_NULL_ENTRY
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"DsParseMethod: **** Parsing [%4.4s] **** NamedObj=%p\n"
+literal|"**** Parsing [%4.4s] **** NamedObj=%p\n"
 operator|,
 operator|&
 operator|(
@@ -201,7 +201,11 @@ name|Status
 operator|=
 name|AcpiOsCreateSemaphore
 argument_list|(
-literal|1
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Concurrency
 argument_list|,
 name|ObjDesc
 operator|->
@@ -268,7 +272,7 @@ name|Node
 operator|=
 name|Node
 expr_stmt|;
-comment|/*      * Parse the method, first pass      *      * The first pass load is      * where newly declared named objects are      * added into the namespace.  Actual evaluation of      * the named objects (what would be called a "second      * pass") happens during the actual execution of the      * method so that operands to the named objects can      * take on dynamic run-time values.      */
+comment|/*      * Parse the method, first pass      *      * The first pass load is where newly declared named objects are      * added into the namespace.  Actual evaluation of      * the named objects (what would be called a "second      * pass") happens during the actual execution of the      * method so that operands to the named objects can      * take on dynamic run-time values.      */
 name|Status
 operator|=
 name|AcpiPsParseAml
@@ -319,7 +323,7 @@ block|}
 comment|/* Get a new OwnerId for objects created by this method */
 name|OwnerId
 operator|=
-name|AcpiCmAllocateOwnerId
+name|AcpiUtAllocateOwnerId
 argument_list|(
 name|OWNER_TYPE_METHOD
 argument_list|)
@@ -332,12 +336,12 @@ name|OwningId
 operator|=
 name|OwnerId
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"DsParseMethod: **** [%4.4s] Parsed **** NamedObj=%p Op=%p\n"
+literal|"**** [%4.4s] Parsed **** NamedObj=%p Op=%p\n"
 operator|,
 operator|&
 operator|(
@@ -372,7 +376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsBeginMethodExecution  *  * PARAMETERS:  MethodNode         - Node of the method  *              ObjDesc             - The method object  *  * RETURN:      Status  *  * DESCRIPTION: Prepare a method for execution.  Parses the method if necessary,  *              increments the thread count, and waits at the method semaphore  *              for clearance to execute.  *  * MUTEX:       Locks/unlocks parser.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsBeginMethodExecution  *  * PARAMETERS:  MethodNode          - Node of the method  *              ObjDesc             - The method object  *              CallingMethodNode   - Caller of this method (if non-null)  *  * RETURN:      Status  *  * DESCRIPTION: Prepare a method for execution.  Parses the method if necessary,  *              increments the thread count, and waits at the method semaphore  *              for clearance to execute.  *  * MUTEX:       Locks/unlocks parser.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -386,6 +390,10 @@ parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
+parameter_list|,
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|CallingMethodNode
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -412,26 +420,7 @@ name|AE_NULL_ENTRY
 argument_list|)
 expr_stmt|;
 block|}
-name|ObjDesc
-operator|=
-name|AcpiNsGetAttachedObject
-argument_list|(
-name|MethodNode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NULL_OBJECT
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * If there is a concurrency limit on this method, we need to      * obtain a unit from the method semaphore.  This releases the      * interpreter if we block      */
+comment|/*      * If there is a concurrency limit on this method, we need to      * obtain a unit from the method semaphore.      */
 if|if
 condition|(
 name|ObjDesc
@@ -441,9 +430,40 @@ operator|.
 name|Semaphore
 condition|)
 block|{
+comment|/*          * Allow recursive method calls, up to the reentrancy/concurrency          * limit imposed by the SERIALIZED rule and the SyncLevel method          * parameter.          *          * The point of this code is to avoid permanently blocking a          * thread that is making recursive method calls.          */
+if|if
+condition|(
+name|MethodNode
+operator|==
+name|CallingMethodNode
+condition|)
+block|{
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|ThreadCount
+operator|>=
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Concurrency
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_METHOD_LIMIT
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/*          * Get a unit from the method semaphore. This releases the          * interpreter if we block          */
 name|Status
 operator|=
-name|AcpiAmlSystemWaitSemaphore
+name|AcpiExSystemWaitSemaphore
 argument_list|(
 name|ObjDesc
 operator|->
@@ -455,7 +475,7 @@ name|WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Increment the method parse tree thread count since there      * is one additional thread executing in it.  If configured      * for deletion-on-exit, the parse tree will be deleted when      * the last thread completes execution of the method      */
+comment|/*      * Increment the method parse tree thread count since it has been      * reentered one more time (even if it is the same thread)      */
 name|ObjDesc
 operator|->
 name|Method
@@ -521,12 +541,12 @@ argument_list|,
 name|ThisWalkState
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsCall, execute method %p, currentstate=%p\n"
+literal|"Execute method %p, currentstate=%p\n"
 operator|,
 name|ThisWalkState
 operator|->
@@ -582,6 +602,10 @@ argument_list|(
 name|MethodNode
 argument_list|,
 name|ObjDesc
+argument_list|,
+name|ThisWalkState
+operator|->
+name|MethodNode
 argument_list|)
 expr_stmt|;
 if|if
@@ -855,7 +879,7 @@ name|i
 operator|++
 control|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ThisWalkState
 operator|->
@@ -882,12 +906,12 @@ name|NumOperands
 operator|=
 literal|0
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsCall, starting nested execution, newstate=%p\n"
+literal|"Starting nested execution, newstate=%p\n"
 operator|,
 name|NextWalkState
 operator|)
@@ -976,7 +1000,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ReturnDesc
 argument_list|)
@@ -991,19 +1015,19 @@ block|}
 else|else
 block|{
 comment|/*              * Delete the return value if it will not be used by the              * calling method              */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ReturnDesc
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsRestart: Method=%p Return=%p ReturnUsed?=%X ResStack=%p State=%p\n"
+literal|"Method=%p Return=%p ReturnUsed?=%X ResStack=%p State=%p\n"
 operator|,
 name|WalkState
 operator|->
@@ -1044,9 +1068,6 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
@@ -1088,7 +1109,7 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 comment|/*      * Lock the parser while we terminate this method.      * If this is the last thread executing the method,      * we have additional cleanup to perform      */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_PARSER
 argument_list|)
@@ -1105,8 +1126,6 @@ operator|.
 name|Semaphore
 condition|)
 block|{
-name|Status
-operator|=
 name|AcpiOsSignalSemaphore
 argument_list|(
 name|WalkState
@@ -1151,7 +1170,7 @@ operator|->
 name|MethodNode
 expr_stmt|;
 comment|/*          * Delete any namespace entries created immediately underneath          * the method          */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -1181,13 +1200,13 @@ operator|.
 name|OwningId
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_PARSER
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 35 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 37 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|TABLE_MANAGER
+value|ACPI_TABLES
 end_define
 
 begin_macro
@@ -93,7 +93,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: cmdelete - object deletion and reference count utilities  *              $Revision: 62 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 71 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__CMDELETE_C__
+name|__UTDELETE_C__
 end_define
 
 begin_include
@@ -47,23 +47,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"cmdelete"
+literal|"utdelete"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmDeleteInternalObj  *  * PARAMETERS:  *Object        - Pointer to the list to be deleted  *  * RETURN:      None  *  * DESCRIPTION: Low level object deletion, after reference counts have been  *              updated (All reference counts, including sub-objects!)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteInternalObj  *  * PARAMETERS:  *Object        - Pointer to the list to be deleted  *  * RETURN:      None  *  * DESCRIPTION: Low level object deletion, after reference counts have been  *              updated (All reference counts, including sub-objects!)  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmDeleteInternalObj
+name|AcpiUtDeleteInternalObj
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -82,7 +82,7 @@ name|HandlerDesc
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"CmDeleteInternalObj"
+literal|"UtDeleteInternalObj"
 argument_list|,
 name|Object
 argument_list|)
@@ -109,12 +109,12 @@ block|{
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: **** String %p, ptr %p\n"
+literal|"**** String %p, ptr %p\n"
 operator|,
 name|Object
 operator|,
@@ -139,12 +139,12 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: **** Buffer %p, ptr %p\n"
+literal|"**** Buffer %p, ptr %p\n"
 operator|,
 name|Object
 operator|,
@@ -169,12 +169,12 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: **** Package of count %X\n"
+literal|" **** Package of count %X\n"
 operator|,
 name|Object
 operator|->
@@ -198,12 +198,12 @@ break|break;
 case|case
 name|ACPI_TYPE_MUTEX
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: ***** Mutex %p, Semaphore %p\n"
+literal|"***** Mutex %p, Semaphore %p\n"
 operator|,
 name|Object
 operator|,
@@ -213,6 +213,11 @@ name|Mutex
 operator|.
 name|Semaphore
 operator|)
+argument_list|)
+expr_stmt|;
+name|AcpiExUnlinkMutex
+argument_list|(
+name|Object
 argument_list|)
 expr_stmt|;
 name|AcpiOsDeleteSemaphore
@@ -228,12 +233,12 @@ break|break;
 case|case
 name|ACPI_TYPE_EVENT
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: ***** Event %p, Semaphore %p\n"
+literal|"***** Event %p, Semaphore %p\n"
 operator|,
 name|Object
 operator|,
@@ -266,12 +271,12 @@ break|break;
 case|case
 name|ACPI_TYPE_METHOD
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: ***** Method %p\n"
+literal|"***** Method %p\n"
 operator|,
 name|Object
 operator|)
@@ -309,12 +314,12 @@ break|break;
 case|case
 name|ACPI_TYPE_REGION
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: ***** Region %p\n"
+literal|"***** Region %p\n"
 operator|,
 name|Object
 operator|)
@@ -369,7 +374,7 @@ name|RegionContext
 expr_stmt|;
 block|}
 comment|/* Now we can free the Extra object */
-name|AcpiCmDeleteObjectDesc
+name|AcpiUtDeleteObjectDesc
 argument_list|(
 name|Object
 operator|->
@@ -381,14 +386,14 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|ACPI_TYPE_FIELD_UNIT
+name|ACPI_TYPE_BUFFER_FIELD
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: ***** FieldUnit %p\n"
+literal|"***** Buffer Field %p\n"
 operator|,
 name|Object
 operator|)
@@ -398,16 +403,16 @@ if|if
 condition|(
 name|Object
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Extra
 condition|)
 block|{
-name|AcpiCmDeleteObjectDesc
+name|AcpiUtDeleteObjectDesc
 argument_list|(
 name|Object
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Extra
 argument_list|)
@@ -432,18 +437,18 @@ name|ObjPointer
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: Deleting Obj Ptr %p \n"
+literal|"Deleting Obj Ptr %p \n"
 operator|,
 name|ObjPointer
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|ObjPointer
 argument_list|)
@@ -462,16 +467,16 @@ operator|&
 name|AOPOBJ_STATIC_ALLOCATION
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: Object %p [%s] static allocation, no delete\n"
+literal|"Object %p [%s] static allocation, no delete\n"
 operator|,
 name|Object
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|Object
 operator|->
@@ -497,16 +502,16 @@ name|AOPOBJ_STATIC_ALLOCATION
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: Deleting object %p [%s]\n"
+literal|"Deleting object %p [%s]\n"
 operator|,
 name|Object
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|Object
 operator|->
@@ -517,7 +522,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmDeleteObjectDesc
+name|AcpiUtDeleteObjectDesc
 argument_list|(
 name|Object
 argument_list|)
@@ -529,12 +534,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmDeleteInternalObjectList  *  * PARAMETERS:  *ObjList        - Pointer to the list to be deleted  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function deletes an internal object list, including both  *              simple objects and package objects  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteInternalObjectList  *  * PARAMETERS:  *ObjList        - Pointer to the list to be deleted  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function deletes an internal object list, including both  *              simple objects and package objects  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmDeleteInternalObjectList
+name|AcpiUtDeleteInternalObjectList
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -549,7 +554,7 @@ name|InternalObj
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmDeleteInternalObjectList"
+literal|"UtDeleteInternalObjectList"
 argument_list|)
 expr_stmt|;
 comment|/* Walk the null-terminated internal list */
@@ -582,7 +587,7 @@ condition|)
 block|{
 comment|/* Delete the package */
 comment|/*              * TBD: [Investigate] This might not be the right thing to do,              * depending on how the internal package object was allocated!!!              */
-name|AcpiCmDeleteInternalObj
+name|AcpiUtDeleteInternalObj
 argument_list|(
 operator|*
 name|InternalObj
@@ -591,7 +596,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Free the combined parameter pointer list and object array */
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|ObjList
 argument_list|)
@@ -605,13 +610,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmUpdateRefCount  *  * PARAMETERS:  *Object         - Object whose ref count is to be updated  *              Action          - What to do  *  * RETURN:      New ref count  *  * DESCRIPTION: Modify the ref count and return it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtUpdateRefCount  *  * PARAMETERS:  *Object         - Object whose ref count is to be updated  *              Action          - What to do  *  * RETURN:      New ref count  *  * DESCRIPTION: Modify the ref count and return it.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|AcpiCmUpdateRefCount
+name|AcpiUtUpdateRefCount
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -627,6 +632,11 @@ decl_stmt|;
 name|UINT16
 name|NewCount
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"UtUpdateRefCount"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -667,12 +677,12 @@ name|ReferenceCount
 operator|=
 name|NewCount
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Obj %p Refs=%X, [Incremented]\n"
+literal|"Obj %p Refs=%X, [Incremented]\n"
 operator|,
 name|Object
 operator|,
@@ -691,12 +701,12 @@ operator|<
 literal|1
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Obj %p Refs=%X, can't decrement! (Set to 0)\n"
+literal|"Obj %p Refs=%X, can't decrement! (Set to 0)\n"
 operator|,
 name|Object
 operator|,
@@ -714,12 +724,12 @@ block|{
 name|NewCount
 operator|--
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Obj %p Refs=%X, [Decremented]\n"
+literal|"Obj %p Refs=%X, [Decremented]\n"
 operator|,
 name|Object
 operator|,
@@ -739,12 +749,12 @@ operator|==
 name|ACPI_TYPE_METHOD
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Method Obj %p Refs=%X, [Decremented]\n"
+literal|"Method Obj %p Refs=%X, [Decremented]\n"
 operator|,
 name|Object
 operator|,
@@ -768,7 +778,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiCmDeleteInternalObj
+name|AcpiUtDeleteInternalObj
 argument_list|(
 name|Object
 argument_list|)
@@ -778,12 +788,12 @@ break|break;
 case|case
 name|REF_FORCE_DELETE
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Obj %p Refs=%X, Force delete! (Set to 0)\n"
+literal|"Obj %p Refs=%X, Force delete! (Set to 0)\n"
 operator|,
 name|Object
 operator|,
@@ -803,19 +813,19 @@ name|ReferenceCount
 operator|=
 name|NewCount
 expr_stmt|;
-name|AcpiCmDeleteInternalObj
+name|AcpiUtDeleteInternalObj
 argument_list|(
 name|Object
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Unknown action (%X)\n"
+literal|"Unknown action (%X)\n"
 operator|,
 name|Action
 operator|)
@@ -831,12 +841,12 @@ operator|>
 name|MAX_REFERENCE_COUNT
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: **** AE_ERROR **** Invalid Reference Count (%X) in object %p\n\n"
+literal|"**** AE_ERROR **** Invalid Reference Count (%X) in object %p\n\n"
 operator|,
 name|Count
 operator|,
@@ -850,12 +860,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmUpdateObjectReference  *  * PARAMETERS:  *Object             - Increment ref count for this object  *                                    and all sub-objects  *              Action              - Either REF_INCREMENT or REF_DECREMENT or  *                                    REF_FORCE_DELETE  *  * RETURN:      Status  *  * DESCRIPTION: Increment the object reference count  *  * Object references are incremented when:  * 1) An object is attached to a Node (namespace object)  * 2) An object is copied (all subobjects must be incremented)  *  * Object references are decremented when:  * 1) An object is detached from an Node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtUpdateObjectReference  *  * PARAMETERS:  *Object             - Increment ref count for this object  *                                    and all sub-objects  *              Action              - Either REF_INCREMENT or REF_DECREMENT or  *                                    REF_FORCE_DELETE  *  * RETURN:      Status  *  * DESCRIPTION: Increment the object reference count  *  * Object references are incremented when:  * 1) An object is attached to a Node (namespace object)  * 2) An object is copied (all subobjects must be incremented)  *  * Object references are decremented when:  * 1) An object is detached from an Node  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmUpdateObjectReference
+name|AcpiUtUpdateObjectReference
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -891,7 +901,7 @@ name|State
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"CmUpdateObjectReference"
+literal|"UtUpdateObjectReference"
 argument_list|,
 name|Object
 argument_list|)
@@ -920,12 +930,12 @@ name|ACPI_DESC_TYPE_NAMED
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateObjectReference: Object %p is NS handle\n"
+literal|"Object %p is NS handle\n"
 operator|,
 name|Object
 operator|)
@@ -945,12 +955,12 @@ name|Object
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateObjectReference: **** Object %p is Pcode Ptr\n"
+literal|"**** Object %p is Pcode Ptr\n"
 operator|,
 name|Object
 operator|)
@@ -964,7 +974,7 @@ expr_stmt|;
 block|}
 name|State
 operator|=
-name|AcpiCmCreateUpdateState
+name|AcpiUtCreateUpdateState
 argument_list|(
 name|Object
 argument_list|,
@@ -992,7 +1002,7 @@ name|Update
 operator|.
 name|Value
 expr_stmt|;
-name|AcpiCmDeleteGenericState
+name|AcpiUtDeleteGenericState
 argument_list|(
 name|State
 argument_list|)
@@ -1012,7 +1022,7 @@ name|ACPI_TYPE_DEVICE
 case|:
 name|Status
 operator|=
-name|AcpiCmCreateUpdateStateAndPush
+name|AcpiUtCreateUpdateStateAndPush
 argument_list|(
 name|Object
 operator|->
@@ -1040,7 +1050,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmUpdateRefCount
+name|AcpiUtUpdateRefCount
 argument_list|(
 name|Object
 operator|->
@@ -1051,7 +1061,7 @@ argument_list|,
 name|Action
 argument_list|)
 expr_stmt|;
-name|AcpiCmUpdateRefCount
+name|AcpiUtUpdateRefCount
 argument_list|(
 name|Object
 operator|->
@@ -1088,7 +1098,7 @@ name|AddrHandler
 operator|.
 name|Next
 expr_stmt|;
-name|AcpiCmUpdateRefCount
+name|AcpiUtUpdateRefCount
 argument_list|(
 name|Next
 argument_list|,
@@ -1126,7 +1136,7 @@ block|{
 comment|/*                  * Push each element onto the stack for later processing.                  * Note: There can be null elements within the package,                  * these are simply ignored                  */
 name|Status
 operator|=
-name|AcpiCmCreateUpdateStateAndPush
+name|AcpiUtCreateUpdateStateAndPush
 argument_list|(
 name|Object
 operator|->
@@ -1160,17 +1170,17 @@ block|}
 block|}
 break|break;
 case|case
-name|ACPI_TYPE_FIELD_UNIT
+name|ACPI_TYPE_BUFFER_FIELD
 case|:
 name|Status
 operator|=
-name|AcpiCmCreateUpdateStateAndPush
+name|AcpiUtCreateUpdateStateAndPush
 argument_list|(
 name|Object
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Container
+name|BufferObj
 argument_list|,
 name|Action
 argument_list|,
@@ -1194,17 +1204,17 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|INTERNAL_TYPE_DEF_FIELD
+name|INTERNAL_TYPE_REGION_FIELD
 case|:
 name|Status
 operator|=
-name|AcpiCmCreateUpdateStateAndPush
+name|AcpiUtCreateUpdateStateAndPush
 argument_list|(
 name|Object
 operator|->
 name|Field
 operator|.
-name|Container
+name|RegionObj
 argument_list|,
 name|Action
 argument_list|,
@@ -1232,13 +1242,13 @@ name|INTERNAL_TYPE_BANK_FIELD
 case|:
 name|Status
 operator|=
-name|AcpiCmCreateUpdateStateAndPush
+name|AcpiUtCreateUpdateStateAndPush
 argument_list|(
 name|Object
 operator|->
 name|BankField
 operator|.
-name|BankSelect
+name|BankRegisterObj
 argument_list|,
 name|Action
 argument_list|,
@@ -1262,13 +1272,77 @@ expr_stmt|;
 block|}
 name|Status
 operator|=
-name|AcpiCmCreateUpdateStateAndPush
+name|AcpiUtCreateUpdateStateAndPush
 argument_list|(
 name|Object
 operator|->
 name|BankField
 operator|.
-name|Container
+name|RegionObj
+argument_list|,
+name|Action
+argument_list|,
+operator|&
+name|StateList
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|INTERNAL_TYPE_INDEX_FIELD
+case|:
+name|Status
+operator|=
+name|AcpiUtCreateUpdateStateAndPush
+argument_list|(
+name|Object
+operator|->
+name|IndexField
+operator|.
+name|IndexObj
+argument_list|,
+name|Action
+argument_list|,
+operator|&
+name|StateList
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiUtCreateUpdateStateAndPush
+argument_list|(
+name|Object
+operator|->
+name|IndexField
+operator|.
+name|DataObj
 argument_list|,
 name|Action
 argument_list|,
@@ -1294,8 +1368,8 @@ break|break;
 case|case
 name|ACPI_TYPE_REGION
 case|:
-comment|/* TBD: [Investigate]             AcpiCmUpdateRefCount (Object->Region.AddrHandler, Action);     */
-comment|/*             Status =                 AcpiCmCreateUpdateStateAndPush (Object->Region.AddrHandler,                                                 Action,&StateList);             if (ACPI_FAILURE (Status))             {                 return_ACPI_STATUS (Status);             } */
+comment|/* TBD: [Investigate]             AcpiUtUpdateRefCount (Object->Region.AddrHandler, Action);     */
+comment|/*             Status =                 AcpiUtCreateUpdateStateAndPush (Object->Region.AddrHandler,                                                 Action,&StateList);             if (ACPI_FAILURE (Status))             {                 return_ACPI_STATUS (Status);             } */
 break|break;
 case|case
 name|INTERNAL_TYPE_REFERENCE
@@ -1303,7 +1377,7 @@ case|:
 break|break;
 block|}
 comment|/*          * Now we can update the count in the main object.  This can only          * happen after we update the sub-objects in case this causes the          * main object to be deleted.          */
-name|AcpiCmUpdateRefCount
+name|AcpiUtUpdateRefCount
 argument_list|(
 name|Object
 argument_list|,
@@ -1313,7 +1387,7 @@ expr_stmt|;
 comment|/* Move on to the next object to be updated */
 name|State
 operator|=
-name|AcpiCmPopGenericState
+name|AcpiUtPopGenericState
 argument_list|(
 operator|&
 name|StateList
@@ -1329,12 +1403,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmAddReference  *  * PARAMETERS:  *Object        - Object whose reference count is to be  *                                  incremented  *  * RETURN:      None  *  * DESCRIPTION: Add one reference to an ACPI object  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAddReference  *  * PARAMETERS:  *Object        - Object whose reference count is to be  *                                  incremented  *  * RETURN:      None  *  * DESCRIPTION: Add one reference to an ACPI object  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1343,7 +1417,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"CmAddReference"
+literal|"UtAddReference"
 argument_list|,
 name|Object
 argument_list|)
@@ -1352,7 +1426,7 @@ comment|/*      * Ensure that we have a valid object      */
 if|if
 condition|(
 operator|!
-name|AcpiCmValidInternalObject
+name|AcpiUtValidInternalObject
 argument_list|(
 name|Object
 argument_list|)
@@ -1362,7 +1436,7 @@ name|return_VOID
 expr_stmt|;
 block|}
 comment|/*      * We have a valid ACPI internal object, now increment the reference count      */
-name|AcpiCmUpdateObjectReference
+name|AcpiUtUpdateObjectReference
 argument_list|(
 name|Object
 argument_list|,
@@ -1375,12 +1449,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmRemoveReference  *  * PARAMETERS:  *Object        - Object whose ref count will be decremented  *  * RETURN:      None  *  * DESCRIPTION: Decrement the reference count of an ACPI internal object  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtRemoveReference  *  * PARAMETERS:  *Object        - Object whose ref count will be decremented  *  * RETURN:      None  *  * DESCRIPTION: Decrement the reference count of an ACPI internal object  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1389,7 +1463,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"CmRemoveReference"
+literal|"UtRemoveReference"
 argument_list|,
 name|Object
 argument_list|)
@@ -1398,7 +1472,7 @@ comment|/*      * Ensure that we have a valid object      */
 if|if
 condition|(
 operator|!
-name|AcpiCmValidInternalObject
+name|AcpiUtValidInternalObject
 argument_list|(
 name|Object
 argument_list|)
@@ -1407,12 +1481,12 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmRemoveReference: Obj %p Refs=%X\n"
+literal|"Obj %p Refs=%X\n"
 operator|,
 name|Object
 operator|,
@@ -1425,7 +1499,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Decrement the reference count, and only actually delete the object      * if the reference count becomes 0.  (Must also decrement the ref count      * of all subobjects!)      */
-name|AcpiCmUpdateObjectReference
+name|AcpiUtUpdateObjectReference
 argument_list|(
 name|Object
 argument_list|,

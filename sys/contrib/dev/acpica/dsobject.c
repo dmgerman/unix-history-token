@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DISPATCHER
+value|ACPI_DISPATCHER
 end_define
 
 begin_macro
@@ -87,7 +87,7 @@ modifier|*
 name|ReturnValue
 parameter_list|)
 block|{
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 decl_stmt|;
 name|ACPI_STATUS
@@ -106,6 +106,11 @@ decl_stmt|;
 name|UINT8
 name|TableRevision
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"DsInitOneObject"
+argument_list|)
+expr_stmt|;
 name|Info
 operator|->
 name|ObjectCount
@@ -240,12 +245,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsInitOneObject: Method %p [%4.4s] parse failed! %s\n"
+literal|"Method %p [%4.4s] parse failed! %s\n"
 operator|,
 name|ObjHandle
 operator|,
@@ -260,7 +265,7 @@ operator|)
 operator|->
 name|Name
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -316,12 +321,12 @@ argument_list|(
 literal|"DsInitializeObjects"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsInitializeObjects: **** Starting initialization of namespace objects ****\n"
+literal|"**** Starting initialization of namespace objects ****\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -385,12 +390,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsInitializeObjects: WalkNamespace failed! %x\n"
+literal|"WalkNamespace failed! %x\n"
 operator|,
 name|Status
 operator|)
@@ -414,12 +419,12 @@ name|ObjectCount
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsInitializeObjects: %d Control Methods found\n"
+literal|"%d Control Methods found\n"
 operator|,
 name|Info
 operator|.
@@ -427,12 +432,12 @@ name|MethodCount
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsInitializeObjects: %d Op Regions found\n"
+literal|"%d Op Regions found\n"
 operator|,
 name|Info
 operator|.
@@ -492,6 +497,11 @@ name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"DsInitObjectFromOp"
+argument_list|)
+expr_stmt|;
 name|OpInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
@@ -569,7 +579,7 @@ expr_stmt|;
 comment|/* Resolve the object (could be an arg or local) */
 name|Status
 operator|=
-name|AcpiAmlResolveToValue
+name|AcpiExResolveToValue
 argument_list|(
 operator|&
 name|ArgDesc
@@ -585,7 +595,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ArgDesc
 argument_list|)
@@ -608,12 +618,12 @@ operator|!=
 name|ACPI_TYPE_INTEGER
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"InitObject: Expecting number, got obj: %p type %X\n"
+literal|"Expecting number, got obj: %p type %X\n"
 operator|,
 name|ArgDesc
 operator|,
@@ -625,7 +635,7 @@ name|Type
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ArgDesc
 argument_list|)
@@ -655,7 +665,7 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ArgDesc
 argument_list|)
@@ -706,7 +716,7 @@ name|Buffer
 operator|.
 name|Pointer
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 operator|(
 operator|*
@@ -769,15 +779,15 @@ name|ByteList
 operator|->
 name|Opcode
 operator|!=
-name|AML_BYTELIST_OP
+name|AML_INT_BYTELIST_OP
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"InitObject: Expecting bytelist, got: %x\n"
+literal|"Expecting bytelist, got: %x\n"
 operator|,
 name|ByteList
 operator|)
@@ -820,7 +830,7 @@ case|case
 name|ACPI_TYPE_PACKAGE
 case|:
 comment|/*          * When called, an internal package object has already          *  been built and is pointed to by *ObjDesc.          *  AcpiDsBuildInternalObject build another internal          *  package object, so remove reference to the original          *  so that it is deleted.  Error checking is done          *  within the remove reference function.          */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 operator|*
 name|ObjDesc
@@ -920,7 +930,7 @@ operator|)
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|=
 name|AML_LOCAL_OP
 expr_stmt|;
@@ -949,7 +959,7 @@ operator|)
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|=
 name|AML_ARG_OP
 expr_stmt|;
@@ -975,7 +985,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
 comment|/* Node was saved in Op */
@@ -1000,7 +1010,7 @@ operator|)
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|=
 name|Opcode
 expr_stmt|;
@@ -1008,12 +1018,12 @@ break|break;
 block|}
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"InitObject: Unimplemented data type: %x\n"
+literal|"Unimplemented data type: %x\n"
 operator|,
 operator|(
 operator|*
@@ -1063,7 +1073,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 decl_stmt|;
 name|ACPI_STATUS
@@ -1087,7 +1097,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
 comment|/*          * This is an object reference.  If The name was          * previously looked up in the NS, it is stored in this op.          * Otherwise, go ahead and look it up now          */
@@ -1190,7 +1200,7 @@ name|AmlOffset
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|Name
 argument_list|)
@@ -1255,7 +1265,7 @@ block|}
 comment|/* Create and init the internal ACPI object */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|Type
 argument_list|)
@@ -1296,7 +1306,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1362,7 +1372,7 @@ argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_PACKAGE
 argument_list|)
@@ -1407,7 +1417,7 @@ name|Package
 operator|.
 name|Elements
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 operator|(
 name|ObjDesc
@@ -1436,15 +1446,7 @@ operator|.
 name|Elements
 condition|)
 block|{
-comment|/* Package vector allocation failure   */
-name|REPORT_ERROR
-argument_list|(
-operator|(
-literal|"DsBuildInternalPackageObj: Package vector allocation failure\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|AcpiCmDeleteObjectDesc
+name|AcpiUtDeleteObjectDesc
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1716,9 +1718,6 @@ name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|,
 name|ObjDesc
@@ -1750,7 +1749,7 @@ argument_list|)
 expr_stmt|;
 name|Cleanup
 label|:
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)

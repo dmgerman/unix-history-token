@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 15 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 25 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -67,12 +67,12 @@ argument_list|(
 literal|"NsInitializeObjects"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"NsInitializeObjects: **** Starting initialization of namespace objects ****\n"
+literal|"**** Starting initialization of namespace objects ****\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -142,12 +142,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"NsInitializeObjects: WalkNamespace failed! %x\n"
+literal|"WalkNamespace failed! %x\n"
 operator|,
 name|Status
 operator|)
@@ -183,12 +183,12 @@ name|ObjectCount
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"NsInitializeObjects: %d Control Methods found\n"
+literal|"%d Control Methods found\n"
 operator|,
 name|Info
 operator|.
@@ -196,12 +196,12 @@ name|MethodCount
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"NsInitializeObjects: %d Op Regions found\n"
+literal|"%d Op Regions found\n"
 operator|,
 name|Info
 operator|.
@@ -218,7 +218,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsInitializeDevices  *  * PARAMETERS:  None  *  * RETURN:      ACPI_STATUS  *  * DESCRIPTION: Walk the entire namespace and initialize all ACPI devices.  *              This means running _INI on all present devices.  *  *              Also: Install PCI config space handler for all PCI root bridges.  *              A PCI root bridge is found by searching for devices containing  *              a HID with the value EISAID("PNP0A03")  *  *****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsInitializeDevices  *  * PARAMETERS:  None  *  * RETURN:      ACPI_STATUS  *  * DESCRIPTION: Walk the entire namespace and initialize all ACPI devices.  *              This means running _INI on all present devices.  *  *              Note: We install PCI config space handler on region access,  *              not here.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -294,12 +294,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"NsInitializeDevices: WalkNamespace failed! %x\n"
+literal|"WalkNamespace failed! %x\n"
 operator|,
 name|Status
 operator|)
@@ -359,7 +359,7 @@ modifier|*
 name|ReturnValue
 parameter_list|)
 block|{
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 decl_stmt|;
 name|ACPI_STATUS
@@ -482,7 +482,7 @@ argument_list|,
 operator|(
 literal|"%s while getting region arguments [%4.4s]\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -517,7 +517,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|ACPI_TYPE_FIELD_UNIT
+name|ACPI_TYPE_BUFFER_FIELD
 case|:
 name|Info
 operator|->
@@ -544,7 +544,7 @@ operator|++
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiDsGetFieldUnitArguments
+name|AcpiDsGetBufferFieldArguments
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -571,9 +571,9 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"%s while getting field arguments [%4.4s]\n"
+literal|"%s while getting buffer field arguments [%4.4s]\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -620,7 +620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsInitOneDevice  *  * PARAMETERS:  WALK_CALLBACK  *  * RETURN:      ACPI_STATUS  *  * DESCRIPTION: This is called once per device soon after ACPI is enabled  *              to initialize each device. It determines if the device is  *              present, and if so, calls _INI.  *  *****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsInitOneDevice  *  * PARAMETERS:  ACPI_WALK_CALLBACK  *  * RETURN:      ACPI_STATUS  *  * DESCRIPTION: This is called once per device soon after ACPI is enabled  *              to initialize each device. It determines if the device is  *              present, and if so, calls _INI.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -693,7 +693,7 @@ operator|->
 name|DeviceCount
 operator|++
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -711,7 +711,7 @@ operator|!
 name|Node
 condition|)
 block|{
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -722,7 +722,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -730,7 +730,7 @@ expr_stmt|;
 comment|/*      * Run _STA to determine if we can run _INI on the device.      */
 name|DEBUG_EXEC
 argument_list|(
-name|AcpiCmDisplayInitPathname
+name|AcpiUtDisplayInitPathname
 argument_list|(
 name|Node
 argument_list|,
@@ -740,7 +740,7 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiCmExecute_STA
+name|AcpiUtExecute_STA
 argument_list|(
 name|Node
 argument_list|,
@@ -788,7 +788,7 @@ block|}
 comment|/*      * The device is present. Run _INI.      */
 name|DEBUG_EXEC
 argument_list|(
-name|AcpiCmDisplayInitPathname
+name|AcpiUtDisplayInitPathname
 argument_list|(
 name|ObjHandle
 argument_list|,
@@ -844,7 +844,7 @@ argument_list|(
 name|ObjHandle
 argument_list|)
 decl_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_WARN
 argument_list|,
@@ -853,14 +853,14 @@ literal|"%s._INI failed: %s\n"
 operator|,
 name|ScopeName
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|ScopeName
 argument_list|)
@@ -870,7 +870,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* Count of successfull INIs */
+comment|/* Count of successful INIs */
 name|Info
 operator|->
 name|Num_INI

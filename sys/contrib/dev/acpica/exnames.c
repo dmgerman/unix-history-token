@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amnames - interpreter/scanner name load/execute  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exnames - interpreter/scanner name load/execute  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMNAMES_C__
+name|__EXNAMES_C__
 end_define
 
 begin_include
@@ -41,13 +41,13 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amnames"
+literal|"exnames"
 argument_list|)
 end_macro
 
@@ -84,13 +84,13 @@ value|0x40000000
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlAllocateNameString  *  * PARAMETERS:  PrefixCount         - Count of parent levels. Special cases:  *                                    (-1) = root,  0 = none  *              NumNameSegs         - count of 4-character name segments  *  * RETURN:      A pointer to the allocated string segment.  This segment must  *              be deleted by the caller.  *  * DESCRIPTION: Allocate a buffer for a name string. Ensure allocated name  *              string is long enough, and set up prefix if any.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAllocateNameString  *  * PARAMETERS:  PrefixCount         - Count of parent levels. Special cases:  *                                    (-1) = root,  0 = none  *              NumNameSegs         - count of 4-character name segments  *  * RETURN:      A pointer to the allocated string segment.  This segment must  *              be deleted by the caller.  *  * DESCRIPTION: Allocate a buffer for a name string. Ensure allocated name  *              string is long enough, and set up prefix if any.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|NATIVE_CHAR
 modifier|*
-name|AcpiAmlAllocateNameString
+name|AcpiExAllocateNameString
 parameter_list|(
 name|UINT32
 name|PrefixCount
@@ -112,7 +112,7 @@ name|SizeNeeded
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlAllocateNameString"
+literal|"ExAllocateNameString"
 argument_list|)
 expr_stmt|;
 comment|/*      * Allow room for all \ and ^ prefixes, all segments, and a MultiNamePrefix.      * Also, one byte for the null terminator.      * This may actually be somewhat longer than needed.      */
@@ -163,7 +163,7 @@ block|}
 comment|/*      * Allocate a buffer for the name.      * This buffer must be deleted by the caller!      */
 name|NameString
 operator|=
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 name|SizeNeeded
 argument_list|)
@@ -177,7 +177,7 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AmlAllocateNameString: name allocation failure\n"
+literal|"ExAllocateNameString: name allocation failure\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -267,7 +267,7 @@ operator|=
 name|AML_DUAL_NAME_PREFIX
 expr_stmt|;
 block|}
-comment|/*      * Terminate string following prefixes. AcpiAmlExecNameSegment() will      * append the segment(s)      */
+comment|/*      * Terminate string following prefixes. AcpiExNameSegment() will      * append the segment(s)      */
 operator|*
 name|TempPtr
 operator|=
@@ -282,12 +282,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecNameSegment  *  * PARAMETERS:  InterpreterMode     - Current running mode (load1/Load2/Exec)  *  * RETURN:      Status  *  * DESCRIPTION: Execute a name segment (4 bytes)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExNameSegment  *  * PARAMETERS:  InterpreterMode     - Current running mode (load1/Load2/Exec)  *  * RETURN:      Status  *  * DESCRIPTION: Execute a name segment (4 bytes)  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecNameSegment
+name|AcpiExNameSegment
 parameter_list|(
 name|UINT8
 modifier|*
@@ -322,7 +322,7 @@ index|]
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecNameSegment"
+literal|"ExNameSegment"
 argument_list|)
 expr_stmt|;
 comment|/*      * If first character is a digit, then we know that we aren't looking at a      * valid name segment      */
@@ -351,12 +351,12 @@ operator|<=
 literal|'9'
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecNameSegment: leading digit: %c\n"
+literal|"leading digit: %c\n"
 operator|,
 name|CharBuf
 index|[
@@ -371,12 +371,12 @@ name|AE_CTRL_PENDING
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_LOAD
 argument_list|,
 operator|(
-literal|"AmlExecNameSegment: Bytes from stream:\n"
+literal|"Bytes from stream:\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -393,7 +393,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|AcpiCmValidAcpiCharacter
+name|AcpiUtValidAcpiCharacter
 argument_list|(
 operator|*
 name|AmlAddress
@@ -460,12 +460,12 @@ argument_list|,
 name|CharBuf
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"AmlExecNameSegment: Appended to - %s \n"
+literal|"Appended to - %s \n"
 operator|,
 name|NameString
 operator|)
@@ -474,12 +474,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"AmlExecNameSegment: No Name string - %s \n"
+literal|"No Name string - %s \n"
 operator|,
 name|CharBuf
 operator|)
@@ -496,12 +496,12 @@ name|Index
 condition|)
 block|{
 comment|/*          * First character was not a valid name character,          * so we are looking at something other than a name.          */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlExecNameSegment: Leading INT8 not alpha: %02Xh (not a name)\n"
+literal|"Leading character is not alpha: %02Xh (not a name)\n"
 operator|,
 name|CharBuf
 index|[
@@ -522,12 +522,12 @@ name|Status
 operator|=
 name|AE_AML_BAD_NAME
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecNameSegment: Bad INT8 %02x in name, at %p\n"
+literal|"Bad character %02x in name, at %p\n"
 operator|,
 operator|*
 name|AmlAddress
@@ -537,20 +537,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
-argument_list|(
-name|TRACE_EXEC
-argument_list|,
-operator|(
-literal|"Leave AcpiAmlExecNameSegment %s \n"
-operator|,
-name|AcpiCmFormatException
-argument_list|(
-name|Status
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 operator|*
 name|InAmlAddress
 operator|=
@@ -565,14 +551,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlGetNameString  *  * PARAMETERS:  DataType            - Data type to be associated with this name  *  * RETURN:      Status  *  * DESCRIPTION: Get a name, including any prefixes.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGetNameString  *  * PARAMETERS:  DataType            - Data type to be associated with this name  *  * RETURN:      Status  *  * DESCRIPTION: Get a name, including any prefixes.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlGetNameString
+name|AcpiExGetNameString
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DataType
 parameter_list|,
 name|UINT8
@@ -626,14 +612,14 @@ name|FALSE
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlGetNameString"
+literal|"ExGetNameString"
 argument_list|,
 name|AmlAddress
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|INTERNAL_TYPE_DEF_FIELD
+name|INTERNAL_TYPE_REGION_FIELD
 operator|==
 name|DataType
 operator|||
@@ -646,10 +632,10 @@ operator|==
 name|DataType
 condition|)
 block|{
-comment|/* Disallow prefixes for types associated with field names */
+comment|/* Disallow prefixes for types associated with FieldUnit names */
 name|NameString
 operator|=
-name|AcpiAmlAllocateNameString
+name|AcpiExAllocateNameString
 argument_list|(
 literal|0
 argument_list|,
@@ -671,7 +657,7 @@ else|else
 block|{
 name|Status
 operator|=
-name|AcpiAmlExecNameSegment
+name|AcpiExNameSegment
 argument_list|(
 operator|&
 name|AmlAddress
@@ -710,7 +696,7 @@ name|Prefix
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*              * Remember that we have a RootPrefix --              * see comment in AcpiAmlAllocateNameString()              */
+comment|/*              * Remember that we have a RootPrefix --              * see comment in AcpiExAllocateNameString()              */
 name|PrefixCount
 operator|=
 operator|(
@@ -796,7 +782,7 @@ argument_list|)
 expr_stmt|;
 name|NameString
 operator|=
-name|AcpiAmlAllocateNameString
+name|AcpiExAllocateNameString
 argument_list|(
 name|PrefixCount
 argument_list|,
@@ -822,7 +808,7 @@ name|TRUE
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiAmlExecNameSegment
+name|AcpiExNameSegment
 argument_list|(
 operator|&
 name|AmlAddress
@@ -840,7 +826,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiAmlExecNameSegment
+name|AcpiExNameSegment
 argument_list|(
 operator|&
 name|AmlAddress
@@ -879,7 +865,7 @@ operator|++
 expr_stmt|;
 name|NameString
 operator|=
-name|AcpiAmlAllocateNameString
+name|AcpiExAllocateNameString
 argument_list|(
 name|PrefixCount
 argument_list|,
@@ -910,7 +896,7 @@ operator|&&
 operator|(
 name|Status
 operator|=
-name|AcpiAmlExecNameSegment
+name|AcpiExNameSegment
 argument_list|(
 operator|&
 name|AmlAddress
@@ -939,12 +925,12 @@ operator|==
 name|PrefixCount
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"AmlDoName: NameSeg is \"\\\" followed by NULL\n"
+literal|"NameSeg is \"\\\" followed by NULL\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -955,7 +941,7 @@ operator|++
 expr_stmt|;
 name|NameString
 operator|=
-name|AcpiAmlAllocateNameString
+name|AcpiExAllocateNameString
 argument_list|(
 name|PrefixCount
 argument_list|,
@@ -979,7 +965,7 @@ default|default:
 comment|/* Name segment string */
 name|NameString
 operator|=
-name|AcpiAmlAllocateNameString
+name|AcpiExAllocateNameString
 argument_list|(
 name|PrefixCount
 argument_list|,
@@ -1000,7 +986,7 @@ break|break;
 block|}
 name|Status
 operator|=
-name|AcpiAmlExecNameSegment
+name|AcpiExNameSegment
 argument_list|(
 operator|&
 name|AmlAddress
@@ -1025,7 +1011,7 @@ comment|/* Ran out of segments after processing a prefix */
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AmlDoName: Malformed Name at %p\n"
+literal|"ExDoName: Malformed Name at %p\n"
 operator|,
 name|NameString
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amconvrt - Object conversion routines  *              $Revision: 3 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 13 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMCONVRT_C__
+name|__EXCONVRT_C__
 end_define
 
 begin_include
@@ -59,258 +59,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amconvrt"
+literal|"exconvrt"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlConvertToTargetType  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION:   *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExConvertToInteger  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Convert an ACPI Object to an integer.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlConvertToTargetType
-parameter_list|(
-name|OBJECT_TYPE_INTERNAL
-name|DestinationType
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ObjDesc
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|Status
-init|=
-name|AE_OK
-decl_stmt|;
-name|FUNCTION_TRACE
-argument_list|(
-literal|"AmlConvertToTargetType"
-argument_list|)
-expr_stmt|;
-comment|/*      * If required by the target,      * perform implicit conversion on the source before we store it.      */
-switch|switch
-condition|(
-name|GET_CURRENT_ARG_TYPE
-argument_list|(
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|RuntimeArgs
-argument_list|)
-condition|)
-block|{
-case|case
-name|ARGI_SIMPLE_TARGET
-case|:
-case|case
-name|ARGI_FIXED_TARGET
-case|:
-case|case
-name|ARGI_INTEGER_REF
-case|:
-comment|/* Handles Increment, Decrement cases */
-switch|switch
-condition|(
-name|DestinationType
-condition|)
-block|{
-case|case
-name|INTERNAL_TYPE_DEF_FIELD
-case|:
-comment|/*              * Named field can always handle conversions              */
-break|break;
-default|default:
-comment|/* No conversion allowed for these types */
-if|if
-condition|(
-name|DestinationType
-operator|!=
-operator|(
-operator|*
-name|ObjDesc
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
-condition|)
-block|{
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"AmlConvertToTargetType: Target does not allow conversion of type %s to %s\n"
-operator|,
-name|AcpiCmGetTypeName
-argument_list|(
-operator|(
-operator|*
-name|ObjDesc
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
-argument_list|)
-operator|,
-name|AcpiCmGetTypeName
-argument_list|(
-name|DestinationType
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_TYPE
-expr_stmt|;
-block|}
-block|}
-break|break;
-case|case
-name|ARGI_TARGETREF
-case|:
-switch|switch
-condition|(
-name|DestinationType
-condition|)
-block|{
-case|case
-name|ACPI_TYPE_INTEGER
-case|:
-case|case
-name|ACPI_TYPE_FIELD_UNIT
-case|:
-case|case
-name|INTERNAL_TYPE_BANK_FIELD
-case|:
-case|case
-name|INTERNAL_TYPE_INDEX_FIELD
-case|:
-comment|/*              * These types require an Integer operand.  We can convert              * a Buffer or a String to an Integer if necessary.              */
-name|Status
-operator|=
-name|AcpiAmlConvertToInteger
-argument_list|(
-name|ObjDesc
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_TYPE_STRING
-case|:
-comment|/*               * The operand must be a String.  We can convert an               * Integer or Buffer if necessary              */
-name|Status
-operator|=
-name|AcpiAmlConvertToString
-argument_list|(
-name|ObjDesc
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_TYPE_BUFFER
-case|:
-comment|/*               * The operand must be a String.  We can convert an               * Integer or Buffer if necessary              */
-name|Status
-operator|=
-name|AcpiAmlConvertToBuffer
-argument_list|(
-name|ObjDesc
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-break|break;
-case|case
-name|ARGI_REFERENCE
-case|:
-comment|/*          * CreateXxxxField cases - we are storing the field object into the name          */
-break|break;
-default|default:
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"AmlConvertToTargetType: Unknown Target type ID 0x%X Op %s DestType %s\n"
-operator|,
-name|GET_CURRENT_ARG_TYPE
-argument_list|(
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|RuntimeArgs
-argument_list|)
-operator|,
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|Name
-operator|,
-name|AcpiCmGetTypeName
-argument_list|(
-name|DestinationType
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_AML_INTERNAL
-expr_stmt|;
-block|}
-comment|/*      * Source-to-Target conversion semantics:      *      * If conversion to the target type cannot be performed, then simply       * overwrite the target with the new object and type.      */
-if|if
-condition|(
-name|Status
-operator|==
-name|AE_TYPE
-condition|)
-block|{
-name|Status
-operator|=
-name|AE_OK
-expr_stmt|;
-block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlConvertToInteger  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Convert an ACPI Object to an integer.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiAmlConvertToInteger
+name|AcpiExConvertToInteger
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -433,7 +198,7 @@ block|}
 comment|/*      * Create a new integer      */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -579,7 +344,7 @@ operator|!=
 name|AML_STORE_OP
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 operator|*
 name|ObjDesc
@@ -600,12 +365,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlConvertToBuffer  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Convert an ACPI Object to an Buffer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExConvertToBuffer  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Convert an ACPI Object to an Buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlConvertToBuffer
+name|AcpiExConvertToBuffer
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -654,7 +419,7 @@ case|:
 comment|/*          * Create a new Buffer          */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_BUFFER
 argument_list|)
@@ -703,7 +468,7 @@ name|IntegerSize
 expr_stmt|;
 name|NewBuf
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|IntegerSize
 argument_list|)
@@ -717,11 +482,11 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AmlExecDyadic2R/ConcatOp: Buffer allocation failure\n"
+literal|"ExDyadic2R/ConcatOp: Buffer allocation failure\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -791,7 +556,7 @@ operator|!=
 name|AML_STORE_OP
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 operator|*
 name|ObjDesc
@@ -829,12 +594,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlConvertToString  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Convert an ACPI Object to a string  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExConvertToString  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Convert an ACPI Object to a string  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlConvertToString
+name|AcpiExConvertToString
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -890,7 +655,7 @@ case|:
 comment|/*          * Create a new String          */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_STRING
 argument_list|)
@@ -945,7 +710,7 @@ literal|1
 expr_stmt|;
 name|NewBuf
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|RetDesc
 operator|->
@@ -963,11 +728,11 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AmlExecDyadic2R/ConcatOp: Buffer allocation failure\n"
+literal|"ExConvertToString: Buffer allocation failure\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -1051,7 +816,7 @@ operator|!=
 name|AML_STORE_OP
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 operator|*
 name|ObjDesc
@@ -1098,7 +863,7 @@ block|}
 comment|/*          * Create a new String          */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_STRING
 argument_list|)
@@ -1135,7 +900,7 @@ literal|3
 expr_stmt|;
 name|NewBuf
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|RetDesc
 operator|->
@@ -1155,11 +920,11 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AmlExecDyadic2R/ConcatOp: Buffer allocation failure\n"
+literal|"ExConvertToString: Buffer allocation failure\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -1285,7 +1050,7 @@ operator|!=
 name|AML_STORE_OP
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 operator|*
 name|ObjDesc
@@ -1315,6 +1080,241 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExConvertToTargetType  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION:  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiExConvertToTargetType
+parameter_list|(
+name|ACPI_OBJECT_TYPE8
+name|DestinationType
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+literal|"ExConvertToTargetType"
+argument_list|)
+expr_stmt|;
+comment|/*      * If required by the target,      * perform implicit conversion on the source before we store it.      */
+switch|switch
+condition|(
+name|GET_CURRENT_ARG_TYPE
+argument_list|(
+name|WalkState
+operator|->
+name|OpInfo
+operator|->
+name|RuntimeArgs
+argument_list|)
+condition|)
+block|{
+case|case
+name|ARGI_SIMPLE_TARGET
+case|:
+case|case
+name|ARGI_FIXED_TARGET
+case|:
+case|case
+name|ARGI_INTEGER_REF
+case|:
+comment|/* Handles Increment, Decrement cases */
+switch|switch
+condition|(
+name|DestinationType
+condition|)
+block|{
+case|case
+name|INTERNAL_TYPE_REGION_FIELD
+case|:
+comment|/*              * Named field can always handle conversions              */
+break|break;
+default|default:
+comment|/* No conversion allowed for these types */
+if|if
+condition|(
+name|DestinationType
+operator|!=
+operator|(
+operator|*
+name|ObjDesc
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+condition|)
+block|{
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"Target does not allow conversion of type %s to %s\n"
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+operator|(
+operator|*
+name|ObjDesc
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|DestinationType
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_TYPE
+expr_stmt|;
+block|}
+block|}
+break|break;
+case|case
+name|ARGI_TARGETREF
+case|:
+switch|switch
+condition|(
+name|DestinationType
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_INTEGER
+case|:
+case|case
+name|ACPI_TYPE_BUFFER_FIELD
+case|:
+case|case
+name|INTERNAL_TYPE_BANK_FIELD
+case|:
+case|case
+name|INTERNAL_TYPE_INDEX_FIELD
+case|:
+comment|/*              * These types require an Integer operand.  We can convert              * a Buffer or a String to an Integer if necessary.              */
+name|Status
+operator|=
+name|AcpiExConvertToInteger
+argument_list|(
+name|ObjDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_STRING
+case|:
+comment|/*              * The operand must be a String.  We can convert an              * Integer or Buffer if necessary              */
+name|Status
+operator|=
+name|AcpiExConvertToString
+argument_list|(
+name|ObjDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_BUFFER
+case|:
+comment|/*              * The operand must be a String.  We can convert an              * Integer or Buffer if necessary              */
+name|Status
+operator|=
+name|AcpiExConvertToBuffer
+argument_list|(
+name|ObjDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|ARGI_REFERENCE
+case|:
+comment|/*          * CreateXxxxField cases - we are storing the field object into the name          */
+break|break;
+default|default:
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"Unknown Target type ID 0x%X Op %s DestType %s\n"
+operator|,
+name|GET_CURRENT_ARG_TYPE
+argument_list|(
+name|WalkState
+operator|->
+name|OpInfo
+operator|->
+name|RuntimeArgs
+argument_list|)
+operator|,
+name|WalkState
+operator|->
+name|OpInfo
+operator|->
+name|Name
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|DestinationType
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_AML_INTERNAL
+expr_stmt|;
+block|}
+comment|/*      * Source-to-Target conversion semantics:      *      * If conversion to the target type cannot be performed, then simply      * overwrite the target with the new object and type.      */
+if|if
+condition|(
+name|Status
+operator|==
+name|AE_TYPE
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

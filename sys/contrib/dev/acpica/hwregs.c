@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 88 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 97 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|HARDWARE
+value|ACPI_HARDWARE
 end_define
 
 begin_macro
@@ -147,7 +147,7 @@ argument_list|(
 literal|"HwClearAcpiStatus"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_IO
 argument_list|,
@@ -170,7 +170,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
@@ -336,7 +336,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
@@ -452,9 +452,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      *  We got something, now ensure it is correct.  The object must      *  be a package and must have at least 2 numeric values as the      *  two elements      */
+comment|/* Even though AcpiEvaluateObject resolves package references,      * NsEvaluate dpesn't. So, we do it here.      */
 name|Status
 operator|=
-name|AcpiCmResolvePackageReferences
+name|AcpiUtResolvePackageReferences
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -592,12 +593,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"SleepTypeRegisterData: Bad Sleep object %p type %X\n"
+literal|"Bad Sleep object %p type %X\n"
 operator|,
 name|ObjDesc
 operator|,
@@ -610,7 +611,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -659,6 +660,9 @@ name|Value
 init|=
 literal|0
 decl_stmt|;
+name|va_list
+name|marker
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"HwRegisterBitAccess"
@@ -671,9 +675,6 @@ operator|==
 name|ACPI_WRITE
 condition|)
 block|{
-name|va_list
-name|marker
-decl_stmt|;
 name|va_start
 argument_list|(
 name|marker
@@ -703,13 +704,13 @@ operator|==
 name|UseLock
 condition|)
 block|{
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Decode the Register ID      *  Register id = Register block id | bit id      *      * Check bit id to fine locate Register offset.      *  check Mask to determine Register offset, and then read-write.      */
+comment|/*      * Decode the Register ID      * Register id = Register block id | bit id      *      * Check bit id to fine locate Register offset.      * Check Mask to determine Register offset, and then read-write.      */
 switch|switch
 condition|(
 name|REGISTER_BLOCK_ID
@@ -1355,7 +1356,7 @@ case|:
 case|case
 name|PROCESSOR_BLOCK
 case|:
-comment|/* not used */
+comment|/* Not used by any callers at this time - therefore, not implemented */
 default|default:
 name|Mask
 operator|=
@@ -1370,7 +1371,7 @@ operator|==
 name|UseLock
 condition|)
 block|{
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
@@ -1441,7 +1442,7 @@ operator|==
 name|UseLock
 condition|)
 block|{
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
@@ -1726,7 +1727,7 @@ operator|==
 name|UseLock
 condition|)
 block|{
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
@@ -1773,7 +1774,7 @@ operator|==
 name|UseLock
 condition|)
 block|{
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
@@ -2098,7 +2099,7 @@ operator|==
 name|UseLock
 condition|)
 block|{
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
@@ -2120,7 +2121,7 @@ parameter_list|(
 name|UINT32
 name|Width
 parameter_list|,
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|Reg
 parameter_list|,
@@ -2177,7 +2178,7 @@ name|AddressSpaceId
 condition|)
 block|{
 case|case
-name|ADDRESS_SPACE_SYSTEM_MEMORY
+name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 case|:
 name|MemAddress
 operator|=
@@ -2236,7 +2237,7 @@ break|break;
 block|}
 break|break;
 case|case
-name|ADDRESS_SPACE_SYSTEM_IO
+name|ACPI_ADR_SPACE_SYSTEM_IO
 case|:
 name|IoAddress
 operator|=
@@ -2295,7 +2296,7 @@ break|break;
 block|}
 break|break;
 case|case
-name|ADDRESS_SPACE_PCI_CONFIG
+name|ACPI_ADR_SPACE_PCI_CONFIG
 case|:
 name|PciDevFunc
 operator|=
@@ -2411,7 +2412,7 @@ parameter_list|,
 name|UINT32
 name|Value
 parameter_list|,
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|Reg
 parameter_list|,
@@ -2461,7 +2462,7 @@ name|AddressSpaceId
 condition|)
 block|{
 case|case
-name|ADDRESS_SPACE_SYSTEM_MEMORY
+name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 case|:
 name|MemAddress
 operator|=
@@ -2529,7 +2530,7 @@ break|break;
 block|}
 break|break;
 case|case
-name|ADDRESS_SPACE_SYSTEM_IO
+name|ACPI_ADR_SPACE_SYSTEM_IO
 case|:
 name|IoAddress
 operator|=
@@ -2597,7 +2598,7 @@ break|break;
 block|}
 break|break;
 case|case
-name|ADDRESS_SPACE_PCI_CONFIG
+name|ACPI_ADR_SPACE_PCI_CONFIG
 case|:
 name|PciDevFunc
 operator|=

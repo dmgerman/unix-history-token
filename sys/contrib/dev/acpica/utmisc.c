@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: cmutils - common utility procedures  *              $Revision: 27 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 42 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__CMUTILS_C__
+name|__UTMISC_C__
 end_define
 
 begin_include
@@ -59,23 +59,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"cmutils"
+literal|"utmisc"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmValidAcpiName  *  * PARAMETERS:  Character           - The character to be examined  *  * RETURN:      1 if Character may appear in a name, else 0  *  * DESCRIPTION: Check for a valid ACPI name.  Each character must be one of:  *              1) Upper case alpha  *              2) numeric  *              3) underscore  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidAcpiName  *  * PARAMETERS:  Character           - The character to be examined  *  * RETURN:      1 if Character may appear in a name, else 0  *  * DESCRIPTION: Check for a valid ACPI name.  Each character must be one of:  *              1) Upper case alpha  *              2) numeric  *              3) underscore  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|BOOLEAN
-name|AcpiCmValidAcpiName
+name|AcpiUtValidAcpiName
 parameter_list|(
 name|UINT32
 name|Name
@@ -172,12 +172,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmValidAcpiCharacter  *  * PARAMETERS:  Character           - The character to be examined  *  * RETURN:      1 if Character may appear in a name, else 0  *  * DESCRIPTION: Check for a printable character  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidAcpiCharacter  *  * PARAMETERS:  Character           - The character to be examined  *  * RETURN:      1 if Character may appear in a name, else 0  *  * DESCRIPTION: Check for a printable character  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|BOOLEAN
-name|AcpiCmValidAcpiCharacter
+name|AcpiUtValidAcpiCharacter
 parameter_list|(
 name|NATIVE_CHAR
 name|Character
@@ -221,12 +221,66 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmMutexInitialize  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Create the system mutex objects.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrupr  *  * PARAMETERS:  SrcString       - The source string to convert to  *  * RETURN:      SrcString  *  * DESCRIPTION: Convert string to uppercase  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|NATIVE_CHAR
+modifier|*
+name|AcpiUtStrupr
+parameter_list|(
+name|NATIVE_CHAR
+modifier|*
+name|SrcString
+parameter_list|)
+block|{
+name|NATIVE_CHAR
+modifier|*
+name|String
+decl_stmt|;
+comment|/* Walk entire string, uppercasing the letters */
+for|for
+control|(
+name|String
+operator|=
+name|SrcString
+init|;
+operator|*
+name|String
+condition|;
+control|)
+block|{
+operator|*
+name|String
+operator|=
+operator|(
+name|char
+operator|)
+name|TOUPPER
+argument_list|(
+operator|*
+name|String
+argument_list|)
+expr_stmt|;
+name|String
+operator|++
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|SrcString
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtMutexInitialize  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Create the system mutex objects.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmMutexInitialize
+name|AcpiUtMutexInitialize
 parameter_list|(
 name|void
 parameter_list|)
@@ -239,7 +293,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmMutexInitialize"
+literal|"UtMutexInitialize"
 argument_list|)
 expr_stmt|;
 comment|/*      * Create each of the predefined mutex objects      */
@@ -259,7 +313,7 @@ control|)
 block|{
 name|Status
 operator|=
-name|AcpiCmCreateMutex
+name|AcpiUtCreateMutex
 argument_list|(
 name|i
 argument_list|)
@@ -288,12 +342,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmMutexTerminate  *  * PARAMETERS:  None.  *  * RETURN:      None.  *  * DESCRIPTION: Delete all of the system mutex objects.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtMutexTerminate  *  * PARAMETERS:  None.  *  * RETURN:      None.  *  * DESCRIPTION: Delete all of the system mutex objects.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmMutexTerminate
+name|AcpiUtMutexTerminate
 parameter_list|(
 name|void
 parameter_list|)
@@ -303,7 +357,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmMutexTerminate"
+literal|"UtMutexTerminate"
 argument_list|)
 expr_stmt|;
 comment|/*      * Delete each predefined mutex object      */
@@ -321,7 +375,7 @@ name|i
 operator|++
 control|)
 block|{
-name|AcpiCmDeleteMutex
+name|AcpiUtDeleteMutex
 argument_list|(
 name|i
 argument_list|)
@@ -333,12 +387,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCreateMutex  *  * PARAMETERS:  MutexID         - ID of the mutex to be created  *  * RETURN:      Status  *  * DESCRIPTION: Create a mutex object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateMutex  *  * PARAMETERS:  MutexID         - ID of the mutex to be created  *  * RETURN:      Status  *  * DESCRIPTION: Create a mutex object.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmCreateMutex
+name|AcpiUtCreateMutex
 parameter_list|(
 name|ACPI_MUTEX_HANDLE
 name|MutexId
@@ -351,7 +405,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-literal|"CmCreateMutex"
+literal|"UtCreateMutex"
 argument_list|,
 name|MutexId
 argument_list|)
@@ -402,9 +456,9 @@ index|[
 name|MutexId
 index|]
 operator|.
-name|Locked
+name|OwnerId
 operator|=
-name|FALSE
+name|ACPI_MUTEX_NOT_ACQUIRED
 expr_stmt|;
 name|AcpiGbl_AcpiMutexInfo
 index|[
@@ -425,12 +479,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmDeleteMutex  *  * PARAMETERS:  MutexID         - ID of the mutex to be deleted  *  * RETURN:      Status  *  * DESCRIPTION: Delete a mutex object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteMutex  *  * PARAMETERS:  MutexID         - ID of the mutex to be deleted  *  * RETURN:      Status  *  * DESCRIPTION: Delete a mutex object.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmDeleteMutex
+name|AcpiUtDeleteMutex
 parameter_list|(
 name|ACPI_MUTEX_HANDLE
 name|MutexId
@@ -441,7 +495,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-literal|"CmDeleteMutex"
+literal|"UtDeleteMutex"
 argument_list|,
 name|MutexId
 argument_list|)
@@ -485,9 +539,9 @@ index|[
 name|MutexId
 index|]
 operator|.
-name|Locked
+name|OwnerId
 operator|=
-name|FALSE
+name|ACPI_MUTEX_NOT_ACQUIRED
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -498,12 +552,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmAcquireMutex  *  * PARAMETERS:  MutexID         - ID of the mutex to be acquired  *  * RETURN:      Status  *  * DESCRIPTION: Acquire a mutex object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAcquireMutex  *  * PARAMETERS:  MutexID         - ID of the mutex to be acquired  *  * RETURN:      Status  *  * DESCRIPTION: Acquire a mutex object.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 parameter_list|(
 name|ACPI_MUTEX_HANDLE
 name|MutexId
@@ -512,18 +566,15 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|DEBUG_PRINT
+name|UINT32
+name|i
+decl_stmt|;
+name|UINT32
+name|ThisThreadId
+decl_stmt|;
+name|PROC_NAME
 argument_list|(
-name|TRACE_MUTEX
-argument_list|,
-operator|(
-literal|"Acquiring Mutex [%s]\n"
-operator|,
-name|AcpiCmGetMutexName
-argument_list|(
-name|MutexId
-argument_list|)
-operator|)
+literal|"UtAcquireMutex"
 argument_list|)
 expr_stmt|;
 if|if
@@ -539,6 +590,111 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
+name|ThisThreadId
+operator|=
+name|AcpiOsGetThreadId
+argument_list|()
+expr_stmt|;
+comment|/*      * Deadlock prevention.  Check if this thread owns any mutexes of value      * greater than or equal to this one.  If so, the thread has violated      * the mutex ordering rule.  This indicates a coding error somewhere in      * the ACPI subsystem code.      */
+for|for
+control|(
+name|i
+operator|=
+name|MutexId
+init|;
+name|i
+operator|<
+name|MAX_MTX
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|AcpiGbl_AcpiMutexInfo
+index|[
+name|i
+index|]
+operator|.
+name|OwnerId
+operator|==
+name|ThisThreadId
+condition|)
+block|{
+if|if
+condition|(
+name|i
+operator|==
+name|MutexId
+condition|)
+block|{
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"Mutex [%s] already acquired by this thread [%X]\n"
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
+name|MutexId
+argument_list|)
+operator|,
+name|ThisThreadId
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ALREADY_ACQUIRED
+operator|)
+return|;
+block|}
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"Invalid acquire order: Thread %X owns [%s], wants [%s]\n"
+operator|,
+name|ThisThreadId
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
+name|i
+argument_list|)
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
+name|MutexId
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ACQUIRE_DEADLOCK
+operator|)
+return|;
+block|}
+block|}
+name|DEBUG_PRINTP
+argument_list|(
+name|TRACE_MUTEX
+argument_list|,
+operator|(
+literal|"Thread %X attempting to acquire Mutex [%s]\n"
+operator|,
+name|ThisThreadId
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
+name|MutexId
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiOsWaitSemaphore
@@ -555,25 +711,6 @@ argument_list|,
 name|WAIT_FOREVER
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
-argument_list|(
-name|TRACE_MUTEX
-argument_list|,
-operator|(
-literal|"Acquired Mutex  [%s] Status %s\n"
-operator|,
-name|AcpiCmGetMutexName
-argument_list|(
-name|MutexId
-argument_list|)
-operator|,
-name|AcpiCmFormatException
-argument_list|(
-name|Status
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ACPI_SUCCESS
@@ -582,14 +719,21 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiGbl_AcpiMutexInfo
-index|[
+name|DEBUG_PRINTP
+argument_list|(
+name|TRACE_MUTEX
+argument_list|,
+operator|(
+literal|"Thread %X acquired Mutex [%s]\n"
+operator|,
+name|ThisThreadId
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
 name|MutexId
-index|]
-operator|.
-name|Locked
-operator|=
-name|TRUE
+argument_list|)
+operator|)
+argument_list|)
 expr_stmt|;
 name|AcpiGbl_AcpiMutexInfo
 index|[
@@ -598,6 +742,39 @@ index|]
 operator|.
 name|UseCount
 operator|++
+expr_stmt|;
+name|AcpiGbl_AcpiMutexInfo
+index|[
+name|MutexId
+index|]
+operator|.
+name|OwnerId
+operator|=
+name|ThisThreadId
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"Thread %X could not acquire Mutex [%s] %s\n"
+operator|,
+name|ThisThreadId
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
+name|MutexId
+argument_list|)
+operator|,
+name|AcpiUtFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -609,12 +786,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmReleaseMutex  *  * PARAMETERS:  MutexID         - ID of the mutex to be released  *  * RETURN:      Status  *  * DESCRIPTION: Release a mutex object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtReleaseMutex  *  * PARAMETERS:  MutexID         - ID of the mutex to be released  *  * RETURN:      Status  *  * DESCRIPTION: Release a mutex object.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 parameter_list|(
 name|ACPI_MUTEX_HANDLE
 name|MutexId
@@ -623,14 +800,32 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|DEBUG_PRINT
+name|UINT32
+name|i
+decl_stmt|;
+name|UINT32
+name|ThisThreadId
+decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"UtReleaseMutex"
+argument_list|)
+expr_stmt|;
+name|ThisThreadId
+operator|=
+name|AcpiOsGetThreadId
+argument_list|()
+expr_stmt|;
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_MUTEX
 argument_list|,
 operator|(
-literal|"Releasing Mutex [%s]\n"
+literal|"Thread %X releasing Mutex [%s]\n"
 operator|,
-name|AcpiCmGetMutexName
+name|ThisThreadId
+operator|,
+name|AcpiUtGetMutexName
 argument_list|(
 name|MutexId
 argument_list|)
@@ -650,16 +845,111 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
+comment|/*      * Mutex must be acquired in order to release it!      */
+if|if
+condition|(
 name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
 operator|.
-name|Locked
-operator|=
-name|FALSE
+name|OwnerId
+operator|==
+name|ACPI_MUTEX_NOT_ACQUIRED
+condition|)
+block|{
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"Mutex [%s] is not acquired, cannot release\n"
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
+name|MutexId
+argument_list|)
+operator|)
+argument_list|)
 expr_stmt|;
-comment|/* Mark before unlocking */
+return|return
+operator|(
+name|AE_NOT_ACQUIRED
+operator|)
+return|;
+block|}
+comment|/*      * Deadlock prevention.  Check if this thread owns any mutexes of value      * greater than this one.  If so, the thread has violated the mutex      * ordering rule.  This indicates a coding error somewhere in      * the ACPI subsystem code.      */
+for|for
+control|(
+name|i
+operator|=
+name|MutexId
+init|;
+name|i
+operator|<
+name|MAX_MTX
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|AcpiGbl_AcpiMutexInfo
+index|[
+name|i
+index|]
+operator|.
+name|OwnerId
+operator|==
+name|ThisThreadId
+condition|)
+block|{
+if|if
+condition|(
+name|i
+operator|==
+name|MutexId
+condition|)
+block|{
+continue|continue;
+block|}
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"Invalid release order: owns [%s], releasing [%s]\n"
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
+name|i
+argument_list|)
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
+name|MutexId
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_RELEASE_DEADLOCK
+operator|)
+return|;
+block|}
+block|}
+comment|/* Mark unlocked FIRST */
+name|AcpiGbl_AcpiMutexInfo
+index|[
+name|MutexId
+index|]
+operator|.
+name|OwnerId
+operator|=
+name|ACPI_MUTEX_NOT_ACQUIRED
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiOsSignalSemaphore
@@ -682,19 +972,21 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"Error Releasing Mutex [%s], %s\n"
+literal|"Thread %X could not release Mutex [%s] %s\n"
 operator|,
-name|AcpiCmGetMutexName
+name|ThisThreadId
+operator|,
+name|AcpiUtGetMutexName
 argument_list|(
 name|MutexId
 argument_list|)
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -704,21 +996,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_MUTEX
 argument_list|,
 operator|(
-literal|"Released Mutex [%s], %s\n"
+literal|"Thread %X released Mutex [%s]\n"
 operator|,
-name|AcpiCmGetMutexName
+name|ThisThreadId
+operator|,
+name|AcpiUtGetMutexName
 argument_list|(
 name|MutexId
-argument_list|)
-operator|,
-name|AcpiCmFormatException
-argument_list|(
-name|Status
 argument_list|)
 operator|)
 argument_list|)
@@ -733,12 +1022,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCreateUpdateStateAndPush  *  * PARAMETERS:  *Object         - Object to be added to the new state  *              Action          - Increment/Decrement  *              StateList       - List the state will be added to  *  * RETURN:      None  *  * DESCRIPTION: Create a new state and push it  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateUpdateStateAndPush  *  * PARAMETERS:  *Object         - Object to be added to the new state  *              Action          - Increment/Decrement  *              StateList       - List the state will be added to  *  * RETURN:      None  *  * DESCRIPTION: Create a new state and push it  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmCreateUpdateStateAndPush
+name|AcpiUtCreateUpdateStateAndPush
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -772,7 +1061,7 @@ return|;
 block|}
 name|State
 operator|=
-name|AcpiCmCreateUpdateState
+name|AcpiUtCreateUpdateState
 argument_list|(
 name|Object
 argument_list|,
@@ -791,7 +1080,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|AcpiCmPushGenericState
+name|AcpiUtPushGenericState
 argument_list|(
 name|StateList
 argument_list|,
@@ -807,12 +1096,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCreatePkgStateAndPush  *  * PARAMETERS:  *Object         - Object to be added to the new state  *              Action          - Increment/Decrement  *              StateList       - List the state will be added to  *  * RETURN:      None  *  * DESCRIPTION: Create a new state and push it  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreatePkgStateAndPush  *  * PARAMETERS:  *Object         - Object to be added to the new state  *              Action          - Increment/Decrement  *              StateList       - List the state will be added to  *  * RETURN:      None  *  * DESCRIPTION: Create a new state and push it  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmCreatePkgStateAndPush
+name|AcpiUtCreatePkgStateAndPush
 parameter_list|(
 name|void
 modifier|*
@@ -837,7 +1126,7 @@ name|State
 decl_stmt|;
 name|State
 operator|=
-name|AcpiCmCreatePkgState
+name|AcpiUtCreatePkgState
 argument_list|(
 name|InternalObject
 argument_list|,
@@ -858,7 +1147,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|AcpiCmPushGenericState
+name|AcpiUtPushGenericState
 argument_list|(
 name|StateList
 argument_list|,
@@ -874,12 +1163,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmPushGenericState  *  * PARAMETERS:  ListHead            - Head of the state stack  *              State               - State object to push  *  * RETURN:      Status  *  * DESCRIPTION: Push a state object onto a state stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtPushGenericState  *  * PARAMETERS:  ListHead            - Head of the state stack  *              State               - State object to push  *  * RETURN:      Status  *  * DESCRIPTION: Push a state object onto a state stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmPushGenericState
+name|AcpiUtPushGenericState
 parameter_list|(
 name|ACPI_GENERIC_STATE
 modifier|*
@@ -893,7 +1182,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmPushGenericState"
+literal|"UtPushGenericState"
 argument_list|)
 expr_stmt|;
 comment|/* Push the state object onto the front of the list (stack) */
@@ -917,13 +1206,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmPopGenericState  *  * PARAMETERS:  ListHead            - Head of the state stack  *  * RETURN:      Status  *  * DESCRIPTION: Pop a state object from a state stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtPopGenericState  *  * PARAMETERS:  ListHead            - Head of the state stack  *  * RETURN:      Status  *  * DESCRIPTION: Pop a state object from a state stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_GENERIC_STATE
 modifier|*
-name|AcpiCmPopGenericState
+name|AcpiUtPopGenericState
 parameter_list|(
 name|ACPI_GENERIC_STATE
 modifier|*
@@ -971,13 +1260,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCreateGenericState  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Create a generic state object.  Attempt to obtain one from  *              the global state cache;  If none available, create a new one.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateGenericState  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Create a generic state object.  Attempt to obtain one from  *              the global state cache;  If none available, create a new one.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_GENERIC_STATE
 modifier|*
-name|AcpiCmCreateGenericState
+name|AcpiUtCreateGenericState
 parameter_list|(
 name|void
 parameter_list|)
@@ -986,7 +1275,7 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -1027,7 +1316,7 @@ expr_stmt|;
 name|AcpiGbl_GenericStateCacheDepth
 operator|--
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -1047,14 +1336,14 @@ block|}
 else|else
 block|{
 comment|/* The cache is empty, create a new object */
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
 expr_stmt|;
 name|State
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1100,13 +1389,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCreateUpdateState  *  * PARAMETERS:  Object              - Initial Object to be installed in the  *                                    state  *              Action              - Update action to be performed  *  * RETURN:      Status  *  * DESCRIPTION: Create an "Update State" - a flavor of the generic state used  *              to update reference counts and delete complex objects such  *              as packages.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateUpdateState  *  * PARAMETERS:  Object              - Initial Object to be installed in the  *                                    state  *              Action              - Update action to be performed  *  * RETURN:      Status  *  * DESCRIPTION: Create an "Update State" - a flavor of the generic state used  *              to update reference counts and delete complex objects such  *              as packages.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_GENERIC_STATE
 modifier|*
-name|AcpiCmCreateUpdateState
+name|AcpiUtCreateUpdateState
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1122,7 +1411,7 @@ name|State
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"CmCreateUpdateState"
+literal|"UtCreateUpdateState"
 argument_list|,
 name|Object
 argument_list|)
@@ -1130,7 +1419,7 @@ expr_stmt|;
 comment|/* Create the generic state object */
 name|State
 operator|=
-name|AcpiCmCreateGenericState
+name|AcpiUtCreateGenericState
 argument_list|()
 expr_stmt|;
 if|if
@@ -1171,13 +1460,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCreatePkgState  *  * PARAMETERS:  Object              - Initial Object to be installed in the  *                                    state  *              Action              - Update action to be performed  *  * RETURN:      Status  *  * DESCRIPTION: Create an "Update State" - a flavor of the generic state used  *              to update reference counts and delete complex objects such  *              as packages.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreatePkgState  *  * PARAMETERS:  Object              - Initial Object to be installed in the  *                                    state  *              Action              - Update action to be performed  *  * RETURN:      Status  *  * DESCRIPTION: Create an "Update State" - a flavor of the generic state used  *              to update reference counts and delete complex objects such  *              as packages.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_GENERIC_STATE
 modifier|*
-name|AcpiCmCreatePkgState
+name|AcpiUtCreatePkgState
 parameter_list|(
 name|void
 modifier|*
@@ -1197,7 +1486,7 @@ name|State
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"CmCreatePkgState"
+literal|"UtCreatePkgState"
 argument_list|,
 name|InternalObject
 argument_list|)
@@ -1205,7 +1494,7 @@ expr_stmt|;
 comment|/* Create the generic state object */
 name|State
 operator|=
-name|AcpiCmCreateGenericState
+name|AcpiUtCreateGenericState
 argument_list|()
 expr_stmt|;
 if|if
@@ -1266,13 +1555,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCreateControlState  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Create a "Control State" - a flavor of the generic state used  *              to support nested IF/WHILE constructs in the AML.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateControlState  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Create a "Control State" - a flavor of the generic state used  *              to support nested IF/WHILE constructs in the AML.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_GENERIC_STATE
 modifier|*
-name|AcpiCmCreateControlState
+name|AcpiUtCreateControlState
 parameter_list|(
 name|void
 parameter_list|)
@@ -1283,13 +1572,13 @@ name|State
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmCreateControlState"
+literal|"UtCreateControlState"
 argument_list|)
 expr_stmt|;
 comment|/* Create the generic state object */
 name|State
 operator|=
-name|AcpiCmCreateGenericState
+name|AcpiUtCreateGenericState
 argument_list|()
 expr_stmt|;
 if|if
@@ -1322,12 +1611,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmDeleteGenericState  *  * PARAMETERS:  State               - The state object to be deleted  *  * RETURN:      Status  *  * DESCRIPTION: Put a state object back into the global state cache.  The object  *              is not actually freed at this time.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteGenericState  *  * PARAMETERS:  State               - The state object to be deleted  *  * RETURN:      Status  *  * DESCRIPTION: Put a state object back into the global state cache.  The object  *              is not actually freed at this time.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmDeleteGenericState
+name|AcpiUtDeleteGenericState
 parameter_list|(
 name|ACPI_GENERIC_STATE
 modifier|*
@@ -1336,7 +1625,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmDeleteGenericState"
+literal|"UtDeleteGenericState"
 argument_list|)
 expr_stmt|;
 comment|/* If cache is full, just free this state object */
@@ -1347,7 +1636,7 @@ operator|>=
 name|MAX_STATE_CACHE_DEPTH
 condition|)
 block|{
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|State
 argument_list|)
@@ -1356,7 +1645,7 @@ block|}
 comment|/* Otherwise put this object back into the cache */
 else|else
 block|{
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -1398,7 +1687,7 @@ expr_stmt|;
 name|AcpiGbl_GenericStateCacheDepth
 operator|++
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -1410,12 +1699,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmDeleteGenericStateCache  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Purge the global state object cache.  Used during subsystem  *              termination.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteGenericStateCache  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Purge the global state object cache.  Used during subsystem  *              termination.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmDeleteGenericStateCache
+name|AcpiUtDeleteGenericStateCache
 parameter_list|(
 name|void
 parameter_list|)
@@ -1426,7 +1715,7 @@ name|Next
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmDeleteGenericStateCache"
+literal|"UtDeleteGenericStateCache"
 argument_list|)
 expr_stmt|;
 comment|/* Traverse the global cache list */
@@ -1444,7 +1733,7 @@ name|Common
 operator|.
 name|Next
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|AcpiGbl_GenericStateCache
 argument_list|)
@@ -1463,12 +1752,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmResolvePackageReferences  *  * PARAMETERS:  ObjDesc         - The Package object on which to resolve refs  *  * RETURN:      Status  *  * DESCRIPTION: Walk through a package and turn internal references into values  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtResolvePackageReferences  *  * PARAMETERS:  ObjDesc         - The Package object on which to resolve refs  *  * RETURN:      Status  *  * DESCRIPTION: Walk through a package and turn internal references into values  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmResolvePackageReferences
+name|AcpiUtResolvePackageReferences
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1484,7 +1773,7 @@ name|SubObject
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiCmResolvePackageReferences"
+literal|"AcpiUtResolvePackageReferences"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1559,7 +1848,7 @@ name|SubObject
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|==
 name|AML_ZERO_OP
 condition|)
@@ -1588,7 +1877,7 @@ name|SubObject
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|==
 name|AML_ONE_OP
 condition|)
@@ -1617,7 +1906,7 @@ name|SubObject
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|==
 name|AML_ONES_OP
 condition|)
@@ -1656,12 +1945,12 @@ name|ACPI_DEBUG
 end_ifdef
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiCmDisplayInitPathname  *  * PARAMETERS:  ObjHandle           - Handle whose pathname will be displayed  *              Path                - Additional path string to be appended  *  * RETURN:      ACPI_STATUS  *  * DESCRIPTION: Display full pathnbame of an object, DEBUG ONLY  *  *****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDisplayInitPathname  *  * PARAMETERS:  ObjHandle           - Handle whose pathname will be displayed  *              Path                - Additional path string to be appended  *  * RETURN:      ACPI_STATUS  *  * DESCRIPTION: Display full pathnbame of an object, DEBUG ONLY  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmDisplayInitPathname
+name|AcpiUtDisplayInitPathname
 parameter_list|(
 name|ACPI_HANDLE
 name|ObjHandle
@@ -1740,12 +2029,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmWalkPackageTree  *  * PARAMETERS:  ObjDesc         - The Package object on which to resolve refs  *  * RETURN:      Status  *  * DESCRIPTION: Walk through a package  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtWalkPackageTree  *  * PARAMETERS:  ObjDesc         - The Package object on which to resolve refs  *  * RETURN:      Status  *  * DESCRIPTION: Walk through a package  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmWalkPackageTree
+name|AcpiUtWalkPackageTree
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1787,12 +2076,12 @@ name|ThisSourceObj
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiCmWalkPackageTree"
+literal|"AcpiUtWalkPackageTree"
 argument_list|)
 expr_stmt|;
 name|State
 operator|=
-name|AcpiCmCreatePkgState
+name|AcpiUtCreatePkgState
 argument_list|(
 name|SourceObject
 argument_list|,
@@ -1845,7 +2134,7 @@ index|[
 name|ThisIndex
 index|]
 expr_stmt|;
-comment|/*          * Check for           * 1) An uninitialized package element.  It is completely          *      legal to declare a package and leave it uninitialized          * 2) Not an internal object - can be a namespace node instead          * 3) Any type other than a package.  Packages are handled in else case below.          */
+comment|/*          * Check for          * 1) An uninitialized package element.  It is completely          *      legal to declare a package and leave it uninitialized          * 2) Not an internal object - can be a namespace node instead          * 3) Any type other than a package.  Packages are handled in else          *      case below.          */
 if|if
 condition|(
 operator|(
@@ -1878,7 +2167,7 @@ name|Status
 operator|=
 name|WalkCallback
 argument_list|(
-literal|0
+name|ACPI_COPY_TYPE_SIMPLE
 argument_list|,
 name|ThisSourceObj
 argument_list|,
@@ -1929,14 +2218,14 @@ name|Count
 condition|)
 block|{
 comment|/*                  * We've handled all of the objects at this level,  This means                  * that we have just completed a package.  That package may                  * have contained one or more packages itself.                  *                  * Delete this state and pop the previous state (package).                  */
-name|AcpiCmDeleteGenericState
+name|AcpiUtDeleteGenericState
 argument_list|(
 name|State
 argument_list|)
 expr_stmt|;
 name|State
 operator|=
-name|AcpiCmPopGenericState
+name|AcpiUtPopGenericState
 argument_list|(
 operator|&
 name|StateList
@@ -1973,7 +2262,7 @@ name|Status
 operator|=
 name|WalkCallback
 argument_list|(
-literal|1
+name|ACPI_COPY_TYPE_PACKAGE
 argument_list|,
 name|ThisSourceObj
 argument_list|,
@@ -1997,9 +2286,9 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*               * The callback above returned a new target package object.              */
+comment|/*              * The callback above returned a new target package object.              */
 comment|/*              * Push the current state and create a new one              */
-name|AcpiCmPushGenericState
+name|AcpiUtPushGenericState
 argument_list|(
 operator|&
 name|StateList
@@ -2009,7 +2298,7 @@ argument_list|)
 expr_stmt|;
 name|State
 operator|=
-name|AcpiCmCreatePkgState
+name|AcpiUtCreatePkgState
 argument_list|(
 name|ThisSourceObj
 argument_list|,

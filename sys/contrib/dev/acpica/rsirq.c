@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsirq - AcpiRsIrqResource,  *                      AcpiRsIrqStream  *                      AcpiRsExtendedIrqResource  *                      AcpiRsExtendedIrqStream  *              $Revision: 13 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 17 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|RESOURCE_MANAGER
+value|ACPI_RESOURCES
 end_define
 
 begin_macro
@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsIrqResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                          stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes consumed from  *                                          the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                          the number of bytes in the filled  *                                          in structure  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *                  structure pointed to by the OutputBuffer.  Return the  *                  number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsIrqResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -71,12 +71,12 @@ name|Buffer
 init|=
 name|ByteStreamBuffer
 decl_stmt|;
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|RESOURCE
+name|ACPI_RESOURCE
 operator|*
 operator|)
 operator|*
@@ -101,12 +101,10 @@ decl_stmt|;
 name|UINT32
 name|StructSize
 init|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|IRQ_RESOURCE
+name|ACPI_RESOURCE_IRQ
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -134,7 +132,7 @@ name|OutputStruct
 operator|->
 name|Id
 operator|=
-name|Irq
+name|ACPI_RSTYPE_IRQ
 expr_stmt|;
 comment|/*      * Point to the 16-bits of Bytes 1 and 2      */
 name|Buffer
@@ -313,7 +311,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*                  * Only _LL and _HE polarity/trigger interrupts                  *  are allowed (ACPI spec v1.0b ection 6.4.2.1),                  *  so an error will occur if we reach this point                  */
+comment|/*                  * Only _LL and _HE polarity/trigger interrupts                  * are allowed (ACPI spec v1.0b ection 6.4.2.1),                  * so an error will occur if we reach this point                  */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_DATA
@@ -341,7 +339,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * Assume Edge Sensitive, Active High, Non-Sharable          *  per ACPI Specification          */
+comment|/*          * Assume Edge Sensitive, Active High, Non-Sharable          * per ACPI Specification          */
 name|OutputStruct
 operator|->
 name|Data
@@ -395,14 +393,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsIrqStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes of the  *                                          OutputBuffer used  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *                  the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsIrqStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsIrqStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -444,7 +442,7 @@ argument_list|(
 literal|"RsIrqStream"
 argument_list|)
 expr_stmt|;
-comment|/*      * The descriptor field is set based upon whether a third byte is      *  needed to contain the IRQ Information.      */
+comment|/*      * The descriptor field is set based upon whether a third byte is      * needed to contain the IRQ Information.      */
 if|if
 condition|(
 name|EDGE_SENSITIVE
@@ -644,18 +642,10 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-call|(
-name|UINT32
-call|)
+name|POINTER_DIFF
 argument_list|(
-operator|(
-name|NATIVE_UINT
-operator|)
 name|Buffer
-operator|-
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 operator|*
 name|OutputBuffer
 argument_list|)
@@ -669,7 +659,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsExtendedIrqResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                          stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes consumed from  *                                          the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                          the number of bytes in the filled  *                                          in structure  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *                  structure pointed to by the OutputBuffer.  Return the  *                  number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsExtendedIrqResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -700,12 +690,12 @@ name|Buffer
 init|=
 name|ByteStreamBuffer
 decl_stmt|;
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|RESOURCE
+name|ACPI_RESOURCE
 operator|*
 operator|)
 operator|*
@@ -721,18 +711,20 @@ name|Temp8
 init|=
 literal|0
 decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|TempPtr
+decl_stmt|;
 name|UINT8
 name|Index
 decl_stmt|;
 name|UINT32
 name|StructSize
 init|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|EXTENDED_IRQ_RESOURCE
+name|ACPI_RESOURCE_EXT_IRQ
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -763,7 +755,7 @@ name|OutputStruct
 operator|->
 name|Id
 operator|=
-name|ExtendedIrq
+name|ACPI_RSTYPE_EXT_IRQ
 expr_stmt|;
 comment|/*      * Point to the Byte3      */
 name|Buffer
@@ -848,7 +840,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*              * Only _LL and _HE polarity/trigger interrupts              *  are allowed (ACPI spec v1.0b ection 6.4.2.1),              *  so an error will occur if we reach this point              */
+comment|/*              * Only _LL and _HE polarity/trigger interrupts              * are allowed (ACPI spec v1.0b ection 6.4.2.1),              * so an error will occur if we reach this point              */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_DATA
@@ -893,7 +885,7 @@ name|NumberOfInterrupts
 operator|=
 name|Temp8
 expr_stmt|;
-comment|/*      * Add any additional structure size to properly calculate      *  the next pointer at the end of this function      */
+comment|/*      * Add any additional structure size to properly calculate      * the next pointer at the end of this function      */
 name|StructSize
 operator|+=
 operator|(
@@ -947,7 +939,7 @@ operator|+=
 literal|4
 expr_stmt|;
 block|}
-comment|/*      * This will leave us pointing to the Resource Source Index      *  If it is present, then save it off and calculate the      *  pointer to where the null terminated string goes:      *  Each Interrupt takes 32-bits + the 5 bytes of the      *  stream that are default.      */
+comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes:      * Each Interrupt takes 32-bits + the 5 bytes of the      * stream that are default.      */
 if|if
 condition|(
 operator|*
@@ -983,7 +975,9 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|ResourceSourceIndex
+name|ResourceSource
+operator|.
+name|Index
 operator|=
 operator|(
 name|UINT32
@@ -994,6 +988,39 @@ comment|/* Point to the String */
 name|Buffer
 operator|+=
 literal|1
+expr_stmt|;
+comment|/*           * Point the String pointer to the end of this structure.          */
+name|OutputStruct
+operator|->
+name|Data
+operator|.
+name|ExtendedIrq
+operator|.
+name|ResourceSource
+operator|.
+name|StringPtr
+operator|=
+operator|(
+name|NATIVE_CHAR
+operator|*
+operator|)
+operator|(
+name|OutputStruct
+operator|+
+name|StructSize
+operator|)
+expr_stmt|;
+name|TempPtr
+operator|=
+name|OutputStruct
+operator|->
+name|Data
+operator|.
+name|ExtendedIrq
+operator|.
+name|ResourceSource
+operator|.
+name|StringPtr
 expr_stmt|;
 comment|/* Copy the string into the buffer */
 name|Index
@@ -1008,19 +1035,15 @@ operator|*
 name|Buffer
 condition|)
 block|{
-name|OutputStruct
-operator|->
-name|Data
-operator|.
-name|ExtendedIrq
-operator|.
-name|ResourceSource
-index|[
-name|Index
-index|]
+operator|*
+name|TempPtr
 operator|=
 operator|*
 name|Buffer
+expr_stmt|;
+name|TempPtr
+operator|+=
+literal|1
 expr_stmt|;
 name|Buffer
 operator|+=
@@ -1032,16 +1055,8 @@ literal|1
 expr_stmt|;
 block|}
 comment|/*          * Add the terminating null          */
-name|OutputStruct
-operator|->
-name|Data
-operator|.
-name|ExtendedIrq
-operator|.
-name|ResourceSource
-index|[
-name|Index
-index|]
+operator|*
+name|TempPtr
 operator|=
 literal|0x00
 expr_stmt|;
@@ -1051,13 +1066,15 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|ResourceSourceStringLength
+name|ResourceSource
+operator|.
+name|StringLength
 operator|=
 name|Index
 operator|+
 literal|1
 expr_stmt|;
-comment|/*          * In order for the StructSize to fall on a 32-bit boundry,          *  calculate the length of the string and expand the          *  StructSize to the next 32-bit boundry.          */
+comment|/*          * In order for the StructSize to fall on a 32-bit boundary,          * calculate the length of the string and expand the          * StructSize to the next 32-bit boundary.          */
 name|Temp8
 operator|=
 call|(
@@ -1069,11 +1086,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|Temp8
-operator|=
-operator|(
-name|UINT8
-operator|)
+name|StructSize
+operator|+=
 name|ROUND_UP_TO_32BITS
 argument_list|(
 name|Temp8
@@ -1088,7 +1102,9 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|ResourceSourceIndex
+name|ResourceSource
+operator|.
+name|Index
 operator|=
 literal|0x00
 expr_stmt|;
@@ -1098,7 +1114,9 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|ResourceSourceStringLength
+name|ResourceSource
+operator|.
+name|StringLength
 operator|=
 literal|0
 expr_stmt|;
@@ -1109,11 +1127,10 @@ operator|.
 name|ExtendedIrq
 operator|.
 name|ResourceSource
-index|[
-literal|0
-index|]
+operator|.
+name|StringPtr
 operator|=
-literal|0x00
+name|NULL
 expr_stmt|;
 block|}
 comment|/*      * Set the Length parameter      */
@@ -1138,14 +1155,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsExtendedIrqStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes of the  *                                          OutputBuffer used  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsExtendedIrqStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsExtendedIrqStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -1368,7 +1385,9 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|ResourceSourceStringLength
+name|ResourceSource
+operator|.
+name|StringLength
 condition|)
 block|{
 operator|*
@@ -1383,7 +1402,9 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|ResourceSourceIndex
+name|ResourceSource
+operator|.
+name|Index
 expr_stmt|;
 name|Buffer
 operator|+=
@@ -1409,9 +1430,11 @@ operator|.
 name|ExtendedIrq
 operator|.
 name|ResourceSource
+operator|.
+name|StringPtr
 argument_list|)
 expr_stmt|;
-comment|/*          * Buffer needs to be set to the length of the sting + one for the          *  terminating null          */
+comment|/*          * Buffer needs to be set to the length of the sting + one for the          * terminating null          */
 name|Buffer
 operator|+=
 operator|(
@@ -1424,6 +1447,8 @@ operator|.
 name|ExtendedIrq
 operator|.
 name|ResourceSource
+operator|.
+name|StringPtr
 argument_list|)
 operator|+
 literal|1
@@ -1434,23 +1459,15 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-call|(
-name|UINT32
-call|)
+name|POINTER_DIFF
 argument_list|(
-operator|(
-name|NATIVE_UINT
-operator|)
 name|Buffer
-operator|-
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 operator|*
 name|OutputBuffer
 argument_list|)
 expr_stmt|;
-comment|/*      * Set the length field to the number of bytes consumed      *  minus the header size (3 bytes)      */
+comment|/*      * Set the length field to the number of bytes consumed      * minus the header size (3 bytes)      */
 operator|*
 name|LengthField
 operator|=

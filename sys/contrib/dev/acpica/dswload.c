@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 26 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 37 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DISPATCHER
+value|ACPI_DISPATCHER
 end_define
 
 begin_macro
@@ -70,7 +70,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsLoad1BeginOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              Op              - Op that has been just been reached in the  *                                walk;  Arguments have not been evaluated yet.  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the loading of ACPI tables.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsLoad1BeginOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              Op              - Op that has been just been reached in the  *                                walk;  Arguments have not been evaluated yet.  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the loading of ACPI tables.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -101,19 +101,24 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DataType
 decl_stmt|;
 name|NATIVE_CHAR
 modifier|*
 name|Path
 decl_stmt|;
-name|DEBUG_PRINT
+name|PROC_NAME
+argument_list|(
+literal|"DsLoad1BeginOp"
+argument_list|)
+expr_stmt|;
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"Load1BeginOp: Op=%p State=%p\n"
+literal|"Op=%p State=%p\n"
 operator|,
 name|Op
 operator|,
@@ -180,12 +185,12 @@ argument_list|(
 name|Opcode
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"Load1BeginOp: State=%p Op=%p Type=%x\n"
+literal|"State=%p Op=%p Type=%x\n"
 operator|,
 name|WalkState
 operator|,
@@ -202,12 +207,12 @@ operator|==
 name|AML_SCOPE_OP
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"Load1BeginOp: State=%p Op=%p Type=%x\n"
+literal|"State=%p Op=%p Type=%x\n"
 operator|,
 name|WalkState
 operator|,
@@ -332,7 +337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsLoad1EndOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              Op              - Op that has been just been completed in the  *                                walk;  Arguments have now been evaluated.  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during the loading of the namespace,  *              both control methods and everything else.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsLoad1EndOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              Op              - Op that has been just been completed in the  *                                walk;  Arguments have now been evaluated.  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during the loading of the namespace,  *              both control methods and everything else.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -348,15 +353,20 @@ modifier|*
 name|Op
 parameter_list|)
 block|{
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DataType
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"DsLoad1EndOp"
+argument_list|)
+expr_stmt|;
 name|DEBUG_PRINT
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"Load1EndOp: Op=%p State=%p\n"
+literal|"Op=%p State=%p\n"
 operator|,
 name|Op
 operator|,
@@ -456,14 +466,14 @@ name|DataType
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"Load1EndOp/%s: Popping scope for Op %p\n"
+literal|"(%s): Popping scope for Op %p\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|DataType
 argument_list|)
@@ -487,7 +497,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsLoad2BeginOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              Op              - Op that has been just been reached in the  *                                walk;  Arguments have not been evaluated yet.  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the loading of ACPI tables.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsLoad2BeginOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              Op              - Op that has been just been reached in the  *                                walk;  Arguments have not been evaluated yet.  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the loading of ACPI tables.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -518,7 +528,7 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DataType
 decl_stmt|;
 name|NATIVE_CHAR
@@ -531,12 +541,17 @@ name|Original
 init|=
 name|NULL
 decl_stmt|;
-name|DEBUG_PRINT
+name|PROC_NAME
+argument_list|(
+literal|"DsLoad2BeginOp"
+argument_list|)
+expr_stmt|;
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"Load2BeginOp: Op=%p State=%p\n"
+literal|"Op=%p State=%p\n"
 operator|,
 name|Op
 operator|,
@@ -555,7 +570,7 @@ argument_list|)
 operator|&&
 name|Opcode
 operator|!=
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
 return|return
@@ -590,7 +605,7 @@ if|if
 condition|(
 name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
 comment|/* For Namepath op, get the path string */
@@ -658,12 +673,12 @@ argument_list|(
 name|Opcode
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"Load2BeginOp: State=%p Op=%p Type=%x\n"
+literal|"State=%p Op=%p Type=%x\n"
 operator|,
 name|WalkState
 operator|,
@@ -677,7 +692,7 @@ if|if
 condition|(
 name|Opcode
 operator|==
-name|AML_DEF_FIELD_OP
+name|AML_FIELD_OP
 operator|||
 name|Opcode
 operator|==
@@ -702,7 +717,7 @@ if|if
 condition|(
 name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
 comment|/*          * The NamePath is an object reference to an existing object.  Don't enter the          * name into the namespace, but look it up for use later          */
@@ -887,12 +902,12 @@ condition|(
 name|Original
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Lookup: old %p new %p\n"
+literal|"old %p new %p\n"
 operator|,
 name|Original
 operator|,
@@ -907,7 +922,7 @@ operator|!=
 name|Node
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -932,7 +947,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsLoad2EndOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              Op              - Op that has been just been completed in the  *                                walk;  Arguments have now been evaluated.  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during the loading of the namespace,  *              both control methods and everything else.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsLoad2EndOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              Op              - Op that has been just been completed in the  *                                walk;  Arguments have now been evaluated.  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during the loading of the namespace,  *              both control methods and everything else.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -953,7 +968,7 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DataType
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
@@ -968,12 +983,17 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|NewNode
 decl_stmt|;
-name|DEBUG_PRINT
+name|PROC_NAME
+argument_list|(
+literal|"DsLoad2EndOp"
+argument_list|)
+expr_stmt|;
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"Load2EndOp: Op=%p State=%p\n"
+literal|"Op=%p State=%p\n"
 operator|,
 name|Op
 operator|,
@@ -1007,12 +1027,12 @@ operator|==
 name|AML_SCOPE_OP
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"Load2EndOp: ending scope Op=%p State=%p\n"
+literal|"Ending scope Op=%p State=%p\n"
 operator|,
 name|Op
 operator|,
@@ -1036,12 +1056,12 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"Load2EndOp: Un-named scope! Op=%p State=%p\n"
+literal|"Unnamed scope! Op=%p State=%p\n"
 operator|,
 name|Op
 operator|,
@@ -1101,14 +1121,14 @@ name|DataType
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"AmlEndNamespaceScope/%s: Popping scope for Op %p\n"
+literal|"(%s) Popping scope for Op %p\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|DataType
 argument_list|)
@@ -1123,7 +1143,7 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Named operations are as follows:      *      * AML_SCOPE      * AML_DEVICE      * AML_THERMALZONE      * AML_METHOD      * AML_POWERRES      * AML_PROCESSOR      * AML_FIELD      * AML_INDEXFIELD      * AML_BANKFIELD      * AML_NAMEDFIELD      * AML_NAME      * AML_ALIAS      * AML_MUTEX      * AML_EVENT      * AML_OPREGION      * AML_CREATEFIELD      * AML_CREATEBITFIELD      * AML_CREATEBYTEFIELD      * AML_CREATEWORDFIELD      * AML_CREATEDWORDFIELD      * AML_METHODCALL      */
+comment|/*      * Named operations are as follows:      *      * AML_SCOPE      * AML_DEVICE      * AML_THERMALZONE      * AML_METHOD      * AML_POWERRES      * AML_PROCESSOR      * AML_FIELD      * AML_INDEXFIELD      * AML_BANKFIELD      * AML_NAMEDFIELD      * AML_NAME      * AML_ALIAS      * AML_MUTEX      * AML_EVENT      * AML_OPREGION      * AML_CREATEFIELD      * AML_CREATEBITFIELD      * AML_CREATEBYTEFIELD      * AML_CREATEWORDFIELD      * AML_CREATEDWORDFIELD      * AML_CREATEQWORDFIELD      * AML_METHODCALL      */
 comment|/* Decode the opcode */
 name|Arg
 operator|=
@@ -1144,24 +1164,27 @@ case|case
 name|AML_CREATE_FIELD_OP
 case|:
 case|case
-name|AML_BIT_FIELD_OP
+name|AML_CREATE_BIT_FIELD_OP
 case|:
 case|case
-name|AML_BYTE_FIELD_OP
+name|AML_CREATE_BYTE_FIELD_OP
 case|:
 case|case
-name|AML_WORD_FIELD_OP
+name|AML_CREATE_WORD_FIELD_OP
 case|:
 case|case
-name|AML_DWORD_FIELD_OP
+name|AML_CREATE_DWORD_FIELD_OP
+case|:
+case|case
+name|AML_CREATE_QWORD_FIELD_OP
 case|:
 comment|/*          * Create the field object, but the field buffer and index must          * be evaluated later during the execution phase          */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"LOADING-CreateXxxField: State=%p Op=%p NamedObj=%p\n"
+literal|"CreateXxxField: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState
 operator|,
@@ -1204,6 +1227,20 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|Arg
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_AML_NO_OPERAND
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 comment|/*          * Enter the NameString into the namespace          */
 name|Status
 operator|=
@@ -1237,20 +1274,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* We could put the returned object (Node) on the object stack for later, but              * for now, we will put it in the "op" object that the parser uses, so we              * can get it again at the end of this scope              */
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/* We could put the returned object (Node) on the object stack for later, but          * for now, we will put it in the "op" object that the parser uses, so we          * can get it again at the end of this scope          */
 name|Op
 operator|->
 name|Node
 operator|=
 name|NewNode
 expr_stmt|;
-comment|/*              * If there is no object attached to the node, this node was just created and              * we need to create the field object.  Otherwise, this was a lookup of an              * existing node and we don't want to create the field object again.              */
+comment|/*          * If there is no object attached to the node, this node was just created and          * we need to create the field object.  Otherwise, this was a lookup of an          * existing node and we don't want to create the field object again.          */
 if|if
 condition|(
 operator|!
@@ -1259,10 +1300,10 @@ operator|->
 name|Object
 condition|)
 block|{
-comment|/*                  * The Field definition is not fully parsed at this time.                  * (We must save the address of the AML for the buffer and index operands)                  */
+comment|/*              * The Field definition is not fully parsed at this time.              * (We must save the address of the AML for the buffer and index operands)              */
 name|Status
 operator|=
-name|AcpiAmlExecCreateField
+name|AcpiExCreateBufferField
 argument_list|(
 operator|(
 operator|(
@@ -1290,12 +1331,11 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
-name|AML_METHODCALL_OP
+name|AML_INT_METHODCALL_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1349,7 +1389,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* has name already been resolved by here ??*/
+comment|/* TBD: has name already been resolved by here ??*/
 comment|/* TBD: [Restructure] Make sure that what we found is indeed a method! */
 comment|/* We didn't search for a method on purpose, to see if the name would resolve! */
 comment|/* We could put the returned object (Node) on the object stack for later, but              * for now, we will put it in the "op" object that the parser uses, so we              * can get it again at the end of this scope              */
@@ -1365,7 +1405,7 @@ case|case
 name|AML_PROCESSOR_OP
 case|:
 comment|/* Nothing to do other than enter object into namespace */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1382,13 +1422,10 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiAmlExecCreateProcessor
+name|AcpiExCreateProcessor
 argument_list|(
 name|Op
 argument_list|,
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|)
 expr_stmt|;
@@ -1424,7 +1461,7 @@ case|case
 name|AML_POWER_RES_OP
 case|:
 comment|/* Nothing to do other than enter object into namespace */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1441,13 +1478,10 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiAmlExecCreatePowerResource
+name|AcpiExCreatePowerResource
 argument_list|(
 name|Op
 argument_list|,
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|)
 expr_stmt|;
@@ -1483,7 +1517,7 @@ case|case
 name|AML_THERMAL_ZONE_OP
 case|:
 comment|/* Nothing to do other than enter object into namespace */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1500,9 +1534,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_DEF_FIELD_OP
+name|AML_FIELD_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1542,7 +1576,7 @@ break|break;
 case|case
 name|AML_INDEX_FIELD_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1585,7 +1619,7 @@ break|break;
 case|case
 name|AML_BANK_FIELD_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1626,7 +1660,7 @@ comment|/*      * MethodOp PkgLength NamesString MethodFlags TermList      */
 case|case
 name|AML_METHOD_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1651,7 +1685,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiAmlExecCreateMethod
+name|AcpiExCreateMethod
 argument_list|(
 operator|(
 operator|(
@@ -1679,9 +1713,6 @@ name|Value
 operator|.
 name|Integer
 argument_list|,
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|)
 expr_stmt|;
@@ -1690,7 +1721,7 @@ break|break;
 case|case
 name|AML_MUTEX_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1726,7 +1757,7 @@ goto|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlExecCreateMutex
+name|AcpiExCreateMutex
 argument_list|(
 name|WalkState
 argument_list|)
@@ -1735,7 +1766,7 @@ break|break;
 case|case
 name|AML_EVENT_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1771,7 +1802,7 @@ goto|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlExecCreateEvent
+name|AcpiExCreateEvent
 argument_list|(
 name|WalkState
 argument_list|)
@@ -1789,7 +1820,7 @@ condition|)
 block|{
 break|break;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1807,7 +1838,7 @@ expr_stmt|;
 comment|/*          * The OpRegion is not fully parsed at this time.  Only valid argument is the SpaceId.          * (We must save the address of the AML of the address and length operands)          */
 name|Status
 operator|=
-name|AcpiAmlExecCreateRegion
+name|AcpiExCreateRegion
 argument_list|(
 operator|(
 operator|(
@@ -1830,7 +1861,7 @@ operator|->
 name|Length
 argument_list|,
 operator|(
-name|ACPI_ADDRESS_SPACE_TYPE
+name|ACPI_ADR_SPACE_TYPE
 operator|)
 name|Arg
 operator|->
@@ -1861,7 +1892,7 @@ comment|/* Namespace Modifier Opcodes */
 case|case
 name|AML_ALIAS_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1897,7 +1928,7 @@ goto|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlExecCreateAlias
+name|AcpiExCreateAlias
 argument_list|(
 name|WalkState
 argument_list|)
@@ -1906,7 +1937,7 @@ break|break;
 case|case
 name|AML_NAME_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
@@ -1942,9 +1973,9 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,

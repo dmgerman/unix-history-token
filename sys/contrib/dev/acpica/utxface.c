@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmxface - External interfaces for "global" ACPI functions  *              $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__CMXFACE_C__
+name|__UTXFACE_C__
 end_define
 
 begin_include
@@ -59,13 +59,13 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"cmxface"
+literal|"utxface"
 argument_list|)
 end_macro
 
@@ -89,7 +89,7 @@ literal|"AcpiInitializeSubsystem"
 argument_list|)
 expr_stmt|;
 comment|/* Initialize all globals used by the subsystem */
-name|AcpiCmInitGlobals
+name|AcpiUtInitGlobals
 argument_list|()
 expr_stmt|;
 comment|/* Initialize the OS-Dependent layer */
@@ -111,7 +111,7 @@ argument_list|(
 operator|(
 literal|"OSD failed to initialize, %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -127,7 +127,7 @@ block|}
 comment|/* Create the default mutex objects */
 name|Status
 operator|=
-name|AcpiCmMutexInitialize
+name|AcpiUtMutexInitialize
 argument_list|()
 expr_stmt|;
 if|if
@@ -143,7 +143,7 @@ argument_list|(
 operator|(
 literal|"Global mutex creation failure, %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -175,7 +175,7 @@ argument_list|(
 operator|(
 literal|"Namespace initialization failure, %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -228,7 +228,7 @@ expr_stmt|;
 comment|/* Sanity check the FADT for valid values */
 name|Status
 operator|=
-name|AcpiCmValidateFadt
+name|AcpiUtValidateFadt
 argument_list|()
 expr_stmt|;
 if|if
@@ -513,12 +513,35 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiTerminate"
 argument_list|)
 expr_stmt|;
-comment|/* Terminate the AML Debuger if present */
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Terminate the AML Debugger if present */
 name|DEBUGGER_EXEC
 argument_list|(
 name|AcpiGbl_DbTerminateThreads
@@ -527,13 +550,13 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* TBD: [Investigate] This is no longer needed?*/
-comment|/*    AcpiCmReleaseMutex (ACPI_MTX_DEBUG_CMD_READY); */
+comment|/*    AcpiUtReleaseMutex (ACPI_MTX_DEBUG_CMD_READY); */
 comment|/* Shutdown and free all resources */
-name|AcpiCmSubsystemShutdown
+name|AcpiUtSubsystemShutdown
 argument_list|()
 expr_stmt|;
 comment|/* Free the mutex objects */
-name|AcpiCmMutexTerminate
+name|AcpiUtMutexTerminate
 argument_list|()
 expr_stmt|;
 comment|/* Now we can shutdown the OS-dependent layer */
@@ -568,11 +591,34 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiGetSystemInfo"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      *  Must have a valid buffer      */
 if|if
 condition|(
@@ -821,7 +867,7 @@ block|}
 comment|/* Convert the exception code (Handles bad exception codes) */
 name|FormattedException
 operator|=
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Exception
 argument_list|)
@@ -868,6 +914,75 @@ expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiAllocate  *  * PARAMETERS:  Size                - Size of the allocation  *  * RETURN:      Address of the allocated memory on success, NULL on failure.  *  * DESCRIPTION: The subsystem's equivalent of malloc.  *              External front-end to the Ut* memory manager  *  ****************************************************************************/
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|AcpiAllocate
+parameter_list|(
+name|UINT32
+name|Size
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AcpiUtAllocate
+argument_list|(
+name|Size
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiCallocate  *  * PARAMETERS:  Size                - Size of the allocation  *  * RETURN:      Address of the allocated memory on success, NULL on failure.  *  * DESCRIPTION: The subsystem's equivalent of calloc.  *              External front-end to the Ut* memory manager  *  ****************************************************************************/
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|AcpiCallocate
+parameter_list|(
+name|UINT32
+name|Size
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AcpiUtCallocate
+argument_list|(
+name|Size
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiFree  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *  * RETURN:      None  *  * DESCRIPTION: Frees the memory at Address  *              External front-end to the Ut* memory manager  *  ****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiFree
+parameter_list|(
+name|void
+modifier|*
+name|Address
+parameter_list|)
+block|{
+name|AcpiUtFree
+argument_list|(
+name|Address
 argument_list|)
 expr_stmt|;
 block|}

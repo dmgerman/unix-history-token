@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 34 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -31,17 +31,11 @@ directive|include
 file|"acnamesp.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"accommon.h"
-end_include
-
 begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|EVENT_HANDLING
+value|ACPI_EVENTS
 end_define
 
 begin_macro
@@ -52,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/**************************************************************************  *  * FUNCTION:    AcpiEvInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Ensures that the system control interrupt (SCI) is properly  *              configured, disables SCI event sources, installs the SCI  *              handler  *  *************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Ensures that the system control interrupt (SCI) is properly  *              configured, disables SCI event sources, installs the SCI  *              handler  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -77,12 +71,12 @@ operator|!
 name|AcpiGbl_DSDT
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_WARN
 argument_list|,
 operator|(
-literal|"EvInitialize: No ACPI tables present!\n"
+literal|"No ACPI tables present!\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -101,12 +95,12 @@ name|AcpiHwGetModeCapabilities
 argument_list|()
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_WARN
 argument_list|,
 operator|(
-literal|"EvInitialize: Only legacy mode supported!\n"
+literal|"ACPI Mode is not supported!\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -135,12 +129,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_FATAL
 argument_list|,
 operator|(
-literal|"EvInitialize: Unable to initialize fixed events.\n"
+literal|"Unable to initialize fixed events.\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -163,12 +157,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_FATAL
 argument_list|,
 operator|(
-literal|"EvInitialize: Unable to initialize general purpose events.\n"
+literal|"Unable to initialize general purpose events.\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -192,12 +186,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_FATAL
 argument_list|,
 operator|(
-literal|"EvInitialize: Unable to install System Control Interrupt Handler\n"
+literal|"Unable to install System Control Interrupt Handler\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -221,12 +215,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_FATAL
 argument_list|,
 operator|(
-literal|"EvInitialize: Unable to initialize Gpe control methods\n"
+literal|"Unable to initialize Gpe control methods\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -250,12 +244,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_FATAL
 argument_list|,
 operator|(
-literal|"EvInitialize: Unable to initialize Global Lock handler\n"
+literal|"Unable to initialize Global Lock handler\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -274,7 +268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvFixedEventInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the Fixed AcpiEvent data structures  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvFixedEventInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the Fixed AcpiEvent data structures  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -298,7 +292,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_FIXED_EVENTS
+name|ACPI_NUM_FIXED_EVENTS
 condition|;
 name|i
 operator|++
@@ -387,7 +381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvFixedEventDetect  *  * PARAMETERS:  None  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Checks the PM status register for fixed events  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvFixedEventDetect  *  * PARAMETERS:  None  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Checks the PM status register for fixed events  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -464,7 +458,7 @@ name|ACPI_EVENT_PMTIMER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* global event (BIOS want's the global lock) */
+comment|/* global event (BIOS wants the global lock) */
 if|if
 condition|(
 operator|(
@@ -545,7 +539,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvFixedEventDispatch  *  * PARAMETERS:  Event               - Event type  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Clears the status bit for the requested event, calls the  *              handler that previously registered for the event.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvFixedEventDispatch  *  * PARAMETERS:  Event               - Event type  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Clears the status bit for the requested event, calls the  *              handler that previously registered for the event.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -697,7 +691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvGpeInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the GPE data structures  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGpeInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the GPE data structures  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -783,7 +777,7 @@ block|}
 comment|/*      * Allocate the Gpe information block      */
 name|AcpiGbl_GpeRegisters
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|AcpiGbl_GpeRegisterCount
 operator|*
@@ -799,7 +793,7 @@ operator|!
 name|AcpiGbl_GpeRegisters
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -817,7 +811,7 @@ block|}
 comment|/*      * Allocate the Gpe dispatch handler block      * There are eight distinct GP events per register.      * Initialization to zeros is sufficient      */
 name|AcpiGbl_GpeInfo
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|MUL_8
 argument_list|(
@@ -836,12 +830,12 @@ operator|!
 name|AcpiGbl_GpeInfo
 condition|)
 block|{
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|AcpiGbl_GpeRegisters
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -866,7 +860,7 @@ name|int
 operator|)
 name|ACPI_GPE_INVALID
 argument_list|,
-name|NUM_GPE
+name|ACPI_NUM_GPE
 argument_list|)
 expr_stmt|;
 comment|/*      * Initialize the Gpe information and validation blocks.  A goal of these      * blocks is to hide the fact that there are two separate GPE register sets      * In a given block, the status registers occupy the first half, and      * the enable registers occupy the second half.      */
@@ -1166,7 +1160,7 @@ name|RegisterIndex
 operator|++
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -1200,7 +1194,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvSaveMethodInfo  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Called from AcpiWalkNamespace.  Expects each object to be a  *              control method under the _GPE portion of the namespace.  *              Extract the name and GPE type from the object, saving this  *              information for quick lookup during GPE dispatch  *  *              The name of each GPE control method is of the form:  *                  "_Lnn" or "_Enn"  *              Where:  *                  L      - means that the GPE is level triggered  *                  E      - means that the GPE is edge triggered  *                  nn     - is the GPE number  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSaveMethodInfo  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Called from AcpiWalkNamespace.  Expects each object to be a  *              control method under the _GPE portion of the namespace.  *              Extract the name and GPE type from the object, saving this  *              information for quick lookup during GPE dispatch  *  *              The name of each GPE control method is of the form:  *                  "_Lnn" or "_Enn"  *              Where:  *                  L      - means that the GPE is level triggered  *                  E      - means that the GPE is edge triggered  *                  nn     - is the GPE number  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1238,6 +1232,11 @@ decl_stmt|;
 name|UINT8
 name|Type
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"EvSaveMethodInfo"
+argument_list|)
+expr_stmt|;
 comment|/* Extract the name from the object and convert to a string */
 name|MOVE_UNALIGNED32_TO_32
 argument_list|(
@@ -1297,12 +1296,12 @@ block|}
 else|else
 block|{
 comment|/* Unknown method type, just ignore it! */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"EvSaveMethodInfo: Unknown GPE method type: %s (name not of form _Lnn or _Enn)\n"
+literal|"Unknown GPE method type: %s (name not of form _Lnn or _Enn)\n"
 operator|,
 name|Name
 operator|)
@@ -1338,12 +1337,12 @@ name|ACPI_UINT32_MAX
 condition|)
 block|{
 comment|/* Conversion failed; invalid method, just ignore it */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"EvSaveMethodInfo: Could not extract GPE number from name: %s (name not of form _Lnn or _Enn)\n"
+literal|"Could not extract GPE number from name: %s (name not of form _Lnn or _Enn)\n"
 operator|,
 name|Name
 operator|)
@@ -1398,12 +1397,12 @@ argument_list|(
 name|GpeNumber
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"EvSaveMethodInfo: Registered GPE method %s as GPE number %X\n"
+literal|"Registered GPE method %s as GPE number %X\n"
 operator|,
 name|Name
 operator|,
@@ -1420,7 +1419,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvInitGpeControlMethods  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Obtain the control methods associated with the GPEs.  *  *              NOTE: Must be called AFTER namespace initialization!  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitGpeControlMethods  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Obtain the control methods associated with the GPEs.  *  *              NOTE: Must be called AFTER namespace initialization!  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1492,7 +1491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvGpeDetect  *  * PARAMETERS:  None  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Detect if any GP events have occurred  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGpeDetect  *  * PARAMETERS:  None  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Detect if any GP events have occurred  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1687,7 +1686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvAsynchExecuteGpeMethod  *  * PARAMETERS:  GpeNumber       - The 0-based Gpe number  *  * RETURN:      None  *  * DESCRIPTION: Perform the actual execution of a GPE control method.  This  *              function is called from an invocation of AcpiOsQueueForExecution  *              (and therefore does NOT execute at interrupt level) so that  *              the control method itself is not executed in the context of  *              the SCI interrupt handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAsynchExecuteGpeMethod  *  * PARAMETERS:  GpeNumber       - The 0-based Gpe number  *  * RETURN:      None  *  * DESCRIPTION: Perform the actual execution of a GPE control method.  This  *              function is called from an invocation of AcpiOsQueueForExecution  *              (and therefore does NOT execute at interrupt level) so that  *              the control method itself is not executed in the context of  *              the SCI interrupt handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1717,7 +1716,7 @@ literal|"EvAsynchExecuteGpeMethod"
 argument_list|)
 expr_stmt|;
 comment|/*      * Take a snapshot of the GPE info for this level      */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
@@ -1729,7 +1728,7 @@ index|[
 name|GpeNumber
 index|]
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
@@ -1782,7 +1781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvGpeDispatch  *  * PARAMETERS:  GpeNumber       - The 0-based Gpe number  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Handle and dispatch a General Purpose AcpiEvent.  *              Clears the status bit for the requested event.  *  * TBD: [Investigate] is this still valid or necessary:  * The Gpe handler differs from the fixed events in that it clears the enable  * bit rather than the status bit to clear the interrupt.  This allows  * software outside of interrupt context to determine what caused the SCI and  * dispatch the correct AML.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGpeDispatch  *  * PARAMETERS:  GpeNumber       - The 0-based Gpe number  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Handle and dispatch a General Purpose AcpiEvent.  *              Clears the status bit for the requested event.  *  * TBD: [Investigate] is this still valid or necessary:  * The Gpe handler differs from the fixed events in that it clears the enable  * bit rather than the status bit to clear the interrupt.  This allows  * software outside of interrupt context to determine what caused the SCI and  * dispatch the correct AML.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1801,7 +1800,6 @@ argument_list|(
 literal|"EvGpeDispatch"
 argument_list|)
 expr_stmt|;
-comment|/*DEBUG_INCREMENT_EVENT_COUNT (EVENT_GENERAL);*/
 comment|/*      * Valid GPE number?      */
 if|if
 condition|(
@@ -1813,7 +1811,7 @@ operator|==
 name|ACPI_GPE_INVALID
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -1922,9 +1920,6 @@ argument_list|,
 operator|(
 name|void
 operator|*
-operator|)
-operator|(
-name|NATIVE_UINT
 operator|)
 name|GpeNumber
 argument_list|)

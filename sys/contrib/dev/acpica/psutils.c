@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 37 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|PARSER
+value|ACPI_PARSER
 end_define
 
 begin_macro
@@ -162,6 +162,11 @@ decl_stmt|;
 name|UINT8
 name|Flags
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"PsAllocOp"
+argument_list|)
+expr_stmt|;
 comment|/* Allocate the minimum required size object */
 if|if
 condition|(
@@ -250,7 +255,7 @@ argument_list|)
 condition|)
 block|{
 comment|/*          * The generic op is by far the most common (16 to 1), and therefore          * the op cache is implemented with this type.          *          * Check if there is an Op already available in the cache          */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -289,7 +294,7 @@ operator|==
 literal|0xFF
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -314,19 +319,19 @@ name|ACPI_PARSE_OBJECT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"PsAllocOp: Op %p from Parse Cache\n"
+literal|"Op %p from Parse Cache\n"
 operator|,
 name|Op
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -335,7 +340,7 @@ block|}
 else|else
 block|{
 comment|/*          * The generic op is by far the most common (16 to 1), and therefore          * the op cache is implemented with this type.          *          * Check if there is an Op already available in the cache          */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -382,7 +387,7 @@ operator|==
 literal|0xFF
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -407,19 +412,19 @@ name|ACPI_PARSE2_OBJECT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"PsAllocOp: Op %p from ExtParse Cache\n"
+literal|"Op %p from ExtParse Cache\n"
 operator|,
 name|Op
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -434,7 +439,7 @@ condition|)
 block|{
 name|Op
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|Size
 argument_list|)
@@ -481,16 +486,21 @@ modifier|*
 name|Op
 parameter_list|)
 block|{
+name|PROC_NAME
+argument_list|(
+literal|"PsFreeOp"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_RETURN_VALUE_OP
+name|AML_INT_RETURN_VALUE_OP
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -539,7 +549,7 @@ name|Flags
 operator|=
 name|PARSEOP_IN_CACHE
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -557,7 +567,7 @@ name|AcpiGbl_ParseCache
 operator|=
 name|Op
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -595,7 +605,7 @@ name|Flags
 operator|=
 name|PARSEOP_IN_CACHE
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -621,7 +631,7 @@ operator|*
 operator|)
 name|Op
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -630,7 +640,7 @@ return|return;
 block|}
 block|}
 comment|/*      * Not a GENERIC OP, or the cache is full, just free the Op      */
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|Op
 argument_list|)
@@ -671,7 +681,7 @@ name|AcpiGbl_ParseCache
 operator|->
 name|Next
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|AcpiGbl_ParseCache
 argument_list|)
@@ -697,7 +707,7 @@ name|AcpiGbl_ExtParseCache
 operator|->
 name|Next
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|AcpiGbl_ExtParseCache
 argument_list|)
@@ -831,7 +841,7 @@ name|AML_PROCESSOR_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_DEF_FIELD_OP
+name|AML_FIELD_OP
 operator|||
 name|Opcode
 operator|==
@@ -843,7 +853,7 @@ name|AML_BANK_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 operator|||
 name|Opcode
 operator|==
@@ -871,27 +881,31 @@ name|AML_CREATE_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_BIT_FIELD_OP
+name|AML_CREATE_BIT_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_BYTE_FIELD_OP
+name|AML_CREATE_BYTE_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_WORD_FIELD_OP
+name|AML_CREATE_WORD_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_DWORD_FIELD_OP
+name|AML_CREATE_DWORD_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_METHODCALL_OP
+name|AML_CREATE_QWORD_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_METHODCALL_OP
+operator|||
+name|Opcode
+operator|==
+name|AML_INT_NAMEPATH_OP
 argument_list|)
 operator|)
 return|;
@@ -938,7 +952,7 @@ name|AML_PROCESSOR_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_DEF_FIELD_OP
+name|AML_FIELD_OP
 operator|||
 name|Opcode
 operator|==
@@ -970,7 +984,7 @@ name|AML_REGION_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 argument_list|)
 operator|)
 return|;
@@ -1021,7 +1035,7 @@ name|AML_PROCESSOR_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 operator|||
 name|Opcode
 operator|==
@@ -1049,27 +1063,31 @@ name|AML_CREATE_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_BIT_FIELD_OP
+name|AML_CREATE_BIT_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_BYTE_FIELD_OP
+name|AML_CREATE_BYTE_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_WORD_FIELD_OP
+name|AML_CREATE_WORD_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_DWORD_FIELD_OP
+name|AML_CREATE_DWORD_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_METHODCALL_OP
+name|AML_CREATE_QWORD_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_METHODCALL_OP
+operator|||
+name|Opcode
+operator|==
+name|AML_INT_NAMEPATH_OP
 argument_list|)
 operator|)
 return|;
@@ -1140,7 +1158,7 @@ name|AML_REGION_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 argument_list|)
 operator|)
 return|;
@@ -1171,19 +1189,23 @@ name|AML_CREATE_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_BIT_FIELD_OP
+name|AML_CREATE_BIT_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_BYTE_FIELD_OP
+name|AML_CREATE_BYTE_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_WORD_FIELD_OP
+name|AML_CREATE_WORD_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_DWORD_FIELD_OP
+name|AML_CREATE_DWORD_FIELD_OP
+operator|||
+name|Opcode
+operator|==
+name|AML_CREATE_QWORD_FIELD_OP
 operator|||
 name|Opcode
 operator|==
@@ -1214,7 +1236,7 @@ call|)
 argument_list|(
 name|Opcode
 operator|==
-name|AML_BYTELIST_OP
+name|AML_INT_BYTELIST_OP
 argument_list|)
 operator|)
 return|;
@@ -1245,7 +1267,7 @@ name|AML_CREATE_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_DEF_FIELD_OP
+name|AML_FIELD_OP
 operator|||
 name|Opcode
 operator|==
@@ -1284,19 +1306,23 @@ name|AML_CREATE_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_BIT_FIELD_OP
+name|AML_CREATE_BIT_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_BYTE_FIELD_OP
+name|AML_CREATE_BYTE_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_WORD_FIELD_OP
+name|AML_CREATE_WORD_FIELD_OP
 operator|||
 name|Opcode
 operator|==
-name|AML_DWORD_FIELD_OP
+name|AML_CREATE_DWORD_FIELD_OP
+operator|||
+name|Opcode
+operator|==
+name|AML_CREATE_QWORD_FIELD_OP
 argument_list|)
 operator|)
 return|;

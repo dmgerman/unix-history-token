@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 38 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 41 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DEBUGGER
+value|ACPI_DEBUGGER
 end_define
 
 begin_macro
@@ -105,7 +105,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|AcpiDbMatchArgument
 parameter_list|(
 name|NATIVE_CHAR
@@ -181,7 +181,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 operator|)
 name|i
 operator|)
@@ -513,7 +513,7 @@ operator|(
 name|ACPI_TABLE_HEADER
 operator|*
 operator|)
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 operator|(
 name|size_t
@@ -640,7 +640,7 @@ argument_list|(
 literal|"Error - could not read the table file\n"
 argument_list|)
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 operator|*
 name|TablePtr
@@ -933,14 +933,14 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Could not install table, %s\n"
 argument_list|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|TablePtr
 argument_list|)

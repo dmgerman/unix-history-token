@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acpi.h - Master include file, Publics and external data.  *       $Revision: 50 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acpi.h - Master include file, Publics and external data.  *       $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acenv.h"
+file|"platform/acenv.h"
 end_include
 
 begin_comment
@@ -50,7 +50,7 @@ file|"actypes.h"
 end_include
 
 begin_comment
-comment|/* Fundamental data types */
+comment|/* Fundamental common data types */
 end_comment
 
 begin_include
@@ -60,7 +60,7 @@ file|"acexcep.h"
 end_include
 
 begin_comment
-comment|/* Local exception codes */
+comment|/* ACPI exception codes */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ file|"actbl.h"
 end_include
 
 begin_comment
-comment|/* Acpi table definitions */
+comment|/* ACPI table definitions */
 end_comment
 
 begin_include
@@ -110,7 +110,7 @@ file|"acpiosxf.h"
 end_include
 
 begin_comment
-comment|/* Interfaces to the Acpi-to-OS layer*/
+comment|/* Interfaces to the ACPI-to-OS layer*/
 end_comment
 
 begin_include
@@ -120,7 +120,7 @@ file|"acpixf.h"
 end_include
 
 begin_comment
-comment|/* Acpi core external interfaces */
+comment|/* ACPI core subsystem external interfaces */
 end_comment
 
 begin_include
@@ -130,7 +130,17 @@ file|"acobject.h"
 end_include
 
 begin_comment
-comment|/* Acpi internal object */
+comment|/* ACPI internal object */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"acstruct.h"
+end_include
+
+begin_comment
+comment|/* Common structures */
 end_comment
 
 begin_include
@@ -156,11 +166,11 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"accommon.h"
+file|"acutils.h"
 end_include
 
 begin_comment
-comment|/* Common (global) interfaces */
+comment|/* Utility interfaces */
 end_comment
 
 begin_endif

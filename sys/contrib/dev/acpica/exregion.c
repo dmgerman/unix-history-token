@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amregion - ACPI default OpRegion (address space) handlers  *              $Revision: 44 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 48 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMREGION_C__
+name|__EXREGION_C__
 end_define
 
 begin_include
@@ -53,23 +53,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amregion"
+literal|"exregion"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemMemorySpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                      accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the System Memory address space (Op Region)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemMemorySpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                      accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the System Memory address space (Op Region)  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlSystemMemorySpaceHandler
+name|AcpiExSystemMemorySpaceHandler
 parameter_list|(
 name|UINT32
 name|Function
@@ -104,7 +104,7 @@ name|LogicalAddrPtr
 init|=
 name|NULL
 decl_stmt|;
-name|MEM_HANDLER_CONTEXT
+name|ACPI_MEM_SPACE_CONTEXT
 modifier|*
 name|MemInfo
 init|=
@@ -115,7 +115,7 @@ name|Length
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlSystemMemorySpaceHandler"
+literal|"ExSystemMemorySpaceHandler"
 argument_list|)
 expr_stmt|;
 comment|/* Validate and translate the bit width */
@@ -149,12 +149,12 @@ literal|4
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlSystemMemorySpaceHandler: Invalid SystemMemory width %d\n"
+literal|"Invalid SystemMemory width %d\n"
 operator|,
 name|BitWidth
 operator|)
@@ -308,7 +308,7 @@ name|Function
 condition|)
 block|{
 case|case
-name|ADDRESS_SPACE_READ
+name|ACPI_READ_ADR_SPACE
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -374,7 +374,7 @@ break|break;
 block|}
 break|break;
 case|case
-name|ADDRESS_SPACE_WRITE
+name|ACPI_WRITE_ADR_SPACE
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -458,12 +458,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemIoSpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                      accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the System IO address space (Op Region)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemIoSpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                      accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the System IO address space (Op Region)  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlSystemIoSpaceHandler
+name|AcpiExSystemIoSpaceHandler
 parameter_list|(
 name|UINT32
 name|Function
@@ -494,7 +494,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlSystemIoSpaceHandler"
+literal|"ExSystemIoSpaceHandler"
 argument_list|)
 expr_stmt|;
 comment|/* Decode the function parameter */
@@ -504,7 +504,7 @@ name|Function
 condition|)
 block|{
 case|case
-name|ADDRESS_SPACE_READ
+name|ACPI_READ_ADR_SPACE
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -581,12 +581,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlSystemIoSpaceHandler: Invalid SystemIO width %d\n"
+literal|"Invalid SystemIO width %d\n"
 operator|,
 name|BitWidth
 operator|)
@@ -599,7 +599,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|ADDRESS_SPACE_WRITE
+name|ACPI_WRITE_ADR_SPACE
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -679,12 +679,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlSystemIoSpaceHandler: Invalid SystemIO width %d\n"
+literal|"Invalid SystemIO width %d\n"
 operator|,
 name|BitWidth
 operator|)
@@ -712,12 +712,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlPciConfigSpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                      accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the PCI Config address space (Op Region)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPciConfigSpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                      accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the PCI Config address space (Op Region)  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlPciConfigSpaceHandler
+name|AcpiExPciConfigSpaceHandler
 parameter_list|(
 name|UINT32
 name|Function
@@ -755,20 +755,20 @@ decl_stmt|;
 name|UINT8
 name|PciReg
 decl_stmt|;
-name|PCI_HANDLER_CONTEXT
+name|ACPI_PCI_SPACE_CONTEXT
 modifier|*
 name|PCIContext
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlPciConfigSpaceHandler"
+literal|"ExPciConfigSpaceHandler"
 argument_list|)
 expr_stmt|;
 comment|/*      *  The arguments to AcpiOs(Read|Write)PciCfg(Byte|Word|Dword) are:      *      *  SegBus - 0xSSSSBBBB     - SSSS is the PCI bus segment      *                            BBBB is the PCI bus number      *      *  DevFunc - 0xDDDDFFFF    - DDDD is the PCI device number      *                            FFFF is the PCI device function number      *      *  RegNum - Config space register must be< 40h      *      *  Value - input value for write, output for read      *      */
 name|PCIContext
 operator|=
 operator|(
-name|PCI_HANDLER_CONTEXT
+name|ACPI_PCI_SPACE_CONTEXT
 operator|*
 operator|)
 name|RegionContext
@@ -812,7 +812,7 @@ name|Function
 condition|)
 block|{
 case|case
-name|ADDRESS_SPACE_READ
+name|ACPI_READ_ADR_SPACE
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -914,12 +914,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlPciConfigSpaceHandler: Invalid PCIConfig width %d\n"
+literal|"Invalid PCIConfig width %d\n"
 operator|,
 name|BitWidth
 operator|)
@@ -933,7 +933,7 @@ block|}
 comment|/* Switch bitWidth */
 break|break;
 case|case
-name|ADDRESS_SPACE_WRITE
+name|ACPI_WRITE_ADR_SPACE
 case|:
 name|DEBUG_PRINT
 argument_list|(
@@ -1036,12 +1036,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlPciConfigSpaceHandler: Invalid PCIConfig width %d\n"
+literal|"Invalid PCIConfig width %d\n"
 operator|,
 name|BitWidth
 operator|)

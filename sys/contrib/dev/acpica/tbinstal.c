@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 36 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|TABLE_MANAGER
+value|ACPI_TABLES
 end_define
 
 begin_macro
@@ -95,7 +95,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Lock tables while installing */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
@@ -112,7 +112,7 @@ argument_list|,
 name|TableInfo
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -134,7 +134,7 @@ name|Pointer
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
@@ -265,12 +265,12 @@ index|]
 operator|.
 name|Status
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"TbRecognizeTable: Found %4.4s\n"
+literal|"Found %4.4s\n"
 operator|,
 name|AcpiGbl_AcpiTableData
 index|[
@@ -326,7 +326,7 @@ operator|==
 name|AE_SUPPORT
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -444,7 +444,7 @@ condition|)
 block|{
 name|TableDesc
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -585,7 +585,7 @@ name|TableDesc
 operator|->
 name|TableId
 operator|=
-name|AcpiCmAllocateOwnerId
+name|AcpiUtAllocateOwnerId
 argument_list|(
 name|OWNER_TYPE_TABLE
 argument_list|)
@@ -712,7 +712,7 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
@@ -782,7 +782,7 @@ case|:
 default|default:
 break|break;
 block|}
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
@@ -904,7 +904,7 @@ break|break;
 case|case
 name|ACPI_MEM_ALLOCATED
 case|:
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|TableDesc
 operator|->
@@ -1061,7 +1061,7 @@ name|TableDesc
 operator|->
 name|Next
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|TableDesc
 argument_list|)

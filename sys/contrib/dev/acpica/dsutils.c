@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 52 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 58 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|PARSER
+value|ACPI_DISPATCHER
 end_define
 
 begin_macro
@@ -104,12 +104,12 @@ operator|!
 name|Op
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsIsResultUsed: Null Op\n"
+literal|"Null Op\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -156,12 +156,12 @@ operator|!=
 name|ACPI_OP_TYPE_OPCODE
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsIsResultUsed: Unknown parent opcode. Op=%X\n"
+literal|"Unknown parent opcode. Op=%X\n"
 operator|,
 name|Op
 operator|)
@@ -200,12 +200,12 @@ case|case
 name|AML_RETURN_OP
 case|:
 comment|/* Never delete the return value associated with a return opcode */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsIsResultUsed: Result used, [RETURN] opcode=%X Op=%X\n"
+literal|"Result used, [RETURN] opcode=%X Op=%X\n"
 operator|,
 name|Op
 operator|->
@@ -255,12 +255,12 @@ name|Op
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsIsResultUsed: Result used as a predicate, [IF/WHILE] opcode=%X Op=%X\n"
+literal|"Result used as a predicate, [IF/WHILE] opcode=%X Op=%X\n"
 operator|,
 name|Op
 operator|->
@@ -313,7 +313,7 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_BIT_FIELD_OP
+name|AML_CREATE_BIT_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -323,7 +323,7 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_BYTE_FIELD_OP
+name|AML_CREATE_BYTE_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -333,7 +333,7 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_WORD_FIELD_OP
+name|AML_CREATE_WORD_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -343,7 +343,7 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_DWORD_FIELD_OP
+name|AML_CREATE_DWORD_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -353,16 +353,16 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_QWORD_FIELD_OP
+name|AML_CREATE_QWORD_FIELD_OP
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsIsResultUsed: Result used, [Region or CreateField] opcode=%X Op=%X\n"
+literal|"Result used, [Region or CreateField] opcode=%X Op=%X\n"
 operator|,
 name|Op
 operator|->
@@ -378,12 +378,12 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsIsResultUsed: Result not used, Parent opcode=%X Op=%X\n"
+literal|"Result not used, Parent opcode=%X Op=%X\n"
 operator|,
 name|Op
 operator|->
@@ -452,14 +452,12 @@ operator|!
 name|Op
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsDeleteResultIfNotUsed: Null Op=%X\n"
-operator|,
-name|Op
+literal|"Null Op\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -505,7 +503,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ResultObj
 argument_list|)
@@ -549,7 +547,7 @@ decl_stmt|;
 name|UINT32
 name|NameLength
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DataType
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
@@ -584,7 +582,7 @@ name|Arg
 operator|->
 name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 operator|)
 operator|&&
 operator|(
@@ -596,12 +594,12 @@ name|String
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsCreateOperand: Getting a name: Arg=%p\n"
+literal|"Getting a name: Arg=%p\n"
 operator|,
 name|Arg
 operator|)
@@ -610,7 +608,7 @@ expr_stmt|;
 comment|/* Get the entire name string from the AML stream */
 name|Status
 operator|=
-name|AcpiAmlGetNameString
+name|AcpiExGetNameString
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|,
@@ -665,7 +663,7 @@ name|ParentOp
 operator|->
 name|Opcode
 operator|!=
-name|AML_METHODCALL_OP
+name|AML_INT_METHODCALL_OP
 operator|)
 operator|&&
 operator|(
@@ -681,7 +679,7 @@ name|ParentOp
 operator|->
 name|Opcode
 operator|!=
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 operator|)
 condition|)
 block|{
@@ -729,7 +727,7 @@ name|ObjDesc
 argument_list|)
 expr_stmt|;
 comment|/* Free the namestring created above */
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|NameString
 argument_list|)
@@ -833,7 +831,7 @@ name|Arg
 operator|->
 name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
 comment|/*              * If the name is null, this means that this is an              * optional result parameter that was not specified              * in the original ASL.  Create an Reference for a              * placeholder              */
@@ -842,12 +840,12 @@ operator|=
 name|AML_ZERO_OP
 expr_stmt|;
 comment|/* Has no arguments! */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsCreateOperand: Null namepath: Arg=%p\n"
+literal|"Null namepath: Arg=%p\n"
 operator|,
 name|Arg
 operator|)
@@ -895,12 +893,12 @@ operator|&
 name|OP_HAS_RETURN_VALUE
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsCreateOperand: Argument previously created, already stacked \n"
+literal|"Argument previously created, already stacked \n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -943,14 +941,14 @@ argument_list|)
 condition|)
 block|{
 comment|/*                  * Only error is underflow, and this indicates                  * a missing or null operand!                  */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsCreateOperand: Missing or null operand, %s\n"
+literal|"Missing or null operand, %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -969,7 +967,7 @@ block|{
 comment|/* Create an ACPI_INTERNAL_OBJECT for the argument */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|DataType
 argument_list|)
@@ -1009,7 +1007,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmDeleteObjectDesc
+name|AcpiUtDeleteObjectDesc
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1135,12 +1133,12 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"DsCreateOperands: Arg #%d (%p) done, Arg1=%p\n"
+literal|"Arg #%d (%p) done, Arg1=%p\n"
 operator|,
 name|ArgCount
 operator|,
@@ -1176,12 +1174,12 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsCreateOperands: Error while creating Arg %d - %s\n"
+literal|"While creating Arg %d - %s\n"
 operator|,
 operator|(
 name|ArgCount
@@ -1189,7 +1187,7 @@ operator|+
 literal|1
 operator|)
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1233,7 +1231,7 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 comment|/*      * Attempt to resolve each of the valid operands      * Method arguments are passed by value, not by reference      */
-comment|/*      * TBD: [Investigate] Note from previous parser:      *   RefOf problem with AcpiAmlResolveToValue() conversion.      */
+comment|/*      * TBD: [Investigate] Note from previous parser:      *   RefOf problem with AcpiExResolveToValue() conversion.      */
 for|for
 control|(
 name|i
@@ -1252,7 +1250,7 @@ control|)
 block|{
 name|Status
 operator|=
-name|AcpiAmlResolveToValue
+name|AcpiExResolveToValue
 argument_list|(
 operator|&
 name|WalkState
@@ -1289,7 +1287,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|AcpiDsMapOpcodeToDataType
 parameter_list|(
 name|UINT16
@@ -1300,7 +1298,7 @@ modifier|*
 name|OutFlags
 parameter_list|)
 block|{
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DataType
 init|=
 name|INTERNAL_TYPE_INVALID
@@ -1314,6 +1312,11 @@ name|Flags
 init|=
 literal|0
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"DsMapOpcodeToDataType"
+argument_list|)
+expr_stmt|;
 name|OpInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
@@ -1332,12 +1335,12 @@ name|ACPI_OP_TYPE_OPCODE
 condition|)
 block|{
 comment|/* Unknown opcode */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"MapOpcode: Unknown AML opcode: %x\n"
+literal|"Unknown AML opcode: %x\n"
 operator|,
 name|Opcode
 operator|)
@@ -1388,7 +1391,7 @@ name|ACPI_TYPE_STRING
 expr_stmt|;
 break|break;
 case|case
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 case|:
 name|DataType
 operator|=
@@ -1396,12 +1399,12 @@ name|INTERNAL_TYPE_REFERENCE
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"MapOpcode: Unknown (type LITERAL) AML opcode: %x\n"
+literal|"Unknown (type LITERAL) AML opcode: %x\n"
 operator|,
 name|Opcode
 operator|)
@@ -1435,12 +1438,12 @@ name|ACPI_TYPE_PACKAGE
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"MapOpcode: Unknown (type DATA_TERM) AML opcode: %x\n"
+literal|"Unknown (type DATA_TERM) AML opcode: %x\n"
 operator|,
 name|Opcode
 operator|)
@@ -1528,12 +1531,12 @@ case|:
 comment|/* No mapping needed at this time */
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"MapOpcode: Unimplemented data type opcode: %x\n"
+literal|"Unimplemented data type opcode: %x\n"
 operator|,
 name|Opcode
 operator|)
@@ -1566,14 +1569,14 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|AcpiDsMapNamedOpcodeToDataType
 parameter_list|(
 name|UINT16
 name|Opcode
 parameter_list|)
 block|{
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DataType
 decl_stmt|;
 comment|/* Decode Opcode */
@@ -1631,12 +1634,12 @@ name|ACPI_TYPE_PROCESSOR
 expr_stmt|;
 break|break;
 case|case
-name|AML_DEF_FIELD_OP
+name|AML_FIELD_OP
 case|:
-comment|/* DefFieldOp */
+comment|/* FieldOp */
 name|DataType
 operator|=
-name|INTERNAL_TYPE_DEF_FIELD_DEFN
+name|INTERNAL_TYPE_FIELD_DEFN
 expr_stmt|;
 break|break;
 case|case
@@ -1658,7 +1661,7 @@ name|INTERNAL_TYPE_BANK_FIELD_DEFN
 expr_stmt|;
 break|break;
 case|case
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 case|:
 comment|/* NO CASE IN ORIGINAL  */
 name|DataType
@@ -1671,7 +1674,7 @@ name|AML_NAME_OP
 case|:
 comment|/* NameOp - special code in original */
 case|case
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 case|:
 name|DataType
 operator|=

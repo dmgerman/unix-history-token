@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 41 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|UINT32
-name|AcpiAmlLength
+name|AmlLength
 decl_stmt|;
 end_decl_stmt
 
@@ -678,6 +678,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiDbDisplayLocks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiDbDisplayResources
 parameter_list|(
 name|NATIVE_CHAR
@@ -926,7 +935,7 @@ comment|/*  * dbfileio - Debugger file I/O commands  */
 end_comment
 
 begin_function_decl
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|AcpiDbMatchArgument
 parameter_list|(
 name|NATIVE_CHAR

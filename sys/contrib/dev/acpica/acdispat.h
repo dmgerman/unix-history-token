@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 35 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -31,24 +31,6 @@ define|#
 directive|define
 name|NAMEOF_ARG_NTE
 value|"__A0"
-end_define
-
-begin_comment
-comment|/* For AcpiDsMethodDataSetValue */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTH_TYPE_LOCAL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MTH_TYPE_ARG
-value|1
 end_define
 
 begin_comment
@@ -121,7 +103,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiDsGetFieldUnitArguments
+name|AcpiDsGetBufferFieldArguments
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -285,7 +267,8 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
 parameter_list|,
-name|ACPI_HANDLE
+name|ACPI_NAMESPACE_NODE
+modifier|*
 name|RegionNode
 parameter_list|,
 name|ACPI_WALK_STATE
@@ -419,10 +402,31 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
+name|AcpiDsStoreObjectToLocal
+parameter_list|(
+name|UINT16
+name|Opcode
+parameter_list|,
+name|UINT32
+name|Index
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SrcDesc
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|AcpiDsMethodDataGetEntry
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -463,11 +467,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|AcpiDsMethodDataGetType
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -483,8 +487,8 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiDsMethodDataGetValue
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -503,31 +507,10 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiDsMethodDataSetValue
-parameter_list|(
-name|UINT32
-name|Type
-parameter_list|,
-name|UINT32
-name|Index
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|SrcDesc
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
 name|AcpiDsMethodDataDeleteValue
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -561,10 +544,10 @@ end_function_decl
 begin_function_decl
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiDsMethodDataGetNte
+name|AcpiDsMethodDataGetNode
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -591,8 +574,8 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiDsMethodDataSetEntry
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -678,6 +661,10 @@ parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
+parameter_list|,
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|CallingMethodNode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -811,7 +798,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiDsEvalFieldUnitOperands
+name|AcpiDsEvalBufferFieldOperands
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -932,7 +919,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|AcpiDsMapOpcodeToDataType
 parameter_list|(
 name|UINT16
@@ -946,7 +933,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|AcpiDsMapNamedOpcodeToDataType
 parameter_list|(
 name|UINT16
@@ -967,7 +954,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|ACPI_WALK_STATE

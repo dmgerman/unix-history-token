@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsmisc - AcpiRsEndTagResource  *                       AcpiRsEndTagStream  *                       AcpiRsVendorResource  *                       AcpiRsVendorStream  *                       AcpiRsStartDependentFunctionsResource  *                       AcpiRsEndDependentFunctionsResource  *                       AcpiRsStartDependentFunctionsStream  *                       AcpiRsEndDependentFunctionsStream  *              $Revision: 12 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsmisc - Miscellaneous resource descriptors  *              $Revision: 15 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|RESOURCE_MANAGER
+value|ACPI_RESOURCES
 end_define
 
 begin_macro
@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsEndTagResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                          stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes consumed from  *                                          the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                          the number of bytes in the filled  *                                          in structure  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *                  structure pointed to by the OutputBuffer.  Return the  *                  number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsEndTagResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -65,12 +65,12 @@ modifier|*
 name|StructureSize
 parameter_list|)
 block|{
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|RESOURCE
+name|ACPI_RESOURCE
 operator|*
 operator|)
 operator|*
@@ -79,7 +79,7 @@ decl_stmt|;
 name|UINT32
 name|StructSize
 init|=
-name|RESOURCE_LENGTH
+name|ACPI_RESOURCE_LENGTH
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -97,7 +97,7 @@ name|OutputStruct
 operator|->
 name|Id
 operator|=
-name|EndTag
+name|ACPI_RSTYPE_END_TAG
 expr_stmt|;
 comment|/*      * Set the Length parameter      */
 name|OutputStruct
@@ -121,14 +121,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsEndTagStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes of the  *                                          OutputBuffer used  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *                  the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsEndTagStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsEndTagStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -169,7 +169,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-comment|/*      * Set the Checksum - zero means that the resource data is treated as if      *  the checksum operation succeeded (ACPI Spec 1.0b Section 6.4.2.8)      */
+comment|/*      * Set the Checksum - zero means that the resource data is treated as if      * the checksum operation succeeded (ACPI Spec 1.0b Section 6.4.2.8)      */
 name|Temp8
 operator|=
 literal|0
@@ -187,18 +187,10 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-call|(
-name|UINT32
-call|)
+name|POINTER_DIFF
 argument_list|(
-operator|(
-name|NATIVE_UINT
-operator|)
 name|Buffer
-operator|-
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 operator|*
 name|OutputBuffer
 argument_list|)
@@ -212,7 +204,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsVendorResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                          stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes consumed from  *                                          the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                          the number of bytes in the filled  *                                          in structure  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *                  structure pointed to by the OutputBuffer.  Return the  *                  number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsVendorResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -243,12 +235,12 @@ name|Buffer
 init|=
 name|ByteStreamBuffer
 decl_stmt|;
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|RESOURCE
+name|ACPI_RESOURCE
 operator|*
 operator|)
 operator|*
@@ -270,12 +262,10 @@ decl_stmt|;
 name|UINT32
 name|StructSize
 init|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|VENDOR_RESOURCE
+name|ACPI_RESOURCE_VENDOR
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -295,8 +285,7 @@ operator|&
 literal|0x80
 condition|)
 block|{
-comment|/*          * Large Item          */
-comment|/* Point to the length field */
+comment|/*          * Large Item          * Point to the length field           */
 name|Buffer
 operator|+=
 literal|1
@@ -326,8 +315,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * Small Item          */
-comment|/* Dereference the size */
+comment|/*          * Small Item          * Dereference the size           */
 name|Temp16
 operator|=
 call|(
@@ -358,7 +346,7 @@ name|OutputStruct
 operator|->
 name|Id
 operator|=
-name|VendorSpecific
+name|ACPI_RSTYPE_VENDOR
 expr_stmt|;
 name|OutputStruct
 operator|->
@@ -403,7 +391,7 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-comment|/*      * In order for the StructSize to fall on a 32-bit boundry,      *  calculate the length of the vendor string and expand the      *  StructSize to the next 32-bit boundry.      */
+comment|/*      * In order for the StructSize to fall on a 32-bit boundary,      * calculate the length of the vendor string and expand the      * StructSize to the next 32-bit boundary.      */
 name|StructSize
 operator|+=
 name|ROUND_UP_TO_32BITS
@@ -433,14 +421,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsVendorStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes of the  *                                          OutputBuffer used  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *                  the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsVendorStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsVendorStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -493,8 +481,7 @@ operator|>
 literal|7
 condition|)
 block|{
-comment|/*          * Large Item          */
-comment|/*          * Set the descriptor field and length bytes          */
+comment|/*          * Large Item          * Set the descriptor field and length bytes          */
 operator|*
 name|Buffer
 operator|=
@@ -532,8 +519,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * Small Item          */
-comment|/*          * Set the descriptor field          */
+comment|/*          * Small Item          * Set the descriptor field          */
 name|Temp8
 operator|=
 literal|0x70
@@ -606,18 +592,10 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-call|(
-name|UINT32
-call|)
+name|POINTER_DIFF
 argument_list|(
-operator|(
-name|NATIVE_UINT
-operator|)
 name|Buffer
-operator|-
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 operator|*
 name|OutputBuffer
 argument_list|)
@@ -631,7 +609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsStartDependentFunctionsResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                          stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes consumed from  *                                          the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                          the number of bytes in the filled  *                                          in structure  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *                  structure pointed to by the OutputBuffer.  Return the  *                  number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsStartDependentFunctionsResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -662,12 +640,12 @@ name|Buffer
 init|=
 name|ByteStreamBuffer
 decl_stmt|;
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|RESOURCE
+name|ACPI_RESOURCE
 operator|*
 operator|)
 operator|*
@@ -681,12 +659,10 @@ decl_stmt|;
 name|UINT32
 name|StructSize
 init|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|START_DEPENDENT_FUNCTIONS_RESOURCE
+name|ACPI_RESOURCE_START_DPF
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -714,7 +690,7 @@ name|OutputStruct
 operator|->
 name|Id
 operator|=
-name|StartDependentFunctions
+name|ACPI_RSTYPE_START_DPF
 expr_stmt|;
 comment|/*      * Point to Byte 1 if it is used      */
 if|if
@@ -739,7 +715,7 @@ name|OutputStruct
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|CompatibilityPriority
 operator|=
@@ -755,7 +731,7 @@ name|OutputStruct
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|CompatibilityPriority
 condition|)
@@ -771,7 +747,7 @@ name|OutputStruct
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|PerformanceRobustness
 operator|=
@@ -791,7 +767,7 @@ name|OutputStruct
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|PerformanceRobustness
 condition|)
@@ -809,7 +785,7 @@ name|OutputStruct
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|CompatibilityPriority
 operator|=
@@ -819,7 +795,7 @@ name|OutputStruct
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|PerformanceRobustness
 operator|=
@@ -848,7 +824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsEndDependentFunctionsResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                          stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes consumed from  *                                          the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                          the number of bytes in the filled  *                                          in structure  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *                  structure pointed to by the OutputBuffer.  Return the  *                  number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsEndDependentFunctionsResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -873,12 +849,12 @@ modifier|*
 name|StructureSize
 parameter_list|)
 block|{
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|RESOURCE
+name|ACPI_RESOURCE
 operator|*
 operator|)
 operator|*
@@ -887,7 +863,7 @@ decl_stmt|;
 name|UINT32
 name|StructSize
 init|=
-name|RESOURCE_LENGTH
+name|ACPI_RESOURCE_LENGTH
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -905,7 +881,7 @@ name|OutputStruct
 operator|->
 name|Id
 operator|=
-name|EndDependentFunctions
+name|ACPI_RSTYPE_END_DPF
 expr_stmt|;
 comment|/*      * Set the Length parameter      */
 name|OutputStruct
@@ -929,14 +905,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsStartDependentFunctionsStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes of the  *                                          OutputBuffer used  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *                  the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsStartDependentFunctionsStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsStartDependentFunctionsStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -967,7 +943,7 @@ argument_list|(
 literal|"RsStartDependentFunctionsStream"
 argument_list|)
 expr_stmt|;
-comment|/*      * The descriptor field is set based upon whether a byte is needed      *  to contain Priority data.      */
+comment|/*      * The descriptor field is set based upon whether a byte is needed      * to contain Priority data.      */
 if|if
 condition|(
 name|ACCEPTABLE_CONFIGURATION
@@ -976,7 +952,7 @@ name|LinkedList
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|CompatibilityPriority
 operator|&&
@@ -986,7 +962,7 @@ name|LinkedList
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|PerformanceRobustness
 condition|)
@@ -1024,7 +1000,7 @@ name|LinkedList
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|PerformanceRobustness
 operator|&
@@ -1041,7 +1017,7 @@ name|LinkedList
 operator|->
 name|Data
 operator|.
-name|StartDependentFunctions
+name|StartDpf
 operator|.
 name|CompatibilityPriority
 operator|&
@@ -1062,18 +1038,10 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-call|(
-name|UINT32
-call|)
+name|POINTER_DIFF
 argument_list|(
-operator|(
-name|NATIVE_UINT
-operator|)
 name|Buffer
-operator|-
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 operator|*
 name|OutputBuffer
 argument_list|)
@@ -1087,14 +1055,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsEndDependentFunctionsStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes of the  *                                          OutputBuffer used  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *                  the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsEndDependentFunctionsStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsEndDependentFunctionsStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -1134,18 +1102,10 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-call|(
-name|UINT32
-call|)
+name|POINTER_DIFF
 argument_list|(
-operator|(
-name|NATIVE_UINT
-operator|)
 name|Buffer
-operator|-
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 operator|*
 name|OutputBuffer
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 56 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 61 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DEBUGGER
+value|ACPI_DEBUGGER
 end_define
 
 begin_macro
@@ -217,7 +217,7 @@ end_comment
 
 begin_enum
 enum|enum
-name|AcpiAmlDebuggerCommands
+name|AcpiExDebuggerCommands
 block|{
 name|CMD_NOT_FOUND
 init|=
@@ -274,6 +274,8 @@ block|,
 name|CMD_LOAD
 block|,
 name|CMD_LOCALS
+block|,
+name|CMD_LOCKS
 block|,
 name|CMD_METHODS
 block|,
@@ -487,6 +489,12 @@ block|}
 block|,
 block|{
 literal|"LOCALS"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"LOCKS"
 block|,
 literal|0
 block|}
@@ -725,6 +733,11 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
+literal|"Locks                               Current status of internal mutexes\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
 literal|"Quit or Exit                        Exit this command\n"
 argument_list|)
 expr_stmt|;
@@ -878,7 +891,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"List [# of AcpiAml Opcodes]             Display method ASL statements\n"
+literal|"List [# of Aml Opcodes]             Display method ASL statements\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1445,7 +1458,7 @@ break|break;
 case|case
 name|CMD_ALLOCATIONS
 case|:
-name|AcpiCmDumpCurrentAllocations
+name|AcpiUtDumpCurrentAllocations
 argument_list|(
 operator|(
 name|UINT32
@@ -1688,10 +1701,12 @@ argument_list|(
 name|Status
 argument_list|)
 condition|)
+block|{
 name|Status
 operator|=
 name|AE_CTRL_TRUE
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|Status
@@ -1738,10 +1753,12 @@ argument_list|(
 name|Status
 argument_list|)
 condition|)
+block|{
 name|Status
 operator|=
 name|AE_CTRL_TRUE
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|Status
@@ -1912,6 +1929,13 @@ return|;
 block|}
 break|break;
 case|case
+name|CMD_LOCKS
+case|:
+name|AcpiDbDisplayLocks
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 name|CMD_LOCALS
 case|:
 name|AcpiDbDisplayLocals
@@ -1982,10 +2006,13 @@ name|CMD_OBJECT
 case|:
 name|AcpiDbDisplayObjects
 argument_list|(
+name|STRUPR
+argument_list|(
 name|Args
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|,
 name|Args
 index|[
@@ -2129,7 +2156,7 @@ argument_list|(
 name|DB_REDIRECTABLE_OUTPUT
 argument_list|)
 expr_stmt|;
-name|AcpiCmSubsystemShutdown
+name|AcpiUtSubsystemShutdown
 argument_list|()
 expr_stmt|;
 comment|/* TBD: [Restructure] Need some way to re-initialize without re-creating the semaphores! */
@@ -2192,9 +2219,14 @@ condition|(
 name|Op
 condition|)
 block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Method execution terminated\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|AE_AML_ERROR
+name|AE_CTRL_TERMINATE
 operator|)
 return|;
 block|}
@@ -2210,7 +2242,7 @@ name|DEBUG_DEFAULT
 expr_stmt|;
 block|}
 comment|/* Shutdown */
-comment|/* AcpiCmSubsystemShutdown (); */
+comment|/* AcpiUtSubsystemShutdown (); */
 name|AcpiDbCloseDebugFile
 argument_list|()
 expr_stmt|;
@@ -2284,7 +2316,7 @@ name|AcpiGbl_StepToNextCall
 operator|=
 name|FALSE
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_DEBUG_CMD_READY
 argument_list|)
@@ -2300,7 +2332,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_DEBUG_CMD_COMPLETE
 argument_list|)
@@ -2421,12 +2453,12 @@ name|DEBUGGER_MULTI_THREADED
 condition|)
 block|{
 comment|/*              * Signal the debug thread that we have a command to execute,              * and wait for the command to complete.              */
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_DEBUG_CMD_READY
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_DEBUG_CMD_COMPLETE
 argument_list|)

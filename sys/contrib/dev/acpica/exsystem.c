@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amsystem - Interface to OS services  *              $Revision: 54 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMSYSTEM_C__
+name|__EXSYSTEM_C__
 end_define
 
 begin_include
@@ -47,42 +47,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amsystem"
+literal|"exsystem"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemThreadId  *  * PARAMETERS:  None  *  * RETURN:      Current Thread ID (for this implementation a 1 is returned)  *  * DESCRIPTION: An invocation is identified by its Thread ID.  In a single  *              threaded OS the Thread ID is undefined so a 1 will be  *              returned.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|UINT16
-name|AcpiAmlSystemThreadId
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemWaitSemaphore  *  * PARAMETERS:  Semaphore           - OSD semaphore to wait on  *              Timeout             - Max time to wait  *  * RETURN:      Status  *  * DESCRIPTION: Implements a semaphore wait with a check to see if the  *              semaphore is available immediately.  If it is not, the  *              interpreter is released.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemWaitSemaphore  *  * PARAMETERS:  Semaphore           - OSD semaphore to wait on  *              Timeout             - Max time to wait  *  * RETURN:      Status  *  * DESCRIPTION: Implements a semaphore wait with a check to see if the  *              semaphore is available immediately.  If it is not, the  *              interpreter is released.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlSystemWaitSemaphore
+name|AcpiExSystemWaitSemaphore
 parameter_list|(
 name|ACPI_HANDLE
 name|Semaphore
@@ -96,7 +77,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiAmlSystemWaitSemaphore"
+literal|"AcpiExSystemWaitSemaphore"
 argument_list|)
 expr_stmt|;
 name|Status
@@ -132,7 +113,7 @@ name|AE_TIME
 condition|)
 block|{
 comment|/* We must wait, so unlock the interpreter */
-name|AcpiAmlExitInterpreter
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 name|Status
@@ -146,24 +127,40 @@ argument_list|,
 name|Timeout
 argument_list|)
 expr_stmt|;
-comment|/* Reacquire the interpreter */
-name|AcpiAmlEnterInterpreter
-argument_list|()
-expr_stmt|;
 name|DEBUG_PRINT
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"*** Thread awake and inside interpreter after blocking, %s\n"
+literal|"*** Thread awake after blocking, %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Reacquire the interpreter */
+name|Status
+operator|=
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* Restore the timeout exception */
+name|Status
+operator|=
+name|AE_TIME
+expr_stmt|;
+block|}
 block|}
 name|return_ACPI_STATUS
 argument_list|(
@@ -174,12 +171,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemDoStall  *  * PARAMETERS:  HowLong             - The amount of time to stall  *  * RETURN:      None  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemDoStall  *  * PARAMETERS:  HowLong             - The amount of time to stall  *  * RETURN:      None  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiAmlSystemDoStall
+name|AcpiExSystemDoStall
 parameter_list|(
 name|UINT32
 name|HowLong
@@ -194,7 +191,7 @@ condition|)
 comment|/* 1 millisecond */
 block|{
 comment|/* Since this thread will sleep, we must release the interpreter */
-name|AcpiAmlExitInterpreter
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 name|AcpiOsSleepUsec
@@ -203,7 +200,7 @@ name|HowLong
 argument_list|)
 expr_stmt|;
 comment|/* And now we must get the interpreter again */
-name|AcpiAmlEnterInterpreter
+name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
 block|}
@@ -219,19 +216,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemDoSuspend  *  * PARAMETERS:  HowLong             - The amount of time to suspend  *  * RETURN:      None  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemDoSuspend  *  * PARAMETERS:  HowLong             - The amount of time to suspend  *  * RETURN:      None  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiAmlSystemDoSuspend
+name|AcpiExSystemDoSuspend
 parameter_list|(
 name|UINT32
 name|HowLong
 parameter_list|)
 block|{
 comment|/* Since this thread will sleep, we must release the interpreter */
-name|AcpiAmlExitInterpreter
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 name|AcpiOsSleep
@@ -262,19 +259,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* And now we must get the interpreter again */
-name|AcpiAmlEnterInterpreter
+name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemAcquireMutex  *  * PARAMETERS:  *TimeDesc           - The 'time to delay' object descriptor  *              *ObjDesc            - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML.  This function will cause a lock to be generated  *              for the Mutex pointed to by ObjDesc.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemAcquireMutex  *  * PARAMETERS:  *TimeDesc           - The 'time to delay' object descriptor  *              *ObjDesc            - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML.  This function will cause a lock to be generated  *              for the Mutex pointed to by ObjDesc.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlSystemAcquireMutex
+name|AcpiExSystemAcquireMutex
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -292,7 +289,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiAmlSystemAcquireMutex"
+literal|"AcpiExSystemAcquireMutex"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -334,7 +331,7 @@ expr_stmt|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlSystemWaitSemaphore
+name|AcpiExSystemWaitSemaphore
 argument_list|(
 name|ObjDesc
 operator|->
@@ -361,12 +358,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemReleaseMutex  *  * PARAMETERS:  *ObjDesc            - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML.  This operation is a request to release a  *              previously acquired Mutex.  If the Mutex variable is set then  *              it will be decremented.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemReleaseMutex  *  * PARAMETERS:  *ObjDesc            - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML.  This operation is a request to release a  *              previously acquired Mutex.  If the Mutex variable is set then  *              it will be decremented.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlSystemReleaseMutex
+name|AcpiExSystemReleaseMutex
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -380,7 +377,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiAmlSystemReleaseMutex"
+literal|"AcpiExSystemReleaseMutex"
 argument_list|)
 expr_stmt|;
 if|if
@@ -438,12 +435,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemSignalEvent  *  * PARAMETERS:  *ObjDesc            - The object descriptor for this op  *  * RETURN:      AE_OK  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemSignalEvent  *  * PARAMETERS:  *ObjDesc            - The object descriptor for this op  *  * RETURN:      AE_OK  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlSystemSignalEvent
+name|AcpiExSystemSignalEvent
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -457,7 +454,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiAmlSystemSignalEvent"
+literal|"AcpiExSystemSignalEvent"
 argument_list|)
 expr_stmt|;
 if|if
@@ -488,12 +485,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemWaitEvent  *  * PARAMETERS:  *TimeDesc           - The 'time to delay' object descriptor  *              *ObjDesc            - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML.  This operation is a request to wait for an  *              event.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemWaitEvent  *  * PARAMETERS:  *TimeDesc           - The 'time to delay' object descriptor  *              *ObjDesc            - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML.  This operation is a request to wait for an  *              event.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlSystemWaitEvent
+name|AcpiExSystemWaitEvent
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -511,7 +508,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiAmlSystemWaitEvent"
+literal|"AcpiExSystemWaitEvent"
 argument_list|)
 expr_stmt|;
 if|if
@@ -521,7 +518,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiAmlSystemWaitSemaphore
+name|AcpiExSystemWaitSemaphore
 argument_list|(
 name|ObjDesc
 operator|->
@@ -549,12 +546,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlSystemResetEvent  *  * PARAMETERS:  *ObjDesc            - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Provides an access point to perform synchronization operations  *              within the AML.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemResetEvent  *  * PARAMETERS:  *ObjDesc            - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Reset an event to a known state.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlSystemResetEvent
+name|AcpiExSystemResetEvent
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -595,14 +592,14 @@ name|AcpiOsDeleteSemaphore
 argument_list|(
 name|ObjDesc
 operator|->
-name|Mutex
+name|Event
 operator|.
 name|Semaphore
 argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|->
-name|Mutex
+name|Event
 operator|.
 name|Semaphore
 operator|=

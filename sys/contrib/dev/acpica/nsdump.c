@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 85 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 93 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -66,7 +66,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsDumpPathname  *  * PARAMETERS:  Handle              - Object  *              Msg                 - Prefix message  *              Level               - Desired debug level  *              Component           - Caller's component ID  *  * DESCRIPTION: Print an object's full namespace pathname  *              Manages allocation/freeing of a pathname buffer  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpPathname  *  * PARAMETERS:  Handle              - Object  *              Msg                 - Prefix message  *              Level               - Desired debug level  *              Component           - Caller's component ID  *  * DESCRIPTION: Print an object's full namespace pathname  *              Manages allocation/freeing of a pathname buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -125,7 +125,7 @@ expr_stmt|;
 block|}
 name|Buffer
 operator|=
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 name|PATHNAME_MAX
 argument_list|)
@@ -175,7 +175,7 @@ name|Handle
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|Buffer
 argument_list|)
@@ -189,7 +189,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsDumpOneObject  *  * PARAMETERS:  Handle              - Node to be dumped  *              Level               - Nesting level of the handle  *              Context             - Passed into WalkNamespace  *  * DESCRIPTION: Dump a single Node  *              This procedure is a UserFunction called by AcpiNsWalkNamespace.  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpOneObject  *  * PARAMETERS:  Handle              - Node to be dumped  *              Level               - Nesting level of the handle  *              Context             - Passed into WalkNamespace  *  * DESCRIPTION: Dump a single Node  *              This procedure is a UserFunction called by AcpiNsWalkNamespace.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -236,10 +236,10 @@ name|ObjDesc
 init|=
 name|NULL
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|ObjType
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 decl_stmt|;
 name|UINT32
@@ -306,7 +306,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Null object handle\n"
+literal|"NsDumpOneObject: Null object handle\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -522,7 +522,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|AcpiCmValidAcpiName
+name|AcpiUtValidAcpiName
 argument_list|(
 name|ThisNode
 operator|->
@@ -555,7 +555,7 @@ name|ThisNode
 operator|->
 name|Name
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|Type
 argument_list|)
@@ -930,7 +930,7 @@ literal|"(Ptr to ACPI Object type %X [%s])\n"
 operator|,
 name|ObjType
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|ObjType
 argument_list|)
@@ -1034,6 +1034,22 @@ name|Pointer
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_TYPE_BUFFER_FIELD
+case|:
+name|Value
+operator|=
+operator|(
+name|UINT8
+operator|*
+operator|)
+name|ObjDesc
+operator|->
+name|BufferField
+operator|.
+name|BufferObj
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_TYPE_PACKAGE
 case|:
 name|Value
@@ -1066,23 +1082,7 @@ name|Pcode
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_TYPE_FIELD_UNIT
-case|:
-name|Value
-operator|=
-operator|(
-name|UINT8
-operator|*
-operator|)
-name|ObjDesc
-operator|->
-name|FieldUnit
-operator|.
-name|Container
-expr_stmt|;
-break|break;
-case|case
-name|INTERNAL_TYPE_DEF_FIELD
+name|INTERNAL_TYPE_REGION_FIELD
 case|:
 name|Value
 operator|=
@@ -1094,7 +1094,7 @@ name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|Container
+name|RegionObj
 expr_stmt|;
 break|break;
 case|case
@@ -1110,7 +1110,7 @@ name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|Container
+name|RegionObj
 expr_stmt|;
 break|break;
 case|case
@@ -1126,7 +1126,7 @@ name|ObjDesc
 operator|->
 name|IndexField
 operator|.
-name|Index
+name|IndexObj
 expr_stmt|;
 break|break;
 default|default:
@@ -1160,14 +1160,14 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsDumpObjects  *  * PARAMETERS:  Type                - Object type to be dumped  *              MaxDepth            - Maximum depth of dump.  Use ACPI_UINT32_MAX  *                                    for an effectively unlimited depth.  *              OwnerId             - Dump only objects owned by this ID.  Use  *                                    ACPI_UINT32_MAX to match all owners.  *              StartHandle         - Where in namespace to start/end search  *  * DESCRIPTION: Dump typed objects within the loaded namespace.  *              Uses AcpiNsWalkNamespace in conjunction with AcpiNsDumpOneObject.  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpObjects  *  * PARAMETERS:  Type                - Object type to be dumped  *              MaxDepth            - Maximum depth of dump.  Use ACPI_UINT32_MAX  *                                    for an effectively unlimited depth.  *              OwnerId             - Dump only objects owned by this ID.  Use  *                                    ACPI_UINT32_MAX to match all owners.  *              StartHandle         - Where in namespace to start/end search  *  * DESCRIPTION: Dump typed objects within the loaded namespace.  *              Uses AcpiNsWalkNamespace in conjunction with AcpiNsDumpOneObject.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiNsDumpObjects
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|UINT32
@@ -1227,7 +1227,7 @@ name|_ACPI_ASL_COMPILER
 end_ifndef
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsDumpOneDevice  *  * PARAMETERS:  Handle              - Node to be dumped  *              Level               - Nesting level of the handle  *              Context             - Passed into WalkNamespace  *  * DESCRIPTION: Dump a single Node that represents a device  *              This procedure is a UserFunction called by AcpiNsWalkNamespace.  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpOneDevice  *  * PARAMETERS:  Handle              - Node to be dumped  *              Level               - Nesting level of the handle  *              Context             - Passed into WalkNamespace  *  * DESCRIPTION: Dump a single Node that represents a device  *              This procedure is a UserFunction called by AcpiNsWalkNamespace.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1345,7 +1345,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsDumpRootDevices  *  * PARAMETERS:  None  *  * DESCRIPTION: Dump all objects of type "device"  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpRootDevices  *  * PARAMETERS:  None  *  * DESCRIPTION: Dump all objects of type "device"  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1416,7 +1416,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsDumpTables  *  * PARAMETERS:  SearchBase          - Root of subtree to be dumped, or  *                                    NS_ALL to dump the entire namespace  *              MaxDepth            - Maximum depth of dump.  Use INT_MAX  *                                    for an effectively unlimited depth.  *  * DESCRIPTION: Dump the name space, or a portion of it.  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpTables  *  * PARAMETERS:  SearchBase          - Root of subtree to be dumped, or  *                                    NS_ALL to dump the entire namespace  *              MaxDepth            - Maximum depth of dump.  Use INT_MAX  *                                    for an effectively unlimited depth.  *  * DESCRIPTION: Dump the name space, or a portion of it.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1447,12 +1447,12 @@ name|AcpiGbl_RootNode
 condition|)
 block|{
 comment|/*          * If the name space has not been initialized,          * there is nothing to dump.          */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_TABLES
 argument_list|,
 operator|(
-literal|"NsDumpTables: name space not initialized!\n"
+literal|"name space not initialized!\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1498,7 +1498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsDumpEntry  *  * PARAMETERS:  Handle              - Node to be dumped  *              DebugLevel          - Output level  *  * DESCRIPTION: Dump a single Node  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpEntry  *  * PARAMETERS:  Handle              - Node to be dumped  *              DebugLevel          - Output level  *  * DESCRIPTION: Dump a single Node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1544,17 +1544,6 @@ operator|&
 name|Info
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-name|DEBUG_PRINT
-argument_list|(
-name|TRACE_EXEC
-argument_list|,
-operator|(
-literal|"leave AcpiNsDumpEntry %p\n"
-operator|,
-name|Handle
-operator|)
 argument_list|)
 expr_stmt|;
 name|return_VOID

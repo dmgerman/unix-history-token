@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 103 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 106 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -246,7 +246,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiNsWalkNamespace
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|ACPI_HANDLE
@@ -258,7 +258,7 @@ parameter_list|,
 name|BOOLEAN
 name|UnlockBeforeCallback
 parameter_list|,
-name|WALK_CALLBACK
+name|ACPI_WALK_CALLBACK
 name|UserFunction
 parameter_list|,
 name|void
@@ -278,7 +278,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|AcpiNsGetNextObject
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|ACPI_NAMESPACE_NODE
@@ -385,7 +385,7 @@ name|NATIVE_CHAR
 modifier|*
 name|Name
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|OPERATING_MODE
@@ -552,7 +552,7 @@ begin_function_decl
 name|void
 name|AcpiNsDumpObjects
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|UINT32
@@ -709,7 +709,7 @@ begin_function_decl
 name|UINT32
 name|AcpiNsOpensScope
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|)
 function_decl|;
@@ -774,28 +774,6 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiNsNameCompare
-parameter_list|(
-name|ACPI_HANDLE
-name|ObjHandle
-parameter_list|,
-name|UINT32
-name|Level
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|,
-name|void
-modifier|*
-modifier|*
-name|ReturnValue
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
 name|AcpiNsGetNode
 parameter_list|(
 name|NATIVE_CHAR
@@ -841,26 +819,8 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|Object
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|AcpiNsCompareValue
-parameter_list|(
-name|ACPI_HANDLE
-name|ObjHandle
-parameter_list|,
-name|UINT32
-name|Level
-parameter_list|,
-name|void
-modifier|*
-name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -887,7 +847,7 @@ parameter_list|,
 name|OPERATING_MODE
 name|InterpreterMode
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|UINT32
@@ -912,7 +872,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|ACPI_NAMESPACE_NODE
@@ -941,7 +901,7 @@ modifier|*
 name|Node
 parameter_list|,
 comment|/* New Child*/
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|)
 function_decl|;
@@ -972,11 +932,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|AcpiNsGetType
 parameter_list|(
-name|ACPI_HANDLE
-name|ObjHandle
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -986,8 +947,9 @@ name|void
 modifier|*
 name|AcpiNsGetAttachedObject
 parameter_list|(
-name|ACPI_HANDLE
-name|ObjHandle
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -996,8 +958,30 @@ begin_function_decl
 name|UINT32
 name|AcpiNsLocal
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiNsBuildInternalName
+parameter_list|(
+name|ACPI_NAMESTRING_INFO
+modifier|*
+name|Info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiNsGetInternalNameLength
+parameter_list|(
+name|ACPI_NAMESTRING_INFO
+modifier|*
+name|Info
 parameter_list|)
 function_decl|;
 end_function_decl

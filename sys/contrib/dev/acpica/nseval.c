@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 83 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 91 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -150,7 +150,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the prefix handle and Node */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -168,7 +168,7 @@ operator|!
 name|PrefixNode
 condition|)
 block|{
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -211,7 +211,7 @@ operator|&
 name|Node
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -224,16 +224,16 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsEvaluateRelative: Object [%s] not found [%.4X]\n"
+literal|"Object [%s] not found [%s]\n"
 operator|,
 name|Pathname
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -245,12 +245,12 @@ name|Cleanup
 goto|;
 block|}
 comment|/*      * Now that we have a handle to the object, we can attempt      * to evaluate it.      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsEvaluateRelative: %s [%p] Value %p\n"
+literal|"%s [%p] Value %p\n"
 operator|,
 name|Pathname
 operator|,
@@ -273,12 +273,12 @@ argument_list|,
 name|ReturnObject
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsEvaluateRelative: *** Completed eval of object %s ***\n"
+literal|"*** Completed eval of object %s ***\n"
 operator|,
 name|Pathname
 operator|)
@@ -286,8 +286,7 @@ argument_list|)
 expr_stmt|;
 name|Cleanup
 label|:
-comment|/* Cleanup */
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|InternalPath
 argument_list|)
@@ -368,7 +367,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -394,7 +393,7 @@ operator|&
 name|Node
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -407,12 +406,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsEvaluateByName: Object at [%s] was not found, status=%.4X\n"
+literal|"Object at [%s] was not found, status=%.4X\n"
 operator|,
 name|Pathname
 operator|,
@@ -425,12 +424,12 @@ name|Cleanup
 goto|;
 block|}
 comment|/*      * Now that we have a handle to the object, we can attempt      * to evaluate it.      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsEvaluateByName: %s [%p] Value %p\n"
+literal|"%s [%p] Value %p\n"
 operator|,
 name|Pathname
 operator|,
@@ -453,12 +452,12 @@ argument_list|,
 name|ReturnObject
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsEvaluateByName: *** Completed eval of object %s ***\n"
+literal|"*** Completed eval of object %s ***\n"
 operator|,
 name|Pathname
 operator|)
@@ -472,7 +471,7 @@ condition|(
 name|InternalPath
 condition|)
 block|{
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|InternalPath
 argument_list|)
@@ -564,7 +563,7 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* Get the prefix handle and Node */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -582,7 +581,7 @@ operator|!
 name|Node
 condition|)
 block|{
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -711,20 +710,11 @@ argument_list|(
 literal|"NsExecuteControlMethod"
 argument_list|)
 expr_stmt|;
-comment|/*      * Unlock the namespace before execution.  This allows namespace access      * via the external Acpi* interfaces while a method is being executed.      * However, any namespace deletion must acquire both the namespace and      * interpreter locks to ensure that no thread is using the portion of the      * namespace that is being deleted.      */
-name|AcpiCmReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
 comment|/* Verify that there is a method associated with this object */
 name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|MethodNode
 argument_list|)
 expr_stmt|;
@@ -734,13 +724,18 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"Control method is undefined (nil value)\n"
+literal|"No attached method object\n"
 operator|)
+argument_list|)
+expr_stmt|;
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -749,7 +744,7 @@ name|AE_ERROR
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -785,7 +780,7 @@ argument_list|,
 name|_COMPONENT
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
@@ -802,10 +797,16 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*      * Unlock the namespace before execution.  This allows namespace access      * via the external Acpi* interfaces while a method is being executed.      * However, any namespace deletion must acquire both the namespace and      * interpreter locks to ensure that no thread is using the portion of the      * namespace that is being deleted.      */
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
+argument_list|)
+expr_stmt|;
 comment|/*      * Execute the method via the interpreter      */
 name|Status
 operator|=
-name|AcpiAmlExecuteMethod
+name|AcpiExExecuteMethod
 argument_list|(
 name|MethodNode
 argument_list|,
@@ -881,7 +882,7 @@ block|{
 comment|/*          *  Create a Reference object to contain the object          */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|Node
 operator|->
@@ -945,6 +946,11 @@ name|ReferenceCount
 operator|=
 literal|1
 expr_stmt|;
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Other objects require a reference object wrapper which we      * then attempt to resolve.      */
 else|else
@@ -952,7 +958,7 @@ block|{
 comment|/* Create an Reference object to contain the object */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|INTERNAL_TYPE_REFERENCE
 argument_list|)
@@ -976,7 +982,7 @@ name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|=
 operator|(
 name|UINT8
@@ -995,13 +1001,28 @@ operator|*
 operator|)
 name|Node
 expr_stmt|;
-comment|/*          * Use AcpiAmlResolveToValue() to get the associated value.          * The call to AcpiAmlResolveToValue causes          * ObjDesc (allocated above) to always be deleted.          *          * NOTE: we can get away with passing in NULL for a walk state          * because ObjDesc is guaranteed to not be a reference to either          * a method local or a method argument          *          * Even though we do not technically need to use the interpreter          * for this, we must enter it because we could hit an opregion.          * The opregion access code assumes it is in the interpreter.          */
-name|AcpiAmlEnterInterpreter
-argument_list|()
+comment|/*          * Use ResolveToValue() to get the associated value.  This call          * always deletes ObjDesc (allocated above).          *          * NOTE: we can get away with passing in NULL for a walk state          * because ObjDesc is guaranteed to not be a reference to either          * a method local or a method argument          *          * Even though we do not directly invoke the interpreter          * for this, we must enter it because we could access an opregion.          * The opregion access code assumes that the interpreter          * is locked.          *          * We must release the namespace lock before entering the          * intepreter.          */
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
+argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiAmlResolveToValue
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiExResolveToValue
 argument_list|(
 operator|&
 name|ObjDesc
@@ -1009,11 +1030,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AcpiAmlExitInterpreter
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 block|}
-comment|/*      * If AcpiAmlResolveToValue() succeeded, the return value was      * placed in ObjDesc.      */
+block|}
+comment|/*      * If AcpiExResolveToValue() succeeded, the return value was      * placed in ObjDesc.      */
 if|if
 condition|(
 name|ACPI_SUCCESS
@@ -1031,12 +1053,12 @@ name|ReturnObjDesc
 operator|=
 name|ObjDesc
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsGetObjectValue: Returning obj %p\n"
+literal|"Returning obj %p\n"
 operator|,
 operator|*
 name|ReturnObjDesc
@@ -1044,10 +1066,16 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Namespace is unlocked */
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 name|UnlockAndExit
 label|:
 comment|/* Unlock the namespace */
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)

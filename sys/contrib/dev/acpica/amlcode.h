@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 52 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -504,28 +504,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_DWORD_FIELD_OP
+name|AML_CREATE_DWORD_FIELD_OP
 value|(UINT16) 0x8a
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_WORD_FIELD_OP
+name|AML_CREATE_WORD_FIELD_OP
 value|(UINT16) 0x8b
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_BYTE_FIELD_OP
+name|AML_CREATE_BYTE_FIELD_OP
 value|(UINT16) 0x8c
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_BIT_FIELD_OP
+name|AML_CREATE_BIT_FIELD_OP
 value|(UINT16) 0x8d
 end_define
 
@@ -539,7 +539,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_QWORD_FIELD_OP
+name|AML_CREATE_QWORD_FIELD_OP
 value|(UINT16) 0x8f
 end_define
 
@@ -905,7 +905,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_DEF_FIELD_OP
+name|AML_FIELD_OP
 value|(UINT16) 0x5b81
 end_define
 
@@ -994,56 +994,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 value|(UINT16) 0x002d
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 value|(UINT16) 0x0030
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_RESERVEDFIELD_OP
+name|AML_INT_RESERVEDFIELD_OP
 value|(UINT16) 0x0031
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_ACCESSFIELD_OP
+name|AML_INT_ACCESSFIELD_OP
 value|(UINT16) 0x0032
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_BYTELIST_OP
+name|AML_INT_BYTELIST_OP
 value|(UINT16) 0x0033
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_STATICSTRING_OP
+name|AML_INT_STATICSTRING_OP
 value|(UINT16) 0x0034
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_METHODCALL_OP
+name|AML_INT_METHODCALL_OP
 value|(UINT16) 0x0035
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_RETURN_VALUE_OP
+name|AML_INT_RETURN_VALUE_OP
 value|(UINT16) 0x0036
 end_define
 
@@ -1308,7 +1308,7 @@ value|0x14
 end_define
 
 begin_comment
-comment|/* Buffer, string, package or reference to a Node - Used only by SizeOf operator*/
+comment|/* Buffer, String, package or reference to a Node - Used only by SizeOf operator*/
 end_comment
 
 begin_define
@@ -1319,7 +1319,7 @@ value|0x15
 end_define
 
 begin_comment
-comment|/* Buffer or package */
+comment|/* Buffer, String, or package (Used by INDEX op only) */
 end_comment
 
 begin_define
@@ -1640,7 +1640,11 @@ block|,
 name|REGION_CMOS
 block|,
 name|REGION_PCI_BAR
-block|}
+block|,
+name|REGION_FIXED_HW
+init|=
+literal|0x7F
+block|,  }
 name|AML_REGION_TYPES
 typedef|;
 end_typedef
@@ -1726,6 +1730,11 @@ name|ACCESS_DWORD_ACC
 init|=
 literal|3
 block|,
+name|ACCESS_QWORD_ACC
+init|=
+literal|4
+block|,
+comment|/* ACPI 2.0 */
 name|ACCESS_BLOCK_ACC
 init|=
 literal|4
@@ -1832,6 +1841,13 @@ name|METHOD_FLAGS_SERIALIZED
 value|0x08
 end_define
 
+begin_define
+define|#
+directive|define
+name|METHOD_FLAGS_SYNCH_LEVEL
+value|0xF0
+end_define
+
 begin_comment
 comment|/* Array sizes.  Used for range checking also */
 end_comment
@@ -1896,7 +1912,7 @@ name|DEFINE_AML_GLOBALS
 end_ifdef
 
 begin_comment
-comment|/* External declarations of the AML tables */
+comment|/* External declarations for the AML tables */
 end_comment
 
 begin_decl_stmt

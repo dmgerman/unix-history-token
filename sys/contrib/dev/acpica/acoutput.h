@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 70 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 77 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -30,162 +30,183 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GLOBAL
+name|ACPI_UTILITIES
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|COMMON
+name|ACPI_HARDWARE
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PARSER
+name|ACPI_EVENTS
 value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|DISPATCHER
+name|ACPI_TABLES
 value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|INTERPRETER
+name|ACPI_NAMESPACE
 value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|NAMESPACE
+name|ACPI_PARSER
 value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_MANAGER
+name|ACPI_DISPATCHER
 value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
-name|TABLE_MANAGER
+name|ACPI_EXECUTER
 value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
-name|EVENT_HANDLING
+name|ACPI_RESOURCES
 value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
-name|HARDWARE
+name|ACPI_DEVICES
 value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
-name|MISCELLANEOUS
+name|ACPI_POWER
 value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
-name|OS_DEPENDENT
-value|0x00000800
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUS_MANAGER
+name|ACPI_BUS_MANAGER
 value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PROCESSOR_CONTROL
+name|ACPI_POWER_CONTROL
 value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYSTEM_CONTROL
+name|ACPI_EMBEDDED_CONTROLLER
 value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
-name|THERMAL_CONTROL
+name|ACPI_PROCESSOR_CONTROL
 value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
-name|POWER_CONTROL
+name|ACPI_AC_ADAPTER
 value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|EMBEDDED_CONTROLLER
+name|ACPI_BATTERY
 value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BATTERY
+name|ACPI_BUTTON
 value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DEBUGGER
+name|ACPI_SYSTEM
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_THERMAL_ZONE
 value|0x00100000
 end_define
 
 begin_define
 define|#
 directive|define
-name|COMPILER
-value|0x00200000
+name|ACPI_DEBUGGER
+value|0x01000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ALL_COMPONENTS
-value|0x001FFFFF
+name|ACPI_OS_SERVICES
+value|0x02000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|COMPONENT_DEFAULT
-value|(ALL_COMPONENTS)
+name|ACPI_ALL_COMPONENTS
+value|0x01FFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMPONENT_DEFAULT
+value|(ACPI_ALL_COMPONENTS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMPILER
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TOOLS
+value|0x20000000
 end_define
 
 begin_comment
@@ -244,6 +265,13 @@ end_define
 begin_comment
 comment|/* Trace level -- also used in the global "DebugLevel" */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TRACE_THREADS
+value|0x00000080
+end_define
 
 begin_define
 define|#
@@ -389,7 +417,7 @@ begin_define
 define|#
 directive|define
 name|TRACE_ALL
-value|0x0FFFFF00
+value|0x0FFFFF80
 end_define
 
 begin_comment

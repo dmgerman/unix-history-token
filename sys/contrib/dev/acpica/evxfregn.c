@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 27 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 34 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|EVENT_HANDLING
+value|ACPI_EVENTS
 end_define
 
 begin_macro
@@ -64,7 +64,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiInstallAddressSpaceHandler  *  * PARAMETERS:  Device          - Handle for the device  *              SpaceId         - The address space ID  *              Handler         - Address of the handler  *              Setup           - Address of the setup function  *              Context         - Value passed to the handler on each access  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for all OpRegions of a given SpaceId.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallAddressSpaceHandler  *  * PARAMETERS:  Device          - Handle for the device  *              SpaceId         - The address space ID  *              Handler         - Address of the handler  *              Setup           - Address of the setup function  *              Context         - Value passed to the handler on each access  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for all OpRegions of a given SpaceId.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -74,13 +74,13 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Device
 parameter_list|,
-name|ACPI_ADDRESS_SPACE_TYPE
+name|ACPI_ADR_SPACE_TYPE
 name|SpaceId
 parameter_list|,
-name|ADDRESS_SPACE_HANDLER
+name|ACPI_ADR_SPACE_HANDLER
 name|Handler
 parameter_list|,
-name|ADDRESS_SPACE_SETUP
+name|ACPI_ADR_SPACE_SETUP
 name|Setup
 parameter_list|,
 name|void
@@ -105,7 +105,7 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 decl_stmt|;
 name|UINT16
@@ -118,6 +118,26 @@ argument_list|(
 literal|"AcpiInstallAddressSpaceHandler"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -152,7 +172,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -238,11 +258,11 @@ name|SpaceId
 condition|)
 block|{
 case|case
-name|ADDRESS_SPACE_SYSTEM_MEMORY
+name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 case|:
 name|Handler
 operator|=
-name|AcpiAmlSystemMemorySpaceHandler
+name|AcpiExSystemMemorySpaceHandler
 expr_stmt|;
 name|Setup
 operator|=
@@ -250,11 +270,11 @@ name|AcpiEvSystemMemoryRegionSetup
 expr_stmt|;
 break|break;
 case|case
-name|ADDRESS_SPACE_SYSTEM_IO
+name|ACPI_ADR_SPACE_SYSTEM_IO
 case|:
 name|Handler
 operator|=
-name|AcpiAmlSystemIoSpaceHandler
+name|AcpiExSystemIoSpaceHandler
 expr_stmt|;
 name|Setup
 operator|=
@@ -262,11 +282,11 @@ name|AcpiEvIoSpaceRegionSetup
 expr_stmt|;
 break|break;
 case|case
-name|ADDRESS_SPACE_PCI_CONFIG
+name|ACPI_ADR_SPACE_PCI_CONFIG
 case|:
 name|Handler
 operator|=
-name|AcpiAmlPciConfigSpaceHandler
+name|AcpiExPciConfigSpaceHandler
 expr_stmt|;
 name|Setup
 operator|=
@@ -301,9 +321,6 @@ name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|)
 expr_stmt|;
@@ -360,7 +377,7 @@ block|}
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_OPREGION
 argument_list|,
@@ -397,7 +414,7 @@ expr_stmt|;
 block|}
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|Type
 argument_list|)
@@ -451,7 +468,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -461,14 +478,14 @@ name|UnlockAndExit
 goto|;
 block|}
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
 literal|"Installing address handler for region %s(%X) on Device %p(%p)\n"
 operator|,
-name|AcpiCmGetRegionName
+name|AcpiUtGetRegionName
 argument_list|(
 name|SpaceId
 argument_list|)
@@ -484,7 +501,7 @@ expr_stmt|;
 comment|/*      *  Now we can install the handler      *      *  At this point we know that there is no existing handler.      *  So, we just allocate the object for the handler and link it      *  into the list.      */
 name|HandlerObj
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|INTERNAL_TYPE_ADDRESS_HANDLER
 argument_list|)
@@ -630,7 +647,7 @@ name|HandlerObj
 expr_stmt|;
 name|UnlockAndExit
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -644,7 +661,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiRemoveAddressSpaceHandler  *  * PARAMETERS:  SpaceId         - The address space ID  *              Handler         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for accesses on an Operation Region  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveAddressSpaceHandler  *  * PARAMETERS:  SpaceId         - The address space ID  *              Handler         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for accesses on an Operation Region  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -654,10 +671,10 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Device
 parameter_list|,
-name|ACPI_ADDRESS_SPACE_TYPE
+name|ACPI_ADR_SPACE_TYPE
 name|SpaceId
 parameter_list|,
-name|ADDRESS_SPACE_HANDLER
+name|ACPI_ADR_SPACE_HANDLER
 name|Handler
 parameter_list|)
 block|{
@@ -692,6 +709,26 @@ argument_list|(
 literal|"AcpiRemoveAddressSpaceHandler"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -726,7 +763,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -758,9 +795,6 @@ name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|Node
 argument_list|)
 expr_stmt|;
@@ -815,7 +849,7 @@ name|SpaceId
 condition|)
 block|{
 comment|/*              *  Got it, first dereference this in the Regions              */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_OPREGION
 argument_list|,
@@ -826,7 +860,7 @@ name|HandlerObj
 operator|,
 name|Handler
 operator|,
-name|AcpiCmGetRegionName
+name|AcpiUtGetRegionName
 argument_list|(
 name|SpaceId
 argument_list|)
@@ -856,7 +890,7 @@ name|AcpiEvDisassociateRegionFromHandler
 argument_list|(
 name|RegionObj
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/*                  *  Walk the list, since we took the first region and it                  *  was removed from the list by the dissassociate call                  *  we just get the first item on the list again                  */
@@ -880,12 +914,12 @@ operator|.
 name|Next
 expr_stmt|;
 comment|/*              *  Now we can delete the handler object              */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|HandlerObj
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|HandlerObj
 argument_list|)
@@ -914,7 +948,7 @@ name|Next
 expr_stmt|;
 block|}
 comment|/*      *  The handler does not exist      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_OPREGION
 argument_list|,
@@ -923,7 +957,7 @@ literal|"Unable to remove address handler %p for %s(%X), DevNode %p, obj %p\n"
 operator|,
 name|Handler
 operator|,
-name|AcpiCmGetRegionName
+name|AcpiUtGetRegionName
 argument_list|(
 name|SpaceId
 argument_list|)
@@ -942,7 +976,7 @@ name|AE_NOT_EXIST
 expr_stmt|;
 name|UnlockAndExit
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)

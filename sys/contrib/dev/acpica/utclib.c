@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  * $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  * $Revision: 38 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -78,8 +78,8 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|NATIVE_UINT
-name|AcpiCmStrlen
+name|UINT32
+name|AcpiUtStrlen
 parameter_list|(
 specifier|const
 name|NATIVE_CHAR
@@ -87,7 +87,7 @@ modifier|*
 name|String
 parameter_list|)
 block|{
-name|NATIVE_UINT
+name|UINT32
 name|Length
 init|=
 literal|0
@@ -121,7 +121,7 @@ end_comment
 begin_function
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmStrcpy
+name|AcpiUtStrcpy
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -180,7 +180,7 @@ end_comment
 begin_function
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmStrncpy
+name|AcpiUtStrncpy
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -260,7 +260,7 @@ end_comment
 
 begin_function
 name|UINT32
-name|AcpiCmStrcmp
+name|AcpiUtStrcmp
 parameter_list|(
 specifier|const
 name|NATIVE_CHAR
@@ -329,7 +329,7 @@ end_comment
 
 begin_function
 name|UINT32
-name|AcpiCmStrncmp
+name|AcpiUtStrncmp
 parameter_list|(
 specifier|const
 name|NATIVE_CHAR
@@ -416,7 +416,7 @@ end_comment
 begin_function
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmStrcat
+name|AcpiUtStrcat
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -482,7 +482,7 @@ end_comment
 begin_function
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmStrncat
+name|AcpiUtStrncat
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -573,7 +573,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|AcpiCmMemcpy
+name|AcpiUtMemcpy
 parameter_list|(
 name|void
 modifier|*
@@ -644,7 +644,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|AcpiCmMemset
+name|AcpiUtMemset
 parameter_list|(
 name|void
 modifier|*
@@ -1589,12 +1589,12 @@ value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_XD))
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmToUpper  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Convert character to uppercase  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtToUpper  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Convert character to uppercase  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|UINT32
-name|AcpiCmToUpper
+name|AcpiUtToUpper
 parameter_list|(
 name|UINT32
 name|c
@@ -1624,12 +1624,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmToLower  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Convert character to lowercase  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtToLower  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Convert character to lowercase  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|UINT32
-name|AcpiCmToLower
+name|AcpiUtToLower
 parameter_list|(
 name|UINT32
 name|c
@@ -1659,67 +1659,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    strupr  *  * PARAMETERS:  SrcString       - The source string to convert to  *  * RETURN:      SrcString  *  * DESCRIPTION: Convert string to uppercase  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|NATIVE_CHAR
-modifier|*
-name|AcpiCmStrupr
-parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|SrcString
-parameter_list|)
-block|{
-name|NATIVE_CHAR
-modifier|*
-name|String
-decl_stmt|;
-comment|/* Walk entire string, uppercasing the letters */
-for|for
-control|(
-name|String
-operator|=
-name|SrcString
-init|;
-operator|*
-name|String
-condition|;
-control|)
-block|{
-operator|*
-name|String
-operator|=
-operator|(
-name|char
-operator|)
-name|AcpiCmToUpper
-argument_list|(
-operator|*
-name|String
-argument_list|)
-expr_stmt|;
-name|String
-operator|++
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|SrcString
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    strstr  *  * PARAMETERS:  String1       -  *              String2  *  * RETURN:  *  * DESCRIPTION: Checks if String2 occurs in String1. This is not really a  *              full implementation of strstr, only sufficient for command  *              matching  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmStrstr
+name|AcpiUtStrstr
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -1736,12 +1682,12 @@ name|String
 decl_stmt|;
 if|if
 condition|(
-name|AcpiCmStrlen
+name|AcpiUtStrlen
 argument_list|(
 name|String2
 argument_list|)
 operator|>
-name|AcpiCmStrlen
+name|AcpiUtStrlen
 argument_list|(
 name|String1
 argument_list|)
@@ -1801,7 +1747,7 @@ end_comment
 
 begin_function
 name|UINT32
-name|AcpiCmStrtoul
+name|AcpiUtStrtoul
 parameter_list|(
 specifier|const
 name|NATIVE_CHAR
@@ -1813,7 +1759,7 @@ modifier|*
 modifier|*
 name|Terminator
 parameter_list|,
-name|NATIVE_UINT
+name|UINT32
 name|Base
 parameter_list|)
 block|{
@@ -1925,7 +1871,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|AcpiCmToLower
+name|AcpiUtToLower
 argument_list|(
 operator|*
 operator|(
@@ -2006,7 +1952,7 @@ name|String
 operator|==
 literal|'0'
 operator|&&
-name|AcpiCmToLower
+name|AcpiUtToLower
 argument_list|(
 operator|*
 operator|(
@@ -2050,7 +1996,7 @@ else|else
 block|{
 name|index
 operator|=
-name|AcpiCmToUpper
+name|AcpiUtToUpper
 argument_list|(
 operator|*
 name|String

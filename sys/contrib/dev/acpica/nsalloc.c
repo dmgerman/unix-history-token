@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 45 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 50 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -69,7 +69,7 @@ argument_list|)
 expr_stmt|;
 name|Node
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -253,7 +253,7 @@ name|Node
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|Node
 argument_list|)
@@ -285,7 +285,7 @@ modifier|*
 name|Node
 parameter_list|,
 comment|/* New Child*/
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|)
 block|{
@@ -402,7 +402,7 @@ name|Type
 operator|)
 operator|||
 operator|(
-name|INTERNAL_TYPE_DEF_FIELD_DEFN
+name|INTERNAL_TYPE_FIELD_DEFN
 operator|==
 name|Type
 operator|)
@@ -415,12 +415,12 @@ operator|)
 condition|)
 block|{
 comment|/*          * We don't want to abort here, however!          * We will fill in the actual type when the          * real definition is found later.          */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsInstallNode: [%4.4s] is a forward reference\n"
+literal|"[%4.4s] is a forward reference\n"
 operator|,
 operator|&
 name|Node
@@ -434,7 +434,7 @@ comment|/*      * The DefFieldDefn and BankFieldDefn cases are actually      * l
 if|if
 condition|(
 operator|(
-name|INTERNAL_TYPE_DEF_FIELD_DEFN
+name|INTERNAL_TYPE_FIELD_DEFN
 operator|==
 name|Type
 operator|)
@@ -483,12 +483,12 @@ operator|)
 name|Type
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsInstallNode: %4.4s added to %p at %p\n"
+literal|"%4.4s added to %p at %p\n"
 operator|,
 operator|&
 name|Node
@@ -607,12 +607,12 @@ operator|->
 name|Child
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"NsDeleteChildren: Found a grandchild! P=%X C=%X\n"
+literal|"Found a grandchild! P=%X C=%X\n"
 operator|,
 name|ParentNode
 operator|,
@@ -630,12 +630,12 @@ name|ACPI_NAMESPACE_NODE
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AcpiNsDeleteChildren: Object %p, Remaining %X\n"
+literal|"Object %p, Remaining %X\n"
 operator|,
 name|ChildNode
 operator|,
@@ -657,7 +657,7 @@ name|ChildNode
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|ChildNode
 argument_list|)
@@ -782,7 +782,7 @@ argument_list|(
 name|ChildNode
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1013,7 +1013,7 @@ argument_list|(
 name|ChildNode
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 21 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 25 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DEBUGGER
+value|ACPI_DEBUGGER
 end_define
 
 begin_macro
@@ -633,7 +633,7 @@ name|Info
 operator|.
 name|Pathname
 argument_list|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -652,7 +652,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Execution of %s returned object %p\n"
+literal|"Execution of %s returned object %p Buflen %X\n"
 argument_list|,
 name|Info
 operator|.
@@ -661,6 +661,10 @@ argument_list|,
 name|ReturnObj
 operator|.
 name|Pointer
+argument_list|,
+name|ReturnObj
+operator|.
+name|Length
 argument_list|)
 expr_stmt|;
 name|AcpiDbDumpObject
@@ -753,7 +757,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Execution of %s returned object %p\n"
+literal|"Execution of %s returned object %p Buflen %X\n"
 argument_list|,
 name|Info
 operator|->
@@ -762,6 +766,10 @@ argument_list|,
 name|ReturnObj
 operator|.
 name|Pointer
+argument_list|,
+name|ReturnObj
+operator|.
+name|Length
 argument_list|)
 expr_stmt|;
 name|AcpiDbDumpObject
@@ -893,7 +901,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Could not create semaphore, %s\n"
 argument_list|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)

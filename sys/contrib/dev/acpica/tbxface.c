@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 34 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 38 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|TABLE_MANAGER
+value|ACPI_TABLES
 end_define
 
 begin_macro
@@ -65,8 +65,6 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
-init|=
-name|AE_OK
 decl_stmt|;
 name|UINT32
 name|NumberOfTables
@@ -78,6 +76,26 @@ argument_list|(
 literal|"AcpiLoadTables"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Map and validate the RSDP */
 name|Status
 operator|=
@@ -99,7 +117,7 @@ argument_list|(
 operator|(
 literal|"AcpiLoadTables: RSDP Failed validation: %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -132,7 +150,7 @@ argument_list|(
 operator|(
 literal|"AcpiLoadTables: Could not load RSDT: %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -166,7 +184,7 @@ argument_list|(
 operator|(
 literal|"AcpiLoadTables: Error getting required tables (DSDT/FADT/FACS): %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -177,7 +195,7 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_OK
 argument_list|,
@@ -205,7 +223,7 @@ argument_list|(
 operator|(
 literal|"AcpiLoadTables: Could not load namespace: %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -228,7 +246,7 @@ argument_list|(
 operator|(
 literal|"AcpiLoadTables: Could not load tables: %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -267,6 +285,26 @@ argument_list|(
 literal|"AcpiLoadTable"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -395,11 +433,34 @@ name|ACPI_TABLE_DESC
 modifier|*
 name|ListHead
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiUnloadTable"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -490,6 +551,26 @@ argument_list|(
 literal|"AcpiGetTableHeader"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -652,6 +733,26 @@ argument_list|(
 literal|"AcpiGetTable"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      *  If we have a buffer, we must have a length too      */
 if|if
 condition|(

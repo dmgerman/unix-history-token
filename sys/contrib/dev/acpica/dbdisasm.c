@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 37 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 40 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DEBUGGER
+value|ACPI_DEBUGGER
 end_define
 
 begin_macro
@@ -506,17 +506,21 @@ argument_list|)
 operator|==
 name|BLOCK_PAREN
 condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"(\n"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"{\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Close a block if we are nested less than last time */
 elseif|else
@@ -591,17 +595,21 @@ argument_list|)
 operator|==
 name|BLOCK_PAREN
 condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|")\n"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"}\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* In verbose mode, print the AML offset, opcode and depth count */
@@ -662,7 +670,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 operator|&&
 name|Op
 operator|->
@@ -1441,7 +1449,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AML_STATICSTRING_OP
+name|AML_INT_STATICSTRING_OP
 case|:
 if|if
 condition|(
@@ -1474,7 +1482,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 case|:
 name|AcpiDbDisplayNamestring
 argument_list|(
@@ -1487,7 +1495,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -1502,7 +1510,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_RESERVEDFIELD_OP
+name|AML_INT_RESERVEDFIELD_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -1517,7 +1525,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_ACCESSFIELD_OP
+name|AML_INT_ACCESSFIELD_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -1532,7 +1540,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_BYTELIST_OP
+name|AML_INT_BYTELIST_OP
 case|:
 if|if
 condition|(
@@ -1641,7 +1649,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_RETURN_VALUE_OP
+name|AML_INT_RETURN_VALUE_OP
 operator|)
 operator|&&
 operator|(

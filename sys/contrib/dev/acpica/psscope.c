@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psscope - Parser scope stack management routines  *              $Revision: 24 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psscope - Parser scope stack management routines  *              $Revision: 27 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|PARSER
+value|ACPI_PARSER
 end_define
 
 begin_macro
@@ -138,7 +138,7 @@ argument_list|)
 expr_stmt|;
 name|Scope
 operator|=
-name|AcpiCmCreateGenericState
+name|AcpiUtCreateGenericState
 argument_list|()
 expr_stmt|;
 if|if
@@ -245,7 +245,7 @@ argument_list|)
 expr_stmt|;
 name|Scope
 operator|=
-name|AcpiCmCreateGenericState
+name|AcpiUtCreateGenericState
 argument_list|()
 expr_stmt|;
 if|if
@@ -295,7 +295,7 @@ operator|->
 name|PkgEnd
 expr_stmt|;
 comment|/* Push onto scope stack */
-name|AcpiCmPushGenericState
+name|AcpiUtPushGenericState
 argument_list|(
 operator|&
 name|ParserState
@@ -395,7 +395,7 @@ condition|)
 block|{
 name|Scope
 operator|=
-name|AcpiCmPopGenericState
+name|AcpiUtPopGenericState
 argument_list|(
 operator|&
 name|ParserState
@@ -442,7 +442,7 @@ operator|.
 name|PkgEnd
 expr_stmt|;
 comment|/* All done with this scope state structure */
-name|AcpiCmDeleteGenericState
+name|AcpiUtDeleteGenericState
 argument_list|(
 name|Scope
 argument_list|)
@@ -467,12 +467,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"PsPopScope:  Popped Op %p Args %X\n"
+literal|"Popped Op %p Args %X\n"
 operator|,
 operator|*
 name|Op
@@ -529,7 +529,7 @@ condition|)
 block|{
 name|Scope
 operator|=
-name|AcpiCmPopGenericState
+name|AcpiUtPopGenericState
 argument_list|(
 operator|&
 name|ParserState
@@ -537,7 +537,7 @@ operator|->
 name|Scope
 argument_list|)
 expr_stmt|;
-name|AcpiCmDeleteGenericState
+name|AcpiUtDeleteGenericState
 argument_list|(
 name|Scope
 argument_list|)

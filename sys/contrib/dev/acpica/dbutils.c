@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 35 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 37 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DEBUGGER
+value|ACPI_DEBUGGER
 end_define
 
 begin_macro
@@ -151,7 +151,7 @@ name|AcpiDbgLevel
 operator||=
 name|TRACE_TABLES
 expr_stmt|;
-name|AcpiCmDumpBuffer
+name|AcpiUtDumpBuffer
 argument_list|(
 operator|(
 name|UINT8
@@ -319,7 +319,7 @@ argument_list|(
 literal|"[Buffer]  Value: "
 argument_list|)
 expr_stmt|;
-name|AcpiCmDumpBuffer
+name|AcpiUtDumpBuffer
 argument_list|(
 operator|(
 name|UINT8
@@ -825,14 +825,14 @@ literal|"Could not locate name: %s %s\n"
 argument_list|,
 name|Name
 argument_list|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|InternalPath
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 27 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|PARSER
+value|ACPI_PARSER
 end_define
 
 begin_macro
@@ -523,28 +523,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_DWORD_FIELD_OP
+name|ARGP_CREATE_DWORD_FIELD_OP
 value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_WORD_FIELD_OP
+name|ARGP_CREATE_WORD_FIELD_OP
 value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_BYTE_FIELD_OP
+name|ARGP_CREATE_BYTE_FIELD_OP
 value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_BIT_FIELD_OP
+name|ARGP_CREATE_BIT_FIELD_OP
 value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
 end_define
 
@@ -558,7 +558,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_QWORD_FIELD_OP
+name|ARGP_CREATE_QWORD_FIELD_OP
 value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
 end_define
 
@@ -859,7 +859,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_DEF_FIELD_OP
+name|ARGP_FIELD_OP
 value|ARGP_LIST4 (ARGP_PKGLENGTH,  ARGP_NAMESTRING,    ARGP_BYTEDATA,  ARGP_FIELDLIST)
 end_define
 
@@ -983,7 +983,7 @@ value|ARGP_LIST1 (ARGP_NAMESTRING)
 end_define
 
 begin_comment
-comment|/*  * All AML opcodes and the runtime arguments for each.  Used by the AML interpreter  Each list is compressed  * into a 32-bit number and stored in the master opcode table at the end of this file.  *  * (Used by AcpiAmlPrepOperands procedure and the ASL Compiler)  */
+comment|/*  * All AML opcodes and the runtime arguments for each.  Used by the AML interpreter  Each list is compressed  * into a 32-bit number and stored in the master opcode table at the end of this file.  *  * (Used by PrepOperands procedure and the ASL Compiler)  */
 end_comment
 
 begin_define
@@ -1374,28 +1374,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_DWORD_FIELD_OP
+name|ARGI_CREATE_DWORD_FIELD_OP
 value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_WORD_FIELD_OP
+name|ARGI_CREATE_WORD_FIELD_OP
 value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_BYTE_FIELD_OP
+name|ARGI_CREATE_BYTE_FIELD_OP
 value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_BIT_FIELD_OP
+name|ARGI_CREATE_BIT_FIELD_OP
 value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
 end_define
 
@@ -1409,7 +1409,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_QWORD_FIELD_OP
+name|ARGI_CREATE_QWORD_FIELD_OP
 value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
 end_define
 
@@ -1710,7 +1710,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_DEF_FIELD_OP
+name|ARGI_FIELD_OP
 value|ARGI_INVALID_OPCODE
 end_define
 
@@ -1844,7 +1844,7 @@ name|AmlOpInfo
 index|[]
 init|=
 block|{
-comment|/* Index          Opcode                                   Type                   Class                 Has Arguments?   Name                 Parser Args             Interpreter Args */
+comment|/* Index          Opcode                                   Type                   Class                 Has Arguments?   Name                 Parser Args               Interpreter Args */
 comment|/*  00 */
 comment|/* AML_ZERO_OP */
 name|OP_INFO_ENTRY
@@ -2713,7 +2713,7 @@ name|ARGI_MATCH_OP
 argument_list|)
 block|,
 comment|/*  33 */
-comment|/* AML_DWORD_FIELD_OP */
+comment|/* AML_CREATE_DWORD_FIELD_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -2724,13 +2724,13 @@ name|AML_HAS_ARGS
 argument_list|,
 literal|"CreateDWordField"
 argument_list|,
-name|ARGP_DWORD_FIELD_OP
+name|ARGP_CREATE_DWORD_FIELD_OP
 argument_list|,
-name|ARGI_DWORD_FIELD_OP
+name|ARGI_CREATE_DWORD_FIELD_OP
 argument_list|)
 block|,
 comment|/*  34 */
-comment|/* AML_WORD_FIELD_OP */
+comment|/* AML_CREATE_WORD_FIELD_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -2741,13 +2741,13 @@ name|AML_HAS_ARGS
 argument_list|,
 literal|"CreateWordField"
 argument_list|,
-name|ARGP_WORD_FIELD_OP
+name|ARGP_CREATE_WORD_FIELD_OP
 argument_list|,
-name|ARGI_WORD_FIELD_OP
+name|ARGI_CREATE_WORD_FIELD_OP
 argument_list|)
 block|,
 comment|/*  35 */
-comment|/* AML_BYTE_FIELD_OP */
+comment|/* AML_CREATE_BYTE_FIELD_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -2758,13 +2758,13 @@ name|AML_HAS_ARGS
 argument_list|,
 literal|"CreateByteField"
 argument_list|,
-name|ARGP_BYTE_FIELD_OP
+name|ARGP_CREATE_BYTE_FIELD_OP
 argument_list|,
-name|ARGI_BYTE_FIELD_OP
+name|ARGI_CREATE_BYTE_FIELD_OP
 argument_list|)
 block|,
 comment|/*  36 */
-comment|/* AML_BIT_FIELD_OP */
+comment|/* AML_CREATE_BIT_FIELD_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -2775,9 +2775,9 @@ name|AML_HAS_ARGS
 argument_list|,
 literal|"CreateBitField"
 argument_list|,
-name|ARGP_BIT_FIELD_OP
+name|ARGP_CREATE_BIT_FIELD_OP
 argument_list|,
-name|ARGI_BIT_FIELD_OP
+name|ARGI_CREATE_BIT_FIELD_OP
 argument_list|)
 block|,
 comment|/*  37 */
@@ -3360,7 +3360,7 @@ name|ARGI_REGION_OP
 argument_list|)
 block|,
 comment|/*  59 */
-comment|/* AML_DEF_FIELD_OP */
+comment|/* AML_FIELD_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3371,9 +3371,9 @@ name|AML_HAS_ARGS
 argument_list|,
 literal|"Field"
 argument_list|,
-name|ARGP_DEF_FIELD_OP
+name|ARGP_FIELD_OP
 argument_list|,
-name|ARGI_DEF_FIELD_OP
+name|ARGI_FIELD_OP
 argument_list|)
 block|,
 comment|/*  5A */
@@ -3531,7 +3531,7 @@ name|ARGI_LGREATEREQUAL_OP
 argument_list|)
 block|,
 comment|/*  63 */
-comment|/* AML_NAMEPATH_OP */
+comment|/* AML_INT_NAMEPATH_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3548,7 +3548,7 @@ name|ARGI_NAMEPATH_OP
 argument_list|)
 block|,
 comment|/*  64 */
-comment|/* AML_METHODCALL_OP */
+comment|/* AML_INT_METHODCALL_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3565,7 +3565,7 @@ name|ARGI_METHODCALL_OP
 argument_list|)
 block|,
 comment|/*  65 */
-comment|/* AML_BYTELIST_OP */
+comment|/* AML_INT_BYTELIST_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3582,7 +3582,7 @@ name|ARGI_BYTELIST_OP
 argument_list|)
 block|,
 comment|/*  66 */
-comment|/* AML_RESERVEDFIELD_OP */
+comment|/* AML_INT_RESERVEDFIELD_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3599,7 +3599,7 @@ name|ARGI_RESERVEDFIELD_OP
 argument_list|)
 block|,
 comment|/*  67 */
-comment|/* AML_NAMEDFIELD_OP */
+comment|/* AML_INT_NAMEDFIELD_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3616,7 +3616,7 @@ name|ARGI_NAMEDFIELD_OP
 argument_list|)
 block|,
 comment|/*  68 */
-comment|/* AML_ACCESSFIELD_OP */
+comment|/* AML_INT_ACCESSFIELD_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3633,7 +3633,7 @@ name|ARGI_ACCESSFIELD_OP
 argument_list|)
 block|,
 comment|/*  69 */
-comment|/* AML_STATICSTRING_OP */
+comment|/* AML_INT_STATICSTRING_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3650,7 +3650,7 @@ name|ARGI_STATICSTRING_OP
 argument_list|)
 block|,
 comment|/*  6A */
-comment|/* AML_RETURN_VALUE_OP */
+comment|/* AML_INT_RETURN_VALUE_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3787,7 +3787,7 @@ name|ARGI_MOD_OP
 argument_list|)
 block|,
 comment|/*  72 */
-comment|/* AML_QWORD_FIELD_OP */
+comment|/* AML_CREATE_QWORD_FIELD_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3798,9 +3798,9 @@ name|AML_HAS_ARGS
 argument_list|,
 literal|"CreateQWordField"
 argument_list|,
-name|ARGP_QWORD_FIELD_OP
+name|ARGP_CREATE_QWORD_FIELD_OP
 argument_list|,
-name|ARGI_QWORD_FIELD_OP
+name|ARGI_CREATE_QWORD_FIELD_OP
 argument_list|)
 block|,
 comment|/*  73 */
@@ -3898,7 +3898,7 @@ name|OPTYPE_MONADIC2R
 operator||
 name|AML_HAS_ARGS
 argument_list|,
-literal|"Copy"
+literal|"CopyObject"
 argument_list|,
 name|ARGP_COPY_OP
 argument_list|,
@@ -4867,6 +4867,11 @@ decl_stmt|;
 name|UINT8
 name|LowerOpcode
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"PsGetOpcodeInfo"
+argument_list|)
+expr_stmt|;
 comment|/* Split the 16-bit opcode into separate bytes */
 name|UpperOpcode
 operator|=
@@ -4946,12 +4951,12 @@ name|AML_LNOT_OP
 case|:
 comment|/* This case is for the bogus opcodes LNOTEQUAL, LLESSEQUAL, LGREATEREQUAL */
 comment|/* TBD: [Investigate] remove this case? */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"PsGetOpcodeInfo: Bad multi-byte opcode=%X\n"
+literal|"Bad multi-byte opcode=%X\n"
 operator|,
 name|Opcode
 operator|)
@@ -4959,12 +4964,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"PsGetOpcodeInfo: Unknown extended opcode=%X\n"
+literal|"Unknown extended opcode=%X\n"
 operator|,
 name|Opcode
 operator|)

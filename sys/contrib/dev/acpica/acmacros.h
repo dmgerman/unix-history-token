@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -382,6 +382,36 @@ value|(*(UINT8*)(addr))
 end_define
 
 begin_comment
+comment|/* Pointer arithmetic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POINTER_ADD
+parameter_list|(
+name|t
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(t *) ((NATIVE_UINT)(a) + (NATIVE_UINT)(b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|POINTER_DIFF
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((UINT32) ((NATIVE_UINT)(a) - (NATIVE_UINT)(b)))
+end_define
+
+begin_comment
 comment|/*  * Macros for moving data around to/from buffers that are possibly unaligned.  * If the hardware supports the transfer of unaligned data, just do the store.  * Otherwise, we have to move one byte at a time.  */
 end_comment
 
@@ -431,6 +461,18 @@ parameter_list|)
 value|*(UINT32*)(d) = *(UINT16*)(s)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOVE_UNALIGNED64_TO_64
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|*(UINT64*)(d) = *(UINT64*)(s)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -474,6 +516,18 @@ parameter_list|,
 name|s
 parameter_list|)
 value|{(*(UINT32*)(d)) = 0; MOVE_UNALIGNED16_TO_16(d,s);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOVE_UNALIGNED64_TO_64
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|{((UINT8 *)(d))[0] = ((UINT8 *)(s))[0];\                                          ((UINT8 *)(d))[1] = ((UINT8 *)(s))[1];\                                          ((UINT8 *)(d))[2] = ((UINT8 *)(s))[2];\                                          ((UINT8 *)(d))[3] = ((UINT8 *)(s))[3];\                                          ((UINT8 *)(d))[4] = ((UINT8 *)(s))[4];\                                          ((UINT8 *)(d))[5] = ((UINT8 *)(s))[5];\                                          ((UINT8 *)(d))[6] = ((UINT8 *)(s))[6];\                                          ((UINT8 *)(d))[7] = ((UINT8 *)(s))[7];}
 end_define
 
 begin_endif
@@ -784,11 +838,71 @@ end_define
 begin_define
 define|#
 directive|define
+name|ROUND_BITS_UP_TO_BYTES
+parameter_list|(
+name|a
+parameter_list|)
+value|DIV_8((a) + 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ROUND_BITS_DOWN_TO_BYTES
+parameter_list|(
+name|a
+parameter_list|)
+value|DIV_8((a))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ROUND_UP_TO_1K
 parameter_list|(
 name|a
 parameter_list|)
 value|(((a) + 1023)>> 10)
+end_define
+
+begin_comment
+comment|/* Generic (non-power-of-two) rounding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ROUND_UP_TO
+parameter_list|(
+name|value
+parameter_list|,
+name|boundary
+parameter_list|)
+value|(((value) + ((boundary)-1)) / (boundary))
+end_define
+
+begin_comment
+comment|/*   * Bitmask creation  * Bit positions start at zero.  * MASK_BITS_ABOVE creates a mask starting AT the position and above  * MASK_BITS_BELOW creates a mask starting one bit BELOW the position  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_BITS_ABOVE
+parameter_list|(
+name|position
+parameter_list|)
+value|(~(((UINT32)(-1))<< ((UINT32) (position))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_BITS_BELOW
+parameter_list|(
+name|position
+parameter_list|)
+value|(((UINT32)(-1))<< ((UINT32) (position)))
 end_define
 
 begin_ifdef
@@ -953,6 +1067,20 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x01) == ACPI_TABLE_SINGLE ? 1 : 0)
+end_define
+
+begin_comment
+comment|/* Check if ACPI has been initialized properly */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_INITIALIZATION_COMPLETE
+parameter_list|(
+name|s
+parameter_list|)
+value|{if (AcpiGbl_RootNode) s = AE_OK; else s=AE_NO_NAMESPACE;}
 end_define
 
 begin_comment
@@ -1319,6 +1447,44 @@ value|(List>>= ((UINT32) ARG_TYPE_WIDTH))
 end_define
 
 begin_comment
+comment|/*  * Build a GAS structure from earlier ACPI table entries (V1.0 and 0.71 extensions)  *  * 1) Address space  * 2) Length in bytes -- convert to length in bits  * 3) Bit offset is zero  * 4) Reserved field is zero  * 5) Expand address to 64 bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_BUILD_GAS_FROM_ENTRY
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|{a.AddressSpaceId = (UINT8) d;\                                              a.RegisterBitWidth = (UINT8) MUL_8 (b);\                                              a.RegisterBitOffset = 0;\                                              a.Reserved = 0;\                                              ACPI_STORE_ADDRESS (a.Address,c);}
+end_define
+
+begin_comment
+comment|/* ACPI V1.0 entries -- address space is always I/O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_BUILD_GAS_FROM_V1_ENTRY
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|ASL_BUILD_GAS_FROM_ENTRY(a,b,c,ACPI_ADR_SPACE_SYSTEM_IO)
+end_define
+
+begin_comment
 comment|/*  * Reporting macros that are never compiled out  */
 end_comment
 
@@ -1477,7 +1643,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|AcpiCmDumpBuffer((UINT8 *)a,b,DB_BYTE_DISPLAY,_COMPONENT)
+value|AcpiUtDumpBuffer((UINT8 *)a,b,DB_BYTE_DISPLAY,_COMPONENT)
 end_define
 
 begin_comment
@@ -1503,6 +1669,16 @@ end_define
 begin_comment
 comment|/*  * Function entry tracing.  * The first parameter should be the procedure name as a quoted string.  This is declared  * as a local string ("_ProcName) so that it can be also used by the function exit macros below.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PROC_NAME
+parameter_list|(
+name|a
+parameter_list|)
+value|char * _ProcName = a;
+end_define
 
 begin_define
 define|#
@@ -1578,7 +1754,7 @@ name|return_VALUE
 parameter_list|(
 name|s
 parameter_list|)
-value|{FunctionValueExit(_THIS_MODULE,__LINE__,_COMPONENT,_ProcName,(ACPI_INTEGER)s);return(s);}
+value|{FunctionValueExit(_THIS_MODULE,__LINE__,_COMPONENT,_ProcName,s);return(s);}
 end_define
 
 begin_define
@@ -1657,7 +1833,7 @@ name|DUMP_STACK_ENTRY
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiAmlDumpOperand(a)
+value|AcpiExDumpOperand(a)
 end_define
 
 begin_define
@@ -1675,7 +1851,7 @@ name|d
 parameter_list|,
 name|e
 parameter_list|)
-value|AcpiAmlDumpOperands(a,b,c,d,e,_THIS_MODULE,__LINE__)
+value|AcpiExDumpOperands(a,b,c,d,e,_THIS_MODULE,__LINE__)
 end_define
 
 begin_define
@@ -1812,6 +1988,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEBUG_PRINTP
+parameter_list|(
+name|lvl
+parameter_list|,
+name|fp
+parameter_list|)
+value|TEST_DEBUG_SWITCH(lvl) {\                                             DebugPrintPrefix (_THIS_MODULE,__LINE__);\                                             DebugPrintRaw ("%s: ",_ProcName);\                                             DebugPrintRaw PARAM_LIST(fp);\                                             BREAK_ON_ERROR(lvl);}
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEBUG_PRINT_RAW
 parameter_list|(
 name|lvl
@@ -1904,6 +2092,15 @@ begin_define
 define|#
 directive|define
 name|DEBUG_ONLY_MEMBERS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_NAME
 parameter_list|(
 name|a
 parameter_list|)
@@ -2051,6 +2248,17 @@ begin_define
 define|#
 directive|define
 name|DEBUG_PRINT
+parameter_list|(
+name|l
+parameter_list|,
+name|f
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_PRINTP
 parameter_list|(
 name|l
 parameter_list|,
@@ -2257,6 +2465,178 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Memory allocation tracking (DEBUG ONLY)  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_DEBUG_TRACK_ALLOCATIONS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AcpiUtAddElementToAllocList
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|,
+name|f
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiUtDeleteElementFromAllocList
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiUtDumpCurrentAllocations
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiUtDumpAllocationInfo
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECREMENT_OBJECT_METRICS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INCREMENT_OBJECT_METRICS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE_ALLOCATION_METRICS
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECREMENT_NAME_TABLE_METRICS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INCREMENT_NAME_TABLE_METRICS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE_ALLOCATION_METRICS
+parameter_list|()
+define|\
+value|AcpiGbl_CurrentObjectCount = 0; \     AcpiGbl_CurrentObjectSize = 0; \     AcpiGbl_RunningObjectCount = 0; \     AcpiGbl_RunningObjectSize = 0; \     AcpiGbl_MaxConcurrentObjectCount = 0; \     AcpiGbl_MaxConcurrentObjectSize = 0; \     AcpiGbl_CurrentAllocSize = 0; \     AcpiGbl_CurrentAllocCount = 0; \     AcpiGbl_RunningAllocSize = 0; \     AcpiGbl_RunningAllocCount = 0; \     AcpiGbl_MaxConcurrentAllocSize = 0; \     AcpiGbl_MaxConcurrentAllocCount = 0; \     AcpiGbl_CurrentNodeCount = 0; \     AcpiGbl_CurrentNodeSize = 0; \     AcpiGbl_MaxConcurrentNodeCount = 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECREMENT_OBJECT_METRICS
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|AcpiGbl_CurrentObjectCount--; \     AcpiGbl_CurrentObjectSize -= a
+end_define
+
+begin_define
+define|#
+directive|define
+name|INCREMENT_OBJECT_METRICS
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|AcpiGbl_CurrentObjectCount++; \     AcpiGbl_RunningObjectCount++; \     if (AcpiGbl_MaxConcurrentObjectCount< AcpiGbl_CurrentObjectCount) \     { \         AcpiGbl_MaxConcurrentObjectCount = AcpiGbl_CurrentObjectCount; \     } \     AcpiGbl_RunningObjectSize += a; \     AcpiGbl_CurrentObjectSize += a; \     if (AcpiGbl_MaxConcurrentObjectSize< AcpiGbl_CurrentObjectSize) \     { \         AcpiGbl_MaxConcurrentObjectSize = AcpiGbl_CurrentObjectSize; \     }
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECREMENT_NAME_TABLE_METRICS
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|AcpiGbl_CurrentNodeCount--; \     AcpiGbl_CurrentNodeSize -= (a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INCREMENT_NAME_TABLE_METRICS
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|AcpiGbl_CurrentNodeCount++; \     AcpiGbl_CurrentNodeSize+= (a); \     if (AcpiGbl_MaxConcurrentNodeCount< AcpiGbl_CurrentNodeCount) \     { \         AcpiGbl_MaxConcurrentNodeCount = AcpiGbl_CurrentNodeCount; \     }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_DEBUG_TRACK_ALLOCATIONS */
+end_comment
 
 begin_endif
 endif|#

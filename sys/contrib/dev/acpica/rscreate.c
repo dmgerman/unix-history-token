@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - AcpiRsCreateResourceList  *                         AcpiRsCreatePciRoutingTable  *                         AcpiRsCreateByteStream  *              $Revision: 25 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 33 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|RESOURCE_MANAGER
+value|ACPI_RESOURCES
 end_define
 
 begin_macro
@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateResourceList  *  * PARAMETERS:  *              ByteStreamBuffer        - Pointer to the resource byte stream  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Pointer to the size of OutputBuffer  *  * RETURN:      Status  - AE_OK if okay, else a valid ACPI_STATUS code  *              If OutputBuffer is not large enough, OutputBufferLength  *              indicates how large OutputBuffer should be, else it  *              indicates how may UINT8 elements of OutputBuffer are valid.  *  * DESCRIPTION: Takes the byte stream returned from a _CRS, _PRS control method  *              execution and parses the stream to create a linked list  *              of device resources.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateResourceList  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource byte stream  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Pointer to the size of OutputBuffer  *  * RETURN:      Status  - AE_OK if okay, else a valid ACPI_STATUS code  *              If OutputBuffer is not large enough, OutputBufferLength  *              indicates how large OutputBuffer should be, else it  *              indicates how may UINT8 elements of OutputBuffer are valid.  *  * DESCRIPTION: Takes the byte stream returned from a _CRS, _PRS control method  *              execution and parses the stream to create a linked list  *              of device resources.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -78,8 +78,6 @@ decl_stmt|;
 name|UINT8
 modifier|*
 name|ByteStreamStart
-init|=
-name|NULL
 decl_stmt|;
 name|UINT32
 name|ListSizeNeeded
@@ -88,20 +86,18 @@ literal|0
 decl_stmt|;
 name|UINT32
 name|ByteStreamBufferLength
-init|=
-literal|0
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"RsCreateResourceList"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsCreateResourceList: ByteStreamBuffer = %p\n"
+literal|"ByteStreamBuffer = %p\n"
 operator|,
 name|ByteStreamBuffer
 operator|)
@@ -137,12 +133,12 @@ operator|&
 name|ListSizeNeeded
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsCreateResourceList: Status=%X ListSizeNeeded=%X\n"
+literal|"Status=%X ListSizeNeeded=%X\n"
 operator|,
 name|Status
 operator|,
@@ -212,12 +208,12 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsByteStreamToList: OutputBuffer = %p\n"
+literal|"OutputBuffer = %p\n"
 operator|,
 name|OutputBuffer
 operator|)
@@ -251,7 +247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreatePciRoutingTable  *  * PARAMETERS:  *              PackageObject           - Pointer to an ACPI_OPERAND_OBJECT  *                                          package  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Size of OutputBuffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBufferLength will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the ACPI_OPERAND_OBJECT  package and creates a  *              linked list of PCI interrupt descriptions  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreatePciRoutingTable  *  * PARAMETERS:  PackageObject           - Pointer to an ACPI_OPERAND_OBJECT  *                                        package  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Size of OutputBuffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBufferLength will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the ACPI_OPERAND_OBJECT  package and creates a  *              linked list of PCI interrupt descriptions  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -341,12 +337,27 @@ operator|&
 name|BufferSizeNeeded
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+if|if
+condition|(
+operator|!
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|DEBUG_PRINTP
 argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsCreatePciRoutingTable: BufferSizeNeeded = %X\n"
+literal|"BufferSizeNeeded = %X\n"
 operator|,
 name|BufferSizeNeeded
 operator|)
@@ -495,14 +506,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CreatePciRoutingTable: Need Integer, found %s\n"
+literal|"Need Integer, found %s\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -559,14 +570,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CreatePciRoutingTable: Need Integer, found %s\n"
+literal|"Need Integer, found %s\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -614,17 +625,17 @@ operator|)
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|!=
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CreatePciRoutingTable: Need name, found reference op %X\n"
+literal|"Need name, found reference op %X\n"
 operator|,
 operator|(
 operator|*
@@ -633,7 +644,7 @@ operator|)
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -737,14 +748,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CreatePciRoutingTable: Need Integer, found %s\n"
+literal|"Need Integer, found %s\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -814,14 +825,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CreatePciRoutingTable: Need Integer, found %s\n"
+literal|"Need Integer, found %s\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -846,12 +857,12 @@ name|TopObjectList
 operator|++
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsCreatePciRoutingTable: OutputBuffer = %p\n"
+literal|"OutputBuffer = %p\n"
 operator|,
 name|OutputBuffer
 operator|)
@@ -886,14 +897,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateByteStream  *  * PARAMETERS:  *              LinkedListBuffer        - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Size of OutputBuffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBufferLength will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the linked list of device resources and  *              creates a bytestream to be used as input for the  *              _SRS control method.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateByteStream  *  * PARAMETERS:  LinkedListBuffer        - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Size of OutputBuffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBufferLength will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the linked list of device resources and  *              creates a bytestream to be used as input for the  *              _SRS control method.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsCreateByteStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedListBuffer
 parameter_list|,
@@ -919,12 +930,12 @@ argument_list|(
 literal|"RsCreateByteStream"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsCreateByteStream: LinkedListBuffer = %p\n"
+literal|"LinkedListBuffer = %p\n"
 operator|,
 name|LinkedListBuffer
 operator|)
@@ -941,16 +952,16 @@ operator|&
 name|ByteStreamSizeNeeded
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsCreateByteStream: ByteStreamSizeNeeded=%X, %s\n"
+literal|"ByteStreamSizeNeeded=%X, %s\n"
 operator|,
 name|ByteStreamSizeNeeded
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1019,12 +1030,12 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsListToByteStream: OutputBuffer = %p\n"
+literal|"OutputBuffer = %p\n"
 operator|,
 name|OutputBuffer
 operator|)

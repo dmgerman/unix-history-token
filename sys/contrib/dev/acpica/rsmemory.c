@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsmem24 - AcpiRsMemory24Resource  *                        AcpiRsMemory24Stream  *                        AcpiRsMemory32RangeResource  *                        AcpiRsFixedMemory32Resource  *                        AcpiRsMemory32RangeStream  *                        AcpiRsFixedMemory32Stream  *              $Revision: 12 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsmem24 - Memory resource descriptors  *              $Revision: 14 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|RESOURCE_MANAGER
+value|ACPI_RESOURCES
 end_define
 
 begin_macro
@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsMemory24Resource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                          stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes consumed from  *                                          the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                          the number of bytes in the filled  *                                          in structure  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *                  structure pointed to by the OutputBuffer.  Return the  *                  number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsMemory24Resource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -71,12 +71,12 @@ name|Buffer
 init|=
 name|ByteStreamBuffer
 decl_stmt|;
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|RESOURCE
+name|ACPI_RESOURCE
 operator|*
 operator|)
 operator|*
@@ -95,12 +95,10 @@ decl_stmt|;
 name|UINT32
 name|StructSize
 init|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|MEMORY24_RESOURCE
+name|ACPI_RESOURCE_MEM24
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -135,7 +133,7 @@ name|OutputStruct
 operator|->
 name|Id
 operator|=
-name|Memory24
+name|ACPI_RSTYPE_MEM24
 expr_stmt|;
 comment|/*      * Check Byte 3 the Read/Write bit      */
 name|Temp8
@@ -269,14 +267,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsMemory24Stream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes of the  *                                          OutputBuffer used  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *                  the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsMemory24Stream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsMemory24Stream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -446,18 +444,10 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-call|(
-name|UINT32
-call|)
+name|POINTER_DIFF
 argument_list|(
-operator|(
-name|NATIVE_UINT
-operator|)
 name|Buffer
-operator|-
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 operator|*
 name|OutputBuffer
 argument_list|)
@@ -471,7 +461,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsMemory32RangeResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                          stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes consumed from  *                                          the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                          the number of bytes in the filled  *                                          in structure  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *                  structure pointed to by the OutputBuffer.  Return the  *                  number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsMemory32RangeResource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -502,12 +492,12 @@ name|Buffer
 init|=
 name|ByteStreamBuffer
 decl_stmt|;
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|RESOURCE
+name|ACPI_RESOURCE
 operator|*
 operator|)
 operator|*
@@ -526,12 +516,10 @@ decl_stmt|;
 name|UINT32
 name|StructSize
 init|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|MEMORY32_RESOURCE
+name|ACPI_RESOURCE_MEM32
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -566,9 +554,9 @@ name|OutputStruct
 operator|->
 name|Id
 operator|=
-name|Memory32
+name|ACPI_RSTYPE_MEM32
 expr_stmt|;
-comment|/*      *  Point to the place in the output buffer where the data portion will      *    begin.      *  1. Set the RESOURCE_DATA * Data to point to it's own address, then      *  2. Set the pointer to the next address.      *      *  NOTE: OutputStruct->Data is cast to UINT8, otherwise, this addition adds      *  4 * sizeof(RESOURCE_DATA) instead of 4 * sizeof(UINT8)      */
+comment|/*      *  Point to the place in the output buffer where the data portion will      *  begin.      *  1. Set the RESOURCE_DATA * Data to point to it's own address, then      *  2. Set the pointer to the next address.      *      *  NOTE: OutputStruct->Data is cast to UINT8, otherwise, this addition adds      *  4 * sizeof(RESOURCE_DATA) instead of 4 * sizeof(UINT8)      */
 comment|/*      * Check Byte 3 the Read/Write bit      */
 name|Temp8
 operator|=
@@ -685,7 +673,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsFixedMemory32Resource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                          stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes consumed from  *                                          the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                          the number of bytes in the filled  *                                          in structure  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *                  structure pointed to by the OutputBuffer.  Return the  *                  number of bytes consumed from the byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsFixedMemory32Resource  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource input byte  *                                        stream  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes consumed from  *                                        the ByteStreamBuffer  *              OutputBuffer            - Pointer to the user's return buffer  *              StructureSize           - UINT32 pointer that is filled with  *                                        the number of bytes in the filled  *                                        in structure  *  * RETURN:      Status  *  * DESCRIPTION: Take the resource byte stream and fill out the appropriate  *              structure pointed to by the OutputBuffer.  Return the  *              number of bytes consumed from the byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -716,12 +704,12 @@ name|Buffer
 init|=
 name|ByteStreamBuffer
 decl_stmt|;
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|RESOURCE
+name|ACPI_RESOURCE
 operator|*
 operator|)
 operator|*
@@ -740,12 +728,10 @@ decl_stmt|;
 name|UINT32
 name|StructSize
 init|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|FIXED_MEMORY32_RESOURCE
+name|ACPI_RESOURCE_FIXED_MEM32
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -780,7 +766,7 @@ name|OutputStruct
 operator|->
 name|Id
 operator|=
-name|FixedMemory32
+name|ACPI_RSTYPE_FIXED_MEM32
 expr_stmt|;
 comment|/*      * Check Byte 3 the Read/Write bit      */
 name|Temp8
@@ -860,14 +846,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsMemory32RangeStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes of the  *                                          OutputBuffer used  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *                  the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsMemory32RangeStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsMemory32RangeStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -1037,18 +1023,10 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-call|(
-name|UINT32
-call|)
+name|POINTER_DIFF
 argument_list|(
-operator|(
-name|NATIVE_UINT
-operator|)
 name|Buffer
-operator|-
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 operator|*
 name|OutputBuffer
 argument_list|)
@@ -1062,14 +1040,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsFixedMemory32Stream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                          the number of bytes of the  *                                          OutputBuffer used  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *                  the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsFixedMemory32Stream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsFixedMemory32Stream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -1201,18 +1179,10 @@ comment|/*      * Return the number of bytes consumed in this operation      */
 operator|*
 name|BytesConsumed
 operator|=
-call|(
-name|UINT32
-call|)
+name|POINTER_DIFF
 argument_list|(
-operator|(
-name|NATIVE_UINT
-operator|)
 name|Buffer
-operator|-
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 operator|*
 name|OutputBuffer
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 31 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DISPATCHER
+value|ACPI_DISPATCHER
 end_define
 
 begin_macro
@@ -83,7 +83,7 @@ value|0x60
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateField  *  * PARAMETERS:  Op              - Op containing the Field definition and args  *              RegionNode  - Object for the containing Operation Region  *  * RETURN:      Status  *  * DESCRIPTION: Create a new field in the specified operation region  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateField  *  * PARAMETERS:  Op              - Op containing the Field definition and args  *              RegionNode      - Object for the containing Operation Region  *  `           WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new field in the specified operation region  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -118,11 +118,6 @@ name|Node
 decl_stmt|;
 name|UINT8
 name|FieldFlags
-decl_stmt|;
-name|UINT8
-name|AccessAttribute
-init|=
-literal|0
 decl_stmt|;
 name|UINT32
 name|FieldBitPosition
@@ -230,7 +225,7 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_RESERVEDFIELD_OP
+name|AML_INT_RESERVEDFIELD_OP
 case|:
 name|FieldBitPosition
 operator|+=
@@ -242,20 +237,9 @@ name|Size
 expr_stmt|;
 break|break;
 case|case
-name|AML_ACCESSFIELD_OP
+name|AML_INT_ACCESSFIELD_OP
 case|:
 comment|/*              * Get a new AccessType and AccessAttribute for all              * entries (until end or another AccessAs keyword)              */
-name|AccessAttribute
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|Arg
-operator|->
-name|Value
-operator|.
-name|Integer
-expr_stmt|;
 name|FieldFlags
 operator|=
 call|(
@@ -286,7 +270,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 case|:
 name|Status
 operator|=
@@ -311,7 +295,7 @@ operator|)
 operator|->
 name|Name
 argument_list|,
-name|INTERNAL_TYPE_DEF_FIELD
+name|INTERNAL_TYPE_REGION_FIELD
 argument_list|,
 name|IMODE_LOAD_PASS1
 argument_list|,
@@ -342,15 +326,13 @@ block|}
 comment|/*              * Initialize an object for the new Node that is on              * the object stack              */
 name|Status
 operator|=
-name|AcpiAmlPrepDefFieldValue
+name|AcpiExPrepRegionFieldValue
 argument_list|(
 name|Node
 argument_list|,
 name|RegionNode
 argument_list|,
 name|FieldFlags
-argument_list|,
-name|AccessAttribute
 argument_list|,
 name|FieldBitPosition
 argument_list|,
@@ -402,7 +384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateBankField  *  * PARAMETERS:  Op              - Op containing the Field definition and args  *              RegionNode  - Object for the containing Operation Region  *  * RETURN:      Status  *  * DESCRIPTION: Create a new bank field in the specified operation region  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateBankField  *  * PARAMETERS:  Op              - Op containing the Field definition and args  *              RegionNode      - Object for the containing Operation Region  *  `           WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new bank field in the specified operation region  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -444,11 +426,6 @@ name|BankValue
 decl_stmt|;
 name|UINT8
 name|FieldFlags
-decl_stmt|;
-name|UINT8
-name|AccessAttribute
-init|=
-literal|0
 decl_stmt|;
 name|UINT32
 name|FieldBitPosition
@@ -620,7 +597,7 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_RESERVEDFIELD_OP
+name|AML_INT_RESERVEDFIELD_OP
 case|:
 name|FieldBitPosition
 operator|+=
@@ -632,20 +609,9 @@ name|Size
 expr_stmt|;
 break|break;
 case|case
-name|AML_ACCESSFIELD_OP
+name|AML_INT_ACCESSFIELD_OP
 case|:
 comment|/*              * Get a new AccessType and AccessAttribute for              * all entries (until end or another AccessAs keyword)              */
-name|AccessAttribute
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|Arg
-operator|->
-name|Value
-operator|.
-name|Integer
-expr_stmt|;
 name|FieldFlags
 operator|=
 call|(
@@ -676,7 +642,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 case|:
 name|Status
 operator|=
@@ -701,7 +667,7 @@ operator|)
 operator|->
 name|Name
 argument_list|,
-name|INTERNAL_TYPE_DEF_FIELD
+name|INTERNAL_TYPE_REGION_FIELD
 argument_list|,
 name|IMODE_LOAD_PASS1
 argument_list|,
@@ -732,7 +698,7 @@ block|}
 comment|/*              * Initialize an object for the new Node that is on              * the object stack              */
 name|Status
 operator|=
-name|AcpiAmlPrepBankFieldValue
+name|AcpiExPrepBankFieldValue
 argument_list|(
 name|Node
 argument_list|,
@@ -743,8 +709,6 @@ argument_list|,
 name|BankValue
 argument_list|,
 name|FieldFlags
-argument_list|,
-name|AccessAttribute
 argument_list|,
 name|FieldBitPosition
 argument_list|,
@@ -796,7 +760,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateIndexField  *  * PARAMETERS:  Op              - Op containing the Field definition and args  *              RegionNode  - Object for the containing Operation Region  *  * RETURN:      Status  *  * DESCRIPTION: Create a new index field in the specified operation region  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateIndexField  *  * PARAMETERS:  Op              - Op containing the Field definition and args  *              RegionNode      - Object for the containing Operation Region  *  `           WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new index field in the specified operation region  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -807,7 +771,8 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
 parameter_list|,
-name|ACPI_HANDLE
+name|ACPI_NAMESPACE_NODE
+modifier|*
 name|RegionNode
 parameter_list|,
 name|ACPI_WALK_STATE
@@ -836,11 +801,6 @@ name|DataRegisterNode
 decl_stmt|;
 name|UINT8
 name|FieldFlags
-decl_stmt|;
-name|UINT8
-name|AccessAttribute
-init|=
-literal|0
 decl_stmt|;
 name|UINT32
 name|FieldBitPosition
@@ -992,7 +952,7 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_RESERVEDFIELD_OP
+name|AML_INT_RESERVEDFIELD_OP
 case|:
 name|FieldBitPosition
 operator|+=
@@ -1004,20 +964,9 @@ name|Size
 expr_stmt|;
 break|break;
 case|case
-name|AML_ACCESSFIELD_OP
+name|AML_INT_ACCESSFIELD_OP
 case|:
 comment|/*              * Get a new AccessType and AccessAttribute for all              * entries (until end or another AccessAs keyword)              */
-name|AccessAttribute
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|Arg
-operator|->
-name|Value
-operator|.
-name|Integer
-expr_stmt|;
 name|FieldFlags
 operator|=
 call|(
@@ -1048,7 +997,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 case|:
 name|Status
 operator|=
@@ -1104,7 +1053,7 @@ block|}
 comment|/*              * Initialize an object for the new Node that is on              * the object stack              */
 name|Status
 operator|=
-name|AcpiAmlPrepIndexFieldValue
+name|AcpiExPrepIndexFieldValue
 argument_list|(
 name|Node
 argument_list|,
@@ -1113,8 +1062,6 @@ argument_list|,
 name|DataRegisterNode
 argument_list|,
 name|FieldFlags
-argument_list|,
-name|AccessAttribute
 argument_list|,
 name|FieldBitPosition
 argument_list|,
@@ -1150,12 +1097,12 @@ name|Size
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsEnterIndexField: Invalid opcode in field list: %X\n"
+literal|"Invalid opcode in field list: %X\n"
 operator|,
 name|Arg
 operator|->

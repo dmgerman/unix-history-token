@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmalloc - local memory allocation routines  *              $Revision: 84 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utalloc - local memory allocation routines  *              $Revision: 90 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__CMALLOC_C__
+name|__UTALLOC_C__
 end_define
 
 begin_include
@@ -47,13 +47,13 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"cmalloc"
+literal|"utalloc"
 argument_list|)
 end_macro
 
@@ -64,24 +64,24 @@ name|ACPI_DEBUG_TRACK_ALLOCATIONS
 end_ifdef
 
 begin_comment
-comment|/*  * Most of this code is for tracking memory leaks in the subsystem, and it  * gets compiled out when the ACPI_DEBUG flag is not set.  * Every memory allocation is kept track of in a doubly linked list.  Each  * element contains the caller's component, module name, function name, and  * line number.  _CmAllocate and _CmCallocate call AcpiCmAddElementToAllocList  * to add an element to the list; deletion occurs in the bosy of _CmFree.  */
+comment|/*  * Most of this code is for tracking memory leaks in the subsystem, and it  * gets compiled out when the ACPI_DEBUG flag is not set.  * Every memory allocation is kept track of in a doubly linked list.  Each  * element contains the caller's component, module name, function name, and  * line number.  _UtAllocate and _UtCallocate call AcpiUtAddElementToAllocList  * to add an element to the list; deletion occurs in the bosy of _UtFree.  */
 end_comment
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmSearchAllocList  *  * PARAMETERS:  Address             - Address of allocated memory  *  * RETURN:      A list element if found; NULL otherwise.  *  * DESCRIPTION: Searches for an element in the global allocation tracking list.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtSearchAllocList  *  * PARAMETERS:  Address             - Address of allocated memory  *  * RETURN:      A list element if found; NULL otherwise.  *  * DESCRIPTION: Searches for an element in the global allocation tracking list.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 modifier|*
-name|AcpiCmSearchAllocList
+name|AcpiUtSearchAllocList
 parameter_list|(
 name|void
 modifier|*
 name|Address
 parameter_list|)
 block|{
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 modifier|*
 name|Element
 init|=
@@ -124,12 +124,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmAddElementToAllocList  *  * PARAMETERS:  Address             - Address of allocated memory  *              Size                - Size of the allocation  *              AllocType           - MEM_MALLOC or MEM_CALLOC  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      None.  *  * DESCRIPTION: Inserts an element into the global allocation tracking list.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAddElementToAllocList  *  * PARAMETERS:  Address             - Address of allocated memory  *              Size                - Size of the allocation  *              AllocType           - MEM_MALLOC or MEM_CALLOC  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      None.  *  * DESCRIPTION: Inserts an element into the global allocation tracking list.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmAddElementToAllocList
+name|AcpiUtAddElementToAllocList
 parameter_list|(
 name|void
 modifier|*
@@ -152,7 +152,7 @@ name|UINT32
 name|Line
 parameter_list|)
 block|{
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 modifier|*
 name|Element
 decl_stmt|;
@@ -163,12 +163,12 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"CmAddElementToAllocList"
+literal|"UtAddElementToAllocList"
 argument_list|,
 name|Address
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_MEMORY
 argument_list|)
@@ -222,15 +222,11 @@ condition|)
 block|{
 name|AcpiGbl_HeadAllocPtr
 operator|=
-operator|(
-name|ALLOCATION_INFO
-operator|*
-operator|)
 name|AcpiOsCallocate
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -240,12 +236,12 @@ operator|!
 name|AcpiGbl_HeadAllocPtr
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"Could not allocate memory info block\n"
+literal|"Could not allocate mem info block\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -268,15 +264,11 @@ name|AcpiGbl_TailAllocPtr
 operator|->
 name|Next
 operator|=
-operator|(
-name|ALLOCATION_INFO
-operator|*
-operator|)
 name|AcpiOsCallocate
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -288,12 +280,12 @@ operator|->
 name|Next
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"Could not allocate memory info block\n"
+literal|"Could not allocate mem info block\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -324,7 +316,7 @@ block|}
 comment|/*      * Search list for this address to make sure it is not already on the list.      * This will catch several kinds of problems.      */
 name|Element
 operator|=
-name|AcpiCmSearchAllocList
+name|AcpiUtSearchAllocList
 argument_list|(
 name|Address
 argument_list|)
@@ -337,13 +329,13 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"CmAddElementToAllocList: Address already present in list! (%p)\n"
+literal|"UtAddElementToAllocList: Address already present in list! (%p)\n"
 operator|,
 name|Address
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -403,7 +395,7 @@ argument_list|)
 expr_stmt|;
 name|UnlockAndExit
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_MEMORY
 argument_list|)
@@ -417,12 +409,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmDeleteElementFromAllocList  *  * PARAMETERS:  Address             - Address of allocated memory  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:  *  * DESCRIPTION: Deletes an element from the global allocation tracking list.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteElementFromAllocList  *  * PARAMETERS:  Address             - Address of allocated memory  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:  *  * DESCRIPTION: Deletes an element from the global allocation tracking list.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmDeleteElementFromAllocList
+name|AcpiUtDeleteElementFromAllocList
 parameter_list|(
 name|void
 modifier|*
@@ -439,7 +431,7 @@ name|UINT32
 name|Line
 parameter_list|)
 block|{
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 modifier|*
 name|Element
 decl_stmt|;
@@ -458,7 +450,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmDeleteElementFromAllocList"
+literal|"UtDeleteElementFromAllocList"
 argument_list|)
 expr_stmt|;
 if|if
@@ -478,14 +470,14 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"CmDeleteElementFromAllocList: Empty allocation list, nothing to free!\n"
+literal|"UtDeleteElementFromAllocList: Empty allocation list, nothing to free!\n"
 operator|)
 argument_list|)
 expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_MEMORY
 argument_list|)
@@ -523,7 +515,7 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"CmDeleteElementFromAllocList: Deleting non-allocated memory\n"
+literal|"UtDeleteElementFromAllocList: Deleting non-allocated memory\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -550,12 +542,12 @@ name|AcpiGbl_TailAllocPtr
 operator|=
 name|NULL
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"_CmFree: Allocation list deleted.  There are no outstanding allocations\n"
+literal|"Allocation list deleted.  There are no outstanding allocations\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -566,7 +558,7 @@ block|}
 comment|/* Search list for this address */
 name|Element
 operator|=
-name|AcpiCmSearchAllocList
+name|AcpiUtSearchAllocList
 argument_list|(
 name|Address
 argument_list|)
@@ -738,7 +730,7 @@ literal|0xEA
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -752,12 +744,12 @@ name|ACPI_OPERAND_OBJECT
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"CmDelete: Freeing size %X (ACPI_OPERAND_OBJECT)\n"
+literal|"Freeing size %X (ACPI_OPERAND_OBJECT)\n"
 operator|,
 name|Size
 operator|)
@@ -766,12 +758,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"CmDelete: Freeing size %X\n"
+literal|"Freeing size %X\n"
 operator|,
 name|Size
 operator|)
@@ -795,22 +787,22 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"_CmFree: Entry not found in list\n"
+literal|"_UtFree: Entry not found in list\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"_CmFree: Entry %p was not found in allocation list\n"
+literal|"Entry %p was not found in allocation list\n"
 operator|,
 name|Address
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_MEMORY
 argument_list|)
@@ -824,7 +816,7 @@ name|AcpiGbl_CurrentAllocSize
 operator|-=
 name|Size
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_MEMORY
 argument_list|)
@@ -835,19 +827,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmDumpAllocationInfo  *  * PARAMETERS:  *  * RETURN:      None  *  * DESCRIPTION: Print some info about the outstanding allocations.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDumpAllocationInfo  *  * PARAMETERS:  *  * RETURN:      None  *  * DESCRIPTION: Print some info about the outstanding allocations.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmDumpAllocationInfo
+name|AcpiUtDumpAllocationInfo
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmDumpAllocationInfo"
+literal|"UtDumpAllocationInfo"
 argument_list|)
 expr_stmt|;
 name|DEBUG_PRINT
@@ -1023,12 +1015,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmDumpCurrentAllocations  *  * PARAMETERS:  Component           - Component(s) to dump info for.  *              Module              - Module to dump info for.  NULL means all.  *  * RETURN:      None  *  * DESCRIPTION: Print a list of all outstanding allocations.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDumpCurrentAllocations  *  * PARAMETERS:  Component           - Component(s) to dump info for.  *              Module              - Module to dump info for.  NULL means all.  *  * RETURN:      None  *  * DESCRIPTION: Print a list of all outstanding allocations.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmDumpCurrentAllocations
+name|AcpiUtDumpCurrentAllocations
 parameter_list|(
 name|UINT32
 name|Component
@@ -1038,7 +1030,7 @@ modifier|*
 name|Module
 parameter_list|)
 block|{
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 modifier|*
 name|Element
 init|=
@@ -1049,7 +1041,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmDumpCurrentAllocations"
+literal|"UtDumpCurrentAllocations"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1074,7 +1066,7 @@ name|return_VOID
 expr_stmt|;
 block|}
 comment|/*      * Walk the allocation list.      */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_MEMORY
 argument_list|)
@@ -1193,7 +1185,7 @@ argument_list|,
 operator|(
 literal|" ObjType %s"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|(
@@ -1320,7 +1312,7 @@ operator|->
 name|Next
 expr_stmt|;
 block|}
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_MEMORY
 argument_list|)
@@ -1355,13 +1347,13 @@ comment|/* #ifdef ACPI_DEBUG_TRACK_ALLOCATIONS */
 end_comment
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    _CmAllocate  *  * PARAMETERS:  Size                - Size of the allocation  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      Address of the allocated memory on success, NULL on failure.  *  * DESCRIPTION: The subsystem's equivalent of malloc.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    _UtAllocate  *  * PARAMETERS:  Size                - Size of the allocation  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      Address of the allocated memory on success, NULL on failure.  *  * DESCRIPTION: The subsystem's equivalent of malloc.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|_CmAllocate
+name|_UtAllocate
 parameter_list|(
 name|UINT32
 name|Size
@@ -1385,7 +1377,7 @@ name|NULL
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-literal|"_CmAllocate"
+literal|"_UtAllocate"
 argument_list|,
 name|Size
 argument_list|)
@@ -1406,7 +1398,7 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"CmAllocate: Attempt to allocate zero bytes\n"
+literal|"UtAllocate: Attempt to allocate zero bytes\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1438,13 +1430,13 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"CmAllocate: Could not allocate size %X\n"
+literal|"UtAllocate: Could not allocate size %X\n"
 operator|,
 name|Size
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+name|return_PTR
 argument_list|(
 name|NULL
 argument_list|)
@@ -1457,7 +1449,7 @@ if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
-name|AcpiCmAddElementToAllocList
+name|AcpiUtAddElementToAllocList
 argument_list|(
 name|Address
 argument_list|,
@@ -1485,12 +1477,12 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"CmAllocate: %p Size %X\n"
+literal|"%p Size %X\n"
 operator|,
 name|Address
 operator|,
@@ -1509,13 +1501,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    _CmCallocate  *  * PARAMETERS:  Size                - Size of the allocation  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      Address of the allocated memory on success, NULL on failure.  *  * DESCRIPTION: Subsystem equivalent of calloc.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    _UtCallocate  *  * PARAMETERS:  Size                - Size of the allocation  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      Address of the allocated memory on success, NULL on failure.  *  * DESCRIPTION: Subsystem equivalent of calloc.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|_CmCallocate
+name|_UtCallocate
 parameter_list|(
 name|UINT32
 name|Size
@@ -1539,7 +1531,7 @@ name|NULL
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-literal|"_CmCallocate"
+literal|"_UtCallocate"
 argument_list|,
 name|Size
 argument_list|)
@@ -1560,11 +1552,11 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"CmCallocate: Attempt to allocate zero bytes\n"
+literal|"UtCallocate: Attempt to allocate zero bytes\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+name|return_PTR
 argument_list|(
 name|NULL
 argument_list|)
@@ -1593,13 +1585,13 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"CmCallocate: Could not allocate size %X\n"
+literal|"UtCallocate: Could not allocate size %X\n"
 operator|,
 name|Size
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+name|return_PTR
 argument_list|(
 name|NULL
 argument_list|)
@@ -1612,7 +1604,7 @@ if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
-name|AcpiCmAddElementToAllocList
+name|AcpiUtAddElementToAllocList
 argument_list|(
 name|Address
 argument_list|,
@@ -1642,12 +1634,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"CmCallocate: %p Size %X\n"
+literal|"%p Size %X\n"
 operator|,
 name|Address
 operator|,
@@ -1664,12 +1656,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    _CmFree  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      None  *  * DESCRIPTION: Frees the memory at Address  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    _UtFree  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      None  *  * DESCRIPTION: Frees the memory at Address  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|_CmFree
+name|_UtFree
 parameter_list|(
 name|void
 modifier|*
@@ -1688,7 +1680,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"_CmFree"
+literal|"_UtFree"
 argument_list|,
 name|Address
 argument_list|)
@@ -1709,7 +1701,7 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"_CmFree: Trying to delete a NULL address\n"
+literal|"_UtFree: Trying to delete a NULL address\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1719,7 +1711,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|ACPI_DEBUG_TRACK_ALLOCATIONS
-name|AcpiCmDeleteElementFromAllocList
+name|AcpiUtDeleteElementFromAllocList
 argument_list|(
 name|Address
 argument_list|,
@@ -1737,12 +1729,12 @@ argument_list|(
 name|Address
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"CmFree: %p freed\n"
+literal|"%p freed\n"
 operator|,
 name|Address
 operator|)

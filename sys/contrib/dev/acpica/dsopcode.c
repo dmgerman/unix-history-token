@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DISPATCHER
+value|ACPI_DISPATCHER
 end_define
 
 begin_macro
@@ -76,12 +76,12 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsGetFieldUnitArguments  *  * PARAMETERS:  ObjDesc         - A valid FieldUnit object  *  * RETURN:      Status.  *  * DESCRIPTION: Get FieldUnit Buffer and Index.  This implements the late  *              evaluation of these field attributes.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsGetBufferFieldArguments  *  * PARAMETERS:  ObjDesc         - A valid BufferField object  *  * RETURN:      Status.  *  * DESCRIPTION: Get BufferField Buffer and Index.  This implements the late  *              evaluation of these field attributes.  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiDsGetFieldUnitArguments
+name|AcpiDsGetBufferFieldArguments
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -113,7 +113,7 @@ name|TableDesc
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"DsGetFieldUnitArguments"
+literal|"DsGetBufferFieldArguments"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -135,12 +135,12 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Get the AML pointer (method object) and FieldUnit node */
+comment|/* Get the AML pointer (method object) and BufferField node */
 name|ExtraDesc
 operator|=
 name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Extra
 expr_stmt|;
@@ -148,13 +148,13 @@ name|Node
 operator|=
 name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Node
 expr_stmt|;
 name|DEBUG_EXEC
 argument_list|(
-name|AcpiCmDisplayInitPathname
+name|AcpiUtDisplayInitPathname
 argument_list|(
 name|Node
 argument_list|,
@@ -162,12 +162,12 @@ literal|"  [Field]"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"DsGetFieldUnitArguments: [%4.4s] FieldUnit JIT Init\n"
+literal|"[%4.4s] BufferField JIT Init\n"
 operator|,
 operator|&
 name|Node
@@ -233,7 +233,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Pass1: Parse the entire FieldUnit declaration */
+comment|/* Pass1: Parse the entire BufferField declaration */
 name|Status
 operator|=
 name|AcpiPsParseAml
@@ -388,18 +388,18 @@ name|Op
 argument_list|)
 expr_stmt|;
 comment|/*      * The pseudo-method object is no longer needed since the region is      * now initialized      */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Extra
 argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Extra
 operator|=
@@ -494,7 +494,7 @@ name|Node
 expr_stmt|;
 name|DEBUG_EXEC
 argument_list|(
-name|AcpiCmDisplayInitPathname
+name|AcpiUtDisplayInitPathname
 argument_list|(
 name|Node
 argument_list|,
@@ -502,12 +502,12 @@ literal|"  [Operation Region]"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"DsGetRegionArguments: [%4.4s] OpRegion Init at AML %p[%x]\n"
+literal|"[%4.4s] OpRegion Init at AML %p[%x]\n"
 operator|,
 operator|&
 name|Node
@@ -797,12 +797,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsEvalFieldUnitOperands  *  * PARAMETERS:  Op              - A valid FieldUnit Op object  *  * RETURN:      Status  *  * DESCRIPTION: Get FieldUnit Buffer and Index  *              Called from AcpiDsExecEndOp during FieldUnit parse tree walk  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsEvalBufferFieldOperands  *  * PARAMETERS:  Op              - A valid BufferField Op object  *  * RETURN:      Status  *  * DESCRIPTION: Get BufferField Buffer and Index  *              Called from AcpiDsExecEndOp during BufferField parse tree walk  *  * ACPI SPECIFICATION REFERENCES:  *  Each of the Buffer Field opcodes is defined as specified in in-line  *  comments below. For each one, use the following definitions.  *  *  DefBitField     :=  BitFieldOp      SrcBuf  BitIdx  Destination  *  DefByteField    :=  ByteFieldOp     SrcBuf  ByteIdx Destination  *  DefCreateField  :=  CreateFieldOp   SrcBuf  BitIdx  NumBits  NameString  *  DefDWordField   :=  DWordFieldOp    SrcBuf  ByteIdx Destination  *  DefWordField    :=  WordFieldOp     SrcBuf  ByteIdx Destination  *  BitIndex        :=  TermArg=>Integer  *  ByteIndex       :=  TermArg=>Integer  *  Destination     :=  NameString  *  NumBits         :=  TermArg=>Integer  *  SourceBuf       :=  TermArg=>Buffer  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiDsEvalFieldUnitOperands
+name|AcpiDsEvalBufferFieldOperands
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -818,7 +818,7 @@ name|Status
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|FieldDesc
+name|ObjDesc
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -834,8 +834,11 @@ decl_stmt|;
 name|UINT32
 name|BitOffset
 decl_stmt|;
-name|UINT16
+name|UINT32
 name|BitCount
+decl_stmt|;
+name|UINT8
+name|FieldFlags
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -868,12 +871,12 @@ literal|3
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"DsEvalFieldUnitOperands"
+literal|"DsEvalBufferFieldOperands"
 argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
-comment|/*      * This is where we evaluate the address and length fields of the OpFieldUnit declaration      */
+comment|/*      * This is where we evaluate the address and length fields of the      * CreateXxxField declaration      */
 name|Node
 operator|=
 name|Op
@@ -913,7 +916,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|FieldDesc
+name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
@@ -923,7 +926,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|FieldDesc
+name|ObjDesc
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -935,7 +938,7 @@ block|}
 comment|/* Resolve the operands */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|Op
 operator|->
@@ -961,7 +964,7 @@ argument_list|)
 argument_list|,
 name|NumOperands
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get the operands */
@@ -1028,12 +1031,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecCreateField/%s: bad operand(s) (%X)\n"
+literal|"(%s) bad operand(s) (%X)\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
@@ -1061,7 +1064,7 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-comment|/*      * If ResDesc is a Name, it will be a direct name pointer after      * AcpiAmlResolveOperands()      */
+comment|/*      * If ResDesc is a Name, it will be a direct name pointer after      * AcpiExResolveOperands()      */
 if|if
 condition|(
 operator|!
@@ -1073,12 +1076,12 @@ name|ACPI_DESC_TYPE_NAMED
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecCreateField (%s): destination must be a Node\n"
+literal|"(%s) destination must be a Node\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
@@ -1105,68 +1108,6 @@ operator|->
 name|Opcode
 condition|)
 block|{
-comment|/* DefCreateBitField */
-case|case
-name|AML_BIT_FIELD_OP
-case|:
-comment|/* Offset is in bits, Field is a bit */
-name|BitOffset
-operator|=
-name|Offset
-expr_stmt|;
-name|BitCount
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-comment|/* DefCreateByteField */
-case|case
-name|AML_BYTE_FIELD_OP
-case|:
-comment|/* Offset is in bytes, field is a byte */
-name|BitOffset
-operator|=
-literal|8
-operator|*
-name|Offset
-expr_stmt|;
-name|BitCount
-operator|=
-literal|8
-expr_stmt|;
-break|break;
-comment|/* DefCreateWordField  */
-case|case
-name|AML_WORD_FIELD_OP
-case|:
-comment|/* Offset is in bytes, field is a word */
-name|BitOffset
-operator|=
-literal|8
-operator|*
-name|Offset
-expr_stmt|;
-name|BitCount
-operator|=
-literal|16
-expr_stmt|;
-break|break;
-comment|/* DefCreateDWordField */
-case|case
-name|AML_DWORD_FIELD_OP
-case|:
-comment|/* Offset is in bytes, field is a dword */
-name|BitOffset
-operator|=
-literal|8
-operator|*
-name|Offset
-expr_stmt|;
-name|BitCount
-operator|=
-literal|32
-expr_stmt|;
-break|break;
 comment|/* DefCreateField   */
 case|case
 name|AML_CREATE_FIELD_OP
@@ -1179,7 +1120,7 @@ expr_stmt|;
 name|BitCount
 operator|=
 operator|(
-name|UINT16
+name|UINT32
 operator|)
 name|CntDesc
 operator|->
@@ -1187,14 +1128,116 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
+name|FieldFlags
+operator|=
+name|ACCESS_BYTE_ACC
+expr_stmt|;
+break|break;
+comment|/* DefCreateBitField */
+case|case
+name|AML_CREATE_BIT_FIELD_OP
+case|:
+comment|/* Offset is in bits, Field is one bit */
+name|BitOffset
+operator|=
+name|Offset
+expr_stmt|;
+name|BitCount
+operator|=
+literal|1
+expr_stmt|;
+name|FieldFlags
+operator|=
+name|ACCESS_BYTE_ACC
+expr_stmt|;
+break|break;
+comment|/* DefCreateByteField */
+case|case
+name|AML_CREATE_BYTE_FIELD_OP
+case|:
+comment|/* Offset is in bytes, field is one byte */
+name|BitOffset
+operator|=
+literal|8
+operator|*
+name|Offset
+expr_stmt|;
+name|BitCount
+operator|=
+literal|8
+expr_stmt|;
+name|FieldFlags
+operator|=
+name|ACCESS_BYTE_ACC
+expr_stmt|;
+break|break;
+comment|/* DefCreateWordField  */
+case|case
+name|AML_CREATE_WORD_FIELD_OP
+case|:
+comment|/* Offset is in bytes, field is one word */
+name|BitOffset
+operator|=
+literal|8
+operator|*
+name|Offset
+expr_stmt|;
+name|BitCount
+operator|=
+literal|16
+expr_stmt|;
+name|FieldFlags
+operator|=
+name|ACCESS_WORD_ACC
+expr_stmt|;
+break|break;
+comment|/* DefCreateDWordField */
+case|case
+name|AML_CREATE_DWORD_FIELD_OP
+case|:
+comment|/* Offset is in bytes, field is one dword */
+name|BitOffset
+operator|=
+literal|8
+operator|*
+name|Offset
+expr_stmt|;
+name|BitCount
+operator|=
+literal|32
+expr_stmt|;
+name|FieldFlags
+operator|=
+name|ACCESS_DWORD_ACC
+expr_stmt|;
+break|break;
+comment|/* DefCreateQWordField */
+case|case
+name|AML_CREATE_QWORD_FIELD_OP
+case|:
+comment|/* Offset is in bytes, field is one qword */
+name|BitOffset
+operator|=
+literal|8
+operator|*
+name|Offset
+expr_stmt|;
+name|BitCount
+operator|=
+literal|64
+expr_stmt|;
+name|FieldFlags
+operator|=
+name|ACCESS_QWORD_ACC
+expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecCreateField: Internal error - unknown field creation opcode %02x\n"
+literal|"Internal error - unknown field creation opcode %02x\n"
 operator|,
 name|Op
 operator|->
@@ -1226,12 +1269,11 @@ name|ACPI_TYPE_BUFFER
 case|:
 if|if
 condition|(
+operator|(
 name|BitOffset
 operator|+
-operator|(
-name|UINT32
-operator|)
 name|BitCount
+operator|)
 operator|>
 operator|(
 literal|8
@@ -1247,18 +1289,15 @@ name|Length
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecCreateField: Field exceeds Buffer %d> %d\n"
+literal|"Field size %d exceeds Buffer size %d (bits)\n"
 operator|,
 name|BitOffset
 operator|+
-operator|(
-name|UINT32
-operator|)
 name|BitCount
 operator|,
 literal|8
@@ -1282,83 +1321,43 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Construct the remainder of the field object */
-name|FieldDesc
-operator|->
-name|FieldUnit
-operator|.
-name|Access
+comment|/*          * Initialize areas of the field object that are common to all fields          * For FieldFlags, use LOCK_RULE = 0 (NO_LOCK), UPDATE_RULE = 0 (UPDATE_PRESERVE)          */
+name|Status
 operator|=
-operator|(
-name|UINT8
-operator|)
-name|ACCESS_ANY_ACC
-expr_stmt|;
-name|FieldDesc
-operator|->
-name|FieldUnit
-operator|.
-name|LockRule
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|GLOCK_NEVER_LOCK
-expr_stmt|;
-name|FieldDesc
-operator|->
-name|FieldUnit
-operator|.
-name|UpdateRule
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|UPDATE_PRESERVE
-expr_stmt|;
-name|FieldDesc
-operator|->
-name|FieldUnit
-operator|.
-name|Length
-operator|=
+name|AcpiExPrepCommonFieldObject
+argument_list|(
+name|ObjDesc
+argument_list|,
+name|FieldFlags
+argument_list|,
+name|BitOffset
+argument_list|,
 name|BitCount
-expr_stmt|;
-name|FieldDesc
-operator|->
-name|FieldUnit
-operator|.
-name|BitOffset
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-name|BitOffset
-operator|%
-literal|8
 argument_list|)
 expr_stmt|;
-name|FieldDesc
-operator|->
-name|FieldUnit
-operator|.
-name|Offset
-operator|=
-name|DIV_8
+if|if
+condition|(
+name|ACPI_FAILURE
 argument_list|(
-name|BitOffset
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
 argument_list|)
 expr_stmt|;
-name|FieldDesc
+block|}
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Container
+name|BufferObj
 operator|=
 name|SrcDesc
 expr_stmt|;
-comment|/* Reference count for SrcDesc inherits FieldDesc count */
+comment|/* Reference count for SrcDesc inherits ObjDesc count */
 name|SrcDesc
 operator|->
 name|Common
@@ -1375,7 +1374,7 @@ name|Common
 operator|.
 name|ReferenceCount
 operator|+
-name|FieldDesc
+name|ObjDesc
 operator|->
 name|Common
 operator|.
@@ -1401,7 +1400,7 @@ name|INTERNAL_TYPE_REFERENCE
 operator|)
 operator|||
 operator|!
-name|AcpiCmValidObjectType
+name|AcpiUtValidObjectType
 argument_list|(
 name|SrcDesc
 operator|->
@@ -1410,13 +1409,14 @@ operator|.
 name|Type
 argument_list|)
 condition|)
+comment|/* TBD: This line MUST be a single line until AcpiSrc can handle it (block deletion) */
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecCreateField: Tried to create field in invalid object type %X\n"
+literal|"Tried to create field in invalid object type %X\n"
 operator|,
 name|SrcDesc
 operator|->
@@ -1429,14 +1429,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecCreateField: Tried to create field in improper object type - %s\n"
+literal|"Tried to create field in improper object type - %s\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|SrcDesc
 operator|->
@@ -1466,7 +1466,7 @@ name|Opcode
 condition|)
 block|{
 comment|/* Delete object descriptor unique to CreateField  */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|CntDesc
 argument_list|)
@@ -1479,12 +1479,12 @@ block|}
 name|Cleanup
 label|:
 comment|/* Always delete the operands */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|OffDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|SrcDesc
 argument_list|)
@@ -1498,7 +1498,7 @@ operator|->
 name|Opcode
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|CntDesc
 argument_list|)
@@ -1513,7 +1513,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ResDesc
 argument_list|)
@@ -1522,10 +1522,10 @@ comment|/* Result descriptor */
 block|}
 else|else
 block|{
-comment|/* Now the address and length are valid for this opFieldUnit */
-name|FieldDesc
+comment|/* Now the address and length are valid for this BufferField */
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Flags
 operator||=
@@ -1633,7 +1633,7 @@ block|}
 comment|/* Resolve the length and address operands to numbers */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|Op
 operator|->
@@ -1673,7 +1673,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 name|ObjDesc
@@ -1724,7 +1724,7 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|OperandDesc
 argument_list|)
@@ -1758,17 +1758,17 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|OperandDesc
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"DsEvalRegionOperands: RgnObj %p Addr %X Len %X\n"
+literal|"RgnObj %p Addr %X Len %X\n"
 operator|,
 name|ObjDesc
 operator|,
@@ -1829,12 +1829,17 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|ControlState
 decl_stmt|;
-name|DEBUG_PRINT
+name|PROC_NAME
+argument_list|(
+literal|"DsExecBeginControlOp"
+argument_list|)
+expr_stmt|;
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"BeginControlOp: Op=%p Opcode=%2.2X State=%p\n"
+literal|"Op=%p Opcode=%2.2X State=%p\n"
 operator|,
 name|Op
 operator|,
@@ -1862,7 +1867,7 @@ case|:
 comment|/*          * IF/WHILE: Create a new control state to manage these          * constructs. We need to manage these as a stack, in order          * to handle nesting.          */
 name|ControlState
 operator|=
-name|AcpiCmCreateControlState
+name|AcpiUtCreateControlState
 argument_list|()
 expr_stmt|;
 if|if
@@ -1877,7 +1882,7 @@ name|AE_NO_MEMORY
 expr_stmt|;
 break|break;
 block|}
-name|AcpiCmPushGenericState
+name|AcpiUtPushGenericState
 argument_list|(
 operator|&
 name|WalkState
@@ -1966,6 +1971,11 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|ControlState
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"DsExecEndControlOp"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|Op
@@ -1976,12 +1986,12 @@ block|{
 case|case
 name|AML_IF_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"EndControlOp: [IF_OP] Op=%p\n"
+literal|"[IF_OP] Op=%p\n"
 operator|,
 name|Op
 operator|)
@@ -2006,7 +2016,7 @@ expr_stmt|;
 comment|/*          * Pop the control state that was created at the start          * of the IF and free it          */
 name|ControlState
 operator|=
-name|AcpiCmPopGenericState
+name|AcpiUtPopGenericState
 argument_list|(
 operator|&
 name|WalkState
@@ -2014,7 +2024,7 @@ operator|->
 name|ControlState
 argument_list|)
 expr_stmt|;
-name|AcpiCmDeleteGenericState
+name|AcpiUtDeleteGenericState
 argument_list|(
 name|ControlState
 argument_list|)
@@ -2027,12 +2037,12 @@ break|break;
 case|case
 name|AML_WHILE_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"EndControlOp: [WHILE_OP] Op=%p\n"
+literal|"[WHILE_OP] Op=%p\n"
 operator|,
 name|Op
 operator|)
@@ -2055,12 +2065,12 @@ operator|=
 name|AE_CTRL_PENDING
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"EndControlOp: [WHILE_OP] termination! Op=%p\n"
+literal|"[WHILE_OP] termination! Op=%p\n"
 operator|,
 name|Op
 operator|)
@@ -2069,7 +2079,7 @@ expr_stmt|;
 comment|/* Pop this control state and free it */
 name|ControlState
 operator|=
-name|AcpiCmPopGenericState
+name|AcpiUtPopGenericState
 argument_list|(
 operator|&
 name|WalkState
@@ -2087,7 +2097,7 @@ name|Control
 operator|.
 name|AmlPredicateStart
 expr_stmt|;
-name|AcpiCmDeleteGenericState
+name|AcpiUtDeleteGenericState
 argument_list|(
 name|ControlState
 argument_list|)
@@ -2096,12 +2106,12 @@ break|break;
 case|case
 name|AML_RETURN_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"EndControlOp: [RETURN_OP] Op=%p Arg=%p\n"
+literal|"[RETURN_OP] Op=%p Arg=%p\n"
 operator|,
 name|Op
 operator|,
@@ -2154,7 +2164,7 @@ block|}
 comment|/*              * If value being returned is a Reference (such as              * an arg or local), resolve it now because it may              * cease to exist at the end of the method.              */
 name|Status
 operator|=
-name|AcpiAmlResolveToValue
+name|AcpiExResolveToValue
 argument_list|(
 operator|&
 name|WalkState
@@ -2216,10 +2226,71 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/*              * The return value has come from a previous calculation.              *              * If value being returned is a Reference (such as              * an arg or local), resolve it now because it may              * cease to exist at the end of the method.              */
+comment|/*              * The return value has come from a previous calculation.              *              * If value being returned is a Reference (such as              * an arg or local), resolve it now because it may              * cease to exist at the end of the method.              *              * Allow references created by the Index operator to return unchanged.              */
+if|if
+condition|(
+name|VALID_DESCRIPTOR_TYPE
+argument_list|(
+name|WalkState
+operator|->
+name|Results
+operator|->
+name|Results
+operator|.
+name|ObjDesc
+index|[
+literal|0
+index|]
+argument_list|,
+name|ACPI_DESC_TYPE_INTERNAL
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|WalkState
+operator|->
+name|Results
+operator|->
+name|Results
+operator|.
+name|ObjDesc
+index|[
+literal|0
+index|]
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+operator|==
+name|INTERNAL_TYPE_REFERENCE
+operator|)
+operator|&&
+operator|(
+operator|(
+name|WalkState
+operator|->
+name|Results
+operator|->
+name|Results
+operator|.
+name|ObjDesc
+index|[
+literal|0
+index|]
+operator|)
+operator|->
+name|Reference
+operator|.
+name|Opcode
+operator|!=
+name|AML_INDEX_OP
+operator|)
+condition|)
+block|{
 name|Status
 operator|=
-name|AcpiAmlResolveToValue
+name|AcpiExResolveToValue
 argument_list|(
 operator|&
 name|WalkState
@@ -2250,6 +2321,7 @@ name|Status
 operator|)
 return|;
 block|}
+block|}
 name|WalkState
 operator|->
 name|ReturnDesc
@@ -2276,7 +2348,7 @@ operator|->
 name|NumOperands
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|WalkState
 operator|->
@@ -2309,12 +2381,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"EndControlOp: Completed RETURN_OP State=%p, RetVal=%p\n"
+literal|"Completed RETURN_OP State=%p, RetVal=%p\n"
 operator|,
 name|WalkState
 operator|,
@@ -2349,12 +2421,12 @@ break|break;
 case|case
 name|AML_BREAK_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"EndControlOp: Break to end of current package, Op=%p\n"
+literal|"Break to end of current package, Op=%p\n"
 operator|,
 name|Op
 operator|)
@@ -2367,12 +2439,12 @@ name|AE_CTRL_FALSE
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"EndControlOp: Unknown control opcode=%X Op=%p\n"
+literal|"Unknown control opcode=%X Op=%p\n"
 operator|,
 name|Op
 operator|->

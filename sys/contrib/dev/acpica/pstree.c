@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: pstree - Parser op tree manipulation/traversal/search  *              $Revision: 27 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: pstree - Parser op tree manipulation/traversal/search  *              $Revision: 30 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|PARSER
+value|ACPI_PARSER
 end_define
 
 begin_macro
@@ -337,7 +337,7 @@ case|case
 name|AML_THERMAL_ZONE_OP
 case|:
 case|case
-name|AML_METHODCALL_OP
+name|AML_INT_METHODCALL_OP
 case|:
 name|Child
 operator|=
@@ -365,7 +365,7 @@ case|case
 name|AML_WHILE_OP
 case|:
 case|case
-name|AML_DEF_FIELD_OP
+name|AML_FIELD_OP
 case|:
 name|Child
 operator|=

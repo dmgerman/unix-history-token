@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amresolv - AML Interpreter object resolution  *              $Revision: 81 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 95 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMRESOLV_C__
+name|__EXRESOLV_C__
 end_define
 
 begin_include
@@ -65,27 +65,27 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amresolv"
+literal|"exresolv"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlGetFieldUnitValue  *  * PARAMETERS:  *FieldDesc          - Pointer to a FieldUnit  *              *ResultDesc         - Pointer to an empty descriptor  *                                    which will become a Number  *                                    containing the field's value.  *  * RETURN:      Status  *  * DESCRIPTION: Retrieve the value from a FieldUnit  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGetBufferFieldValue  *  * PARAMETERS:  *ObjDesc            - Pointer to a BufferField  *              *ResultDesc         - Pointer to an empty descriptor which will  *                                    become an Integer with the field's value  *  * RETURN:      Status  *  * DESCRIPTION: Retrieve the value from a BufferField  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlGetFieldUnitValue
+name|AcpiExGetBufferFieldValue
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|FieldDesc
+name|ObjDesc
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -94,8 +94,6 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
-init|=
-name|AE_OK
 decl_stmt|;
 name|UINT32
 name|Mask
@@ -103,44 +101,39 @@ decl_stmt|;
 name|UINT8
 modifier|*
 name|Location
-init|=
-name|NULL
-decl_stmt|;
-name|BOOLEAN
-name|Locked
-init|=
-name|FALSE
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlGetFieldUnitValue"
+literal|"ExGetBufferFieldValue"
 argument_list|)
 expr_stmt|;
+comment|/*      * Parameter validation      */
 if|if
 condition|(
 operator|!
-name|FieldDesc
+name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlGetFieldUnitValue: Internal error - null field pointer\n"
+literal|"Internal - null field pointer\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_AML_NO_OPERAND
+argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
 operator|!
 operator|(
-name|FieldDesc
+name|ObjDesc
 operator|->
 name|Common
 operator|.
@@ -152,9 +145,9 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiDsGetFieldUnitArguments
+name|AcpiDsGetBufferFieldArguments
 argument_list|(
-name|FieldDesc
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 if|if
@@ -175,131 +168,106 @@ block|}
 if|if
 condition|(
 operator|!
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Container
+name|BufferObj
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlGetFieldUnitValue: Internal error - null container pointer\n"
+literal|"Internal - null container pointer\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_AML_INTERNAL
+argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|ACPI_TYPE_BUFFER
 operator|!=
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Container
+name|BufferObj
 operator|->
 name|Common
 operator|.
 name|Type
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlGetFieldUnitValue: Internal error - container is not a Buffer\n"
+literal|"Internal - container is not a Buffer\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_AML_OPERAND_TYPE
+argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 operator|!
 name|ResultDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlGetFieldUnitValue: Internal error - null result pointer\n"
+literal|"Internal - null result pointer\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
-name|AE_AML_INTERNAL
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_AML_INTERNAL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Get the global lock if needed */
-name|Locked
-operator|=
-name|AcpiAmlAcquireGlobalLock
-argument_list|(
-name|FieldDesc
-operator|->
-name|FieldUnit
-operator|.
-name|LockRule
-argument_list|)
-expr_stmt|;
 comment|/* Field location is (base of buffer) + (byte offset) */
 name|Location
 operator|=
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Container
+name|BufferObj
 operator|->
 name|Buffer
 operator|.
 name|Pointer
 operator|+
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Offset
+name|BaseByteOffset
 expr_stmt|;
-comment|/*      * Construct Mask with as many 1 bits as the field width      *      * NOTE: Only the bottom 5 bits are valid for a shift operation, so      *  special care must be taken for any shift greater than 31 bits.      *      * TBD: [Unhandled] Fields greater than 32-bits will not work.      */
+comment|/*      * Construct Mask with as many 1 bits as the field width      *      * NOTE: Only the bottom 5 bits are valid for a shift operation, so      *  special care must be taken for any shift greater than 31 bits.      *      * TBD: [Unhandled] Fields greater than 32 bits will not work.      */
 if|if
 condition|(
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Length
+name|BitLength
 operator|<
 literal|32
 condition|)
@@ -312,11 +280,11 @@ name|UINT32
 operator|)
 literal|1
 operator|<<
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Length
+name|BitLength
 operator|)
 operator|-
 operator|(
@@ -370,11 +338,11 @@ name|Integer
 operator|.
 name|Value
 operator|>>
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|BitOffset
+name|StartFieldBitOffset
 operator|)
 operator|&
 name|Mask
@@ -386,33 +354,33 @@ argument_list|,
 operator|(
 literal|"** Read from buffer %p byte %ld bit %d width %d addr %p mask %08lx val %08lx\n"
 operator|,
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Container
+name|BufferObj
 operator|->
 name|Buffer
 operator|.
 name|Pointer
 operator|,
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Offset
+name|BaseByteOffset
 operator|,
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|BitOffset
+name|StartFieldBitOffset
 operator|,
-name|FieldDesc
+name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
-name|Length
+name|BitLength
 operator|,
 name|Location
 operator|,
@@ -426,27 +394,21 @@ name|Value
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Release global lock if we acquired it earlier */
-name|AcpiAmlReleaseGlobalLock
-argument_list|(
-name|Locked
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlResolveToValue  *  * PARAMETERS:  **StackPtr          - Points to entry on ObjStack, which can  *                                    be either an (ACPI_OPERAND_OBJECT  *)  *                                    or an ACPI_HANDLE.  *  * RETURN:      Status  *  * DESCRIPTION: Convert Reference objects to values  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveToValue  *  * PARAMETERS:  **StackPtr          - Points to entry on ObjStack, which can  *                                    be either an (ACPI_OPERAND_OBJECT *)  *                                    or an ACPI_HANDLE.  *              WalkState           - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Convert Reference objects to values  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlResolveToValue
+name|AcpiExResolveToValue
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -460,12 +422,10 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
-init|=
-name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlResolveToValue"
+literal|"ExResolveToValue"
 argument_list|,
 name|StackPtr
 argument_list|)
@@ -480,12 +440,12 @@ operator|*
 name|StackPtr
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveToValue: Internal error - null pointer\n"
+literal|"Internal - null pointer\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -509,7 +469,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiAmlResolveObjectToValue
+name|AcpiExResolveObjectToValue
 argument_list|(
 name|StackPtr
 argument_list|,
@@ -531,7 +491,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Object on the stack may have changed if AcpiAmlResolveObjectToValue()      * was called (i.e., we can't use an _else_ here.)      */
+comment|/*      * Object on the stack may have changed if AcpiExResolveObjectToValue()      * was called (i.e., we can't use an _else_ here.)      */
 if|if
 condition|(
 name|VALID_DESCRIPTOR_TYPE
@@ -545,7 +505,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiAmlResolveNodeToValue
+name|AcpiExResolveNodeToValue
 argument_list|(
 operator|(
 name|ACPI_NAMESPACE_NODE
@@ -557,13 +517,27 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
-name|DEBUG_PRINT
+block|}
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveToValue: Returning resolved object %p\n"
+literal|"Resolved object %p\n"
 operator|,
 operator|*
 name|StackPtr
@@ -572,19 +546,19 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlResolveObjectToValue  *  * PARAMETERS:  StackPtr        - Pointer to a stack location that contains a  *                                ptr to an internal object.  *  * RETURN:      Status  *  * DESCRIPTION: Retrieve the value from an internal object.  The Reference type  *              uses the associated AML opcode to determine the value.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveObjectToValue  *  * PARAMETERS:  StackPtr        - Pointer to a stack location that contains a  *                                ptr to an internal object.  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Retrieve the value from an internal object.  The Reference type  *              uses the associated AML opcode to determine the value.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlResolveObjectToValue
+name|AcpiExResolveObjectToValue
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -596,37 +570,29 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|StackDesc
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|ACPI_HANDLE
-name|TempHandle
-init|=
-name|NULL
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|StackDesc
+decl_stmt|;
+name|void
+modifier|*
+name|TempNode
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
-init|=
-name|NULL
-decl_stmt|;
-name|UINT32
-name|Index
-init|=
-literal|0
 decl_stmt|;
 name|UINT16
 name|Opcode
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlResolveObjectToValue"
+literal|"ExResolveObjectToValue"
 argument_list|)
 expr_stmt|;
 name|StackDesc
@@ -653,7 +619,7 @@ name|StackDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 expr_stmt|;
 switch|switch
 condition|(
@@ -663,8 +629,8 @@ block|{
 case|case
 name|AML_NAME_OP
 case|:
-comment|/*              * Convert indirect name ptr to a direct name ptr.              * Then, AcpiAmlResolveNodeToValue can be used to get the value              */
-name|TempHandle
+comment|/*              * Convert indirect name ptr to a direct name ptr.              * Then, AcpiExResolveNodeToValue can be used to get the value              */
+name|TempNode
 operator|=
 name|StackDesc
 operator|->
@@ -673,7 +639,7 @@ operator|.
 name|Object
 expr_stmt|;
 comment|/* Delete the Reference Object */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|StackDesc
 argument_list|)
@@ -684,127 +650,27 @@ operator|*
 name|StackPtr
 operator|)
 operator|=
-name|TempHandle
-expr_stmt|;
-name|Status
-operator|=
-name|AE_OK
+name|TempNode
 expr_stmt|;
 break|break;
 case|case
 name|AML_LOCAL_OP
 case|:
-name|Index
-operator|=
-name|StackDesc
-operator|->
-name|Reference
-operator|.
-name|Offset
-expr_stmt|;
+case|case
+name|AML_ARG_OP
+case|:
 comment|/*              * Get the local from the method's state info              * Note: this increments the local's object reference count              */
 name|Status
 operator|=
 name|AcpiDsMethodDataGetValue
 argument_list|(
-name|MTH_TYPE_LOCAL
+name|Opcode
 argument_list|,
-name|Index
-argument_list|,
-name|WalkState
-argument_list|,
-operator|&
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*              * Now we can delete the original Reference Object and              * replace it with the resolve value              */
-name|AcpiCmRemoveReference
-argument_list|(
-name|StackDesc
-argument_list|)
-expr_stmt|;
-operator|*
-name|StackPtr
-operator|=
-name|ObjDesc
-expr_stmt|;
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_INFO
-argument_list|,
-operator|(
-literal|"AmlResolveObjectToValue: [Local%d] ValueObj is %p\n"
-operator|,
-name|Index
-operator|,
-name|ObjDesc
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_TYPE_INTEGER
-operator|==
-name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
-condition|)
-block|{
-comment|/* Value is a Number */
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_INFO
-argument_list|,
-operator|(
-literal|"AmlResolveObjectToValue: [Local%d] value=%X \n"
-operator|,
-name|Index
-operator|,
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|AML_ARG_OP
-case|:
-name|Index
-operator|=
 name|StackDesc
 operator|->
 name|Reference
 operator|.
 name|Offset
-expr_stmt|;
-comment|/*              * Get the argument from the method's state info              * Note: this increments the object reference count              */
-name|Status
-operator|=
-name|AcpiDsMethodDataGetValue
-argument_list|(
-name|MTH_TYPE_ARG
-argument_list|,
-name|Index
 argument_list|,
 name|WalkState
 argument_list|,
@@ -827,7 +693,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*              * Now we can delete the original Reference Object and              * replace it with the resolve value              */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|StackDesc
 argument_list|)
@@ -837,49 +703,23 @@ name|StackPtr
 operator|=
 name|ObjDesc
 expr_stmt|;
-name|DEBUG_PRINT
-argument_list|(
-name|TRACE_EXEC
-argument_list|,
-operator|(
-literal|"AmlResolveObjectToValue: [Arg%d] ValueObj is %p\n"
-operator|,
-name|Index
-operator|,
-name|ObjDesc
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_TYPE_INTEGER
-operator|==
-name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
-condition|)
-block|{
-comment|/* Value is a Number */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveObjectToValue: [Arg%d] value=%X\n"
+literal|"[Arg/Local %d] ValueObj is %p\n"
 operator|,
-name|Index
+name|StackDesc
+operator|->
+name|Reference
+operator|.
+name|Offset
 operator|,
 name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 comment|/*          * TBD: [Restructure] These next three opcodes change the type of          * the object, which is actually a no-no.          */
 case|case
@@ -951,7 +791,7 @@ operator|=
 name|ACPI_INTEGER_MAX
 expr_stmt|;
 comment|/* Truncate value if we are executing from a 32-bit ACPI table */
-name|AcpiAmlTruncateFor32bitTable
+name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|StackDesc
 argument_list|,
@@ -994,12 +834,12 @@ name|ObjDesc
 condition|)
 block|{
 comment|/*                      * Valid obj descriptor, copy pointer to return value                      * (i.e., dereference the package index)                      * Delete the ref object, increment the returned object                      */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|StackDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1012,13 +852,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*                      * A NULL object descriptor means an unitialized element of                      * the package, can't deref it                      */
-name|DEBUG_PRINT
+comment|/*                      * A NULL object descriptor means an unitialized element of                      * the package, can't dereference it                      */
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveObjectToValue: Attempt to deref an Index to NULL pkg element Idx=%p\n"
+literal|"Attempt to deref an Index to NULL pkg element Idx=%p\n"
 operator|,
 name|StackDesc
 operator|)
@@ -1031,13 +871,13 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-comment|/* Invalid reference OBJ*/
-name|DEBUG_PRINT
+comment|/* Invalid reference object */
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveObjectToValue: Unknown TargetType %X in Index/Reference obj %p\n"
+literal|"Unknown TargetType %X in Index/Reference obj %p\n"
 operator|,
 name|StackDesc
 operator|->
@@ -1062,12 +902,12 @@ case|:
 comment|/* Just leave the object as-is */
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveObjectToValue: Unknown Reference object subtype %02X in %p\n"
+literal|"Unknown Reference object subtype %02X in %p\n"
 operator|,
 name|Opcode
 operator|,
@@ -1079,30 +919,17 @@ name|Status
 operator|=
 name|AE_AML_INTERNAL
 expr_stmt|;
+break|break;
 block|}
 comment|/* switch (Opcode) */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 comment|/* case INTERNAL_TYPE_REFERENCE */
 case|case
-name|ACPI_TYPE_FIELD_UNIT
+name|ACPI_TYPE_BUFFER_FIELD
 case|:
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|)
@@ -1113,7 +940,6 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-comment|/* Descriptor allocation failure  */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_NO_MEMORY
@@ -1122,7 +948,7 @@ expr_stmt|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlGetFieldUnitValue
+name|AcpiExGetBufferFieldValue
 argument_list|(
 name|StackDesc
 argument_list|,
@@ -1137,7 +963,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1162,7 +988,7 @@ name|INTERNAL_TYPE_BANK_FIELD
 case|:
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|)
@@ -1173,16 +999,16 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-comment|/* Descriptor allocation failure */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* TBD: WRONG! */
 name|Status
 operator|=
-name|AcpiAmlGetFieldUnitValue
+name|AcpiExGetBufferFieldValue
 argument_list|(
 name|StackDesc
 argument_list|,
@@ -1197,7 +1023,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)

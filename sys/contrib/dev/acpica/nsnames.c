@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 54 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 59 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -147,7 +147,7 @@ block|}
 comment|/* Allocate a buffer to be returned to caller */
 name|NameBuffer
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|Size
 operator|+
@@ -242,12 +242,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"NsGetTablePathname:  Bad pointer returned; size=%X\n"
+literal|"Bad pointer returned; size=%X\n"
 operator|,
 name|Size
 operator|)
@@ -385,9 +385,6 @@ if|if
 condition|(
 operator|!
 name|AcpiGbl_RootNode
-operator|||
-operator|!
-name|TargetHandle
 condition|)
 block|{
 comment|/*          * If the name space has not been initialized,          * this function should not have been called.          */
@@ -550,12 +547,12 @@ index|]
 operator|=
 literal|'\\'
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"NsHandleToPathname: Len=%X, %s \n"
+literal|"Len=%X, %s \n"
 operator|,
 name|PathLength
 operator|,

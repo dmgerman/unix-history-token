@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|TABLE_MANAGER
+value|ACPI_TABLES
 end_define
 
 begin_macro
@@ -295,7 +295,7 @@ block|}
 comment|/* Allocate buffer for the entire table */
 name|FullTable
 operator|=
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 name|TableHeader
 operator|->
@@ -1038,11 +1038,11 @@ name|TableSignature
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiTbGetTableRsdt"
+literal|"TbGetTableRsdt"
 argument_list|)
 expr_stmt|;
 comment|/*      * Get the RSDT from the RSDP      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -1159,14 +1159,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"GetTableRsdt: Could not get the RSDT, %s\n"
+literal|"Could not get the RSDT, %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1310,7 +1310,7 @@ name|TableInfo
 operator|.
 name|Pointer
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -1396,7 +1396,7 @@ block|{
 comment|/*          * Getting table from a file -- allocate a buffer and          * read the table.          */
 name|TablePtr
 operator|=
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 name|Size
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 77 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 83 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -58,7 +58,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsValidRootPrefix  *  * PARAMETERS:  Prefix          - Character to be checked  *  * RETURN:      TRUE if a valid prefix  *  * DESCRIPTION: Check if a character is a valid ACPI Root prefix  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsValidRootPrefix  *  * PARAMETERS:  Prefix          - Character to be checked  *  * RETURN:      TRUE if a valid prefix  *  * DESCRIPTION: Check if a character is a valid ACPI Root prefix  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -85,7 +85,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsValidPathSeparator  *  * PARAMETERS:  Sep              - Character to be checked  *  * RETURN:      TRUE if a valid path separator  *  * DESCRIPTION: Check if a character is a valid ACPI path separator  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsValidPathSeparator  *  * PARAMETERS:  Sep              - Character to be checked  *  * RETURN:      TRUE if a valid path separator  *  * DESCRIPTION: Check if a character is a valid ACPI path separator  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -112,15 +112,16 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsGetType  *  * PARAMETERS:  Handle              - Parent Node to be examined  *  * RETURN:      Type field from Node whose handle is passed  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetType  *  * PARAMETERS:  Handle              - Parent Node to be examined  *  * RETURN:      Type field from Node whose handle is passed  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|AcpiNsGetType
 parameter_list|(
-name|ACPI_HANDLE
-name|handle
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|)
 block|{
 name|FUNCTION_TRACE
@@ -131,13 +132,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|handle
+name|Node
 condition|)
 block|{
 name|REPORT_WARNING
 argument_list|(
 operator|(
-literal|"NsGetType: Null handle\n"
+literal|"NsGetType: Null Node ptr"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -149,13 +150,7 @@ expr_stmt|;
 block|}
 name|return_VALUE
 argument_list|(
-operator|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
-name|handle
-operator|)
+name|Node
 operator|->
 name|Type
 argument_list|)
@@ -164,14 +159,14 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsLocal  *  * PARAMETERS:  Type            - A namespace object type  *  * RETURN:      LOCAL if names must be found locally in objects of the  *              passed type, 0 if enclosing scopes should be searched  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsLocal  *  * PARAMETERS:  Type            - A namespace object type  *  * RETURN:      LOCAL if names must be found locally in objects of the  *              passed type, 0 if enclosing scopes should be searched  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|UINT32
 name|AcpiNsLocal
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|)
 block|{
@@ -183,7 +178,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|AcpiCmValidObjectType
+name|AcpiUtValidObjectType
 argument_list|(
 name|Type
 argument_list|)
@@ -220,99 +215,68 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsInternalizeName  *  * PARAMETERS:  *ExternalName             - External representation of name  *              **Converted Name        - Where to return the resulting  *                                        internal represention of the name  *  * RETURN:      Status  *  * DESCRIPTION: Convert an external representation (e.g. "\_PR_.CPU0")  *              to internal form (e.g. 5c 2f 02 5f 50 52 5f 43 50 55 30)  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetInternalNameLength  *  * PARAMETERS:  Info            - Info struct initialized with the   *                                external name pointer.  *  * RETURN:      Status  *  * DESCRIPTION: Calculate the length of the internal (AML) namestring   *              corresponding to the external (ASL) namestring.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiNsInternalizeName
+name|AcpiNsGetInternalNameLength
 parameter_list|(
-name|NATIVE_CHAR
+name|ACPI_NAMESTRING_INFO
 modifier|*
-name|ExternalName
-parameter_list|,
-name|NATIVE_CHAR
-modifier|*
-modifier|*
-name|ConvertedName
+name|Info
 parameter_list|)
 block|{
 name|NATIVE_CHAR
 modifier|*
-name|Result
-init|=
-name|NULL
-decl_stmt|;
-name|NATIVE_CHAR
-modifier|*
-name|InternalName
-decl_stmt|;
-name|UINT32
-name|NumSegments
-init|=
-literal|0
-decl_stmt|;
-name|BOOLEAN
-name|FullyQualified
-init|=
-name|FALSE
+name|NextExternalChar
 decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-name|UINT32
+name|NextExternalChar
+operator|=
+name|Info
+operator|->
+name|ExternalName
+expr_stmt|;
+name|Info
+operator|->
 name|NumCarats
-init|=
+operator|=
 literal|0
-decl_stmt|;
-name|FUNCTION_TRACE
-argument_list|(
-literal|"NsInternalizeName"
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|!
-name|ExternalName
-operator|)
-operator|||
-operator|(
-operator|*
-name|ExternalName
-operator|==
+name|Info
+operator|->
+name|NumSegments
+operator|=
 literal|0
-operator|)
-operator|||
-operator|(
-operator|!
-name|ConvertedName
-operator|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BAD_PARAMETER
-argument_list|)
 expr_stmt|;
-block|}
+name|Info
+operator|->
+name|FullyQualified
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/*      * For the internal name, the required length is 4 bytes      * per segment, plus 1 each for RootPrefix, MultiNamePrefixOp,      * segment count, trailing null (which is not really needed,      * but no there's harm in putting it there)      *      * strlen() + 1 covers the first NameSeg, which has no      * path separator      */
 if|if
 condition|(
 name|AcpiNsValidRootPrefix
 argument_list|(
-name|ExternalName
+name|NextExternalChar
 index|[
 literal|0
 index|]
 argument_list|)
 condition|)
 block|{
+name|Info
+operator|->
 name|FullyQualified
 operator|=
 name|TRUE
 expr_stmt|;
-name|ExternalName
+name|NextExternalChar
 operator|++
 expr_stmt|;
 block|}
@@ -322,15 +286,17 @@ comment|/*          * Handle Carat prefixes          */
 while|while
 condition|(
 operator|*
-name|ExternalName
+name|NextExternalChar
 operator|==
 literal|'^'
 condition|)
 block|{
+name|Info
+operator|->
 name|NumCarats
 operator|++
 expr_stmt|;
-name|ExternalName
+name|NextExternalChar
 operator|++
 expr_stmt|;
 block|}
@@ -339,9 +305,11 @@ comment|/*      * Determine the number of ACPI name "segments" by counting      
 if|if
 condition|(
 operator|*
-name|ExternalName
+name|NextExternalChar
 condition|)
 block|{
+name|Info
+operator|->
 name|NumSegments
 operator|=
 literal|1
@@ -352,7 +320,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|ExternalName
+name|NextExternalChar
 index|[
 name|i
 index|]
@@ -365,50 +333,108 @@ if|if
 condition|(
 name|AcpiNsValidPathSeparator
 argument_list|(
-name|ExternalName
+name|NextExternalChar
 index|[
 name|i
 index|]
 argument_list|)
 condition|)
 block|{
+name|Info
+operator|->
 name|NumSegments
 operator|++
 expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* We need a segment to store the internal version of the name */
-name|InternalName
+name|Info
+operator|->
+name|Length
 operator|=
-name|AcpiCmCallocate
-argument_list|(
 operator|(
 name|ACPI_NAME_SIZE
 operator|*
+name|Info
+operator|->
 name|NumSegments
 operator|)
 operator|+
 literal|4
 operator|+
+name|Info
+operator|->
 name|NumCarats
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|InternalName
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
+name|Info
+operator|->
+name|NextExternalChar
+operator|=
+name|NextExternalChar
 expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsBuildInternalName  *  * PARAMETERS:  Info            - Info struct fully initialized  *  * RETURN:      Status  *  * DESCRIPTION: Construct the internal (AML) namestring   *              corresponding to the external (ASL) namestring.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiNsBuildInternalName
+parameter_list|(
+name|ACPI_NAMESTRING_INFO
+modifier|*
+name|Info
+parameter_list|)
+block|{
+name|UINT32
+name|NumSegments
+init|=
+name|Info
+operator|->
+name|NumSegments
+decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|InternalName
+init|=
+name|Info
+operator|->
+name|InternalName
+decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|ExternalName
+init|=
+name|Info
+operator|->
+name|NextExternalChar
+decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|Result
+init|=
+name|NULL
+decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+literal|"AcpiNsBuildInternalName"
+argument_list|)
+expr_stmt|;
 comment|/* Setup the correct prefixes, counts, and pointers */
 if|if
 condition|(
+name|Info
+operator|->
 name|FullyQualified
 condition|)
 block|{
@@ -497,6 +523,8 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|Info
+operator|->
 name|NumCarats
 condition|)
 block|{
@@ -508,6 +536,8 @@ literal|0
 init|;
 name|i
 operator|<
+name|Info
+operator|->
 name|NumCarats
 condition|;
 name|i
@@ -638,7 +668,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/*                  * Pad the segment with underscore(s) if                  * segment is short                  */
+comment|/* Pad the segment with underscore(s) if segment is short */
 name|Result
 index|[
 name|i
@@ -649,7 +679,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Convert INT8 to uppercase and save it */
+comment|/* Convert the character to uppercase and save it */
 name|Result
 index|[
 name|i
@@ -687,11 +717,6 @@ literal|0
 operator|)
 condition|)
 block|{
-name|AcpiCmFree
-argument_list|(
-name|InternalName
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_PARAMETER
@@ -707,29 +732,25 @@ operator|+=
 name|ACPI_NAME_SIZE
 expr_stmt|;
 block|}
-comment|/* Return the completed name */
-comment|/* Terminate the string! */
+comment|/* Terminate the string */
 operator|*
 name|Result
 operator|=
 literal|0
 expr_stmt|;
-operator|*
-name|ConvertedName
-operator|=
-name|InternalName
-expr_stmt|;
 if|if
 condition|(
+name|Info
+operator|->
 name|FullyQualified
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"NsInternalizeName: returning [%p] (abs) \"\\%s\"\n"
+literal|"returning [%p] (abs) \"\\%s\"\n"
 operator|,
 name|InternalName
 operator|,
@@ -744,12 +765,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"NsInternalizeName: returning [%p] (rel) \"%s\"\n"
+literal|"returning [%p] (rel) \"%s\"\n"
 operator|,
 name|InternalName
 operator|,
@@ -771,7 +792,148 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsExternalizeName  *  * PARAMETERS:  *InternalName          - Internal representation of name  *              **ConvertedName        - Where to return the resulting  *                                        external representation of name  *  * RETURN:      Status  *  * DESCRIPTION: Convert internal name (e.g. 5c 2f 02 5f 50 52 5f 43 50 55 30)  *              to its external form (e.g. "\_PR_.CPU0")  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsInternalizeName  *  * PARAMETERS:  *ExternalName           - External representation of name  *              **Converted Name        - Where to return the resulting  *                                        internal represention of the name  *  * RETURN:      Status  *  * DESCRIPTION: Convert an external representation (e.g. "\_PR_.CPU0")  *              to internal form (e.g. 5c 2f 02 5f 50 52 5f 43 50 55 30)  *  *******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiNsInternalizeName
+parameter_list|(
+name|NATIVE_CHAR
+modifier|*
+name|ExternalName
+parameter_list|,
+name|NATIVE_CHAR
+modifier|*
+modifier|*
+name|ConvertedName
+parameter_list|)
+block|{
+name|NATIVE_CHAR
+modifier|*
+name|InternalName
+decl_stmt|;
+name|ACPI_NAMESTRING_INFO
+name|Info
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+literal|"NsInternalizeName"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|!
+name|ExternalName
+operator|)
+operator|||
+operator|(
+operator|*
+name|ExternalName
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|!
+name|ConvertedName
+operator|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_PARAMETER
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Get the length of the new internal name */
+name|Info
+operator|.
+name|ExternalName
+operator|=
+name|ExternalName
+expr_stmt|;
+name|AcpiNsGetInternalNameLength
+argument_list|(
+operator|&
+name|Info
+argument_list|)
+expr_stmt|;
+comment|/* We need a segment to store the internal  name */
+name|InternalName
+operator|=
+name|AcpiUtCallocate
+argument_list|(
+name|Info
+operator|.
+name|Length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|InternalName
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Build the name */
+name|Info
+operator|.
+name|InternalName
+operator|=
+name|InternalName
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiNsBuildInternalName
+argument_list|(
+operator|&
+name|Info
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiUtFree
+argument_list|(
+name|InternalName
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|ConvertedName
+operator|=
+name|InternalName
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsExternalizeName  *  * PARAMETERS:  *InternalName          - Internal representation of name  *              **ConvertedName        - Where to return the resulting  *                                       external representation of name  *  * RETURN:      Status  *  * DESCRIPTION: Convert internal name (e.g. 5c 2f 02 5f 50 52 5f 43 50 55 30)  *              to its external form (e.g. "\_PR_.CPU0")  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1050,7 +1212,7 @@ operator|*
 name|ConvertedName
 operator|)
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 operator|*
 name|ConvertedNameLength
@@ -1215,7 +1377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsConvertHandleToEntry  *  * PARAMETERS:  Handle          - Handle to be converted to an Node  *  * RETURN:      A Name table entry pointer  *  * DESCRIPTION: Convert a namespace handle to a real Node  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsConvertHandleToEntry  *  * PARAMETERS:  Handle          - Handle to be converted to an Node  *  * RETURN:      A Name table entry pointer  *  * DESCRIPTION: Convert a namespace handle to a real Node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1284,7 +1446,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsConvertEntryToHandle  *  * PARAMETERS:  Node          - Node to be converted to a Handle  *  * RETURN:      An USER ACPI_HANDLE  *  * DESCRIPTION: Convert a real Node to a namespace handle  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsConvertEntryToHandle  *  * PARAMETERS:  Node          - Node to be converted to a Handle  *  * RETURN:      An USER ACPI_HANDLE  *  * DESCRIPTION: Convert a real Node to a namespace handle  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1310,7 +1472,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsTerminate  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: free memory allocated for table storage.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsTerminate  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: free memory allocated for table storage.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1337,8 +1499,7 @@ name|ThisNode
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
-comment|/*      * 1) Free the entire namespace -- all objects, tables, and stacks      */
-comment|/*      * Delete all objects linked to the root      * (additional table descriptors)      */
+comment|/*      * 1) Free the entire namespace -- all objects, tables, and stacks      *      * Delete all objects linked to the root      * (additional table descriptors)      */
 name|AcpiNsDeleteNamespaceSubtree
 argument_list|(
 name|ThisNode
@@ -1362,7 +1523,7 @@ argument_list|(
 name|ThisNode
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1373,12 +1534,12 @@ argument_list|(
 name|ThisNode
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsTerminate: Namespace freed\n"
+literal|"Namespace freed\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1386,12 +1547,12 @@ comment|/*      * 2) Now we can delete the ACPI tables      */
 name|AcpiTbDeleteAcpiTables
 argument_list|()
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsTerminate: ACPI Tables freed\n"
+literal|"ACPI Tables freed\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1401,14 +1562,14 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsOpensScope  *  * PARAMETERS:  Type        - A valid namespace type  *  * RETURN:      NEWSCOPE if the passed type "opens a name scope" according  *              to the ACPI specification, else 0  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsOpensScope  *  * PARAMETERS:  Type        - A valid namespace type  *  * RETURN:      NEWSCOPE if the passed type "opens a name scope" according  *              to the ACPI specification, else 0  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|UINT32
 name|AcpiNsOpensScope
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|)
 block|{
@@ -1422,7 +1583,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|AcpiCmValidObjectType
+name|AcpiUtValidObjectType
 argument_list|(
 name|Type
 argument_list|)
@@ -1461,7 +1622,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsGetNode  *  * PARAMETERS:  *Pathname   - Name to be found, in external (ASL) format. The  *                            \ (backslash) and ^ (carat) prefixes, and the  *                            . (period) to separate segments are supported.  *              StartNode   - Root of subtree to be searched, or NS_ALL for the  *                            root of the name space.  If Name is fully  *                            qualified (first INT8 is '\'), the passed value  *                            of Scope will not be accessed.  *              ReturnNode  - Where the Node is returned  *  * DESCRIPTION: Look up a name relative to a given scope and return the  *              corresponding Node.  NOTE: Scope can be null.  *  * MUTEX:       Locks namespace  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNode  *  * PARAMETERS:  *Pathname   - Name to be found, in external (ASL) format. The  *                            \ (backslash) and ^ (carat) prefixes, and the  *                            . (period) to separate segments are supported.  *              StartNode   - Root of subtree to be searched, or NS_ALL for the  *                            root of the name space.  If Name is fully  *                            qualified (first INT8 is '\'), the passed value  *                            of Scope will not be accessed.  *              ReturnNode  - Where the Node is returned  *  * DESCRIPTION: Look up a name relative to a given scope and return the  *              corresponding Node.  NOTE: Scope can be null.  *  * MUTEX:       Locks namespace  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1551,7 +1712,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -1596,16 +1757,16 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsGetNode: %s, %s\n"
+literal|"%s, %s\n"
 operator|,
 name|InternalPath
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1613,13 +1774,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
 comment|/* Cleanup */
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|InternalPath
 argument_list|)
@@ -1633,7 +1794,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsFindParentName  *  * PARAMETERS:  *ChildNode             - Named Obj whose name is to be found  *  * RETURN:      The ACPI name  *  * DESCRIPTION: Search for the given obj in its parent scope and return the  *              name segment, or "????" if the parent name can't be found  *              (which "should not happen").  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsFindParentName  *  * PARAMETERS:  *ChildNode             - Named Obj whose name is to be found  *  * RETURN:      The ACPI name  *  * DESCRIPTION: Search for the given obj in its parent scope and return the  *              name segment, or "????" if the parent name can't be found  *              (which "should not happen").  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1672,7 +1833,7 @@ condition|(
 name|ParentNode
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
@@ -1711,12 +1872,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"FindParentName: unable to find parent of %p (%4.4s)\n"
+literal|"unable to find parent of %p (%4.4s)\n"
 operator|,
 name|ChildNode
 operator|,
@@ -1751,7 +1912,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsExistDownstreamSibling  *  * PARAMETERS:  *Node          - pointer to first Node to examine  *  * RETURN:      TRUE if sibling is found, FALSE otherwise  *  * DESCRIPTION: Searches remainder of scope being processed to determine  *              whether there is a downstream sibling to the current  *              object.  This function is used to determine what type of  *              line drawing character to use when displaying namespace  *              trees.  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsExistDownstreamSibling  *  * PARAMETERS:  *Node          - pointer to first Node to examine  *  * RETURN:      TRUE if sibling is found, FALSE otherwise  *  * DESCRIPTION: Searches remainder of scope being processed to determine  *              whether there is a downstream sibling to the current  *              object.  This function is used to determine what type of  *              line drawing character to use when displaying namespace  *              trees.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1806,7 +1967,7 @@ comment|/* ACPI_DEBUG */
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsGetParentObject  *  * PARAMETERS:  Node       - Current table entry  *  * RETURN:      Parent entry of the given entry  *  * DESCRIPTION: Obtain the parent entry for a given entry in the namespace.  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetParentObject  *  * PARAMETERS:  Node       - Current table entry  *  * RETURN:      Parent entry of the given entry  *  * DESCRIPTION: Obtain the parent entry for a given entry in the namespace.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1862,7 +2023,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiNsGetNextValidObject  *  * PARAMETERS:  Node       - Current table entry  *  * RETURN:      Next valid object in the table.  NULL if no more valid  *              objects  *  * DESCRIPTION: Find the next valid object within a name table.  *              Useful for implementing NULL-end-of-list loops.  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNextValidObject  *  * PARAMETERS:  Node       - Current table entry  *  * RETURN:      Next valid object in the table.  NULL if no more valid  *              objects  *  * DESCRIPTION: Find the next valid object within a name table.  *              Useful for implementing NULL-end-of-list loops.  *  ******************************************************************************/
 end_comment
 
 begin_function

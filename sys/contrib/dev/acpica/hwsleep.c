@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 7 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 11 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|HARDWARE
+value|ACPI_HARDWARE
 end_define
 
 begin_macro
@@ -440,22 +440,8 @@ argument_list|,
 name|PM1BControl
 argument_list|)
 expr_stmt|;
-name|AcpiHwRegisterWrite
-argument_list|(
-name|ACPI_MTX_LOCK
-argument_list|,
-name|PM1_CONTROL
-argument_list|,
-operator|(
-literal|1
-operator|<<
-name|AcpiHwGetBitShift
-argument_list|(
-name|SLP_EN_MASK
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* one system won't work with this, one won't work without */
+comment|/*AcpiHwRegisterWrite(ACPI_MTX_LOCK, PM1_CONTROL,         (1<< AcpiHwGetBitShift (SLP_EN_MASK)));*/
 name|enable
 argument_list|()
 expr_stmt|;
