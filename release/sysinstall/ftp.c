@@ -652,8 +652,20 @@ name|fdir
 operator|++
 control|)
 block|{
+comment|/* Avoid sending CWD . commands which confuse some ftp servers */
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|ftp_dirs
+index|[
+name|fdir
+index|]
+argument_list|,
+literal|"."
+argument_list|)
+operator|&&
+operator|(
 name|ftpChdir
 argument_list|(
 name|OpenConn
@@ -669,6 +681,7 @@ index|]
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 continue|continue;
 if|if
