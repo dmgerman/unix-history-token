@@ -5708,6 +5708,20 @@ argument_list|)
 expr_stmt|;
 name|ACPI_ASSERTLOCK
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|acpi_sstate
+operator|!=
+name|ACPI_STATE_S0
+condition|)
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_PARAMETER
+argument_list|)
+expr_stmt|;
+comment|/* avoid reentry */
 switch|switch
 condition|(
 name|state
