@@ -1246,6 +1246,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|BUFFALO
+argument_list|,
+name|WLI_CF_S11G
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|COMPAQ
 argument_list|,
 name|NC5004
