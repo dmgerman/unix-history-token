@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -430,12 +436,18 @@ name|bio_data
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Kerneldump off=%lld len=%lld\n"
+literal|"Kerneldump off=%jd len=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|gkd
 operator|->
 name|offset
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|gkd
 operator|->
 name|length

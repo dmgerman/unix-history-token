@@ -100,6 +100,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -751,14 +757,20 @@ name|sectorsize
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"c%d - c%d (%llx - %llx) = %s\n"
+literal|"c%d - c%d (%jx - %jx) = %s\n"
 argument_list|,
 name|v
 argument_list|,
 name|u
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|start
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|length
 argument_list|,
 name|buf

@@ -100,6 +100,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -1362,10 +1368,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<labeloffset>%lld</labeloffset>\n"
+literal|"%s<labeloffset>%jd</labeloffset>\n"
 argument_list|,
 name|indent
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ms
 operator|->
 name|labeloffset
