@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.13 1997/12/23 08:04:38 yokota Exp $"
+literal|"$Id: moused.c,v 1.14 1998/01/20 03:38:36 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,13 +666,13 @@ block|,
 name|MOUSE_MODEL_INTELLI
 block|}
 block|,
-comment|/* Genius EZScroll */
+comment|/* Genius PnP Mouse */
 block|{
-literal|"KYEEZ00"
+literal|"KYE0001"
 block|,
 name|MOUSE_PROTO_MS
 block|,
-name|MOUSE_MODEL_EASYSCROLL
+name|MOUSE_MODEL_GENERIC
 block|}
 block|,
 comment|/* Genius NetMouse */
@@ -682,6 +682,15 @@ block|,
 name|MOUSE_PROTO_INTELLI
 block|,
 name|MOUSE_MODEL_NET
+block|}
+block|,
+comment|/* Genius EZScroll */
+block|{
+literal|"KYEEZ00"
+block|,
+name|MOUSE_PROTO_MS
+block|,
+name|MOUSE_MODEL_EASYSCROLL
 block|}
 block|,
 comment|/* Logitech MouseMan (new 4 button model) */
