@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2112,6 +2112,12 @@ argument_list|,
 operator|&
 name|nfsd_head
 argument_list|)
+expr_stmt|;
+name|nd
+operator|->
+name|nd_nqlflag
+operator|=
+name|NQL_NOVAL
 expr_stmt|;
 name|nfs_numnfsd
 operator|++
