@@ -9127,7 +9127,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 specifier|static
-name|int
+name|void
 function_decl|(
 modifier|*
 name|old_proto4_input
