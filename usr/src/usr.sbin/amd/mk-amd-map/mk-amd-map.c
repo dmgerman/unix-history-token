@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mk-amd-map.c	8.1 (Berkeley) %G%  *  * $Id: mk-amd-map.c,v 5.2.2.1 1992/02/09 15:09:18 jsp beta $  */
+comment|/*  * Copyright (c) 1990, 1993 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mk-amd-map.c	5.6 (Berkeley) %G%  *  * $Id: mk-amd-map.c,v 5.2.2.1 1992/02/09 15:09:18 jsp beta $  */
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"\ @(#)Copyright (c) 1990 Jan-Simon Pendry\n\ @(#)Copyright (c) 1990 Imperial College of Science, Technology& Medicine\n\ @(#)Copyright (c) 1990 The Regents of the University of California.\n\ @(#)All rights reserved.\n"
+literal|"\ @(#)Copyright (c) 1990, 1993 Jan-Simon Pendry\n\ @(#)Copyright (c) 1990 Imperial College of Science, Technology& Medicine\n\ @(#)Copyright (c) 1990, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mk-amd-map.c	8.1 (Berkeley) %G%"
+literal|"@(#)mk-amd-map.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,23 @@ directive|include
 file|<ndbm.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBM_SUFFIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USING_DB
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -114,7 +131,7 @@ name|create_database
 parameter_list|(
 name|name
 parameter_list|)
-value|dbm_open(name, O_RDWR|O_CREAT, 0444)
+value|dbm_open(name, O_RDWR|O_CREAT, 0644)
 end_define
 
 begin_function
@@ -856,7 +873,15 @@ name|maptpag
 index|[
 literal|16
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
+modifier|*
+name|mappag
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|USING_DB
+name|char
 name|maptdir
 index|[
 literal|16
@@ -864,11 +889,10 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|mappag
-decl_stmt|,
-modifier|*
 name|mapdir
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|len
 decl_stmt|;
@@ -1029,6 +1053,85 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USING_DB
+name|mappag
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|len
+operator|+
+literal|5
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mappag
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"mk-amd-map: malloc"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|mktemp
+argument_list|(
+name|maptmp
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|maptpag
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|maptmp
+argument_list|,
+name|DBM_SUFFIX
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|remove_file
+argument_list|(
+name|maptpag
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't remove existing temporary file"
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|maptpag
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 name|mappag
 operator|=
 operator|(
@@ -1135,6 +1238,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 name|mapf
 operator|=
@@ -1195,6 +1300,11 @@ argument_list|,
 name|mapd
 argument_list|)
 decl_stmt|;
+name|dbm_close
+argument_list|(
+name|mapd
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1251,6 +1361,59 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|USING_DB
+name|sprintf
+argument_list|(
+name|mappag
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|map
+argument_list|,
+name|DBM_SUFFIX
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rename
+argument_list|(
+name|maptpag
+argument_list|,
+name|mappag
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Couldn't rename %s to "
+argument_list|,
+name|maptpag
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|mappag
+argument_list|)
+expr_stmt|;
+comment|/* Throw away the temporary map */
+name|unlink
+argument_list|(
+name|maptpag
+argument_list|)
+expr_stmt|;
+name|rc
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|#
+directive|else
 name|sprintf
 argument_list|(
 name|mappag
@@ -1366,6 +1529,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 block|}
 block|}
