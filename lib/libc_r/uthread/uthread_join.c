@@ -184,6 +184,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* Check if the return value is required: */
 if|if
 condition|(
@@ -197,6 +198,7 @@ name|pthread
 operator|->
 name|ret
 expr_stmt|;
+block|}
 else|else
 comment|/* Return an error: */
 name|ret
