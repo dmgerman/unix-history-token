@@ -8,7 +8,7 @@ comment|/* Header files used by all modules */
 end_comment
 
 begin_comment
-comment|/*  * $Id: vinumhdr.h,v 1.18 2001/01/04 00:14:14 grog Exp grog $  * $FreeBSD$  */
+comment|/*  * $Id: vinumhdr.h,v 1.19 2001/05/22 04:07:22 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -221,177 +221,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
+file|<dev/vinum/vinumutil.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|Free
-end_undef
-
-begin_comment
-comment|/* defined in some funny net stuff */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VINUMDEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|Malloc
-parameter_list|(
-name|x
-parameter_list|)
-value|MMalloc ((x), __FILE__, __LINE__)
-end_define
-
-begin_comment
-comment|/* show where we came from */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Free
-parameter_list|(
-name|x
-parameter_list|)
-value|FFree ((x), __FILE__, __LINE__)
-end_define
-
-begin_comment
-comment|/* show where we came from */
-end_comment
-
-begin_function_decl
-name|caddr_t
-name|MMalloc
-parameter_list|(
-name|int
-name|size
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|FFree
-parameter_list|(
-name|void
-modifier|*
-name|mem
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|LOCKDRIVE
-parameter_list|(
-name|d
-parameter_list|)
-value|lockdrive (d, __FILE__, __LINE__)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|Malloc
-parameter_list|(
-name|x
-parameter_list|)
-value|malloc((x), M_DEVBUF, \ 	curproc->p_intr_nesting_level == 0? M_WAITOK: M_NOWAIT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|Free
-parameter_list|(
-name|x
-parameter_list|)
-value|free((x), M_DEVBUF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOCKDRIVE
-parameter_list|(
-name|d
-parameter_list|)
-value|lockdrive (d)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|Malloc
-parameter_list|(
-name|x
-parameter_list|)
-value|malloc ((x))
-end_define
-
-begin_comment
-comment|/* just the size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Free
-parameter_list|(
-name|x
-parameter_list|)
-value|free ((x))
-end_define
-
-begin_comment
-comment|/* just the address */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
 
 begin_decl_stmt
 specifier|extern
