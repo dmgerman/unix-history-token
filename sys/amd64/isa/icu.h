@@ -335,14 +335,14 @@ name|APIC_IO
 end_ifdef
 
 begin_comment
-comment|/* 32-47: ISA IRQ0-IRQ15, 48-55: IO APIC IRQ16-IRQ23 */
+comment|/* 32-47: ISA IRQ0-IRQ15, 48-55: IO APIC IRQ16-IRQ31 */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ICU_LEN
-value|24
+value|32
 end_define
 
 begin_else
