@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gcore.c	5.6 (Berkeley) %G%"
+literal|"@(#)gcore.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
 end_include
 
 begin_comment
@@ -450,7 +456,7 @@ argument_list|()
 expr_stmt|;
 name|procbase
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -462,7 +468,7 @@ argument_list|)
 expr_stmt|;
 name|nproc
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -474,7 +480,7 @@ argument_list|)
 expr_stmt|;
 name|nswap
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -486,7 +492,7 @@ argument_list|)
 expr_stmt|;
 name|dmmin
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -498,7 +504,7 @@ argument_list|)
 expr_stmt|;
 name|dmmax
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -791,7 +797,7 @@ block|}
 end_function
 
 begin_macro
-name|getw
+name|getword
 argument_list|(
 argument|loc
 argument_list|)
@@ -1431,6 +1437,14 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+else|else
+name|p0
+operator|=
+name|p1
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* not actually used */
 name|getu
 argument_list|(
 name|p
@@ -1710,6 +1724,12 @@ name|map
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|rev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -1920,6 +1940,12 @@ name|dbp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|rev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -2039,6 +2065,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
 begin_comment
 comment|/*VARARGS1*/
 end_comment
@@ -2046,40 +2078,95 @@ end_comment
 begin_macro
 name|panic
 argument_list|(
-argument|cp
-argument_list|,
-argument|a
-argument_list|,
-argument|b
-argument_list|,
-argument|c
-argument_list|,
-argument|d
+argument|fmt
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|cp
+name|fmt
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|printf
+name|fmt
+operator|=
+name|fmt
+expr_stmt|;
+name|longjmp
 argument_list|(
-name|cp
+name|cont_frame
 argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
+literal|1
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* lint */
+end_comment
+
+begin_macro
+name|panic
+argument_list|(
+argument|va_alist
+argument_list|)
+end_macro
+
+begin_macro
+name|va_dcl
+end_macro
+
+begin_block
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+name|fmt
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vprintf
+argument_list|(
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -2094,6 +2181,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_comment
 comment|/*   * Debugging routine to print out page table.  */
