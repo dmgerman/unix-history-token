@@ -543,7 +543,15 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"cannot get udp netconf."
+literal|"cannot get %s netconf: %s."
+argument_list|,
+name|transports
+index|[
+name|i
+index|]
+argument_list|,
+name|nc_sperror
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|transp
