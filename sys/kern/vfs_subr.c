@@ -240,6 +240,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|vlruvp
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Number of vnodes in existence.  Increased whenever getnewvnode()  * allocates a new vnode, never decreased.  */
 end_comment
@@ -2417,6 +2430,37 @@ decl_stmt|;
 name|int
 name|done
 decl_stmt|;
+name|int
+name|trigger
+decl_stmt|;
+name|int
+name|usevnodes
+decl_stmt|;
+comment|/* 	 * Calculate the trigger point, don't allow user 	 * screwups to blow us up.   This prevents us from 	 * recycling vnodes with lots of resident pages.  We 	 * aren't trying to free memory, we are trying to 	 * free vnodes. 	 */
+name|usevnodes
+operator|=
+name|desiredvnodes
+expr_stmt|;
+if|if
+condition|(
+name|usevnodes
+operator|<=
+literal|0
+condition|)
+name|usevnodes
+operator|=
+literal|1
+expr_stmt|;
+name|trigger
+operator|=
+name|cnt
+operator|.
+name|v_page_count
+operator|*
+literal|2
+operator|/
+name|usevnodes
+expr_stmt|;
 name|done
 operator|=
 literal|0
@@ -2490,6 +2534,22 @@ name|vp
 argument_list|)
 operator|&&
 comment|/* critical path opt */
+operator|(
+name|vp
+operator|->
+name|v_object
+operator|==
+name|NULL
+operator|||
+name|vp
+operator|->
+name|v_object
+operator|->
+name|resident_page_count
+operator|<
+name|trigger
+operator|)
+operator|&&
 name|mtx_trylock
 argument_list|(
 operator|&
@@ -7109,6 +7169,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+else|else
+name|vlruvp
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -7293,6 +7359,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+else|else
+name|vlruvp
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we are doing a vput, the node is already locked, and we must 	 * call VOP_INACTIVE with the node locked.  So, in the case of 	 * vrele, we explicitly lock the vnode before calling VOP_INACTIVE. 	 */
 if|if
 condition|(
@@ -7468,6 +7540,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+else|else
+name|vlruvp
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we are doing a vput, the node is already locked, and we must 	 * call VOP_INACTIVE with the node locked.  So, in the case of 	 * vrele, we explicitly lock the vnode before calling VOP_INACTIVE. 	 */
 name|mtx_unlock
 argument_list|(
@@ -7609,6 +7687,12 @@ name|vp
 argument_list|)
 condition|)
 name|vfree
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+else|else
+name|vlruvp
 argument_list|(
 name|vp
 argument_list|)
@@ -8150,6 +8234,30 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * This moves a now (likely recyclable) vnode to the end of the  * mountlist.  XXX However, it is temporarily disabled until we  * can clean up ffs_sync() and friends, which have loop restart  * conditions which this code causes to operate O(N^2).  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|vlruvp
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+block|{
+if|#
+directive|if
+literal|0
+block|struct mount *mp;  	if ((mp = vp->v_mount) != NULL) { 		mtx_lock(&mntvnode_mtx); 		TAILQ_REMOVE(&mp->mnt_nvnodelist, vp, v_nmntvnodes); 		TAILQ_INSERT_TAIL(&mp->mnt_nvnodelist, vp, v_nmntvnodes); 		mtx_unlock(&mntvnode_mtx); 	}
+endif|#
+directive|endif
 block|}
 end_function
 
