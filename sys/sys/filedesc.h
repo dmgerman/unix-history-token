@@ -167,6 +167,12 @@ begin_comment
 comment|/* auto-close on exec */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -177,6 +183,11 @@ end_define
 begin_comment
 comment|/* mapped from device */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Storage required per open file descriptor.  */
@@ -302,6 +313,11 @@ name|dupfdopen
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
 expr|struct
 name|filedesc
 operator|*
@@ -552,7 +568,7 @@ begin_decl_stmt
 name|struct
 name|file
 modifier|*
-name|getfp
+name|holdfp
 name|__P
 argument_list|(
 operator|(

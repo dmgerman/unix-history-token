@@ -1183,7 +1183,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|getsock
+name|holdsock
 name|__P
 argument_list|(
 operator|(
