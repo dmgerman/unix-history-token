@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)htable.h	4.1 (Berkeley) %G%	*/
+comment|/*	@(#)htable.h	4.2 (Berkeley) %G%	*/
 end_comment
 
 begin_include
@@ -49,95 +49,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|alloc_addr
-parameter_list|(
-name|dummy
-parameter_list|)
-value|((struct addr *) malloc(sizeof(struct addr)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|free_addr
-parameter_list|(
-name|x
-parameter_list|)
-value|free((char *) x)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NOADDR
-value|((struct addr *) 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|net
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0xff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|host
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> 8)& 0xff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|lhost
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> 16)& 0xff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|imp
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> 24)& 0xff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|alloc_name
-parameter_list|(
-name|dummy
-parameter_list|)
-value|((struct name *) malloc(sizeof(struct name)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|free_name
-parameter_list|(
-name|x
-parameter_list|)
-value|free(x->name_val); \ 				free((char *) x)
+value|((struct addr *)0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NONAME
-value|((struct name *) 0)
+value|((struct name *)0)
 end_define
 
 begin_define
