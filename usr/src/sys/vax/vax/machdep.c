@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.37	81/05/12	*/
+comment|/*	machdep.c	4.38	81/08/31	*/
 end_comment
 
 begin_include
@@ -201,6 +201,12 @@ directive|include
 file|"../h/rpb.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/msgbuf.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|icode
@@ -309,7 +315,14 @@ decl_stmt|;
 comment|/* 	 * Initialize error message buffer (at end of core). 	 */
 name|maxmem
 operator|-=
-name|CLSIZE
+name|btoc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|msgbuf
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|pte
 operator|=
@@ -323,7 +336,14 @@ literal|0
 init|;
 name|i
 operator|<
-name|CLSIZE
+name|btoc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|msgbuf
+argument_list|)
+argument_list|)
 condition|;
 name|i
 operator|++
