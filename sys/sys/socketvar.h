@@ -1397,6 +1397,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|socket
+modifier|*
+name|soalloc
+parameter_list|(
+name|int
+name|mflags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|socheckuid
 parameter_list|(
@@ -1407,18 +1419,6 @@ name|so
 parameter_list|,
 name|uid_t
 name|uid
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|socket
-modifier|*
-name|soalloc
-parameter_list|(
-name|int
-name|waitok
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -651,7 +651,7 @@ name|so
 operator|=
 name|soalloc
 argument_list|(
-literal|0
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
