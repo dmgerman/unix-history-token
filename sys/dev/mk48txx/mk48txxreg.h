@@ -577,11 +577,11 @@ begin_define
 define|#
 directive|define
 name|MK48TXX_WDAY_FT
-value|0x30
+value|0x40
 end_define
 
 begin_comment
-comment|/* frequency bit */
+comment|/* frequency test */
 end_comment
 
 begin_comment
