@@ -1574,7 +1574,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*      * Clear wake status      */
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
@@ -1586,7 +1586,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/*      * Set ACPI_SLP_TYPA/b and ACPI_SLP_EN      */
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
@@ -1597,7 +1597,7 @@ argument_list|,
 name|Slp_TypA
 argument_list|)
 expr_stmt|;
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
@@ -1608,7 +1608,7 @@ argument_list|,
 name|Slp_TypB
 argument_list|)
 expr_stmt|;
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
@@ -1636,7 +1636,7 @@ while|while
 condition|(
 operator|!
 operator|(
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_READ
 argument_list|,
