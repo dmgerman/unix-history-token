@@ -2324,10 +2324,9 @@ name|oldifflags
 operator|&
 name|IFF_UP
 operator|)
-operator|!=
-literal|0
 operator|&&
 comment|/* UP to DOWN */
+operator|!
 operator|(
 name|iflist
 index|[
@@ -2338,8 +2337,6 @@ name|ifm_flags
 operator|&
 name|IFF_UP
 operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|syslog
@@ -2367,13 +2364,12 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
 operator|(
 name|oldifflags
 operator|&
 name|IFF_UP
 operator|)
-operator|==
-literal|0
 operator|&&
 comment|/* DOWN to UP */
 operator|(
@@ -2386,8 +2382,6 @@ name|ifm_flags
 operator|&
 name|IFF_UP
 operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|syslog
@@ -4726,7 +4720,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"<%s> prefeerred lifetime for %s/%d"
+literal|"<%s> preferred lifetime for %s/%d"
 literal|" (decr. in real time) inconsistent on %s:"
 literal|" %d from %s, %ld from us"
 argument_list|,
@@ -4794,7 +4788,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"<%s> prefeerred lifetime for %s/%d"
+literal|"<%s> preferred lifetime for %s/%d"
 literal|" inconsistent on %s:"
 literal|" %d from %s, %d from us"
 argument_list|,

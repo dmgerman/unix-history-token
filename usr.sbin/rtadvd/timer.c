@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: timer.c,v 1.4 2000/05/27 11:30:43 jinmei Exp $	*/
+comment|/*	$KAME: timer.c,v 1.9 2002/06/10 19:59:47 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -259,7 +259,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> timeout function unspecfied"
+literal|"<%s> timeout function unspecified"
 argument_list|,
 name|__func__
 argument_list|)

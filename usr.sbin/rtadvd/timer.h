@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: timer.h,v 1.3 2000/05/27 11:30:43 jinmei Exp $	*/
+comment|/*	$KAME: timer.h,v 1.5 2002/05/31 13:30:38 jinmei Exp $	*/
 end_comment
 
 begin_comment

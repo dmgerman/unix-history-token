@@ -1249,7 +1249,7 @@ block|}
 endif|#
 directive|endif
 comment|/* prefix information */
-comment|/* 	 * This is an implementation specific parameter to consinder 	 * link propagation delays and poorly synchronized clocks when 	 * checking consistency of advertised lifetimes. 	 */
+comment|/* 	 * This is an implementation specific parameter to consider 	 * link propagation delays and poorly synchronized clocks when 	 * checking consistency of advertised lifetimes. 	 */
 name|MAYHAVE
 argument_list|(
 name|val
@@ -4035,8 +4035,7 @@ argument_list|(
 name|LOG_INFO
 argument_list|,
 literal|"<%s> link-layer address option has"
-literal|" null length on %s."
-literal|" Treat as not included."
+literal|" null length on %s.  Treat as not included."
 argument_list|,
 name|__func__
 argument_list|,

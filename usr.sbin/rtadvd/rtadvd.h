@@ -300,7 +300,7 @@ decl_stmt|;
 name|int
 name|origin
 decl_stmt|;
-comment|/* from kernel or cofig */
+comment|/* from kernel or config */
 name|struct
 name|in6_addr
 name|prefix
@@ -332,7 +332,7 @@ comment|/* route lifetime */
 name|u_int
 name|rtpref
 decl_stmt|;
-comment|/* router preference */
+comment|/* route preference */
 name|int
 name|prefixlen
 decl_stmt|;

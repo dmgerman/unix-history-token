@@ -37,7 +37,7 @@ comment|/* interface status */
 name|int
 name|probeinterval
 decl_stmt|;
-comment|/* interval of probe timer(if necessary) */
+comment|/* interval of probe timer (if necessary) */
 name|int
 name|probetimer
 decl_stmt|;
@@ -161,7 +161,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|ifindex
 operator|)
 argument_list|)
 decl_stmt|;
@@ -176,7 +175,6 @@ operator|(
 expr|struct
 name|ifinfo
 operator|*
-name|ifinfo
 operator|)
 argument_list|)
 decl_stmt|;
@@ -244,7 +242,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -275,7 +272,6 @@ operator|(
 expr|struct
 name|sockaddr_dl
 operator|*
-name|sdl
 operator|)
 argument_list|)
 decl_stmt|;
@@ -291,12 +287,10 @@ operator|(
 expr|struct
 name|sockaddr_dl
 operator|*
-name|sdl
 operator|,
 expr|struct
 name|nd_opt_hdr
 operator|*
-name|ndopt
 operator|)
 argument_list|)
 decl_stmt|;
@@ -313,7 +307,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -327,7 +320,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|code
 operator|)
 argument_list|)
 decl_stmt|;
@@ -360,7 +352,6 @@ operator|(
 expr|struct
 name|ifinfo
 operator|*
-name|ifinfo
 operator|)
 argument_list|)
 decl_stmt|;
@@ -374,7 +365,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|s
 operator|)
 argument_list|)
 decl_stmt|;
@@ -405,7 +395,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|ifindex
 operator|)
 argument_list|)
 decl_stmt|;

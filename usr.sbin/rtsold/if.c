@@ -416,7 +416,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|warnmsg
 argument_list|(
 name|LOG_ERR
@@ -431,7 +430,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 operator|-
@@ -852,7 +850,7 @@ name|NEXT_SA
 parameter_list|(
 name|ap
 parameter_list|)
-value|(ap) = (struct sockaddr *) \ 	((caddr_t)(ap) + ((ap)->sa_len ? ROUNDUP((ap)->sa_len,\ 						 sizeof(u_long)) :\ 			  			 sizeof(u_long)))
+value|(ap) = (struct sockaddr *) \ 	((caddr_t)(ap) + ((ap)->sa_len ? ROUNDUP((ap)->sa_len,\ 	sizeof(u_long)) : sizeof(u_long)))
 end_define
 
 begin_define
@@ -1552,7 +1550,7 @@ name|LOG_ERR
 argument_list|,
 name|__func__
 argument_list|,
-literal|"etifaddrs: %s"
+literal|"getifaddrs: %s"
 argument_list|,
 name|strerror
 argument_list|(

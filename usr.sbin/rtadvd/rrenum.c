@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: rrenum.c,v 1.10 2001/01/21 15:32:16 itojun Exp $	*/
+comment|/*	$KAME: rrenum.c,v 1.12 2002/06/10 19:59:47 itojun Exp $	*/
 end_comment
 
 begin_comment

@@ -875,18 +875,23 @@ modifier|*
 name|ifinfo
 parameter_list|)
 block|{
-name|int
-name|i
+name|struct
+name|in6_pktinfo
+modifier|*
+name|pi
 decl_stmt|;
 name|struct
 name|cmsghdr
 modifier|*
 name|cm
 decl_stmt|;
-name|struct
-name|in6_pktinfo
-modifier|*
-name|pi
+name|int
+name|hoplimit
+init|=
+literal|255
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|sndmhdr
 operator|.
@@ -1002,12 +1007,6 @@ operator|->
 name|sdl_index
 expr_stmt|;
 comment|/* specify the hop limit of the packet */
-block|{
-name|int
-name|hoplimit
-init|=
-literal|255
-decl_stmt|;
 name|cm
 operator|=
 name|CMSG_NXTHDR
@@ -1058,7 +1057,6 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|warnmsg
 argument_list|(
 name|LOG_DEBUG
@@ -1645,7 +1643,7 @@ name|LOG_NOTICE
 argument_list|,
 name|__func__
 argument_list|,
-literal|"received RA from %s on an unexpeced IF(%s)"
+literal|"received RA from %s on an unexpected IF(%s)"
 argument_list|,
 name|inet_ntop
 argument_list|(

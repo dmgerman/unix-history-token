@@ -348,7 +348,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|sprintf
 argument_list|(
 name|ebuf
@@ -356,7 +355,6 @@ argument_list|,
 literal|"NONE"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|ebuf
