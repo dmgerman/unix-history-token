@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: database.c,v 1.1.1.1 1994/08/27 13:43:03 jkh Exp $"
+literal|"$Id: database.c,v 1.2 1996/09/08 23:50:23 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -386,8 +386,6 @@ name|tabname
 argument_list|,
 sizeof|sizeof
 name|tabname
-argument_list|,
-literal|"%s"
 argument_list|,
 name|CRON_TAB
 argument_list|(
