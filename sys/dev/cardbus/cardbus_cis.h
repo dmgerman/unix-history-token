@@ -293,6 +293,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CISTPL_CUSTOMSTART
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
 name|CISTPL_END
 value|0xFF
 end_define

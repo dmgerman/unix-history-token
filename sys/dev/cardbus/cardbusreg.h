@@ -315,6 +315,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|CARDBUS_CIS_SPACE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(CARDBUS_CIS_ASIMASK& (x))
+end_define
+
+begin_define
+define|#
+directive|define
 name|CARDBUS_CIS_ASI_BAR
 parameter_list|(
 name|x
