@@ -1156,6 +1156,8 @@ operator|->
 name|next
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 name|p
 operator|=

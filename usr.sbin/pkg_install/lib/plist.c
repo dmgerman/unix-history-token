@@ -2020,6 +2020,8 @@ operator|->
 name|name
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 return|return
