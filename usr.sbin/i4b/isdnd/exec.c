@@ -344,8 +344,6 @@ name|char
 name|path
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|pid_t
