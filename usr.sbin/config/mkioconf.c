@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.37 1998/06/17 15:16:53 bde Exp $"
+literal|"$Id: mkioconf.c,v 1.38 1998/07/21 21:47:51 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3577,6 +3577,9 @@ name|char
 modifier|*
 name|old_d_name
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -4078,6 +4081,103 @@ name|fp1
 argument_list|,
 operator|&
 name|dev_id
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"/*\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" * New bus architecture devices.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" */\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include<sys/bus_private.h>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"struct config_device devtab[] = {\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"/* name, unit, resource count, resources */\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"{ 0, 0, 0, 0 }\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"};\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"int devtab_count = %d;\n"
+argument_list|,
+name|count
 argument_list|)
 expr_stmt|;
 comment|/* XXX David did this differently!!! */
