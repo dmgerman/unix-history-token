@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)colcrt.c	4.3 (Berkeley) %G%"
+literal|"@(#)colcrt.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,15 +42,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|outcol
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -186,13 +177,6 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 do|do
 block|{
 if|if
@@ -237,11 +221,6 @@ name|argv
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
 argument_list|)
 expr_stmt|;
 name|exit

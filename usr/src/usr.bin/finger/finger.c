@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)finger.c	4.7 (Berkeley) %G%"
+literal|"@(#)finger.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -396,19 +396,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|outbuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* output buffer */
-end_comment
-
-begin_decl_stmt
-name|char
 modifier|*
 name|ctime
 argument_list|()
@@ -692,14 +679,6 @@ decl_stmt|;
 name|int
 name|fngrlogin
 decl_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|outbuf
-argument_list|)
-expr_stmt|;
-comment|/* buffer output */
 comment|/*  parse command line for (optional) arguments */
 name|i
 operator|=

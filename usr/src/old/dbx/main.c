@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.8 (Berkeley) %G%"
+literal|"@(#)main.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,20 +261,6 @@ end_comment
 begin_decl_stmt
 name|private
 name|char
-name|outbuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* standard output buffer */
-end_comment
-
-begin_decl_stmt
-name|private
-name|char
 name|namebuf
 index|[
 literal|512
@@ -357,13 +343,6 @@ argument_list|(
 name|EINTR
 argument_list|,
 name|nil
-argument_list|)
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|outbuf
 argument_list|)
 expr_stmt|;
 name|setlinebuf

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)head.c	4.1 (Berkeley) %G%"
+literal|"@(#)head.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,19 +66,6 @@ specifier|static
 name|int
 name|around
 decl_stmt|;
-name|char
-name|obuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|obuf
-argument_list|)
-expr_stmt|;
 name|Argc
 operator|--
 operator|,

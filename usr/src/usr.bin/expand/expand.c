@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)expand.c	4.2 (Berkeley) %G%"
+literal|"@(#)expand.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,15 +18,6 @@ end_include
 begin_comment
 comment|/*  * expand - expand tabs to equivalent spaces  */
 end_comment
-
-begin_decl_stmt
-name|char
-name|obuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -69,13 +60,6 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|obuf
-argument_list|)
-expr_stmt|;
 name|argc
 operator|--
 operator|,

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.12 (Berkeley) %G%"
+literal|"@(#)w.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,19 +683,6 @@ name|curpid
 decl_stmt|,
 name|empty
 decl_stmt|;
-name|char
-name|obuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|obuf
-argument_list|)
-expr_stmt|;
 name|login
 operator|=
 operator|(

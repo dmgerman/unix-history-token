@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ul.c	4.5 (Berkeley) %G%"
+literal|"@(#)ul.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,15 +198,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -466,13 +457,6 @@ condition|)
 name|must_overstrike
 operator|=
 literal|1
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|buf
-argument_list|)
 expr_stmt|;
 name|initbuf
 argument_list|()

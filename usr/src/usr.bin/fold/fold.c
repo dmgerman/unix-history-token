@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)fold.c	4.2 (Berkeley) %G%"
+literal|"@(#)fold.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,24 +50,11 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
-name|char
-name|obuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 name|argc
 operator|--
 operator|,
 name|argv
 operator|++
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|obuf
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
