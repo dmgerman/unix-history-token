@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.6 (Berkeley) %G%"
+literal|"@(#)table.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -830,72 +830,6 @@ name|RESC1
 block|,
 literal|"	movl	$1,A1\nZN"
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FORT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SPRECC
-argument_list|)
-name|UNARY
-name|CALL
-block|,
-name|INTAREG
-block|,
-name|SCON
-block|,
-name|TANY
-block|,
-name|SANY
-block|,
-name|TFLOAT
-block|,
-name|NAREG
-operator||
-name|NASL
-block|,
-name|RESC1
-block|,
-literal|"	calls	ZC,CL\n"
-block|,
-name|UNARY
-name|CALL
-block|,
-name|INTAREG
-block|,
-name|SCON
-block|,
-name|TANY
-block|,
-name|SANY
-block|,
-name|TWORD
-operator||
-name|TCHAR
-operator||
-name|TUCHAR
-operator||
-name|TSHORT
-operator||
-name|TUSHORT
-operator||
-name|TDOUBLE
-block|,
-name|NAREG
-operator||
-name|NASL
-block|,
-name|RESC1
-block|,
-comment|/* should be register 0 */
-literal|"	calls	ZC,CL\n"
-block|,
-else|#
-directive|else
 name|UNARY
 name|CALL
 block|,
@@ -929,8 +863,6 @@ name|RESC1
 block|,
 literal|"	calls	ZC,CL\n"
 block|,
-endif|#
-directive|endif
 name|UNARY
 name|CALL
 block|,
