@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diskpart.c	4.1 (Berkeley) %G%"
+literal|"@(#)diskpart.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -987,6 +987,9 @@ condition|(
 name|dflag
 condition|)
 block|{
+name|int
+name|nparts
+decl_stmt|;
 comment|/* 		 * In case the disk is in the ``in-between'' range 		 * where the 'g' partition is smaller than the 'h' 		 * partition, reverse the frag sizes so the /usr partition 		 * is always set up with a frag size larger than the 		 * user's partition. 		 */
 if|if
 condition|(
@@ -1093,6 +1096,41 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|nparts
+operator|=
+literal|0
+operator|,
+name|part
+operator|=
+name|PART
+argument_list|(
+literal|'a'
+argument_list|)
+init|;
+name|part
+operator|<
+name|NPARTITIONS
+condition|;
+name|part
+operator|++
+control|)
+if|if
+condition|(
+name|defpart
+index|[
+name|def
+index|]
+index|[
+name|part
+index|]
+operator|!=
+literal|0
+condition|)
+name|nparts
+operator|++
+expr_stmt|;
+for|for
+control|(
 name|part
 operator|=
 name|PART
@@ -1149,6 +1187,7 @@ name|p_bsize
 operator|!=
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"b%c#%d:f%c#%d:"
@@ -1176,15 +1215,17 @@ operator|.
 name|p_fsize
 argument_list|)
 expr_stmt|;
+block|}
+name|nparts
+operator|--
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|part
-operator|!=
-name|NPARTITIONS
-operator|-
-literal|1
+name|nparts
+operator|>
+literal|0
 condition|?
 literal|"\\"
 else|:
