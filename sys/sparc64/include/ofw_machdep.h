@@ -28,6 +28,8 @@ parameter_list|(
 name|phandle_t
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|bus_addr_t

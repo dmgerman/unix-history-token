@@ -980,6 +980,8 @@ name|OF_decode_addr
 argument_list|(
 name|input
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|space
 argument_list|,
