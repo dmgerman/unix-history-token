@@ -513,6 +513,42 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_function
+specifier|static
+name|__inline
+name|pmap_t
+name|vmspace_pmap
+parameter_list|(
+name|struct
+name|vmspace
+modifier|*
+name|vmspace
+parameter_list|)
+block|{
+return|return
+operator|&
+name|vmspace
+operator|->
+name|vm_pmap
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  *	Macros:		vm_map_lock, etc.  *	Function:  *		Perform locking on the data portion of a map.  Note that  *		these macros mimic procedure calls returning void.  The  *		semicolon is supplied by the user of these macros, not  *		by the macros themselves.  The macros can safely be used  *		as unbraced elements in a higher level statement.  */
 end_comment
@@ -772,20 +808,6 @@ parameter_list|)
 define|\
 value|_vm_map_clear_recursive(map, LOCK_FILE, LOCK_LINE)
 end_define
-
-begin_function_decl
-name|struct
-name|pmap
-modifier|*
-name|vmspace_pmap
-parameter_list|(
-name|struct
-name|vmspace
-modifier|*
-name|vmspace
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|long
