@@ -4051,9 +4051,14 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEV_ATADISK
 name|ata_raid_attach
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

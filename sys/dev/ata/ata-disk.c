@@ -1228,11 +1228,19 @@ operator||=
 name|AD_F_RAID_SUBDISK
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+name|atadev
+operator|->
+name|driver
+condition|)
 name|ad_print
 argument_list|(
 name|adp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
