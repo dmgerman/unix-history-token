@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: hprop.c,v 1.69 2002/04/18 10:18:35 joda Exp $"
+literal|"$Id: hprop.c,v 1.70 2002/09/04 18:19:41 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4398,6 +4398,8 @@ argument_list|,
 name|server
 argument_list|,
 name|AP_OPTS_MUTUAL_REQUIRED
+operator||
+name|AP_OPTS_USE_SUBKEY
 argument_list|,
 name|NULL
 argument_list|,

@@ -23,7 +23,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: k5dfspag.c,v 1.5 2002/01/23 01:49:34 assar Exp $"
+literal|"$Id: k5dfspag.c,v 1.6 2002/08/12 15:11:58 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -363,7 +363,7 @@ begin_define
 define|#
 directive|define
 name|DPAGAIX
-value|LIBEXECDIR ## "/dpagaix"
+value|LIBEXECDIR "/dpagaix"
 end_define
 
 begin_endif
@@ -489,7 +489,7 @@ begin_define
 define|#
 directive|define
 name|K5DCECON
-value|LIBEXECDIR ## "/k5dcecon"
+value|LIBEXECDIR "/k5dcecon"
 end_define
 
 begin_endif

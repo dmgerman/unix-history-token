@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/*   * $Id: kadmin_locl.h,v 1.40 2001/08/22 20:30:24 assar Exp $  */
+comment|/*   * $Id: kadmin_locl.h,v 1.41 2002/09/10 20:04:45 joda Exp $  */
 end_comment
 
 begin_ifndef
@@ -287,34 +287,6 @@ include|#
 directive|include
 file|<roken.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_OPENSSL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<openssl/des.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<des.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

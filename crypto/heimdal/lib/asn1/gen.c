@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gen.c,v 1.48 2002/08/26 13:27:20 assar Exp $"
+literal|"$Id: gen.c,v 1.49 2002/09/04 15:06:18 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -286,15 +286,7 @@ name|fprintf
 argument_list|(
 name|headerfile
 argument_list|,
-if|#
-directive|if
-literal|0
-argument_list|"typedef struct general_string {\n" 	     "  size_t length;\n" 	     "  char *data;\n" 	     "} general_string;\n\n"
-else|#
-directive|else
 literal|"typedef char *general_string;\n\n"
-endif|#
-directive|endif
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -305,6 +297,27 @@ literal|"typedef struct oid {\n"
 literal|"  size_t length;\n"
 literal|"  unsigned *components;\n"
 literal|"} oid;\n\n"
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"#define ASN1_MALLOC_ENCODE(T, B, BL, S, L, R)                  \\\n"
+literal|"  do {                                                         \\\n"
+literal|"    (BL) = length_##T((S));                                    \\\n"
+literal|"    (B) = malloc((BL));                                        \\\n"
+literal|"    if((B) == NULL) {                                          \\\n"
+literal|"      (R) = ENOMEM;                                            \\\n"
+literal|"    } else {                                                   \\\n"
+literal|"      (R) = encode_##T(((unsigned char*)(B)) + (BL) - 1, (BL), \\\n"
+literal|"                       (S), (L));                              \\\n"
+literal|"      if((R) != 0) {                                           \\\n"
+literal|"        free((B));                                             \\\n"
+literal|"        (B) = NULL;                                            \\\n"
+literal|"      }                                                        \\\n"
+literal|"    }                                                          \\\n"
+literal|"  } while (0)\n\n"
+argument_list|,
+name|headerfile
 argument_list|)
 expr_stmt|;
 name|fprintf
