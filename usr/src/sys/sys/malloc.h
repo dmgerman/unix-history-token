@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)malloc.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)malloc.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -388,9 +388,9 @@ define|#
 directive|define
 name|kmemxtob
 parameter_list|(
-name|addr
+name|alloc
 parameter_list|)
-value|(kmembase + (addr) * NBPG)
+value|(kmembase + (alloc) * NBPG)
 end_define
 
 begin_define
@@ -400,7 +400,7 @@ name|btokmemx
 parameter_list|(
 name|addr
 parameter_list|)
-value|(((addr) - kmembase) / NBPG)
+value|(((caddr_t)(addr) - kmembase) / NBPG)
 end_define
 
 begin_define
@@ -410,7 +410,7 @@ name|btokup
 parameter_list|(
 name|addr
 parameter_list|)
-value|(&kmemusage[((addr) - kmembase)>> CLSHIFT])
+value|(&kmemusage[((caddr_t)(addr) - kmembase)>> CLSHIFT])
 end_define
 
 begin_comment
@@ -439,7 +439,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|(space) = (cast)malloc(size, type, flags)
+value|(space) = (cast)malloc((u_long)(size), type, flags)
 end_define
 
 begin_define
@@ -451,7 +451,7 @@ name|addr
 parameter_list|,
 name|type
 parameter_list|)
-value|free(addr, type)
+value|free((caddr_t)(addr), type)
 end_define
 
 begin_else
@@ -478,7 +478,7 @@ name|type
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	register struct kmembuckets *kbp =&bucket[BUCKETINDX(size)]; \ 	long s = splimp(); \ 	if (kbp->kb_next == NULL) { \ 		(space) = (cast)malloc(size, type, flags); \ 	} else { \ 		(space) = (cast)kbp->kb_next; \ 		kbp->kb_next = *(caddr_t *)(space); \ 	} \ 	splx(s); \ }
+value|{ \ 	register struct kmembuckets *kbp =&bucket[BUCKETINDX(size)]; \ 	long s = splimp(); \ 	if (kbp->kb_next == NULL) { \ 		(space) = (cast)malloc((u_long)(size), type, flags); \ 	} else { \ 		(space) = (cast)kbp->kb_next; \ 		kbp->kb_next = *(caddr_t *)(space); \ 	} \ 	splx(s); \ }
 end_define
 
 begin_define
@@ -490,7 +490,7 @@ name|addr
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	register struct kmembuckets *kbp; \ 	register struct kmemusage *kup = btokup(addr); \ 	long s = splimp(); \ 	if (1<< kup->ku_indx> MAXALLOCSAVE) { \ 		free(addr, type); \ 	} else { \ 		kbp =&bucket[kup->ku_indx]; \ 		*(caddr_t *)(addr) = kbp->kb_next; \ 		kbp->kb_next = (caddr_t)(addr); \ 	} \ 	splx(s); \ }
+value|{ \ 	register struct kmembuckets *kbp; \ 	register struct kmemusage *kup = btokup(addr); \ 	long s = splimp(); \ 	if (1<< kup->ku_indx> MAXALLOCSAVE) { \ 		free((caddr_t)(addr), type); \ 	} else { \ 		kbp =&bucket[kup->ku_indx]; \ 		*(caddr_t *)(addr) = kbp->kb_next; \ 		kbp->kb_next = (caddr_t)(addr); \ 	} \ 	splx(s); \ }
 end_define
 
 begin_endif
