@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.8 2001/01/20 01:48:55 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.9 2001/01/20 02:03:53 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.107 2000/12/20 06:05:13; haya Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.111 2001/01/20 01:56:16 imp Exp $ */
 end_comment
 
 begin_comment
@@ -440,6 +440,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_ROLAND
+value|0xc00c
+end_define
+
+begin_comment
+comment|/* Roland */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_COREGA
 value|0xc00f
 end_define
@@ -479,6 +490,17 @@ end_define
 
 begin_comment
 comment|/* RATOC System Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_EMTAC
+value|0xc250
+end_define
+
+begin_comment
+comment|/* EMTAC Technology Corporation */
 end_comment
 
 begin_define
@@ -2267,6 +2289,31 @@ value|"Contec C-NET(PC)C"
 end_define
 
 begin_comment
+comment|/* Roland */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_ROLAND_SCP55
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_ROLAND_SCP55
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_ROLAND_SCP55
+value|"Roland SCP-55"
+end_define
+
+begin_comment
 comment|/* Allied Telesis K.K. */
 end_comment
 
@@ -2577,6 +2624,31 @@ define|#
 directive|define
 name|PCCARD_STR_MACNICA_ME1_JEIDA
 value|"MACNICA ME1 for JEIDA"
+end_define
+
+begin_comment
+comment|/* EMTAC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_EMTAC_WLAN
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_EMTAC_WLAN
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_EMTAC_WLAN
+value|"EMTAC A2424i 11Mbps WLAN Card"
 end_define
 
 begin_comment
@@ -3522,6 +3594,27 @@ define|#
 directive|define
 name|PCCARD_STR_SMC_2632W
 value|"SMC 2632 EZ Connect Wireless PC Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_NANOSPEED_PRISM2
+value|{ "NANOSPEED", "HFA384x/IEEE", "Version 01.02", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_NANOSPEED_PRISM2
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_NANOSPEED_PRISM2
+value|"NANOSPEED ROOT-RZ2000 WLAN Card"
 end_define
 
 end_unit
