@@ -1304,6 +1304,8 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+name|done
+label|:
 name|NG_RESPOND_MSG
 argument_list|(
 name|error
@@ -1313,17 +1315,6 @@ argument_list|,
 name|item
 argument_list|,
 name|resp
-argument_list|)
-expr_stmt|;
-name|done
-label|:
-if|if
-condition|(
-name|item
-condition|)
-name|NG_FREE_ITEM
-argument_list|(
-name|item
 argument_list|)
 expr_stmt|;
 name|NG_FREE_MSG

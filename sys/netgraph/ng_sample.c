@@ -1281,6 +1281,7 @@ name|downstream_hook
 operator|.
 name|hook
 condition|)
+block|{
 name|NG_FREE_ITEM
 argument_list|(
 name|item
@@ -1291,6 +1292,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 literal|0
