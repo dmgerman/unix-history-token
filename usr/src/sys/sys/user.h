@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.1	%G%	*/
+comment|/*	user.h	4.2	%G%	*/
 end_comment
 
 begin_ifdef
@@ -83,6 +83,13 @@ define|#
 directive|define
 name|EXCLOSE
 value|01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHSIZE
+value|32
 end_define
 
 begin_struct
@@ -299,42 +306,86 @@ name|dev_t
 name|u_ttyd
 decl_stmt|;
 comment|/* controlling tty dev */
+union|union
+block|{
 struct|struct
 block|{
 comment|/* header of executable file */
 name|int
-name|ux_mag
+name|Ux_mag
 decl_stmt|;
 comment|/* magic number */
 name|unsigned
-name|ux_tsize
+name|Ux_tsize
 decl_stmt|;
 comment|/* text size */
 name|unsigned
-name|ux_dsize
+name|Ux_dsize
 decl_stmt|;
 comment|/* data size */
 name|unsigned
-name|ux_bsize
+name|Ux_bsize
 decl_stmt|;
 comment|/* bss size */
 name|unsigned
-name|ux_ssize
+name|Ux_ssize
 decl_stmt|;
 comment|/* symbol table size */
 name|unsigned
-name|ux_entloc
+name|Ux_entloc
 decl_stmt|;
 comment|/* entry location */
 name|unsigned
-name|ux_unused
+name|Ux_unused
 decl_stmt|;
 name|unsigned
-name|ux_relflg
+name|Ux_relflg
 decl_stmt|;
 block|}
-name|u_exdata
+name|Ux_A
 struct|;
+name|char
+name|ux_shell
+index|[
+name|SHSIZE
+index|]
+decl_stmt|;
+comment|/* #! and name of interpreter */
+block|}
+name|u_exdata
+union|;
+define|#
+directive|define
+name|ux_mag
+value|Ux_A.Ux_mag
+define|#
+directive|define
+name|ux_tsize
+value|Ux_A.Ux_tsize
+define|#
+directive|define
+name|ux_dsize
+value|Ux_A.Ux_dsize
+define|#
+directive|define
+name|ux_bsize
+value|Ux_A.Ux_bsize
+define|#
+directive|define
+name|ux_ssize
+value|Ux_A.Ux_ssize
+define|#
+directive|define
+name|ux_entloc
+value|Ux_A.Ux_entloc
+define|#
+directive|define
+name|ux_unused
+value|Ux_A.Ux_unused
+define|#
+directive|define
+name|ux_relflg
+value|Ux_A.Ux_relflg
 name|char
 name|u_comm
 index|[
