@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Datakit driver  * KMC assistance, with or without DR11C  *	@(#)dkit_kmc.c	1.3 (Berkeley) %G%  */
+comment|/*  * Datakit driver  * KMC assistance, with or without DR11C  *	@(#)dkit_kmc.c	1.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -26,79 +26,79 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|"sys/syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|"sys/time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|"sys/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|"sys/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|"net/if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_uba.h"
+file|"../if/if_uba.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubareg.h"
+file|"../uba/ubareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubavar.h"
+file|"../uba/ubavar.h"
 end_include
 
 begin_include

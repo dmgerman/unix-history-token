@@ -1,84 +1,84 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"psl.h"
+file|"../include/psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reg.h"
+file|"../include/reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"seg.h"
+file|"sys/seg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"trap.h"
+file|"../include/trap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acct.h"
+file|"sys/acct.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|"sys/syslog.h"
 end_include
 
 begin_ifdef
@@ -90,7 +90,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"ktrace.h"
+file|"sys/ktrace.h"
 end_include
 
 begin_endif
@@ -101,25 +101,25 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm/vm_param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/pmap.h"
+file|"vm/pmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_map.h"
+file|"vm/vm_map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmmeter.h"
+file|"sys/vmmeter.h"
 end_include
 
 begin_ifdef
@@ -2101,7 +2101,7 @@ expr_stmt|;
 comment|/* 	 * XXX the check for sigreturn ensures that we don't 	 * attempt to set up a call to a signal handler (sendsig) before 	 * we have cleaned up the stack from the last call (sigreturn). 	 * Allowing this seems to lock up the machine in certain scenarios. 	 * What should really be done is to clean up the signal handling 	 * so that this is not a problem. 	 */
 include|#
 directive|include
-file|"syscall.h"
+file|"sys/syscall.h"
 if|if
 condition|(
 name|code

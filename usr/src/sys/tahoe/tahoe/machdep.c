@@ -1,114 +1,114 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|"sys/map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm.h"
+file|"sys/vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reboot.h"
+file|"sys/reboot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|"sys/conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|"sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"text.h"
+file|"sys/text.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clist.h"
+file|"sys/clist.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"callout.h"
+file|"sys/callout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cmap.h"
+file|"sys/cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|"sys/malloc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"msgbuf.h"
+file|"sys/msgbuf.h"
 end_include
 
 begin_ifdef
@@ -120,7 +120,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"shm.h"
+file|"sys/shm.h"
 end_include
 
 begin_endif
@@ -131,25 +131,25 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reg.h"
+file|"../include/reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"psl.h"
+file|"../include/psl.h"
 end_include
 
 begin_include
@@ -161,7 +161,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
@@ -173,7 +173,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../tahoevba/vbavar.h"
+file|"../vba/vbavar.h"
 end_include
 
 begin_comment
@@ -269,7 +269,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../tahoevba/cyreg.h"
+file|"../vba/cyreg.h"
 end_include
 
 begin_endif

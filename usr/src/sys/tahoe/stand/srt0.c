@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	1.7	89/04/25	*/
+comment|/*	srt0.c	1.8	90/12/16	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"machine/mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_define

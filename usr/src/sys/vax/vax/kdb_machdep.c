@@ -1,108 +1,108 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)kdb_machdep.c	7.7 (Berkeley) %G%	*/
+comment|/*	@(#)kdb_machdep.c	7.8 (Berkeley) %G%	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|"sys/conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|"sys/uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reboot.h"
+file|"sys/reboot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmmac.h"
+file|"sys/vmmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|"sys/tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"psl.h"
+file|"../include/psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reg.h"
+file|"../include/reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"trap.h"
+file|"../include/trap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kdbparam.h"
+file|"../include/kdbparam.h"
 end_include
 
 begin_define

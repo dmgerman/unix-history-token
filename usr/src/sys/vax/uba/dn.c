@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dn.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dn.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,49 +24,49 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"machine/pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|"sys/map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|"sys/conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|"sys/uio.h"
 end_include
 
 begin_include

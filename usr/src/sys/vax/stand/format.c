@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	7.5 (Berkeley) %G%"
+literal|"@(#)format.c	7.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,43 +59,43 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dkbad.h"
+file|"sys/dkbad.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmmac.h"
+file|"sys/vmmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"disklabel.h"
+file|"sys/disklabel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"saio.h"
+file|"stand/saio.h"
 end_include
 
 begin_include

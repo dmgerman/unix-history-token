@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,31 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/idcreg.h"
+file|"../uba/idcreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubareg.h"
+file|"../uba/ubareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"saio.h"
+file|"stand/saio.h"
 end_include
 
 begin_include

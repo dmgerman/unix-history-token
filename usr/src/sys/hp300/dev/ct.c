@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ct.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ct.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,31 +24,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mtio.h"
+file|"sys/mtio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|"sys/errno.h"
 end_include
 
 begin_include
@@ -66,19 +66,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|"sys/tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_comment

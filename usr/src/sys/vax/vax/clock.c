@@ -1,42 +1,42 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)clock.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)clock.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|"sys/time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clock.h"
+file|"../include/clock.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_comment

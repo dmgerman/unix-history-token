@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dma.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dma.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,31 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|"sys/time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/isr.h"
+file|"../hp300/isr.h"
 end_include
 
 begin_function_decl
@@ -1624,6 +1624,8 @@ directive|endif
 name|DMA_ARM
 argument_list|(
 name|dc
+argument_list|,
+literal|"KIRK, MISSING AN ARG"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2006,6 +2008,8 @@ expr_stmt|;
 name|DMA_ARM
 argument_list|(
 name|dc
+argument_list|,
+literal|"KIRK, MISSING AN ARG"
 argument_list|)
 expr_stmt|;
 block|}

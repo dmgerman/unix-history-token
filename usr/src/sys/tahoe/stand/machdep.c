@@ -1,24 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	1.4	90/06/22	*/
+comment|/*	machdep.c	1.5	90/12/16	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"tahoe/mem.h"
+file|"../tahoe/mem.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tahoe/mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tahoe/SYS.h"
+file|"../tahoe/SYS.h"
 end_include
 
 begin_expr_stmt

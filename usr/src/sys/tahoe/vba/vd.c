@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vd.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vd.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,127 +24,127 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cmap.h"
+file|"sys/cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|"sys/conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dkstat.h"
+file|"sys/dkstat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"disklabel.h"
+file|"sys/disklabel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|"sys/map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|"sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmmac.h"
+file|"sys/vmmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|"sys/syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"stat.h"
+file|"sys/stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoevba/vbavar.h"
+file|"../vba/vbavar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoevba/vdreg.h"
+file|"../vba/vdreg.h"
 end_include
 
 begin_ifndef

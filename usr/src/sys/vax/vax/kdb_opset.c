@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../kdb/defs.h"
+file|"kdb/defs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"frame.h"
+file|"../include/frame.h"
 end_include
 
 begin_decl_stmt
@@ -1421,7 +1421,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"asnumber.h"
+file|"../vax/asnumber.h"
 end_include
 
 begin_typedef

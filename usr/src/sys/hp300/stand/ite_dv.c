@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_dv.c 1.1 89/02/28$  *  *	@(#)ite_dv.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_dv.c 1.1 89/02/28$  *  *	@(#)ite_dv.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,31 +18,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hpdev/itevar.h"
+file|"../dev/itevar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hpdev/itereg.h"
+file|"../dev/itereg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hpdev/grfvar.h"
+file|"../dev/grfvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hpdev/grf_dvreg.h"
+file|"../dev/grf_dvreg.h"
 end_include
 
 begin_define

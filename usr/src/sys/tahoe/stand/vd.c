@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vd.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vd.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -40,19 +40,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"saio.h"
+file|"stand/saio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tahoevba/vdreg.h"
+file|"../vba/vdreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tahoevba/vbaparam.h"
+file|"../vba/vbaparam.h"
 end_include
 
 begin_define

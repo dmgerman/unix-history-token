@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kdb.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kdb.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,25 +10,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"machine/pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"disklabel.h"
+file|"sys/disklabel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"saio.h"
+file|"stand/saio.h"
 end_include
 
 begin_include
@@ -84,13 +84,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../vaxbi/bireg.h"
+file|"../bi/bireg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxbi/kdbreg.h"
+file|"../bi/kdbreg.h"
 end_include
 
 begin_include

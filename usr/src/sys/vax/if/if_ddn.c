@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_ddn.c	7.3 (Berkeley) %G% */
+comment|/*	@(#)if_ddn.c	7.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -39,91 +39,91 @@ end_if
 begin_include
 include|#
 directive|include
-file|"machine/pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|"sys/protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|"sys/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmmac.h"
+file|"sys/vmmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|"sys/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|"sys/time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|"net/if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/netisr.h"
+file|"net/netisr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|"net/route.h"
 end_include
 
 begin_ifdef
@@ -135,25 +135,25 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|"netinet/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_systm.h"
+file|"netinet/in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_var.h"
+file|"netinet/in_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip.h"
+file|"netinet/ip.h"
 end_include
 
 begin_endif
@@ -164,13 +164,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../vax/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
@@ -194,13 +194,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubareg.h"
+file|"../uba/ubareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubavar.h"
+file|"../uba/ubavar.h"
 end_include
 
 begin_escape

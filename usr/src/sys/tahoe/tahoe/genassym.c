@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	7.6 (Berkeley) %G%"
+literal|"@(#)genassym.c	7.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,85 +55,85 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmmeter.h"
+file|"sys/vmmeter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmparam.h"
+file|"sys/vmparam.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cmap.h"
+file|"sys/cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|"sys/map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"text.h"
+file|"sys/text.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"msgbuf.h"
+file|"sys/msgbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scb.h"
+file|"../tahoe/scb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoevba/vbaparam.h"
+file|"../vba/vbaparam.h"
 end_include
 
 begin_function

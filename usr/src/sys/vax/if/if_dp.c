@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_dp.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_dp.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -28,37 +28,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"machine/pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_comment
@@ -68,79 +68,79 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|"sys/protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|"sys/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|"sys/socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|"sys/syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmmac.h"
+file|"sys/vmmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|"sys/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|"sys/time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|"net/if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/netisr.h"
+file|"net/netisr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|"net/route.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_define
@@ -153,31 +153,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../vaxuba/pdma.h"
+file|"../uba/pdma.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubavar.h"
+file|"../uba/ubavar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/x25.h"
+file|"netccitt/x25.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/pk.h"
+file|"netccitt/pk.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/pk_var.h"
+file|"netccitt/pk_var.h"
 end_include
 
 begin_include

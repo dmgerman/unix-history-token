@@ -77,109 +77,109 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm.h"
+file|"sys/vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|"sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"signal.h"
+file|"sys/signal.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mtio.h"
+file|"sys/mtio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|"sys/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cmap.h"
+file|"sys/cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|"sys/time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|"sys/syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tprintf.h"
+file|"sys/tprintf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoevba/vbavar.h"
+file|"../vba/vbavar.h"
 end_include
 
 begin_define
@@ -191,7 +191,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../tahoevba/cyreg.h"
+file|"../vba/cyreg.h"
 end_include
 
 begin_comment

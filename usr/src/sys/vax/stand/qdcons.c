@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)qdcons.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)qdcons.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,13 +18,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/types.h"
+file|"sys/types.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_define
@@ -36,25 +36,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../vaxuba/qdioctl.h"
+file|"../uba/qdioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/qevent.h"
+file|"../uba/qevent.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/qduser.h"
+file|"../uba/qduser.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/qdreg.h"
+file|"../uba/qdreg.h"
 end_include
 
 begin_undef

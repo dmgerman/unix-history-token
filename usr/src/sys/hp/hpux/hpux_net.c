@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_net.c 1.33 89/08/23$  *  *	@(#)hpux_net.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_net.c 1.33 89/08/23$  *  *	@(#)hpux_net.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,79 +16,79 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|"sys/time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|"sys/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|"sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|"sys/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|"sys/socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|"sys/uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ktrace.h"
+file|"sys/ktrace.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hpux.h"
+file|"sys/hpux.h"
 end_include
 
 begin_define

@@ -121,33 +121,11 @@ begin_comment
 comment|/* Sys V compatibility */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"machine/machtypes.h"
+file|<machine/types.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<machine/machtypes.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

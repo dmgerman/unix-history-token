@@ -1,72 +1,72 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"psl.h"
+file|"../include/psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reg.h"
+file|"../include/reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"seg.h"
+file|"sys/seg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"trap.h"
+file|"../include/trap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acct.h"
+file|"sys/acct.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_ifdef
@@ -78,7 +78,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"ktrace.h"
+file|"sys/ktrace.h"
 end_include
 
 begin_endif
@@ -89,7 +89,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_define

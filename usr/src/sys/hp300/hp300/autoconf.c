@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.25 89/10/07$  *  *	@(#)autoconf.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.25 89/10/07$  *  *	@(#)autoconf.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,55 +10,55 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|"sys/map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dkstat.h"
+file|"sys/dkstat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|"sys/conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dmap.h"
+file|"sys/dmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reboot.h"
+file|"sys/reboot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
@@ -70,19 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../hpdev/device.h"
+file|"../dev/device.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hpdev/grfioctl.h"
+file|"../dev/grfioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hpdev/grfvar.h"
+file|"../dev/grfvar.h"
 end_include
 
 begin_comment
@@ -2781,7 +2781,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../hpdev/cdvar.h"
+file|"../dev/cdvar.h"
 end_include
 
 begin_macro

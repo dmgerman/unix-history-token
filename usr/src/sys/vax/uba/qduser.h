@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qduser.h	1.4  Berkeley  %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qduser.h	1.5  Berkeley  %G%  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"qevent.h"
+file|"../uba/qevent.h"
 end_include
 
 begin_comment
@@ -43,7 +43,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<vaxuba/qevent.h>
+file|<vax/uba/qevent.h>
 end_include
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -32,61 +32,67 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"bi.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dkstat.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm.h"
+file|"sys/dkstat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|"sys/vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|"sys/malloc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dmap.h"
+file|"sys/conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reboot.h"
+file|"sys/dmap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/reboot.h"
 end_include
 
 begin_ifdef
@@ -122,19 +128,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
@@ -146,7 +146,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
@@ -170,31 +170,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vaxbi/bireg.h"
+file|"../bi/bireg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxmba/mbareg.h"
+file|"../mba/mbareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxmba/mbavar.h"
+file|"../mba/mbavar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubareg.h"
+file|"../uba/ubareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubavar.h"
+file|"../uba/ubavar.h"
 end_include
 
 begin_comment
@@ -2132,12 +2132,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"bi.h"
-end_include
 
 begin_if
 if|#

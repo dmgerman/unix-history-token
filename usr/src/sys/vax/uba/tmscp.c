@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.14 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.15 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -46,103 +46,103 @@ end_if
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|"sys/conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|"sys/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|"sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|"sys/map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm.h"
+file|"sys/vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|"sys/syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mtio.h"
+file|"sys/mtio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cmap.h"
+file|"sys/cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|"sys/uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tprintf.h"
+file|"sys/tprintf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include

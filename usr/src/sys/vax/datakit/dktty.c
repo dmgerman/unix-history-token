@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Datakit terminal driver  *	SCCSID[] = "@(#)dktty.c	1.8 Garage 84/05/14"  *		   "@(#)dktty.c	1.4 (Berkeley) %G%"  */
+comment|/*  *  Datakit terminal driver  *	SCCSID[] = "@(#)dktty.c	1.8 Garage 84/05/14"  *		   "@(#)dktty.c	1.5 (Berkeley) %G%"  */
 end_comment
 
 begin_include
@@ -26,85 +26,85 @@ end_include
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|"sys/syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|"sys/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"signal.h"
+file|"sys/signal.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|"sys/conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|"sys/tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|"sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|"sys/uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include

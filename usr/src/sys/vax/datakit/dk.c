@@ -20,127 +20,127 @@ end_if
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"../include/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"signal.h"
+file|"sys/signal.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|"sys/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|"sys/conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|"sys/tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|"sys/vnode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|"sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|"sys/uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dkit.h"
+file|"sys/dkit.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dkcmc.h"
+file|"sys/dkcmc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dk.h"
+file|"sys/dk.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dkdev.h"
+file|"sys/dkdev.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|"sys/syslog.h"
 end_include
 
 begin_decl_stmt

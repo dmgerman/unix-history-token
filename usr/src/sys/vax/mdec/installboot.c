@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)installboot.c	7.1 (Berkeley) %G%"
+literal|"@(#)installboot.c	7.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,13 +49,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"sys/fs.h"
 end_include
 
 begin_decl_stmt

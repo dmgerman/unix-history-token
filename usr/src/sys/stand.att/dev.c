@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dev.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dev.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,8 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|"saio.h"
+file|"stand/saio.h"
 end_include
+
+begin_comment
+comment|/* used from machine/stand dir */
+end_comment
 
 begin_comment
 comment|/*  * NB: the value "io->i_dev", used to offset the devsw[] array  * in the routines below, is munged by the vaxstand Makefile to work  * for certain boots.  */

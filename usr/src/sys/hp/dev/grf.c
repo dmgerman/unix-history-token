@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.28 89/08/14$  *  *	@(#)grf.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.28 89/08/14$  *  *	@(#)grf.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,37 +24,37 @@ end_if
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|"sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|"sys/malloc.h"
 end_include
 
 begin_include
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_ifdef
@@ -101,49 +101,49 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm/vm_param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_map.h"
+file|"vm/vm_map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_kern.h"
+file|"vm/vm_kern.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_page.h"
+file|"vm/vm_page.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_pager.h"
+file|"vm/vm_pager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"specdev.h"
+file|"sys/specdev.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|"sys/vnode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mman.h"
+file|"sys/mman.h"
 end_include
 
 begin_include

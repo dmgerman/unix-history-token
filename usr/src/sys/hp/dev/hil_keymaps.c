@@ -1,16 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil_keymaps.c 1.1 90/07/09$  *  *	@(#)hil_keymaps.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil_keymaps.c 1.1 90/07/09$  *  *	@(#)hil_keymaps.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Keymaps for various HP-HIL keyboard layouts.  * These tables apply only to keyboards in "cooked" mode.  * Currently only one is supported as an ITE keyboard.  *  * Maps are indexed by cooked keycode and contain the ASCII  * character for that keycode.  The map-set used depends on the  * keyboard "language".  The map used within that set depends on  * the shift/control status that is returned by the hardware along  * with the keycode.  If an entry is NULL for a key in the appropriate  * unshifted, shifted, control, or control-shifted table, then a  * single "string" table is consulted.  In this fashion, a multi-  * character sequence can be returned for a key press.  Note that  * control/shift status have no effect on multi-character lookup  * (i.e. there is only one string table per set, not four).  *  * Someday we could allow user-definable keymaps, but we would have  * to come up with a better format (at least externally).  This  * format takes up lots of space.  Having keymaps for all 18 or so  * HP supported layouts would be bad news.  */
+comment|/*  * Keymaps for various HP-HIL keyboard layouts.  These tables apply only to  * keyboards in "cooked" mode.  Currently only one is supported as an ITE  * keyboard.  *  * Maps are indexed by cooked keycode and contain the ASCII character for  * that keycode.  The map-set used depends on the keyboard "language".  The  * map used within that set depends on the shift/control status that is  * returned by the hardware along with the keycode.  If an entry is NULL for  * a key in the appropriate unshifted, shifted, control, or control-shifted  * table, then a single "string" table is consulted.  In this fashion, a  * multi- character sequence can be returned for a key press.  Note that  * control/shift status have no effect on multi-character lookup (i.e. there  * is only one string table per set, not four).  *  * Someday we could allow user-definable keymaps, but we would have to come up  * with a better format (at least externally).  This format takes up lots of  * space.  Having keymaps for all 18 or so HP supported layouts would be bad  * news.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include

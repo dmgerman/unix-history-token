@@ -24,7 +24,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../vax/pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_comment
@@ -34,7 +34,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_comment
@@ -44,7 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/param.h"
+file|"sys/param.h"
 end_include
 
 begin_comment
@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/conf.h"
+file|"sys/conf.h"
 end_include
 
 begin_comment
@@ -64,7 +64,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/user.h"
+file|"sys/user.h"
 end_include
 
 begin_comment
@@ -84,13 +84,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/tty.h"
+file|"sys/tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/map.h"
+file|"sys/map.h"
 end_include
 
 begin_comment
@@ -100,7 +100,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_comment
@@ -110,7 +110,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/vm.h"
+file|"sys/vm.h"
 end_include
 
 begin_comment
@@ -120,7 +120,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/clist.h"
+file|"sys/clist.h"
 end_include
 
 begin_comment
@@ -130,7 +130,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/file.h"
+file|"sys/file.h"
 end_include
 
 begin_comment
@@ -140,7 +140,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/uio.h"
+file|"sys/uio.h"
 end_include
 
 begin_comment
@@ -150,7 +150,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../sys/kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_comment
@@ -160,7 +160,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../vax/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_comment
@@ -170,7 +170,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubareg.h"
+file|"../uba/ubareg.h"
 end_include
 
 begin_comment
@@ -180,7 +180,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubavar.h"
+file|"../uba/ubavar.h"
 end_include
 
 begin_comment

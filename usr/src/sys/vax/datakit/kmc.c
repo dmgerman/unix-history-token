@@ -28,55 +28,55 @@ end_if
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|"sys/kmcreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kmcreg.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubavar.h"
+file|"../uba/ubavar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|"sys/uio.h"
 end_include
 
 begin_ifdef

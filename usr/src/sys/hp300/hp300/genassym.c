@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -12,79 +12,79 @@ end_define
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmmeter.h"
+file|"sys/vmmeter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cmap.h"
+file|"sys/cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|"sys/map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"msgbuf.h"
+file|"sys/msgbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"trap.h"
+file|"../include/trap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"psl.h"
+file|"../include/psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reg.h"
+file|"../include/reg.h"
 end_include
 
 begin_include
@@ -96,25 +96,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscall.h"
+file|"sys/syscall.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm/vm_param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_map.h"
+file|"vm/vm_map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pmap.h"
+file|"../include/pmap.h"
 end_include
 
 begin_function

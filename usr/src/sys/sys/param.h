@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -254,7 +254,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|LOCORE
 end_ifndef
 
 begin_include
@@ -262,28 +262,6 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -294,65 +272,33 @@ begin_comment
 comment|/*  * Signals  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"signal.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<sys/signal.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Machine type dependent parameters.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<machine/param.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/machparam.h"
+file|<machine/endian.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
 directive|include
-file|<machine/machparam.h>
+file|<machine/limits.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

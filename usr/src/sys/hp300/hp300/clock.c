@@ -1,30 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.17 89/11/30$  *  *	@(#)clock.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.17 89/11/30$  *  *	@(#)clock.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hpdev/hilreg.h"
+file|"../dev/hilreg.h"
 end_include
 
 begin_include
@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"machine/psl.h"
+file|"../include/psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|"../include/cpu.h"
 end_include
 
 begin_if
@@ -62,7 +62,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"gprof.h"
+file|"sys/gprof.h"
 end_include
 
 begin_endif
@@ -410,19 +410,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|"sys/malloc.h"
 end_include
 
 begin_include
@@ -434,37 +434,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm/vm_param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_pager.h"
+file|"vm/vm_pager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_prot.h"
+file|"vm/vm_prot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"specdev.h"
+file|"sys/specdev.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|"sys/vnode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mman.h"
+file|"sys/mman.h"
 end_include
 
 begin_decl_stmt

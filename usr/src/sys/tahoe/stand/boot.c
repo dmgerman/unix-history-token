@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	7.4	90/06/30	*/
+comment|/*	boot.c	7.5	90/12/16	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"machine/mtpr.h"
+file|"../include/mtpr.h"
 end_include
 
 begin_include
@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"saio.h"
+file|"stand/saio.h"
 end_include
 
 begin_include
