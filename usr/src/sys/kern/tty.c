@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	7.43 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	7.44 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -122,6 +122,27 @@ include|#
 directive|include
 file|"syslog.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|proc_compare
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p1
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p2
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* symbolic sleep message strings */
@@ -8258,16 +8279,17 @@ undef|#
 directive|undef
 name|clamp
 block|}
-comment|/*  * (^T)  * Report on state of foreground process group.  */
+comment|/*  * Report on state of foreground process group.  */
 name|ttyinfo
 argument_list|(
-argument|tp
-argument_list|)
-name|struct
-name|tty
-modifier|*
 name|tp
-decl_stmt|;
+argument_list|)
+specifier|register
+expr|struct
+name|tty
+operator|*
+name|tp
+expr_stmt|;
 block|{
 specifier|register
 name|struct
@@ -8277,13 +8299,6 @@ name|p
 decl_stmt|,
 modifier|*
 name|pick
-init|=
-name|NULL
-decl_stmt|;
-name|int
-name|x
-decl_stmt|,
-name|s
 decl_stmt|;
 name|struct
 name|timeval
@@ -8291,13 +8306,9 @@ name|utime
 decl_stmt|,
 name|stime
 decl_stmt|;
-define|#
-directive|define
-name|pgtok
-parameter_list|(
-name|a
-parameter_list|)
-value|(((a)*NBPG)/1024)
+name|int
+name|tmp
+decl_stmt|;
 if|if
 condition|(
 name|ttycheckoutq
@@ -8310,8 +8321,8 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/*  	 * load average  	 */
-name|x
+comment|/* Print load average. */
+name|tmp
 operator|=
 operator|(
 name|averunnable
@@ -8332,24 +8343,15 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|"load: %d."
+literal|"load: %d.%02d "
 argument_list|,
-name|x
+name|tmp
 operator|/
 literal|100
-argument_list|)
-expr_stmt|;
-name|ttyoutint
-argument_list|(
-name|x
+argument_list|,
+name|tmp
 operator|%
 literal|100
-argument_list|,
-literal|10
-argument_list|,
-literal|2
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 if|if
@@ -8364,7 +8366,7 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|" not a controlling terminal\n"
+literal|"not a controlling terminal\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -8380,7 +8382,7 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|" no foreground process group\n"
+literal|"no foreground process group\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -8402,14 +8404,17 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|" empty foreground process group\n"
+literal|"empty foreground process group\n"
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* pick interesting process */
+comment|/* Pick interesting process. */
 for|for
 control|(
+name|pick
+operator|=
+name|NULL
 init|;
 name|p
 operator|!=
@@ -8421,7 +8426,6 @@ name|p
 operator|->
 name|p_pgrpnxt
 control|)
-block|{
 if|if
 condition|(
 name|proc_compare
@@ -8435,12 +8439,11 @@ name|pick
 operator|=
 name|p
 expr_stmt|;
-block|}
 name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|"  cmd: %s %d [%s] "
+literal|" cmd: %s %d [%s] "
 argument_list|,
 name|pick
 operator|->
@@ -8469,14 +8472,14 @@ else|:
 literal|"iowait"
 argument_list|)
 expr_stmt|;
-comment|/*  		 * cpu time  		 */
+comment|/* 		 * Lock out clock if process is running; get user/system 		 * cpu time. 		 */
 if|if
 condition|(
 name|curproc
 operator|==
 name|pick
 condition|)
-name|s
+name|tmp
 operator|=
 name|splclock
 argument_list|()
@@ -8501,12 +8504,20 @@ name|pick
 condition|)
 name|splx
 argument_list|(
-name|s
+name|tmp
 argument_list|)
 expr_stmt|;
-comment|/* user time */
-name|x
-operator|=
+comment|/* Print user time. */
+name|ttyprintf
+argument_list|(
+name|tp
+argument_list|,
+literal|"%d.%02du "
+argument_list|,
+name|utime
+operator|.
+name|tv_sec
+argument_list|,
 operator|(
 name|utime
 operator|.
@@ -8516,56 +8527,19 @@ literal|5000
 operator|)
 operator|/
 literal|10000
+argument_list|)
 expr_stmt|;
-comment|/* scale to 100's */
-name|ttyoutint
+comment|/* Print system time. */
+name|ttyprintf
 argument_list|(
-name|utime
+name|tp
+argument_list|,
+literal|"%d.%02ds "
+argument_list|,
+name|stime
 operator|.
 name|tv_sec
 argument_list|,
-literal|10
-argument_list|,
-literal|1
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|tputchar
-argument_list|(
-literal|'.'
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|ttyoutint
-argument_list|(
-name|x
-argument_list|,
-literal|10
-argument_list|,
-literal|2
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|tputchar
-argument_list|(
-literal|'u'
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|tputchar
-argument_list|(
-literal|' '
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* system time */
-name|x
-operator|=
 operator|(
 name|stime
 operator|.
@@ -8575,55 +8549,17 @@ literal|5000
 operator|)
 operator|/
 literal|10000
-expr_stmt|;
-comment|/* scale to 100's */
-name|ttyoutint
-argument_list|(
-name|stime
-operator|.
-name|tv_sec
-argument_list|,
-literal|10
-argument_list|,
-literal|1
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
-name|tputchar
-argument_list|(
-literal|'.'
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|ttyoutint
-argument_list|(
-name|x
-argument_list|,
-literal|10
-argument_list|,
-literal|2
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|tputchar
-argument_list|(
-literal|'s'
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|tputchar
-argument_list|(
-literal|' '
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/*  		 * pctcpu  		 */
-name|x
+define|#
+directive|define
+name|pgtok
+parameter_list|(
+name|a
+parameter_list|)
+value|(((a) * NBPG) / 1024)
+comment|/* Print percentage cpu, resident set size. */
+name|tmp
 operator|=
 name|pick
 operator|->
@@ -8637,50 +8573,15 @@ literal|2
 operator|>>
 name|FSHIFT
 expr_stmt|;
-name|ttyoutint
-argument_list|(
-name|x
-operator|/
-literal|100
-argument_list|,
-literal|10
-argument_list|,
-literal|1
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* do we really want this ??? */
-name|tputchar
-argument_list|(
-literal|'.'
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|ttyoutint
-argument_list|(
-name|x
-operator|%
-literal|100
-argument_list|,
-literal|10
-argument_list|,
-literal|2
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|"%% %dk\n"
+literal|"%d%% %dk\n"
+argument_list|,
+name|tmp
+operator|/
+literal|100
 argument_list|,
 name|pgtok
 argument_list|(
@@ -8700,86 +8601,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* so pending input will be retyped if BS */
-block|}
-name|ttyoutint
-argument_list|(
-name|n
-argument_list|,
-name|base
-argument_list|,
-name|min
-argument_list|,
-name|tp
-argument_list|)
-specifier|register
-name|int
-name|n
-operator|,
-name|base
-operator|,
-name|min
-expr_stmt|;
-specifier|register
-name|struct
-name|tty
-modifier|*
-name|tp
-decl_stmt|;
-block|{
-name|char
-name|info
-index|[
-literal|16
-index|]
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-init|=
-name|info
-decl_stmt|;
-while|while
-condition|(
-operator|--
-name|min
-operator|>=
-literal|0
-operator|||
-name|n
-condition|)
-block|{
-operator|*
-name|p
-operator|++
-operator|=
-literal|"0123456789abcdef"
-index|[
-name|n
-operator|%
-name|base
-index|]
-expr_stmt|;
-name|n
-operator|/=
-name|base
-expr_stmt|;
-block|}
-while|while
-condition|(
-name|p
-operator|>
-name|info
-condition|)
-name|ttyoutput
-argument_list|(
-operator|*
-operator|--
-name|p
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
 block|}
 comment|/*  * Returns 1 if p2 is "better" than p1  *  * The algorithm for picking the "interesting" process is thus:  *  *	1) (Only foreground processes are eligable - implied)  *	2) Runnable processes are favored over anything  *	   else.  The runner with the highest cpu  *	   utilization is picked (p_cpu).  Ties are  *	   broken by picking the highest pid.  *	3  Next, the sleeper with the shortest sleep  *	   time is favored.  With ties, we pick out  *	   just "short-term" sleepers (SSINTR == 0).  *	   Further ties are broken by picking the highest  *	   pid.  *  */
 define|#
@@ -8810,21 +8631,23 @@ define|#
 directive|define
 name|BOTH
 value|3
+specifier|static
+name|int
 name|proc_compare
-argument_list|(
+parameter_list|(
 name|p1
-argument_list|,
+parameter_list|,
 name|p2
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|p2
-expr_stmt|;
+decl_stmt|;
 block|{
 if|if
 condition|(
