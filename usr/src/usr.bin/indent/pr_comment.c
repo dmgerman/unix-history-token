@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr_comment.c	5.7 (Berkeley) %G%"
+literal|"@(#)pr_comment.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,6 @@ begin_include
 include|#
 directive|include
 file|"indent_globs.h"
-include|;
 end_include
 
 begin_macro
