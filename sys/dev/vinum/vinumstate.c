@@ -75,11 +75,14 @@ return|;
 if|if
 condition|(
 name|newstate
-operator|!=
+operator|==
 name|oldstate
 condition|)
-block|{
 comment|/* don't change it if it's not different */
+return|return
+literal|1
+return|;
+comment|/* all OK */
 if|if
 condition|(
 operator|(
@@ -275,10 +278,6 @@ return|return
 literal|1
 return|;
 block|}
-return|return
-literal|0
-return|;
-block|}
 end_function
 
 begin_comment
@@ -337,24 +336,28 @@ decl_stmt|;
 comment|/* status to return */
 if|if
 condition|(
-operator|(
 name|newstate
 operator|==
 name|oldstate
-operator|)
-operator|||
-operator|(
+condition|)
+comment|/* already there, */
+return|return
+literal|1
+return|;
+elseif|else
+if|if
+condition|(
 name|sd
 operator|->
 name|state
 operator|==
 name|sd_unallocated
-operator|)
 condition|)
 comment|/* no subdisk to do anything with, */
 return|return
 literal|0
 return|;
+comment|/* can't do it */
 if|if
 condition|(
 name|sd
@@ -406,7 +409,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*  space allocated */
+comment|/* space allocated */
 switch|switch
 condition|(
 name|newstate
@@ -597,6 +600,9 @@ break|break;
 comment|/* otherwise it's like being empty */
 comment|/* FALLTHROUGH */
 case|case
+name|sd_initializing
+case|:
+case|case
 name|sd_empty
 case|:
 comment|/* 		 * If we're associated with a plex which is down, or which is 		 * the only one in the volume, and we're not a RAID-5 plex, we 		 * can come up without being inconsistent.  Internally, we use 		 * the force flag to bring up a RAID-5 plex after 		 * initialization. 		 */
@@ -778,22 +784,6 @@ name|EAGAIN
 expr_stmt|;
 comment|/* need to repeat */
 break|break;
-comment|/* 		 * XXX This is silly.  We need to be able to 		 * bring the subdisk up when it's finished 		 * initializing, but not from the user.  We 		 * use the same ioctl in each case, but Vinum(8) 		 * doesn't supply the -f flag, so we use that 		 * to decide whether to do it or not 		 */
-case|case
-name|sd_initializing
-case|:
-if|if
-condition|(
-name|flags
-operator|&
-name|setstate_force
-condition|)
-break|break;
-comment|/* do it if we have to */
-return|return
-literal|0
-return|;
-comment|/* no */
 case|case
 name|sd_reviving
 case|:
@@ -1006,18 +996,21 @@ name|plex
 operator|->
 name|state
 expr_stmt|;
-comment|/*      * If the plex isn't allocated,      * or it's already in the the state we want,      * and it's not up, just return.  If it's up,      * we still need to do some housekeeping.      */
+comment|/* If the plex isn't allocated, we can't do it. */
 if|if
 condition|(
-operator|(
 name|plex
 operator|->
 name|state
 operator|==
 name|plex_unallocated
-operator|)
-operator|||
-operator|(
+condition|)
+return|return
+literal|0
+return|;
+comment|/*      * If it's already in the the state we want,      * and it's not up, just return.  If it's up,      * we still need to do some housekeeping.      */
+if|if
+condition|(
 operator|(
 name|state
 operator|==
@@ -1029,10 +1022,9 @@ name|state
 operator|!=
 name|plex_up
 operator|)
-operator|)
 condition|)
 return|return
-literal|0
+literal|1
 return|;
 name|vps
 operator|=
@@ -1263,26 +1255,27 @@ decl_stmt|;
 comment|/* point to our volume */
 if|if
 condition|(
-operator|(
-name|vol
-operator|->
-name|state
-operator|==
-name|state
-operator|)
-comment|/* we're there already */
-operator|||
-operator|(
 name|vol
 operator|->
 name|state
 operator|==
 name|volume_unallocated
-operator|)
 condition|)
-comment|/* or no volume to do anything with, */
+comment|/* no volume to do anything with, */
 return|return
 literal|0
+return|;
+if|if
+condition|(
+name|vol
+operator|->
+name|state
+operator|==
+name|state
+condition|)
+comment|/* we're there already */
+return|return
+literal|1
 return|;
 if|if
 condition|(
@@ -1707,7 +1700,7 @@ if|if
 condition|(
 name|statemap
 operator|&
-name|sd_initializing
+name|sd_initstate
 condition|)
 comment|/* something initializing? */
 name|plex
