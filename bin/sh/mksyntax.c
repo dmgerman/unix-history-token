@@ -1659,13 +1659,13 @@ name|macro
 index|[]
 init|=
 block|{
-literal|"#define is_digit(c)\t((c>= 0&& is_type+SYNBASE)[c]& ISDIGIT)"
+literal|"#define is_digit(c)\t((is_type+SYNBASE)[c]& ISDIGIT)"
 block|,
-literal|"#define is_alpha(c)\t((c) != PEOF&& ((c)< CTLESC || (c)> CTLENDARI)&& isalpha((unsigned char) (c)))"
+literal|"#define is_alpha(c)\t((c) != PEOF&& ((c)< CTLESC || (c)> CTLQUOTEMARK)&& isalpha((unsigned char) (c)))"
 block|,
-literal|"#define is_name(c)\t((c) != PEOF&& ((c)< CTLESC || (c)> CTLENDARI)&& ((c) == '_' || isalpha((unsigned char) (c))))"
+literal|"#define is_name(c)\t((c) != PEOF&& ((c)< CTLESC || (c)> CTLQUOTEMARK)&& ((c) == '_' || isalpha((unsigned char) (c))))"
 block|,
-literal|"#define is_in_name(c)\t((c) != PEOF&& ((c)< CTLESC || (c)> CTLENDARI)&& ((c) == '_' || isalnum((unsigned char) (c))))"
+literal|"#define is_in_name(c)\t((c) != PEOF&& ((c)< CTLESC || (c)> CTLQUOTEMARK)&& ((c) == '_' || isalnum((unsigned char) (c))))"
 block|,
 literal|"#define is_special(c)\t((is_type+SYNBASE)[c]& (ISSPECL|ISDIGIT))"
 block|,
