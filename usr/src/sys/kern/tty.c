@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8617,50 +8617,6 @@ name|p_pid
 operator|)
 return|;
 comment|/* tie - return highest pid */
-block|}
-comment|/* XXX move to subr_prf.c */
-define|#
-directive|define
-name|TOTTY
-value|0x2
-comment|/* XXX should be in header */
-comment|/*VARARGS2*/
-name|ttyprintf
-argument_list|(
-argument|tp
-argument_list|,
-argument|fmt
-argument_list|,
-argument|x1
-argument_list|)
-name|struct
-name|tty
-modifier|*
-name|tp
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-name|unsigned
-name|x1
-decl_stmt|;
-block|{
-name|prf
-argument_list|(
-name|fmt
-argument_list|,
-operator|&
-name|x1
-argument_list|,
-name|TOTTY
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|tp
-argument_list|)
-expr_stmt|;
 block|}
 comment|/*  * Output char to tty; console putchar style.  */
 name|tputchar
