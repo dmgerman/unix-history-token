@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*  *  devDC7085.c --  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.3 (Berkeley) %G%  *  * devDC7085.c --  *  *     	This file contains machine-dependent routines that handle the  *	output queue for the serial lines.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devDC7085.c,  *	v 1.4 89/08/29 11:55:30 nelson Exp $ SPRITE (DECWRL)";  */
+comment|/*  *  devDC7085.c --  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.4 (Berkeley) %G%  *  * devDC7085.c --  *  *     	This file contains machine-dependent routines that handle the  *	output queue for the serial lines.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devDC7085.c,  *	v 1.4 89/08/29 11:55:30 nelson Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -159,16 +159,21 @@ name|NDCLINE
 value|(NDC*4)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|int
+name|void
 name|dcstart
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|dcxint
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -4189,20 +4194,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|dcxint
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -4410,22 +4413,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|dcstart
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -4777,7 +4778,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Stop output on a line.  */
