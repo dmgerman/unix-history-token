@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	1.4	%G%"
+literal|"@(#)conf.c	1.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,13 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ArpaLocal
+value|NULL
+end_define
 
 begin_decl_stmt
 name|char
@@ -161,11 +168,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|UucpLocal
+index|[]
+init|=
+block|{
+literal|"ucbvax"
+block|,
+literal|"ernie"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|MyLocNam
 init|=
-literal|"CSVax"
+literal|"CSVAX"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,7 +333,7 @@ name|char
 modifier|*
 name|MyLocNam
 init|=
-literal|"ESVax"
+literal|"ESVAX"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,6 +389,44 @@ begin_endif
 endif|#
 directive|endif
 endif|EECS40
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASARPA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ArpaLocal
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|HASARPA
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASUUCP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|UucpLocal
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|HASUUCP
 end_endif
 
 begin_decl_stmt
@@ -472,7 +534,7 @@ name|M_STRIPQ
 block|,
 literal|0
 block|,
-name|NULL
+name|ArpaLocal
 block|,
 block|{
 literal|"...arpa%mail"
@@ -489,17 +551,8 @@ block|}
 block|,
 comment|/* uucp mail (cheat& use Bell's v7 mail) */
 block|{
-ifdef|#
-directive|ifdef
-name|UCKMAIL
-literal|"/bin/badmail"
-block|,
-else|#
-directive|else
 literal|"/bin/mail"
 block|,
-endif|#
-directive|endif
 name|M_ROPT
 operator||
 name|M_NOHOST
@@ -508,7 +561,7 @@ name|M_STRIPQ
 block|,
 name|EX_NOUSER
 block|,
-name|NULL
+name|UucpLocal
 block|,
 ifdef|#
 directive|ifdef
