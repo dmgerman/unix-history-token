@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.13 (Berkeley) %G%"
+literal|"@(#)cico.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -955,6 +955,20 @@ expr_stmt|;
 block|}
 end_while
 
+begin_if
+if|if
+condition|(
+name|Debug
+operator|&&
+name|Role
+operator|==
+name|MASTER
+condition|)
+name|chkdebug
+argument_list|()
+expr_stmt|;
+end_if
+
 begin_comment
 comment|/* Try to run as uucp */
 end_comment
@@ -1108,15 +1122,6 @@ condition|(
 name|Debug
 condition|)
 block|{
-if|if
-condition|(
-name|Role
-operator|==
-name|MASTER
-condition|)
-name|chkdebug
-argument_list|()
-expr_stmt|;
 name|setdebug
 argument_list|(
 operator|(
