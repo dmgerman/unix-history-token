@@ -361,7 +361,7 @@ name|out
 operator|.
 name|dbsz
 argument_list|,
-name|SEEK_SET
+name|SEEK_CUR
 argument_list|)
 operator|==
 operator|-

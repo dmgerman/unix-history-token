@@ -1070,6 +1070,17 @@ argument_list|,
 literal|"count cannot be negative"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cpy_cnt
+operator|==
+literal|0
+condition|)
+name|cpy_cnt
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_function
 
