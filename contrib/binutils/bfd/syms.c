@@ -1106,6 +1106,10 @@ name|symclass
 decl_stmt|;
 block|{
 return|return
+call|(
+name|boolean
+call|)
+argument_list|(
 name|symclass
 operator|==
 literal|'U'
@@ -1117,6 +1121,7 @@ operator|||
 name|symclass
 operator|==
 literal|'v'
+argument_list|)
 return|;
 block|}
 end_function
@@ -2383,6 +2388,9 @@ index|[
 name|TYPEOFF
 index|]
 operator|==
+operator|(
+name|bfd_byte
+operator|)
 name|N_SO
 condition|)
 block|{
@@ -2439,6 +2447,9 @@ operator|+
 name|TYPEOFF
 operator|)
 operator|==
+operator|(
+name|bfd_byte
+operator|)
 name|N_SO
 condition|)
 block|{
@@ -2456,6 +2467,9 @@ index|[
 name|TYPEOFF
 index|]
 operator|==
+operator|(
+name|bfd_byte
+operator|)
 name|N_FUN
 condition|)
 block|{
@@ -2797,6 +2811,9 @@ operator|+
 name|TYPEOFF
 operator|)
 operator|!=
+operator|(
+name|bfd_byte
+operator|)
 name|N_SO
 condition|)
 block|{

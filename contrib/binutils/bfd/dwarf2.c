@@ -2339,6 +2339,10 @@ name|cur_abbrev
 operator|->
 name|tag
 operator|=
+operator|(
+expr|enum
+name|dwarf_tag
+operator|)
 name|read_unsigned_leb128
 argument_list|(
 name|abfd
@@ -2477,6 +2481,10 @@ index|]
 operator|.
 name|name
 operator|=
+operator|(
+expr|enum
+name|dwarf_attribute
+operator|)
 name|abbrev_name
 expr_stmt|;
 name|cur_abbrev
@@ -2491,6 +2499,10 @@ index|]
 operator|.
 name|form
 operator|=
+operator|(
+expr|enum
+name|dwarf_form
+operator|)
 name|abbrev_form
 expr_stmt|;
 name|abbrev_name
@@ -2548,7 +2560,7 @@ index|]
 operator|=
 name|cur_abbrev
 expr_stmt|;
-comment|/* Get next abbreviation.          Under Irix6 the abbreviations for a compilation unit are not 	 always properly terminated with an abbrev number of 0. 	 Exit loop if we encounter an abbreviation which we have 	 already read (which means we are about to read the abbreviations 	 for the next compile unit) or if the end of the abbreviation 	 table is reached.  */
+comment|/* Get next abbreviation. 	 Under Irix6 the abbreviations for a compilation unit are not 	 always properly terminated with an abbrev number of 0. 	 Exit loop if we encounter an abbreviation which we have 	 already read (which means we are about to read the abbreviations 	 for the next compile unit) or if the end of the abbreviation 	 table is reached.  */
 if|if
 condition|(
 call|(
@@ -2663,6 +2675,10 @@ name|attr
 operator|->
 name|form
 operator|=
+operator|(
+expr|enum
+name|dwarf_form
+operator|)
 name|form
 expr_stmt|;
 switch|switch
@@ -3505,6 +3521,13 @@ name|line_info
 modifier|*
 name|last_line
 decl_stmt|;
+comment|/* largest VMA */
+name|struct
+name|line_info
+modifier|*
+name|lcl_head
+decl_stmt|;
+comment|/* local head; used in 'add_line_info' */
 block|}
 struct|;
 end_struct
@@ -3531,6 +3554,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* add_line_info: adds a new entry to the line_info list in the    line_info_table, ensuring that the list is sorted.  Note that the    line_info list is sorted from highest to lowest VMA (with possible    duplicates); that is, line_info->prev_line always accesses an equal    or smaller VMA.  */
+end_comment
 
 begin_function
 specifier|static
@@ -3601,6 +3628,28 @@ argument_list|,
 name|amt
 argument_list|)
 decl_stmt|;
+comment|/* Find the correct location for 'info'.  Normally we will receive      new line_info data 1) in order and 2) with increasing VMAs.      However some compilers break the rules (cf. decode_line_info) and      so we include some heuristics for quickly finding the correct      location for 'info'. In particular, these heuristics optimize for      the common case in which the VMA sequence that we receive is a      list of locally sorted VMAs such as        p...z a...j  (where a< j< p< z)       Note: table->lcl_head is used to head an *actual* or *possible*      sequence within the list (such as a...j) that is not directly      headed by table->last_line       Note: we may receive duplicate entries from 'decode_line_info'.  */
+while|while
+condition|(
+literal|1
+condition|)
+if|if
+condition|(
+operator|!
+name|table
+operator|->
+name|last_line
+operator|||
+name|address
+operator|>=
+name|table
+operator|->
+name|last_line
+operator|->
+name|address
+condition|)
+block|{
+comment|/* Normal case: add 'info' to the beginning of the list */
 name|info
 operator|->
 name|prev_line
@@ -3615,6 +3664,169 @@ name|last_line
 operator|=
 name|info
 expr_stmt|;
+comment|/* lcl_head: initialize to head a *possible* sequence at the end.  */
+if|if
+condition|(
+operator|!
+name|table
+operator|->
+name|lcl_head
+condition|)
+name|table
+operator|->
+name|lcl_head
+operator|=
+name|info
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|table
+operator|->
+name|lcl_head
+operator|->
+name|prev_line
+operator|&&
+name|table
+operator|->
+name|lcl_head
+operator|->
+name|address
+operator|>
+name|address
+condition|)
+block|{
+comment|/* Abnormal but easy: lcl_head is 1) at the *end* of the line 	   list and 2) the head of 'info'.  */
+name|info
+operator|->
+name|prev_line
+operator|=
+name|NULL
+expr_stmt|;
+name|table
+operator|->
+name|lcl_head
+operator|->
+name|prev_line
+operator|=
+name|info
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|table
+operator|->
+name|lcl_head
+operator|->
+name|prev_line
+operator|&&
+name|table
+operator|->
+name|lcl_head
+operator|->
+name|address
+operator|>
+name|address
+operator|&&
+name|address
+operator|>=
+name|table
+operator|->
+name|lcl_head
+operator|->
+name|prev_line
+operator|->
+name|address
+condition|)
+block|{
+comment|/* Abnormal but easy: lcl_head is 1) in the *middle* of the line 	   list and 2) the head of 'info'.  */
+name|info
+operator|->
+name|prev_line
+operator|=
+name|table
+operator|->
+name|lcl_head
+operator|->
+name|prev_line
+expr_stmt|;
+name|table
+operator|->
+name|lcl_head
+operator|->
+name|prev_line
+operator|=
+name|info
+expr_stmt|;
+break|break;
+block|}
+else|else
+block|{
+comment|/* Abnormal and hard: Neither 'last_line' nor 'lcl_head' are valid 	   heads for 'info'.  Reset 'lcl_head' and repeat.  */
+name|struct
+name|line_info
+modifier|*
+name|li2
+init|=
+name|table
+operator|->
+name|last_line
+decl_stmt|;
+comment|/* always non-NULL */
+name|struct
+name|line_info
+modifier|*
+name|li1
+init|=
+name|li2
+operator|->
+name|prev_line
+decl_stmt|;
+while|while
+condition|(
+name|li1
+condition|)
+block|{
+if|if
+condition|(
+name|li2
+operator|->
+name|address
+operator|>
+name|address
+operator|&&
+name|address
+operator|>=
+name|li1
+operator|->
+name|address
+condition|)
+break|break;
+name|li2
+operator|=
+name|li1
+expr_stmt|;
+comment|/* always non-NULL */
+name|li1
+operator|=
+name|li1
+operator|->
+name|prev_line
+expr_stmt|;
+block|}
+name|table
+operator|->
+name|lcl_head
+operator|=
+name|li2
+expr_stmt|;
+block|}
+comment|/* Set member data of 'info'.  */
 name|info
 operator|->
 name|address
@@ -3918,6 +4130,11 @@ block|}
 comment|/* Need to allocate a new arange and insert it into the arange list.  */
 name|arange
 operator|=
+operator|(
+expr|struct
+name|arange
+operator|*
+operator|)
 name|bfd_zalloc
 argument_list|(
 name|unit
@@ -4263,6 +4480,12 @@ expr_stmt|;
 name|table
 operator|->
 name|last_line
+operator|=
+name|NULL
+expr_stmt|;
+name|table
+operator|->
+name|lcl_head
 operator|=
 name|NULL
 expr_stmt|;
@@ -4898,7 +5121,7 @@ name|end_sequence
 init|=
 literal|0
 decl_stmt|;
-comment|/* eraxxon@alumni.rice.edu: Against the DWARF2 specs, some          compilers generate address sequences that are wildly out of          order using DW_LNE_set_address (e.g. Intel C++ 6.0 compiler          for ia64-Linux).  Thus, to determine the low and high          address, we must compare on every DW_LNS_copy, etc.  */
+comment|/* eraxxon@alumni.rice.edu: Against the DWARF2 specs, some 	 compilers generate address sequences that are wildly out of 	 order using DW_LNE_set_address (e.g. Intel C++ 6.0 compiler 	 for ia64-Linux).  Thus, to determine the low and high 	 address, we must compare on every DW_LNS_copy, etc.  */
 name|bfd_vma
 name|low_pc
 init|=
@@ -5074,15 +5297,6 @@ argument_list|,
 name|end_sequence
 argument_list|)
 expr_stmt|;
-name|arange_add
-argument_list|(
-name|unit
-argument_list|,
-name|low_pc
-argument_list|,
-name|high_pc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|low_pc
@@ -5113,7 +5327,7 @@ name|unit
 argument_list|,
 name|low_pc
 argument_list|,
-name|address
+name|high_pc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5633,6 +5847,7 @@ modifier|*
 name|linenumber_ptr
 decl_stmt|;
 block|{
+comment|/* Note: table->last_line should be a descendingly sorted list. */
 name|struct
 name|line_info
 modifier|*
@@ -5646,7 +5861,14 @@ name|struct
 name|line_info
 modifier|*
 name|each_line
+init|=
+name|NULL
 decl_stmt|;
+operator|*
+name|filename_ptr
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -5661,6 +5883,21 @@ name|next_line
 operator|->
 name|prev_line
 expr_stmt|;
+comment|/* Check for large addresses */
+if|if
+condition|(
+name|addr
+operator|>
+name|next_line
+operator|->
+name|address
+condition|)
+name|each_line
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* ensure we skip over the normal case */
+comment|/* Normal case: search the list; save  */
 while|while
 condition|(
 name|each_line
@@ -5668,26 +5905,31 @@ operator|&&
 name|next_line
 condition|)
 block|{
+comment|/* If we have an address match, save this info.  This allows us 	 to return as good as results as possible for strange debugging 	 info.  */
+name|boolean
+name|addr_match
+init|=
+name|false
+decl_stmt|;
 if|if
 condition|(
-operator|!
-name|each_line
-operator|->
-name|end_sequence
-operator|&&
-name|addr
-operator|>=
 name|each_line
 operator|->
 name|address
+operator|<=
+name|addr
 operator|&&
 name|addr
-operator|<
+operator|<=
 name|next_line
 operator|->
 name|address
 condition|)
 block|{
+name|addr_match
+operator|=
+name|true
+expr_stmt|;
 comment|/* If this line appears to span functions, and addr is in the 	     later function, return the first line of that function instead 	     of the last line of the earlier one.  This check is for GCC 	     2.95, which emits the first line number for a function late.  */
 if|if
 condition|(
@@ -5744,10 +5986,20 @@ operator|->
 name|line
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|addr_match
+operator|&&
+operator|!
+name|each_line
+operator|->
+name|end_sequence
+condition|)
 return|return
 name|true
 return|;
-block|}
+comment|/* we have definitely found what we want */
 name|next_line
 operator|=
 name|each_line
@@ -5759,9 +6011,14 @@ operator|->
 name|prev_line
 expr_stmt|;
 block|}
-comment|/* At this point each_line is NULL but next_line is not.  If we found the      containing function in this compilation unit, return the first line we      have a number for.  This is also for compatibility with GCC 2.95.  */
+comment|/* At this point each_line is NULL but next_line is not.  If we found      a candidate end-of-sequence point in the loop above, we can return      that (compatibility with a bug in the Intel compiler); otherwise,      assuming that we found the containing function for this address in      this compilation unit, return the first line we have a number for      (compatibility with GCC 2.95).  */
 if|if
 condition|(
+operator|*
+name|filename_ptr
+operator|==
+name|NULL
+operator|&&
 name|function
 operator|!=
 name|NULL
@@ -7157,7 +7414,7 @@ operator|->
 name|error
 condition|)
 return|return
-literal|0
+name|false
 return|;
 name|arange
 operator|=
@@ -7183,7 +7440,7 @@ operator|->
 name|high
 condition|)
 return|return
-literal|1
+name|true
 return|;
 name|arange
 operator|=
@@ -7198,7 +7455,7 @@ name|arange
 condition|)
 do|;
 return|return
-literal|0
+name|false
 return|;
 block|}
 end_function
@@ -7396,9 +7653,14 @@ name|linenumber_ptr
 argument_list|)
 expr_stmt|;
 return|return
+call|(
+name|boolean
+call|)
+argument_list|(
 name|line_p
 operator|||
 name|func_p
+argument_list|)
 return|;
 block|}
 end_function
@@ -7720,7 +7982,7 @@ comment|/* No dwarf2 info.  Note that at this point the stash 	   has been alloc
 return|return
 name|false
 return|;
-comment|/* There can be more than one DWARF2 info section in a BFD these days.          Read them all in and produce one large stash.  We do this in two 	 passes - in the first pass we just accumulate the section sizes. 	 In the second pass we read in the section's contents.  The allows 	 us to avoid reallocing the data as we add sections to the stash.  */
+comment|/* There can be more than one DWARF2 info section in a BFD these days. 	 Read them all in and produce one large stash.  We do this in two 	 passes - in the first pass we just accumulate the section sizes. 	 In the second pass we read in the section's contents.  The allows 	 us to avoid reallocing the data as we add sections to the stash.  */
 for|for
 control|(
 name|total_size

@@ -2532,7 +2532,16 @@ operator|->
 name|internal_elf_sym
 operator|.
 name|st_other
-operator|=
+operator|&=
+operator|~
+literal|3
+expr_stmt|;
+name|elfsym
+operator|->
+name|internal_elf_sym
+operator|.
+name|st_other
+operator||=
 name|visibility
 expr_stmt|;
 if|if

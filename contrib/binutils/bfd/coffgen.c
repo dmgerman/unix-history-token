@@ -10084,6 +10084,10 @@ name|name
 decl_stmt|;
 block|{
 return|return
+call|(
+name|boolean
+call|)
+argument_list|(
 name|name
 index|[
 literal|0
@@ -10097,6 +10101,7 @@ literal|1
 index|]
 operator|==
 literal|'L'
+argument_list|)
 return|;
 block|}
 end_function

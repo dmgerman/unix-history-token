@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldgram.h"
+file|<ldgram.h>
 end_include
 
 begin_include

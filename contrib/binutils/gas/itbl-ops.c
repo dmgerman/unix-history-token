@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"itbl-parse.h"
+file|<itbl-parse.h>
 end_include
 
 begin_comment

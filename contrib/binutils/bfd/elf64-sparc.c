@@ -8516,6 +8516,19 @@ name|_raw_size
 operator|=
 name|PLT_HEADER_SIZE
 expr_stmt|;
+comment|/* To simplify matters later, just store the plt index here.  */
+name|h
+operator|->
+name|plt
+operator|.
+name|offset
+operator|=
+name|s
+operator|->
+name|_raw_size
+operator|/
+name|PLT_ENTRY_SIZE
+expr_stmt|;
 comment|/* If this symbol is not defined in a regular file, and we are 	 not generating a shared library, then set the symbol to this 	 location in the .plt.  This is required to make function 	 pointers compare as equal between the normal executable and 	 the shared library.  */
 if|if
 condition|(
@@ -8557,24 +8570,16 @@ name|def
 operator|.
 name|value
 operator|=
-name|s
-operator|->
-name|_raw_size
-expr_stmt|;
-block|}
-comment|/* To simplify matters later, just store the plt index here.  */
+name|sparc64_elf_plt_entry_offset
+argument_list|(
 name|h
 operator|->
 name|plt
 operator|.
 name|offset
-operator|=
-name|s
-operator|->
-name|_raw_size
-operator|/
-name|PLT_ENTRY_SIZE
+argument_list|)
 expr_stmt|;
+block|}
 comment|/* Make room for this entry.  */
 name|s
 operator|->
@@ -11011,13 +11016,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|outrel
+operator|.
+name|r_addend
+operator|=
+name|relocation
+operator|+
+name|rel
+operator|->
+name|r_addend
+expr_stmt|;
 if|if
 condition|(
 name|r_type
 operator|==
 name|R_SPARC_64
 condition|)
-block|{
 name|outrel
 operator|.
 name|r_info
@@ -11029,17 +11043,6 @@ argument_list|,
 name|R_SPARC_RELATIVE
 argument_list|)
 expr_stmt|;
-name|outrel
-operator|.
-name|r_addend
-operator|=
-name|relocation
-operator|+
-name|rel
-operator|->
-name|r_addend
-expr_stmt|;
-block|}
 else|else
 block|{
 name|long
@@ -11162,6 +11165,15 @@ argument_list|)
 operator|->
 name|dynindx
 expr_stmt|;
+comment|/* We are turning this relocation into one 			       against a section symbol, so subtract out 			       the output section's address but not the 			       offset of the input section in the output 			       section.  */
+name|outrel
+operator|.
+name|r_addend
+operator|-=
+name|osec
+operator|->
+name|vma
+expr_stmt|;
 comment|/* FIXME: we really should be able to link non-pic 			       shared libraries.  */
 if|if
 condition|(
@@ -11219,16 +11231,6 @@ argument_list|,
 name|r_type
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_addend
-operator|=
-name|relocation
-operator|+
-name|rel
-operator|->
-name|r_addend
 expr_stmt|;
 block|}
 block|}

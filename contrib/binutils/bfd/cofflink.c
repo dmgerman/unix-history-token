@@ -6051,6 +6051,16 @@ operator|<
 literal|1
 condition|)
 continue|continue;
+comment|/* Don't mark relocs in excluded sections.  */
+if|if
+condition|(
+name|a
+operator|->
+name|output_section
+operator|==
+name|bfd_abs_section_ptr
+condition|)
+continue|continue;
 comment|/* Read in the relocs.  */
 name|internal_relocs
 operator|=

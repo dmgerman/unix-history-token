@@ -4312,7 +4312,7 @@ block|}
 end_function
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|md_shortopts
@@ -5837,7 +5837,7 @@ parameter_list|,
 name|reloc
 parameter_list|)
 define|\
-value|if (strncmp (input_line_pointer, name##"(", strlen (name) + 1) == 0)	\     {									\       input_line_pointer += strlen (name);				\       return reloc;							\     }
+value|if (strncmp (input_line_pointer, name "(", strlen (name) + 1) == 0)	\     {									\       input_line_pointer += strlen (name);				\       return reloc;							\     }
 name|CHECK_
 argument_list|(
 literal|"hi0"
@@ -7892,9 +7892,13 @@ operator|(
 operator|(
 literal|1
 operator|<<
+operator|(
 name|operand
 operator|->
 name|bits
+operator|-
+literal|1
+operator|)
 operator|)
 operator|-
 literal|1

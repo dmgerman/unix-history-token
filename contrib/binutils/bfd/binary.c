@@ -746,6 +746,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
+name|long
+operator|)
 name|false
 return|;
 comment|/* Start symbol.  */

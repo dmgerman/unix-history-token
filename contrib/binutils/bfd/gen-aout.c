@@ -15,6 +15,27 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_
+parameter_list|(
+name|X
+parameter_list|)
+value|X
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|main

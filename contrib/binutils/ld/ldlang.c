@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldgram.h"
+file|<ldgram.h>
 end_include
 
 begin_include
@@ -7633,6 +7633,64 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|const
+name|char
+modifier|*
+name|lang_get_output_target
+parameter_list|()
+block|{
+specifier|const
+name|char
+modifier|*
+name|target
+decl_stmt|;
+comment|/* Has the user told us which output format to use?  */
+if|if
+condition|(
+name|output_target
+operator|!=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+condition|)
+return|return
+name|output_target
+return|;
+comment|/* No - has the current target been set to something other than      the default?  */
+if|if
+condition|(
+name|current_target
+operator|!=
+name|default_target
+condition|)
+return|return
+name|current_target
+return|;
+comment|/* No - can we determine the format of the first input file?  */
+name|target
+operator|=
+name|get_first_input_target
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|target
+operator|!=
+name|NULL
+condition|)
+return|return
+name|target
+return|;
+comment|/* Failed - use the default output target.  */
+return|return
+name|default_target
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Open the output file.  */
 end_comment
@@ -7655,50 +7713,11 @@ name|bfd
 modifier|*
 name|output
 decl_stmt|;
-comment|/* Has the user told us which output format to use?  */
-if|if
-condition|(
-name|output_target
-operator|==
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-comment|/* No - has the current target been set to something other than          the default?  */
-if|if
-condition|(
-name|current_target
-operator|!=
-name|default_target
-condition|)
 name|output_target
 operator|=
-name|current_target
-expr_stmt|;
-comment|/* No - can we determine the format of the first input file?  */
-else|else
-block|{
-name|output_target
-operator|=
-name|get_first_input_target
+name|lang_get_output_target
 argument_list|()
 expr_stmt|;
-comment|/* Failed - use the default output target.  */
-if|if
-condition|(
-name|output_target
-operator|==
-name|NULL
-condition|)
-name|output_target
-operator|=
-name|default_target
-expr_stmt|;
-block|}
-block|}
 comment|/* Has the user requested a particular endianness on the command      line?  */
 if|if
 condition|(
@@ -8437,7 +8456,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|lang_output_section_statement_lookup (".text");   lang_output_section_statement_lookup (".data");    default_common_section = lang_output_section_statement_lookup (".bss");    if (placed_commons == false)     {       lang_wild_statement_type *new =       new_stat (lang_wild_statement,&default_common_section->children);        new->section_name = "COMMON";       new->filename = (char *) NULL;       lang_list_init (&new->children);     }
+block|lang_output_section_statement_lookup (".text");   lang_output_section_statement_lookup (".data");    default_common_section = lang_output_section_statement_lookup (".bss");    if (!placed_commons)     {       lang_wild_statement_type *new =       new_stat (lang_wild_statement,&default_common_section->children);        new->section_name = "COMMON";       new->filename = (char *) NULL;       lang_list_init (&new->children);     }
 endif|#
 directive|endif
 block|}
@@ -11469,13 +11488,12 @@ name|section
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|is
 operator|->
 name|ifile
 operator|->
 name|just_syms_flag
-operator|==
-name|false
 condition|)
 block|{
 name|unsigned
@@ -12552,13 +12570,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|r
 operator|.
 name|valid_p
-operator|==
-name|false
 condition|)
-block|{
 name|einfo
 argument_list|(
 name|_
@@ -12571,7 +12587,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|dot
 operator|=
 name|r
@@ -14026,11 +14041,10 @@ name|value
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|value
 operator|.
 name|valid_p
-operator|==
-name|false
 condition|)
 name|einfo
 argument_list|(
@@ -14152,11 +14166,10 @@ name|value
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|value
 operator|.
 name|valid_p
-operator|==
-name|false
 condition|)
 name|einfo
 argument_list|(
@@ -16259,9 +16272,8 @@ block|{
 comment|/* Make -o on command line override OUTPUT in script.  */
 if|if
 condition|(
+operator|!
 name|had_output_filename
-operator|==
-name|false
 operator|||
 operator|!
 name|from_script

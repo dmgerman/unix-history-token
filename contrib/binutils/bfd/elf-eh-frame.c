@@ -1702,11 +1702,14 @@ literal|4
 expr_stmt|;
 if|if
 condition|(
-operator|(
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
 name|buf
 operator|-
 name|ehbuf
-operator|)
+argument_list|)
 operator|+
 name|hdr
 operator|.

@@ -1274,6 +1274,10 @@ name|e
 decl_stmt|;
 name|e
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|memchr
 argument_list|(
 name|hdr
@@ -1297,6 +1301,10 @@ condition|)
 block|{
 name|e
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|memchr
 argument_list|(
 name|hdr
@@ -1319,6 +1327,10 @@ name|NULL
 condition|)
 name|e
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|memchr
 argument_list|(
 name|hdr

@@ -2952,7 +2952,6 @@ name|boolean
 argument_list|(
 argument|*_bfd_coff_adjust_symndx
 argument_list|)
-block|\
 name|PARAMS
 argument_list|(
 operator|(

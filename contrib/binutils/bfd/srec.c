@@ -577,7 +577,7 @@ begin_decl_stmt
 name|boolean
 name|S3Forced
 init|=
-literal|0
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -4986,6 +4986,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
+name|long
+operator|)
 name|false
 return|;
 name|abfd

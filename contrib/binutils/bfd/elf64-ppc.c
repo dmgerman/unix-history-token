@@ -5587,6 +5587,14 @@ name|xvec
 operator|->
 name|byteorder
 operator|&&
+name|ibfd
+operator|->
+name|xvec
+operator|->
+name|byteorder
+operator|!=
+name|BFD_ENDIAN_UNKNOWN
+operator|&&
 name|obfd
 operator|->
 name|xvec
@@ -5715,7 +5723,7 @@ value|".stub"
 end_define
 
 begin_comment
-comment|/* Linker stubs.    ppc_stub_long_branch:    Used when a 14 bit branch (or even a 24 bit branch) can't reach its    destination, but a 24 bit branch in a stub section will reach.    .	b	dest     ppc_stub_plt_branch:    Similar to the above, but a 24 bit branch in the stub section won't    reach its destination.    .	addis	%r12,%r2,xxx@ha    .	ld	%r11,xxx@l(%r12)    .	mtctr	%r11    .	bctr     ppc_stub_plt_call:    Used to call a function in a shared library.    .	addis	%r12,%r2,xxx@ha    .	std	%r2,40(%r1)    .	ld	%r11,xxx+0@l(%r12)    .	ld	%r2,xxx+8@l(%r12)    .	mtctr	%r11    .	ld	%r11,xxx+16@l(%r12)    .	bctr */
+comment|/* Linker stubs.    ppc_stub_long_branch:    Used when a 14 bit branch (or even a 24 bit branch) can't reach its    destination, but a 24 bit branch in a stub section will reach.    .	b	dest     ppc_stub_plt_branch:    Similar to the above, but a 24 bit branch in the stub section won't    reach its destination.    .	addis	%r12,%r2,xxx@toc@ha    .	ld	%r11,xxx@toc@l(%r12)    .	mtctr	%r11    .	bctr     ppc_stub_plt_call:    Used to call a function in a shared library.    .	addis	%r12,%r2,xxx@toc@ha    .	std	%r2,40(%r1)    .	ld	%r11,xxx+0@toc@l(%r12)    .	ld	%r2,xxx+8@toc@l(%r12)    .	mtctr	%r11    .	ld	%r11,xxx+16@toc@l(%r12)    .	bctr */
 end_comment
 
 begin_enum
@@ -11749,6 +11757,11 @@ name|asymbol
 modifier|*
 name|newsym
 decl_stmt|;
+name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|bh
+decl_stmt|;
 name|abfd
 operator|=
 name|h
@@ -11816,6 +11829,13 @@ name|flags
 operator||=
 name|BSF_WEAK
 expr_stmt|;
+name|bh
+operator|=
+operator|&
+name|fdh
+operator|->
+name|root
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -11848,14 +11868,8 @@ name|false
 argument_list|,
 name|false
 argument_list|,
-operator|(
-expr|struct
-name|bfd_link_hash_entry
-operator|*
-operator|*
-operator|)
 operator|&
-name|fdh
+name|bh
 argument_list|)
 operator|)
 condition|)
@@ -11864,6 +11878,15 @@ return|return
 name|false
 return|;
 block|}
+name|fdh
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|bh
+expr_stmt|;
 name|fdh
 operator|->
 name|elf_link_hash_flags
@@ -14819,15 +14842,9 @@ block|{
 comment|/* Local syms are a bit tricky.  We could 			     tweak them as they can be cached, but 			     we'd need to look through the local syms 			     for the function descriptor sym which we 			     don't have at the moment.  So keep an 			     array of adjustments.  */
 name|adjust
 index|[
-operator|(
 name|rel
 operator|->
 name|r_offset
-operator|+
-name|wptr
-operator|-
-name|rptr
-operator|)
 operator|/
 literal|24
 index|]

@@ -877,7 +877,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|(((ptr)->vma = (ptr)->lma = (val)), ((ptr)->user_set_vma = (boolean)true), true)
+value|(((ptr)->vma = (ptr)->lma = (val)), ((ptr)->user_set_vma = (unsigned int)true), true)
 define|#
 directive|define
 name|bfd_set_section_alignment
@@ -9039,7 +9039,7 @@ operator|*
 name|abfd
 operator|,
 name|int
-name|index
+name|alternative
 operator|)
 argument_list|)
 decl_stmt|;
