@@ -174,7 +174,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
 end_include
 
 begin_include
@@ -199,6 +211,12 @@ begin_include
 include|#
 directive|include
 file|<machine/reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/tick.h>
 end_include
 
 begin_typedef
@@ -1202,6 +1220,13 @@ argument_list|(
 name|globaldata
 argument_list|)
 expr_stmt|;
+name|tick_start
+argument_list|(
+name|clock
+argument_list|,
+name|tick_hardclock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1247,6 +1272,9 @@ name|struct
 name|trapframe
 modifier|*
 name|tf
+decl_stmt|;
+name|u_long
+name|ps
 decl_stmt|;
 comment|/* 	 * Initialize openfirmware (needed for console). 	 */
 name|OF_init
@@ -1294,6 +1322,7 @@ name|bi
 operator|->
 name|bi_metadata
 expr_stmt|;
+comment|/* 	 * Initialize tunables. 	 */
 name|init_param
 argument_list|()
 expr_stmt|;
@@ -1317,26 +1346,9 @@ operator|->
 name|bi_end
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX Clear tick and disable the comparator. 	 */
-name|wrpr
-argument_list|(
-name|tick
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|wr
-argument_list|(
-name|asr23
-argument_list|,
-literal|1L
-operator|<<
-literal|63
-argument_list|,
-literal|0
-argument_list|)
+comment|/* 	 * Disable tick for now. 	 */
+name|tick_stop
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Force trap level 1 and take over the trap table. 	 */
 name|wrpr
@@ -1386,6 +1398,17 @@ operator|*
 operator|)
 name|user0
 expr_stmt|;
+name|proc0
+operator|.
+name|p_stats
+operator|=
+operator|&
+name|proc0
+operator|.
+name|p_addr
+operator|->
+name|u_stats
+expr_stmt|;
 name|tf
 operator|=
 operator|(
@@ -1399,6 +1422,12 @@ operator|+
 name|UPAGES
 operator|*
 name|PAGE_SIZE
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|frame
+argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -1424,6 +1453,61 @@ name|globaldata
 operator|=
 operator|&
 name|__globaldata
+expr_stmt|;
+comment|/* 	 * Setup pointers to interrupt data tables. 	 */
+name|globaldata
+operator|->
+name|gd_iq
+operator|=
+operator|&
+name|intr_queues
+index|[
+literal|0
+index|]
+expr_stmt|;
+comment|/* XXX cpuno */
+name|globaldata
+operator|->
+name|gd_ivt
+operator|=
+name|intr_vectors
+expr_stmt|;
+comment|/* 	 * Put the globaldata pointer in the alternate and interrupt %g7 also. 	 * globaldata is tied to %g7. We could therefore also use assignments to 	 * globaldata here. 	 */
+name|ps
+operator|=
+name|rdpr
+argument_list|(
+name|pstate
+argument_list|)
+expr_stmt|;
+name|wrpr
+argument_list|(
+name|pstate
+argument_list|,
+name|ps
+argument_list|,
+name|PSTATE_AG
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mov %0, %%g7" : : "r" (&__globaldata));
+name|wrpr
+argument_list|(
+name|pstate
+argument_list|,
+name|ps
+argument_list|,
+name|PSTATE_IG
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("mov %0, %%g7" : : "r" (&__globaldata));
+name|wrpr
+argument_list|(
+name|pstate
+argument_list|,
+name|ps
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize curproc so that mutexes work. 	 */
 name|PCPU_SET
@@ -1676,6 +1760,11 @@ name|ps_strings
 parameter_list|)
 block|{
 name|struct
+name|frame
+modifier|*
+name|fp
+decl_stmt|;
+name|struct
 name|pcb
 modifier|*
 name|pcb
@@ -1689,34 +1778,105 @@ name|p_addr
 operator|->
 name|u_pcb
 expr_stmt|;
+comment|/* The inital window for the process. */
+name|fp
+operator|=
+operator|(
+expr|struct
+name|frame
+operator|*
+operator|)
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|p
+operator|->
+name|p_addr
+operator|+
+name|UPAGES
+operator|*
+name|PAGE_SIZE
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Make sure the frames that are frobbed are actually flushed. */
+asm|__asm __volatile("flushw");
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|fp
+operator|=
+operator|(
+expr|struct
+name|frame
+operator|*
+operator|)
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|p
+operator|->
+name|p_addr
+operator|+
+name|UPAGES
+operator|*
+name|PAGE_SIZE
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 name|fp_init_pcb
 argument_list|(
 name|pcb
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
+comment|/* Setup state in the trap frame. */
 name|p
 operator|->
 name|p_frame
 operator|->
 name|tf_tstate
-operator|&=
-operator|~
-name|TSTATE_PEF
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
+name|p_frame
+operator|->
+name|tf_tpc
+operator|=
+name|entry
+expr_stmt|;
+name|p
+operator|->
+name|p_frame
+operator|->
+name|tf_tnpc
+operator|=
+name|entry
+operator|+
+literal|4
+expr_stmt|;
+comment|/* Set up user stack. */
+name|fp
+operator|->
+name|f_fp
+operator|=
+name|stack
+operator|-
+name|SPOFF
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
-expr_stmt|;
-name|TODO
 expr_stmt|;
 block|}
 end_function
