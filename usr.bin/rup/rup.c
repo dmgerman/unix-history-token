@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rup.c,v 1.7 1997/02/22 19:56:48 peter Exp $"
+literal|"$Id: rup.c,v 1.8 1997/08/07 06:50:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -881,6 +881,10 @@ name|NULL
 argument_list|,
 name|xdr_statstime
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|host_stat
 argument_list|,
