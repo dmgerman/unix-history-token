@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optim.c	5.1 (Berkeley) %G%"
+literal|"@(#)optim.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1618,7 +1618,7 @@ name|q
 operator|<
 literal|0
 condition|)
-name|q
+name|h
 operator|+=
 name|XHSIZE
 expr_stmt|;
