@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, and Kazumasa Utashiro of  * Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, and Kazumasa Utashiro of  * Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -56,15 +56,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start the real-time clock.  */
+comment|/*  * Set up the real-time and statistics clocks.  Leave stathz 0 only if  * no alternative timer is available.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|startrtclock
-parameter_list|()
+begin_macro
+name|cpu_initclocks
+argument_list|()
+end_macro
+
+begin_block
 block|{
+comment|/* 	 * Start the real-time clock. 	 */
 operator|*
 operator|(
 name|char
@@ -80,19 +82,7 @@ literal|100
 operator|-
 literal|1
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Enable the real-time clock.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|enablertclock
-parameter_list|()
-block|{
+comment|/* 	 * Enable the real-time clock. 	 */
 operator|*
 operator|(
 name|char
@@ -104,26 +94,6 @@ operator|(
 name|char
 operator|)
 name|INTEN0_TIMINT
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Set up the real-time and statistics clocks.  Leave stathz 0 only if  * no alternative timer is available.  *  */
-end_comment
-
-begin_macro
-name|cpu_initclocks
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|startrtclock
-argument_list|()
-expr_stmt|;
-name|enablertclock
-argument_list|()
 expr_stmt|;
 block|}
 end_block
