@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/cvs/386BSD/src/sys.386bsd/i386/isa/com.c,v 1.1.1.1 1993/06/12 14:58:02 rgrimes Exp $"
+literal|"$Header: /freefall/a/cvs/386BSD/src/sys/i386/isa/com.c,v 1.2 1993/06/30 23:33:41 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -629,7 +629,9 @@ name|unit
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" fifo"
+literal|"com%d: fifo\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
