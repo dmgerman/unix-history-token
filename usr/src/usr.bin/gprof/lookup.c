@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lookup.c	1.2 (Berkeley) %G%"
+literal|"@(#)lookup.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ if|if
 condition|(
 name|debug
 operator|&
-name|TALLYDEBUG
+name|LOOKUPDEBUG
 condition|)
 block|{
 name|printf
@@ -252,7 +252,7 @@ if|if
 condition|(
 name|debug
 operator|&
-name|TALLYDEBUG
+name|LOOKUPDEBUG
 condition|)
 block|{
 name|printf
@@ -296,7 +296,7 @@ if|if
 condition|(
 name|debug
 operator|&
-name|TALLYDEBUG
+name|LOOKUPDEBUG
 condition|)
 block|{
 name|printf

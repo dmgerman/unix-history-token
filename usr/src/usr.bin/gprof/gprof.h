@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.2 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.3 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -465,8 +465,26 @@ comment|/* exec header of a.out */
 end_comment
 
 begin_decl_stmt
+name|unsigned
+name|char
+modifier|*
+name|textspace
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* text space of a.out in core */
+end_comment
+
+begin_decl_stmt
 name|int
 name|zflg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cflag
 decl_stmt|;
 end_decl_stmt
 
@@ -612,8 +630,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ANYDEBUG
+name|CALLSDEBUG
 value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOKUPDEBUG
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANYDEBUG
+value|512
 end_define
 
 end_unit
