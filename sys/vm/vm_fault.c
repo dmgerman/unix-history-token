@@ -2206,10 +2206,10 @@ operator|->
 name|backing_object
 condition|)
 block|{
-comment|/* 				 * get rid of the unnecessary page 				 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
+comment|/* 				 * get rid of the unnecessary page 				 */
 name|pmap_remove_all
 argument_list|(
 name|fs
@@ -2223,12 +2223,6 @@ name|fs
 operator|.
 name|first_m
 argument_list|)
-expr_stmt|;
-name|fs
-operator|.
-name|first_m
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* 				 * grab the page and put it into the  				 * process'es object.  The page is  				 * automatically made dirty. 				 */
 name|vm_page_rename
@@ -2246,6 +2240,16 @@ operator|.
 name|first_pindex
 argument_list|)
 expr_stmt|;
+name|vm_page_busy
+argument_list|(
+name|fs
+operator|.
+name|m
+argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|fs
 operator|.
 name|first_m
@@ -2253,16 +2257,6 @@ operator|=
 name|fs
 operator|.
 name|m
-expr_stmt|;
-name|vm_page_busy
-argument_list|(
-name|fs
-operator|.
-name|first_m
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|fs
 operator|.
@@ -2341,19 +2335,6 @@ name|object
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Only use the new page below... 			 */
-name|cnt
-operator|.
-name|v_cow_faults
-operator|++
-expr_stmt|;
-name|fs
-operator|.
-name|m
-operator|=
-name|fs
-operator|.
-name|first_m
-expr_stmt|;
 name|fs
 operator|.
 name|object
@@ -2369,6 +2350,19 @@ operator|=
 name|fs
 operator|.
 name|first_pindex
+expr_stmt|;
+name|fs
+operator|.
+name|m
+operator|=
+name|fs
+operator|.
+name|first_m
+expr_stmt|;
+name|cnt
+operator|.
+name|v_cow_faults
+operator|++
 expr_stmt|;
 block|}
 else|else
