@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cron.c	4.5 (Berkeley) %G%"
+literal|"@(#)cron.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,13 @@ begin_define
 define|#
 directive|define
 name|LISTS
+value|(2*BUFSIZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXLIN
 value|BUFSIZ
 end_define
 
@@ -813,7 +820,7 @@ name|list
 operator|+
 name|listsize
 operator|-
-name|BUFSIZ
+name|MAXLIN
 condition|)
 block|{
 name|char
