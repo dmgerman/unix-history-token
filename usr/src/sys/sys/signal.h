@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -16,6 +16,27 @@ name|NSIG
 value|32
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../machine/trap.h"
+end_include
+
+begin_comment
+comment|/* codes for SIGILL, SIGFPE */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -25,6 +46,11 @@ end_include
 begin_comment
 comment|/* codes for SIGILL, SIGFPE */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
