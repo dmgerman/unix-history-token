@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tscroll.c	8.3 (Berkeley) %G%"
+literal|"@(#)tscroll.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,9 @@ name|__tscroll
 parameter_list|(
 name|cap
 parameter_list|,
-name|n
+name|n1
+parameter_list|,
+name|n2
 parameter_list|)
 specifier|const
 name|char
@@ -60,7 +62,9 @@ modifier|*
 name|cap
 decl_stmt|;
 name|int
-name|n
+name|n1
+decl_stmt|,
+name|n2
 decl_stmt|;
 block|{
 specifier|static
@@ -72,6 +76,8 @@ index|]
 decl_stmt|;
 name|int
 name|c
+decl_stmt|,
+name|n
 decl_stmt|;
 name|char
 modifier|*
@@ -88,6 +94,10 @@ name|err
 goto|;
 for|for
 control|(
+name|n
+operator|=
+name|n1
+operator|,
 name|dp
 operator|=
 name|result
@@ -204,6 +214,10 @@ operator|%
 literal|10
 operator||
 literal|'0'
+expr_stmt|;
+name|n
+operator|=
+name|n2
 expr_stmt|;
 continue|continue;
 case|case
