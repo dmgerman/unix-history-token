@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.86 (Berkeley) 9/28/95"
+literal|"@(#)parseaddr.c	8.87 (Berkeley) 11/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -3852,12 +3852,15 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"rewrite: LHS $&%c => \"%s\"\n"
+literal|"rewrite: LHS $&%s => \"%s\"\n"
 argument_list|,
+name|macname
+argument_list|(
 name|rp
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|,
 name|ap
 operator|==
@@ -4513,12 +4516,15 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"rewrite: RHS $&%c => \"%s\"\n"
+literal|"rewrite: RHS $&%s => \"%s\"\n"
 argument_list|,
+name|macname
+argument_list|(
 name|rp
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|,
 operator|*
 name|avp
