@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)mdiv.c	4.1	%G%	*/
+comment|/*	@(#)mdiv.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -221,7 +221,8 @@ name|int
 name|borrow
 decl_stmt|,
 name|j
-decl_stmt|,
+decl_stmt|;
+name|short
 name|u
 decl_stmt|;
 name|qx
