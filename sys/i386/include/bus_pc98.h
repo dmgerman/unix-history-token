@@ -395,6 +395,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  *      int bus_space_unmap (bus_space_tag_t t,  *          bus_space_handle_t bsh, bus_size_t size);  *  * Unmap a region of bus space.  */
+end_comment
+
+begin_function_decl
+name|void
+name|i386_memio_unmap
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|bus_space_unmap
+parameter_list|(
+name|t
+parameter_list|,
+name|h
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|i386_memio_unmap((t), (h), (s))
+end_define
+
+begin_comment
 comment|/*  *      int bus_space_subregion (bus_space_tag_t t,  *          bus_space_handle_t bsh, bus_size_t offset, bus_size_t size,  *          bus_space_handle_t *nbshp);  *  * Get a new handle for a subregion of an already-mapped area of bus space.  */
 end_comment
 
@@ -438,6 +473,41 @@ name|nhp
 parameter_list|)
 define|\
 value|i386_memio_subregion((t), (h), (o), (s), (nhp))
+end_define
+
+begin_comment
+comment|/*  *      int bus_space_free (bus_space_tag_t t,  *          bus_space_handle_t bsh, bus_size_t size);  *  * Free a region of bus space.  */
+end_comment
+
+begin_function_decl
+name|void
+name|i386_memio_free
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|bus_space_free
+parameter_list|(
+name|t
+parameter_list|,
+name|h
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|i386_memio_free((t), (h), (s))
 end_define
 
 begin_comment
