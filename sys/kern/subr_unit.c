@@ -431,7 +431,7 @@ name|void
 name|check_unrhdr
 parameter_list|(
 name|struct
-name|unhdr
+name|unrhdr
 modifier|*
 name|uh
 parameter_list|,
