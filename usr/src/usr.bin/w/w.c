@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	8.2 (Berkeley) %G%"
+literal|"@(#)w.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1853,7 +1853,7 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-comment|/* 	 * Print time of day. 	 * 	 * Note, SCCS forces the string manipulation below, as it 	 * replaces w.c with file information. 	 */
+comment|/* 	 * Print time of day. 	 * 	 * SCCS forces the string manipulation below, as it replaces 	 * %, M, and % in a character string with the file name. 	 */
 operator|(
 name|void
 operator|)
