@@ -5127,9 +5127,6 @@ operator|&
 name|allpmaps_lock
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|m
 operator|=
 name|PHYS_TO_VM_PAGE
@@ -5141,6 +5138,39 @@ index|[
 name|PML4PML4I
 index|]
 argument_list|)
+expr_stmt|;
+name|pmap
+operator|->
+name|pm_pml4
+index|[
+name|KPML4I
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* KVA */
+name|pmap
+operator|->
+name|pm_pml4
+index|[
+name|DMPML4I
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Direct Map */
+name|pmap
+operator|->
+name|pm_pml4
+index|[
+name|PML4PML4I
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Recursive Mapping */
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|m
 operator|->
@@ -5157,7 +5187,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|vm_page_free
+name|vm_page_free_zero
 argument_list|(
 name|m
 argument_list|)
