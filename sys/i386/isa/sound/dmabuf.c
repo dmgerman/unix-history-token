@@ -1535,6 +1535,11 @@ argument_list|(
 literal|"Sound: DMA timed out - IRQ/DRQ config error?\n"
 argument_list|)
 expr_stmt|;
+name|dma_reset
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|EIO
@@ -2648,6 +2653,11 @@ block|{
 name|printk
 argument_list|(
 literal|"Sound: DMA timed out - IRQ/DRQ config error?\n"
+argument_list|)
+expr_stmt|;
+name|dma_reset
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|err
