@@ -3249,7 +3249,7 @@ name|moduleargv
 expr_stmt|;
 name|optind
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|wid
 operator|=
