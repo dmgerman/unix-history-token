@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rtprio.c,v 1.5 1997/10/13 11:24:01 charnier Exp $"
+literal|"$Id: rtprio.c,v 1.6 1998/05/19 20:52:31 dufault Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -480,7 +480,7 @@ literal|"%s"
 argument_list|,
 name|argv
 index|[
-literal|0
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
