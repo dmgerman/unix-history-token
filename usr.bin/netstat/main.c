@@ -444,9 +444,6 @@ block|{
 literal|"_ipsec6stat"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notyet
 define|#
 directive|define
 name|N_PIM6STAT
@@ -487,8 +484,6 @@ block|{
 literal|"_mif6table"
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|""
 block|}
@@ -2247,9 +2242,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|af
@@ -2270,8 +2262,6 @@ operator|.
 name|n_value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
@@ -2307,9 +2297,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|af
@@ -2337,8 +2324,6 @@ operator|.
 name|n_value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}

@@ -199,7 +199,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No multicast routing compiled into this system.\n"
+literal|"No IPv4 multicast routing compiled into this system.\n"
 argument_list|)
 expr_stmt|;
 return|return;
