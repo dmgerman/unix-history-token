@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.58 2001/11/20 23:53:26 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.59 2001/11/26 20:16:55 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1876,7 +1876,7 @@ name|usb_all_tasks
 argument_list|,
 name|PWAIT
 argument_list|,
-literal|"usbevt"
+literal|"usbtsk"
 argument_list|,
 literal|0
 argument_list|)
