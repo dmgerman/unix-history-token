@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.11 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.12 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.11 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.12 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2194,6 +2194,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|pid_t
+name|pid
+decl_stmt|;
+specifier|extern
+name|pid_t
+name|dowork
+parameter_list|()
+function_decl|;
+name|pid
+operator|=
 name|dowork
 argument_list|(
 name|w
@@ -2207,6 +2217,18 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|waitfor
+argument_list|(
+name|pid
 argument_list|)
 expr_stmt|;
 block|}
@@ -3322,54 +3344,40 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DOWORK -- do a work request. ** **	Parameters: **		id -- the ID of the job to run. **		forkflag -- if set, run this in background. **		requeueflag -- if set, reinstantiate the queue quickly. **			This is used when expanding aliases in the queue. **			If forkflag is also set, it doesn't wait for the **			child. **		e - the envelope in which to run it. ** **	Returns: **		none. ** **	Side Effects: **		The work request is satisfied if possible. */
+comment|/* **  DOWORK -- do a work request. ** **	Parameters: **		id -- the ID of the job to run. **		forkflag -- if set, run this in background. **		requeueflag -- if set, reinstantiate the queue quickly. **			This is used when expanding aliases in the queue. **			If forkflag is also set, it doesn't wait for the **			child. **		e - the envelope in which to run it. ** **	Returns: **		process id of process that is running the queue job. ** **	Side Effects: **		The work request is satisfied if possible. */
 end_comment
 
-begin_macro
+begin_function
+name|pid_t
 name|dowork
-argument_list|(
-argument|id
-argument_list|,
-argument|forkflag
-argument_list|,
-argument|requeueflag
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|id
+parameter_list|,
+name|forkflag
+parameter_list|,
+name|requeueflag
+parameter_list|,
+name|e
+parameter_list|)
 name|char
 modifier|*
 name|id
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|forkflag
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|requeueflag
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
-name|int
-name|i
+name|pid_t
+name|pid
 decl_stmt|;
 specifier|extern
 name|bool
@@ -3398,14 +3406,14 @@ condition|(
 name|forkflag
 condition|)
 block|{
-name|i
+name|pid
 operator|=
 name|fork
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|pid
 operator|<
 literal|0
 condition|)
@@ -3415,19 +3423,21 @@ argument_list|(
 literal|"dowork: cannot fork"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 block|}
 else|else
 block|{
-name|i
+name|pid
 operator|=
 literal|0
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|i
+name|pid
 operator|==
 literal|0
 condition|)
@@ -3473,7 +3483,7 @@ name|forkflag
 condition|)
 name|disconnect
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 name|e
 argument_list|)
@@ -3603,29 +3613,17 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|requeueflag
-condition|)
-block|{
-comment|/* 		**  Parent -- pick up results. 		*/
-name|errno
+name|e
+operator|->
+name|e_id
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|waitfor
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
+return|return
+name|pid
+return|;
 block|}
-block|}
-end_block
+end_function
 
 begin_escape
 end_escape

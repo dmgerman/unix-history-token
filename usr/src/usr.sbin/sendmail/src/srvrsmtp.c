@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.12 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.13 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.12 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.13 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2085,11 +2085,19 @@ operator|!=
 name|SM_QUEUE
 condition|)
 block|{
+specifier|extern
+name|pid_t
+name|dowork
+parameter_list|()
+function_decl|;
 name|unlockqueue
 argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dowork
 argument_list|(
 name|id
@@ -2100,12 +2108,6 @@ name|TRUE
 argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
-name|e
-operator|->
-name|e_id
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 block|}
