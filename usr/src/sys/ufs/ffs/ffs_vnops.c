@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.83 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.84 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1428,6 +1428,27 @@ argument_list|(
 literal|"ffs_read type"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|IFLNK
+operator|&&
+name|ip
+operator|->
+name|i_size
+operator|<
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_maxsymlinklen
+condition|)
+name|panic
+argument_list|(
+literal|"read short symlink"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -1449,25 +1470,6 @@ name|ip
 operator|->
 name|i_fs
 expr_stmt|;
-if|if
-condition|(
-name|uio
-operator|->
-name|uio_offset
-operator|+
-name|uio
-operator|->
-name|uio_resid
-operator|>
-name|fs
-operator|->
-name|fs_maxfilesize
-condition|)
-return|return
-operator|(
-name|EFBIG
-operator|)
-return|;
 name|ip
 operator|->
 name|i_flag
