@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* db2.c-  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains routines for implementing the database  * manipulations for the gremlin picture editor.  */
+comment|/* @(#)db2.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains routines for implementing the database  * manipulations for the gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -324,9 +321,6 @@ begin_comment
 comment|/* end copy */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|DBXform
 argument_list|(
@@ -509,9 +503,6 @@ end_expr_stmt
 begin_comment
 comment|/* end Xform */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|DBChangeBrush

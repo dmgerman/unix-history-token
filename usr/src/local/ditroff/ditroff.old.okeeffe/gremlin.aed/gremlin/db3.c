@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* db3.c -  *  *  * Copyright -C- 1982 Barry S. Roitblat  *  *       This file contains additional routines to implement the database  * manipulations necessary for the gremlin picture editor.  */
+comment|/* @(#)db3.c	1.2	%G%  *  *  * Copyright -C- 1982 Barry S. Roitblat  *  *       This file contains additional routines to implement the database  * manipulations necessary for the gremlin picture editor.  */
 end_comment
 
 begin_include
