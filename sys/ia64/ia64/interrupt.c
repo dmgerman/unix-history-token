@@ -628,7 +628,7 @@ literal|0
 condition|)
 name|statclock_process
 argument_list|(
-name|curkse
+name|curthread
 argument_list|,
 name|TRAPF_PC
 argument_list|(
