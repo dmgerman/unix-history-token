@@ -6734,6 +6734,9 @@ block|{
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|env
 decl_stmt|;
 name|int
 name|len
@@ -6741,7 +6744,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|cp
+name|env
 operator|=
 name|getenv
 argument_list|(
@@ -6761,7 +6764,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|cp
+name|env
 argument_list|,
 literal|"all"
 argument_list|)
@@ -6769,7 +6772,7 @@ condition|)
 block|{
 name|freeenv
 argument_list|(
-name|cp
+name|env
 argument_list|)
 expr_stmt|;
 return|return
@@ -6779,6 +6782,10 @@ operator|)
 return|;
 block|}
 comment|/* scan the disable list checking for a match */
+name|cp
+operator|=
+name|env
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -6853,7 +6860,7 @@ condition|)
 block|{
 name|freeenv
 argument_list|(
-name|cp
+name|env
 argument_list|)
 expr_stmt|;
 return|return
@@ -6869,7 +6876,7 @@ expr_stmt|;
 block|}
 name|freeenv
 argument_list|(
-name|cp
+name|env
 argument_list|)
 expr_stmt|;
 return|return
