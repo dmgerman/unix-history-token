@@ -105,7 +105,7 @@ argument_list|(
 operator|*
 name|set
 argument_list|,
-name|_process_sigpending
+name|_thread_sigpending
 argument_list|)
 expr_stmt|;
 block|}

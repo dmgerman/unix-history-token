@@ -233,6 +233,12 @@ case|:
 case|case
 name|PS_WAIT_WAIT
 case|:
+case|case
+name|PS_SIGSUSPEND
+case|:
+case|case
+name|PS_SIGWAIT
+case|:
 comment|/* Interrupt and resume: */
 name|pthread
 operator|->

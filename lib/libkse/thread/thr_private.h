@@ -1067,6 +1067,10 @@ name|PS_SLEEP_WAIT
 block|,
 name|PS_WAIT_WAIT
 block|,
+name|PS_SIGSUSPEND
+block|,
+name|PS_SIGWAIT
+block|,
 name|PS_SPINBLOCK
 block|,
 name|PS_JOIN
@@ -1117,6 +1121,12 @@ decl_stmt|;
 name|pthread_cond_t
 name|cond
 decl_stmt|;
+specifier|const
+name|sigset_t
+modifier|*
+name|sigwait
+decl_stmt|;
+comment|/* Waiting on a signal in sigwait */
 name|spinlock_t
 modifier|*
 name|spinlock
@@ -1163,6 +1173,35 @@ name|ret
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pthread_state_data
+block|{
+name|struct
+name|timespec
+name|psd_wakeup_time
+decl_stmt|;
+name|union
+name|pthread_wait_data
+name|psd_wait_data
+decl_stmt|;
+name|enum
+name|pthread_state
+name|psd_state
+decl_stmt|;
+name|int
+name|psd_flags
+decl_stmt|;
+name|int
+name|psd_interrupted
+decl_stmt|;
+name|int
+name|psd_sig_defer_count
 decl_stmt|;
 block|}
 struct|;
@@ -1274,6 +1313,10 @@ decl_stmt|;
 name|thread_continuation_t
 name|continuation
 decl_stmt|;
+comment|/* Currently pending signals. */
+name|sigset_t
+name|sigpend
+decl_stmt|;
 comment|/* Thread state: */
 name|enum
 name|pthread_state
@@ -1344,6 +1387,10 @@ decl_stmt|;
 comment|/* 	 * Set to TRUE if a blocking operation was 	 * interrupted by a signal: 	 */
 name|int
 name|interrupted
+decl_stmt|;
+comment|/* Signal number when in state PS_SIGWAIT: */
+name|int
+name|signo
 decl_stmt|;
 comment|/* 	 * Set to non-zero when this thread has deferred signals. 	 * We allow for recursive deferral. 	 */
 name|int
@@ -1937,6 +1984,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Array of signal actions for this process.  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|struct
+name|sigaction
+name|_thread_sigact
+index|[
+name|NSIG
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Scheduling queues:  */
 end_comment
 
@@ -2005,6 +2067,24 @@ init|=
 name|NULL
 endif|#
 directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Signals pending and masked.  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|sigset_t
+name|_thread_sigpending
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|sigset_t
+name|_thread_sigmask
 decl_stmt|;
 end_decl_stmt
 
@@ -2757,6 +2837,21 @@ name|void
 name|_thread_kern_sig_undefer
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_sig_handler
+parameter_list|(
+name|int
+parameter_list|,
+name|siginfo_t
+modifier|*
+parameter_list|,
+name|ucontext_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
