@@ -25521,6 +25521,9 @@ name|subcmd
 condition|)
 block|{
 case|case
+operator|(
+name|int
+operator|)
 name|SPPPIOGDEFS
 case|:
 if|if
@@ -25722,6 +25725,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+operator|(
+name|int
+operator|)
 name|SPPPIOSDEFS
 case|:
 if|if
