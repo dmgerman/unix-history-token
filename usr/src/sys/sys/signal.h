@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	signal.h	6.2	84/08/30	*/
+comment|/*	signal.h	6.3	84/12/31	*/
 end_comment
 
 begin_ifndef
@@ -458,6 +458,17 @@ end_define
 
 begin_comment
 comment|/* profiling time alarm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGWINCH
+value|28
+end_define
+
+begin_comment
+comment|/* window size changes */
 end_comment
 
 begin_ifndef
