@@ -4,6 +4,10 @@ comment|/* ELF executable support for BFD.    Copyright 1993, 94, 95, 96, 97, 19
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  SECTION 	ELF backends  	BFD support for ELF formats is being worked on. 	Currently, the best supported back ends are for sparc and i386 	(running svr4 or Solaris 2).  	Documentation of the internals of the support code still needs 	to be written.  The code is changing quickly enough that we 	haven't bothered yet.  */
 end_comment
 
@@ -43,6 +47,50 @@ include|#
 directive|include
 file|"elf-bfd.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|EI_BRAND_OFFSET
+value|8
+end_define
+
+begin_comment
+comment|/* should be in binutils/include/elf/common.h */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BRANDING
+value|"FreeBSD"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BRANDING
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 specifier|static
@@ -14254,10 +14302,7 @@ name|s
 operator|->
 name|sizeof_ehdr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* Quick and dirty hack to brand the file as a FreeBSD ELF file. */
+comment|/* Some OS's brands all ELF binaries so the image loader knows what system 	 call set, etc. to use.  */
 name|strncpy
 argument_list|(
 operator|(
@@ -14269,18 +14314,16 @@ name|i_ehdrp
 operator|->
 name|e_ident
 index|[
-literal|8
+name|EI_BRAND_OFFSET
 index|]
 argument_list|,
-literal|"FreeBSD"
+name|BRANDING
 argument_list|,
 name|EI_NIDENT
 operator|-
-literal|8
+name|EI_BRAND_OFFSET
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* no program header, for now. */
 name|i_ehdrp
 operator|->
