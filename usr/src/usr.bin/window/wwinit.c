@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.18 84/04/16"
+literal|"@(#)wwinit.c	3.19 84/05/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -786,7 +786,7 @@ name|kp
 operator|=
 name|wwkeys
 expr_stmt|;
-name|addcap
+name|wwaddcap
 argument_list|(
 literal|"kb"
 argument_list|,
@@ -794,7 +794,7 @@ operator|&
 name|kp
 argument_list|)
 expr_stmt|;
-name|addcap
+name|wwaddcap
 argument_list|(
 literal|"ku"
 argument_list|,
@@ -802,7 +802,7 @@ operator|&
 name|kp
 argument_list|)
 expr_stmt|;
-name|addcap
+name|wwaddcap
 argument_list|(
 literal|"kd"
 argument_list|,
@@ -810,7 +810,7 @@ operator|&
 name|kp
 argument_list|)
 expr_stmt|;
-name|addcap
+name|wwaddcap
 argument_list|(
 literal|"kl"
 argument_list|,
@@ -818,7 +818,7 @@ operator|&
 name|kp
 argument_list|)
 expr_stmt|;
-name|addcap
+name|wwaddcap
 argument_list|(
 literal|"kr"
 argument_list|,
@@ -826,7 +826,7 @@ operator|&
 name|kp
 argument_list|)
 expr_stmt|;
-name|addcap
+name|wwaddcap
 argument_list|(
 literal|"kh"
 argument_list|,
@@ -905,7 +905,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|addcap
+name|wwaddcap
 argument_list|(
 name|cap
 argument_list|,
@@ -920,7 +920,7 @@ index|]
 operator|=
 literal|'l'
 expr_stmt|;
-name|addcap
+name|wwaddcap
 argument_list|(
 name|cap
 argument_list|,
@@ -1072,6 +1072,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigsetmask
 argument_list|(
 name|s
@@ -1120,8 +1130,7 @@ block|}
 end_block
 
 begin_expr_stmt
-specifier|static
-name|addcap
+name|wwaddcap
 argument_list|(
 name|cap
 argument_list|,
