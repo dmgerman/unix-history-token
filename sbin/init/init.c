@@ -548,6 +548,20 @@ name|AUTOBOOT
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|1
+end_define
+
 begin_decl_stmt
 name|int
 name|Reboot
