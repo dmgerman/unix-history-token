@@ -8516,6 +8516,18 @@ operator|=
 name|splfw
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+literal|1
+name|sbp_abort_all_ocbs
+argument_list|(
+name|sdev
+argument_list|,
+name|CAM_CMD_TIMEOUT
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sbp_abort_ocb
 argument_list|(
 name|ocb
@@ -8523,6 +8535,8 @@ argument_list|,
 name|CAM_CMD_TIMEOUT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
@@ -10086,6 +10100,10 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
+name|bus_dma_segment_t
+modifier|*
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|error
@@ -10221,23 +10239,45 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
+name|s
+operator|=
+operator|&
 name|segments
 index|[
 name|i
 index|]
-operator|.
+expr_stmt|;
+if|#
+directive|if
+literal|1
+comment|/* XXX LSI Logic "< 16 byte" bug might be hit */
+if|if
+condition|(
+name|s
+operator|->
 name|ds_len
 operator|<
 literal|16
 condition|)
 name|printf
 argument_list|(
-literal|"sbp_execute_ocb: segment length is "
-literal|"less than 16.\n"
+literal|"sbp_execute_ocb: warning, "
+literal|"segment length(%d) is less than 16."
+literal|"(seg=%d/%d)\n"
+argument_list|,
+name|s
+operator|->
+name|ds_len
+argument_list|,
+name|i
+operator|+
+literal|1
+argument_list|,
+name|seg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ocb
 operator|->
 name|ind_ptr
@@ -10249,11 +10289,8 @@ name|hi
 operator|=
 name|htonl
 argument_list|(
-name|segments
-index|[
-name|i
-index|]
-operator|.
+name|s
+operator|->
 name|ds_len
 operator|<<
 literal|16
@@ -10270,11 +10307,8 @@ name|lo
 operator|=
 name|htonl
 argument_list|(
-name|segments
-index|[
-name|i
-index|]
-operator|.
+name|s
+operator|->
 name|ds_addr
 argument_list|)
 expr_stmt|;
