@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	6.2	84/05/10	*/
+comment|/*	proc.h	6.2	84/06/06	*/
 end_comment
 
 begin_comment
@@ -22,6 +22,19 @@ name|proc
 modifier|*
 name|p_rlink
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p_nxt
+decl_stmt|;
+comment|/* linked list of allocated proc slots */
+name|struct
+name|proc
+modifier|*
+modifier|*
+name|p_prev
+decl_stmt|;
+comment|/* also zombies, and free proc's */
 name|struct
 name|pte
 modifier|*
@@ -219,7 +232,7 @@ begin_define
 define|#
 directive|define
 name|PIDHSZ
-value|63
+value|64
 end_define
 
 begin_define
@@ -229,7 +242,7 @@ name|PIDHASH
 parameter_list|(
 name|pid
 parameter_list|)
-value|((pid) % PIDHSZ)
+value|((pid)& (PIDHSZ - 1))
 end_define
 
 begin_ifdef
@@ -269,6 +282,24 @@ end_decl_stmt
 
 begin_comment
 comment|/* the proc table itself */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|freeproc
+decl_stmt|,
+modifier|*
+name|zombproc
+decl_stmt|,
+modifier|*
+name|allproc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lists of procs in various states */
 end_comment
 
 begin_decl_stmt
