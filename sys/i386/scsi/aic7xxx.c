@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870, aic7860,  *			and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.80 1996/10/25 06:42:51 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870, aic7860,  *			and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.84 1996/11/07 06:39:44 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -157,12 +157,6 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_aic7xxx.h"
-end_include
 
 begin_include
 include|#
@@ -4285,15 +4279,16 @@ name|targ_mask
 operator|)
 operator|!=
 literal|0
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|saved_offset
 operator|==
 name|offset
-operator|)
 condition|)
 block|{
-comment|/* 				 * Don't send an SDTR back to 				 * the target 				 */
+comment|/* 					 * Don't send an SDTR back to 					 * the target 					 */
 name|AHC_OUTB
 argument_list|(
 name|ahc
@@ -4303,19 +4298,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|AHC_OUTB
+argument_list|(
 name|ahc
-operator|->
-name|needsdtr
-operator|&=
-operator|~
-name|targ_mask
-expr_stmt|;
-name|ahc
-operator|->
-name|sdtrpending
-operator|&=
-operator|~
-name|targ_mask
+argument_list|,
+name|RETURN_1
+argument_list|,
+name|SEND_REJ
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -4347,19 +4339,7 @@ argument_list|,
 name|SEND_MSG
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If we aren't starting a re-negotiation 				 * because we had to go async in response 				 * to a "too low" response from the target 				 * clear the needsdtr flag for this target. 				 */
-if|if
-condition|(
-operator|(
-name|ahc
-operator|->
-name|sdtrpending
-operator|&
-name|targ_mask
-operator|)
-operator|==
-literal|0
-condition|)
+block|}
 name|ahc
 operator|->
 name|needsdtr
@@ -4367,14 +4347,13 @@ operator|&=
 operator|~
 name|targ_mask
 expr_stmt|;
-else|else
 name|ahc
 operator|->
 name|sdtrpending
-operator||=
+operator|&=
+operator|~
 name|targ_mask
 expr_stmt|;
-block|}
 break|break;
 block|}
 case|case
@@ -4655,6 +4634,7 @@ name|SEND_REJ
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
 block|}
 case|case
 name|REJECT_MSG
@@ -5164,6 +5144,7 @@ name|sg
 operator|->
 name|addr
 expr_stmt|;
+comment|/* Maintain SCB_LINKED_NEXT */
 name|hscb
 operator|->
 name|datalen
@@ -8437,6 +8418,18 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* At least the control byte of each hscb needs to be zeroed */
+name|bzero
+argument_list|(
+name|ahc
+operator|->
+name|scb_data
+operator|->
+name|hscbs
+argument_list|,
+name|array_size
+argument_list|)
+expr_stmt|;
 comment|/* Tell the sequencer where it can find the hscb array. */
 name|hscb_physaddr
 operator|=
