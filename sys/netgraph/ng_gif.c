@@ -899,7 +899,6 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
-specifier|const
 name|priv_p
 name|priv
 decl_stmt|;
