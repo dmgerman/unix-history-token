@@ -427,6 +427,13 @@ name|astosc
 modifier|*
 name|ptr
 decl_stmt|;
+while|while
+condition|(
+operator|!
+name|EmptyChar
+condition|)
+block|{
+comment|/* send up the link */
 if|if
 condition|(
 operator|*
@@ -452,13 +459,6 @@ name|ourPHead
 index|]
 expr_stmt|;
 block|}
-while|while
-condition|(
-operator|!
-name|EmptyChar
-condition|)
-block|{
-comment|/* send up the link */
 if|if
 condition|(
 name|AcceptKeystroke
@@ -482,6 +482,10 @@ name|work
 operator|=
 literal|1
 expr_stmt|;
+block|}
+else|else
+block|{
+break|break;
 block|}
 block|}
 if|if
