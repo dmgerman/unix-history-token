@@ -2850,6 +2850,10 @@ if|if
 condition|(
 name|utimes
 argument_list|(
+name|tmppath
+condition|?
+name|tmppath
+else|:
 name|path
 argument_list|,
 name|tv
@@ -2859,6 +2863,10 @@ name|warn
 argument_list|(
 literal|"%s: utimes()"
 argument_list|,
+name|tmppath
+condition|?
+name|tmppath
+else|:
 name|path
 argument_list|)
 expr_stmt|;
