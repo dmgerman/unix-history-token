@@ -1003,6 +1003,11 @@ decl_stmt|;
 name|u_int16_t
 name|v
 decl_stmt|;
+name|int
+name|already
+init|=
+literal|0
+decl_stmt|;
 name|v
 operator|=
 name|pcibios_get_version
@@ -1145,32 +1150,16 @@ name|irq
 operator|!=
 literal|255
 condition|)
-block|{
-name|PRVERB
-argument_list|(
-operator|(
-literal|"pci_cfgintr: %d:%d INT%c already routed to irq %d\n"
-operator|,
-name|bus
-operator|,
-name|device
-operator|,
-literal|'A'
-operator|+
-name|pin
-operator|-
+name|already
+operator|=
 literal|1
-operator|,
-name|irq
-operator|)
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
 name|irq
-operator|)
-return|;
-block|}
+operator|==
+literal|255
+condition|)
 name|irq
 operator|=
 name|pci_cfgintr_unique
@@ -1262,13 +1251,16 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 argument_list|)
+operator|&&
+operator|!
+name|already
 condition|)
 block|{
 comment|/* 	     * XXX if it fails, we should try to smack the router 	     * hardware directly. 	     * XXX Also, there may be other choices that we can try that 	     * will work. 	     */
 name|PRVERB
 argument_list|(
 operator|(
-literal|"pci_cfgintr: ROUTE_INTERRUPT failured.\n"
+literal|"pci_cfgintr: ROUTE_INTERRUPT failed.\n"
 operator|)
 argument_list|)
 expr_stmt|;
