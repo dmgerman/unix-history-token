@@ -211,10 +211,11 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|extend_heap
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|rpb
@@ -437,9 +438,6 @@ literal|128
 index|]
 decl_stmt|;
 comment|/*       * Initialise the heap as early as possible.  Once this is done,      * alloc() is usable. The stack is buried inside us, so this is      * safe.      */
-name|extend_heap
-argument_list|()
-expr_stmt|;
 name|setheap
 argument_list|(
 operator|(
