@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savenl.c 1.1 %G%"
+literal|"@(#)savenl.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|"0.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfmt.h"
 end_include
 
 begin_undef
@@ -141,6 +147,13 @@ name|linesfp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|LOCAL
+name|long
+name|nlsize
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * create temporary files for the namelist info  */
 end_comment
@@ -152,6 +165,10 @@ end_macro
 
 begin_block
 block|{
+name|nlsize
+operator|=
+literal|0
+expr_stmt|;
 name|mktemp
 argument_list|(
 name|symname
@@ -300,6 +317,20 @@ argument_list|(
 name|linesfp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|opt
+argument_list|(
+literal|'g'
+argument_list|)
+condition|)
+block|{
+name|removenlfile
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 name|symfd
 operator|=
 name|open
@@ -532,6 +563,48 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|nlhdrsize
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|int
+name|r
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|opt
+argument_list|(
+literal|'g'
+argument_list|)
+condition|)
+block|{
+name|r
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|r
+operator|=
+name|nlsize
+operator|+
+sizeof|sizeof
+argument_list|(
+name|nlhdr
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|r
+return|;
+block|}
+end_block
+
 begin_define
 define|#
 directive|define
@@ -734,6 +807,18 @@ name|nlhdr
 operator|.
 name|nsyms
 operator|++
+expr_stmt|;
+name|nlsize
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|OBJSYM
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 expr_stmt|;
 name|putw
 argument_list|(
@@ -962,7 +1047,7 @@ name|LOCAL
 name|int
 name|olc
 init|=
-name|BASEADDR
+name|HEADER_BYTES
 decl_stmt|;
 end_decl_stmt
 
@@ -992,6 +1077,10 @@ name|nlhdr
 operator|.
 name|nlines
 operator|++
+expr_stmt|;
+name|nlsize
+operator|+=
+literal|2
 expr_stmt|;
 name|putc
 argument_list|(
@@ -1059,6 +1148,13 @@ operator|.
 name|nfiles
 operator|++
 expr_stmt|;
+name|nlsize
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|FILETAB
+argument_list|)
+expr_stmt|;
 name|ft
 operator|.
 name|line
@@ -1091,7 +1187,7 @@ name|addr
 operator|=
 name|lc
 operator|-
-name|BASEADDR
+name|HEADER_BYTES
 expr_stmt|;
 block|}
 name|ft
@@ -1165,6 +1261,18 @@ operator|.
 name|nsyms
 operator|++
 expr_stmt|;
+name|nlsize
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|OBJSYM
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
 name|putw
 argument_list|(
 literal|0
@@ -1237,6 +1345,7 @@ condition|;
 name|p
 operator|++
 control|)
+block|{
 name|putc
 argument_list|(
 operator|*
@@ -1245,9 +1354,20 @@ argument_list|,
 name|strfp
 argument_list|)
 expr_stmt|;
+block|}
 name|nlhdr
 operator|.
 name|stringsize
+operator|+=
+operator|(
+name|p
+operator|-
+name|s
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|nlsize
 operator|+=
 operator|(
 name|p
