@@ -336,7 +336,7 @@ begin_define
 define|#
 directive|define
 name|EXTENDED_TRANSLATION
-value|0x10
+value|0x80
 end_define
 
 begin_define
