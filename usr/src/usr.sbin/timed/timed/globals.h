@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*	@(#)globals.h	2.2	(Berkeley)	%G%	*/
+comment|/*	@(#)globals.h	2.3	(Berkeley)	%G%	*/
 end_comment
 
 begin_include
@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|TRIALS
-value|6
+value|10
 end_define
 
 begin_define
