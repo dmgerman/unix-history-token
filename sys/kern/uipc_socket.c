@@ -597,7 +597,9 @@ name|mac_init_socket
 argument_list|(
 name|so
 argument_list|,
-name|flag
+name|mflags
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
