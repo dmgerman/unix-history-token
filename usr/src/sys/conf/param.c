@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -27,91 +27,91 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"../sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"../sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"../sys/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"../ufs/dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"../sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/proc.h"
+file|"../sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/text.h"
+file|"../sys/text.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"../ufs/inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/file.h"
+file|"../sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/callout.h"
+file|"../sys/callout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/clist.h"
+file|"../sys/clist.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/cmap.h"
+file|"../sys/cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"../sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/quota.h"
+file|"../ufs/quota.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"../sys/kernel.h"
 end_include
 
 begin_comment
