@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.4 %G%"
+literal|"@(#)interp.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -845,16 +845,8 @@ operator|.
 name|cp
 operator|+=
 name|tl
-operator|+
-comment|/* skip over proc hdr info */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|hdr
-argument_list|)
-operator|-
-literal|4
 expr_stmt|;
+comment|/* skip over proc hdr info */
 name|stp
 operator|->
 name|file
