@@ -761,7 +761,7 @@ expr|*
 name|tmp
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|tmp
 operator|->
@@ -771,6 +771,8 @@ name|argv
 index|[
 name|i
 index|]
+argument_list|,
+name|IFNAMSIZ
 argument_list|)
 expr_stmt|;
 name|tmp
