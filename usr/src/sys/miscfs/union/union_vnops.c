@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5634,21 +5634,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|LK_TYPE_MASK
-operator|)
-operator|==
-name|LK_DRAIN
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* 	 * Need to do real lockmgr-style locking here. 	 * in the mean time, draining won't work quite right, 	 * which could lead to a few race conditions. 	 * the following test was here, but is not quite right, we 	 * still need to take the lock: 	if ((flags& LK_TYPE_MASK) == LK_DRAIN) 		return (0); 	 */
 name|flags
 operator|&=
 operator|~
