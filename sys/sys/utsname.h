@@ -77,12 +77,6 @@ directive|ifndef
 name|_KERNEL
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|int
@@ -98,34 +92,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_macro
 name|__END_DECLS
-else|#
-directive|else
-specifier|extern
-name|int
-name|uname
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|utsname
-name|utsname
-decl_stmt|;
-end_decl_stmt
+end_macro
 
 begin_endif
 endif|#
