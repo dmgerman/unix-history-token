@@ -38,16 +38,6 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/* THIS MUST DIE! */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
-begin_comment
 comment|/* Global variables for the kernel. */
 end_comment
 
