@@ -49,6 +49,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NTP_SYSCALLS_LIBC
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -246,6 +252,15 @@ end_endif
 
 begin_comment
 comment|/* !NTP_SYSCALLS_STD */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !NTP_SYSCALLS_LIBC */
 end_comment
 
 begin_endif

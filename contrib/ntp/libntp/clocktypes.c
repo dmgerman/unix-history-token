@@ -375,11 +375,35 @@ literal|"JJY"
 block|}
 block|,
 block|{
+name|REFCLK_TT560
+block|,
+literal|"TrueTime 560 IRIG-B decoder (41)"
+block|,
+literal|"TT_IRIG"
+block|}
+block|,
+block|{
 name|REFCLK_ZYFER
 block|,
-literal|"Zyfer GPStarplus receiver (41)"
+literal|"Zyfer GPStarplus receiver (42)"
 block|,
 literal|"GPS_ZYFER"
+block|}
+block|,
+block|{
+name|REFCLK_RIPENCC
+block|,
+literal|"RIPE NCC Trimble driver (43)"
+block|,
+literal|"GPS_RIPENCC"
+block|}
+block|,
+block|{
+name|REFCLK_NEOCLOCK4X
+block|,
+literal|"NeoClock4X DCF77 / TDF receiver (44)"
+block|,
+literal|"NEOCLK4X"
 block|}
 block|,
 block|{

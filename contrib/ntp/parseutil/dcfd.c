@@ -369,12 +369,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DECL_ERRNO
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * display received data (avoids also detaching from tty)  */
@@ -2429,6 +2440,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|time_t
 name|dcf_to_unixtime
 parameter_list|(
@@ -3746,7 +3758,8 @@ specifier|static
 name|void
 name|tick
 parameter_list|(
-name|void
+name|int
+name|signum
 parameter_list|)
 block|{
 specifier|static
@@ -4262,6 +4275,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|check_y2k
 parameter_list|(

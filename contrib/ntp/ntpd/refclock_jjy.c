@@ -3200,7 +3200,7 @@ name|io
 operator|.
 name|fd
 argument_list|,
-literal|"\x051J\x03"
+literal|"\0051J\003"
 argument_list|,
 literal|4
 argument_list|)

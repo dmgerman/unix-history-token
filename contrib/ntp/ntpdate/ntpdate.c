@@ -5267,6 +5267,10 @@ operator|(
 name|absoffset
 operator|>=
 name|NTPDATE_THRESHOLD
+operator|||
+name|absoffset
+operator|<
+literal|0
 operator|)
 expr_stmt|;
 block|}
