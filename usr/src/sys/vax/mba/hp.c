@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.66	83/02/10	*/
+comment|/*	hp.c	4.67	83/02/11	*/
 end_comment
 
 begin_ifdef
@@ -2429,7 +2429,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_seek
+name|sc_doseeks
 condition|)
 return|return
 operator|(
@@ -2497,7 +2497,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_seek
+name|sc_doseeks
 condition|)
 name|hpaddr
 operator|->
