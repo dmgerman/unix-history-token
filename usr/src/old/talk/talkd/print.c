@@ -125,7 +125,7 @@ name|FILE
 modifier|*
 name|debugout
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
 name|debugout
 argument_list|,

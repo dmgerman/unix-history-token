@@ -82,7 +82,6 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|timezone
-modifier|*
 name|txp
 decl_stmt|;
 end_decl_stmt

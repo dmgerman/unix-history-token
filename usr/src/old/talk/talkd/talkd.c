@@ -119,7 +119,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 name|timeout
 parameter_list|()
 function_decl|;
@@ -282,6 +282,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|from
 argument_list|,
@@ -369,6 +374,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|request
 operator|.
@@ -400,12 +410,10 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|timeout
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -429,7 +437,7 @@ name|TIMEOUT
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*    * heuristic to detect if need to swap bytes  */
