@@ -4464,7 +4464,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|fract
 decl_stmt|,
 name|sum
@@ -4533,6 +4533,9 @@ condition|)
 block|{
 name|whole
 operator|=
+operator|(
+name|uintmax_t
+operator|)
 name|cpu_cx_stats
 index|[
 name|i
