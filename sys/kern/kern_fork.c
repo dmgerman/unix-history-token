@@ -2510,27 +2510,31 @@ begin_comment
 comment|/*  * Handle the return of a child process from fork1().  This function  * is called from the MD fork_trampoline() entry point.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|void
 name|fork_exit
-parameter_list|(
+argument_list|(
 name|callout
-parameter_list|,
+argument_list|,
 name|arg
-parameter_list|,
+argument_list|,
 name|frame
-parameter_list|)
-function|void *callout
-parameter_list|(
+argument_list|)
 name|void
-modifier|*
-parameter_list|,
-name|struct
+argument_list|(
+operator|*
+name|callout
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|,
+expr|struct
 name|trapframe
-modifier|*
-parameter_list|)
-function|;
-end_function
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -2598,10 +2602,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * cpu_set_fork_handler intercepts this function call to          * have this call a non-return function to stay in kernel mode.          * initproc has its own fork handler, but it does return.          */
-call|(
-modifier|*
 name|callout
-call|)
 argument_list|(
 name|arg
 argument_list|,
