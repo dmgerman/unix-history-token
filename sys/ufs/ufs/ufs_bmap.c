@@ -871,7 +871,7 @@ operator|--
 name|bn
 init|;
 name|bn
-operator|>
+operator|>=
 literal|0
 operator|&&
 operator|*
