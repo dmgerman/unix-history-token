@@ -1503,6 +1503,12 @@ name|hlen
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|ifp
+operator|->
+name|if_iqdrops
+operator|++
+expr_stmt|;
 block|}
 elseif|else
 if|if
