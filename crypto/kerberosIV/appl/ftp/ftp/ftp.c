@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ftp.c,v 1.60 1999/10/28 19:32:17 assar Exp $"
+literal|"$Id: ftp.c,v 1.60.2.1 2000/06/23 02:45:40 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -859,6 +859,13 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+operator|*
+name|tmp
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|tmp
@@ -872,7 +879,9 @@ literal|1
 argument_list|,
 name|stdin
 argument_list|)
-expr_stmt|;
+operator|!=
+name|NULL
+condition|)
 name|tmp
 index|[
 name|strlen
@@ -930,15 +939,6 @@ operator|==
 name|CONTINUE
 condition|)
 block|{
-if|if
-condition|(
-name|sec_complete
-condition|)
-name|pass
-operator|=
-name|myname
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|pass
@@ -1006,6 +1006,17 @@ name|defaultpass
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|sec_complete
+condition|)
+block|{
+name|pass
+operator|=
+name|myname
+expr_stmt|;
+block|}
 else|else
 block|{
 operator|*
@@ -1026,6 +1037,13 @@ literal|"Password: "
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pass
+operator|==
+name|NULL
+condition|)
+block|{
 name|pass
 operator|=
 name|defaultpass
@@ -1055,6 +1073,7 @@ name|pass
 operator|=
 name|tmp
 expr_stmt|;
+block|}
 block|}
 name|n
 operator|=

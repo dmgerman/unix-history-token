@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rsaencpwd.c,v 1.17 1998/07/09 23:16:32 assar Exp $"
+literal|"$Id: rsaencpwd.c,v 1.18 1999/09/16 20:41:34 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1080,7 +1080,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|challenge
 argument_list|,
@@ -1737,7 +1737,7 @@ name|UserPassword
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|name
 argument_list|,
@@ -1850,7 +1850,7 @@ case|case
 name|RSA_ENCPWD_REJECT
 case|:
 comment|/* Rejected (reason might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1870,7 +1870,7 @@ case|case
 name|RSA_ENCPWD_ACCEPT
 case|:
 comment|/* Accepted (name might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1956,7 +1956,7 @@ case|case
 name|RSA_ENCPWD_AUTH
 case|:
 comment|/* Authentication data follows */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1975,7 +1975,7 @@ goto|;
 case|case
 name|RSA_ENCPWD_CHALLENGEKEY
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char

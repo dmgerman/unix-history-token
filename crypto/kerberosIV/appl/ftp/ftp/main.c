@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.27 1999/11/13 06:18:02 assar Exp $"
+literal|"$Id: main.c,v 1.27.2.1 2000/10/10 13:01:50 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -802,6 +802,12 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|quit
 argument_list|(
 literal|0
@@ -809,6 +815,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|strlcpy
 argument_list|(
 name|line

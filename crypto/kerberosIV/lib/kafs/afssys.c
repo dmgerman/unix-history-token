@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: afssys.c,v 1.65 1999/12/02 16:58:40 joda Exp $"
+literal|"$Id: afssys.c,v 1.65.2.1 2000/06/23 03:27:23 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -453,6 +453,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 if|if
 condition|(
 name|strncmp

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sia.c,v 1.32 1999/10/03 15:49:36 joda Exp $"
+literal|"$Id: sia.c,v 1.32.2.1 1999/12/20 09:49:30 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -642,8 +642,9 @@ operator|->
 name|ticket
 argument_list|)
 argument_list|,
+literal|"%s%u_%u"
+argument_list|,
 name|TKT_ROOT
-literal|"%u_%u"
 argument_list|,
 operator|(
 name|unsigned
@@ -755,8 +756,9 @@ operator|->
 name|ticket
 argument_list|)
 argument_list|,
+literal|"%s_%s_to_%s_%d"
+argument_list|,
 name|TKT_ROOT
-literal|"_%s_to_%s_%d"
 argument_list|,
 name|fpwd
 operator|->
@@ -2378,8 +2380,9 @@ argument_list|(
 name|tktstring
 argument_list|)
 argument_list|,
+literal|"%s_cpw_%u"
+argument_list|,
 name|TKT_ROOT
-literal|"_cpw_%u"
 argument_list|,
 operator|(
 name|unsigned

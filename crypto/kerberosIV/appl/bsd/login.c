@@ -50,7 +50,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: login.c,v 1.125 1999/11/30 19:24:01 bg Exp $"
+literal|"$Id: login.c,v 1.125.2.2 2000/06/23 02:33:07 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2624,6 +2624,10 @@ name|pwd
 operator|->
 name|pw_change
 condition|)
+block|{
+name|time_t
+name|t
+decl_stmt|;
 if|if
 condition|(
 name|tp
@@ -2665,6 +2669,13 @@ operator|&&
 operator|!
 name|quietlog
 condition|)
+block|{
+name|t
+operator|=
+name|pwd
+operator|->
+name|pw_change
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Warning: your password expires on %s"
@@ -2672,12 +2683,11 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|pwd
-operator|->
-name|pw_change
+name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|pwd
@@ -2726,6 +2736,13 @@ operator|&&
 operator|!
 name|quietlog
 condition|)
+block|{
+name|t
+operator|=
+name|pwd
+operator|->
+name|pw_expire
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Warning: your account expires on %s"
@@ -2733,12 +2750,11 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|pwd
-operator|->
-name|pw_expire
+name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* defined(HAVE_PASSWD_CHANGE)&& defined(HAVE_PASSWD_EXPIRE) */
@@ -3525,6 +3541,40 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|uid
+operator|!=
+literal|0
+operator|&&
+name|setuid
+argument_list|(
+literal|0
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ALERT
+operator||
+name|LOG_AUTH
+argument_list|,
+literal|"Failed to drop privileges for user %d"
+argument_list|,
+name|uid
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Sorry"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/*          * After dropping privileges and after cleaning up the environment,          * optionally run, as the user, /bin/passwd.          */
 if|if
@@ -3765,43 +3815,22 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERBEROS
-end_ifdef
-
-begin_define
 define|#
 directive|define
 name|NBUFSIZ
 value|(UT_NAMESIZE + 1 + 5)
-end_define
-
-begin_comment
 comment|/* .root suffix */
-end_comment
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|NBUFSIZ
 value|(UT_NAMESIZE + 1)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
 specifier|static
 name|void
 name|getloginname
@@ -3951,9 +3980,6 @@ block|}
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|find_in_etc_securetty
@@ -4067,9 +4093,6 @@ return|return
 name|ret
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|rootterm
@@ -4143,9 +4166,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|RETSIGTYPE
 name|timedout
@@ -4169,9 +4189,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|checknologin
@@ -4247,9 +4264,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|dolastlog
@@ -4275,6 +4289,9 @@ name|ll
 decl_stmt|;
 name|int
 name|fd
+decl_stmt|;
+name|time_t
+name|t
 decl_stmt|;
 if|if
 condition|(
@@ -4396,6 +4413,12 @@ operator|!
 name|quiet
 condition|)
 block|{
+name|t
+operator|=
+name|ll
+operator|.
+name|ll_time
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Last login: %.*s "
@@ -4407,9 +4430,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|ll
-operator|.
-name|ll_time
+name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4520,6 +4541,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|t
+operator|=
+name|ll
+operator|.
+name|ll_time
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Last login: %.*s "
@@ -4531,9 +4558,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|ll
-operator|.
-name|ll_time
+name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4622,12 +4647,13 @@ name|ll
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|time
-argument_list|(
-operator|&
 name|ll
 operator|.
 name|ll_time
+operator|=
+name|time
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 name|strncpy
@@ -4689,9 +4715,6 @@ endif|#
 directive|endif
 comment|/* DOLASTLOG */
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|badlogin
@@ -4802,22 +4825,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_undef
 undef|#
 directive|undef
 name|UNKNOWN
-end_undef
-
-begin_define
 define|#
 directive|define
 name|UNKNOWN
 value|"su"
-end_define
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -4892,9 +4906,6 @@ endif|#
 directive|endif
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|xgetstr
@@ -4977,13 +4988,7 @@ name|ch
 condition|)
 do|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Some old rlogind's unknowingly pass remuser, locuser and  * terminal_type/speed so we need to take care of that part of the  * protocol here. Also, we can't make a getpeername(2) on the socket  * so we have to trust that rlogind resolved the name correctly.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|doremotelogin
@@ -5116,9 +5121,6 @@ name|code
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sleepexit
 parameter_list|(

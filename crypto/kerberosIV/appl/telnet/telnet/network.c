@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: network.c,v 1.10 1997/05/04 04:01:08 assar Exp $"
+literal|"$Id: network.c,v 1.10.28.1 2000/10/10 13:08:27 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -136,6 +136,19 @@ name|FD_ZERO
 argument_list|(
 operator|&
 name|excepts
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|net
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"fd too large"
 argument_list|)
 expr_stmt|;
 name|FD_SET

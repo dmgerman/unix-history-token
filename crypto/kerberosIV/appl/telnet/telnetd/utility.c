@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utility.c,v 1.20 1998/06/13 00:06:56 assar Exp $"
+literal|"$Id: utility.c,v 1.22.2.1 2000/10/10 13:12:34 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,11 +28,11 @@ comment|/*  * utility functions performing io related tasks  */
 end_comment
 
 begin_comment
-comment|/*  * ttloop  *  * A small subroutine to flush the network output buffer, get some  * data from the network, and pass it through the telnet state  * machine.  We also flush the pty input buffer (by dropping its data)  * if it becomes too full.  */
+comment|/*  * ttloop  *  * A small subroutine to flush the network output buffer, get some  * data from the network, and pass it through the telnet state  * machine.  We also flush the pty input buffer (by dropping its data)  * if it becomes too full.  *  * return 0 if OK or 1 if interrupted by a signal.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|ttloop
 parameter_list|(
 name|void
@@ -81,6 +81,15 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+return|return
+literal|1
+return|;
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -106,7 +115,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ttloop:  peer died: %m\n"
+literal|"ttloop:  peer died\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -149,6 +158,9 @@ name|telrcv
 argument_list|()
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -183,6 +195,19 @@ decl_stmt|;
 name|int
 name|value
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|fatal
+argument_list|(
+name|ourpty
+argument_list|,
+literal|"fd too large"
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|FD_ZERO
@@ -1261,7 +1286,7 @@ condition|(
 operator|*
 name|host
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|res
 argument_list|,
