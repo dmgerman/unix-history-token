@@ -4434,6 +4434,16 @@ specifier|static
 name|u_char
 modifier|*
 name|cp
+decl_stmt|,
+name|cbuf
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Temp buf for multi-char key sequence. */
+specifier|register
+name|u_char
+name|c
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -4506,6 +4516,41 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|c
+operator|=
+operator|*
+name|cp
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|&&
+operator|*
+name|cp
+condition|)
+block|{
+comment|/* Preserve the multi-char sequence for the next call. */
+name|bcopy
+argument_list|(
+name|cp
+argument_list|,
+name|cbuf
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+comment|/* take care for a trailing '\0' */
+name|cp
+operator|=
+name|cbuf
+expr_stmt|;
+block|}
+else|else
+name|cp
+operator|=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 operator|!
@@ -4517,13 +4562,11 @@ operator|)
 comment|/* this belongs to cons.c */
 if|if
 condition|(
-operator|*
-name|cp
+name|c
 operator|==
 literal|'\r'
 condition|)
-operator|*
-name|cp
+name|c
 operator|=
 literal|'\n'
 expr_stmt|;
@@ -4531,11 +4574,7 @@ endif|#
 directive|endif
 comment|/* ! (PCVT_FREEBSD>= 201) */
 return|return
-operator|(
-operator|*
-name|cp
-operator|++
-operator|)
+name|c
 return|;
 block|}
 if|#

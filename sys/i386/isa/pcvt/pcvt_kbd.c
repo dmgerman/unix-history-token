@@ -3438,20 +3438,8 @@ comment|/* see if there is data from the keyboard available either from */
 comment|/* the keyboard fifo or from the 8042 keyboard controller	*/
 if|if
 condition|(
-operator|(
-name|noblock
-operator|&&
 name|pcvt_kbd_count
-operator|)
 operator|||
-operator|(
-operator|(
-operator|!
-name|noblock
-operator|||
-name|kbd_polling
-operator|)
-operator|&&
 operator|(
 name|inb
 argument_list|(
@@ -3460,15 +3448,12 @@ argument_list|)
 operator|&
 name|STATUS_OUTPBF
 operator|)
-operator|)
 condition|)
 block|{
 if|if
 condition|(
 operator|!
-name|noblock
-operator|||
-name|kbd_polling
+name|pcvt_kbd_count
 condition|)
 comment|/* source = 8042 */
 block|{
@@ -4499,20 +4484,8 @@ comment|/* see if there is data from the keyboard available either from */
 comment|/* the keyboard fifo or from the 8042 keyboard controller	*/
 if|if
 condition|(
-operator|(
-name|noblock
-operator|&&
 name|pcvt_kbd_count
-operator|)
 operator|||
-operator|(
-operator|(
-operator|!
-name|noblock
-operator|||
-name|kbd_polling
-operator|)
-operator|&&
 operator|(
 name|inb
 argument_list|(
@@ -4520,7 +4493,6 @@ name|CONTROLLER_CTRL
 argument_list|)
 operator|&
 name|STATUS_OUTPBF
-operator|)
 operator|)
 condition|)
 block|{
