@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: value.c,v 1.3 1997/08/18 07:16:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,6 +197,32 @@ name|v_type
 operator|&
 name|IREMOTE
 condition|)
+if|if
+condition|(
+name|p
+operator|->
+name|v_type
+operator|&
+name|STRING
+condition|)
+name|p
+operator|->
+name|v_value
+operator|=
+operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|address
+argument_list|(
+name|p
+operator|->
+name|v_value
+argument_list|)
+expr_stmt|;
+else|else
 name|number
 argument_list|(
 name|p

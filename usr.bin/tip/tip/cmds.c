@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cmds.c,v 1.6 1997/08/26 10:25:16 eivind Exp $"
+literal|"$Id: cmds.c,v 1.7 1998/06/09 04:28:02 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2535,12 +2535,12 @@ literal|0
 expr_stmt|;
 name|alarm
 argument_list|(
-operator|(
-name|int
-operator|)
+name|number
+argument_list|(
 name|value
 argument_list|(
 name|ETIMEOUT
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3054,12 +3054,12 @@ literal|0
 expr_stmt|;
 name|alarm
 argument_list|(
-operator|(
-name|int
-operator|)
+name|number
+argument_list|(
 name|value
 argument_list|(
 name|ETIMEOUT
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
