@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1578,6 +1578,28 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|prtrealloc
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ctldebug
+name|debug15
+init|=
+block|{
+literal|"prtrealloc"
+block|,
+operator|&
+name|prtrealloc
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -2111,6 +2133,29 @@ goto|goto
 name|fail
 goto|;
 comment|/* 	 * We have found a new contiguous block. 	 * 	 * First we have to replace the old block pointers with the new 	 * block pointers in the inode and indirect blocks associated 	 * with the file. 	 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|prtrealloc
+condition|)
+name|printf
+argument_list|(
+literal|"realloc: ino %d, lbns %d-%d\n\told:"
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|start_lbn
+argument_list|,
+name|end_lbn
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 name|blkno
 operator|=
 name|newblk
@@ -2178,6 +2223,23 @@ condition|)
 name|panic
 argument_list|(
 literal|"ffs_reallocblks: alloc mismatch"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|prtrealloc
+condition|)
+name|printf
+argument_list|(
+literal|" %d,"
+argument_list|,
+operator|*
+name|bap
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2270,6 +2332,20 @@ name|ebp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Last, free the old blocks and assign the new blocks to the buffers. 	 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|prtrealloc
+condition|)
+name|printf
+argument_list|(
+literal|"\n\tnew:"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|blkno
@@ -2333,7 +2409,42 @@ argument_list|,
 name|blkno
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|prtrealloc
+condition|)
+name|printf
+argument_list|(
+literal|" %d,"
+argument_list|,
+name|blkno
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|prtrealloc
+condition|)
+block|{
+name|prtrealloc
+operator|--
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
