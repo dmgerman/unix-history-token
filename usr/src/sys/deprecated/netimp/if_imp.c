@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.27	82/04/25	*/
+comment|/*	if_imp.c	4.28	82/04/28	*/
 end_comment
 
 begin_include
@@ -818,6 +818,17 @@ comment|/* 	 * IMP going down.  Print message, and if not immediate, 	 * set off
 case|case
 name|IMPTYPE_DOWN
 case|:
+if|if
+condition|(
+name|sc
+operator|->
+name|imp_state
+operator|==
+name|IMPS_DOINGDOWN
+condition|)
+goto|goto
+name|drop
+goto|;
 if|if
 condition|(
 operator|(
