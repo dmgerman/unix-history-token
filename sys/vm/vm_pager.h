@@ -41,25 +41,20 @@ name|bio
 struct_decl|;
 end_struct_decl
 
-begin_struct
-struct|struct
-name|pagerops
-block|{
+begin_typedef
+typedef|typedef
 name|void
-function_decl|(
-modifier|*
-name|pgo_init
-function_decl|)
+name|pgo_init_t
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* Initialize pager. */
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|vm_object_t
-function_decl|(
-modifier|*
-name|pgo_alloc
-function_decl|)
+name|pgo_alloc_t
 parameter_list|(
 name|void
 modifier|*
@@ -71,22 +66,22 @@ parameter_list|,
 name|vm_ooffset_t
 parameter_list|)
 function_decl|;
-comment|/* Allocate pager. */
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|void
-function_decl|(
-modifier|*
-name|pgo_dealloc
-function_decl|)
+name|pgo_dealloc_t
 parameter_list|(
 name|vm_object_t
 parameter_list|)
 function_decl|;
-comment|/* Disassociate. */
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|int
-function_decl|(
-modifier|*
-name|pgo_getpages
-function_decl|)
+name|pgo_getpages_t
 parameter_list|(
 name|vm_object_t
 parameter_list|,
@@ -98,12 +93,12 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-comment|/* Get (read) page. */
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|void
-function_decl|(
-modifier|*
-name|pgo_putpages
-function_decl|)
+name|pgo_putpages_t
 parameter_list|(
 name|vm_object_t
 parameter_list|,
@@ -118,12 +113,12 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Put (write) page. */
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|boolean_t
-function_decl|(
-modifier|*
-name|pgo_haspage
-function_decl|)
+name|pgo_haspage_t
 parameter_list|(
 name|vm_object_t
 parameter_list|,
@@ -136,16 +131,56 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Does pager have page? */
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|void
-function_decl|(
-modifier|*
-name|pgo_pageunswapped
-function_decl|)
+name|pgo_pageunswapped_t
 parameter_list|(
 name|vm_page_t
 parameter_list|)
 function_decl|;
+end_typedef
+
+begin_struct
+struct|struct
+name|pagerops
+block|{
+name|pgo_init_t
+modifier|*
+name|pgo_init
+decl_stmt|;
+comment|/* Initialize pager. */
+name|pgo_alloc_t
+modifier|*
+name|pgo_alloc
+decl_stmt|;
+comment|/* Allocate pager. */
+name|pgo_dealloc_t
+modifier|*
+name|pgo_dealloc
+decl_stmt|;
+comment|/* Disassociate. */
+name|pgo_getpages_t
+modifier|*
+name|pgo_getpages
+decl_stmt|;
+comment|/* Get (read) page. */
+name|pgo_putpages_t
+modifier|*
+name|pgo_putpages
+decl_stmt|;
+comment|/* Put (write) page. */
+name|pgo_haspage_t
+modifier|*
+name|pgo_haspage
+decl_stmt|;
+comment|/* Does pager have page? */
+name|pgo_pageunswapped_t
+modifier|*
+name|pgo_pageunswapped
+decl_stmt|;
 block|}
 struct|;
 end_struct
