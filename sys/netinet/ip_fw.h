@@ -629,7 +629,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* This is a divert rul */
+comment|/* This is a divert rule */
 end_comment
 
 begin_define
@@ -662,7 +662,7 @@ value|0x00000007
 end_define
 
 begin_comment
-comment|/* This is a "change forwarding 					 * address" rule */
+comment|/* This is a "change forwarding 					 * address" rule 					 */
 end_comment
 
 begin_define
