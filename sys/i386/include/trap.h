@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.h	5.4 (Berkeley) 5/9/91  *	$Id: trap.h,v 1.2 1993/10/16 14:39:37 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.h	5.4 (Berkeley) 5/9/91  *	$Id: trap.h,v 1.3 1993/11/07 17:43:15 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -13,22 +13,10 @@ begin_define
 define|#
 directive|define
 name|_MACHINE_TRAP_H_
-value|1
 end_define
 
 begin_comment
 comment|/*  * Trap type values  * also known in trap.c for name strings  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_RESADFLT
-value|0
-end_define
-
-begin_comment
-comment|/* reserved addressing */
 end_comment
 
 begin_define
@@ -45,34 +33,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|T_RESOPFLT
-value|2
-end_define
-
-begin_comment
-comment|/* reserved operand */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|T_BPTFLT
 value|3
 end_define
 
 begin_comment
 comment|/* breakpoint instruction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_SYSCALL
-value|5
-end_define
-
-begin_comment
-comment|/* system call (kcall) */
 end_comment
 
 begin_define
@@ -100,17 +66,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|T_SEGFLT
-value|8
-end_define
-
-begin_comment
-comment|/* segmentation (limit) fault */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|T_PROTFLT
 value|9
 end_define
@@ -127,7 +82,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* trace trap */
+comment|/* debug exception (sic) */
 end_comment
 
 begin_define
@@ -144,56 +99,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|T_TABLEFLT
-value|13
-end_define
-
-begin_comment
-comment|/* page table fault */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|T_ALIGNFLT
 value|14
 end_define
 
 begin_comment
 comment|/* alignment fault */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_KSPNOTVAL
-value|15
-end_define
-
-begin_comment
-comment|/* kernel stack pointer not valid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_BUSERR
-value|16
-end_define
-
-begin_comment
-comment|/* bus error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_KDBTRAP
-value|17
-end_define
-
-begin_comment
-comment|/* kernel debugger trap */
 end_comment
 
 begin_define
@@ -314,7 +225,11 @@ value|28
 end_define
 
 begin_comment
-comment|/* reserved fault base */
+comment|/* reserved (unknown) */
+end_comment
+
+begin_comment
+comment|/* XXX most of the following codes aren't used, but could be. */
 end_comment
 
 begin_comment
@@ -506,7 +421,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_TRAP_H_ */
+comment|/* !_MACHINE_TRAP_H_ */
 end_comment
 
 end_unit

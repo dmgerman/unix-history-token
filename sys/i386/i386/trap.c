@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.42 1994/12/24 07:22:58 bde Exp $  */
+comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.43 1995/01/09 16:04:39 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -182,33 +182,33 @@ name|trap_msg
 index|[]
 init|=
 block|{
-literal|"reserved addressing fault"
+literal|""
 block|,
-comment|/*  0 T_RESADFLT */
+comment|/*  0 unused */
 literal|"privileged instruction fault"
 block|,
 comment|/*  1 T_PRIVINFLT */
-literal|"reserved operand fault"
+literal|""
 block|,
-comment|/*  2 T_RESOPFLT */
+comment|/*  2 unused */
 literal|"breakpoint instruction fault"
 block|,
 comment|/*  3 T_BPTFLT */
 literal|""
 block|,
 comment|/*  4 unused */
-literal|"system call trap"
+literal|""
 block|,
-comment|/*  5 T_SYSCALL */
+comment|/*  5 unused */
 literal|"arithmetic trap"
 block|,
 comment|/*  6 T_ARITHTRAP */
 literal|"system forced exception"
 block|,
 comment|/*  7 T_ASTFLT */
-literal|"segmentation (limit) fault"
+literal|""
 block|,
-comment|/*  8 T_SEGFLT */
+comment|/*  8 unused */
 literal|"general protection fault"
 block|,
 comment|/*  9 T_PROTFLT */
@@ -221,21 +221,21 @@ comment|/* 11 unused */
 literal|"page fault"
 block|,
 comment|/* 12 T_PAGEFLT */
-literal|"page table fault"
+literal|""
 block|,
-comment|/* 13 T_TABLEFLT */
+comment|/* 13 unused */
 literal|"alignment fault"
 block|,
 comment|/* 14 T_ALIGNFLT */
-literal|"kernel stack pointer not valid"
+literal|""
 block|,
-comment|/* 15 T_KSPNOTVAL */
-literal|"bus error"
+comment|/* 15 unused */
+literal|""
 block|,
-comment|/* 16 T_BUSERR */
-literal|"kernel debugger fault"
+comment|/* 16 unused */
+literal|""
 block|,
-comment|/* 17 T_KDBTRAP */
+comment|/* 17 unused */
 literal|"integer divide fault"
 block|,
 comment|/* 18 T_DIVIDE */
@@ -512,14 +512,6 @@ name|eva
 decl_stmt|;
 endif|#
 directive|endif
-name|frame
-operator|.
-name|tf_eflags
-operator|&=
-operator|~
-name|PSL_NT
-expr_stmt|;
-comment|/* clear nested trap XXX */
 name|type
 operator|=
 name|frame
@@ -570,17 +562,9 @@ name|type
 condition|)
 block|{
 case|case
-name|T_RESADFLT
-case|:
-comment|/* reserved addressing fault */
-case|case
 name|T_PRIVINFLT
 case|:
 comment|/* privileged instruction fault */
-case|case
-name|T_RESOPFLT
-case|:
-comment|/* reserved operand fault */
 name|ucode
 operator|=
 name|type
@@ -693,6 +677,15 @@ case|case
 name|T_STKFLT
 case|:
 comment|/* stack fault */
+case|case
+name|T_TSSFLT
+case|:
+comment|/* invalid TSS fault */
+case|case
+name|T_DOUBLEFLT
+case|:
+comment|/* double fault */
+default|default:
 name|ucode
 operator|=
 name|code
@@ -926,14 +919,6 @@ operator|=
 name|SIGILL
 expr_stmt|;
 break|break;
-default|default:
-name|trap_fatal
-argument_list|(
-operator|&
-name|frame
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 block|}
 else|else
@@ -968,6 +953,46 @@ case|case
 name|T_SEGNPFLT
 case|:
 comment|/* segment not present fault */
+comment|/* 			 * Invalid segment selectors and out of bounds 			 * %eip's and %esp's can be set up in user mode. 			 * This causes a fault in kernel mode when the 			 * kernel tries to return to user mode.  We want 			 * to get this fault so that we can fix the 			 * problem here and not have to check all the 			 * selectors and pointers when the user changes 			 * them. 			 */
+define|#
+directive|define
+name|MAYBE_DORETI_FAULT
+parameter_list|(
+name|where
+parameter_list|,
+name|whereto
+parameter_list|)
+define|\
+value|do {								\ 		extern void where(void) __asm(__STRING(where));		\ 		extern void whereto(void) __asm(__STRING(whereto));	\ 		if (frame.tf_eip == (int)where) {			\ 			frame.tf_eip = (int)whereto;			\ 			return;						\ 		}							\ 	} while (0)
+if|if
+condition|(
+name|intr_nesting_level
+operator|==
+literal|0
+condition|)
+block|{
+name|MAYBE_DORETI_FAULT
+argument_list|(
+name|doreti_iret
+argument_list|,
+name|doreti_iret_fault
+argument_list|)
+expr_stmt|;
+name|MAYBE_DORETI_FAULT
+argument_list|(
+name|doreti_popl_ds
+argument_list|,
+name|doreti_popl_ds_fault
+argument_list|)
+expr_stmt|;
+name|MAYBE_DORETI_FAULT
+argument_list|(
+name|doreti_popl_es
+argument_list|,
+name|doreti_popl_es_fault
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|curpcb
@@ -987,6 +1012,29 @@ operator|)
 name|curpcb
 operator|->
 name|pcb_onfault
+expr_stmt|;
+return|return;
+block|}
+break|break;
+case|case
+name|T_TSSFLT
+case|:
+comment|/* 			 * PSL_NT can be set in user mode and isn't cleared 			 * automatically when the kernel is entered.  This 			 * causes a TSS fault when the kernel attempts to 			 * `iret' because the TSS link is uninitialized.  We 			 * want to get this fault so that we can fix the 			 * problem here and not every time the kernel is 			 * entered. 			 */
+if|if
+condition|(
+name|frame
+operator|.
+name|tf_eflags
+operator|&
+name|PSL_NT
+condition|)
+block|{
+name|frame
+operator|.
+name|tf_eflags
+operator|&=
+operator|~
+name|PSL_NT
 expr_stmt|;
 return|return;
 block|}
