@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.13	%G%"
+literal|"@(#)main.c	2.14	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,6 +382,49 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|vax
+end_if
+
+begin_macro
+name|sigdie
+argument_list|(
+argument|s
+argument_list|,
+argument|t
+argument_list|,
+argument|sc
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|t
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|sigcontext
+modifier|*
+name|sc
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+else|pdp11
+end_else
+
 begin_macro
 name|sigdie
 argument_list|(
@@ -410,6 +453,11 @@ name|long
 name|pc
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -611,9 +659,14 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+name|sigsetmask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
-else|vax
+else|pdp11
 name|signal
 argument_list|(
 name|SIGIOT
@@ -623,7 +676,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
 name|abort
 argument_list|()
 expr_stmt|;
