@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.36 (Berkeley) %G%"
+literal|"@(#)login.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1621,6 +1621,9 @@ operator|->
 name|pw_change
 operator|<
 name|TWOWEEKS
+operator|&&
+operator|!
+name|quietlog
 condition|)
 block|{
 name|ttp
@@ -1694,6 +1697,9 @@ operator|->
 name|pw_expire
 operator|<
 name|TWOWEEKS
+operator|&&
+operator|!
+name|quietlog
 condition|)
 block|{
 name|ttp
@@ -1818,17 +1824,6 @@ name|utmp
 argument_list|)
 expr_stmt|;
 block|}
-name|quietlog
-operator|=
-name|access
-argument_list|(
-name|_PATH_HUSHLOGIN
-argument_list|,
-name|F_OK
-argument_list|)
-operator|==
-literal|0
-expr_stmt|;
 name|dolastlog
 argument_list|(
 name|quietlog
