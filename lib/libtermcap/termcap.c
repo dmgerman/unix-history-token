@@ -28,39 +28,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PBUFSIZ
-value|512
-end_define
-
-begin_comment
-comment|/* max length of filename path */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PVECSIZ
-value|32
-end_define
-
-begin_comment
-comment|/* max number of names in path */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TBUFSIZ
-value|1024
-end_define
-
-begin_comment
-comment|/* max length of tgetent buffer */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -100,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -126,6 +99,39 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|PBUFSIZ
+value|MAXPATHLEN
+end_define
+
+begin_comment
+comment|/* max length of filename path */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVECSIZ
+value|32
+end_define
+
+begin_comment
+comment|/* max number of names in path */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TBUFSIZ
+value|1024
+end_define
+
+begin_comment
+comment|/* max length of tgetent buffer */
+end_comment
 
 begin_comment
 comment|/*  * termcap - routines for dealing with the terminal capability data base  *  * BUG:		Should use a "last" pointer in tbuf, so that searching  *		for capabilities alphabetically would not be a n**2/2  *		process when large numbers of capabilities are given.  * Note:	If we add a last pointer now we will screw up the  *		tc capability. We really should compile termcap.  *  * Essentially all the work here is scanning and decoding escapes  * in string capabilities.  We don't use stdio because the editor  * doesn't, and because living w/o it is not hard.  */
