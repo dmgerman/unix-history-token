@@ -128,6 +128,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_MIRROR_DISK_FLAG_HARDCODED
+value|0x0000000000000010ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_MIRROR_DISK_FLAG_MASK
 value|(G_MIRROR_DISK_FLAG_DIRTY |	\ 					 G_MIRROR_DISK_FLAG_SYNCHRONIZING | \ 					 G_MIRROR_DISK_FLAG_FORCE_SYNC | \ 					 G_MIRROR_DISK_FLAG_INACTIVE)
 end_define
@@ -750,6 +757,13 @@ name|uint64_t
 name|md_dflags
 decl_stmt|;
 comment|/* Additional disk flags. */
+name|char
+name|md_provider
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Hardcoded provider. */
 name|u_char
 name|md_hash
 index|[
@@ -947,6 +961,19 @@ operator|->
 name|md_dflags
 argument_list|)
 expr_stmt|;
+name|bcopy
+argument_list|(
+name|md
+operator|->
+name|md_provider
+argument_list|,
+name|data
+operator|+
+literal|91
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
 name|MD5Init
 argument_list|(
 operator|&
@@ -960,7 +987,7 @@ name|ctx
 argument_list|,
 name|data
 argument_list|,
-literal|91
+literal|107
 argument_list|)
 expr_stmt|;
 name|MD5Final
@@ -981,7 +1008,7 @@ name|md_hash
 argument_list|,
 name|data
 operator|+
-literal|91
+literal|107
 argument_list|,
 literal|16
 argument_list|)
@@ -1184,6 +1211,19 @@ literal|91
 argument_list|,
 name|md
 operator|->
+name|md_provider
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|data
+operator|+
+literal|107
+argument_list|,
+name|md
+operator|->
 name|md_hash
 argument_list|,
 literal|16
@@ -1202,7 +1242,7 @@ name|ctx
 argument_list|,
 name|data
 argument_list|,
-literal|91
+literal|107
 argument_list|)
 expr_stmt|;
 name|MD5Final
@@ -1225,7 +1265,7 @@ name|md_hash
 argument_list|,
 name|data
 operator|+
-literal|91
+literal|107
 argument_list|,
 literal|16
 argument_list|)
@@ -1746,6 +1786,15 @@ block|}
 name|printf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"hcprovider: %s\n"
+argument_list|,
+name|md
+operator|->
+name|md_provider
 argument_list|)
 expr_stmt|;
 name|bzero

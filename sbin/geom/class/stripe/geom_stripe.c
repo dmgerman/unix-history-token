@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -254,6 +260,16 @@ name|stripe_main
 block|,
 block|{
 block|{
+literal|'h'
+block|,
+literal|"hardcode"
+block|,
+name|NULL
+block|,
+name|G_TYPE_NONE
+block|}
+block|,
+block|{
 literal|'s'
 block|,
 literal|"stripesize"
@@ -330,7 +346,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s create [-v] [-s stripesize]<name><dev1><dev2> [dev3 [...]]\n"
+literal|"usage: %s create [-hv] [-s stripesize]<name><prov><prov> [prov [...]]\n"
 argument_list|,
 name|name
 argument_list|)
@@ -339,7 +355,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s destroy [-fv]<name> [name2 [...]]\n"
+literal|"       %s destroy [-fv]<name> [name [...]]\n"
 argument_list|,
 name|name
 argument_list|)
@@ -348,7 +364,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s label [-v] [-s stripesize]<name><dev1><dev2> [dev3 [...]]\n"
+literal|"       %s label [-hv] [-s stripesize]<name><prov><prov> [prov [...]]\n"
 argument_list|,
 name|name
 argument_list|)
@@ -357,7 +373,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s stop [-fv]<name> [name2 [...]]\n"
+literal|"       %s stop [-fv]<name> [name [...]]\n"
 argument_list|,
 name|name
 argument_list|)
@@ -366,7 +382,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s clear [-v]<dev1> [dev2 [...]]\n"
+literal|"       %s clear [-v]<prov> [prov [...]]\n"
 argument_list|,
 name|name
 argument_list|)
@@ -375,7 +391,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s dump<dev1> [dev2 [...]]\n"
+literal|"       %s dump<prov> [prov [...]]\n"
 argument_list|,
 name|name
 argument_list|)
@@ -547,6 +563,9 @@ name|i
 decl_stmt|;
 name|int
 modifier|*
+name|hardcode
+decl_stmt|,
+modifier|*
 name|nargs
 decl_stmt|,
 name|error
@@ -597,6 +616,39 @@ argument_list|(
 name|req
 argument_list|,
 literal|"Too few arguments."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|hardcode
+operator|=
+name|gctl_get_paraml
+argument_list|(
+name|req
+argument_list|,
+literal|"hardcode"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|hardcode
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hardcode
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"No '%s' argument."
+argument_list|,
+literal|"hardcode"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -847,6 +899,68 @@ name|i
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|hardcode
+condition|)
+name|bzero
+argument_list|(
+name|md
+operator|.
+name|md_provider
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|md
+operator|.
+name|md_provider
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|name
+argument_list|,
+name|_PATH_DEV
+argument_list|,
+name|strlen
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|+=
+name|strlen
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|md
+operator|.
+name|md_provider
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|md
+operator|.
+name|md_provider
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|stripe_metadata_encode
 argument_list|(
 operator|&
@@ -1178,6 +1292,15 @@ operator|)
 name|md
 operator|->
 name|md_stripesize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   Hardcoded provider: %s\n"
+argument_list|,
+name|md
+operator|->
+name|md_provider
 argument_list|)
 expr_stmt|;
 block|}

@@ -35,11 +35,15 @@ name|G_CONCAT_MAGIC
 value|"GEOM::CONCAT"
 end_define
 
+begin_comment
+comment|/*  * Version history:  * 1 - Initial version number.  * 2 - Added 'stop' command to gconcat(8).  * 3 - Added md_provider field to metadata and '-h' option to gconcat(8).  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|G_CONCAT_VERSION
-value|2
+value|3
 end_define
 
 begin_ifdef
@@ -194,6 +198,13 @@ name|uint16_t
 name|md_all
 decl_stmt|;
 comment|/* Number of all disks. */
+name|char
+name|md_provider
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Hardcoded provider. */
 block|}
 struct|;
 end_struct
@@ -293,6 +304,24 @@ operator|->
 name|md_all
 argument_list|)
 expr_stmt|;
+name|bcopy
+argument_list|(
+name|md
+operator|->
+name|md_provider
+argument_list|,
+name|data
+operator|+
+literal|44
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|md
+operator|->
+name|md_provider
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -389,6 +418,24 @@ argument_list|(
 name|data
 operator|+
 literal|42
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|data
+operator|+
+literal|44
+argument_list|,
+name|md
+operator|->
+name|md_provider
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|md
+operator|->
+name|md_provider
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

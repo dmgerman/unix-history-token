@@ -35,11 +35,15 @@ name|G_STRIPE_MAGIC
 value|"GEOM::STRIPE"
 end_define
 
+begin_comment
+comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added 'stop' command for gstripe(8).  * 2 - Added md_provider field to metadata and '-h' option for gstripe(8).  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|G_STRIPE_VERSION
-value|1
+value|2
 end_define
 
 begin_ifdef
@@ -181,6 +185,13 @@ name|uint32_t
 name|md_stripesize
 decl_stmt|;
 comment|/* Stripe size. */
+name|char
+name|md_provider
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Hardcoded provider. */
 block|}
 struct|;
 end_struct
@@ -291,6 +302,24 @@ operator|->
 name|md_stripesize
 argument_list|)
 expr_stmt|;
+name|bcopy
+argument_list|(
+name|md
+operator|->
+name|md_provider
+argument_list|,
+name|data
+operator|+
+literal|48
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|md
+operator|->
+name|md_provider
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -398,6 +427,24 @@ argument_list|(
 name|data
 operator|+
 literal|44
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|data
+operator|+
+literal|48
+argument_list|,
+name|md
+operator|->
+name|md_provider
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|md
+operator|->
+name|md_provider
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
