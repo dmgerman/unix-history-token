@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)SYS.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)SYS.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8,31 +8,6 @@ include|#
 directive|include
 file|<sys/syscall.h>
 end_include
-
-begin_comment
-comment|/* vax/tahoe compat */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ret
-value|rts
-end_define
-
-begin_define
-define|#
-directive|define
-name|r0
-value|d0
-end_define
-
-begin_define
-define|#
-directive|define
-name|r1
-value|d1
-end_define
 
 begin_ifdef
 ifdef|#
@@ -126,7 +101,7 @@ name|x
 parameter_list|)
 value|.even; err: jmp cerror; ENTRY(x); movl #SYS_
 comment|/**/
-value|x,d0; \ 			trap #0; jcs err
+value|x,d0; \ 			trap #0; jcs err; rts
 end_define
 
 begin_define
@@ -140,7 +115,7 @@ name|y
 parameter_list|)
 value|ENTRY(x); movl #SYS_
 comment|/**/
-value|y,d0; trap #0;
+value|y,d0; trap #0; rts
 end_define
 
 begin_define
