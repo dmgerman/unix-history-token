@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.117 1999/08/11 15:34:47 luigi Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.118 1999/08/21 18:35:50 green Exp $  */
 end_comment
 
 begin_comment
@@ -5062,14 +5062,12 @@ name|ftmp_ext
 operator|->
 name|dont_match_prob
 operator|=
-call|(
-name|long
-call|)
-argument_list|(
+operator|(
+name|intptr_t
+operator|)
 name|ftmp
 operator|->
 name|pipe_ptr
-argument_list|)
 expr_stmt|;
 name|ftmp
 operator|->
@@ -6785,14 +6783,14 @@ operator|->
 name|rule
 argument_list|)
 expr_stmt|;
-operator|(
-name|long
-operator|)
 name|bp
 operator|->
 name|pipe_ptr
 operator|=
-operator|(
+call|(
+name|intptr_t
+call|)
+argument_list|(
 operator|(
 expr|struct
 name|ip_fw_ext
@@ -6801,7 +6799,7 @@ operator|)
 name|fcp
 operator|->
 name|rule
-operator|)
+argument_list|)
 operator|->
 name|dont_match_prob
 expr_stmt|;
