@@ -978,9 +978,13 @@ decl_stmt|;
 comment|/* current key file */
 name|char
 modifier|*
-name|keyfiles
+name|kfspec
 decl_stmt|;
 comment|/* list of key files to add */
+name|char
+modifier|*
+name|keyfiles
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1033,11 +1037,11 @@ argument_list|,
 name|PAM_OPT_KEYFILES
 argument_list|,
 operator|&
-name|keyfiles
+name|kfspec
 argument_list|)
 condition|)
 block|{
-name|keyfiles
+name|kfspec
 operator|=
 name|DEF_KEYFILES
 expr_stmt|;
@@ -1167,6 +1171,13 @@ name|authenticated
 operator|=
 literal|0
 expr_stmt|;
+name|keyfiles
+operator|=
+name|strdup
+argument_list|(
+name|kfspec
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|file
@@ -1211,6 +1222,11 @@ name|PAM_SUCCESS
 condition|)
 name|authenticated
 operator|++
+expr_stmt|;
+name|free
+argument_list|(
+name|keyfiles
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
