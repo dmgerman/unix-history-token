@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)names.c	2.1 %G%"
+literal|"@(#)names.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2506,27 +2506,13 @@ name|n_flink
 expr_stmt|;
 continue|continue;
 block|}
-name|cp
-operator|=
-name|n
-operator|->
-name|n_name
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|cp
-operator|==
-literal|'\\'
-condition|)
-name|cp
-operator|++
-expr_stmt|;
 operator|*
 name|ap
 operator|++
 operator|=
-name|cp
+name|n
+operator|->
+name|n_name
 expr_stmt|;
 name|n
 operator|=
