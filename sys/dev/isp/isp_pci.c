@@ -2990,7 +2990,7 @@ name|isp
 operator|->
 name|isp_confopts
 operator||=
-name|ISP_CFG_OWNWWN
+name|ISP_CFG_OWNWWPN
 expr_stmt|;
 block|}
 block|}
@@ -3124,7 +3124,7 @@ name|isp
 operator|->
 name|isp_confopts
 operator||=
-name|ISP_CFG_OWNWWN
+name|ISP_CFG_OWNWWNN
 expr_stmt|;
 block|}
 block|}
