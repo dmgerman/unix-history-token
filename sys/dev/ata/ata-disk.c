@@ -845,12 +845,6 @@ name|atadev
 operator|->
 name|softc
 decl_stmt|;
-name|atadev
-operator|->
-name|flags
-operator||=
-name|ATA_D_DETACHING
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_ATARAID
