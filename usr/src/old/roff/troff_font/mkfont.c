@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfont.c	4.1 %G%"
+literal|"@(#)mkfont.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,8 +295,7 @@ operator|!=
 literal|0
 condition|;
 name|j
-operator|=
-operator|+
+operator|+=
 literal|2
 control|)
 block|{
