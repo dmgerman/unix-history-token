@@ -389,18 +389,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|smnt
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* beginning of special fonts */
-end_comment
-
-begin_decl_stmt
-name|int
 name|ascii
 init|=
 name|ASCII

@@ -54,13 +54,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|smnt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|setwdf
 decl_stmt|;
 end_decl_stmt
@@ -531,12 +524,6 @@ operator|(
 name|k
 operator|<=
 literal|4
-operator|)
-operator|&&
-operator|(
-name|k
-operator|!=
-name|smnt
 operator|)
 condition|)
 return|return

@@ -1269,13 +1269,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|smnt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|spacesz
 decl_stmt|;
 end_decl_stmt
