@@ -678,8 +678,7 @@ name|struct
 name|sockaddr_in
 name|sin
 decl_stmt|;
-name|unsigned
-name|long
+name|u_int32_t
 name|xid
 decl_stmt|;
 block|}
@@ -745,7 +744,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|time_t
+name|u_int32_t
 name|xid_seed
 decl_stmt|,
 name|xid_lookup
