@@ -1181,14 +1181,7 @@ name|cancel
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|n
-operator|==
-name|LAYOUT_IPADDR
-condition|)
-block|{
-comment|/* Insert a default value for the netmask, 0xffffff00 is 	       the most appropriate one (entire class C, or subnetted 	       class A/B network). */
+comment|/* Insert a default value for the netmask, 0xffffff00 is 	   the most appropriate one (entire class C, or subnetted 	   class A/B network). */
 if|if
 condition|(
 name|netmask
@@ -1217,15 +1210,6 @@ name|obj
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|n
-operator|==
-name|LAYOUT_DOMAINNAME
-condition|)
-block|{
 if|if
 condition|(
 operator|!
@@ -1267,15 +1251,7 @@ name|obj
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 elseif|else
-if|if
-condition|(
-name|n
-operator|==
-name|LAYOUT_HOSTNAME
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -1319,7 +1295,6 @@ operator|.
 name|obj
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
