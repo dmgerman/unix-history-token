@@ -226,6 +226,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|*
 operator|(
 name|ap
 operator|=
@@ -236,7 +237,7 @@ name|NULL
 condition|)
 name|error
 argument_list|(
-literal|"arg count"
+literal|"bad argument/arg count"
 argument_list|)
 expr_stmt|;
 if|if
