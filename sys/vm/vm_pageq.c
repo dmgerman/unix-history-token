@@ -256,23 +256,26 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
+begin_function
+name|void
+name|vm_pageq_requeue
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+name|int
+name|queue
+init|=
+name|m
+operator|->
+name|queue
+decl_stmt|;
+name|struct
 name|vpgqueues
-operator|*
-name|vm_pageq_aquire
-argument_list|(
-argument|int queue
-argument_list|)
-block|{ 	struct
-name|vpgqueues
-operator|*
+modifier|*
 name|vpq
-operator|=
-name|NULL
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|queue
@@ -287,46 +290,6 @@ name|vm_page_queues
 index|[
 name|queue
 index|]
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_return
-return|return
-operator|(
-name|vpq
-operator|)
-return|;
-end_return
-
-begin_macro
-unit|}  void
-name|vm_pageq_requeue
-argument_list|(
-argument|vm_page_t m
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|int
-name|queue
-init|=
-name|m
-operator|->
-name|queue
-decl_stmt|;
-name|struct
-name|vpgqueues
-modifier|*
-name|vpq
-decl_stmt|;
-name|vpq
-operator|=
-name|vm_pageq_aquire
-argument_list|(
-name|queue
-argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
@@ -353,7 +316,8 @@ name|pageq
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+block|}
+end_function
 
 begin_comment
 comment|/*  *	vm_pageq_enqueue:  */
