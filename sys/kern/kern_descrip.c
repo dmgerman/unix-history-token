@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -127,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|<sys/event.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/limits.h>
 end_include
 
 begin_include
@@ -1572,11 +1572,20 @@ operator|.
 name|l_start
 operator|)
 condition|)
+block|{
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EOVERFLOW
 operator|)
 return|;
+block|}
 name|fl
 operator|.
 name|l_start
@@ -1896,11 +1905,20 @@ operator|.
 name|l_start
 operator|)
 condition|)
+block|{
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EOVERFLOW
 operator|)
 return|;
+block|}
 name|fl
 operator|.
 name|l_start
