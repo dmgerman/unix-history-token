@@ -40,7 +40,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	8.4 (Berkeley) 4/2/94"
+literal|"From: @(#)chpass.c	8.4 (Berkeley) 4/2/94"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,6 +247,8 @@ block|,
 name|LOADENTRY
 block|,
 name|EDITENTRY
+block|,
+name|NEWPW
 block|}
 name|op
 enum|;
@@ -273,7 +285,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:s:"
+literal|"a:p:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -302,6 +314,18 @@ case|:
 name|op
 operator|=
 name|NEWSH
+expr_stmt|;
+name|arg
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|op
+operator|=
+name|NEWPW
 expr_stmt|;
 name|arg
 operator|=
@@ -338,6 +362,10 @@ operator|||
 name|op
 operator|==
 name|NEWSH
+operator|||
+name|op
+operator|==
+name|NEWPW
 condition|)
 switch|switch
 condition|(
@@ -497,6 +525,45 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|op
+operator|==
+name|NEWPW
+condition|)
+block|{
+if|if
+condition|(
+name|uid
+condition|)
+name|baduser
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|arg
+argument_list|,
+literal|':'
+argument_list|)
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"invalid format for password"
+argument_list|)
+expr_stmt|;
+block|}
+name|pw
+operator|->
+name|pw_passwd
+operator|=
+name|arg
+expr_stmt|;
+block|}
 comment|/* 	 * The temporary file/file descriptor usage is a little tricky here. 	 * 1:	We start off with two fd's, one for the master password 	 *	file (used to lock everything), and one for a temporary file. 	 * 2:	Display() gets an fp for the temporary file, and copies the 	 *	user's information into it.  It then gives the temporary file 	 *	to the user and closes the fp, closing the underlying fd. 	 * 3:	The user edits the temporary file some number of times. 	 * 4:	Verify() gets an fp for the temporary file, and verifies the 	 *	contents.  It can't use an fp derived from the step #2 fd, 	 *	because the user's editor may have created a new instance of 	 *	the file.  Once the file is verified, its contents are stored 	 *	in a password structure.  The verify routine closes the fp, 	 *	closing the underlying fd. 	 * 5:	Delete the temporary file. 	 * 6:	Get a new temporary file/fd.  Pw_copy() gets an fp for it 	 *	file and copies the master password file into it, replacing 	 *	the user record with a new one.  We can't use the first 	 *	temporary file for this because it was owned by the user. 	 *	Pw_copy() closes its fp, flushing the data and closing the 	 *	underlying file descriptor.  We can't close the master 	 *	password fp, or we'd lose the lock. 	 * 7:	Call pw_mkdb() (which renames the temporary file) and exit. 	 *	The exit closes the master passwd fp/fd. 	 */
 name|pw_init
 argument_list|()
@@ -612,7 +679,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chpass [-a list] [-s shell] [user]\n"
+literal|"usage: chpass [-a list] [-p encpass] [-s shell] [user]\n"
 argument_list|)
 expr_stmt|;
 name|exit
