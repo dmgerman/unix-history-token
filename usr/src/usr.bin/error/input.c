@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)input.c	1.4 (Berkeley) 82/01/22"
+literal|"@(#)input.c	1.5 (Berkeley) 82/05/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -1222,39 +1222,6 @@ name|wordv
 operator|++
 expr_stmt|;
 comment|/*compensate*/
-if|if
-condition|(
-name|language
-operator|==
-name|INAS
-condition|)
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|currentfilename
-argument_list|,
-literal|"???"
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|wordv
-index|[
-literal|1
-index|]
-operator|=
-name|currentfilename
-expr_stmt|;
-return|return
-operator|(
-name|C_NULLED
-operator|)
-return|;
-block|}
-else|else
-block|{
 name|currentfilename
 operator|=
 name|wordv
@@ -1271,7 +1238,6 @@ operator|(
 name|C_TRUE
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
