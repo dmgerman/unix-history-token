@@ -85,18 +85,6 @@ directive|include
 file|<sys/uio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/psl.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
