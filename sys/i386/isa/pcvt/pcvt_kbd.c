@@ -2173,20 +2173,10 @@ name|NULL
 condition|)
 return|return;
 comment|/* shouldn't happen */
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|init
-operator|)
-operator|(
-name|kbd
-operator|)
+name|kbd_configure
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|ledstate
 operator|=
@@ -6780,7 +6770,7 @@ case|:
 name|update_led
 argument_list|()
 expr_stmt|;
-comment|/* ??? */
+comment|/* ? */
 break|break;
 case|case
 name|KBDGLOCK
@@ -8146,7 +8136,7 @@ operator|*
 operator|)
 literal|"\033[35~"
 expr_stmt|;
-comment|/* F21 ??!! */
+comment|/* F21 ? !! */
 block|}
 block|}
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 9  *---------------------------------------------------------------------------*/

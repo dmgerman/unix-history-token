@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.22 1999/01/23 17:04:13 dfr Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -4271,10 +4271,21 @@ name|opt
 parameter_list|)
 block|{
 name|int
+name|arg
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|int
 name|repeat
 decl_stmt|;
 name|int
 name|delay
+decl_stmt|;
+name|int
+name|r
+decl_stmt|,
+name|d
 decl_stmt|;
 if|if
 condition|(
@@ -4286,14 +4297,24 @@ argument_list|,
 literal|"slow"
 argument_list|)
 condition|)
+block|{
 name|delay
 operator|=
-literal|3
+literal|1000
 operator|,
 name|repeat
 operator|=
+literal|500
+expr_stmt|;
+name|d
+operator|=
+literal|3
+operator|,
+name|r
+operator|=
 literal|31
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -4305,14 +4326,24 @@ argument_list|,
 literal|"normal"
 argument_list|)
 condition|)
+block|{
 name|delay
 operator|=
-literal|1
+literal|500
 operator|,
 name|repeat
 operator|=
+literal|125
+expr_stmt|;
+name|d
+operator|=
+literal|1
+operator|,
+name|r
+operator|=
 literal|15
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -4324,12 +4355,20 @@ argument_list|,
 literal|"fast"
 argument_list|)
 condition|)
+block|{
 name|delay
 operator|=
 name|repeat
 operator|=
 literal|0
 expr_stmt|;
+name|d
+operator|=
+name|r
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 block|{
 name|int
@@ -4443,7 +4482,7 @@ name|n
 index|]
 condition|)
 break|break;
-name|delay
+name|d
 operator|=
 name|n
 expr_stmt|;
@@ -4472,11 +4511,37 @@ name|n
 index|]
 condition|)
 break|break;
-name|repeat
+name|r
 operator|=
 name|n
 expr_stmt|;
 block|}
+name|arg
+index|[
+literal|0
+index|]
+operator|=
+name|delay
+expr_stmt|;
+name|arg
+index|[
+literal|1
+index|]
+operator|=
+name|repeat
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|KDSETREPEAT
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|ioctl
@@ -4486,21 +4551,20 @@ argument_list|,
 name|KDSETRAD
 argument_list|,
 operator|(
-name|delay
+name|d
 operator|<<
 literal|5
 operator|)
 operator||
-name|repeat
+name|r
 argument_list|)
-operator|<
-literal|0
 condition|)
 name|warn
 argument_list|(
 literal|"setting keyboard rate"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4566,12 +4630,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
 
 begin_function
 specifier|static
@@ -5000,15 +5058,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __i386__ */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -5021,9 +5070,6 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-ifdef|#
-directive|ifdef
-name|__i386__
 literal|"usage: kbdcontrol [-dFKix] [-b  duration.pitch | [quiet.]belltype]"
 argument_list|,
 literal|"                  [-r delay.repeat | speed] [-l mapfile] [-f # string]"
@@ -5031,32 +5077,16 @@ argument_list|,
 literal|"                  [-h size] [-k device] [-L mapfile]"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-literal|"usage: kbdcontrol [-dFx] [-b  duration.pitch | [quiet.]belltype]"
-operator|,
-literal|"                  [-r delay.repeat | speed] [-l mapfile] [-f # string]"
-operator|,
-literal|"                  [-h size] [-L mapfile]"
-block|)
-function|;
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_expr_stmt
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_function
-unit|}   void
+name|void
 name|main
 parameter_list|(
 name|int
@@ -5071,9 +5101,6 @@ block|{
 name|int
 name|opt
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__i386__
 while|while
 condition|(
 operator|(
@@ -5092,28 +5119,6 @@ operator|!=
 operator|-
 literal|1
 condition|)
-else|#
-directive|else
-while|while
-condition|(
-operator|(
-name|opt
-operator|=
-name|getopt
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-literal|"b:df:h:Fl:L:r:x"
-argument_list|)
-operator|)
-operator|!=
-operator|-
-literal|1
-condition|)
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|opt
@@ -5194,9 +5199,6 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|__i386__
 case|case
 literal|'i'
 case|:
@@ -5220,9 +5222,6 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* __i386__ */
 case|case
 literal|'r'
 case|:
