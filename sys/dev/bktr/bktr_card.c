@@ -3993,6 +3993,9 @@ case|:
 case|case
 literal|0x17
 case|:
+case|case
+literal|0x21
+case|:
 name|select_tuner
 argument_list|(
 name|bktr
