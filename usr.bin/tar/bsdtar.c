@@ -342,6 +342,16 @@ literal|'c'
 block|}
 block|,
 block|{
+literal|"dereference"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'H'
+block|}
+block|,
+block|{
 literal|"directory"
 block|,
 name|required_argument
