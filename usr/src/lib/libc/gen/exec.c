@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.7 (Berkeley) %G%"
+literal|"@(#)exec.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -751,6 +751,9 @@ name|etxtbsy
 decl_stmt|;
 name|char
 modifier|*
+name|bp
+decl_stmt|,
+modifier|*
 name|cur
 decl_stmt|,
 modifier|*
@@ -772,25 +775,28 @@ literal|'/'
 argument_list|)
 condition|)
 block|{
+name|bp
+operator|=
 operator|(
-name|void
+name|char
+operator|*
 operator|)
-name|execve
-argument_list|(
 name|name
-argument_list|,
-name|argv
-argument_list|,
-name|environ
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+name|cur
+operator|=
+name|path
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
 block|}
+name|bp
+operator|=
+name|buf
+expr_stmt|;
 comment|/* Get the path we're searching. */
 if|if
 condition|(
@@ -873,7 +879,7 @@ name|void
 operator|)
 name|execve
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 name|argv
 argument_list|,
@@ -959,6 +965,8 @@ block|{
 name|bcopy
 argument_list|(
 name|argv
+operator|+
+literal|1
 argument_list|,
 name|ap
 operator|+
@@ -985,7 +993,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|buf
+name|bp
 expr_stmt|;
 operator|(
 name|void
@@ -1056,6 +1064,10 @@ name|ENOENT
 expr_stmt|;
 name|done
 label|:
+if|if
+condition|(
+name|path
+condition|)
 name|free
 argument_list|(
 name|path
