@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_put.c	5.2 (Berkeley) %G%"
+literal|"@(#)rec_put.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,10 +177,38 @@ name|bt_rcursor
 expr_stmt|;
 break|break;
 case|case
-literal|0
-case|:
-case|case
 name|R_IAFTER
+case|:
+if|if
+condition|(
+operator|(
+name|nrec
+operator|=
+operator|*
+operator|(
+name|recno_t
+operator|*
+operator|)
+name|key
+operator|->
+name|data
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|nrec
+operator|=
+literal|1
+expr_stmt|;
+name|flags
+operator|=
+name|R_IBEFORE
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|0
 case|:
 case|case
 name|R_IBEFORE
@@ -256,7 +284,7 @@ name|RET_ERROR
 operator|)
 return|;
 block|}
-comment|/* 	 * Make sure that records up to and including the put record are already  	 * in the database.  If skipping records, create empty ones. 	 */
+comment|/* 	 * Make sure that records up to and including the put record are 	 * already in the database.  If skipping records, create empty ones. 	 */
 if|if
 condition|(
 name|nrec
