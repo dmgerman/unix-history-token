@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NETGRAPH_SOURCE_H_
+name|_NETGRAPH_NG_SOURCE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NETGRAPH_SOURCE_H_
+name|_NETGRAPH_NG_SOURCE_H_
 end_define
 
 begin_comment
@@ -144,7 +144,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NETGRAPH_SOURCE_H_ */
+comment|/* _NETGRAPH_NG_SOURCE_H_ */
 end_comment
 
 end_unit
