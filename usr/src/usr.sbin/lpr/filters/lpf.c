@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpf.c	4.2	81/06/02	*/
+comment|/*	lpf.c	4.3	81/06/02	*/
 end_comment
 
 begin_comment
@@ -26,16 +26,6 @@ name|LINELN
 value|132
 end_define
 
-begin_define
-define|#
-directive|define
-name|output
-parameter_list|(
-name|c
-parameter_list|)
-value|(putchar(c))
-end_define
-
 begin_decl_stmt
 name|char
 name|linebuf
@@ -50,6 +40,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ov
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ff
 decl_stmt|;
 end_decl_stmt
 
@@ -345,6 +341,14 @@ name|col
 expr_stmt|;
 continue|continue;
 case|case
+literal|'\f'
+case|:
+name|ff
+operator|=
+literal|1
+expr_stmt|;
+comment|/* force form feed */
+case|case
 literal|'\n'
 case|:
 if|if
@@ -485,6 +489,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ff
+condition|)
+block|{
+name|ff
+operator|=
+literal|0
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\f'
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|ferror
 argument_list|(
 name|stdout
@@ -497,12 +516,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|output
-end_ifndef
 
 begin_expr_stmt
 name|output
@@ -600,11 +613,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
