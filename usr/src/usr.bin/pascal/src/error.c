@@ -3,6 +3,12 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -12,6 +18,11 @@ init|=
 literal|"@(#)error.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -30,6 +41,16 @@ ifndef|#
 directive|ifndef
 name|PI1
 end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
+begin_comment
+comment|/* must be included for yy.h */
+end_comment
 
 begin_include
 include|#
@@ -150,7 +171,7 @@ comment|/*  * Error is called for  * semantic errors and  * prints the error and
 end_comment
 
 begin_comment
-comment|/*VARARGS*/
+comment|/*VARARGS1*/
 end_comment
 
 begin_expr_stmt
@@ -208,10 +229,13 @@ return|return;
 block|}
 name|Enocascade
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 name|geterr
 argument_list|(
+operator|(
+name|int
+operator|)
 name|a1
 argument_list|,
 name|errbuf
@@ -358,7 +382,7 @@ name|Eholdnl
 condition|)
 name|Eholdnl
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 else|else
 name|pchr
@@ -370,7 +394,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*VARAGRS*/
+comment|/*VARARGS1*/
 end_comment
 
 begin_macro
@@ -387,6 +411,13 @@ argument_list|,
 argument|a5
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|a1
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -440,6 +471,25 @@ argument_list|,
 argument|a5
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|a1
+decl_stmt|,
+modifier|*
+name|a2
+decl_stmt|,
+modifier|*
+name|a3
+decl_stmt|,
+modifier|*
+name|a4
+decl_stmt|,
+modifier|*
+name|a5
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
