@@ -18,13 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/callout.h>
+file|<sys/_label.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
+file|<sys/callout.h>
 end_include
 
 begin_include

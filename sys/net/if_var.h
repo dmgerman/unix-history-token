@@ -73,7 +73,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
+file|<sys/_label.h>
 end_include
 
 begin_comment
