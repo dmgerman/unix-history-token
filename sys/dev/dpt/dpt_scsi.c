@@ -12,7 +12,7 @@ comment|/**  * IMPORTANT:  *	There are two critical section "levels" used in thi
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.8 1998/08/05 00:54:36 eivind Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.9 1998/08/06 20:57:33 eivind Exp $"
 end_empty
 
 begin_define
@@ -5384,7 +5384,7 @@ comment|/** 	 * If Auto Request Sense is on, copyout the sense struct 	 */
 define|#
 directive|define
 name|usr_pckt_DMA
-value|(caddr_t)ntohl(ccb->eata_ccb.cp_reqDMA)
+value|(caddr_t)(intptr_t)ntohl(ccb->eata_ccb.cp_reqDMA)
 define|#
 directive|define
 name|usr_pckt_len
