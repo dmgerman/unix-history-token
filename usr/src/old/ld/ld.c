@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c 3.1 %G%"
+literal|"@(#)ld.c 3.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,13 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<newar.h>
+file|<ar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<newa.out.h>
+file|<a.out.h>
 end_include
 
 begin_include
@@ -277,9 +277,6 @@ begin_decl_stmt
 name|struct
 name|nlist
 modifier|*
-name|p_data
-decl_stmt|,
-modifier|*
 name|p_etext
 decl_stmt|,
 modifier|*
@@ -342,7 +339,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * In processing each module on pass 2 we must relocate references  * relative to external symbols.  These references are recorded  * in the relocation information as relative to local symbol numbers  * assigned to the external symbols when the module was created.  * Thus before relocating the module in pass 2 we create a table  * which maps these internal numbers to symbol table entries.  * A hash table is constructed, based on the local symbol table indices,  * for quick lookup of these symbols.  *  * COULD JUST KEEP WHOLE SYMBOL TABLE AROUND.  */
+comment|/*  * In processing each module on pass 2 we must relocate references  * relative to external symbols.  These references are recorded  * in the relocation information as relative to local symbol numbers  * assigned to the external symbols when the module was created.  * Thus before relocating the module in pass 2 we create a table  * which maps these internal numbers to symbol table entries.  * A hash table is constructed, based on the local symbol table indices,  * for quick lookup of these symbols.  */
 end_comment
 
 begin_define
@@ -463,7 +460,7 @@ comment|/* string table for table of contents */
 end_comment
 
 begin_comment
-comment|/*  * We open each input file or library only once, but in pass2 we  * (historically) read from such a file at 2 different places at the  * same time.  These structures are remnants from those days,  * and now serve only to catch ``Premature EOF''... soon to be gone...  */
+comment|/*  * We open each input file or library only once, but in pass2 we  * (historically) read from such a file at 2 different places at the  * same time.  These structures are remnants from those days,  * and now serve only to catch ``Premature EOF''.  */
 end_comment
 
 begin_typedef
@@ -683,8 +680,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|zflag
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -710,6 +705,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* doing incremental load */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Nflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* want impure a.out */
 end_comment
 
 begin_decl_stmt
@@ -743,7 +748,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Symbol relocation: c?rel is a scale factor which is  * added to an old relocation to convert it to new units;  * i.e. it is the difference between segment origins.  */
+comment|/*  * Symbol relocation: c?rel is a scale factor which is  * added to an old relocation to convert it to new units;  * i.e. it is the difference between segment origins.  * (Thus if we are loading from a data segment which began at location  * 4 in a .o file into an a.out where it will be loaded starting at  * 1024, cdrel will be 1020.)  */
 end_comment
 
 begin_decl_stmt
@@ -757,7 +762,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Textbase is the starting text address, 0 unless given by -H.  * Database is the base of all data, computed before and used during pass2.  * The base addresses for the loaded text, data and bss from the  * current module during pass2 are given by torigin, dorigin and borigin.  */
+comment|/*  * Textbase is the start address of all text, 0 unless given by -T.  * Database is the base of all data, computed before and used during pass2.  */
 end_comment
 
 begin_decl_stmt
@@ -767,6 +772,10 @@ decl_stmt|,
 name|database
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * The base addresses for the loaded text, data and bss from the  * current module during pass2 are given by torigin, dorigin and borigin.  */
+end_comment
 
 begin_decl_stmt
 name|long
@@ -1017,6 +1026,7 @@ argument_list|)
 operator|!=
 name|SIG_IGN
 condition|)
+block|{
 name|signal
 argument_list|(
 name|SIGINT
@@ -1024,6 +1034,14 @@ argument_list|,
 name|delexit
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|delexit
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
@@ -1041,7 +1059,7 @@ name|argv
 operator|+
 literal|1
 expr_stmt|;
-comment|/* scan files once to find symdefs */
+comment|/* 	 * Scan files once to find where symbols are defined. 	 */
 for|for
 control|(
 name|c
@@ -1453,14 +1471,6 @@ expr_stmt|;
 name|arflag
 operator|++
 expr_stmt|;
-name|zflag
-operator|=
-literal|0
-expr_stmt|;
-name|nflag
-operator|=
-literal|1
-expr_stmt|;
 continue|continue;
 case|case
 literal|'s'
@@ -1478,6 +1488,8 @@ case|:
 name|nflag
 operator|++
 expr_stmt|;
+name|Nflag
+operator|=
 name|zflag
 operator|=
 literal|0
@@ -1486,10 +1498,11 @@ continue|continue;
 case|case
 literal|'N'
 case|:
+name|Nflag
+operator|++
+expr_stmt|;
 name|nflag
 operator|=
-literal|0
-expr_stmt|;
 name|zflag
 operator|=
 literal|0
@@ -1524,6 +1537,8 @@ case|:
 name|zflag
 operator|++
 expr_stmt|;
+name|Nflag
+operator|=
 name|nflag
 operator|=
 literal|0
@@ -1571,6 +1586,23 @@ name|next
 label|:
 empty_stmt|;
 block|}
+if|if
+condition|(
+name|rflag
+operator|==
+literal|0
+operator|&&
+name|Nflag
+operator|==
+literal|0
+operator|&&
+name|nflag
+operator|==
+literal|0
+condition|)
+name|zflag
+operator|++
+expr_stmt|;
 name|endload
 argument_list|(
 name|argc
@@ -3456,14 +3488,6 @@ name|borigin
 operator|=
 literal|0
 expr_stmt|;
-name|p_data
-operator|=
-operator|*
-name|slookup
-argument_list|(
-literal|"_data"
-argument_list|)
-expr_stmt|;
 name|p_etext
 operator|=
 operator|*
@@ -3551,10 +3575,6 @@ operator|&&
 name|sp
 operator|!=
 name|p_etext
-operator|&&
-name|sp
-operator|!=
-name|p_data
 condition|)
 block|{
 name|rflag
@@ -3632,20 +3652,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ldrsym
-argument_list|(
-name|p_data
-argument_list|,
-operator|(
-name|long
-operator|)
-literal|0
-argument_list|,
-name|N_EXT
-operator|+
-name|N_DATA
-argument_list|)
-expr_stmt|;
 name|ldrsym
 argument_list|(
 name|p_etext
@@ -3954,6 +3960,21 @@ condition|)
 block|{
 if|if
 condition|(
+name|sp
+operator|==
+name|p_end
+operator|||
+name|sp
+operator|==
+name|p_etext
+operator|||
+name|sp
+operator|==
+name|p_edata
+condition|)
+continue|continue;
+if|if
+condition|(
 name|nund
 operator|==
 literal|0
@@ -4082,13 +4103,6 @@ condition|(
 name|Aflag
 condition|)
 block|{
-name|fixspec
-argument_list|(
-name|p_data
-argument_list|,
-name|dorigin
-argument_list|)
-expr_stmt|;
 name|fixspec
 argument_list|(
 name|p_etext
@@ -5588,6 +5602,10 @@ name|load2td
 argument_list|(
 name|ctrel
 argument_list|,
+name|torigin
+operator|-
+name|textbase
+argument_list|,
 name|tout
 argument_list|,
 name|trout
@@ -5636,6 +5654,10 @@ expr_stmt|;
 name|load2td
 argument_list|(
 name|cdrel
+argument_list|,
+name|dorigin
+operator|-
+name|database
 argument_list|,
 name|dout
 argument_list|,
@@ -5697,10 +5719,16 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * This routine relocates the single text or data segment argument.  * Offsets from external symbols are resolved by adding the value  * of the external symbols.  Non-external reference are updated to account  * for the relative motion of the segments (ctrel, cdrel, ...).  If  * a relocation was pc-relative, then we update it to reflect the  * change in the positioning of the segments by adding the displacement  * of the referenced segment and subtracting the displacement of the  * current segment (creloc).  *  * If we are saving the relocation information, then we increase  * each relocation datum address by our base position in the new segment.  */
+end_comment
+
 begin_macro
 name|load2td
 argument_list|(
 argument|creloc
+argument_list|,
+argument|position
 argument_list|,
 argument|b1
 argument_list|,
@@ -5711,6 +5739,8 @@ end_macro
 begin_decl_stmt
 name|long
 name|creloc
+decl_stmt|,
+name|offset
 decl_stmt|;
 end_decl_stmt
 
@@ -5750,9 +5780,6 @@ name|rp
 decl_stmt|,
 modifier|*
 name|rpend
-decl_stmt|;
-name|long
-name|address
 decl_stmt|;
 name|struct
 name|relocation_info
@@ -5877,18 +5904,6 @@ name|rp
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|rflag
-condition|)
-name|address
-operator|=
-name|rp
-operator|->
-name|r_address
-operator|+
-name|creloc
-expr_stmt|;
 name|cp
 operator|=
 name|codep
@@ -5897,6 +5912,7 @@ name|rp
 operator|->
 name|r_address
 expr_stmt|;
+comment|/* 		 * Pick up previous value at location to be relocated. 		 */
 switch|switch
 condition|(
 name|rp
@@ -5951,6 +5967,7 @@ literal|"load2td botch: bad length"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * If relative to an external which is defined, 		 * resolve to a simpler kind of reference in the 		 * result file.  If the external is undefined, just 		 * convert the symbol number to the number of the 		 * symbol in the result file and leave it undefined. 		 */
 if|if
 condition|(
 name|rp
@@ -5958,6 +5975,7 @@ operator|->
 name|r_extern
 condition|)
 block|{
+comment|/* 			 * Search the hash table which maps local 			 * symbol numbers to symbol tables entries 			 * in the new a.out file. 			 */
 name|lp
 operator|=
 name|lochash
@@ -6063,6 +6081,7 @@ operator|&
 name|N_TYPE
 condition|)
 block|{
+comment|/* 		 * Relocation is relative to the loaded position 		 * of another segment.  Update by the change in position 		 * of that segment. 		 */
 case|case
 name|N_TEXT
 case|:
@@ -6100,17 +6119,18 @@ literal|"relocation format botch (symbol type))"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Relocation is pc relative, so decrease the relocation 		 * by the amount the current segment is displaced. 		 * (E.g if we are a relative reference to a text location 		 * from data space, we added the increase in the text address 		 * above, and subtract the increase in our (data) address 		 * here, leaving the net change the relative change in the 		 * positioning of our text and data segments.) 		 */
 if|if
 condition|(
 name|rp
 operator|->
 name|r_pcrel
 condition|)
-comment|/* assembler already subtracted text.pos */
 name|tw
 operator|-=
 name|creloc
 expr_stmt|;
+comment|/* 		 * Put the value back in the segment, 		 * while checking for overflow. 		 */
 switch|switch
 condition|(
 name|rp
@@ -6193,6 +6213,7 @@ name|tw
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * If we are saving relocation information, 		 * we must convert the address in the segment from 		 * the old .o file into an address in the segment in 		 * the new a.out, by adding the position of our 		 * segment in the new larger segment. 		 */
 if|if
 condition|(
 name|rflag
@@ -6200,8 +6221,8 @@ condition|)
 name|rp
 operator|->
 name|r_address
-operator|=
-name|address
+operator|+=
+name|position
 expr_stmt|;
 block|}
 name|bwrite
