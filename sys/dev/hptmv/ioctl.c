@@ -3777,6 +3777,7 @@ if|if
 condition|(
 name|buffer
 condition|)
+block|{
 name|free
 argument_list|(
 name|buffer
@@ -3784,6 +3785,12 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+comment|/* beware of goto retry_cmd below */
+name|buffer
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|KdPrintI
 argument_list|(
 operator|(
