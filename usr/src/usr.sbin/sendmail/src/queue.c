@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.69
+literal|3.70
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.69
+literal|3.70
 operator|%
 name|G
 operator|%
@@ -639,6 +639,15 @@ name|m_s_rwset
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|nullmailer
+operator|.
+name|m_eol
+operator|=
+literal|"\n"
 expr_stmt|;
 end_expr_stmt
 
