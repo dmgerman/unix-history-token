@@ -4,7 +4,7 @@ comment|/* interrupt.c: bottom half of the driver */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: interrupt.c,v 1.5 1998/12/28 04:56:23 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinuminterrupt.c,v 1.4 1999/01/12 04:30:12 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -116,8 +116,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|rqelement
 modifier|*
@@ -239,15 +237,42 @@ operator|=
 name|EIO
 expr_stmt|;
 comment|/* no: catchall "I/O error" */
-if|if
-condition|(
+name|SD
+index|[
+name|rqe
+operator|->
+name|sdno
+index|]
+operator|.
+name|lasterror
+operator|=
 name|rq
 operator|->
 name|error
-operator|==
-name|EIO
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
 condition|)
-comment|/* I/O error, */
+block|{
+name|printf
+argument_list|(
+literal|"%s: fatal read I/O error\n"
+argument_list|,
+name|SD
+index|[
+name|rqe
+operator|->
+name|sdno
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
 name|set_sd_state
 argument_list|(
 name|rqe
@@ -257,21 +282,79 @@ argument_list|,
 name|sd_crashed
 argument_list|,
 name|setstate_force
-operator||
-name|setstate_noupdate
 argument_list|)
 expr_stmt|;
-comment|/* take the subdisk down */
-elseif|else
+comment|/* subdisk is crashed */
+block|}
+else|else
+block|{
+comment|/* write operation */
+name|printf
+argument_list|(
+literal|"%s: fatal write I/O error\n"
+argument_list|,
+name|SD
+index|[
+name|rqe
+operator|->
+name|sdno
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+name|set_sd_state
+argument_list|(
+name|rqe
+operator|->
+name|sdno
+argument_list|,
+name|sd_stale
+argument_list|,
+name|setstate_force
+argument_list|)
+expr_stmt|;
+comment|/* subdisk is stale */
+block|}
 if|if
 condition|(
 name|rq
 operator|->
 name|error
-operator|=
+operator|==
 name|ENXIO
 condition|)
-comment|/* or "not configured" (drive down) */
+block|{
+comment|/* the drive's down too */
+name|printf
+argument_list|(
+literal|"%s: fatal drive I/O error\n"
+argument_list|,
+name|DRIVE
+index|[
+name|rqe
+operator|->
+name|driveno
+index|]
+operator|.
+name|label
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+name|DRIVE
+index|[
+name|rqe
+operator|->
+name|driveno
+index|]
+operator|.
+name|lasterror
+operator|=
+name|rq
+operator|->
+name|error
+expr_stmt|;
 name|set_drive_state
 argument_list|(
 name|rqe
@@ -282,10 +365,9 @@ comment|/* take the drive down */
 name|drive_down
 argument_list|,
 name|setstate_force
-operator||
-name|setstate_noupdate
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Now update the statistics */
 if|if
@@ -614,6 +696,14 @@ name|error
 condition|)
 block|{
 comment|/* did we have an error? */
+if|if
+condition|(
+name|rq
+operator|->
+name|isplex
+condition|)
+block|{
+comment|/* plex operation, */
 name|ubp
 operator|->
 name|b_flags
@@ -631,6 +721,18 @@ name|error
 expr_stmt|;
 block|}
 else|else
+comment|/* try to recover */
+name|queue_daemon_request
+argument_list|(
+name|daemonrq_ioerror
+argument_list|,
+name|rq
+argument_list|)
+expr_stmt|;
+comment|/* let the daemon complete */
+block|}
+else|else
+block|{
 name|ubp
 operator|->
 name|b_resid
@@ -674,6 +776,7 @@ expr_stmt|;
 comment|/* return the request storage */
 block|}
 block|}
+block|}
 end_function
 
 begin_comment
@@ -690,8 +793,6 @@ modifier|*
 name|rq
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|rqgroup
 modifier|*
