@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_var.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_var.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -134,7 +134,7 @@ directive|endif
 name|u_char
 name|ipf_mff
 decl_stmt|;
-comment|/* copied from (ip_off&IP_MF) */
+comment|/* XXX overlays ip_tos: use low bit 					 * to avoid destroying tos; 					 * copied from (ip_off&IP_MF) */
 name|short
 name|ip_len
 decl_stmt|;
@@ -329,7 +329,15 @@ comment|/* error in option processing */
 name|u_long
 name|ips_noroute
 decl_stmt|;
-comment|/* packtes discarded due to no route */
+comment|/* packets discarded due to no route */
+name|u_long
+name|ips_badvers
+decl_stmt|;
+comment|/* ip version != 4 */
+name|u_long
+name|ips_rawout
+decl_stmt|;
+comment|/* total raw ip packets generated */
 block|}
 struct|;
 end_struct
@@ -353,6 +361,17 @@ end_define
 
 begin_comment
 comment|/* most of ip header exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RAWOUTPUT
+value|0x2
+end_define
+
+begin_comment
+comment|/* raw ip header exists */
 end_comment
 
 begin_define
