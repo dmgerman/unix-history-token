@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)local.h	3.4 %G%  */
+comment|/*  * @(#)local.h	3.5 %G%  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|ESCAPEC
-value|ctrl(p)
+value|ctrl('p')
 end_define
 
 begin_define

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	3.30 %G%"
+literal|"@(#)cmd1.c	3.31 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -657,21 +657,21 @@ break|break;
 case|case
 name|ctrl
 argument_list|(
-index|[
+literal|'['
 argument_list|)
-operator|:
-expr|if
-operator|(
+case|:
+if|if
+condition|(
 operator|!
 name|terse
-operator|)
+condition|)
 name|wwputs
 argument_list|(
 literal|"\nCancelled.  "
 argument_list|,
 name|cmdwin
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 return|return
 literal|3
 return|;

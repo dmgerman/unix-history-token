@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwmisc.c	3.9 %G%"
+literal|"@(#)wwmisc.c	3.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,7 +205,7 @@ name|ttputc
 argument_list|(
 name|ctrl
 argument_list|(
-name|g
+literal|'g'
 argument_list|)
 argument_list|)
 expr_stmt|;

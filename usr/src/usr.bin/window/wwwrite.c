@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwwrite.c	3.25 %G%"
+literal|"@(#)wwwrite.c	3.26 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -937,14 +937,14 @@ break|break;
 case|case
 name|ctrl
 argument_list|(
-name|g
+literal|'g'
 argument_list|)
 case|:
 name|ttputc
 argument_list|(
 name|ctrl
 argument_list|(
-name|g
+literal|'g'
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -952,15 +952,15 @@ break|break;
 case|case
 name|ctrl
 argument_list|(
-index|[
+literal|'['
 argument_list|)
-operator|:
+case|:
 name|w
 operator|->
 name|ww_wstate
 operator|=
 literal|1
-expr|;
+expr_stmt|;
 break|break;
 block|}
 break|break;

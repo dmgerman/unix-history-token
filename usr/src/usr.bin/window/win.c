@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)win.c	3.17 %G%"
+literal|"@(#)win.c	3.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1569,13 +1569,13 @@ name|c
 operator|==
 name|ctrl
 argument_list|(
-index|[
+literal|'['
 argument_list|)
 condition|?
 literal|2
 else|:
 literal|1
-expr|;
+return|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)char.h	3.3 %G%  */
+comment|/*  * @(#)char.h	3.4 %G%  */
 end_comment
 
 begin_comment
@@ -33,7 +33,7 @@ name|ctrl
 parameter_list|(
 name|c
 parameter_list|)
-value|('c'& 0x1f)
+value|(c& 0x1f)
 end_define
 
 begin_define

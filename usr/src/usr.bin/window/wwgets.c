@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwgets.c	3.9 %G%"
+literal|"@(#)wwgets.c	3.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,7 +273,7 @@ name|wwputc
 argument_list|(
 name|ctrl
 argument_list|(
-name|g
+literal|'g'
 argument_list|)
 argument_list|,
 name|w
