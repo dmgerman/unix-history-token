@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -129,6 +129,30 @@ directive|include
 file|"tcpip.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|tcp_ttl
+init|=
+name|TCP_TTL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|float
+name|tcp_alpha
+init|=
+name|TCP_ALPHA
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|float
+name|tcp_beta
+init|=
+name|TCP_BETA
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Tcp initialization  */
 end_comment
@@ -155,14 +179,6 @@ name|inp_prev
 operator|=
 operator|&
 name|tcb
-expr_stmt|;
-name|tcp_alpha
-operator|=
-name|TCP_ALPHA
-expr_stmt|;
-name|tcp_beta
-operator|=
-name|TCP_BETA
 expr_stmt|;
 block|}
 end_block
@@ -814,7 +830,7 @@ operator|)
 operator|->
 name|ip_ttl
 operator|=
-name|TCP_TTL
+name|tcp_ttl
 expr_stmt|;
 operator|(
 name|void
