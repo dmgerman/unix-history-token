@@ -316,7 +316,7 @@ expr_stmt|;
 comment|/* initialize getopt */
 name|phys
 operator|=
-literal|0
+name|Pflag
 expr_stmt|;
 while|while
 condition|(
@@ -1410,7 +1410,7 @@ expr_stmt|;
 comment|/* initialize getopt */
 name|phys
 operator|=
-literal|0
+name|Pflag
 expr_stmt|;
 while|while
 condition|(

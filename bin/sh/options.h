@@ -164,8 +164,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|Pflag
+value|optlist[17].val
+end_define
+
+begin_define
+define|#
+directive|define
 name|NOPTS
-value|17
+value|18
 end_define
 
 begin_struct
@@ -335,6 +342,14 @@ block|{
 literal|"trapsasync"
 block|,
 literal|'T'
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"physical"
+block|,
+literal|'P'
 block|,
 literal|0
 block|}
