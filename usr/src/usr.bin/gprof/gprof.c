@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.19 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2177,7 +2177,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Assign samples to the procedures to which they belong.  */
+comment|/*  *	Assign samples to the procedures to which they belong.  *  *	There are three cases as to where pcl and pch can be  *	with respect to the routine entry addresses svalue0 and svalue1  *	as shown in the following diagram.  overlap computes the  *	distance between the arrows, the fraction of the sample  *	that is to be credited to the routine which starts at svalue0.  *  *	    svalue0                                         svalue1  *	       |                                               |  *	       v                                               v  *  *	       +-----------------------------------------------+  *	       |					       |  *	  |  ->|    |<-		->|         |<-		->|    |<-  |  *	  |         |		  |         |		  |         |  *	  +---------+		  +---------+		  +---------+  *  *	  ^         ^		  ^         ^		  ^         ^  *	  |         |		  |         |		  |         |  *	 pcl       pch		 pcl       pch		 pcl       pch  *  *	For the vax we assert that samples will never fall in the first  *	two bytes of any routine, since that is the entry mask, thus we give  *	ourselves a little room and use svalue0+2 when assigning samples.  *	In conjunction with the alignment of routine addresses, this   *	should allow us to have one sample for every four bytes of text  *	space and never have any overlap (the two end cases, above).  */
 end_comment
 
 begin_macro
@@ -2374,6 +2374,29 @@ operator|>=
 name|svalue1
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|vax
+name|overlap
+operator|=
+name|min
+argument_list|(
+name|pch
+argument_list|,
+name|svalue1
+argument_list|)
+operator|-
+name|max
+argument_list|(
+name|pcl
+argument_list|,
+name|svalue0
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|overlap
 operator|=
 name|min
@@ -2390,6 +2413,9 @@ argument_list|,
 name|svalue0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|vax
 if|if
 condition|(
 name|overlap
