@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.19 (Berkeley) %G%"
+literal|"@(#)table.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -734,12 +734,30 @@ operator||
 name|AWD
 block|,
 name|TSHORT
+block|,
+name|SSCON
+block|,
+name|ANYSIGNED
+block|,
+literal|0
+block|,
+name|RESCC
+block|,
+literal|"	cmpw	AL,AR\nZP"
+block|,
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|SAREG
 operator||
+name|AWD
+block|,
 name|TUSHORT
 block|,
 name|SSCON
 block|,
-name|TANY
+name|ANYUSIGNED
 block|,
 literal|0
 block|,
@@ -756,12 +774,30 @@ operator||
 name|AWD
 block|,
 name|TCHAR
+block|,
+name|SCCON
+block|,
+name|ANYSIGNED
+block|,
+literal|0
+block|,
+name|RESCC
+block|,
+literal|"	cmpb	AL,AR\nZP"
+block|,
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|SAREG
 operator||
+name|AWD
+block|,
 name|TUCHAR
 block|,
 name|SCCON
 block|,
-name|TANY
+name|ANYUSIGNED
 block|,
 literal|0
 block|,
@@ -1012,6 +1048,8 @@ block|,
 name|SCON
 block|,
 name|TINT
+operator||
+name|TUNSIGNED
 block|,
 literal|0
 block|,
@@ -1088,6 +1126,8 @@ block|,
 name|SCON
 block|,
 name|TINT
+operator||
+name|TUNSIGNED
 block|,
 name|NAREG
 operator||
@@ -2677,7 +2717,11 @@ name|SONE
 block|,
 name|TINT
 operator||
+name|TUNSIGNED
+operator||
 name|TLONG
+operator||
+name|TULONG
 block|,
 literal|0
 block|,
@@ -2706,7 +2750,11 @@ name|SONE
 block|,
 name|TINT
 operator||
+name|TUNSIGNED
+operator||
 name|TLONG
+operator||
+name|TULONG
 block|,
 literal|0
 block|,
@@ -2735,7 +2783,11 @@ name|SONE
 block|,
 name|TINT
 operator||
+name|TUNSIGNED
+operator||
 name|TLONG
+operator||
+name|TULONG
 block|,
 literal|0
 block|,
@@ -2764,7 +2816,11 @@ name|SONE
 block|,
 name|TINT
 operator||
+name|TUNSIGNED
+operator||
 name|TLONG
+operator||
+name|TULONG
 block|,
 literal|0
 block|,
@@ -2799,7 +2855,11 @@ name|SONE
 block|,
 name|TINT
 operator||
+name|TUNSIGNED
+operator||
 name|TLONG
+operator||
+name|TULONG
 block|,
 literal|0
 block|,
@@ -2828,7 +2888,11 @@ name|SONE
 block|,
 name|TINT
 operator||
+name|TUNSIGNED
+operator||
 name|TLONG
+operator||
+name|TULONG
 block|,
 literal|0
 block|,
@@ -2857,7 +2921,11 @@ name|SONE
 block|,
 name|TINT
 operator||
+name|TUNSIGNED
+operator||
 name|TLONG
+operator||
+name|TULONG
 block|,
 literal|0
 block|,
@@ -2886,7 +2954,11 @@ name|SONE
 block|,
 name|TINT
 operator||
+name|TUNSIGNED
+operator||
 name|TLONG
+operator||
+name|TULONG
 block|,
 literal|0
 block|,
