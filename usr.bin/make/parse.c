@@ -1666,6 +1666,10 @@ literal|'.'
 operator|&&
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|src
 index|[
 literal|1
@@ -2495,6 +2499,10 @@ literal|'.'
 operator|&&
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|line
 index|[
 literal|1
