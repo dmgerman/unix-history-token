@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.8 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.9 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.8 (Berkeley) %G%"
+literal|"@(#)queue.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2158,6 +2158,8 @@ argument_list|,
 name|w
 operator|->
 name|w_name
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 return|return;
