@@ -5469,6 +5469,16 @@ literal|0
 index|]
 expr_stmt|;
 break|break;
+case|case
+name|kw_retryerrors
+case|:
+name|sd
+operator|->
+name|flags
+operator||=
+name|VF_RETRYERRORS
+expr_stmt|;
+break|break;
 default|default:
 name|throw_rude_remark
 argument_list|(

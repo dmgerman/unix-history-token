@@ -2602,14 +2602,6 @@ name|drivename
 operator|=
 literal|"*invalid*"
 expr_stmt|;
-if|if
-condition|(
-name|sd
-operator|->
-name|plexno
-operator|>=
-literal|0
-condition|)
 name|snprintf
 argument_list|(
 name|s
@@ -2618,8 +2610,7 @@ name|configend
 operator|-
 name|s
 argument_list|,
-literal|"sd name %s drive %s plex %s state %s "
-literal|"len %llus driveoffset %llus plexoffset %llds\n"
+literal|"sd name %s drive %s plex %s len %llus driveoffset %llus state %s"
 argument_list|,
 name|sd
 operator|->
@@ -2638,13 +2629,6 @@ index|]
 operator|.
 name|name
 argument_list|,
-name|sd_state
-argument_list|(
-name|sd
-operator|->
-name|state
-argument_list|)
-argument_list|,
 operator|(
 name|unsigned
 name|long
@@ -2662,6 +2646,41 @@ operator|)
 name|sd
 operator|->
 name|driveoffset
+argument_list|,
+name|sd_state
+argument_list|(
+name|sd
+operator|->
+name|state
+argument_list|)
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+condition|)
+name|s
+operator|++
+expr_stmt|;
+comment|/* find the end */
+if|if
+condition|(
+name|sd
+operator|->
+name|plexno
+operator|>=
+literal|0
+condition|)
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+name|configend
+operator|-
+name|s
+argument_list|,
+literal|" plexoffset %llds"
 argument_list|,
 operator|(
 name|long
@@ -2681,39 +2700,57 @@ name|configend
 operator|-
 name|s
 argument_list|,
-literal|"sd name %s drive %s state %s "
-literal|"len %llus driveoffset %llus detached\n"
-argument_list|,
-name|sd
-operator|->
-name|name
-argument_list|,
-name|drivename
-argument_list|,
-name|sd_state
-argument_list|(
-name|sd
-operator|->
-name|state
+literal|" detached"
 argument_list|)
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+condition|)
+name|s
+operator|++
+expr_stmt|;
+comment|/* find the end */
+if|if
+condition|(
 name|sd
 operator|->
-name|sectors
+name|flags
+operator|&
+name|VF_RETRYERRORS
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|s
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|sd
-operator|->
-name|driveoffset
+name|configend
+operator|-
+name|s
+argument_list|,
+literal|" retryerrors"
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+condition|)
+name|s
+operator|++
+expr_stmt|;
+comment|/* find the end */
+block|}
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+name|configend
+operator|-
+name|s
+argument_list|,
+literal|" \n"
 argument_list|)
 expr_stmt|;
 while|while

@@ -606,6 +606,11 @@ init|=
 literal|0x200000
 block|,
 comment|/* for drives: use as hot spare */
+name|VF_RETRYERRORS
+init|=
+literal|0x400000
+block|,
+comment|/* don't down subdisks on I/O errors */
 block|}
 enum|;
 end_enum

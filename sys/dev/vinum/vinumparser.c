@@ -556,7 +556,12 @@ argument_list|)
 block|,
 name|keypair
 argument_list|(
-argument|dumpconfig
+name|dumpconfig
+argument_list|)
+block|,
+name|keypair
+argument_list|(
+argument|retryerrors
 argument_list|)
 block|}
 decl_stmt|;

@@ -100,6 +100,16 @@ name|drive
 modifier|*
 name|drive
 decl_stmt|;
+name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
+name|char
+modifier|*
+name|gravity
+decl_stmt|;
+comment|/* for error messages */
 name|rqe
 operator|=
 operator|(
@@ -109,7 +119,7 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
-comment|/* point to the element element that completed */
+comment|/* point to the element that completed */
 name|rqg
 operator|=
 name|rqe
@@ -222,6 +232,20 @@ literal|0
 condition|)
 block|{
 comment|/* transfer in error */
+name|gravity
+operator|=
+literal|""
+expr_stmt|;
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|rqe
+operator|->
+name|sdno
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -257,13 +281,8 @@ operator|=
 name|EIO
 expr_stmt|;
 comment|/* no: catchall "I/O error" */
-name|SD
-index|[
-name|rqe
+name|sd
 operator|->
-name|sdno
-index|]
-operator|.
 name|lasterror
 operator|=
 name|rq
@@ -279,29 +298,30 @@ operator|&
 name|B_READ
 condition|)
 block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: fatal read I/O error, block %d for %ld bytes\n"
-argument_list|,
-name|SD
-index|[
-name|rqe
+if|if
+condition|(
+operator|(
+name|rq
 operator|->
-name|sdno
-index|]
-operator|.
-name|name
-argument_list|,
-name|bp
+name|error
+operator|==
+name|ENXIO
+operator|)
+operator|||
+operator|(
+name|sd
 operator|->
-name|b_blkno
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
-argument_list|)
+name|flags
+operator|&
+name|VF_RETRYERRORS
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|gravity
+operator|=
+literal|" fatal"
 expr_stmt|;
 name|set_sd_state
 argument_list|(
@@ -316,22 +336,16 @@ argument_list|)
 expr_stmt|;
 comment|/* subdisk is crashed */
 block|}
-else|else
-block|{
-comment|/* write operation */
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: fatal write I/O error, block %d for %ld bytes\n"
+literal|"%s:%s read error, block %d for %ld bytes\n"
 argument_list|,
-name|SD
-index|[
-name|rqe
+name|gravity
+argument_list|,
+name|sd
 operator|->
-name|sdno
-index|]
-operator|.
 name|name
 argument_list|,
 name|bp
@@ -342,6 +356,35 @@ name|bp
 operator|->
 name|b_bcount
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* write operation */
+if|if
+condition|(
+operator|(
+name|rq
+operator|->
+name|error
+operator|==
+name|ENXIO
+operator|)
+operator|||
+operator|(
+name|sd
+operator|->
+name|flags
+operator|&
+name|VF_RETRYERRORS
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|gravity
+operator|=
+literal|"fatal "
 expr_stmt|;
 name|set_sd_state
 argument_list|(
@@ -360,15 +403,32 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
+literal|"%s:%s write error, block %d for %ld bytes\n"
+argument_list|,
+name|gravity
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|)
+expr_stmt|;
+block|}
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"%s: user buffer block %d for %ld bytes\n"
 argument_list|,
-name|SD
-index|[
-name|rqe
+name|sd
 operator|->
-name|sdno
-index|]
-operator|.
 name|name
 argument_list|,
 name|ubp
@@ -1006,8 +1066,8 @@ literal|0
 condition|)
 block|{
 comment|/* request finished, */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|VINUMDEBUG
 if|if
 condition|(

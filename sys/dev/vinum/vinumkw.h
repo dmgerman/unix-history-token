@@ -191,6 +191,8 @@ name|kw_rebuildparity
 block|,
 name|kw_dumpconfig
 block|,
+name|kw_retryerrors
+block|,
 name|kw_invalid_keyword
 init|=
 operator|-
