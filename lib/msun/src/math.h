@@ -869,6 +869,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|double
+name|tgamma
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifndef
 ifndef|#
 directive|ifndef

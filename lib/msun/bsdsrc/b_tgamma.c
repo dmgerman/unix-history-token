@@ -28,15 +28,13 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_expr_stmt
-name|include
-operator|<
-name|sys
-operator|/
-name|cdefs
-operator|.
-name|h
-operator|>
 name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
@@ -435,7 +433,7 @@ end_endif
 
 begin_function
 name|double
-name|gamma
+name|tgamma
 parameter_list|(
 name|x
 parameter_list|)
@@ -1059,7 +1057,7 @@ name|a
 operator|)
 expr_stmt|;
 block|}
-comment|/* Return r*gamma(y). */
+comment|/* Return r*tgamma(y). */
 name|yy
 operator|=
 name|ratfun_gam
@@ -1915,7 +1913,7 @@ name|x
 condition|)
 name|y
 operator|=
-name|gamma
+name|tgamma
 argument_list|(
 name|y
 argument_list|)
@@ -1927,7 +1925,7 @@ operator|=
 operator|-
 name|x
 operator|*
-name|gamma
+name|tgamma
 argument_list|(
 operator|-
 name|x
