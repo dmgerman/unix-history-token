@@ -27963,7 +27963,7 @@ name|ahd
 operator|->
 name|stat_timer
 argument_list|,
-name|AHD_STAT_UPDATE_US
+name|AHD_STAT_UPDATE_MS
 argument_list|,
 name|ahd_stat_timer
 argument_list|,
@@ -35310,8 +35310,8 @@ end_function
 begin_define
 define|#
 directive|define
-name|AHD_RESET_POLL_US
-value|1000
+name|AHD_RESET_POLL_MS
+value|1
 end_define
 
 begin_function
@@ -35437,7 +35437,7 @@ name|ahd
 operator|->
 name|reset_timer
 argument_list|,
-name|AHD_RESET_POLL_US
+name|AHD_RESET_POLL_MS
 argument_list|,
 name|ahd_reset_poll
 argument_list|,
@@ -35766,7 +35766,7 @@ name|ahd
 operator|->
 name|stat_timer
 argument_list|,
-name|AHD_STAT_UPDATE_US
+name|AHD_STAT_UPDATE_MS
 argument_list|,
 name|ahd_stat_timer
 argument_list|,
@@ -36714,7 +36714,7 @@ name|scb
 argument_list|,
 literal|5
 operator|*
-literal|1000000
+literal|1000
 argument_list|)
 expr_stmt|;
 break|break;
@@ -41921,7 +41921,7 @@ name|scb
 argument_list|,
 literal|2
 operator|*
-literal|1000000
+literal|1000
 argument_list|)
 expr_stmt|;
 break|break;
@@ -42169,7 +42169,7 @@ name|scb
 argument_list|,
 literal|2
 operator|*
-literal|1000000
+literal|1000
 argument_list|)
 expr_stmt|;
 break|break;

@@ -3281,9 +3281,8 @@ decl_stmt|;
 comment|/* 	 * Statistics. 	 */
 define|#
 directive|define
-name|AHD_STAT_UPDATE_US
-value|250000
-comment|/* 250ms */
+name|AHD_STAT_UPDATE_MS
+value|250
 define|#
 directive|define
 name|AHD_STAT_BUCKETS

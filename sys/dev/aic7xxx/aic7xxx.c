@@ -2691,7 +2691,7 @@ name|scb
 argument_list|,
 literal|5
 operator|*
-literal|1000000
+literal|1000
 argument_list|)
 expr_stmt|;
 break|break;
@@ -31753,7 +31753,7 @@ name|scb
 argument_list|,
 literal|2
 operator|*
-literal|1000000
+literal|1000
 argument_list|)
 expr_stmt|;
 block|}
@@ -32057,7 +32057,7 @@ name|scb
 argument_list|,
 literal|2
 operator|*
-literal|1000000
+literal|1000
 argument_list|)
 expr_stmt|;
 block|}
