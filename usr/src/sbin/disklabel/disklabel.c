@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.7 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -779,6 +779,16 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BOOT
+name|rflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* force bootstrap to be written */
+endif|#
+directive|endif
 if|if
 condition|(
 name|getasciilabel
@@ -904,6 +914,16 @@ name|lp
 operator|=
 name|lab
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BOOT
+name|rflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* force bootstrap to be written */
+endif|#
+directive|endif
 if|if
 condition|(
 name|checklabel
@@ -1374,11 +1394,31 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|rflag
-operator|==
-literal|0
-operator|&&
 name|boot
+operator|||
+name|rflag
+condition|)
+if|if
+condition|(
+name|read
+argument_list|(
+name|f
+argument_list|,
+name|buf
+argument_list|,
+name|BBSIZE
+argument_list|)
+operator|<
+name|BBSIZE
+condition|)
+name|Perror
+argument_list|(
+name|specname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rflag
 operator|==
 literal|0
 condition|)
@@ -1404,24 +1444,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|read
-argument_list|(
-name|f
-argument_list|,
-name|buf
-argument_list|,
-name|BBSIZE
-argument_list|)
-operator|<
-name|BBSIZE
-condition|)
-name|Perror
-argument_list|(
-name|specname
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|lp
@@ -2042,7 +2064,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"flags: "
+literal|"flags:"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2057,7 +2079,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"removeable "
+literal|" removeable"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2072,7 +2094,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"ecc "
+literal|" ecc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2087,7 +2109,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"badsect "
+literal|" badsect"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3106,16 +3128,15 @@ argument_list|(
 operator|*
 name|cp
 argument_list|)
-condition|)
-if|if
-condition|(
+operator|&&
 operator|*
 name|cp
-operator|++
-operator|==
+operator|!=
 literal|'#'
 condition|)
-break|break;
+name|cp
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
