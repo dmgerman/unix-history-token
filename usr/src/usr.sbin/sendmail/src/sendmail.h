@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.85		%G%"
+literal|"@(#)sendmail.h	3.86		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,19 +414,18 @@ decl_stmt|;
 comment|/* mailer number internally */
 name|char
 modifier|*
-name|m_from
-decl_stmt|;
-comment|/* pattern for From: header */
-name|char
-modifier|*
 modifier|*
 name|m_argv
 decl_stmt|;
 comment|/* template argument vector */
 name|short
-name|m_rwset
+name|m_s_rwset
 decl_stmt|;
-comment|/* apply this rewriting set to addresses */
+comment|/* rewriting set for sender addresses */
+name|short
+name|m_r_rwset
+decl_stmt|;
+comment|/* rewriting set for recipient addresses */
 block|}
 struct|;
 end_struct
@@ -562,17 +561,6 @@ end_define
 
 begin_comment
 comment|/* need Message-Id: field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_RELRCPT
-value|000004000L
-end_define
-
-begin_comment
-comment|/* make recipient addresses relative */
 end_comment
 
 begin_define
@@ -850,12 +838,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_ADDR
+name|H_TRACE
 value|00200
 end_define
 
 begin_comment
-comment|/* this field contains addresses */
+comment|/* this field contains trace information */
 end_comment
 
 begin_define
@@ -906,23 +894,19 @@ name|e_oldstyle
 decl_stmt|;
 comment|/* use spaces (not commas) in hdrs */
 name|bool
-name|e_retreceipt
-decl_stmt|;
-comment|/* give a return receipt */
-name|bool
 name|e_sendreceipt
 decl_stmt|;
 comment|/* actually send a receipt back */
 name|char
 modifier|*
-name|e_origfrom
-decl_stmt|;
-comment|/* the From: line first read */
-name|char
-modifier|*
 name|e_to
 decl_stmt|;
 comment|/* the target person */
+name|char
+modifier|*
+name|e_receiptto
+decl_stmt|;
+comment|/* return receipt address */
 name|ADDRESS
 name|e_from
 decl_stmt|;
