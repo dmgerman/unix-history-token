@@ -96,7 +96,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|ng_shutdown_t
-name|ng_xxx_rmnode
+name|ng_xxx_shutdown
 decl_stmt|;
 end_decl_stmt
 
@@ -231,7 +231,7 @@ name|ng_xxx_constructor
 block|,
 name|ng_xxx_rcvmsg
 block|,
-name|ng_xxx_rmnode
+name|ng_xxx_shutdown
 block|,
 name|ng_xxx_newhook
 block|,
@@ -333,7 +333,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Allocate the private data structure and the generic node  * and link them together.  *  * ng_make_node_common() returns with a generic node struct  * with a single reference for us.. we transfer it to the  * private structure.. when we free the private struct we must  * unref the node so it gets freed too.  *  * If this were a device node than this work would be done in the attach()  * routine and the constructor would return EINVAL as you should not be able  * to creatednodes that depend on hardware (unless you can add the hardware :)  */
+comment|/*  * Allocate the private data structure. The generic node has already  * been created. Link them together. We arrive with a reference to the node  * i.e. the reference count is incremented for us already.  *  * If this were a device node than this work would be done in the attach()  * routine and the constructor would return EINVAL as you should not be able  * to creatednodes that depend on hardware (unless you can add the hardware :)  */
 end_comment
 
 begin_function
@@ -342,7 +342,6 @@ name|int
 name|ng_xxx_constructor
 parameter_list|(
 name|node_p
-modifier|*
 name|nodep
 parameter_list|)
 block|{
@@ -422,35 +421,6 @@ name|channel
 operator|=
 name|i
 expr_stmt|;
-block|}
-comment|/* Call the 'generic' (ie, superclass) node constructor */
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|ng_make_node_common
-argument_list|(
-operator|&
-name|typestruct
-argument_list|,
-name|nodep
-argument_list|)
-operator|)
-condition|)
-block|{
-name|FREE
-argument_list|(
-name|privdata
-argument_list|,
-name|M_NETGRAPH
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 comment|/* Link structs together; this counts as our one reference to *nodep */
 operator|(
@@ -818,7 +788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a netgraph control message.  * Check it is one we understand. If needed, send a response.  * We could save the address for an async action later, but don't here.  * Always free the message.  * The response should be in a malloc'd region that the caller can 'free'.  * A response is not required.  * Theoretically you could respond defferently to old message types if  * the cookie in the header didn't match what we consider to be current  * (so that old userland programs could continue to work).  */
+comment|/*  * Get a netgraph control message.  * We actually recieve a queue item that has a pointer to the message.  * If we free the item, the message will be freed too, unless we remove  * it from the item using NGI_GET_MSG();  * The return address is also stored in the item, as an ng_ID_t,  * accessible as NGI_RETADDR(item);  * Check it is one we understand. If needed, send a response.  * We could save the address for an async action later, but don't here.  * Always free the message.  * The response should be in a malloc'd region that the caller can 'free'.  * A response is not required.  * Theoretically you could respond defferently to old message types if  * the cookie in the header didn't match what we consider to be current  * (so that old userland programs could continue to work).  */
 end_comment
 
 begin_function
@@ -829,21 +799,8 @@ parameter_list|(
 name|node_p
 name|node
 parameter_list|,
-name|struct
-name|ng_mesg
-modifier|*
-name|msg
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|retaddr
-parameter_list|,
-name|struct
-name|ng_mesg
-modifier|*
-modifier|*
-name|rptr
+name|item_p
+name|item
 parameter_list|,
 name|hook_p
 name|lasthook
@@ -869,6 +826,18 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|ng_mesg
+modifier|*
+name|msg
+decl_stmt|;
+name|NGI_GET_MSG
+argument_list|(
+name|item
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
 comment|/* Deal with message according to cookie and command */
 switch|switch
 condition|(
@@ -1013,33 +982,21 @@ comment|/* unknown cookie type */
 break|break;
 block|}
 comment|/* Take care of synchronous response, if any */
-if|if
-condition|(
-name|rptr
-condition|)
-operator|*
-name|rptr
-operator|=
-name|resp
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|resp
-condition|)
-name|FREE
+name|NG_RESPOND_MSG
 argument_list|(
-name|resp
+name|error
 argument_list|,
-name|M_NETGRAPH
+name|node
+argument_list|,
+name|item
+argument_list|,
+name|resp
 argument_list|)
 expr_stmt|;
 comment|/* Free the message and return */
-name|FREE
+name|NG_FREE_MSG
 argument_list|(
 name|msg
-argument_list|,
-name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
 return|return
@@ -1051,7 +1008,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Receive data, and do something with it.  * Possibly send it out on another link after processing.  * Possibly do something different if it comes from different  * hooks. the caller will never free m or meta, so  * if we use up this data or abort we must free BOTH of these.  *  * If we want, we may decide to force this data to be queued and reprocessed  * at the netgraph NETISR time.  * We would do that by setting the HK_QUEUE flag on our hook. We would do that  * in the connect() method.   */
+comment|/*  * Receive data, and do something with it.  * Actually we receive a queue item which holds the data.  * If we free the item it wil also froo the data and metadata unless  * we have previously disassociated them using the NGI_GET_xxx() macros.  * Possibly send it out on another link after processing.  * Possibly do something different if it comes from different  * hooks. the caller will never free m or meta, so  * if we use up this data or abort we must free BOTH of these.  *  * If we want, we may decide to force this data to be queued and reprocessed  * at the netgraph NETISR time.  * We would do that by setting the HK_QUEUE flag on our hook. We would do that  * in the connect() method.   */
 end_comment
 
 begin_function
@@ -1062,29 +1019,8 @@ parameter_list|(
 name|hook_p
 name|hook
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|meta_p
-name|meta
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|ret_m
-parameter_list|,
-name|meta_p
-modifier|*
-name|ret_meta
-parameter_list|,
-name|struct
-name|ng_mesg
-modifier|*
-modifier|*
-name|resp
+name|item_p
+name|item
 parameter_list|)
 block|{
 specifier|const
@@ -1112,6 +1048,21 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|meta_p
+name|meta
+decl_stmt|;
+name|NGI_GET_M
+argument_list|(
+name|item
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hook
@@ -1160,9 +1111,11 @@ block|{
 comment|/* If received on a DLCI hook process for this 			 * channel and pass it to the downstream module. 			 * Normally one would add a multiplexing header at 			 * the front here */
 comment|/* M_PREPEND(....)	; */
 comment|/* mtod(m, xxxxxx)->dlci = dlci; */
-name|NG_SEND_DATA
+name|NG_FWD_NEW_DATA
 argument_list|(
 name|error
+argument_list|,
+name|item
 argument_list|,
 name|xxxp
 operator|->
@@ -1171,8 +1124,6 @@ operator|.
 name|hook
 argument_list|,
 name|m
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 name|xxxp
@@ -1225,11 +1176,14 @@ operator|==
 name|XXX_NUM_DLCIS
 condition|)
 block|{
-name|NG_FREE_DATA
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+name|NG_FREE_M
 argument_list|(
 name|m
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 return|return
@@ -1239,9 +1193,11 @@ operator|)
 return|;
 block|}
 comment|/* If we were called at splnet, use the following: 			 * NG_SEND_DATA(error, otherhook, m, meta); if this 			 * node is running at some SPL other than SPLNET 			 * then you should use instead: error = 			 * ng_queueit(otherhook, m, meta); m = NULL: meta = 			 * NULL; this queues the data using the standard 			 * NETISR system and schedules the data to be picked 			 * up again once the system has moved to SPLNET and 			 * the processing of the data can continue. after 			 * these are run 'm' and 'meta' should be considered 			 * as invalid and NG_SEND_DATA actually zaps them. */
-name|NG_SEND_DATA
+name|NG_FWD_NEW_DATA
 argument_list|(
 name|error
+argument_list|,
+name|item
 argument_list|,
 name|xxxp
 operator|->
@@ -1253,8 +1209,6 @@ operator|.
 name|hook
 argument_list|,
 name|m
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 name|xxxp
@@ -1277,11 +1231,14 @@ name|downstream_hook
 operator|.
 name|hook
 condition|)
-name|NG_FREE_DATA
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+name|NG_FREE_M
 argument_list|(
 name|m
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 block|}
@@ -1326,13 +1283,13 @@ comment|/* 0 */
 end_comment
 
 begin_comment
-comment|/*  * Do local shutdown processing..  * If we are a persistant device, we might refuse to go away, and  * we'd only remove our links and reset ourself.  */
+comment|/*  * Do local shutdown processing..  * All our links and the name have already been removed.  * If we are a persistant device, we might refuse to go away, and  * we'd create a new node immediatly.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|ng_xxx_rmnode
+name|ng_xxx_shutdown
 parameter_list|(
 name|node_p
 name|node
@@ -1346,24 +1303,14 @@ name|node
 operator|->
 name|private
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|node
 operator|->
 name|flags
 operator||=
 name|NG_INVALID
-expr_stmt|;
-name|ng_cutlinks
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PERSISTANT_NODE
-name|ng_unname
-argument_list|(
-name|node
-argument_list|)
 expr_stmt|;
 name|node
 operator|->
@@ -1378,6 +1325,9 @@ operator|->
 name|node
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PERSISTANT_NODE
 name|FREE
 argument_list|(
 name|privdata
@@ -1387,6 +1337,64 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/*  	 * Create a new node. This is basically what a device  	 * driver would do in the attach routine. 	 */
+name|error
+operator|=
+name|ng_make_node_common
+argument_list|(
+operator|&
+name|typestruct
+argument_list|,
+operator|&
+name|node
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|node
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"node recreation failed:"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|ng_name_node
+argument_list|(
+name|node
+argument_list|,
+literal|"name"
+argument_list|)
+condition|)
+block|{
+comment|/* whatever name is needed */
+name|printf
+argument_list|(
+literal|"something informative"
+argument_list|)
+expr_stmt|;
+name|ng_unref
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* drop it again */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|privdata
 operator|->
 name|packets_in
@@ -1399,6 +1407,57 @@ operator|->
 name|packets_out
 operator|=
 literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|XXX_NUM_DLCIS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|privdata
+operator|->
+name|channel
+index|[
+name|i
+index|]
+operator|.
+name|dlci
+operator|=
+operator|-
+literal|2
+expr_stmt|;
+name|privdata
+operator|->
+name|channel
+index|[
+name|i
+index|]
+operator|.
+name|channel
+operator|=
+name|i
+expr_stmt|;
+block|}
+comment|/* Link structs together; this counts as our one reference to node */
+name|privdata
+operator|->
+name|node
+operator|=
+name|node
+expr_stmt|;
+name|node
+operator|->
+name|private
+operator|=
+name|privdata
 expr_stmt|;
 name|node
 operator|->
@@ -1497,6 +1556,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|hook
 operator|->
 name|node
@@ -1504,8 +1564,24 @@ operator|->
 name|numhooks
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|hook
+operator|->
+name|node
+operator|->
+name|flags
+operator|&
+name|NG_INVALID
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
-name|ng_rmnode
+comment|/* already shutting down? */
+name|ng_rmnode_self
 argument_list|(
 name|hook
 operator|->

@@ -151,7 +151,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|ng_shutdown_t
-name|ngs_rmnode
+name|ngs_shutdown
 decl_stmt|;
 end_decl_stmt
 
@@ -263,24 +263,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ng_connect_cntl
-parameter_list|(
-name|struct
-name|sockaddr
-modifier|*
-name|nam
-parameter_list|,
-name|struct
-name|ngpcb
-modifier|*
-name|pcbp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|ng_bind
 parameter_list|(
 name|struct
@@ -358,7 +340,7 @@ name|ngs_constructor
 block|,
 name|ngs_rcvmsg
 block|,
-name|ngs_rmnode
+name|ngs_shutdown
 block|,
 name|ngs_newhook
 block|,
@@ -641,7 +623,7 @@ decl_stmt|;
 name|struct
 name|ng_mesg
 modifier|*
-name|resp
+name|msg
 decl_stmt|;
 name|struct
 name|mbuf
@@ -649,9 +631,6 @@ modifier|*
 name|m0
 decl_stmt|;
 name|char
-modifier|*
-name|msg
-decl_stmt|,
 modifier|*
 name|path
 init|=
@@ -841,14 +820,15 @@ name|MALLOC
 argument_list|(
 name|msg
 argument_list|,
-name|char
+expr|struct
+name|ng_mesg
 operator|*
 argument_list|,
 name|len
 operator|+
 literal|1
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MSG
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -876,57 +856,29 @@ literal|0
 argument_list|,
 name|len
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|msg
 argument_list|)
 expr_stmt|;
-comment|/* The callee will free the msg when done. The addr is our business. */
-name|error
-operator|=
-name|ng_send_msg
+comment|/* The callee will free the msg when done. The path is our business. */
+name|NG_SEND_MSG_PATH
 argument_list|(
+name|error
+argument_list|,
 name|pcbp
 operator|->
 name|sockdata
 operator|->
 name|node
 argument_list|,
-operator|(
-expr|struct
-name|ng_mesg
-operator|*
-operator|)
 name|msg
 argument_list|,
 name|path
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|resp
-argument_list|)
-expr_stmt|;
-comment|/* If the callee responded with a synchronous response, then put it 	 * back on the receive side of the socket; sap is source address. */
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-operator|&&
-name|resp
-operator|!=
-name|NULL
-condition|)
-name|error
-operator|=
-name|ship_msg
-argument_list|(
-name|pcbp
-argument_list|,
-name|resp
-argument_list|,
-name|sap
 argument_list|)
 expr_stmt|;
 name|release
@@ -1051,36 +1003,10 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|struct
-name|ngpcb
-modifier|*
-specifier|const
-name|pcbp
-init|=
-name|sotongpcb
-argument_list|(
-name|so
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|pcbp
-operator|==
-literal|0
-condition|)
+comment|/* 	 * At this time refuse to do this.. it used to  	 * do something but it was undocumented and not used. 	 */
 return|return
 operator|(
 name|EINVAL
-operator|)
-return|;
-return|return
-operator|(
-name|ng_connect_cntl
-argument_list|(
-name|nam
-argument_list|,
-name|pcbp
-argument_list|)
 operator|)
 return|;
 block|}
@@ -2165,7 +2091,7 @@ operator|!=
 name|NULL
 operator|)
 condition|)
-name|ng_rmnode
+name|ng_rmnode_self
 argument_list|(
 name|sockdata
 operator|->
@@ -2497,6 +2423,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|item_p
+name|item
+decl_stmt|;
 comment|/* If we are already connected, don't do it again */
 if|if
 condition|(
@@ -2511,7 +2440,7 @@ operator|(
 name|EISCONN
 operator|)
 return|;
-comment|/* Find the target (victim) and check it doesn't already have a data 	 * socket. Also check it is a 'socket' type node. */
+comment|/* Find the target (victim) and check it doesn't already have a data 	 * socket. Also check it is a 'socket' type node. 	 * Use ng_package_data() and address_path() to do this. 	 */
 name|sap
 operator|=
 operator|(
@@ -2521,21 +2450,43 @@ operator|*
 operator|)
 name|nam
 expr_stmt|;
+comment|/* The item will hold the node reference */
+name|item
+operator|=
+name|ng_package_data
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|item
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
 name|error
 operator|=
-name|ng_path2node
+name|ng_address_path
 argument_list|(
 name|NULL
+argument_list|,
+name|item
 argument_list|,
 name|sap
 operator|->
 name|sg_data
-argument_list|,
-operator|&
-name|farnode
 argument_list|,
 name|NULL
 argument_list|)
@@ -2546,6 +2497,15 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* item is freed on failure */
+comment|/* 	 * Extract node from item and free item. Remember we now have  	 * a reference on the node. The item holds it for us. 	 * when we free the item we release the reference. 	 */
+name|farnode
+operator|=
+name|item
+operator|->
+name|el_dest
+expr_stmt|;
+comment|/* shortcut */
 if|if
 condition|(
 name|strcmp
@@ -2561,11 +2521,19 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+comment|/* drop the reference to the node */
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|sockdata
 operator|=
 name|farnode
@@ -2580,12 +2548,20 @@ name|datasock
 operator|!=
 name|NULL
 condition|)
+block|{
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+comment|/* drop the reference to the node */
 return|return
 operator|(
 name|EADDRINUSE
 operator|)
 return|;
-comment|/* Link the PCB and the private data struct. and note the extra 	 * reference */
+block|}
+comment|/* 	 * Link the PCB and the private data struct. and note the extra 	 * reference. Drop the extra reference on the node. 	 */
 name|sockdata
 operator|->
 name|datasock
@@ -2603,157 +2579,17 @@ operator|->
 name|refs
 operator|++
 expr_stmt|;
+comment|/* XXX possible race if it's being freed */
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+comment|/* drop the reference to the node */
 return|return
 operator|(
 literal|0
 operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Connect the existing control socket node to a named node:hook.  * The hook we use on this end is the same name as the remote node name.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|ng_connect_cntl
-parameter_list|(
-name|struct
-name|sockaddr
-modifier|*
-name|nam
-parameter_list|,
-name|struct
-name|ngpcb
-modifier|*
-name|pcbp
-parameter_list|)
-block|{
-name|struct
-name|ngsock
-modifier|*
-specifier|const
-name|sockdata
-init|=
-name|pcbp
-operator|->
-name|sockdata
-decl_stmt|;
-name|struct
-name|sockaddr_ng
-modifier|*
-name|sap
-decl_stmt|;
-name|char
-modifier|*
-name|node
-decl_stmt|,
-modifier|*
-name|hook
-decl_stmt|;
-name|node_p
-name|farnode
-decl_stmt|;
-name|int
-name|rtn
-decl_stmt|,
-name|error
-decl_stmt|;
-name|sap
-operator|=
-operator|(
-expr|struct
-name|sockaddr_ng
-operator|*
-operator|)
-name|nam
-expr_stmt|;
-name|rtn
-operator|=
-name|ng_path_parse
-argument_list|(
-name|sap
-operator|->
-name|sg_data
-argument_list|,
-operator|&
-name|node
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|hook
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rtn
-operator|<
-literal|0
-operator|||
-name|node
-operator|==
-name|NULL
-operator|||
-name|hook
-operator|==
-name|NULL
-condition|)
-block|{
-name|TRAP_ERROR
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-name|farnode
-operator|=
-name|ng_findname
-argument_list|(
-name|sockdata
-operator|->
-name|node
-argument_list|,
-name|node
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|farnode
-operator|==
-name|NULL
-condition|)
-block|{
-name|TRAP_ERROR
-expr_stmt|;
-return|return
-operator|(
-name|EADDRNOTAVAIL
-operator|)
-return|;
-block|}
-comment|/* Connect, using a hook name the same as the far node name. */
-name|error
-operator|=
-name|ng_con_nodes
-argument_list|(
-name|sockdata
-operator|->
-name|node
-argument_list|,
-name|node
-argument_list|,
-name|farnode
-argument_list|,
-name|hook
-argument_list|)
-expr_stmt|;
-return|return
-name|error
 return|;
 block|}
 end_function
@@ -2967,11 +2803,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Here we free the message, as we are the end of the line. 	 * We need to do that regardless of whether we got mbufs. */
-name|FREE
+name|NG_FREE_MSG
 argument_list|(
 name|msg
-argument_list|,
-name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
 if|if
@@ -3050,7 +2884,6 @@ name|int
 name|ngs_constructor
 parameter_list|(
 name|node_p
-modifier|*
 name|nodep
 parameter_list|)
 block|{
@@ -3111,21 +2944,8 @@ parameter_list|(
 name|node_p
 name|node
 parameter_list|,
-name|struct
-name|ng_mesg
-modifier|*
-name|msg
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|retaddr
-parameter_list|,
-name|struct
-name|ng_mesg
-modifier|*
-modifier|*
-name|resp
+name|item_p
+name|item
 parameter_list|,
 name|hook_p
 name|lasthook
@@ -3164,6 +2984,38 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|ng_mesg
+modifier|*
+name|msg
+decl_stmt|;
+name|ng_ID_t
+name|retaddr
+init|=
+name|NGI_RETADDR
+argument_list|(
+name|item
+argument_list|)
+decl_stmt|;
+name|char
+name|retabuf
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|NGI_GET_MSG
+argument_list|(
+name|item
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+comment|/* we have all we need */
 comment|/* Only allow mesgs to be passed if we have the control socket. 	 * Data sockets can only support the generic messages. */
 if|if
 condition|(
@@ -3229,11 +3081,9 @@ expr_stmt|;
 comment|/* unknown command */
 block|}
 comment|/* Free the message and return */
-name|FREE
+name|NG_FREE_MSG
 argument_list|(
 name|msg
-argument_list|,
-name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
 return|return
@@ -3243,30 +3093,20 @@ operator|)
 return|;
 block|}
 comment|/* Get the return address into a sockaddr */
-if|if
-condition|(
-operator|(
+name|sprintf
+argument_list|(
+name|retabuf
+argument_list|,
+literal|"[%x]:"
+argument_list|,
 name|retaddr
-operator|==
-name|NULL
-operator|)
-operator|||
-operator|(
-operator|*
-name|retaddr
-operator|==
-literal|'\0'
-operator|)
-condition|)
-name|retaddr
-operator|=
-literal|""
+argument_list|)
 expr_stmt|;
 name|addrlen
 operator|=
 name|strlen
 argument_list|(
-name|retaddr
+name|retabuf
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -3317,7 +3157,7 @@ name|AF_NETGRAPH
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|retaddr
+name|retabuf
 argument_list|,
 name|addr
 operator|->
@@ -3374,29 +3214,8 @@ parameter_list|(
 name|hook_p
 name|hook
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|meta_p
-name|meta
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|ret_m
-parameter_list|,
-name|meta_p
-modifier|*
-name|ret_meta
-parameter_list|,
-name|struct
-name|ng_mesg
-modifier|*
-modifier|*
-name|resp
+name|item_p
+name|item
 parameter_list|)
 block|{
 name|struct
@@ -3445,6 +3264,23 @@ decl_stmt|;
 name|int
 name|addrlen
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|NGI_GET_M
+argument_list|(
+name|item
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
 comment|/* If there is no data socket, black-hole it */
 if|if
 condition|(
@@ -3453,11 +3289,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|NG_FREE_DATA
+name|NG_FREE_M
 argument_list|(
 name|m
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 return|return
@@ -3527,12 +3361,6 @@ name|addrlen
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-comment|/* We have no use for the meta data, free/clear it now. */
-name|NG_FREE_META
-argument_list|(
-name|meta
-argument_list|)
 expr_stmt|;
 comment|/* Try to tell the socket which hook it came in on */
 if|if
@@ -3629,9 +3457,23 @@ name|numhooks
 operator|==
 literal|0
 operator|)
+operator|&&
+operator|(
+operator|(
+name|hook
+operator|->
+name|node
+operator|->
+name|flags
+operator|&
+name|NG_INVALID
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
-name|ng_rmnode
+name|ng_rmnode_self
 argument_list|(
 name|hook
 operator|->
@@ -3654,7 +3496,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ngs_rmnode
+name|ngs_shutdown
 parameter_list|(
 name|node_p
 name|node
@@ -3690,16 +3532,6 @@ name|sockdata
 operator|->
 name|ctlsock
 decl_stmt|;
-name|ng_cutlinks
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-name|ng_unname
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dpcbp
@@ -3930,9 +3762,11 @@ block|{
 block|{
 name|SOCK_DGRAM
 block|,
+comment|/* protocol type */
 operator|&
 name|ngdomain
 block|,
+comment|/* backpointer to domain */
 name|NG_CONTROL
 block|,
 name|PR_ATOMIC
@@ -3940,6 +3774,7 @@ operator||
 name|PR_ADDR
 comment|/* | PR_RIGHTS */
 block|,
+comment|/* flags */
 literal|0
 block|,
 literal|0
@@ -3948,8 +3783,10 @@ literal|0
 block|,
 literal|0
 block|,
+comment|/* input, output, ctlinput, ctloutput */
 name|NULL
 block|,
+comment|/* ousrreq */
 literal|0
 block|,
 literal|0
@@ -3958,22 +3795,30 @@ literal|0
 block|,
 literal|0
 block|,
+comment|/* init, fasttimeo, slowtimo, drain */
 operator|&
 name|ngc_usrreqs
+block|,
+comment|/* usrreq table (above) */
+comment|/*{NULL}*/
+comment|/* pffh (protocol filter head?) */
 block|}
 block|,
 block|{
 name|SOCK_DGRAM
 block|,
+comment|/* protocol type */
 operator|&
 name|ngdomain
 block|,
+comment|/* backpointer to domain */
 name|NG_DATA
 block|,
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
+comment|/* flags */
 literal|0
 block|,
 literal|0
@@ -3982,8 +3827,10 @@ literal|0
 block|,
 literal|0
 block|,
+comment|/* input, output, ctlinput, ctloutput */
 name|NULL
 block|,
+comment|/* ousrreq() */
 literal|0
 block|,
 literal|0
@@ -3992,8 +3839,13 @@ literal|0
 block|,
 literal|0
 block|,
+comment|/* init, fasttimeo, slowtimo, drain */
 operator|&
 name|ngd_usrreqs
+block|,
+comment|/* usrreq table (above) */
+comment|/*{NULL}*/
+comment|/* pffh (protocol filter head?) */
 block|}
 block|}
 decl_stmt|;
@@ -4009,14 +3861,18 @@ name|AF_NETGRAPH
 block|,
 literal|"netgraph"
 block|,
-literal|0
-block|,
 name|NULL
 block|,
+comment|/* init() */
 name|NULL
 block|,
+comment|/* externalise() */
+name|NULL
+block|,
+comment|/* dispose() */
 name|ngsw
 block|,
+comment|/* protosw entry */
 operator|&
 name|ngsw
 index|[
@@ -4034,13 +3890,18 @@ index|]
 argument_list|)
 index|]
 block|,
-literal|0
-block|,
+comment|/* Number of protosw entries */
 name|NULL
 block|,
+comment|/* next domain in list */
+name|NULL
+block|,
+comment|/* rtattach() */
 literal|0
 block|,
+comment|/* arg to rtattach in bits */
 literal|0
+comment|/* maxrtkey */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4109,6 +3970,25 @@ block|}
 ifdef|#
 directive|ifdef
 name|NOTYET
+if|if
+condition|(
+operator|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|ngsocklist
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|typestruct
+operator|.
+name|refs
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
 comment|/* Unregister protocol domain XXX can't do this yet.. */
 if|if
 condition|(
@@ -4125,14 +4005,14 @@ operator|!=
 literal|0
 condition|)
 break|break;
-else|#
-directive|else
+block|}
+else|else
+endif|#
+directive|endif
 name|error
 operator|=
 name|EBUSY
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 default|default:
 name|error

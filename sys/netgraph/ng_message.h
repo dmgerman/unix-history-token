@@ -149,6 +149,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* this command is guaranteed to not alter data or'd into the command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_READONLY
+value|0x10000000
+end_define
+
+begin_comment
 comment|/* Keep this in sync with the above structure definition */
 end_comment
 
@@ -170,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|NG_VERSION
-value|4
+value|5
 end_define
 
 begin_comment
@@ -181,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|NGF_ORIG
-value|0x0000
+value|0x00000000
 end_define
 
 begin_comment
@@ -192,11 +203,26 @@ begin_define
 define|#
 directive|define
 name|NGF_RESP
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
 comment|/* the message is a response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGF_STATIC
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Not malloc'd. Don't FREE */
+end_comment
+
+begin_comment
+comment|/* Only checked in generic message */
 end_comment
 
 begin_comment
@@ -222,7 +248,7 @@ begin_define
 define|#
 directive|define
 name|NGM_GENERIC_COOKIE
-value|851672668
+value|977674408
 end_define
 
 begin_comment
@@ -288,18 +314,18 @@ begin_define
 define|#
 directive|define
 name|NGM_NODEINFO
-value|6
+value|(6|NGM_READONLY)
 end_define
 
 begin_comment
-comment|/* get nodeinfo for the target */
+comment|/* get nodeinfo for target */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_LISTHOOKS
-value|7
+value|(7|NGM_READONLY)
 end_define
 
 begin_comment
@@ -310,66 +336,66 @@ begin_define
 define|#
 directive|define
 name|NGM_LISTNAMES
-value|8
+value|(8|NGM_READONLY)
 end_define
 
 begin_comment
-comment|/* list all globally named nodes */
+comment|/* list globally named nodes */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_LISTNODES
-value|9
+value|(9|NGM_READONLY)
 end_define
 
 begin_comment
-comment|/* list all nodes, named and unnamed */
+comment|/* list nodes, named& not */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_LISTTYPES
-value|10
+value|(10|NGM_READONLY)
 end_define
 
 begin_comment
-comment|/* list all installed node types */
+comment|/* list installed node types */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_TEXT_STATUS
-value|11
+value|(11|NGM_READONLY)
 end_define
 
 begin_comment
-comment|/* (optional) get text status report */
+comment|/* (optional) get txt status */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_BINARY2ASCII
-value|12
+value|(12|NGM_READONLY)
 end_define
 
 begin_comment
-comment|/* convert struct ng_mesg to ascii */
+comment|/* convert ng_mesg to ascii */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGM_ASCII2BINARY
-value|13
+value|(13|NGM_READONLY)
 end_define
 
 begin_comment
-comment|/* convert ascii to struct ng_mesg */
+comment|/* convert ascii to ng_mesg */
 end_comment
 
 begin_define
@@ -502,7 +528,7 @@ begin_define
 define|#
 directive|define
 name|NGM_GET_BANDWIDTH
-value|44
+value|(44|NGM_READONLY)
 end_define
 
 begin_comment
@@ -524,7 +550,7 @@ begin_define
 define|#
 directive|define
 name|NGM_GET_XMIT_Q_LIMITS
-value|46
+value|(46|NGM_READONLY)
 end_define
 
 begin_comment
@@ -539,7 +565,7 @@ value|47
 end_define
 
 begin_comment
-comment|/* We want sync. queue state reply  					   for each packet sent down */
+comment|/* We want sync. queue state 						reply for each packet sent */
 end_comment
 
 begin_define
@@ -1116,7 +1142,7 @@ parameter_list|,
 name|how
 parameter_list|)
 define|\
-value|do {								\ 	  MALLOC((msg), struct ng_mesg *, sizeof(struct ng_mesg)	\ 	    + (len), M_NETGRAPH, (how) | M_ZERO);			\ 	  if ((msg) == NULL)						\ 	    break;							\ 	  (msg)->header.version = NG_VERSION;				\ 	  (msg)->header.typecookie = (cookie);				\ 	  (msg)->header.cmd = (cmdid);					\ 	  (msg)->header.arglen = (len);					\ 	  strncpy((msg)->header.cmdstr, #cmdid,				\ 	    sizeof((msg)->header.cmdstr) - 1);				\ 	} while (0)
+value|do {								\ 	  MALLOC((msg), struct ng_mesg *, sizeof(struct ng_mesg)	\ 	    + (len), M_NETGRAPH_MSG, (how) | M_ZERO);			\ 	  if ((msg) == NULL)						\ 	    break;							\ 	  (msg)->header.version = NG_VERSION;				\ 	  (msg)->header.typecookie = (cookie);				\ 	  (msg)->header.cmd = (cmdid);					\ 	  (msg)->header.arglen = (len);					\ 	  strncpy((msg)->header.cmdstr, #cmdid,				\ 	    sizeof((msg)->header.cmdstr) - 1);				\ 	} while (0)
 end_define
 
 begin_comment
@@ -1137,7 +1163,7 @@ parameter_list|,
 name|how
 parameter_list|)
 define|\
-value|do {								\ 	  MALLOC((rsp), struct ng_mesg *, sizeof(struct ng_mesg)	\ 	    + (len), M_NETGRAPH, (how) | M_ZERO);			\ 	  if ((rsp) == NULL)						\ 	    break;							\ 	  (rsp)->header.version = NG_VERSION;				\ 	  (rsp)->header.arglen = (len);					\ 	  (rsp)->header.token = (msg)->header.token;			\ 	  (rsp)->header.typecookie = (msg)->header.typecookie;		\ 	  (rsp)->header.cmd = (msg)->header.cmd;			\ 	  bcopy((msg)->header.cmdstr, (rsp)->header.cmdstr,		\ 	    sizeof((rsp)->header.cmdstr));				\ 	  (rsp)->header.flags |= NGF_RESP;				\ 	} while (0)
+value|do {								\ 	  MALLOC((rsp), struct ng_mesg *, sizeof(struct ng_mesg)	\ 	    + (len), M_NETGRAPH_MSG, (how) | M_ZERO);			\ 	  if ((rsp) == NULL)						\ 	    break;							\ 	  (rsp)->header.version = NG_VERSION;				\ 	  (rsp)->header.arglen = (len);					\ 	  (rsp)->header.token = (msg)->header.token;			\ 	  (rsp)->header.typecookie = (msg)->header.typecookie;		\ 	  (rsp)->header.cmd = (msg)->header.cmd;			\ 	  bcopy((msg)->header.cmdstr, (rsp)->header.cmdstr,		\ 	    sizeof((rsp)->header.cmdstr));				\ 	  (rsp)->header.flags |= NGF_RESP;				\ 	} while (0)
 end_define
 
 begin_endif

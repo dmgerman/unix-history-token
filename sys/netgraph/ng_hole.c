@@ -55,6 +55,13 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|ng_constructor_t
+name|ngh_cons
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|ng_rcvdata_t
 name|ngh_rcvdata
 decl_stmt|;
@@ -80,23 +87,33 @@ name|NG_HOLE_NODE_TYPE
 block|,
 name|NULL
 block|,
+comment|/* modeventhand_t */
+name|ngh_cons
+block|,
+comment|/* ng_constructor_t */
 name|NULL
 block|,
+comment|/* ng_rcvmsg_t */
 name|NULL
 block|,
+comment|/* ng_shutdown_t */
 name|NULL
 block|,
+comment|/* ng_newhook_t */
 name|NULL
 block|,
+comment|/* ng_findhook_t */
 name|NULL
 block|,
-name|NULL
-block|,
+comment|/* ng_connect_t */
 name|ngh_rcvdata
 block|,
+comment|/* ng_rcvdata_t */
 name|ngh_disconnect
 block|,
+comment|/* ng_disconnect_t */
 name|NULL
+comment|/* ng_cmdlist */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -113,6 +130,27 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*   * Be obliging. but no work to do.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ngh_cons
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Receive data  */
 end_comment
 
@@ -124,36 +162,13 @@ parameter_list|(
 name|hook_p
 name|hook
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|meta_p
-name|meta
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|ret_m
-parameter_list|,
-name|meta_p
-modifier|*
-name|ret_meta
-parameter_list|,
-name|struct
-name|ng_mesg
-modifier|*
-modifier|*
-name|resp
+name|item_p
+name|item
 parameter_list|)
 block|{
-name|NG_FREE_DATA
+name|NG_FREE_ITEM
 argument_list|(
-name|m
-argument_list|,
-name|meta
+name|item
 argument_list|)
 expr_stmt|;
 return|return
@@ -185,7 +200,7 @@ name|numhooks
 operator|==
 literal|0
 condition|)
-name|ng_rmnode
+name|ng_rmnode_self
 argument_list|(
 name|hook
 operator|->
