@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: time.c,v 1.6 1997/08/14 06:48:59 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -170,6 +176,15 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
 specifier|register
 name|int
 name|pid
@@ -191,6 +206,12 @@ name|struct
 name|rusage
 name|ru
 decl_stmt|;
+name|FILE
+modifier|*
+name|out
+init|=
+name|NULL
+decl_stmt|;
 name|lflag
 operator|=
 literal|0
@@ -206,7 +227,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"l"
+literal|"a:f:l"
 argument_list|)
 operator|)
 operator|!=
@@ -221,6 +242,96 @@ operator|)
 name|ch
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+if|if
+condition|(
+name|out
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|out
+operator|=
+name|fopen
+argument_list|(
+name|optarg
+argument_list|,
+literal|"a"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|out
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+if|if
+condition|(
+name|out
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|out
+operator|=
+name|stdout
+expr_stmt|;
+else|else
+block|{
+name|out
+operator|=
+name|fopen
+argument_list|(
+name|optarg
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|out
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 case|case
 literal|'l'
 case|:
@@ -254,6 +365,15 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|out
+condition|)
+name|out
+operator|=
+name|stderr
 expr_stmt|;
 name|gettimeofday
 argument_list|(
@@ -415,7 +535,7 @@ literal|1000000
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%9ld.%02ld real "
 argument_list|,
@@ -432,7 +552,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%9ld.%02ld user "
 argument_list|,
@@ -453,7 +573,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%9ld.%02ld sys\n"
 argument_list|,
@@ -535,7 +655,7 @@ literal|1
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -548,7 +668,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -563,7 +683,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -578,7 +698,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -593,7 +713,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -606,7 +726,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -619,7 +739,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -632,7 +752,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -645,7 +765,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -658,7 +778,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -671,7 +791,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -684,7 +804,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -697,7 +817,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
@@ -710,7 +830,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%10ld  %s\n"
 argument_list|,
