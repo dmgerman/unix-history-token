@@ -449,15 +449,15 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p2
 decl_stmt|;
-comment|/* Don't allow kernel only flags. */
+name|int
+name|error
+decl_stmt|;
+comment|/* Don't allow kernel-only flags. */
 if|if
 condition|(
 operator|(
@@ -941,7 +941,7 @@ operator|=
 name|fdtmp
 expr_stmt|;
 block|}
-comment|/* 		 * Unshare file descriptors (from parent.) 		 */
+comment|/* 		 * Unshare file descriptors (from parent). 		 */
 if|if
 condition|(
 name|flags
@@ -1052,7 +1052,7 @@ name|SINGLE_NO_EXIT
 argument_list|)
 condition|)
 block|{
-comment|/* Abort.. someone else is single threading before us */
+comment|/* Abort. Someone else is single threading before us. */
 name|PROC_UNLOCK
 argument_list|(
 name|p1
@@ -1717,7 +1717,7 @@ argument_list|(
 name|kg2
 argument_list|)
 expr_stmt|;
-comment|/* Allocate and switch to an alternate kstack if specified */
+comment|/* Allocate and switch to an alternate kstack if specified. */
 if|if
 condition|(
 name|pages
@@ -2112,7 +2112,7 @@ name|p_fdtol
 operator|=
 name|fdtol
 expr_stmt|;
-comment|/* 	 * p_limit is copy-on-write, bump refcnt, 	 */
+comment|/* 	 * p_limit is copy-on-write.  Bump its refcount. 	 */
 name|p2
 operator|->
 name|p_limit
@@ -2134,7 +2134,7 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup linkage for kernel based threading 	 */
+comment|/* 	 * Set up linkage for kernel based threading. 	 */
 if|if
 condition|(
 operator|(
@@ -2840,7 +2840,7 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If other threads are waiting, let them continue now 	 */
+comment|/* 	 * If other threads are waiting, let them continue now. 	 */
 if|if
 condition|(
 name|p1
