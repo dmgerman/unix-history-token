@@ -26549,6 +26549,19 @@ condition|)
 return|return
 name|ENXIO
 return|;
+comment|/*      * Some LanMedia WAN cards use the Tulip chip, but they have      * their own driver, and we should not recognize them      */
+if|if
+condition|(
+name|pci_get_subvendor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x1376
+condition|)
+return|return
+name|ENXIO
+return|;
 switch|switch
 condition|(
 name|pci_get_device
