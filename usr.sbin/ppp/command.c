@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.52 1997/05/31 16:37:19 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.53 1997/06/01 01:13:00 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -73,6 +73,18 @@ begin_include
 include|#
 directive|include
 file|<alias.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -157,6 +169,12 @@ begin_include
 include|#
 directive|include
 file|"os.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"timeout.h"
 end_include
 
 begin_decl_stmt
@@ -394,6 +412,14 @@ name|n
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|argc
 operator|>
 literal|0
@@ -412,7 +438,6 @@ condition|;
 name|cmd
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|strcasecmp
@@ -442,18 +467,18 @@ name|plist
 operator|==
 name|SetCommands
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"set "
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s %s\n"
+name|VarTerm
 argument_list|,
-name|cmd
-operator|->
-name|name
+literal|"%s\n"
 argument_list|,
 name|cmd
 operator|->
@@ -461,16 +486,12 @@ name|syntax
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
-block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 name|n
@@ -490,7 +511,6 @@ condition|;
 name|cmd
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|cmd
@@ -506,8 +526,10 @@ name|VarLocalAuth
 operator|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"  %-8s: %-20s\n"
 argument_list|,
 name|cmd
@@ -523,22 +545,21 @@ name|n
 operator|++
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|n
 operator|&
 literal|1
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -613,23 +634,25 @@ condition|(
 name|mes
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%s\n"
 argument_list|,
 name|mes
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -671,8 +694,14 @@ operator|>
 name|ST_CLOSED
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"LCP state is [%s]\n"
 argument_list|,
 name|StateNames
@@ -684,9 +713,7 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 if|if
@@ -720,8 +747,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%s: not found.\n"
 argument_list|,
 operator|*
@@ -729,9 +762,8 @@ name|argv
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 block|}
@@ -741,8 +773,14 @@ literal|0
 expr_stmt|;
 do|do
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Dial attempt %u of %d\n"
 argument_list|,
 operator|++
@@ -765,9 +803,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
-literal|"failed to open modem.\n"
+name|VarTerm
+argument_list|,
+literal|"Failed to open modem.\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -806,9 +850,7 @@ name|VarDialTries
 condition|)
 do|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -846,31 +888,13 @@ decl_stmt|;
 name|pid_t
 name|shpid
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|shell
-operator|=
-name|getenv
-argument_list|(
-literal|"SHELL"
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|shell
-operator|=
-name|_PATH_BSHELL
-expr_stmt|;
-block|}
+name|FILE
+modifier|*
+name|oVarTerm
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SHELL_ONLY_INTERACTIVELY
-ifndef|#
-directive|ifndef
-name|HAVE_SHELL_CMD_WITH_ANY_MODE
 if|if
 condition|(
 name|mode
@@ -878,21 +902,51 @@ operator|!=
 name|MODE_INTER
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stdout
+name|LogWARN
 argument_list|,
 literal|"Can only start a shell in interactive mode\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 else|#
 directive|else
+if|if
+condition|(
+operator|(
+name|mode
+operator|&
+operator|(
+name|MODE_AUTO
+operator||
+name|MODE_INTER
+operator|)
+operator|)
+operator|==
+operator|(
+name|MODE_AUTO
+operator||
+name|MODE_INTER
+operator|)
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Shell is not allowed interactively in auto mode\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|argc
@@ -907,59 +961,35 @@ name|MODE_INTER
 operator|)
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogWARN
 argument_list|,
-literal|"Can only start an interactive shell in interactive mode\n"
+literal|"Can only start an interactive shell in"
+literal|" interactive mode\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* HAVE_SHELL_CMD_WITH_ANY_MODE */
-else|#
-directive|else
 if|if
 condition|(
 operator|(
-name|mode
-operator|&
-operator|(
-name|MODE_AUTO
-operator||
-name|MODE_INTER
-operator|)
+name|shell
+operator|=
+name|getenv
+argument_list|(
+literal|"SHELL"
+argument_list|)
 operator|)
 operator|==
-operator|(
-name|MODE_AUTO
-operator||
-name|MODE_INTER
-operator|)
+literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"Shell is not allowed interactively in auto mode\n"
-argument_list|)
+name|shell
+operator|=
+name|_PATH_BSHELL
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
-comment|/* SHELL_ONLY_INTERACTIVELY */
 if|if
 condition|(
 operator|(
@@ -976,7 +1006,115 @@ name|int
 name|dtablesize
 decl_stmt|,
 name|i
+decl_stmt|,
+name|fd
 decl_stmt|;
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fd
+operator|=
+name|fileno
+argument_list|(
+name|VarTerm
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogALERT
+argument_list|,
+literal|"Failed to open /dev/null: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+name|i
+operator|++
+control|)
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>
+literal|2
+condition|)
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
+name|oVarTerm
+operator|=
+name|VarTerm
+expr_stmt|;
+name|VarTerm
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|oVarTerm
+operator|&&
+name|oVarTerm
+operator|!=
+name|stdout
+condition|)
+name|fclose
+argument_list|(
+name|oVarTerm
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|dtablesize
@@ -1015,9 +1153,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"setgid"
+name|LogERROR
+argument_list|,
+literal|"setgid: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1037,9 +1182,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"setuid"
+name|LogERROR
+argument_list|,
+literal|"setuid: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1189,9 +1341,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stdout
+name|LogWARN
 argument_list|,
 literal|"exec() of %s failed\n"
 argument_list|,
@@ -1224,11 +1376,16 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stdout
+name|LogERROR
 argument_list|,
-literal|"Fork failed\n"
+literal|"Fork failed: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1265,35 +1422,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|static
-name|char
-name|StrOption
-index|[]
-init|=
-literal|"option .."
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|StrRemote
-index|[]
-init|=
-literal|"[remote]"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|StrNull
-index|[]
-init|=
-literal|""
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|cmdtab
 specifier|const
@@ -1312,7 +1440,7 @@ name|LOCAL_AUTH
 block|,
 literal|"accept option request"
 block|,
-name|StrOption
+literal|"accept option .."
 block|}
 block|,
 block|{
@@ -1326,7 +1454,7 @@ name|LOCAL_AUTH
 block|,
 literal|"add route"
 block|,
-literal|"dest mask gateway"
+literal|"add dest mask gateway"
 block|}
 block|,
 block|{
@@ -1340,7 +1468,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Close connection"
 block|,
-name|StrNull
+literal|"close"
 block|}
 block|,
 block|{
@@ -1354,7 +1482,7 @@ name|LOCAL_AUTH
 block|,
 literal|"delete route"
 block|,
-literal|"ALL | dest gateway [mask]"
+literal|"delete ALL | dest gateway [mask]"
 block|}
 block|,
 block|{
@@ -1368,7 +1496,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Deny option request"
 block|,
-name|StrOption
+literal|"deny option .."
 block|}
 block|,
 block|{
@@ -1382,7 +1510,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Dial and login"
 block|,
-name|StrRemote
+literal|"dial|call [remote]"
 block|}
 block|,
 block|{
@@ -1396,7 +1524,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Disable option"
 block|,
-name|StrOption
+literal|"disable option .."
 block|}
 block|,
 block|{
@@ -1410,7 +1538,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Display option configs"
 block|,
-name|StrNull
+literal|"display"
 block|}
 block|,
 block|{
@@ -1424,7 +1552,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Enable option"
 block|,
-name|StrOption
+literal|"enable option .."
 block|}
 block|,
 block|{
@@ -1438,7 +1566,7 @@ name|LOCAL_NO_AUTH
 block|,
 literal|"Password for manipulation"
 block|,
-name|StrOption
+literal|"passwd option .."
 block|}
 block|,
 block|{
@@ -1452,7 +1580,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Load settings"
 block|,
-name|StrRemote
+literal|"load [remote]"
 block|}
 block|,
 block|{
@@ -1466,7 +1594,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Save settings"
 block|,
-name|StrNull
+literal|"save"
 block|}
 block|,
 block|{
@@ -1480,7 +1608,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set parameters"
 block|,
-literal|"var value"
+literal|"set[up] var value"
 block|}
 block|,
 block|{
@@ -1494,7 +1622,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Run a subshell"
 block|,
-literal|"[sh command]"
+literal|"shell|! [sh command]"
 block|}
 block|,
 block|{
@@ -1508,7 +1636,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show status and statictics"
 block|,
-literal|"var"
+literal|"show var"
 block|}
 block|,
 block|{
@@ -1522,7 +1650,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Enter to terminal mode"
 block|,
-name|StrNull
+literal|"term"
 block|}
 block|,
 block|{
@@ -1536,7 +1664,7 @@ name|LOCAL_AUTH
 block|,
 literal|"alias control"
 block|,
-literal|"option [yes|no]"
+literal|"alias option [yes|no]"
 block|}
 block|,
 block|{
@@ -1552,7 +1680,7 @@ name|LOCAL_NO_AUTH
 block|,
 literal|"Quit PPP program"
 block|,
-literal|"[all]"
+literal|"quit|bye [all]"
 block|}
 block|,
 block|{
@@ -1568,7 +1696,7 @@ name|LOCAL_NO_AUTH
 block|,
 literal|"Display this message"
 block|,
-literal|"[command]"
+literal|"help|? [command]"
 block|,
 operator|(
 name|void
@@ -1588,7 +1716,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Generate down event"
 block|,
-name|StrNull
+literal|"down"
 block|}
 block|,
 block|{
@@ -1666,62 +1794,39 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|LogLevelName
-index|[]
-init|=
-block|{
-name|LM_PHASE
-block|,
-name|LM_CHAT
-block|,
-name|LM_LQM
-block|,
-name|LM_LCP
-block|,
-name|LM_TCPIP
-block|,
-name|LM_HDLC
-block|,
-name|LM_ASYNC
-block|,
-name|LM_LINK
-block|,
-name|LM_CONNECT
-block|,
-name|LM_CARRIER
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
-name|ShowDebugLevel
+name|ShowLogLevel
 parameter_list|()
 block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+name|fprintf
 argument_list|(
-literal|"%02x: "
+name|VarTerm
 argument_list|,
-name|loglevel
+literal|"Log:"
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-name|LOG_PHASE
+name|LogMIN
 init|;
 name|i
 operator|<
-name|MAXLOGLEVEL
+name|LogMAXCONF
 condition|;
 name|i
 operator|++
@@ -1729,34 +1834,33 @@ control|)
 block|{
 if|if
 condition|(
-name|loglevel
-operator|&
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-condition|)
-name|printf
+name|LogIsKept
 argument_list|(
-literal|"%s "
-argument_list|,
-name|LogLevelName
-index|[
 name|i
-index|]
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|" %s"
+argument_list|,
+name|LogName
+argument_list|(
+name|i
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -1774,6 +1878,14 @@ name|bit
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|EscMap
 index|[
 literal|32
@@ -1793,7 +1905,6 @@ condition|;
 name|code
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|EscMap
@@ -1801,7 +1912,6 @@ index|[
 name|code
 index|]
 condition|)
-block|{
 for|for
 control|(
 name|bit
@@ -1815,7 +1925,6 @@ condition|;
 name|bit
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|EscMap
@@ -1829,9 +1938,10 @@ operator|<<
 name|bit
 operator|)
 condition|)
-block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" 0x%02x"
 argument_list|,
 operator|(
@@ -1843,20 +1953,16 @@ operator|+
 name|bit
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-block|}
-block|}
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1867,9 +1973,20 @@ name|int
 name|ShowTimeout
 parameter_list|()
 block|{
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+name|fprintf
 argument_list|(
-literal|" Idle Timer: %d secs   LQR Timer: %d secs   Retry Timer: %d secs\n"
+name|VarTerm
+argument_list|,
+literal|" Idle Timer: %d secs   LQR Timer: %d secs"
+literal|"   Retry Timer: %d secs\n"
 argument_list|,
 name|VarIdleTimeout
 argument_list|,
@@ -1879,9 +1996,7 @@ name|VarRetryTimeout
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1892,24 +2007,34 @@ name|int
 name|ShowAuthKey
 parameter_list|()
 block|{
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"AuthName = %s\n"
 argument_list|,
 name|VarAuthName
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"AuthKey  = %s\n"
 argument_list|,
 name|VarAuthKey
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1930,8 +2055,18 @@ name|char
 name|VarLocalVersion
 index|[]
 decl_stmt|;
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%s - %s \n"
 argument_list|,
 name|VarVersion
@@ -1940,26 +2075,7 @@ name|VarLocalVersion
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|ShowLogList
-parameter_list|()
-block|{
-name|ListLog
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1970,17 +2086,25 @@ name|int
 name|ShowInitialMRU
 parameter_list|()
 block|{
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" Initial MRU: %ld\n"
 argument_list|,
 name|VarMRU
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1993,25 +2117,35 @@ parameter_list|()
 block|{
 if|if
 condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|VarPrefMTU
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" Preferred MTU: %ld\n"
 argument_list|,
 name|VarPrefMTU
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" Preferred MTU: unspecified\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -2022,8 +2156,18 @@ name|int
 name|ShowReconnect
 parameter_list|()
 block|{
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" Reconnect Timer:  %d,  %d tries\n"
 argument_list|,
 name|VarReconnectTimer
@@ -2032,9 +2176,7 @@ name|VarReconnectTries
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -2045,8 +2187,18 @@ name|int
 name|ShowRedial
 parameter_list|()
 block|{
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" Redial Timer: "
 argument_list|)
 expr_stmt|;
@@ -2057,8 +2209,10 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" %d seconds, "
 argument_list|,
 name|VarRedialTimeout
@@ -2067,16 +2221,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" Random 0 - %d seconds, "
 argument_list|,
 name|REDIAL_PERIOD
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" Redial Next Timer: "
 argument_list|)
 expr_stmt|;
@@ -2087,8 +2245,10 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" %d seconds, "
 argument_list|,
 name|VarRedialNextTimeout
@@ -2097,8 +2257,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" Random 0 - %d seconds, "
 argument_list|,
 name|REDIAL_PERIOD
@@ -2109,31 +2271,33 @@ if|if
 condition|(
 name|VarDialTries
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%d dial tries"
 argument_list|,
 name|VarDialTries
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MSEXT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOMSEXT
+end_ifndef
 
 begin_function
 specifier|static
@@ -2141,13 +2305,25 @@ name|int
 name|ShowMSExt
 parameter_list|()
 block|{
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" MS PPP extention values \n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"   Primary NS     : %s\n"
 argument_list|,
 name|inet_ntoa
@@ -2159,8 +2335,10 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"   Secondary NS   : %s\n"
 argument_list|,
 name|inet_ntoa
@@ -2172,8 +2350,10 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"   Primary NBNS   : %s\n"
 argument_list|,
 name|inet_ntoa
@@ -2185,8 +2365,10 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"   Secondary NBNS : %s\n"
 argument_list|,
 name|inet_ntoa
@@ -2199,9 +2381,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -2210,10 +2390,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* MSEXT */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -2251,7 +2427,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show keep Alive filters"
 block|,
-name|StrOption
+literal|"show afilter option .."
 block|}
 block|,
 block|{
@@ -2265,7 +2441,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show auth name/key"
 block|,
-name|StrNull
+literal|"show auth"
 block|}
 block|,
 block|{
@@ -2279,7 +2455,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show CCP status"
 block|,
-name|StrNull
+literal|"show cpp"
 block|}
 block|,
 block|{
@@ -2293,21 +2469,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show compression statictics"
 block|,
-name|StrNull
-block|}
-block|,
-block|{
-literal|"debug"
-block|,
-name|NULL
-block|,
-name|ShowDebugLevel
-block|,
-name|LOCAL_AUTH
-block|,
-literal|"Show current debug level"
-block|,
-name|StrNull
+literal|"show compress"
 block|}
 block|,
 block|{
@@ -2321,7 +2483,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show Demand filters"
 block|,
-name|StrOption
+literal|"show dfilteroption .."
 block|}
 block|,
 block|{
@@ -2335,7 +2497,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show escape characters"
 block|,
-name|StrNull
+literal|"show escape"
 block|}
 block|,
 block|{
@@ -2349,7 +2511,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show HDLC error summary"
 block|,
-name|StrNull
+literal|"show hdlc"
 block|}
 block|,
 block|{
@@ -2363,7 +2525,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show Input filters"
 block|,
-name|StrOption
+literal|"show ifilter option .."
 block|}
 block|,
 block|{
@@ -2377,7 +2539,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show IPCP status"
 block|,
-name|StrNull
+literal|"show ipcp"
 block|}
 block|,
 block|{
@@ -2391,7 +2553,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show LCP status"
 block|,
-name|StrNull
+literal|"show lcp"
 block|}
 block|,
 block|{
@@ -2399,13 +2561,13 @@ literal|"log"
 block|,
 name|NULL
 block|,
-name|ShowLogList
+name|ShowLogLevel
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show log records"
+literal|"Show current log level"
 block|,
-name|StrNull
+literal|"show log"
 block|}
 block|,
 block|{
@@ -2419,7 +2581,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show memory map"
 block|,
-name|StrNull
+literal|"show mem"
 block|}
 block|,
 block|{
@@ -2433,7 +2595,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show modem setups"
 block|,
-name|StrNull
+literal|"show modem"
 block|}
 block|,
 block|{
@@ -2447,7 +2609,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show Initial MRU"
 block|,
-name|StrNull
+literal|"show mru"
 block|}
 block|,
 block|{
@@ -2461,7 +2623,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show Preferred MTU"
 block|,
-name|StrNull
+literal|"show mtu"
 block|}
 block|,
 block|{
@@ -2475,7 +2637,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show Output filters"
 block|,
-name|StrOption
+literal|"show ofilter option .."
 block|}
 block|,
 block|{
@@ -2489,7 +2651,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show protocol summary"
 block|,
-name|StrNull
+literal|"show proto"
 block|}
 block|,
 block|{
@@ -2503,7 +2665,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show Reconnect timer,tries"
 block|,
-name|StrNull
+literal|"show reconnect"
 block|}
 block|,
 block|{
@@ -2517,7 +2679,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show Redial timeout value"
 block|,
-name|StrNull
+literal|"show redial"
 block|}
 block|,
 block|{
@@ -2531,7 +2693,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show routing table"
 block|,
-name|StrNull
+literal|"show route"
 block|}
 block|,
 block|{
@@ -2545,12 +2707,12 @@ name|LOCAL_AUTH
 block|,
 literal|"Show Idle timeout value"
 block|,
-name|StrNull
+literal|"show timeout"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|MSEXT
+ifndef|#
+directive|ifndef
+name|NOMSEXT
 block|{
 literal|"msext"
 block|,
@@ -2562,12 +2724,11 @@ name|LOCAL_AUTH
 block|,
 literal|"Show MS PPP extentions"
 block|,
-name|StrNull
+literal|"show msext"
 block|}
 block|,
 endif|#
 directive|endif
-comment|/* MSEXT */
 block|{
 literal|"version"
 block|,
@@ -2581,7 +2742,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Show version string"
 block|,
-name|StrNull
+literal|"show version"
 block|}
 block|,
 block|{
@@ -2597,7 +2758,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Display this message"
 block|,
-name|StrNull
+literal|"show help|?"
 block|,
 operator|(
 name|void
@@ -2645,24 +2806,30 @@ decl_stmt|;
 block|{
 name|int
 name|nmatch
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|len
-init|=
-name|strlen
-argument_list|(
-name|str
-argument_list|)
 decl_stmt|;
 name|struct
 name|cmdtab
 modifier|*
 name|found
-init|=
-name|NULL
 decl_stmt|;
+name|found
+operator|=
+name|NULL
+expr_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+name|nmatch
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|cmds
@@ -2690,6 +2857,27 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|cmds
+operator|->
+name|name
+index|[
+name|len
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+operator|*
+name|pmatch
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|cmds
+return|;
+block|}
 name|nmatch
 operator|++
 expr_stmt|;
@@ -2719,6 +2907,27 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|cmds
+operator|->
+name|alias
+index|[
+name|len
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+operator|*
+name|pmatch
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|cmds
+return|;
+block|}
 name|nmatch
 operator|++
 expr_stmt|;
@@ -2737,9 +2946,7 @@ operator|=
 name|nmatch
 expr_stmt|;
 return|return
-operator|(
 name|found
-operator|)
 return|;
 block|}
 end_function
@@ -2800,9 +3007,14 @@ name|nmatch
 operator|>
 literal|1
 condition|)
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"Ambiguous.\n"
+name|LogWARN
+argument_list|,
+literal|"%s: Ambiguous command\n"
+argument_list|,
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2840,15 +3052,53 @@ name|args
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"what?\n"
+name|LogWARN
+argument_list|,
+literal|"%s: Invalid command\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|==
+operator|-
+literal|1
+condition|)
+name|LogPrintf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Usage: %s\n"
+argument_list|,
+name|cmd
+operator|->
+name|syntax
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|val
+condition|)
+name|LogPrintf
+argument_list|(
+name|LogCOMMAND
+argument_list|,
+literal|"%s: Failed %d\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|val
-operator|)
 return|;
 block|}
 end_function
@@ -2858,6 +3108,13 @@ name|int
 name|aft_cmd
 init|=
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|TermMode
 decl_stmt|;
 end_decl_stmt
 
@@ -2881,6 +3138,11 @@ name|mode
 operator|&
 name|MODE_INTER
 operator|)
+operator|||
+operator|!
+name|VarTerm
+operator|||
+name|TermMode
 condition|)
 return|return;
 if|if
@@ -2888,8 +3150,10 @@ condition|(
 operator|!
 name|aft_cmd
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -2934,8 +3198,10 @@ name|pconnect
 operator|=
 literal|"ppp"
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%s%s%s> "
 argument_list|,
 name|pconnect
@@ -2947,7 +3213,7 @@ argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stdout
+name|VarTerm
 argument_list|)
 expr_stmt|;
 block|}
@@ -2988,17 +3254,11 @@ name|argv
 decl_stmt|;
 name|int
 name|argc
-decl_stmt|,
-name|val
 decl_stmt|;
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|val
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|nb
@@ -3026,7 +3286,6 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-block|{
 name|argc
 operator|=
 name|MakeArgs
@@ -3051,8 +3310,6 @@ name|argc
 operator|>
 literal|0
 condition|)
-name|val
-operator|=
 name|FindExec
 argument_list|(
 name|Commands
@@ -3063,11 +3320,8 @@ name|argv
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
-name|val
-operator|&&
 name|prompt
 condition|)
 name|Prompt
@@ -3101,19 +3355,12 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|int
-name|val
-init|=
-literal|1
-decl_stmt|;
 if|if
 condition|(
 name|argc
 operator|>
 literal|0
 condition|)
-name|val
-operator|=
 name|FindExec
 argument_list|(
 name|ShowCommands
@@ -3123,16 +3370,28 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
+elseif|else
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Use ``show ?'' to get a list.\n"
 argument_list|)
 expr_stmt|;
+else|else
+name|LogPrintf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"show command must have arguments\n"
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
-name|val
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -3152,8 +3411,14 @@ operator|>
 name|ST_CLOSED
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"LCP state is [%s]\n"
 argument_list|,
 name|StateNames
@@ -3165,9 +3430,7 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -3195,9 +3458,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
-literal|"failed to open modem.\n"
+name|VarTerm
+argument_list|,
+literal|"Failed to open modem.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3206,16 +3475,26 @@ literal|1
 operator|)
 return|;
 block|}
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Enter to terminal mode.\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Type `~?' for help.\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|TtyTermMode
 argument_list|()
 expr_stmt|;
@@ -3252,6 +3531,10 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+name|FILE
+modifier|*
+name|oVarTerm
+decl_stmt|;
 if|if
 condition|(
 name|mode
@@ -3288,47 +3571,76 @@ operator|&=
 operator|~
 name|MODE_INTER
 expr_stmt|;
+name|oVarTerm
+operator|=
+name|VarTerm
+expr_stmt|;
+name|VarTerm
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|oVarTerm
+operator|&&
+name|oVarTerm
+operator|!=
+name|stdout
+condition|)
+name|fclose
+argument_list|(
+name|oVarTerm
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
-literal|"client connection closed.\n"
+literal|"Client connection closed.\n"
 argument_list|)
 expr_stmt|;
 name|VarLocalAuth
 operator|=
 name|LOCAL_NO_AUTH
 expr_stmt|;
-name|close
-argument_list|(
-name|netfd
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-literal|2
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Have to have something here or the modem will be 1 */
-name|netfd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|mode
 operator|&=
 operator|~
 name|MODE_INTER
+expr_stmt|;
+name|oVarTerm
+operator|=
+name|VarTerm
+expr_stmt|;
+name|VarTerm
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|oVarTerm
+operator|&&
+name|oVarTerm
+operator|!=
+name|stdout
+condition|)
+name|fclose
+argument_list|(
+name|oVarTerm
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|netfd
+argument_list|)
+expr_stmt|;
+name|netfd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -3339,9 +3651,7 @@ name|EX_NORMAL
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -3372,9 +3682,7 @@ name|EX_NORMAL
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -3389,9 +3697,7 @@ name|LcpDown
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -3449,9 +3755,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 name|speed
@@ -3477,21 +3781,23 @@ operator|=
 name|speed
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"invalid speed.\n"
+name|LogWARN
+argument_list|,
+literal|"%s: Invalid speed\n"
+argument_list|,
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -3548,25 +3854,13 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|printf
-argument_list|(
-literal|"Usage: %s %s\n"
-argument_list|,
-name|list
-operator|->
-name|name
-argument_list|,
-name|list
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
 return|return
-operator|(
+literal|0
+return|;
+block|}
+return|return
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -3661,11 +3955,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Using random redial timeout.\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3720,32 +4009,23 @@ name|timeout
 operator|>=
 literal|0
 condition|)
-block|{
 name|VarRedialTimeout
 operator|=
 name|timeout
 expr_stmt|;
-block|}
 else|else
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"invalid redial timeout\n"
+name|LogWARN
+argument_list|,
+literal|"Invalid redial timeout\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Usage: %s %s\n"
-argument_list|,
-name|list
-operator|->
-name|name
-argument_list|,
-name|list
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 block|}
 name|dot
@@ -3783,11 +4063,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Using random next redial timeout.\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3839,32 +4114,23 @@ name|timeout
 operator|>=
 literal|0
 condition|)
-block|{
 name|VarRedialNextTimeout
 operator|=
 name|timeout
 expr_stmt|;
-block|}
 else|else
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"invalid next redial timeout\n"
+name|LogWARN
+argument_list|,
+literal|"Invalid next redial timeout\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Usage: %s %s\n"
-argument_list|,
-name|list
-operator|->
-name|name
-argument_list|,
-name|list
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 block|}
 block|}
@@ -3905,47 +4171,25 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"invalid retry value\n"
+name|LogWARN
+argument_list|,
+literal|"Invalid retry value\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Usage: %s %s\n"
-argument_list|,
-name|list
-operator|->
-name|name
-argument_list|,
-name|list
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
-block|}
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"Usage: %s %s\n"
-argument_list|,
-name|list
-operator|->
-name|name
-argument_list|,
-name|list
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
 block|}
 return|return
-operator|(
+literal|0
+return|;
+block|}
+return|return
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -3999,21 +4243,27 @@ name|parity
 operator|<
 literal|0
 condition|)
-name|printf
+name|LogPrintf
 argument_list|(
+name|LogWARN
+argument_list|,
 literal|"Invalid parity.\n"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|VarParity
 operator|=
 name|parity
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -4021,7 +4271,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|SetDebugLevel
+name|SetLogLevel
 parameter_list|(
 name|list
 parameter_list|,
@@ -4044,124 +4294,155 @@ name|argv
 decl_stmt|;
 block|{
 name|int
-name|level
-decl_stmt|,
-name|w
+name|i
 decl_stmt|;
-for|for
-control|(
-name|level
+name|int
+name|res
+decl_stmt|;
+name|char
+modifier|*
+name|arg
+decl_stmt|;
+name|res
 operator|=
 literal|0
-init|;
-name|argc
-operator|--
-operator|>
-literal|0
-condition|;
-name|argv
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|isdigit
-argument_list|(
-operator|*
-operator|*
-name|argv
-argument_list|)
-condition|)
-block|{
-name|w
-operator|=
-name|atoi
-argument_list|(
-operator|*
-name|argv
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|w
-operator|<
+name|argc
+operator|==
 literal|0
 operator|||
-name|w
-operator|>=
-name|MAXLOGLEVEL
+operator|(
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'+'
+operator|&&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+operator|)
+condition|)
+name|LogDiscardAll
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|argc
+operator|--
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"invalid log level.\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-else|else
-name|level
-operator||=
-operator|(
+name|arg
+operator|=
+operator|*
+operator|*
+name|argv
+operator|==
+literal|'+'
+operator|||
+operator|*
+operator|*
+name|argv
+operator|==
+literal|'-'
+condition|?
+operator|*
+name|argv
+operator|+
 literal|1
-operator|<<
-name|w
-operator|)
+else|:
+operator|*
+name|argv
 expr_stmt|;
-block|}
-else|else
-block|{
 for|for
 control|(
-name|w
+name|i
 operator|=
-literal|0
+name|LogMIN
 init|;
-name|w
-operator|<
-name|MAXLOGLEVEL
+name|i
+operator|<=
+name|LogMAX
 condition|;
-name|w
+name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|strcasecmp
 argument_list|(
-operator|*
-name|argv
+name|arg
 argument_list|,
-name|LogLevelName
-index|[
-name|w
-index|]
+name|LogName
+argument_list|(
+name|i
+argument_list|)
 argument_list|)
 operator|==
 literal|0
 condition|)
 block|{
-name|level
-operator||=
-operator|(
-literal|1
-operator|<<
-name|w
-operator|)
+if|if
+condition|(
+operator|*
+operator|*
+name|argv
+operator|==
+literal|'-'
+condition|)
+name|LogDiscard
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
-continue|continue;
+else|else
+name|LogKeep
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
-block|}
-block|}
-block|}
-name|loglevel
+if|if
+condition|(
+name|i
+operator|>
+name|LogMAX
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"%s: Invalid log value\n"
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+name|res
 operator|=
-name|level
-expr_stmt|;
-return|return
-operator|(
+operator|-
 literal|1
-operator|)
+expr_stmt|;
+block|}
+name|argv
+operator|++
+expr_stmt|;
+block|}
+return|return
+name|res
 return|;
 block|}
 end_function
@@ -4264,9 +4545,7 @@ literal|1
 expr_stmt|;
 block|}
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -4299,6 +4578,10 @@ block|{
 name|long
 name|mru
 decl_stmt|;
+name|char
+modifier|*
+name|err
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -4320,12 +4603,9 @@ name|mru
 operator|<
 name|MIN_MRU
 condition|)
-name|printf
-argument_list|(
+name|err
+operator|=
 literal|"Given MRU value (%ld) is too small.\n"
-argument_list|,
-name|mru
-argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -4334,37 +4614,33 @@ name|mru
 operator|>
 name|MAX_MRU
 condition|)
-name|printf
-argument_list|(
+name|err
+operator|=
 literal|"Given MRU value (%ld) is too big.\n"
-argument_list|,
-name|mru
-argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|VarMRU
 operator|=
 name|mru
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-else|else
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"Usage: %s %s\n"
+name|LogWARN
 argument_list|,
-name|list
-operator|->
-name|name
+name|err
 argument_list|,
-name|list
-operator|->
-name|syntax
+name|mru
 argument_list|)
 expr_stmt|;
+block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -4397,6 +4673,10 @@ block|{
 name|long
 name|mtu
 decl_stmt|;
+name|char
+modifier|*
+name|err
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -4418,10 +4698,15 @@ name|mtu
 operator|==
 literal|0
 condition|)
+block|{
 name|VarPrefMTU
 operator|=
 literal|0
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -4429,12 +4714,9 @@ name|mtu
 operator|<
 name|MIN_MTU
 condition|)
-name|printf
-argument_list|(
+name|err
+operator|=
 literal|"Given MTU value (%ld) is too small.\n"
-argument_list|,
-name|mtu
-argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -4443,37 +4725,33 @@ name|mtu
 operator|>
 name|MAX_MTU
 condition|)
-name|printf
-argument_list|(
+name|err
+operator|=
 literal|"Given MTU value (%ld) is too big.\n"
-argument_list|,
-name|mtu
-argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|VarPrefMTU
 operator|=
 name|mtu
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-else|else
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"Usage: %s %s\n"
+name|LogWARN
 argument_list|,
-name|list
-operator|->
-name|name
+name|err
 argument_list|,
-name|list
-operator|->
-name|syntax
+name|mtu
 argument_list|)
 expr_stmt|;
+block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -4520,6 +4798,10 @@ name|argv
 operator|++
 argument_list|)
 expr_stmt|;
+name|UpdateIdleTimer
+argument_list|()
+expr_stmt|;
+comment|/* If we're connected, restart the idle timer */
 if|if
 condition|(
 name|argc
@@ -4578,11 +4860,13 @@ literal|3
 expr_stmt|;
 block|}
 block|}
+return|return
+literal|0
+return|;
 block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -4711,20 +4995,10 @@ name|argc
 operator|>
 literal|4
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"set ifaddr: too many arguments (%d> 4)\n"
-argument_list|,
-name|argc
-argument_list|)
-expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+operator|-
+literal|1
 return|;
-block|}
 if|if
 condition|(
 name|argc
@@ -4760,9 +5034,7 @@ operator|==
 literal|0
 condition|)
 return|return
-operator|(
-literal|0
-operator|)
+literal|1
 return|;
 if|if
 condition|(
@@ -4800,9 +5072,7 @@ operator|==
 literal|0
 condition|)
 return|return
-operator|(
-literal|0
-operator|)
+literal|2
 return|;
 if|if
 condition|(
@@ -4856,9 +5126,7 @@ operator|==
 literal|0
 condition|)
 return|return
-operator|(
-literal|0
-operator|)
+literal|3
 return|;
 block|}
 block|}
@@ -4954,24 +5222,20 @@ operator|<
 literal|0
 condition|)
 return|return
-operator|(
-literal|0
-operator|)
+literal|4
 return|;
 block|}
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MSEXT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOMSEXT
+end_ifndef
 
 begin_function
 name|void
@@ -5126,9 +5390,7 @@ name|argv
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -5178,9 +5440,7 @@ name|argv
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -5415,6 +5675,9 @@ break|break;
 case|case
 name|VAR_DEVICE
 case|:
+name|CloseModem
+argument_list|()
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|VarDevice
@@ -5526,9 +5789,7 @@ break|break;
 block|}
 block|}
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -5599,16 +5860,17 @@ operator|=
 name|FALSE
 expr_stmt|;
 else|else
-name|printf
-argument_list|(
-literal|"usage: set ctsrts [on|off].\n"
-argument_list|)
-expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|0
+return|;
 block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -5679,39 +5941,20 @@ operator|=
 name|OPEN_PASSIVE
 expr_stmt|;
 else|else
-name|printf
-argument_list|(
-literal|"Invalid mode.\n"
-argument_list|)
-expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|0
+return|;
 block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|char
-name|StrChatStr
-index|[]
-init|=
-literal|"chat-script"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|StrValue
-index|[]
-init|=
-literal|"value"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -5749,7 +5992,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set accmap value"
 block|,
-literal|"hex-value"
+literal|"set accmap hex-value"
 block|,
 operator|(
 name|void
@@ -5769,7 +6012,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set keep Alive filter"
 block|,
-literal|"..."
+literal|"set afilter ..."
 block|}
 block|,
 block|{
@@ -5783,7 +6026,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set authentication key"
 block|,
-literal|"key"
+literal|"set authkey|key key"
 block|,
 operator|(
 name|void
@@ -5803,7 +6046,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set authentication name"
 block|,
-literal|"name"
+literal|"set authname name"
 block|,
 operator|(
 name|void
@@ -5823,21 +6066,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Use CTS/RTS modem signalling"
 block|,
-literal|"[on|off]"
-block|}
-block|,
-block|{
-literal|"debug"
-block|,
-name|NULL
-block|,
-name|SetDebugLevel
-block|,
-name|LOCAL_AUTH
-block|,
-literal|"Set debug level"
-block|,
-name|StrValue
+literal|"set ctsrts [on|off]"
 block|}
 block|,
 block|{
@@ -5851,7 +6080,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set modem device name"
 block|,
-literal|"device-name"
+literal|"set device|line device-name"
 block|,
 operator|(
 name|void
@@ -5871,7 +6100,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set demand filter"
 block|,
-literal|"..."
+literal|"set dfilter ..."
 block|}
 block|,
 block|{
@@ -5885,7 +6114,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set dialing script"
 block|,
-name|StrChatStr
+literal|"set dial chat-script"
 block|,
 operator|(
 name|void
@@ -5905,7 +6134,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set escape characters"
 block|,
-literal|"hex-digit ..."
+literal|"set escape hex-digit ..."
 block|}
 block|,
 block|{
@@ -5919,7 +6148,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set destination address"
 block|,
-literal|"[src-addr [dst-addr [netmask [trg-addr]]]]"
+literal|"set ifaddr [src-addr [dst-addr [netmask [trg-addr]]]]"
 block|}
 block|,
 block|{
@@ -5933,7 +6162,21 @@ name|LOCAL_AUTH
 block|,
 literal|"Set input filter"
 block|,
-literal|"..."
+literal|"set ifilter ..."
+block|}
+block|,
+block|{
+literal|"log"
+block|,
+name|NULL
+block|,
+name|SetLogLevel
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Set log level"
+block|,
+literal|"set log [+|-]value..."
 block|}
 block|,
 block|{
@@ -5947,7 +6190,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set login script"
 block|,
-name|StrChatStr
+literal|"set login chat-script"
 block|,
 operator|(
 name|void
@@ -5967,7 +6210,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set Initial MRU value"
 block|,
-name|StrValue
+literal|"set mru value"
 block|}
 block|,
 block|{
@@ -5981,7 +6224,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set Preferred MTU value"
 block|,
-name|StrValue
+literal|"set mtu value"
 block|}
 block|,
 block|{
@@ -5995,7 +6238,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set output filter"
 block|,
-literal|"..."
+literal|"set ofilter ..."
 block|}
 block|,
 block|{
@@ -6009,7 +6252,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set open mode"
 block|,
-literal|"[active|passive]"
+literal|"set openmode [active|passive]"
 block|}
 block|,
 block|{
@@ -6023,7 +6266,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set modem parity"
 block|,
-literal|"[odd|even|none]"
+literal|"set parity [odd|even|none]"
 block|}
 block|,
 block|{
@@ -6037,7 +6280,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set telephone number(s)"
 block|,
-literal|"phone1[:phone2[...]]"
+literal|"set phone phone1[:phone2[...]]"
 block|,
 operator|(
 name|void
@@ -6057,7 +6300,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set Reconnect timeout"
 block|,
-literal|"value ntries"
+literal|"set reconnect value ntries"
 block|}
 block|,
 block|{
@@ -6071,7 +6314,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set Redial timeout"
 block|,
-literal|"value|random[.value|random] [dial_attempts]"
+literal|"set redial value|random[.value|random] [dial_attempts]"
 block|}
 block|,
 block|{
@@ -6085,7 +6328,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set modem speed"
 block|,
-literal|"speed"
+literal|"set speed value"
 block|}
 block|,
 block|{
@@ -6099,12 +6342,12 @@ name|LOCAL_AUTH
 block|,
 literal|"Set Idle timeout"
 block|,
-name|StrValue
+literal|"set timeout value"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|MSEXT
+ifndef|#
+directive|ifndef
+name|NOMSEXT
 block|{
 literal|"ns"
 block|,
@@ -6116,7 +6359,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set NameServer"
 block|,
-literal|"pri-addr [sec-addr]"
+literal|"set ns pri-addr [sec-addr]"
 block|}
 block|,
 block|{
@@ -6130,12 +6373,11 @@ name|LOCAL_AUTH
 block|,
 literal|"Set NetBIOS NameServer"
 block|,
-literal|"pri-addr [sec-addr]"
+literal|"set nbns pri-addr [sec-addr]"
 block|}
 block|,
 endif|#
 directive|endif
-comment|/* MSEXT */
 block|{
 literal|"help"
 block|,
@@ -6149,7 +6391,7 @@ name|LOCAL_NO_AUTH
 block|,
 literal|"Display this message"
 block|,
-name|StrNull
+literal|"set help|?"
 block|,
 operator|(
 name|void
@@ -6194,19 +6436,12 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|int
-name|val
-init|=
-literal|1
-decl_stmt|;
 if|if
 condition|(
 name|argc
 operator|>
 literal|0
 condition|)
-name|val
-operator|=
 name|FindExec
 argument_list|(
 name|SetCommands
@@ -6216,16 +6451,29 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
+elseif|else
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
-literal|"Use `set ?' to get a list or `set ?<var>' for syntax help.\n"
+name|VarTerm
+argument_list|,
+literal|"Use `set ?' to get a list or `set ?<var>' for"
+literal|" syntax help.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|LogPrintf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"set command must have arguments\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|val
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -6332,27 +6580,13 @@ argument_list|,
 name|netmask
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"Usage: %s %s\n"
-argument_list|,
-name|list
-operator|->
-name|name
-argument_list|,
-name|list
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -6457,7 +6691,7 @@ name|inet_aton
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|2
 index|]
 argument_list|,
 operator|&
@@ -6467,15 +6701,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"bad netmask value.\n"
+name|LogWARN
+argument_list|,
+literal|"Bad netmask value.\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 block|}
@@ -6505,7 +6740,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|"ALL"
+literal|"all"
 argument_list|)
 operator|==
 literal|0
@@ -6518,25 +6753,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|printf
-argument_list|(
-literal|"Usage: %s %s\n"
-argument_list|,
-name|list
-operator|->
-name|name
-argument_list|,
-name|list
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
-block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
+return|;
+return|return
+literal|0
 return|;
 block|}
 end_function
@@ -6577,7 +6799,7 @@ name|LOCAL_AUTH
 block|,
 literal|"enable IP aliasing"
 block|,
-literal|"[yes|no]"
+literal|"alias enable [yes|no]"
 block|}
 block|,
 block|{
@@ -6591,7 +6813,7 @@ name|LOCAL_AUTH
 block|,
 literal|"port redirection"
 block|,
-literal|"[proto  addr_local:port_local  port_alias]"
+literal|"alias port [proto addr_local:port_local  port_alias]"
 block|}
 block|,
 block|{
@@ -6605,7 +6827,7 @@ name|LOCAL_AUTH
 block|,
 literal|"static address translation"
 block|,
-literal|"[addr_local  addr_alias]"
+literal|"alias addr [addr_local addr_alias]"
 block|}
 block|,
 block|{
@@ -6619,7 +6841,7 @@ name|LOCAL_AUTH
 block|,
 literal|"stop incoming connections"
 block|,
-literal|"[yes|no]"
+literal|"alias deny_incoming [yes|no]"
 block|,
 operator|(
 name|void
@@ -6639,7 +6861,7 @@ name|LOCAL_AUTH
 block|,
 literal|"log aliasing link creation"
 block|,
-literal|"[yes|no]"
+literal|"alias log [yes|no]"
 block|,
 operator|(
 name|void
@@ -6659,7 +6881,7 @@ name|LOCAL_AUTH
 block|,
 literal|"try to leave port numbers unchanged"
 block|,
-literal|"[yes|no]"
+literal|"alias same_ports [yes|no]"
 block|,
 operator|(
 name|void
@@ -6679,7 +6901,7 @@ name|LOCAL_AUTH
 block|,
 literal|"allocate host sockets"
 block|,
-literal|"[yes|no]"
+literal|"alias use_sockets [yes|no]"
 block|,
 operator|(
 name|void
@@ -6699,7 +6921,7 @@ name|LOCAL_AUTH
 block|,
 literal|"alias unregistered (private) IP address space only"
 block|,
-literal|"[yes|no]"
+literal|"alias unregistered_only [yes|no]"
 block|,
 operator|(
 name|void
@@ -6721,7 +6943,7 @@ name|LOCAL_NO_AUTH
 block|,
 literal|"Display this message"
 block|,
-name|StrNull
+literal|"alias help|?"
 block|,
 operator|(
 name|void
@@ -6766,19 +6988,12 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|int
-name|val
-init|=
-literal|1
-decl_stmt|;
 if|if
 condition|(
 name|argc
 operator|>
 literal|0
 condition|)
-name|val
-operator|=
 name|FindExec
 argument_list|(
 name|AliasCommands
@@ -6788,16 +7003,29 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
+elseif|else
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
-literal|"Use `alias help' to get a list or `alias help<option>' for syntax h elp.\n"
+name|VarTerm
+argument_list|,
+literal|"Use `alias help' to get a list or `alias help<option>'"
+literal|" for syntax help.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|LogPrintf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"alias command must have arguments\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|val
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -6832,8 +7060,10 @@ condition|(
 name|argc
 operator|==
 literal|1
-operator|&&
-name|strcmp
+condition|)
+if|if
+condition|(
+name|strcasecmp
 argument_list|(
 name|argv
 index|[
@@ -6855,6 +7085,7 @@ operator|&
 name|MODE_ALIAS
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|loadAliasHandlers
@@ -6865,25 +7096,34 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mode
 operator||=
 name|MODE_ALIAS
 expr_stmt|;
-else|else
-name|printf
+return|return
+literal|0
+return|;
+block|}
+name|LogPrintf
 argument_list|(
+name|LogWARN
+argument_list|,
 literal|"Cannot load alias library\n"
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
 block|}
 elseif|else
 if|if
 condition|(
-name|argc
-operator|==
-literal|1
-operator|&&
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|argv
 index|[
@@ -6912,27 +7152,13 @@ operator|~
 name|MODE_ALIAS
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"Usage: alias %s %s\n"
-argument_list|,
-name|list
-operator|->
-name|name
-argument_list|,
-name|list
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -6973,8 +7199,10 @@ condition|(
 name|argc
 operator|==
 literal|1
-operator|&&
-name|strcmp
+condition|)
+if|if
+condition|(
+name|strcasecmp
 argument_list|(
 name|argv
 index|[
@@ -6993,6 +7221,7 @@ name|mode
 operator|&
 name|MODE_ALIAS
 condition|)
+block|{
 name|VarSetPacketAliasMode
 argument_list|(
 operator|(
@@ -7006,9 +7235,14 @@ operator|)
 name|param
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
+return|return
+literal|0
+return|;
+block|}
+name|LogPrintf
 argument_list|(
+name|LogWARN
+argument_list|,
 literal|"alias not enabled\n"
 argument_list|)
 expr_stmt|;
@@ -7016,10 +7250,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|argc
-operator|==
-literal|1
-operator|&&
 name|strcmp
 argument_list|(
 name|argv
@@ -7039,6 +7269,7 @@ name|mode
 operator|&
 name|MODE_ALIAS
 condition|)
+block|{
 name|VarSetPacketAliasMode
 argument_list|(
 literal|0
@@ -7049,33 +7280,21 @@ operator|)
 name|param
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
+return|return
+literal|0
+return|;
+block|}
+name|LogPrintf
 argument_list|(
+name|LogWARN
+argument_list|,
 literal|"alias not enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"Usage: alias %s %s\n"
-argument_list|,
-name|list
-operator|->
-name|name
-argument_list|,
-name|list
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
-block|}
 return|return
-operator|(
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function

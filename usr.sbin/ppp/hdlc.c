@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.14 1997/05/10 01:22:10 brian Exp $  *  *	TODO:  */
+comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.15 1997/05/26 00:43:59 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -1248,7 +1248,7 @@ expr_stmt|;
 block|}
 name|LogDumpBp
 argument_list|(
-name|LOG_HDLC
+name|LogHDLC
 argument_list|,
 literal|"HdlcOutput"
 argument_list|,
@@ -1319,22 +1319,19 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
-argument_list|(
-literal|"proto = %04x\n"
-argument_list|,
-name|proto
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|u_char
 modifier|*
 name|cp
 decl_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"DecodePacket: proto = %04x\n"
+argument_list|,
+name|proto
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|proto
@@ -1445,7 +1442,7 @@ break|break;
 default|default:
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Unknown protocol 0x%04x\n"
 argument_list|,
@@ -1524,8 +1521,10 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"    Protocol     in        out      Protocol      in       out\n"
 argument_list|)
 expr_stmt|;
@@ -1534,8 +1533,10 @@ block|{
 name|statp
 operator|++
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"   %-9s: %8lu, %8lu"
 argument_list|,
 name|statp
@@ -1559,8 +1560,10 @@ operator|==
 literal|2
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1581,8 +1584,10 @@ if|if
 condition|(
 name|cnt
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1607,13 +1612,22 @@ init|=
 operator|&
 name|HdlcStat
 decl_stmt|;
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"HDLC level errors\n\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"FCS: %u  ADDR: %u  COMMAND: %u  PROTO: %u\n"
 argument_list|,
 name|hp
@@ -1633,10 +1647,9 @@ operator|->
 name|unknownproto
 argument_list|)
 expr_stmt|;
+block|}
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -1687,7 +1700,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"HDLC errors -> FCS: %u ADDR: %u COMD: %u PROTO: %u\n"
 argument_list|,
@@ -1762,7 +1775,7 @@ name|statp
 decl_stmt|;
 name|LogDumpBp
 argument_list|(
-name|LOG_HDLC
+name|LogHDLC
 argument_list|,
 literal|"HdlcInput:"
 argument_list|,
@@ -1804,12 +1817,11 @@ name|cnt
 operator|+
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"fcs = %04x (%s)\n"
+name|LogDEBUG
+argument_list|,
+literal|"HdlcInput: fcs = %04x (%s)\n"
 argument_list|,
 name|fcs
 argument_list|,
@@ -1824,8 +1836,6 @@ else|:
 literal|"bad"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|fcs
@@ -1838,16 +1848,13 @@ operator|.
 name|SaveInErrors
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"Bad FCS\n"
+name|LogDEBUG
+argument_list|,
+literal|"HdlcInput: Bad FCS\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|HdlcStat
 operator|.
 name|badfcs
@@ -1937,19 +1944,16 @@ operator|.
 name|badaddr
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"addr %02x\n"
+name|LogDEBUG
+argument_list|,
+literal|"HdlcInput: addr %02x\n"
 argument_list|,
 operator|*
 name|cp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfree
 argument_list|(
 name|bp
@@ -1980,19 +1984,16 @@ operator|.
 name|badcommand
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"command %02x\n"
+name|LogDEBUG
+argument_list|,
+literal|"HdlcInput: %02x\n"
 argument_list|,
 operator|*
 name|cp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfree
 argument_list|(
 name|bp

@@ -86,21 +86,17 @@ name|struct
 name|utmp
 name|utmp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"passwdauth called with name= %s, key= %s\n"
+name|LogDEBUG
+argument_list|,
+literal|"PasswdAuth: Called with name %s, key %s\n"
 argument_list|,
 name|name
 argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 operator|(
@@ -125,7 +121,7 @@ argument_list|()
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"PasswdAuth - user (%s) not in passwd file\n"
 argument_list|,
@@ -153,7 +149,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"PasswdAuth - user (%s) not a PPP user\n"
 argument_list|,
@@ -196,7 +192,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"PasswdAuth - user (%s,%s) authentication failed\n"
 argument_list|,
@@ -348,7 +344,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"PasswdAuth has logged in user %s\n"
 argument_list|,

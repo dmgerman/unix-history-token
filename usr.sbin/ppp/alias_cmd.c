@@ -167,11 +167,19 @@ operator|&
 name|MODE_ALIAS
 operator|)
 condition|)
-name|printf
+block|{
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
-literal|"alias not enabled\n"
+name|VarTerm
+argument_list|,
+literal|"Alias not enabled\n"
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -253,13 +261,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"port redirect: protocol must be tcp or udp\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
 name|list
@@ -271,6 +288,7 @@ operator|->
 name|syntax
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
@@ -298,13 +316,22 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"port redirect: error reading local addr:port\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
 name|list
@@ -316,6 +343,7 @@ operator|->
 name|syntax
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
@@ -340,13 +368,22 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"port redirect: error reading alias port\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
 name|list
@@ -358,6 +395,7 @@ operator|->
 name|syntax
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
@@ -392,19 +430,29 @@ condition|(
 name|link
 operator|==
 name|NULL
+operator|&&
+name|VarTerm
 condition|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"port redirect: error returned by packed aliasing engine"
-literal|"(code=%d)\n"
+name|VarTerm
+argument_list|,
+literal|"port redirect: error returned by packed"
+literal|" aliasing engine (code=%d)\n"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|printf
+elseif|else
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
 name|list
@@ -453,11 +501,19 @@ operator|&
 name|MODE_ALIAS
 operator|)
 condition|)
-name|printf
+block|{
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"alias not enabled\n"
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -500,8 +556,14 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"address redirect: invalid local address\n"
 argument_list|)
 expr_stmt|;
@@ -527,13 +589,22 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"address redirect: invalid alias address\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
 name|list
@@ -545,6 +616,7 @@ operator|->
 name|syntax
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
@@ -563,15 +635,21 @@ condition|(
 name|link
 operator|==
 name|NULL
+operator|&&
+name|VarTerm
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"address redirect: packet aliasing engine error\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
 name|list
@@ -585,9 +663,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-name|printf
+elseif|else
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
 name|list
@@ -650,11 +734,11 @@ operator|!
 name|hp
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogWARN
 argument_list|,
-literal|"Unknown host %s.\n"
+literal|"StrToAddr: Unknown host %s.\n"
 argument_list|,
 name|str
 argument_list|)
@@ -761,11 +845,11 @@ operator|!
 name|sp
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogWARN
 argument_list|,
-literal|"Unknown port or service %s/%s.\n"
+literal|"StrToAddr: Unknown port or service %s/%s.\n"
 argument_list|,
 name|str
 argument_list|,
@@ -831,11 +915,11 @@ operator|!
 name|ptr
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogWARN
 argument_list|,
-literal|"%s is missing port number.\n"
+literal|"StrToAddrAndPort: %s is missing port number.\n"
 argument_list|,
 name|str
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.21 1997/05/26 00:44:03 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.22 1997/06/01 03:43:22 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -185,148 +185,121 @@ name|LcpInfo
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|LcpSendConfigReq
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|LcpSendTerminateReq
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
+modifier|*
 name|fp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|LcpSendTerminateAck
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
+modifier|*
 name|fp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|LcpDecodeConfig
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_char
-operator|*
+modifier|*
 name|cp
-operator|,
+parameter_list|,
 name|int
 name|flen
-operator|,
+parameter_list|,
 name|int
 name|mode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|LcpInitRestartCounter
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|LcpLayerUp
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|LcpLayerDown
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|LcpLayerStart
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|LcpLayerFinish
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -495,9 +468,9 @@ name|new
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
-literal|"Phase: %s\n"
+literal|"NewPhase: %s\n"
 argument_list|,
 name|PhaseNames
 index|[
@@ -542,7 +515,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|" his = %x, mine = %x\n"
 argument_list|,
@@ -647,9 +620,14 @@ name|void
 name|LcpReportTime
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|VERBOSE
+if|if
+condition|(
+name|LogIsKept
+argument_list|(
+name|LogDEBUG
+argument_list|)
+condition|)
+block|{
 name|time_t
 name|t
 decl_stmt|;
@@ -659,9 +637,11 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"%s"
+name|LogDEBUG
+argument_list|,
+literal|"LcpReportTime: %s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -670,8 +650,7 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|StopTimer
 argument_list|(
 operator|&
@@ -717,8 +696,18 @@ init|=
 operator|&
 name|LcpFsm
 decl_stmt|;
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|1
+return|;
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%s [%s]\n"
 argument_list|,
 name|fp
@@ -733,8 +722,10 @@ name|state
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" his side: MRU %ld, ACCMAP %08lx, PROTOCOMP %d, ACFCOMP %d, MAGIC %08lx,\n"
 literal|"           REJECT %04lx\n"
 argument_list|,
@@ -763,8 +754,10 @@ operator|->
 name|his_reject
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" my  side: MRU %ld, ACCMAP %08lx, PROTOCOMP %d, ACFCOMP %d, MAGIC %08lx,\n"
 literal|"           REJECT %04lx\n"
 argument_list|,
@@ -793,8 +786,10 @@ operator|->
 name|my_reject
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"\nDefaults:   MRU = %ld, ACCMAP = %08x\t"
 argument_list|,
 name|VarMRU
@@ -802,8 +797,10 @@ argument_list|,
 name|VarAccmap
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Open Mode: %s\n"
 argument_list|,
 operator|(
@@ -818,9 +815,7 @@ literal|"passive"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -1145,7 +1140,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s [%d] %s\n"
 argument_list|,
@@ -1167,7 +1162,7 @@ else|else
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s [%d] %08x\n"
 argument_list|,
@@ -1210,7 +1205,7 @@ block|}
 else|else
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s [%d] %d\n"
 argument_list|,
@@ -1284,13 +1279,9 @@ name|req
 decl_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: SendConfigReq\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"LcpSendConfigReq\n"
 argument_list|)
 expr_stmt|;
 name|cp
@@ -1332,7 +1323,7 @@ literal|2
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s\n"
 argument_list|,
@@ -1372,7 +1363,7 @@ literal|2
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s\n"
 argument_list|,
@@ -1536,7 +1527,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s (%d)\n"
 argument_list|,
@@ -1653,13 +1644,9 @@ name|LcpFsm
 decl_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: SendProtoRej\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"LcpSendProtoRej\n"
 argument_list|)
 expr_stmt|;
 name|FsmOutput
@@ -1712,13 +1699,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: SendTerminateAck.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"LcpSendTerminateAck.\n"
 argument_list|)
 expr_stmt|;
 name|FsmOutput
@@ -1755,13 +1738,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerStart\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"LcpLayerStart\n"
 argument_list|)
 expr_stmt|;
 name|NewPhase
@@ -1828,53 +1807,18 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: LayerFinish\r\n"
-argument_list|,
-name|fp
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|Prompt
-argument_list|()
-expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerFinish\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"LcpLayerFinish\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|OsCloseLink
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|OsCloseLink
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|NewPhase
 argument_list|(
 name|PHASE_DEAD
@@ -1890,6 +1834,9 @@ name|OsInterfaceDown
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|Prompt
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1909,13 +1856,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerUp\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"LcpLayerUp\n"
 argument_list|)
 expr_stmt|;
 name|OsSetInterfaceParams
@@ -1994,13 +1937,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerDown\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"LcpLayerDown\n"
 argument_list|)
 expr_stmt|;
 name|StopAllTimers
@@ -2013,9 +1952,6 @@ name|NewPhase
 argument_list|(
 name|PHASE_TERMINATE
 argument_list|)
-expr_stmt|;
-name|Prompt
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2235,7 +2171,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s %d\n"
 argument_list|,
@@ -2395,7 +2331,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s %08x\n"
 argument_list|,
@@ -2483,7 +2419,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s proto = %04x\n"
 argument_list|,
@@ -2517,7 +2453,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s bad length (%d)\n"
 argument_list|,
@@ -2628,7 +2564,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s bad length (%d)\n"
 argument_list|,
@@ -2731,7 +2667,7 @@ break|break;
 default|default:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s not implemented, NAK.\n"
 argument_list|,
@@ -2788,7 +2724,7 @@ name|cp
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s proto: %x, interval: %dms\n"
 argument_list|,
@@ -2937,7 +2873,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s %08x\n"
 argument_list|,
@@ -2973,7 +2909,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"Magic is same (%08x)\n"
 argument_list|,
@@ -3046,7 +2982,7 @@ name|MODE_NAK
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s magic %08x has NAKed\n"
 argument_list|,
@@ -3068,7 +3004,7 @@ name|MODE_REJ
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s magic has REJected\n"
 argument_list|,
@@ -3099,7 +3035,7 @@ name|TY_PROTOCOMP
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s\n"
 argument_list|,
@@ -3220,7 +3156,7 @@ name|TY_ACFCOMP
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s\n"
 argument_list|,
@@ -3341,7 +3277,7 @@ name|TY_SDP
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" %s\n"
 argument_list|,
@@ -3368,7 +3304,7 @@ break|break;
 default|default:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|" ???[%02x]\n"
 argument_list|,
@@ -3420,7 +3356,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"LCP size zero\n"
 argument_list|)

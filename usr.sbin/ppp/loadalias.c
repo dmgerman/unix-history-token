@@ -210,10 +210,6 @@ name|char
 modifier|*
 name|env
 decl_stmt|;
-name|char
-modifier|*
-name|err
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -244,22 +240,15 @@ operator|=
 name|env
 expr_stmt|;
 else|else
-block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"Ignoring environment _PATH_ALIAS value (%s)\n"
+name|LogALERT
+argument_list|,
+literal|"Ignoring environment _PATH_ALIAS value (%s)"
 argument_list|,
 name|env
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Ignoring environment _PATH_ALIAS value (%s)\n"
-argument_list|,
-name|env
-argument_list|)
-expr_stmt|;
-block|}
 name|dl
 operator|=
 name|dlopen
@@ -280,27 +269,16 @@ operator|)
 literal|0
 condition|)
 block|{
-name|err
-operator|=
+name|LogPrintf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"_PATH_ALIAS (%s): Invalid lib: %s\n"
+argument_list|,
+name|path
+argument_list|,
 name|dlerror
 argument_list|()
-expr_stmt|;
-name|logprintf
-argument_list|(
-literal|"_PATH_ALIAS (%s): Invalid lib: %s\n"
-argument_list|,
-name|path
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"_PATH_ALIAS (%s): Invalid lib: %s\n"
-argument_list|,
-name|path
-argument_list|,
-name|err
 argument_list|)
 expr_stmt|;
 return|return
@@ -388,41 +366,23 @@ operator|)
 literal|0
 condition|)
 block|{
-name|err
-operator|=
+name|LogPrintf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"_PATH_ALIAS (%s): %s: %s\n"
+argument_list|,
+name|path
+argument_list|,
+name|map
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
 name|dlerror
 argument_list|()
-expr_stmt|;
-name|logprintf
-argument_list|(
-literal|"_PATH_ALIAS (%s): %s: %s\n"
-argument_list|,
-name|path
-argument_list|,
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|name
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"_PATH_ALIAS (%s): %s: %s\n"
-argument_list|,
-name|path
-argument_list|,
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|name
-argument_list|,
-name|err
 argument_list|)
 expr_stmt|;
 operator|(

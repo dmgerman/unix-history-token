@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.11 1997/05/10 01:22:06 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
+comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.12 1997/05/26 00:43:56 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
 end_comment
 
 begin_include
@@ -51,12 +51,6 @@ directive|include
 file|"pred.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"cdefs.h"
-end_include
-
 begin_decl_stmt
 name|struct
 name|ccpstate
@@ -64,148 +58,121 @@ name|CcpInfo
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|CcpSendConfigReq
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|CcpSendTerminateReq
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
+modifier|*
 name|fp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|CcpSendTerminateAck
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
+modifier|*
 name|fp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|CcpDecodeConfig
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_char
-operator|*
+modifier|*
 name|cp
-operator|,
+parameter_list|,
 name|int
 name|flen
-operator|,
+parameter_list|,
 name|int
 name|mode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|CcpLayerStart
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|CcpLayerFinish
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|CcpLayerUp
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|CcpLayerDown
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|CcpInitRestartCounter
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -361,8 +328,15 @@ init|=
 operator|&
 name|CcpFsm
 decl_stmt|;
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%s [%s]\n"
 argument_list|,
 name|fp
@@ -377,8 +351,10 @@ name|state
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"myproto = %s, hisproto = %s\n"
 argument_list|,
 name|cftypes
@@ -396,8 +372,10 @@ name|his_proto
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Input: %ld --> %ld,  Output: %ld --> %ld\n"
 argument_list|,
 name|icp
@@ -417,6 +395,7 @@ operator|->
 name|compout
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -538,13 +517,9 @@ name|ReqBuff
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: SendConfigReq\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"CcpSendConfigReq\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -616,13 +591,9 @@ expr_stmt|;
 comment|/* Initialize Input part */
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: SendResetReq\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"CcpSendResetReq\n"
 argument_list|)
 expr_stmt|;
 name|FsmOutput
@@ -675,13 +646,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"  %s: SendTerminateAck\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"CcpSendTerminateAck\n"
 argument_list|)
 expr_stmt|;
 name|FsmOutput
@@ -739,13 +706,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerStart.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"CcpLayerStart.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -766,13 +729,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerFinish.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"CcpLayerFinish.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -793,13 +752,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerDown.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"CcpLayerDown.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -822,40 +777,20 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogLCP
 argument_list|,
-literal|"%s: LayerUp(%d).\r\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"CcpLayerUp(%d).\n"
 argument_list|,
 name|fp
 operator|->
 name|state
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
-argument_list|,
-literal|"%s: LayerUp.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|LogPrintf
-argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"myproto = %d, hisproto = %d\n"
 argument_list|,
@@ -890,7 +825,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"CCP Up event!!\n"
 argument_list|)
@@ -1034,7 +969,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -1194,9 +1129,11 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"ccp in phase %d\n"
+name|LogERROR
+argument_list|,
+literal|"Unexpected CCP in phase %d\n"
 argument_list|,
 name|phase
 argument_list|)

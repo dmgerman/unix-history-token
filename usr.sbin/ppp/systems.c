@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.10 1997/05/10 01:22:19 brian Exp $  *  *  TODO:  */
+comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.11 1997/05/26 00:44:09 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -140,8 +140,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogERROR
+argument_list|,
 literal|"unable to setreuid!\n"
 argument_list|)
 expr_stmt|;
@@ -164,8 +166,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogERROR
+argument_list|,
 literal|"unable to setregid!\n"
 argument_list|)
 expr_stmt|;
@@ -207,8 +211,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogERROR
+argument_list|,
 literal|"unable to setreuid!\n"
 argument_list|)
 expr_stmt|;
@@ -231,8 +237,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogERROR
+argument_list|,
 literal|"unable to setregid!\n"
 argument_list|)
 expr_stmt|;
@@ -360,11 +368,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogWARN
 argument_list|,
-literal|"can't open %s.\n"
+literal|"OpenSecret: Can't open %s.\n"
 argument_list|,
 name|line
 argument_list|)
@@ -438,12 +446,6 @@ name|wp
 decl_stmt|;
 name|int
 name|n
-decl_stmt|;
-name|int
-name|val
-init|=
-operator|-
-literal|1
 decl_stmt|;
 name|u_char
 name|olauth
@@ -548,20 +550,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogDEBUG
 argument_list|,
-literal|"can't open %s.\n"
+literal|"SelectSystem: Can't open %s.\n"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|SetPppId
 argument_list|()
 expr_stmt|;
@@ -572,22 +569,17 @@ literal|1
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogDEBUG
 argument_list|,
-literal|"checking %s (%s).\n"
+literal|"SelectSystem: Checking %s (%s).\n"
 argument_list|,
 name|name
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|linenum
 operator|=
 literal|0
@@ -649,9 +641,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogWARN
 argument_list|,
 literal|"Bad rule in %s (line %d) - missing colon.\n"
 argument_list|,
@@ -728,20 +720,17 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogCOMMAND
 argument_list|,
-literal|"%s"
+literal|"%s: %s"
+argument_list|,
+name|name
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|SetPppId
 argument_list|()
 expr_stmt|;
@@ -813,9 +802,8 @@ name|SetPppId
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
-name|val
-operator|)
+operator|-
+literal|1
 return|;
 block|}
 end_function
@@ -876,24 +864,22 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
+name|LogWARN
+argument_list|,
 literal|"%s: not found.\n"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -922,15 +908,15 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
+name|LogWARN
+argument_list|,
 literal|"save command is not implemented (yet).\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function

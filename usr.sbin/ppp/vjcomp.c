@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.6 1997/02/22 16:11:05 peter Exp $  *  *  TODO:  */
+comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.7 1997/05/07 23:30:50 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -104,11 +104,10 @@ name|his_compproto
 operator|>>
 literal|16
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"SendPppFrame: proto = %x\n"
 argument_list|,
 name|IpcpInfo
@@ -116,8 +115,6 @@ operator|.
 name|his_compproto
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -167,18 +164,15 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"type = %x\n"
+name|LogDEBUG
+argument_list|,
+literal|"SendPppFrame: type = %x\n"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|type
@@ -209,9 +203,11 @@ name|PROTO_VJCOMP
 expr_stmt|;
 break|break;
 default|default:
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"unknown type %x\n"
+name|LogERROR
+argument_list|,
+literal|"Unknown frame type %x\n"
 argument_list|,
 name|type
 argument_list|)
@@ -476,23 +472,24 @@ block|{
 name|u_char
 name|type
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"VjCompInput (%02x):\n"
+name|LogDEBUG
+argument_list|,
+literal|"VjCompInput: proto %02x\n"
 argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
-name|DumpBp
+name|LogDumpBp
 argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"Raw packet info:"
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|proto
@@ -515,9 +512,11 @@ name|TYPE_UNCOMPRESSED_TCP
 expr_stmt|;
 break|break;
 default|default:
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"???\n"
+name|LogERROR
+argument_list|,
+literal|"VjCompInput...???\n"
 argument_list|)
 expr_stmt|;
 return|return

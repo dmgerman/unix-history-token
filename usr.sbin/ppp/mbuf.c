@@ -1,12 +1,48 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.5 1997/02/22 16:10:34 peter Exp $  *  */
+comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.6 1997/05/10 01:22:15 brian Exp $  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"loadalias.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vars.h"
 end_include
 
 begin_struct
@@ -113,9 +149,11 @@ name|type
 operator|>
 name|MB_MAX
 condition|)
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"bad type %d\n"
+name|LogERROR
+argument_list|,
+literal|"Bad mbuf type %d\n"
 argument_list|,
 name|type
 argument_list|)
@@ -143,20 +181,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"failed to allocate memory: %u\n"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mbuf
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+name|LogALERT
 argument_list|,
 literal|"failed to allocate memory: %u\n"
 argument_list|,
@@ -169,7 +196,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -202,16 +229,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"failed to allocate memory: %d\n"
-argument_list|,
-name|cnt
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+name|LogALERT
 argument_list|,
 literal|"failed to allocate memory: %d\n"
 argument_list|,
@@ -220,7 +240,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -589,126 +609,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|DumpBp
-parameter_list|(
-name|bp
-parameter_list|)
-name|struct
-name|mbuf
-modifier|*
-name|bp
-decl_stmt|;
-block|{
-name|u_char
-modifier|*
-name|cp
-decl_stmt|;
-name|int
-name|cnt
-decl_stmt|,
-name|loc
-decl_stmt|;
-name|logprintf
-argument_list|(
-literal|"dump bp = %x (%d)\n"
-argument_list|,
-name|bp
-argument_list|,
-name|plength
-argument_list|(
-name|bp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|loc
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|bp
-condition|)
-block|{
-name|cp
-operator|=
-name|MBUF_CTOP
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-name|cnt
-operator|=
-name|bp
-operator|->
-name|cnt
-expr_stmt|;
-while|while
-condition|(
-name|cnt
-operator|>
-literal|0
-condition|)
-block|{
-name|logprintf
-argument_list|(
-literal|"%02x"
-argument_list|,
-operator|*
-name|cp
-operator|++
-argument_list|)
-expr_stmt|;
-name|loc
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|loc
-operator|==
-literal|16
-condition|)
-block|{
-name|loc
-operator|=
-literal|0
-expr_stmt|;
-name|logprintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|logprintf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
-name|cnt
-operator|--
-expr_stmt|;
-block|}
-name|bp
-operator|=
-name|bp
-operator|->
-name|next
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|loc
-condition|)
-name|logprintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|int
 name|ShowMemMap
 parameter_list|()
@@ -716,6 +616,14 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|1
+return|;
 for|for
 control|(
 name|i
@@ -730,10 +638,11 @@ name|i
 operator|+=
 literal|2
 control|)
-block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%d: %d   %d: %d\r\n"
+name|VarTerm
+argument_list|,
+literal|"%d: %d   %d: %d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -758,11 +667,8 @@ operator|.
 name|count
 argument_list|)
 expr_stmt|;
-block|}
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -772,19 +678,20 @@ name|void
 name|LogMemory
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"mem alloced: %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"LogMemory: mem alloced: %d\n"
 argument_list|,
 name|totalalloced
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|" 1: %d  2: %d   3: %d   4: %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"LogMemory:  1: %d  2: %d   3: %d   4: %d\n"
 argument_list|,
 name|MemMap
 index|[
@@ -815,9 +722,11 @@ operator|.
 name|count
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|" 5: %d  6: %d   7: %d   8: %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"LogMemory:  5: %d  6: %d   7: %d   8: %d\n"
 argument_list|,
 name|MemMap
 index|[
@@ -848,8 +757,6 @@ operator|.
 name|count
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.16 1997/05/26 00:44:10 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.17 1997/06/01 01:13:04 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_ifndef
@@ -235,7 +235,7 @@ comment|/* Redial next timeout value */
 name|int
 name|dial_tries
 decl_stmt|;
-comment|/* Dial attempts before giving up, 0 == forever */
+comment|/* Dial attempts before giving up, 0 == inf */
 name|char
 name|modem_dev
 index|[
@@ -264,6 +264,11 @@ name|u_char
 name|lauth
 decl_stmt|;
 comment|/* Local Authorized status */
+name|FILE
+modifier|*
+name|termfp
+decl_stmt|;
+comment|/* The terminal */
 define|#
 directive|define
 name|DIALUP_REQ
@@ -515,6 +520,13 @@ define|#
 directive|define
 name|VarDialTries
 value|pppVars.dial_tries
+end_define
+
+begin_define
+define|#
+directive|define
+name|VarTerm
+value|pppVars.termfp
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Filter command Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.c,v 1.8 1997/02/22 16:10:12 peter Exp $  *  *	TODO: Shoud send ICMP error message when we discard packets.  */
+comment|/*  *		PPP Filter command Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.c,v 1.9 1997/05/10 01:22:08 brian Exp $  *  *	TODO: Shoud send ICMP error message when we discard packets.  */
 end_comment
 
 begin_include
@@ -66,7 +66,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"filter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"loadalias.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vars.h"
 end_include
 
 begin_decl_stmt
@@ -212,16 +236,13 @@ operator|<
 literal|1
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"address/mask is expected.\n"
+name|LogWARN
+argument_list|,
+literal|"ParseAddr: address/mask is expected.\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -304,9 +325,11 @@ operator|>
 literal|32
 condition|)
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"bad mask width.\n"
+name|LogWARN
+argument_list|,
+literal|"ParseAddr: bad mask width.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -541,9 +564,11 @@ operator|==
 name|service
 condition|)
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"%s is not a port name or number.\n"
+name|LogWARN
+argument_list|,
+literal|"ParsePort: %s is not a port name or number.\n"
 argument_list|,
 name|service
 argument_list|)
@@ -610,9 +635,11 @@ name|OP_NONE
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"bad icmp syntax.\n"
+name|LogWARN
+argument_list|,
+literal|"ParseIcmp: bad icmp syntax.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -669,9 +696,11 @@ literal|2
 index|]
 condition|)
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"type is expected.\n"
+name|LogWARN
+argument_list|,
+literal|"ParseIcmp: type is expected.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -835,16 +864,13 @@ operator|<
 literal|3
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"bad udp syntax.\n"
+name|LogWARN
+argument_list|,
+literal|"ParseUdpOrTcp: bad udp/tcp syntax.\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -891,9 +917,11 @@ operator|==
 name|OP_NONE
 condition|)
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"bad operation\n"
+name|LogWARN
+argument_list|,
+literal|"ParseUdpOrTcp: bad operation\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -995,9 +1023,11 @@ operator|==
 name|OP_NONE
 condition|)
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"bad operation\n"
+name|LogWARN
+argument_list|,
+literal|"ParseUdpOrTcp: bad operation\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1089,9 +1119,11 @@ literal|1
 operator|)
 return|;
 block|}
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"estab is expected: %s\n"
+name|LogWARN
+argument_list|,
+literal|"ParseUdpOrTcp: estab is expected: %s\n"
 argument_list|,
 operator|*
 name|argv
@@ -1109,9 +1141,11 @@ name|argc
 operator|>
 literal|0
 condition|)
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"bad src/dst port syntax: %s\n"
+name|LogWARN
+argument_list|,
+literal|"ParseUdpOrTcp: bad src/dst port syntax: %s\n"
 argument_list|,
 operator|*
 name|argv
@@ -1213,9 +1247,11 @@ operator|>
 name|MAXFILTERS
 condition|)
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"invalid filter number.\n"
+name|LogWARN
+argument_list|,
+literal|"Parse: invalid filter number.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1255,9 +1291,11 @@ name|ofp
 operator|++
 expr_stmt|;
 block|}
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"filter cleard.\n"
+name|LogWARN
+argument_list|,
+literal|"Parse: filter cleared.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1278,9 +1316,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"missing action.\n"
+name|LogWARN
+argument_list|,
+literal|"Parse: missing action.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1366,9 +1406,11 @@ return|;
 block|}
 else|else
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"bad action: %s\n"
+name|LogWARN
+argument_list|,
+literal|"Parse: bad action: %s\n"
 argument_list|,
 operator|*
 name|argv
@@ -1571,9 +1613,11 @@ block|}
 block|}
 else|else
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"Address/protocol expected.\n"
+name|LogWARN
+argument_list|,
+literal|"Parse: Address/protocol expected.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1651,12 +1695,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"src: %s/"
+name|LogDEBUG
+argument_list|,
+literal|"Parse: Src: %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1666,9 +1709,11 @@ name|saddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"%s "
+name|LogDEBUG
+argument_list|,
+literal|"Parse: Src mask: %s "
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1678,9 +1723,11 @@ name|smask
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"dst: %s/"
+name|LogDEBUG
+argument_list|,
+literal|"Parse: Dst: %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1690,9 +1737,11 @@ name|daddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"%s proto = %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"Parse: Dst mask: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1700,13 +1749,22 @@ name|fp
 operator|->
 name|dmask
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"Parse: Proto = %d\n"
 argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"src:  %s (%d)\n"
+name|LogDEBUG
+argument_list|,
+literal|"Parse: src:  %s (%d)\n"
 argument_list|,
 name|opname
 index|[
@@ -1724,9 +1782,11 @@ operator|.
 name|srcport
 argument_list|)
 expr_stmt|;
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"dst:  %s (%d)\n"
+name|LogDEBUG
+argument_list|,
+literal|"Parse: dst:  %s (%d)\n"
 argument_list|,
 name|opname
 index|[
@@ -1744,9 +1804,11 @@ operator|.
 name|dstport
 argument_list|)
 expr_stmt|;
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"estab: %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"Parse: estab: %d\n"
 argument_list|,
 name|fp
 operator|->
@@ -1755,8 +1817,6 @@ operator|.
 name|estab
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|val
@@ -1805,6 +1865,7 @@ name|argc
 operator|>
 literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1817,16 +1878,13 @@ argument_list|,
 name|ifilters
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"syntax error.\n"
-argument_list|)
-expr_stmt|;
 return|return
-operator|(
+literal|0
+return|;
+block|}
+return|return
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1861,6 +1919,7 @@ name|argc
 operator|>
 literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1873,16 +1932,13 @@ argument_list|,
 name|ofilters
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"syntax error.\n"
-argument_list|)
-expr_stmt|;
 return|return
-operator|(
+literal|0
+return|;
+block|}
+return|return
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1917,6 +1973,7 @@ name|argc
 operator|>
 literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1929,16 +1986,13 @@ argument_list|,
 name|dfilters
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"syntax error.\n"
-argument_list|)
-expr_stmt|;
 return|return
-operator|(
+literal|0
+return|;
+block|}
+return|return
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1973,6 +2027,7 @@ name|argc
 operator|>
 literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1985,16 +2040,13 @@ argument_list|,
 name|afilters
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"syntax error.\n"
-argument_list|)
-expr_stmt|;
 return|return
-operator|(
+literal|0
+return|;
+block|}
+return|return
+operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -2051,6 +2103,12 @@ block|{
 name|int
 name|n
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return;
 for|for
 control|(
 name|n
@@ -2077,8 +2135,10 @@ operator|!=
 name|A_NONE
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%2d %s"
 argument_list|,
 name|n
@@ -2091,8 +2151,10 @@ name|action
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%s/%d "
 argument_list|,
 name|inet_ntoa
@@ -2107,8 +2169,10 @@ operator|->
 name|swidth
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%s/%d "
 argument_list|,
 name|inet_ntoa
@@ -2130,8 +2194,10 @@ operator|->
 name|proto
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%s"
 argument_list|,
 name|protoname
@@ -2150,8 +2216,10 @@ name|opt
 operator|.
 name|srcop
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" src %s %d"
 argument_list|,
 name|opname
@@ -2178,8 +2246,10 @@ name|opt
 operator|.
 name|dstop
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" dst %s %d"
 argument_list|,
 name|opname
@@ -2206,14 +2276,18 @@ name|opt
 operator|.
 name|estab
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" estab"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -2252,9 +2326,7 @@ name|ifilters
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -2289,9 +2361,7 @@ name|ofilters
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -2326,9 +2396,7 @@ name|dfilters
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -2363,9 +2431,7 @@ name|afilters
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function

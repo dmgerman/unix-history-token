@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.16 1997/05/24 17:32:32 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.17 1997/05/26 00:43:56 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -233,19 +233,18 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|DumpBp
+name|LogDumpBp
 argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"ChapOutput"
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"ChapOutput: %s\n"
 argument_list|,
@@ -413,83 +412,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_function
-name|void
-name|DumpDigest
-parameter_list|(
-name|mes
-parameter_list|,
-name|cp
-parameter_list|,
-name|len
-parameter_list|)
-name|char
-modifier|*
-name|mes
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|;
-name|logprintf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|mes
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|logprintf
-argument_list|(
-literal|" %02x"
-argument_list|,
-operator|*
-name|cp
-operator|++
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
-block|}
-name|logprintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|RecvChapTalk
@@ -566,18 +488,15 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"length: %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"RecvChapTalk: length: %d\n"
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|arglen
 operator|=
 name|len
@@ -630,7 +549,7 @@ literal|0
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|" Valsize = %d, Name = %s\n"
 argument_list|,
@@ -785,11 +704,10 @@ argument_list|,
 name|valsize
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|DumpDigest
+name|LogDumpBuff
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"recv"
 argument_list|,
 name|ap
@@ -797,8 +715,6 @@ argument_list|,
 name|valsize
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ap
 operator|+=
 name|valsize
@@ -829,11 +745,10 @@ operator|&
 name|context
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|DumpDigest
+name|LogDumpBuff
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"answer"
 argument_list|,
 name|digest
@@ -841,8 +756,6 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bcopy
 argument_list|(
 name|name
@@ -959,11 +872,10 @@ operator|&
 name|context
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|DumpDigest
+name|LogDumpBuff
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"got"
 argument_list|,
 name|cp
@@ -971,8 +883,10 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-name|DumpDigest
+name|LogDumpBuff
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"expect"
 argument_list|,
 name|cdigest
@@ -980,8 +894,6 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/*        * Compare with the response        */
 if|if
 condition|(
@@ -1084,18 +996,15 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"length: %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"RecvChapResult: length: %d\n"
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|chp
@@ -1223,7 +1132,7 @@ literal|0
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"ChapInput: %s\n"
 argument_list|,
