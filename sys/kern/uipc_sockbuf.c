@@ -2436,6 +2436,11 @@ operator|(
 literal|0
 operator|)
 return|;
+if|#
+directive|if
+name|MSIZE
+operator|<=
+literal|256
 if|if
 condition|(
 name|asa
@@ -2449,6 +2454,8 @@ operator|(
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
 name|MGET
 argument_list|(
 name|m

@@ -409,6 +409,11 @@ literal|0
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|MSIZE
+operator|<=
+literal|256
 if|if
 condition|(
 name|argp
@@ -422,6 +427,8 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+endif|#
+directive|endif
 name|i
 operator|=
 sizeof|sizeof
