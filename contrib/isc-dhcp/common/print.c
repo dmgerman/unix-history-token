@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: print.c,v 1.16.2.1 1998/06/25 21:11:31 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: print.c,v 1.16.2.2 1998/11/24 22:39:35 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,7 +178,7 @@ index|]
 decl_stmt|;
 name|debug
 argument_list|(
-literal|"  Lease %s"
+literal|"      Lease %s"
 argument_list|,
 name|piaddr
 argument_list|(
@@ -212,7 +212,7 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"  start %s"
+literal|"        start %s"
 argument_list|,
 name|tbuf
 argument_list|)
@@ -241,7 +241,7 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"  end %s"
+literal|"        end %s"
 argument_list|,
 name|tbuf
 argument_list|)
@@ -270,14 +270,14 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"  stamp %s"
+literal|"        stamp %s"
 argument_list|,
 name|tbuf
 argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"    hardware addr = %s"
+literal|"        hardware addr = %s"
 argument_list|,
 name|print_hw_addr
 argument_list|(
@@ -303,7 +303,7 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"  host %s  "
+literal|"        host %s  "
 argument_list|,
 name|lease
 operator|->
