@@ -851,6 +851,11 @@ argument_list|,
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|kd
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -861,28 +866,9 @@ name|mf
 argument_list|,
 name|_PATH_MEM
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
-name|_kvm_err
-argument_list|(
-name|kd
-argument_list|,
-name|kd
-operator|->
-name|program
-argument_list|,
-literal|"%s: not physical memory device"
-argument_list|,
-name|mf
-argument_list|)
-expr_stmt|;
-goto|goto
-name|failed
-goto|;
-block|}
-else|else
 block|{
 if|if
 condition|(
@@ -952,11 +938,14 @@ goto|goto
 name|failed
 goto|;
 block|}
+return|return
+operator|(
+name|kd
+operator|)
+return|;
 block|}
 block|}
-else|else
-block|{
-comment|/* 		 * This is a crash dump. 		 * Initialize the virtual address translation machinery, 		 * but first setup the namelist fd. 		 */
+comment|/* 	 * This is a crash dump. 	 * Initialize the virtual address translation machinery, 	 * but first setup the namelist fd. 	 */
 if|if
 condition|(
 operator|(
@@ -1039,7 +1028,6 @@ condition|)
 goto|goto
 name|failed
 goto|;
-block|}
 return|return
 operator|(
 name|kd
