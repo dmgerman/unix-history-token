@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/if_wavelan_ieee.h>
+file|<dev/wi/if_wavelan_ieee.h>
 end_include
 
 begin_include
