@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      294X and aic7870 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  */
+comment|/*  * Product specific probe and attach routines for:  *      294X and aic7870 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id$  */
 end_comment
 
 begin_include
@@ -65,6 +65,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_ADAPTEC_2940
 value|0x71789004ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ADAPTEC_2940_MB
+value|0x70789004ul
 end_define
 
 begin_decl_stmt
@@ -148,6 +155,16 @@ case|:
 return|return
 operator|(
 literal|"Adaptec 294X SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_2940_MB
+case|:
+return|return
+operator|(
+literal|"Adaptec aic7870 SCSI host adapter"
+literal|": on Motherboard"
 operator|)
 return|;
 break|break;
