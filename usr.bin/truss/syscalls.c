@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syscalls.c,v 1.5 1998/07/06 21:01:48 bde Exp $"
+literal|"$Id: syscalls.c,v 1.7 1999/08/05 12:03:50 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,6 +476,30 @@ block|{
 name|Hex
 block|,
 literal|0
+block|}
+block|}
+block|}
+block|,
+block|{
+literal|"access"
+block|,
+literal|1
+block|,
+literal|2
+block|,
+block|{
+block|{
+name|String
+operator||
+name|IN
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|Int
+block|,
+literal|1
 block|}
 block|}
 block|}
