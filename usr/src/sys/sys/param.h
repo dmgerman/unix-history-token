@@ -4,7 +4,7 @@ comment|/* "@(#)param.h 2.1 3/25/82" */
 end_comment
 
 begin_comment
-comment|/*	param.h	4.17	82/04/19	*/
+comment|/*	param.h	4.18	82/06/11	*/
 end_comment
 
 begin_comment
@@ -609,7 +609,7 @@ value|(((ps)& PSL_IPL) != 0)
 end_define
 
 begin_comment
-comment|/*  * File system parameters and macros.  *  * The file system is made out of blocks of at most MAXBSIZE units,  * with smaller units (fragments) only in the last direct block.  * MAXBSIZE primarily determines the size of buffers in the buffer  * pool. It may be made larger without any effect on existing  * file systems; however making it smaller make make some file  * systems unmountable.  *  * Note that the blocked devices are assumed to have DEV_BSIZE  * "sectors" and that fragments must be some multiple of this size.  */
+comment|/*  * File system parameters and macros.  *  * The file system is made out of blocks of at most MAXBSIZE units,  * with smaller units (fragments) only in the last direct block.  * MAXBSIZE primarily determines the size of buffers in the buffer  * pool. It may be made larger without any effect on existing  * file systems; however making it smaller make make some file  * systems unmountable.  *  * Note that the blocked devices are assumed to have DEV_BSIZE  * "sectors" and that fragments must be some multiple of this size.  * Block devices are read in BLKDEV_IOSIZE units. This number must  * be a power of two and in the range of  *	DEV_BSIZE<= BLKDEV_IOSIZE<= MAXBSIZE  * This size has no effect upon the file system, but is usually set  * to the block size of the root file system, so as to maximize the  * speed of ``fsck''.  */
 end_comment
 
 begin_define
@@ -624,6 +624,13 @@ define|#
 directive|define
 name|DEV_BSIZE
 value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLKDEV_IOSIZE
+value|4096
 end_define
 
 begin_define
