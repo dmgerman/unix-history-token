@@ -2420,7 +2420,7 @@ name|wi_len
 operator|=
 literal|7
 expr_stmt|;
-comment|/* value should be "V2.00-11" */
+comment|/* value should be the format like "V2.00-11" */
 if|if
 condition|(
 name|wi_read_record
@@ -2450,8 +2450,8 @@ name|sver
 operator|.
 name|wi_str
 operator|)
-operator|==
-literal|'V'
+operator|>=
+literal|'A'
 operator|&&
 name|p
 index|[
@@ -4957,6 +4957,41 @@ operator|&
 name|p2ltv
 expr_stmt|;
 break|break;
+case|case
+name|WI_RID_ROAMING_MODE
+case|:
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_firmware_type
+operator|==
+name|WI_INTERSIL
+condition|)
+break|break;
+comment|/* not supported */
+name|ltv
+operator|->
+name|wi_len
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+name|WI_RID_MICROWAVE_OVEN
+case|:
+comment|/* not supported */
+name|ltv
+operator|->
+name|wi_len
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 block|}
 comment|/* Tell the NIC to enter record read mode. */
@@ -5772,6 +5807,29 @@ operator|&
 name|p2ltv
 expr_stmt|;
 break|break;
+case|case
+name|WI_RID_ROAMING_MODE
+case|:
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_firmware_type
+operator|==
+name|WI_INTERSIL
+condition|)
+break|break;
+comment|/* not supported */
+return|return
+literal|0
+return|;
+case|case
+name|WI_RID_MICROWAVE_OVEN
+case|:
+comment|/* not supported */
+return|return
+literal|0
+return|;
 block|}
 block|}
 else|else
