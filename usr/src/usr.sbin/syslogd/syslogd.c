@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.17 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4187,6 +4187,10 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|logerror
 argument_list|(
 name|buf
@@ -4256,6 +4260,10 @@ name|flushmsg
 argument_list|()
 expr_stmt|;
 comment|/* 	 *  Close all open log files. 	 */
+name|Initialized
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|f
@@ -4874,6 +4882,11 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+comment|/* keep sys_errlist stuff out of logerror messages */
 comment|/* clear out file entry */
 name|bzero
 argument_list|(
