@@ -4023,10 +4023,7 @@ operator|->
 name|inp_gencnt
 operator|<=
 name|gencnt
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|cr_canseesocket
 argument_list|(
 name|req
@@ -4039,8 +4036,9 @@ name|inp
 operator|->
 name|inp_socket
 argument_list|)
+operator|==
+literal|0
 condition|)
-continue|continue;
 name|inp_list
 index|[
 name|i
@@ -4049,7 +4047,6 @@ index|]
 operator|=
 name|inp
 expr_stmt|;
-block|}
 name|INP_UNLOCK
 argument_list|(
 name|inp
