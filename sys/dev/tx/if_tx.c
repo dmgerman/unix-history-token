@@ -15,21 +15,6 @@ begin_comment
 comment|/*  * EtherPower II 10/100  Fast Ethernet (tx0)  * (aka SMC9432TX based on SMC83c170 EPIC chip)  *   * Thanks are going to Steve Bauer and Jason Wright.  *  * todo:  *	Implement FULL IFF_MULTICAST support.  *	  */
 end_comment
 
-begin_comment
-comment|/* We should define compile time options before if_txvar.h included */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EARLY_RX
-value|1
-end_define
-
-begin_comment
-comment|/*#define	EPIC_DEBUG	1*/
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -231,7 +216,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/if_txvar.h>
+file|<dev/tx/if_txreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/tx/if_txvar.h>
 end_include
 
 begin_else
@@ -6894,6 +6885,18 @@ name|rxcon
 init|=
 name|RXCON_DEFAULT
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|EPIC_EARLY_RX
+argument_list|)
+name|rxcon
+operator||=
+name|RXCON_EARLY_RX
+expr_stmt|;
+endif|#
+directive|endif
 name|rxcon
 operator||=
 operator|(
