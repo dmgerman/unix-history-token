@@ -51,11 +51,11 @@ comment|/* list of masks contained in subtree */
 name|struct
 name|radix_node
 modifier|*
-name|rn_p
+name|rn_parent
 decl_stmt|;
 comment|/* parent */
 name|short
-name|rn_b
+name|rn_bit
 decl_stmt|;
 comment|/* bit offset; -1-index(netmask) */
 name|char
@@ -173,21 +173,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|rn_off
+name|rn_offset
 value|rn_u.rn_node.rn_Off
 end_define
 
 begin_define
 define|#
 directive|define
-name|rn_l
+name|rn_left
 value|rn_u.rn_node.rn_L
 end_define
 
 begin_define
 define|#
 directive|define
-name|rn_r
+name|rn_right
 value|rn_u.rn_node.rn_R
 end_define
 
@@ -200,7 +200,7 @@ struct|struct
 name|radix_mask
 block|{
 name|short
-name|rm_b
+name|rm_bit
 decl_stmt|;
 comment|/* bit offset; -1-index(netmask) */
 name|char
