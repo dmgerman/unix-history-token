@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|QUERY
-value|0
+value|0x0
 end_define
 
 begin_comment
@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|IQUERY
-value|1
+value|0x1
 end_define
 
 begin_comment
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|CQUERYM
-value|2
+value|0x2
 end_define
 
 begin_comment
@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|CQUERYU
-value|3
+value|0x3
 end_define
 
 begin_comment
@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|UPDATEA
-value|100
+value|0xb
 end_define
 
 begin_comment
@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|UPDATED
-value|101
+value|0xc
 end_define
 
 begin_comment
@@ -162,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|UPDATEM
-value|102
+value|0xd
 end_define
 
 begin_comment
@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|ZONEINIT
-value|103
+value|0xe
 end_define
 
 begin_comment
@@ -184,7 +184,7 @@ begin_define
 define|#
 directive|define
 name|ZONEREF
-value|104
+value|0xf
 end_define
 
 begin_comment
@@ -269,7 +269,7 @@ begin_define
 define|#
 directive|define
 name|NOCHANGE
-value|100
+value|0xf
 end_define
 
 begin_comment
