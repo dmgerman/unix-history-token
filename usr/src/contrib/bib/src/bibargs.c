@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bibargs.c	2.9	%G%"
+literal|"@(#)bibargs.c	2.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,7 +266,7 @@ begin_decl_stmt
 name|char
 name|pfile
 index|[
-literal|120
+literal|400
 index|]
 decl_stmt|;
 end_decl_stmt
