@@ -55,6 +55,12 @@ modifier|*
 name|null_vnode
 decl_stmt|;
 comment|/* Back pointer */
+name|int
+name|null_pending_locks
+decl_stmt|;
+name|int
+name|null_drain_wakeup
+decl_stmt|;
 block|}
 struct|;
 end_struct
