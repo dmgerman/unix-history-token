@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.22 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5736,18 +5736,12 @@ name|tm_isdst
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TM_GMTOFF
 name|tmp
 operator|->
-name|TM_GMTOFF
+name|tm_gmtoff
 operator|=
 name|offset
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined TM_GMTOFF */
 block|}
 end_function
 
