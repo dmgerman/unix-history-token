@@ -9016,6 +9016,14 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * This is a kludge, but if we receive and accept 		 * random urgent pointers, we'll crash in 		 * soreceive.  It's hard to imagine someone 		 * actually wanting to send this much urgent data. 		 */
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|th
@@ -9042,6 +9050,15 @@ name|thflags
 operator|&=
 operator|~
 name|TH_URG
+expr_stmt|;
+comment|/* XXX */
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
 expr_stmt|;
 comment|/* XXX */
 goto|goto
@@ -9079,14 +9096,6 @@ operator|+
 name|th
 operator|->
 name|th_urp
-expr_stmt|;
-name|SOCKBUF_LOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|)
 expr_stmt|;
 name|so
 operator|->
@@ -9126,14 +9135,6 @@ name|sb_state
 operator||=
 name|SBS_RCVATMARK
 expr_stmt|;
-name|SOCKBUF_UNLOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|)
-expr_stmt|;
 name|sohasoutofband
 argument_list|(
 name|so
@@ -9151,6 +9152,14 @@ name|TCPOOB_HADDATA
 operator|)
 expr_stmt|;
 block|}
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Remove out of band data so doesn't get presented to user. 		 * This can happen independent of advancing the URG pointer, 		 * but if two URG's are pending at once, some out-of-band 		 * data may creep in... ick. 		 */
 if|if
 condition|(
