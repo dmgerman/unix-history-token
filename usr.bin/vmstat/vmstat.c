@@ -4830,19 +4830,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"intrcntlen = %lu\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|intrcntlen
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
