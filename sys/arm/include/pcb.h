@@ -58,11 +58,6 @@ name|u_int
 name|pcb32_dacr
 decl_stmt|;
 comment|/* Domain Access Control Reg */
-name|void
-modifier|*
-name|pcb32_cstate
-decl_stmt|;
-comment|/*&pmap->pm_cstate */
 comment|/* 	 * WARNING! 	 * cpuswitch.S relies on pcb32_r8 being quad-aligned in struct pcb 	 * (due to the use of "strd" when compiled for XSCALE) 	 */
 name|u_int
 name|pcb32_r8
