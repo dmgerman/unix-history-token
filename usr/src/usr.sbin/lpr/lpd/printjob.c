@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	8.5 (Berkeley) %G%"
+literal|"@(#)printjob.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -1530,7 +1536,7 @@ name|i
 operator|=
 name|wait
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 operator|)
 operator|>
@@ -5918,8 +5924,7 @@ argument_list|)
 expr_stmt|;
 name|wait
 argument_list|(
-operator|&
-name|s
+name|NULL
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -7913,6 +7918,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
 if|#
 directive|if
