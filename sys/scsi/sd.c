@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.26 1994/08/29 21:37:49 ache Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.27 1994/08/30 00:12:11 jkh Exp $  */
 end_comment
 
 begin_define
@@ -284,8 +284,12 @@ begin_define
 define|#
 directive|define
 name|RAW_PART
-value|2
+value|3
 end_define
+
+begin_comment
+comment|/* XXX must be 2 */
+end_comment
 
 begin_define
 define|#
@@ -2707,7 +2711,7 @@ operator|<<
 name|UNITSHIFT
 operator|)
 operator|+
-literal|3
+name|RAW_PART
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the inflo is already loaded, use it 	 */
@@ -2738,7 +2742,7 @@ name|disklabel
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * make partition 3 the whole disk in case of failure then get pdinfo 	 * for historical reasons, make part a same as raw part 	 */
+comment|/* 	 * make raw partition the whole disk in case of failure then get pdinfo 	 * for historical reasons, make part a same as raw part 	 */
 name|sd
 operator|->
 name|disklabel
@@ -2908,7 +2912,7 @@ operator|<<
 name|UNITSHIFT
 operator|)
 operator|+
-literal|3
+name|RAW_PART
 argument_list|)
 argument_list|,
 name|sdstrategy
