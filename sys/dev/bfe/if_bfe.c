@@ -1266,23 +1266,14 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
-name|sc
-operator|->
-name|bfe_tx_tag
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 operator|&
 name|sc
 operator|->
 name|bfe_tx_tag
-block|)
-function|;
-end_function
-
-begin_if
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1301,13 +1292,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-end_if
-
-begin_comment
 comment|/* tag for RX ring */
-end_comment
-
-begin_expr_stmt
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -1345,7 +1330,6 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* lockfunc, lockarg */
 endif|#
 directive|endif
 operator|&
@@ -1354,9 +1338,6 @@ operator|->
 name|bfe_rx_tag
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|error
@@ -1375,13 +1356,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-end_if
-
-begin_comment
 comment|/* tag for mbufs */
-end_comment
-
-begin_expr_stmt
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -1427,9 +1402,6 @@ operator|->
 name|bfe_tag
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|error
@@ -1448,13 +1420,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-end_if
-
-begin_comment
 comment|/* pre allocate dmamaps for RX list */
-end_comment
-
-begin_for
 for|for
 control|(
 name|i
@@ -1509,13 +1475,7 @@ operator|)
 return|;
 block|}
 block|}
-end_for
-
-begin_comment
 comment|/* pre allocate dmamaps for TX list */
-end_comment
-
-begin_for
 for|for
 control|(
 name|i
@@ -1570,13 +1530,7 @@ operator|)
 return|;
 block|}
 block|}
-end_for
-
-begin_comment
 comment|/* Alloc dma for rx ring */
-end_comment
-
-begin_expr_stmt
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -1602,9 +1556,6 @@ operator|->
 name|bfe_rx_map
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|error
@@ -1614,9 +1565,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-end_if
-
-begin_expr_stmt
 name|bzero
 argument_list|(
 name|sc
@@ -1626,9 +1574,6 @@ argument_list|,
 name|BFE_RX_LIST_SIZE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|error
 operator|=
 name|bus_dmamap_load
@@ -1661,9 +1606,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|error
@@ -1673,9 +1615,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-end_if
-
-begin_expr_stmt
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -1689,9 +1628,6 @@ argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -1717,9 +1653,6 @@ operator|->
 name|bfe_tx_map
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|error
@@ -1729,9 +1662,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-end_if
-
-begin_expr_stmt
 name|error
 operator|=
 name|bus_dmamap_load
@@ -1764,9 +1694,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|error
@@ -1776,9 +1703,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-end_if
-
-begin_expr_stmt
 name|bzero
 argument_list|(
 name|sc
@@ -1788,9 +1712,6 @@ argument_list|,
 name|BFE_TX_LIST_SIZE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -1804,18 +1725,16 @@ argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|bfe_attach
 parameter_list|(
@@ -4109,7 +4028,7 @@ name|BFE_LAZY_FC_MASK
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * We don't want lazy interrupts, so just send them at the end of a frame, 	 * please  	 */
+comment|/*  	 * We don't want lazy interrupts, so just send them at 	 * the end of a frame, please  	 */
 name|BFE_OR
 argument_list|(
 name|sc
@@ -4152,7 +4071,7 @@ argument_list|,
 literal|56
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Initialise DMA channels - not forgetting dma addresses need to be added 	 * to BFE_PCI_DMA  	 */
+comment|/*  	 * Initialise DMA channels 	 * - not forgetting dma addresses need to be added to BFE_PCI_DMA  	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -4246,7 +4165,7 @@ operator|&
 name|BFE_RESET
 condition|)
 return|return;
-comment|/*  	 * Set reject, wait for it set, then wait for the core to stop being busy 	 * Then set reset and reject and enable the clocks 	 */
+comment|/*  	 * Set reject, wait for it set, then wait for the core to stop 	 * being busy, then set reset and reject and enable the clocks. 	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -6838,7 +6757,7 @@ name|BFE_TX_LIST_CNT
 operator|-
 literal|1
 condition|)
-comment|/* Tell the chip to wrap to the start of the descriptor list */
+comment|/* 				 * Tell the chip to wrap to the start of 				 * the descriptor list 				 */
 name|d
 operator|->
 name|bfe_ctrl
@@ -7020,7 +6939,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * not much point trying to send if the link is down or we have nothing to 	 * send 	 */
+comment|/*  	 * Not much point trying to send if the link is down 	 * or we have nothing to send. 	 */
 if|if
 condition|(
 operator|!
@@ -7091,7 +7010,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/*  		 * Pack the data into the tx ring.  If we dont have enough room, let 		 * the chip drain the ring 		 */
+comment|/*  		 * Pack the data into the tx ring.  If we dont have 		 * enough room, let the chip drain the ring. 		 */
 if|if
 condition|(
 name|bfe_encap
@@ -7266,7 +7185,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bfe%d: bfe_init failed. Not enough memory for list buffers\n"
+literal|"bfe%d: bfe_init: Not enough memory for list buffers\n"
 argument_list|,
 name|sc
 operator|->
