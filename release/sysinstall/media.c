@@ -1143,14 +1143,6 @@ expr_stmt|;
 comment|/* If we've been through here before ... */
 if|if
 condition|(
-operator|!
-name|variable_get
-argument_list|(
-name|VAR_NONINTERACTIVE
-argument_list|)
-condition|)
-if|if
-condition|(
 name|networkDev
 operator|&&
 name|cp
