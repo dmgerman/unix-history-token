@@ -1620,6 +1620,11 @@ name|el
 operator|->
 name|el_outfile
 expr_stmt|;
+name|term_init_arrow
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|term_set
@@ -1638,11 +1643,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|term_init_arrow
-argument_list|(
-name|el
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
