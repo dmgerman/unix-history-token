@@ -3355,14 +3355,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|in6p
-operator|->
-name|in6p_route
-operator|.
-name|ro_rt
-operator|=
-literal|0
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -3475,13 +3467,20 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-else|else
-comment|/* 		 * A new route can be allocated 		 * the next time output is attempted. 		 */
+name|in6p
+operator|->
+name|in6p_route
+operator|.
+name|ro_rt
+operator|=
+name|NULL
+expr_stmt|;
 name|rtfree
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+comment|/* 		 * A new route can be allocated 		 * the next time output is attempted. 		 */
 block|}
 block|}
 end_function
