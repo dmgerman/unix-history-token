@@ -11429,6 +11429,13 @@ index|[]
 init|=
 block|{
 block|{
+literal|0x09
+block|,
+literal|125
+block|}
+block|,
+comment|/* FAST-80 */
+block|{
 literal|0x0a
 block|,
 literal|250
