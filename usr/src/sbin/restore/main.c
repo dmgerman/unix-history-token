@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -794,7 +794,9 @@ name|createlinks
 argument_list|()
 expr_stmt|;
 name|setdirmodes
-argument_list|()
+argument_list|(
+name|FORCE
+argument_list|)
 expr_stmt|;
 name|checkrestore
 argument_list|()
@@ -860,7 +862,9 @@ name|createlinks
 argument_list|()
 expr_stmt|;
 name|setdirmodes
-argument_list|()
+argument_list|(
+name|FORCE
+argument_list|)
 expr_stmt|;
 name|checkrestore
 argument_list|()
@@ -1021,7 +1025,9 @@ name|createlinks
 argument_list|()
 expr_stmt|;
 name|setdirmodes
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.12 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,7 +531,9 @@ name|createlinks
 argument_list|()
 expr_stmt|;
 name|setdirmodes
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -837,7 +839,9 @@ goto|goto
 name|bad
 goto|;
 name|setdirmodes
-argument_list|()
+argument_list|(
+name|FORCE
+argument_list|)
 expr_stmt|;
 break|break;
 comment|/* 	 * Print out dump header information. 	 */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.21 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2575,8 +2575,16 @@ end_comment
 
 begin_macro
 name|setdirmodes
-argument_list|()
+argument_list|(
+argument|flags
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2728,6 +2736,14 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|FORCE
+operator|)
+operator|==
+literal|0
+operator|&&
 name|ep
 operator|->
 name|e_flags
