@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.9		%G%"
+literal|"@(#)sendmail.h	6.10		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,13 +541,21 @@ name|m_argv
 decl_stmt|;
 comment|/* template argument vector */
 name|short
-name|m_s_rwset
+name|m_sh_rwset
 decl_stmt|;
-comment|/* rewriting set for sender addresses */
+comment|/* rewrite set: sender header addresses */
 name|short
-name|m_r_rwset
+name|m_se_rwset
 decl_stmt|;
-comment|/* rewriting set for recipient addresses */
+comment|/* rewrite set: sender envelope addresses */
+name|short
+name|m_rh_rwset
+decl_stmt|;
+comment|/* rewrite set: recipient header addresses */
+name|short
+name|m_re_rwset
+decl_stmt|;
+comment|/* rewrite set: recipient envelope addresses */
 name|char
 modifier|*
 name|m_eol
