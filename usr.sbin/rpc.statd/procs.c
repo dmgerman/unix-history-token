@@ -503,14 +503,6 @@ name|mon_id
 operator|.
 name|my_id
 operator|.
-name|my_name
-argument_list|,
-name|arg
-operator|->
-name|mon_id
-operator|.
-name|my_id
-operator|.
 name|my_prog
 argument_list|,
 name|arg
@@ -946,12 +938,6 @@ argument_list|,
 name|arg
 operator|->
 name|mon_name
-argument_list|,
-name|arg
-operator|->
-name|my_id
-operator|.
-name|my_name
 argument_list|,
 name|arg
 operator|->
