@@ -856,22 +856,26 @@ name|icp
 operator|->
 name|icmp_ip
 expr_stmt|;
-name|nip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-call|(
-name|u_short
-call|)
+comment|/* 	 * Convert fields to network representation. 	 */
+name|HTONS
 argument_list|(
 name|nip
 operator|->
 name|ip_len
-operator|+
-name|oiplen
 argument_list|)
+expr_stmt|;
+name|HTONS
+argument_list|(
+name|nip
+operator|->
+name|ip_id
+argument_list|)
+expr_stmt|;
+name|HTONS
+argument_list|(
+name|nip
+operator|->
+name|ip_off
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now, copy old ip header (without options) 	 * in front of icmp message. 	 */

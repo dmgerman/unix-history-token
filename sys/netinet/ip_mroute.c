@@ -7586,11 +7586,8 @@ name|ip_copy
 operator|->
 name|ip_id
 operator|=
-name|htons
-argument_list|(
 name|ip_id
 operator|++
-argument_list|)
 expr_stmt|;
 name|ip_copy
 operator|->
@@ -7644,6 +7641,13 @@ argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
+expr_stmt|;
+name|HTONS
+argument_list|(
+name|ip
+operator|->
+name|ip_id
 argument_list|)
 expr_stmt|;
 name|HTONS
