@@ -371,6 +371,8 @@ argument_list|,
 name|ch
 operator|->
 name|channel
+argument_list|,
+name|dir
 argument_list|)
 expr_stmt|;
 name|ch
@@ -467,6 +469,10 @@ argument_list|(
 name|pa_dev
 argument_list|,
 name|format
+argument_list|,
+name|ch
+operator|->
+name|dir
 argument_list|)
 expr_stmt|;
 name|ch
@@ -538,6 +544,10 @@ argument_list|(
 name|pa_dev
 argument_list|,
 name|speed
+argument_list|,
+name|ch
+operator|->
+name|dir
 argument_list|)
 expr_stmt|;
 return|return
@@ -624,6 +634,10 @@ argument_list|(
 name|pa_dev
 argument_list|,
 name|blocksize
+argument_list|,
+name|ch
+operator|->
+name|dir
 argument_list|)
 expr_stmt|;
 return|return
@@ -803,6 +817,10 @@ return|return
 name|uaudio_chan_getptr
 argument_list|(
 name|pa_dev
+argument_list|,
+name|ch
+operator|->
+name|dir
 argument_list|)
 return|;
 block|}

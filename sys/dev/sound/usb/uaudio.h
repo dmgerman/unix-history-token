@@ -40,6 +40,9 @@ name|struct
 name|pcm_channel
 modifier|*
 name|pc
+parameter_list|,
+name|int
+name|dir
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -119,6 +122,9 @@ name|dev
 parameter_list|,
 name|u_int32_t
 name|blocksize
+parameter_list|,
+name|int
+name|dir
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -132,6 +138,9 @@ name|dev
 parameter_list|,
 name|u_int32_t
 name|speed
+parameter_list|,
+name|int
+name|dir
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -145,6 +154,9 @@ name|dev
 parameter_list|,
 name|u_int32_t
 name|format
+parameter_list|,
+name|int
+name|dir
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -155,6 +167,8 @@ name|uaudio_chan_getptr
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
