@@ -2093,7 +2093,7 @@ name|bus_dma_tag_create
 argument_list|(
 name|NULL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|,

@@ -1433,8 +1433,7 @@ if|if
 condition|(
 name|map
 operator|!=
-operator|&
-name|nobounce_dmamap
+name|NULL
 condition|)
 name|panic
 argument_list|(

@@ -1431,7 +1431,7 @@ comment|/*parent*/
 name|NULL
 argument_list|,
 comment|/*alignment*/
-literal|0
+literal|1
 argument_list|,
 comment|/*boundary*/
 literal|0
@@ -1485,7 +1485,7 @@ comment|/*parent*/
 name|NULL
 argument_list|,
 comment|/*alignment*/
-literal|0
+literal|1
 argument_list|,
 comment|/*boundary*/
 literal|0

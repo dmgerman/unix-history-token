@@ -508,7 +508,7 @@ comment|/*parent*/
 name|NULL
 argument_list|,
 comment|/*alignemnt*/
-literal|0
+literal|1
 argument_list|,
 comment|/*boundary*/
 literal|0
