@@ -952,7 +952,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -n ... PH */
+comment|/* -n */
 end_comment
 
 begin_decl_stmt
