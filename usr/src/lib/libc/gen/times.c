@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,15 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)times.c	5.2 (Berkeley) %G%"
+literal|"@(#)times.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_include
 include|#
@@ -43,56 +46,36 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/times.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resource.h>
 end_include
 
-begin_comment
-comment|/*  * Backwards compatible times.  */
-end_comment
-
-begin_struct
-struct|struct
-name|tms
-block|{
-name|int
-name|tms_utime
-decl_stmt|;
-comment|/* user time */
-name|int
-name|tms_stime
-decl_stmt|;
-comment|/* system time */
-name|int
-name|tms_cutime
-decl_stmt|;
-comment|/* user time, children */
-name|int
-name|tms_cstime
-decl_stmt|;
-comment|/* system time, children */
-block|}
-struct|;
-end_struct
-
-begin_expr_stmt
+begin_function
+name|clock_t
 name|times
-argument_list|(
+parameter_list|(
 name|tmsp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tms
-operator|*
+modifier|*
 name|tmsp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|struct
 name|rusage
 name|ru
 decl_stmt|;
+name|clock_t
+name|scale60
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|getrusage
@@ -107,6 +90,9 @@ literal|0
 condition|)
 return|return
 operator|(
+operator|(
+name|clock_t
+operator|)
 operator|-
 literal|1
 operator|)
@@ -149,6 +135,9 @@ literal|0
 condition|)
 return|return
 operator|(
+operator|(
+name|clock_t
+operator|)
 operator|-
 literal|1
 operator|)
@@ -179,27 +168,28 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|clock_t
+operator|)
 literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|clock_t
 name|scale60
-argument_list|(
+parameter_list|(
 name|tvp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|timeval
-operator|*
+modifier|*
 name|tvp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 return|return
 operator|(
@@ -217,7 +207,7 @@ literal|16667
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
