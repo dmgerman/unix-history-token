@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)BUFF.c 1.2 %G%"
+literal|"@(#)BUFF.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,12 +59,12 @@ literal|0
 condition|)
 name|setbuf
 argument_list|(
-literal|0
-argument_list|,
 name|ACTFILE
 argument_list|(
 name|curfile
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -76,12 +76,12 @@ literal|2
 condition|)
 name|setbuf
 argument_list|(
-name|_sobuf
-argument_list|,
 name|ACTFILE
 argument_list|(
 name|curfile
 argument_list|)
+argument_list|,
+name|_sobuf
 argument_list|)
 expr_stmt|;
 block|}
