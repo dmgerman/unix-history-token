@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.4 1996/01/11 06:17:49 gibbs Exp $  */
+comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.5 1996/01/29 03:12:06 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -1572,7 +1572,7 @@ value|0x41
 end_define
 
 begin_comment
-comment|/* SDTR message recieved */
+comment|/* SDTR message received */
 end_comment
 
 begin_define
@@ -1583,7 +1583,7 @@ value|0x51
 end_define
 
 begin_comment
-comment|/* WDTR message recieved */
+comment|/* WDTR message received */
 end_comment
 
 begin_define
@@ -1594,7 +1594,7 @@ value|0x61
 end_define
 
 begin_comment
-comment|/* Reject message recieved */
+comment|/* Reject message received */
 end_comment
 
 begin_define
