@@ -152,18 +152,6 @@ name|intpending
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|commandname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of command--printed on error */
-end_comment
-
 begin_define
 define|#
 directive|define

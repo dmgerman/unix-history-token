@@ -201,7 +201,7 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|optarg
+name|shoptarg
 decl_stmt|;
 end_decl_stmt
 
@@ -2407,7 +2407,7 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-name|optarg
+name|shoptarg
 operator|=
 name|p
 expr_stmt|;
