@@ -276,7 +276,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ed_pccard_ax88190
+name|ed_pccard_ax88x90
 parameter_list|(
 name|device_t
 name|dev
@@ -287,7 +287,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ax88190_geteprom
+name|ax88x90_geteprom
 parameter_list|(
 name|struct
 name|ed_softc
@@ -416,14 +416,14 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|NE2000DVF_DL10019
+name|NE2000DVF_DL100XX
 value|0x0001
-comment|/* chip is D-Link DL10019 */
+comment|/* chip is D-Link DL10019/22 */
 define|#
 directive|define
-name|NE2000DVF_AX88190
+name|NE2000DVF_AX88X90
 value|0x0002
-comment|/* chip is ASIX AX88190 */
+comment|/* chip is ASIX AX88[17]90 */
 define|#
 directive|define
 name|NE2000DVF_ENADDR
@@ -538,7 +538,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_AX88190
+name|NE2000DVF_AX88X90
 block|}
 block|,
 block|{
@@ -642,7 +642,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_DL10019
+name|NE2000DVF_DL100XX
 block|}
 block|,
 block|{
@@ -655,7 +655,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_AX88190
+name|NE2000DVF_AX88X90
 block|}
 block|,
 block|{
@@ -668,7 +668,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_DL10019
+name|NE2000DVF_DL100XX
 block|}
 block|,
 block|{
@@ -746,7 +746,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_DL10019
+name|NE2000DVF_DL100XX
 block|}
 block|,
 block|{
@@ -878,7 +878,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_AX88190
+name|NE2000DVF_AX88X90
 block|}
 block|,
 block|{
@@ -891,9 +891,9 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_DL10019
+name|NE2000DVF_DL100XX
 operator||
-name|NE2000DVF_AX88190
+name|NE2000DVF_AX88X90
 block|}
 block|,
 block|{
@@ -932,7 +932,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_DL10019
+name|NE2000DVF_DL100XX
 block|}
 block|,
 block|{
@@ -984,7 +984,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_AX88190
+name|NE2000DVF_AX88X90
 block|}
 block|,
 block|{
@@ -997,7 +997,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_AX88190
+name|NE2000DVF_AX88X90
 block|}
 block|,
 block|{
@@ -1023,7 +1023,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_DL10019
+name|NE2000DVF_DL100XX
 block|}
 block|,
 block|{
@@ -1036,7 +1036,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_AX88190
+name|NE2000DVF_AX88X90
 block|}
 block|,
 block|{
@@ -1192,7 +1192,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_DL10019
+name|NE2000DVF_DL100XX
 block|}
 block|,
 block|{
@@ -1257,7 +1257,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|NE2000DVF_AX88190
+name|NE2000DVF_AX88X90
 block|}
 block|,
 block|{
@@ -1494,7 +1494,7 @@ name|pp
 operator|->
 name|flags
 operator|&
-name|NE2000DVF_DL10019
+name|NE2000DVF_DL100XX
 condition|)
 block|{
 name|error
@@ -1542,12 +1542,12 @@ name|pp
 operator|->
 name|flags
 operator|&
-name|NE2000DVF_AX88190
+name|NE2000DVF_AX88X90
 condition|)
 block|{
 name|error
 operator|=
-name|ed_pccard_ax88190
+name|ed_pccard_ax88x90
 argument_list|(
 name|dev
 argument_list|)
@@ -2211,7 +2211,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ax88190_geteprom
+name|ax88x90_geteprom
 parameter_list|(
 name|struct
 name|ed_softc
@@ -2981,13 +2981,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Special setup for AX88190  */
+comment|/*  * Special setup for AX88[17]90  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|ed_pccard_ax88190
+name|ed_pccard_ax88x90
 parameter_list|(
 name|device_t
 name|dev
@@ -3006,6 +3006,10 @@ argument_list|)
 decl_stmt|;
 name|int
 name|iobase
+decl_stmt|;
+name|char
+modifier|*
+name|ts
 decl_stmt|;
 name|struct
 name|ed_softc
@@ -3092,9 +3096,7 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|type_str
+name|ts
 operator|=
 literal|"AX88190"
 expr_stmt|;
@@ -3119,14 +3121,12 @@ argument_list|,
 name|ED_AX88790_CSR_PWRDWN
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|type_str
+name|ts
 operator|=
 literal|"AX88790"
 expr_stmt|;
 block|}
-name|ax88190_geteprom
+name|ax88x90_geteprom
 argument_list|(
 name|sc
 argument_list|)
@@ -3147,6 +3147,13 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Error is %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -3165,6 +3172,18 @@ operator|->
 name|type
 operator|=
 name|ED_TYPE_NE2000
+expr_stmt|;
+name|sc
+operator|->
+name|chip_type
+operator|=
+name|ED_CHIP_TYPE_AX88190
+expr_stmt|;
+name|sc
+operator|->
+name|type_str
+operator|=
+name|ts
 expr_stmt|;
 block|}
 return|return
