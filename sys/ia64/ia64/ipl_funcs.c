@@ -180,9 +180,9 @@ name|swi_null
 block|,
 name|swi_null
 block|,
-name|softclock
-block|,
 name|swi_null
+block|,
+name|softclock
 block|,
 name|swi_null
 block|,
