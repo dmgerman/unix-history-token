@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readmsg.c	2.2 (Berkeley) %G%"
+literal|"@(#)readmsg.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -689,7 +689,7 @@ name|msgin
 operator|.
 name|tsp_type
 operator|==
-name|TSP_DATE
+name|TSP_SETDATE
 operator|||
 ifdef|#
 directive|ifdef
@@ -1408,7 +1408,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|TSP_DATEREQ
+name|TSP_SETDATEREQ
 case|:
 name|resp
 operator|.
