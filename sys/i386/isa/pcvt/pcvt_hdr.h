@@ -22,6 +22,12 @@ begin_comment
 comment|/* see also: pcvt_ioctl.h	*/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"opt_pcvt.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -29,12 +35,6 @@ name|PCVT_FREEBSD
 operator|>=
 literal|200
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_pcvt.h"
-end_include
 
 begin_include
 include|#
