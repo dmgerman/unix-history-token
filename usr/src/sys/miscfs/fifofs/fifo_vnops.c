@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -579,6 +579,16 @@ name|error
 operator|)
 return|;
 block|}
+name|fip
+operator|->
+name|fi_readers
+operator|=
+name|fip
+operator|->
+name|fi_writers
+operator|=
+literal|0
+expr_stmt|;
 name|wso
 operator|->
 name|so_state
@@ -665,8 +675,12 @@ name|fi_writers
 operator|==
 literal|0
 condition|)
-if|if
-condition|(
+block|{
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|tsleep
@@ -685,8 +699,18 @@ name|openstr
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
+block|}
 block|}
 else|else
 block|{
@@ -763,8 +787,12 @@ name|fi_readers
 operator|==
 literal|0
 condition|)
-if|if
-condition|(
+block|{
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|tsleep
@@ -783,8 +811,18 @@ name|openstr
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
+block|}
 block|}
 block|}
 if|if
