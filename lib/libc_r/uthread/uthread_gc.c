@@ -100,7 +100,7 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
-name|sigprocmask
+name|pthread_sigmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,

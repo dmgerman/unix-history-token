@@ -658,6 +658,14 @@ operator|&
 name|hash_lock
 argument_list|)
 expr_stmt|;
+name|_thread_run
+operator|->
+name|data
+operator|.
+name|fp
+operator|=
+name|fp
+expr_stmt|;
 comment|/* Wait on the FILE lock: */
 name|_thread_kern_sched_state
 argument_list|(
@@ -731,7 +739,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -753,7 +760,6 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1064,7 +1070,6 @@ name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1265,6 +1270,112 @@ name|hash_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Undefer and handle pending signals, yielding if 	 * necessary: 	 */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_flockfile_backout
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|)
+block|{
+name|int
+name|idx
+init|=
+name|file_idx
+argument_list|(
+name|pthread
+operator|->
+name|data
+operator|.
+name|fp
+argument_list|)
+decl_stmt|;
+name|struct
+name|file_lock
+modifier|*
+name|p
+decl_stmt|;
+comment|/* 	 * Defer signals to protect the scheduling queues from 	 * access by the signal handler: 	 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Get a pointer to the lock for the file and check that 	 * the running thread is the one with the lock: 	 */
+if|if
+condition|(
+operator|(
+operator|(
+name|pthread
+operator|->
+name|flags
+operator|&
+name|PTHREAD_FLAGS_IN_FILEQ
+operator|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|p
+operator|=
+name|find_lock
+argument_list|(
+name|idx
+argument_list|,
+name|pthread
+operator|->
+name|data
+operator|.
+name|fp
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|)
+condition|)
+block|{
+comment|/* Lock the hash table: */
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|hash_lock
+argument_list|)
+expr_stmt|;
+comment|/* Remove the thread from the queue: */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|p
+operator|->
+name|l_head
+argument_list|,
+name|pthread
+argument_list|,
+name|qe
+argument_list|)
+expr_stmt|;
+name|pthread
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PTHREAD_FLAGS_IN_FILEQ
+expr_stmt|;
+comment|/* Unlock the hash table: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|hash_lock
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Undefer and handle pending signals, yielding if necessary: 	 */
 name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;

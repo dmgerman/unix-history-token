@@ -748,8 +748,6 @@ name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Nothing to return. */
-return|return;
 block|}
 end_function
 
@@ -819,8 +817,9 @@ name|FD_RDWR
 condition|)
 block|{
 comment|/* 			 * Wait for the file descriptor to be locked 			 * for read for the current thread:  			 */
-if|if
+while|while
 condition|(
+operator|(
 name|_thread_fd_table
 index|[
 name|fd
@@ -829,6 +828,15 @@ operator|->
 name|r_owner
 operator|!=
 name|_thread_run
+operator|)
+operator|&&
+operator|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 				 * Check if the file descriptor is locked by 				 * another thread:  				 */
@@ -999,8 +1007,9 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * Wait for the file descriptor to be locked 			 * for write for the current thread:  			 */
-if|if
+while|while
 condition|(
+operator|(
 name|_thread_fd_table
 index|[
 name|fd
@@ -1009,6 +1018,15 @@ operator|->
 name|w_owner
 operator|!=
 name|_thread_run
+operator|)
+operator|&&
+operator|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 				 * Check if the file descriptor is locked by 				 * another thread:  				 */
@@ -1521,8 +1539,6 @@ name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Nothing to return. */
-return|return;
 block|}
 end_function
 
@@ -1603,8 +1619,9 @@ name|FD_RDWR
 condition|)
 block|{
 comment|/* 			 * Wait for the file descriptor to be locked 			 * for read for the current thread:  			 */
-if|if
+while|while
 condition|(
+operator|(
 name|_thread_fd_table
 index|[
 name|fd
@@ -1613,6 +1630,15 @@ operator|->
 name|r_owner
 operator|!=
 name|_thread_run
+operator|)
+operator|&&
+operator|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 				 * Check if the file descriptor is locked by 				 * another thread:  				 */
@@ -1822,8 +1848,9 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * Wait for the file descriptor to be locked 			 * for write for the current thread:  			 */
-if|if
+while|while
 condition|(
+operator|(
 name|_thread_fd_table
 index|[
 name|fd
@@ -1832,6 +1859,15 @@ operator|->
 name|w_owner
 operator|!=
 name|_thread_run
+operator|)
+operator|&&
+operator|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 				 * Check if the file descriptor is locked by 				 * another thread:  				 */
@@ -2329,6 +2365,118 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|_fd_lock_backout
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|)
+block|{
+name|int
+name|fd
+decl_stmt|;
+comment|/* 	 * Defer signals to protect the scheduling queues 	 * from access by the signal handler: 	 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
+switch|switch
+condition|(
+name|pthread
+operator|->
+name|state
+condition|)
+block|{
+case|case
+name|PS_FDLR_WAIT
+case|:
+name|fd
+operator|=
+name|pthread
+operator|->
+name|data
+operator|.
+name|fd
+operator|.
+name|fd
+expr_stmt|;
+comment|/* 		 * Lock the file descriptor table entry to prevent 		 * other threads for clashing with the current 		 * thread's accesses: 		 */
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* Remove the thread from the waiting queue: */
+name|FDQ_REMOVE
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_queue
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PS_FDLW_WAIT
+case|:
+name|fd
+operator|=
+name|pthread
+operator|->
+name|data
+operator|.
+name|fd
+operator|.
+name|fd
+expr_stmt|;
+comment|/* 		 * Lock the file descriptor table entry to prevent 		 * other threads from clashing with the current 		 * thread's accesses: 		 */
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* Remove the thread from the waiting queue: */
+name|FDQ_REMOVE
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_queue
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+comment|/* 	 * Undefer and handle pending signals, yielding if 	 * necessary. 	 */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

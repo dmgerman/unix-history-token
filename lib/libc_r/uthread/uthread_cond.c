@@ -166,6 +166,15 @@ name|c_mutex
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_seqno
+operator|=
+literal|0
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -352,6 +361,12 @@ name|c_mutex
 operator|=
 name|NULL
 expr_stmt|;
+name|pcond
+operator|->
+name|c_seqno
+operator|=
+literal|0
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -471,9 +486,22 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|done
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|interrupted
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|unlock_mutex
+init|=
+literal|1
+decl_stmt|;
+name|int
+name|seqno
 decl_stmt|;
 name|_thread_enter_cancellation_point
 argument_list|()
@@ -484,19 +512,19 @@ name|cond
 operator|==
 name|NULL
 condition|)
-name|rval
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
+operator|)
+return|;
 comment|/* 	 * If the condition variable is statically initialized, 	 * perform the dynamic initialization: 	 */
-elseif|else
 if|if
 condition|(
 operator|*
 name|cond
-operator|!=
+operator|==
 name|NULL
-operator|||
+operator|&&
 operator|(
 name|rval
 operator|=
@@ -507,13 +535,17 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
+return|return
+operator|(
+name|rval
+operator|)
+return|;
+comment|/* 	 * Enter a loop waiting for a condition signal or broadcast 	 * to wake up this thread.  A loop is needed in case the waiting 	 * thread is interrupted by a signal to execute a signal handler. 	 * It is not (currently) possible to remain in the waiting queue 	 * while running a handler.  Instead, the thread is interrupted 	 * and backed out of the waiting queue prior to executing the 	 * signal handler. 	 */
+do|do
 block|{
-name|_thread_enter_cancellation_point
-argument_list|()
-expr_stmt|;
 comment|/* Lock the condition variable structure: */
 name|_SPINLOCK
 argument_list|(
@@ -655,7 +687,7 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
-comment|/* Remember the mutex that is being used: */
+comment|/* Remember the mutex and sequence number: */
 operator|(
 operator|*
 name|cond
@@ -665,6 +697,15 @@ name|c_mutex
 operator|=
 operator|*
 name|mutex
+expr_stmt|;
+name|seqno
+operator|=
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_seqno
 expr_stmt|;
 comment|/* Wait forever: */
 name|_thread_run
@@ -680,6 +721,13 @@ comment|/* Unlock the mutex: */
 if|if
 condition|(
 operator|(
+name|unlock_mutex
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
 name|rval
 operator|=
 name|_mutex_cv_unlock
@@ -689,6 +737,7 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 comment|/* 					 * Cannot unlock the mutex, so remove 					 * the running thread from the condition 					 * variable queue: 					 */
@@ -740,6 +789,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 					 * Don't unlock the mutex in the event 					 * this thread has to be requeued in 					 * condition variable queue: 					 */
+name|unlock_mutex
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 					 * Schedule the next thread and unlock 					 * the condition variable structure: 					 */
 name|_thread_kern_sched_state_unlock
 argument_list|(
@@ -758,20 +812,32 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+name|done
+operator|=
+operator|(
+name|seqno
+operator|!=
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_seqno
+operator|)
+expr_stmt|;
 if|if
 condition|(
+operator|(
 name|_thread_run
 operator|->
-name|interrupted
+name|flags
+operator|&
+name|PTHREAD_FLAGS_IN_CONDQ
+operator|)
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 						 * Remember that this thread 						 * was interrupted: 						 */
-name|interrupted
-operator|=
-literal|1
-expr_stmt|;
 comment|/* 						 * Lock the condition variable 						 * while removing the thread. 						 */
 name|_SPINLOCK
 argument_list|(
@@ -829,6 +895,13 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 					 * Save the interrupted flag; locking 					 * the mutex will destroy it. 					 */
+name|interrupted
+operator|=
+name|_thread_run
+operator|->
+name|interrupted
+expr_stmt|;
 comment|/* 					 * Note that even though this thread may have 					 * been canceled, POSIX requires that the mutex 					 * be reaquired prior to cancellation. 					 */
 name|rval
 operator|=
@@ -863,18 +936,19 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
 name|interrupted
 operator|!=
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|_thread_run
 operator|->
 name|continuation
 operator|!=
 name|NULL
+operator|)
 condition|)
 name|_thread_run
 operator|->
@@ -888,10 +962,21 @@ name|_thread_run
 argument_list|)
 expr_stmt|;
 block|}
-name|_thread_leave_cancellation_point
-argument_list|()
-expr_stmt|;
-block|}
+do|while
+condition|(
+operator|(
+name|done
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|rval
+operator|==
+literal|0
+operator|)
+condition|)
+do|;
 name|_thread_leave_cancellation_point
 argument_list|()
 expr_stmt|;
@@ -929,9 +1014,22 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|done
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|interrupted
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|unlock_mutex
+init|=
+literal|1
+decl_stmt|;
+name|int
+name|seqno
 decl_stmt|;
 name|_thread_enter_cancellation_point
 argument_list|()
@@ -960,19 +1058,19 @@ name|tv_nsec
 operator|>=
 literal|1000000000
 condition|)
-name|rval
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
+operator|)
+return|;
 comment|/* 	 * If the condition variable is statically initialized, perform dynamic 	 * initialization. 	 */
-elseif|else
 if|if
 condition|(
 operator|*
 name|cond
-operator|!=
+operator|==
 name|NULL
-operator|||
+operator|&&
 operator|(
 name|rval
 operator|=
@@ -983,13 +1081,17 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
+return|return
+operator|(
+name|rval
+operator|)
+return|;
+comment|/* 	 * Enter a loop waiting for a condition signal or broadcast 	 * to wake up this thread.  A loop is needed in case the waiting 	 * thread is interrupted by a signal to execute a signal handler. 	 * It is not (currently) possible to remain in the waiting queue 	 * while running a handler.  Instead, the thread is interrupted 	 * and backed out of the waiting queue prior to executing the 	 * signal handler. 	 */
+do|do
 block|{
-name|_thread_enter_cancellation_point
-argument_list|()
-expr_stmt|;
 comment|/* Lock the condition variable structure: */
 name|_SPINLOCK
 argument_list|(
@@ -1152,7 +1254,7 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
-comment|/* Remember the mutex that is being used: */
+comment|/* Remember the mutex and sequence number: */
 operator|(
 operator|*
 name|cond
@@ -1163,9 +1265,25 @@ operator|=
 operator|*
 name|mutex
 expr_stmt|;
+name|seqno
+operator|=
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_seqno
+expr_stmt|;
 comment|/* Unlock the mutex: */
 if|if
 condition|(
+operator|(
+name|unlock_mutex
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
 operator|(
 name|rval
 operator|=
@@ -1176,6 +1294,7 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 comment|/* 					 * Cannot unlock the mutex, so remove 					 * the running thread from the condition 					 * variable queue:  					 */
@@ -1227,6 +1346,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 					 * Don't unlock the mutex in the event 					 * this thread has to be requeued in 					 * condition variable queue: 					 */
+name|unlock_mutex
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 					 * Schedule the next thread and unlock 					 * the condition variable structure: 					 */
 name|_thread_kern_sched_state_unlock
 argument_list|(
@@ -1245,7 +1369,20 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Check if the wait timedout or was 					 * interrupted (canceled): 					 */
+name|done
+operator|=
+operator|(
+name|seqno
+operator|!=
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_seqno
+operator|)
+expr_stmt|;
+comment|/* 					 * Check if the wait timedout, was 					 * interrupted (canceled), or needs to 					 * be resumed after handling a signal. 					 */
 if|if
 condition|(
 operator|(
@@ -1263,6 +1400,12 @@ name|interrupted
 operator|==
 literal|0
 operator|)
+operator|&&
+operator|(
+name|done
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* Lock the mutex: */
@@ -1276,14 +1419,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 						 * Remember if this thread was 						 * interrupted: 						 */
-name|interrupted
-operator|=
-name|_thread_run
-operator|->
-name|interrupted
-expr_stmt|;
-comment|/* Lock the condition variable structure: */
+comment|/* Lock the CV structure: */
 name|_SPINLOCK
 argument_list|(
 operator|&
@@ -1295,7 +1431,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 						 * The wait timed out; remove 						 * the thread from the condition 					 	 * variable queue: 						 */
+comment|/* 						 * The wait timed out; remove 						 * the thread from the condition 						 * variable queue: 						 */
 name|cond_queue_remove
 argument_list|(
 operator|*
@@ -1329,7 +1465,7 @@ name|c_mutex
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Unock the condition variable structure: */
+comment|/* Unock the CV structure: */
 name|_SPINUNLOCK
 argument_list|(
 operator|&
@@ -1342,9 +1478,24 @@ name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Return a timeout error: */
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|timeout
+operator|!=
+literal|0
+condition|)
 name|rval
 operator|=
 name|ETIMEDOUT
+expr_stmt|;
+comment|/* 						 * Save the interrupted flag; 						 * locking the mutex will 						 * destroy it. 						 */
+name|interrupted
+operator|=
+name|_thread_run
+operator|->
+name|interrupted
 expr_stmt|;
 comment|/* 						 * Lock the mutex and ignore any 						 * errors.  Note that even though 						 * this thread may have been 						 * canceled, POSIX requires that 						 * the mutex be reaquired prior 						 * to cancellation. 						 */
 operator|(
@@ -1382,18 +1533,19 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
 name|interrupted
 operator|!=
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|_thread_run
 operator|->
 name|continuation
 operator|!=
 name|NULL
+operator|)
 condition|)
 name|_thread_run
 operator|->
@@ -1407,10 +1559,21 @@ name|_thread_run
 argument_list|)
 expr_stmt|;
 block|}
-name|_thread_leave_cancellation_point
-argument_list|()
-expr_stmt|;
-block|}
+do|while
+condition|(
+operator|(
+name|done
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|rval
+operator|==
+literal|0
+operator|)
+condition|)
+do|;
 name|_thread_leave_cancellation_point
 argument_list|()
 expr_stmt|;
@@ -1504,6 +1667,15 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
+comment|/* Increment the sequence number: */
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_seqno
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1685,6 +1857,15 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
+comment|/* Increment the sequence number: */
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_seqno
+operator|++
+expr_stmt|;
 comment|/* 			 * Enter a loop to bring all threads off the 			 * condition queue: 			 */
 while|while
 condition|(
@@ -1771,6 +1952,104 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|_cond_wait_backout
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|)
+block|{
+name|pthread_cond_t
+name|cond
+decl_stmt|;
+name|cond
+operator|=
+name|pthread
+operator|->
+name|data
+operator|.
+name|cond
+expr_stmt|;
+if|if
+condition|(
+name|cond
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Defer signals to protect the scheduling queues 		 * from access by the signal handler: 		 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* Process according to condition variable type: */
+switch|switch
+condition|(
+name|cond
+operator|->
+name|c_type
+condition|)
+block|{
+comment|/* Fast condition variable: */
+case|case
+name|COND_TYPE_FAST
+case|:
+name|cond_queue_remove
+argument_list|(
+name|cond
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
+comment|/* Check for no more waiters: */
+if|if
+condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|c_queue
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|cond
+operator|->
+name|c_mutex
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 		 */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/*  * Dequeue a waiting thread from the head of a condition queue in  * descending priority order.  */
 end_comment
@@ -1814,7 +2093,7 @@ name|c_queue
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 name|pthread
@@ -1889,7 +2168,7 @@ name|c_queue
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 name|pthread
@@ -1933,6 +2212,11 @@ argument_list|,
 name|cond_head
 argument_list|)
 decl_stmt|;
+name|PTHREAD_ASSERT_NOT_IN_SYNCQ
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
 comment|/* 	 * For the common case of all threads having equal priority, 	 * we perform a quick check against the priority of the thread 	 * at the tail of the queue. 	 */
 if|if
 condition|(
@@ -1961,7 +2245,7 @@ name|c_queue
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 else|else
@@ -1992,7 +2276,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|tid
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_BEFORE
@@ -2001,7 +2285,7 @@ name|tid
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 block|}
@@ -2010,6 +2294,14 @@ operator|->
 name|flags
 operator||=
 name|PTHREAD_FLAGS_IN_CONDQ
+expr_stmt|;
+name|pthread
+operator|->
+name|data
+operator|.
+name|cond
+operator|=
+name|cond
 expr_stmt|;
 block|}
 end_function

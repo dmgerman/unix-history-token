@@ -65,7 +65,7 @@ name|sa
 operator|.
 name|sa_flags
 operator|=
-literal|0
+name|SA_SIGINFO
 expr_stmt|;
 comment|/* Perform the sigaction syscall: */
 if|if

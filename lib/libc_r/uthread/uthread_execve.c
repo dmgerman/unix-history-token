@@ -298,17 +298,6 @@ index|]
 operator|.
 name|sa_flags
 expr_stmt|;
-comment|/* Ensure the scheduling signal is masked: */
-name|sigaddset
-argument_list|(
-operator|&
-name|act
-operator|.
-name|sa_mask
-argument_list|,
-name|_SCHED_SIGNAL
-argument_list|)
-expr_stmt|;
 comment|/* Change the signal action for the process: */
 name|_thread_sys_sigaction
 argument_list|(

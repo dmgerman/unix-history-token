@@ -57,6 +57,14 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|FLAGS_IN_SCHEDQ
+define|\
+value|(PTHREAD_FLAGS_IN_PRIOQ|PTHREAD_FLAGS_IN_WAITQ|PTHREAD_FLAGS_IN_WORKQ)
+end_define
+
 begin_function
 name|void
 name|__exit
@@ -512,9 +520,68 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Defer signals to protect the scheduling queues from access 	 * by the signal handler: 	 */
+comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
+if|if
+condition|(
+name|pthread_mutex_lock
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot lock gc mutex"
+argument_list|)
+expr_stmt|;
+comment|/* Add this thread to the list of dead threads. */
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|_dead_list
+argument_list|,
+name|_thread_run
+argument_list|,
+name|dle
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Signal the garbage collector thread that there is something 	 * to clean up. 	 */
+if|if
+condition|(
+name|pthread_cond_signal
+argument_list|(
+operator|&
+name|_gc_cond
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot signal gc cond"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Avoid a race condition where a scheduling signal can occur 	 * causing the garbage collector thread to run.  If this happens, 	 * the current thread can be cleaned out from under us. 	 */
 name|_thread_kern_sig_defer
 argument_list|()
+expr_stmt|;
+comment|/* Unlock the garbage collector mutex: */
+if|if
+condition|(
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot lock gc mutex"
+argument_list|)
 expr_stmt|;
 comment|/* Check if there are any threads joined to this one: */
 while|while
@@ -546,10 +613,17 @@ name|join_queue
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
-comment|/* Wake the joined thread and let it detach this thread: */
+name|pthread
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PTHREAD_FLAGS_IN_JOINQ
+expr_stmt|;
+comment|/* 		 * Wake the joined thread and let it 		 * detach this thread: 		 */
 name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
@@ -557,42 +631,45 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	 * Undefer and handle pending signals, yielding if necessary: 	 */
-name|_thread_kern_sig_undefer
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
+comment|/* 		 * Set the return value for the woken thread: 		 */
 if|if
 condition|(
-name|pthread_mutex_lock
-argument_list|(
+operator|(
+name|_thread_run
+operator|->
+name|attr
+operator|.
+name|flags
 operator|&
-name|_gc_mutex
-argument_list|)
+name|PTHREAD_DETACHED
+operator|)
 operator|!=
 literal|0
 condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
+name|pthread
+operator|->
+name|error
+operator|=
+name|ESRCH
 expr_stmt|;
-comment|/* Add this thread to the list of dead threads. */
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|_dead_list
-argument_list|,
+else|else
+block|{
+name|pthread
+operator|->
+name|ret
+operator|=
 name|_thread_run
-argument_list|,
-name|dle
-argument_list|)
+operator|->
+name|ret
 expr_stmt|;
-comment|/* 	 * Defer signals to protect the scheduling queues from access 	 * by the signal handler: 	 */
-name|_thread_kern_sig_defer
-argument_list|()
+name|pthread
+operator|->
+name|error
+operator|=
+literal|0
 expr_stmt|;
+block|}
+block|}
 comment|/* Remove this thread from the thread list: */
 name|TAILQ_REMOVE
 argument_list|(
@@ -604,54 +681,14 @@ argument_list|,
 name|tle
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Undefer and handle pending signals, yielding if necessary: 	 */
-name|_thread_kern_sig_undefer
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Signal the garbage collector thread that there is something 	 * to clean up. 	 */
-if|if
-condition|(
-name|pthread_cond_signal
+comment|/* This thread will never be re-scheduled. */
+name|_thread_kern_sched_state
 argument_list|(
-operator|&
-name|_gc_cond
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot signal gc cond"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Mark the thread as dead so it will not return if it 	 * gets context switched out when the mutex is unlocked. 	 */
-name|PTHREAD_SET_STATE
-argument_list|(
-name|_thread_run
-argument_list|,
 name|PS_DEAD
-argument_list|)
-expr_stmt|;
-comment|/* Unlock the garbage collector mutex: */
-if|if
-condition|(
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
-expr_stmt|;
-comment|/* This this thread will never be re-scheduled. */
-name|_thread_kern_sched
-argument_list|(
-name|NULL
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|)
 expr_stmt|;
 comment|/* This point should not be reached. */

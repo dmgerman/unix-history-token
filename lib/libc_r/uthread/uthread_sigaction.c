@@ -204,31 +204,22 @@ operator|!=
 name|SIGINFO
 condition|)
 block|{
-comment|/* Initialise the global signal action structure: */
-name|gact
-operator|.
-name|sa_mask
-operator|=
-name|act
-operator|->
-name|sa_mask
-expr_stmt|;
-name|gact
-operator|.
-name|sa_flags
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Ensure the scheduling signal is masked: */
-name|sigaddset
+comment|/* 			 * Ensure the signal handler cannot be interrupted 			 * by other signals.  Always request the POSIX signal 			 * handler arguments. 			 */
+name|sigfillset
 argument_list|(
 operator|&
 name|gact
 operator|.
 name|sa_mask
-argument_list|,
-name|_SCHED_SIGNAL
 argument_list|)
+expr_stmt|;
+name|gact
+operator|.
+name|sa_flags
+operator|=
+name|SA_SIGINFO
+operator||
+name|SA_ONSTACK
 expr_stmt|;
 comment|/* 			 * Check if the signal handler is being set to 			 * the default or ignore handlers: 			 */
 if|if

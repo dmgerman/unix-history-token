@@ -67,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -107,6 +113,244 @@ file|<pthread_np.h>
 end_include
 
 begin_comment
+comment|/*  * Define machine dependent macros to get and set the stack pointer  * from the supported contexts.  Also define a macro to set the return  * address in a jmp_buf context.  *  * XXX - These need to be moved into architecture dependent support files.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_JB
+parameter_list|(
+name|jb
+parameter_list|)
+value|((unsigned long)((jb)[0]._jb[2]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_SJB
+parameter_list|(
+name|sjb
+parameter_list|)
+value|((unsigned long)((sjb)[0]._sjb[2]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_UC
+parameter_list|(
+name|ucp
+parameter_list|)
+value|((unsigned long)((ucp)->uc_mcontext.mc_esp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_STACK_JB
+parameter_list|(
+name|jb
+parameter_list|,
+name|stk
+parameter_list|)
+value|(jb)[0]._jb[2] = (int)(stk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_STACK_SJB
+parameter_list|(
+name|sjb
+parameter_list|,
+name|stk
+parameter_list|)
+value|(sjb)[0]._sjb[2] = (int)(stk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_STACK_UC
+parameter_list|(
+name|ucp
+parameter_list|,
+name|stk
+parameter_list|)
+value|(ucp)->uc_mcontext.mc_esp = (int)(stk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FP_SAVE_UC
+parameter_list|(
+name|ucp
+parameter_list|)
+value|do {			\ 	char	*fdata;					\ 	fdata = (char *) (ucp)->uc_mcontext.mc_fpregs;	\ 	__asm__("fnsave %0": :"m"(*fdata));		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FP_RESTORE_UC
+parameter_list|(
+name|ucp
+parameter_list|)
+value|do {			\ 	char	*fdata;					\ 	fdata = (char *) (ucp)->uc_mcontext.mc_fpregs;	\ 	__asm__("frstor %0": :"m"(*fdata));		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_RETURN_ADDR_JB
+parameter_list|(
+name|jb
+parameter_list|,
+name|ra
+parameter_list|)
+value|(jb)[0]._jb[0] = (int)(ra)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<machine/reg.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_JB
+parameter_list|(
+name|jb
+parameter_list|)
+value|((unsigned long)((jb)[0]._jb[R_SP + 4]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_SJB
+parameter_list|(
+name|sjb
+parameter_list|)
+value|((unsigned long)((sjb)[0]._sjb[R_SP + 4]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_UC
+parameter_list|(
+name|ucp
+parameter_list|)
+value|((ucp)->uc_mcontext.mc_regs[R_SP])
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_STACK_JB
+parameter_list|(
+name|jb
+parameter_list|,
+name|stk
+parameter_list|)
+value|(jb)[0]._jb[R_SP + 4] = (long)(stk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_STACK_SJB
+parameter_list|(
+name|sjb
+parameter_list|,
+name|stk
+parameter_list|)
+value|(sjb)[0]._sjb[R_SP + 4] = (long)(stk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_STACK_UC
+parameter_list|(
+name|ucp
+parameter_list|,
+name|stk
+parameter_list|)
+value|(ucp)->uc_mcontext.mc_regs[R_SP] = (unsigned long)(stk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FP_SAVE_UC
+parameter_list|(
+name|ucp
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FP_RESTORE_UC
+parameter_list|(
+name|ucp
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_RETURN_ADDR_JB
+parameter_list|(
+name|jb
+parameter_list|,
+name|ra
+parameter_list|)
+value|do {		\ 	(jb)[0]._jb[2] = (long)(ra);		\ 	(jb)[0]._jb[R_RA + 4] = 0;		\ 	(jb)[0]._jb[R_T12 + 4] = (long)(ra);	\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"Don't recognize this architecture!"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Kernel fatal error handler macro.  */
 end_comment
 
@@ -129,9 +373,10 @@ define|#
 directive|define
 name|stdout_debug
 parameter_list|(
-name|_x
+name|args
+modifier|...
 parameter_list|)
-value|_thread_sys_write(1,_x,strlen(_x));
+value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	_thread_sys_write(1, buf, strlen(buf));	\ } while (0)
 end_define
 
 begin_define
@@ -139,9 +384,10 @@ define|#
 directive|define
 name|stderr_debug
 parameter_list|(
-name|_x
+name|args
+modifier|...
 parameter_list|)
-value|_thread_sys_write(2,_x,strlen(_x));
+value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	_thread_sys_write(2, buf, strlen(buf));	\ } while (0)
 end_define
 
 begin_comment
@@ -190,15 +436,6 @@ begin_comment
 comment|/*  * Waiting queue manipulation macros (using pqe link):  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_PTHREADS_INVARIANTS
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -218,6 +455,15 @@ name|thrd
 parameter_list|)
 value|_waitq_insert(thrd)
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_PTHREADS_INVARIANTS
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -239,26 +485,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_WAITQ_REMOVE
-parameter_list|(
-name|thrd
-parameter_list|)
-value|do {					\ 	TAILQ_REMOVE(&_waitingq,thrd,pqe);				\ 	(thrd)->flags&= ~PTHREAD_FLAGS_IN_WAITQ;			\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_WAITQ_INSERT
-parameter_list|(
-name|thrd
-parameter_list|)
-value|do {					\ 	if ((thrd)->wakeup_time.tv_sec == -1)				\ 		TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe);			\ 	else {								\ 		pthread_t tid = TAILQ_FIRST(&_waitingq);		\ 		while ((tid != NULL)&& (tid->wakeup_time.tv_sec != -1)&& \ 		    ((tid->wakeup_time.tv_sec< (thrd)->wakeup_time.tv_sec) ||	\ 		    ((tid->wakeup_time.tv_sec == (thrd)->wakeup_time.tv_sec)&&	\ 		    (tid->wakeup_time.tv_nsec<= (thrd)->wakeup_time.tv_nsec)))) \ 			tid = TAILQ_NEXT(tid, pqe);			\ 		if (tid == NULL)					\ 			TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe);		\ 		else							\ 			TAILQ_INSERT_BEFORE(tid,thrd,pqe);		\ 	}								\ 	(thrd)->flags |= PTHREAD_FLAGS_IN_WAITQ;			\ } while (0)
-end_define
 
 begin_define
 define|#
@@ -332,6 +558,35 @@ name|_PTHREADS_INVARIANTS
 argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_ASSERT
+parameter_list|(
+name|cond
+parameter_list|,
+name|msg
+parameter_list|)
+value|do {	\ 	if (!(cond))			\ 		PANIC(msg);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_ASSERT_NOT_IN_SYNCQ
+parameter_list|(
+name|thrd
+parameter_list|)
+define|\
+value|PTHREAD_ASSERT((((thrd)->flags& PTHREAD_FLAGS_IN_SYNCQ) == 0),	\ 	    "Illegal call from signal handler");
+end_define
+
 begin_define
 define|#
 directive|define
@@ -348,6 +603,26 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_ASSERT
+parameter_list|(
+name|cond
+parameter_list|,
+name|msg
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_ASSERT_NOT_IN_SYNCQ
+parameter_list|(
+name|thrd
+parameter_list|)
+end_define
 
 begin_define
 define|#
@@ -666,6 +941,9 @@ decl_stmt|;
 name|long
 name|c_flags
 decl_stmt|;
+name|int
+name|c_seqno
+decl_stmt|;
 comment|/* 	 * Lock for accesses to this structure. 	 */
 name|spinlock_t
 name|lock
@@ -723,7 +1001,7 @@ define|#
 directive|define
 name|PTHREAD_COND_STATIC_INITIALIZER
 define|\
-value|{ COND_TYPE_FAST, TAILQ_INITIALIZER, NULL, NULL, \ 	0, _SPINLOCK_INITIALIZER }
+value|{ COND_TYPE_FAST, TAILQ_INITIALIZER, NULL, NULL, \ 	0, 0, _SPINLOCK_INITIALIZER }
 end_define
 
 begin_comment
@@ -907,21 +1185,25 @@ value|0x100000
 end_define
 
 begin_comment
-comment|/* Address immediately beyond the beginning of the initial thread stack. */
+comment|/* Size of the scheduler stack: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHED_STACK_SIZE
+value|PAGE_SIZE
+end_define
+
+begin_comment
+comment|/*  * Define the different priority ranges.  All applications have thread  * priorities constrained within 0-31.  The threads library raises the  * priority when delivering signals in order to ensure that signal  * delivery happens (from the POSIX spec) "as soon as possible".  * In the future, the threads library will also be able to map specific  * threads into real-time (cooperating) processes or kernel threads.  * The RT and SIGNAL priorities will be used internally and added to  * thread base priorities so that the scheduling queue can handle both  * normal and RT priority threads with and without signal handling.  *  * The approach taken is that, within each class, signal delivery  * always has priority over thread execution.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PTHREAD_DEFAULT_PRIORITY
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_MAX_PRIORITY
-value|126
+value|15
 end_define
 
 begin_define
@@ -934,18 +1216,70 @@ end_define
 begin_define
 define|#
 directive|define
-name|_POSIX_THREAD_ATTR_STACKSIZE
+name|PTHREAD_MAX_PRIORITY
+value|31
 end_define
 
 begin_comment
-comment|/*  * Clock resolution in nanoseconds.  */
+comment|/* 0x1F */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CLOCK_RES_NSEC
-value|10000000
+name|PTHREAD_SIGNAL_PRIORITY
+value|32
+end_define
+
+begin_comment
+comment|/* 0x20 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_RT_PRIORITY
+value|64
+end_define
+
+begin_comment
+comment|/* 0x40 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_FIRST_PRIORITY
+value|PTHREAD_MIN_PRIORITY
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_LAST_PRIORITY
+define|\
+value|(PTHREAD_MAX_PRIORITY + PTHREAD_SIGNAL_PRIORITY + PTHREAD_RT_PRIORITY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_BASE_PRIORITY
+parameter_list|(
+name|prio
+parameter_list|)
+value|((prio)& PTHREAD_MAX_PRIORITY)
+end_define
+
+begin_comment
+comment|/*  * Clock resolution in microseconds.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_RES_USEC
+value|10000
 end_define
 
 begin_comment
@@ -956,7 +1290,22 @@ begin_define
 define|#
 directive|define
 name|TIMESLICE_USEC
-value|100000
+value|20000
+end_define
+
+begin_comment
+comment|/*  * Define a thread-safe macro to get the current time of day  * which is updated at regular intervals by the scheduling signal  * handler.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_CURRENT_TOD
+parameter_list|(
+name|tv
+parameter_list|)
+define|\
+value|do {						\ 		tv.tv_sec = _sched_tod.tv_sec;		\ 		tv.tv_usec = _sched_tod.tv_usec;	\ 	} while (tv.tv_sec != _sched_tod.tv_sec)
 end_define
 
 begin_struct
@@ -1223,6 +1572,10 @@ comment|/* Source file name for debugging.*/
 block|}
 name|fd
 struct|;
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 name|struct
 name|pthread_poll_data
 modifier|*
@@ -1231,6 +1584,11 @@ decl_stmt|;
 name|spinlock_t
 modifier|*
 name|spinlock
+decl_stmt|;
+name|struct
+name|pthread
+modifier|*
+name|thread
 decl_stmt|;
 block|}
 union|;
@@ -1253,6 +1611,135 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_struct_decl
+struct_decl|struct
+name|pthread_signal_frame
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|pthread_state_data
+block|{
+name|struct
+name|pthread_signal_frame
+modifier|*
+name|psd_curframe
+decl_stmt|;
+name|sigset_t
+name|psd_sigmask
+decl_stmt|;
+name|struct
+name|timespec
+name|psd_wakeup_time
+decl_stmt|;
+name|union
+name|pthread_wait_data
+name|psd_wait_data
+decl_stmt|;
+name|enum
+name|pthread_state
+name|psd_state
+decl_stmt|;
+name|int
+name|psd_flags
+decl_stmt|;
+name|int
+name|psd_interrupted
+decl_stmt|;
+name|int
+name|psd_longjmp_val
+decl_stmt|;
+name|int
+name|psd_sigmask_seqno
+decl_stmt|;
+name|int
+name|psd_signo
+decl_stmt|;
+name|int
+name|psd_sig_defer_count
+decl_stmt|;
+comment|/* XXX - What about thread->timeout and/or thread->error? */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Normally thread contexts are stored as jmp_bufs via _setjmp()/_longjmp(),  * but they may also be sigjmp_buf and ucontext_t.  When a thread is  * interrupted by a signal, it's context is saved as a ucontext_t.  An  * application is also free to use [_]longjmp()/[_]siglongjmp() to jump  * between contexts within the same thread.  Future support will also  * include setcontext()/getcontext().  *  * Define an enumerated type that can identify the 4 different context  * types.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTX_JB_NOSIG
+block|,
+comment|/* context is jmp_buf without saved sigset */
+name|CTX_JB
+block|,
+comment|/* context is jmp_buf (with saved sigset) */
+name|CTX_SJB
+block|,
+comment|/* context is sigjmp_buf (with saved sigset) */
+name|CTX_UC
+comment|/* context is ucontext_t (with saved sigset) */
+block|}
+name|thread_context_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * There are 2 basic contexts that a frame may contain at any  * one time:  *  *   o ctx - The context that the thread should return to after normal  *     completion of the signal handler.  *   o sig_jb - The context just before the signal handler is invoked.  *     Attempts at abnormal returns from user supplied signal handlers  *     will return back to the signal context to perform any necessary  *     cleanup.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pthread_signal_frame
+block|{
+comment|/* 	 * This stores the threads state before the signal. 	 */
+name|struct
+name|pthread_state_data
+name|saved_state
+decl_stmt|;
+comment|/* 	 * Threads return context; ctxtype identifies the type of context. 	 * For signal frame 0, these point to the context storage area 	 * within the pthread structure.  When handling signals (frame> 0), 	 * these point to a context storage area that is allocated off the 	 * threads stack. 	 */
+union|union
+block|{
+name|jmp_buf
+name|jb
+decl_stmt|;
+name|sigjmp_buf
+name|sigjb
+decl_stmt|;
+name|ucontext_t
+name|uc
+decl_stmt|;
+block|}
+name|ctx
+union|;
+name|thread_context_t
+name|ctxtype
+decl_stmt|;
+name|int
+name|longjmp_val
+decl_stmt|;
+name|int
+name|signo
+decl_stmt|;
+comment|/* signal, arg 1 to sighandler */
+name|int
+name|sig_has_args
+decl_stmt|;
+comment|/* use signal args if true */
+name|ucontext_t
+name|uc
+decl_stmt|;
+name|siginfo_t
+name|siginfo
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Thread structure.  */
@@ -1320,90 +1807,32 @@ name|struct
 name|pthread_attr
 name|attr
 decl_stmt|;
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-comment|/* 	 * Saved floating point registers on systems where they are not 	 * saved in the signal context. 	 */
-name|char
-name|saved_fp
-index|[
-literal|108
-index|]
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * Saved signal context used in call to sigreturn by 	 * _thread_kern_sched if sig_saved is TRUE. 	 */
-name|ucontext_t
-name|saved_sigcontext
-decl_stmt|;
-comment|/*  	 * Saved jump buffer used in call to longjmp by _thread_kern_sched 	 * if sig_saved is FALSE. 	 */
-name|jmp_buf
-name|saved_jmp_buf
-decl_stmt|;
-name|jmp_buf
-modifier|*
-name|sighandler_jmp_buf
-decl_stmt|;
-comment|/* 	 * Saved jump buffers for use when doing nested [sig|_]longjmp()s, as 	 * when doing signal delivery. 	 */
+comment|/* 	 * Threads return context; ctxtype identifies the type of context. 	 */
 union|union
 block|{
 name|jmp_buf
-name|jmp
+name|jb
 decl_stmt|;
 name|sigjmp_buf
-name|sigjmp
+name|sigjb
+decl_stmt|;
+name|ucontext_t
+name|uc
 decl_stmt|;
 block|}
-name|nested_jmp
+name|ctx
 union|;
+name|thread_context_t
+name|ctxtype
+decl_stmt|;
 name|int
 name|longjmp_val
 decl_stmt|;
-define|#
-directive|define
-name|JMPFLAGS_NONE
-value|0x00
-define|#
-directive|define
-name|JMPFLAGS_LONGJMP
-value|0x01
-define|#
-directive|define
-name|JMPFLAGS__LONGJMP
-value|0x02
-define|#
-directive|define
-name|JMPFLAGS_SIGLONGJMP
-value|0x04
-define|#
-directive|define
-name|JMPFLAGS_DEFERRED
-value|0x08
-name|int
-name|jmpflags
-decl_stmt|;
-comment|/* 	 * TRUE if the last state saved was a signal context. FALSE if the 	 * last state saved was a jump buffer. 	 */
-name|int
-name|sig_saved
-decl_stmt|;
-comment|/* 	 * Used for tracking delivery of nested signal handlers. 	 */
-name|int
-name|signal_nest_level
+comment|/* 	 * Used for tracking delivery of signal handlers. 	 */
+name|struct
+name|pthread_signal_frame
+modifier|*
+name|curframe
 decl_stmt|;
 comment|/* 	 * Cancelability flags - the lower 2 bits are used by cancel 	 * definitions in pthread.h 	 */
 define|#
@@ -1435,32 +1864,28 @@ decl_stmt|;
 name|sigset_t
 name|sigpend
 decl_stmt|;
+name|int
+name|sigmask_seqno
+decl_stmt|;
+name|int
+name|check_pending
+decl_stmt|;
 comment|/* Thread state: */
 name|enum
 name|pthread_state
 name|state
 decl_stmt|;
-name|enum
-name|pthread_state
-name|oldstate
-decl_stmt|;
-comment|/* Time that this thread was last made active. */
-name|struct
-name|timeval
+comment|/* Scheduling clock when this thread was last made active. */
+name|long
 name|last_active
 decl_stmt|;
-comment|/* Time that this thread was last made inactive. */
-name|struct
-name|timeval
+comment|/* Scheduling clock when this thread was last made inactive. */
+name|long
 name|last_inactive
 decl_stmt|;
 comment|/* 	 * Number of microseconds accumulated by this thread when 	 * time slicing is active. 	 */
 name|long
 name|slice_usec
-decl_stmt|;
-comment|/* 	 * Incremental priority accumulated by thread while it is ready to 	 * run but is denied being run. 	 */
-name|int
-name|inc_prio
 decl_stmt|;
 comment|/* 	 * Time to wake up thread. This is used for sleeping threads and 	 * for any operation which may time out (such as select). 	 */
 name|struct
@@ -1484,21 +1909,28 @@ argument|pthread
 argument_list|)
 name|join_queue
 expr_stmt|;
-comment|/* 	 * The current thread can belong to only one scheduling queue at 	 * a time (ready or waiting queue).  It can also belong to (only) 	 * one of: 	 * 	 *   o A queue of threads waiting for a mutex 	 *   o A queue of threads waiting for a condition variable 	 *   o A queue of threads waiting for another thread to terminate 	 *     (the join queue above) 	 *   o A queue of threads waiting for a file descriptor lock 	 *   o A queue of threads needing work done by the kernel thread 	 *     (waiting for a spinlock or file I/O) 	 * 	 * Use pqe for the scheduling queue link (both ready and waiting), 	 * and qe for other links. 	 */
-comment|/* Priority queue entry for this thread: */
+comment|/* 	 * The current thread can belong to only one scheduling queue at 	 * a time (ready or waiting queue).  It can also belong to: 	 * 	 *   o A queue of threads waiting for a mutex 	 *   o A queue of threads waiting for a condition variable 	 *   o A queue of threads waiting for another thread to terminate 	 *     (the join queue above) 	 *   o A queue of threads waiting for a file descriptor lock 	 *   o A queue of threads needing work done by the kernel thread 	 *     (waiting for a spinlock or file I/O) 	 * 	 * It is possible for a thread to belong to more than one of the 	 * above queues if it is handling a signal.  A thread may only 	 * enter a mutex, condition variable, or join queue when it is 	 * not being called from a signal handler.  If a thread is a 	 * member of one of these queues when a signal handler is invoked, 	 * it must remain in the queue.  For this reason, the links for 	 * these queues must not be (re)used for other queues. 	 * 	 * Use pqe for the scheduling queue link (both ready and waiting), 	 * sqe for synchronization (mutex, condition variable, and join) 	 * queue links, and qe for all other links. 	 */
 name|TAILQ_ENTRY
 argument_list|(
 argument|pthread
 argument_list|)
 name|pqe
 expr_stmt|;
-comment|/* Queue entry for this thread: */
+comment|/* priority queue link */
+name|TAILQ_ENTRY
+argument_list|(
+argument|pthread
+argument_list|)
+name|sqe
+expr_stmt|;
+comment|/* synchronization queue link */
 name|TAILQ_ENTRY
 argument_list|(
 argument|pthread
 argument_list|)
 name|qe
 expr_stmt|;
+comment|/* all other queues link */
 comment|/* Wait data. */
 name|union
 name|pthread_wait_data
@@ -1539,44 +1971,54 @@ name|PTHREAD_EXITING
 value|0x0002
 define|#
 directive|define
-name|PTHREAD_FLAGS_IN_CONDQ
-value|0x0004
-comment|/* in condition queue using qe link*/
-define|#
-directive|define
-name|PTHREAD_FLAGS_IN_WORKQ
-value|0x0008
-comment|/* in work queue using qe link */
-define|#
-directive|define
 name|PTHREAD_FLAGS_IN_WAITQ
-value|0x0010
+value|0x0004
 comment|/* in waiting queue using pqe link */
 define|#
 directive|define
 name|PTHREAD_FLAGS_IN_PRIOQ
-value|0x0020
+value|0x0008
 comment|/* in priority queue using pqe link */
 define|#
 directive|define
-name|PTHREAD_FLAGS_IN_MUTEXQ
-value|0x0040
-comment|/* in mutex queue using qe link */
+name|PTHREAD_FLAGS_IN_WORKQ
+value|0x0010
+comment|/* in work queue using qe link */
 define|#
 directive|define
 name|PTHREAD_FLAGS_IN_FILEQ
-value|0x0080
+value|0x0020
 comment|/* in file lock queue using qe link */
 define|#
 directive|define
 name|PTHREAD_FLAGS_IN_FDQ
-value|0x0100
+value|0x0040
 comment|/* in fd lock queue using qe link */
 define|#
 directive|define
-name|PTHREAD_FLAGS_TRACE
+name|PTHREAD_FLAGS_IN_CONDQ
+value|0x0080
+comment|/* in condition queue using sqe link*/
+define|#
+directive|define
+name|PTHREAD_FLAGS_IN_MUTEXQ
+value|0x0100
+comment|/* in mutex queue using sqe link */
+define|#
+directive|define
+name|PTHREAD_FLAGS_IN_JOINQ
 value|0x0200
+comment|/* in join queue using sqe link */
+define|#
+directive|define
+name|PTHREAD_FLAGS_TRACE
+value|0x0400
 comment|/* for debugging purposes */
+define|#
+directive|define
+name|PTHREAD_FLAGS_IN_SYNCQ
+define|\
+value|(PTHREAD_FLAGS_IN_CONDQ | PTHREAD_FLAGS_IN_MUTEXQ | PTHREAD_FLAGS_IN_JOINQ)
 comment|/* 	 * Base priority is the user setable and retrievable priority 	 * of the thread.  It is only affected by explicit calls to 	 * set thread priority and upon thread creation via a thread 	 * attribute or default priority. 	 */
 name|char
 name|base_priority
@@ -1897,15 +2339,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_sig_in_handler
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Last time that an incremental priority update was performed: */
+comment|/* Time of day at last scheduling timer signal: */
 end_comment
 
 begin_decl_stmt
 name|SCLASS
 name|struct
 name|timeval
-name|kern_inc_prio_time
+specifier|volatile
+name|_sched_tod
 ifdef|#
 directive|ifdef
 name|GLOBAL_PTHREAD_PRIVATE
@@ -1915,6 +2384,38 @@ literal|0
 block|,
 literal|0
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Current scheduling timer ticks; used as resource usage.  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|unsigned
+name|int
+specifier|volatile
+name|_sched_ticks
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2267,13 +2768,13 @@ end_endif
 begin_decl_stmt
 name|SCLASS
 name|int
-name|_clock_res_nsec
-comment|/* Clock resolution in nsec.	*/
+name|_clock_res_usec
+comment|/* Clock resolution in usec.	*/
 ifdef|#
 directive|ifdef
 name|GLOBAL_PTHREAD_PRIVATE
 init|=
-name|CLOCK_RES_NSEC
+name|CLOCK_RES_USEC
 decl_stmt|;
 end_decl_stmt
 
@@ -2353,13 +2854,37 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Pending signals for this process.  */
+comment|/*  * Pending signals and mask for this process:  */
 end_comment
 
 begin_decl_stmt
 name|SCLASS
 name|sigset_t
 name|_process_sigpending
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|sigset_t
+name|_process_sigmask
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+endif|#
+directive|endif
 decl_stmt|;
 end_decl_stmt
 
@@ -2414,6 +2939,49 @@ init|=
 literal|0
 endif|#
 directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Used to maintain pending and active signals: */
+end_comment
+
+begin_struct
+struct|struct
+name|sigstatus
+block|{
+name|int
+name|pending
+decl_stmt|;
+comment|/* Is this a pending signal? */
+name|int
+name|blocked
+decl_stmt|;
+comment|/* 					 * A handler is currently active for 					 * this signal; ignore subsequent 					 * signals until the handler is done. 					 */
+name|int
+name|signo
+decl_stmt|;
+comment|/* arg 1 to signal handler */
+name|siginfo_t
+name|siginfo
+decl_stmt|;
+comment|/* arg 2 to signal handler */
+name|ucontext_t
+name|uc
+decl_stmt|;
+comment|/* arg 3 to signal handler */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|SCLASS
+name|struct
+name|sigstatus
+name|_thread_sigq
+index|[
+name|NSIG
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -2497,6 +3065,32 @@ literal|2
 operator|*
 name|PTHREAD_STACK_GUARD
 operator|)
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Declare the kernel scheduler jump buffer and stack:  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|jmp_buf
+name|_thread_kern_sched_jb
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|void
+modifier|*
+name|_thread_kern_sched_stack
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+name|NULL
 endif|#
 directive|endif
 decl_stmt|;
@@ -2644,6 +3238,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|_cond_wait_backout
+parameter_list|(
+name|pthread_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_fd_lock_backout
+parameter_list|(
+name|pthread_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|_find_dead_thread
 parameter_list|(
@@ -2663,7 +3275,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|_flockfile_backout
+parameter_list|(
+name|pthread_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|_funlock_owned
+parameter_list|(
+name|pthread_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_join_backout
 parameter_list|(
 name|pthread_t
 parameter_list|)
@@ -2738,15 +3368,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|_dispatch_signals
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|_mutex_cv_lock
 parameter_list|(
@@ -2762,6 +3383,15 @@ name|_mutex_cv_unlock
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_mutex_lock_backout
+parameter_list|(
+name|pthread_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2892,15 +3522,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_PTHREADS_INVARIANTS
-argument_list|)
-end_if
-
 begin_function_decl
 name|void
 name|_waitq_insert
@@ -2920,6 +3541,15 @@ name|pthread
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_PTHREADS_INVARIANTS
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -3053,6 +3683,36 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|_thread_kern_scheduler
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_kern_sched_frame
+parameter_list|(
+name|struct
+name|pthread_signal_frame
+modifier|*
+name|psf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_kern_sched_sig
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|_thread_kern_sched_state
 parameter_list|(
 name|enum
@@ -3126,19 +3786,8 @@ name|_thread_sig_handler
 parameter_list|(
 name|int
 parameter_list|,
-name|int
-parameter_list|,
-name|ucontext_t
+name|siginfo_t
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|pthread_t
-name|_thread_sig_handle
-parameter_list|(
-name|int
 parameter_list|,
 name|ucontext_t
 modifier|*
@@ -3148,7 +3797,17 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_thread_sig_init
+name|_thread_sig_check_pending
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_sig_handle_pending
 parameter_list|(
 name|void
 parameter_list|)
@@ -3170,13 +3829,24 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_thread_sig_deliver
+name|_thread_sig_wrapper
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_sigframe_restore
 parameter_list|(
 name|pthread_t
-name|pthread
+name|thread
 parameter_list|,
-name|int
-name|sig
+name|struct
+name|pthread_signal_frame
+modifier|*
+name|psf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3184,15 +3854,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|_thread_start
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_thread_start_sig_handler
 parameter_list|(
 name|void
 parameter_list|)
@@ -3340,6 +4001,22 @@ name|int
 name|_thread_sys_sigreturn
 parameter_list|(
 name|ucontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_thread_sys_sigaltstack
+parameter_list|(
+specifier|const
+name|struct
+name|sigaltstack
+modifier|*
+parameter_list|,
+name|struct
+name|sigstack
 modifier|*
 parameter_list|)
 function_decl|;
