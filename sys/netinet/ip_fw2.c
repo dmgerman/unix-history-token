@@ -26,16 +26,6 @@ begin_comment
 comment|/*  * Implement IP packet firewall (new version)  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -86,11 +76,6 @@ end_endif
 begin_comment
 comment|/* INET */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -606,6 +591,29 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Firewall"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip_fw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable
+argument_list|,
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE3
+argument_list|,
+operator|&
+name|fw_enable
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable ipfw"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
