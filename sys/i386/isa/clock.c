@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.86 1997/05/31 09:27:30 peter Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.3 1997/06/25 20:37:29 smp Exp smp $  */
 end_comment
 
 begin_comment
@@ -93,6 +93,27 @@ include|#
 directive|include
 file|<machine/ipl.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|APIC_IO
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APIC_IO */
+end_comment
 
 begin_include
 include|#
@@ -3083,17 +3104,14 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|APIC_IO
-argument_list|)
-end_if
+end_ifdef
 
 begin_comment
-comment|/* from icu.s: */
+comment|/* XXX FIXME: from icu.s: */
 end_comment
 
 begin_decl_stmt
@@ -3187,12 +3205,9 @@ block|{
 name|int
 name|diag
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|APIC_IO
-argument_list|)
 name|int
 name|x
 decl_stmt|;
@@ -3229,19 +3244,26 @@ name|RTC_PROFRATE
 expr_stmt|;
 block|}
 comment|/* Finish initializing 8253 timer 0. */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|APIC_IO
-argument_list|)
+ifndef|#
+directive|ifndef
+name|IO_ICU1
+define|#
+directive|define
+name|IO_ICU1
+value|0x20
+endif|#
+directive|endif
+comment|/* IO_ICU1 */
 comment|/* 8254 is traditionally on ISA IRQ0 */
 if|if
 condition|(
 operator|(
 name|x
 operator|=
-name|get_isa_apic_irq
+name|isa_apic_pin
 argument_list|(
 literal|0
 argument_list|)
@@ -3250,22 +3272,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 		 * bummer, this mb doesn't have the 8254 on ISA irq0, 		 *  perhaps it's on the EISA bus... 		 */
-if|if
-condition|(
-operator|(
-name|x
-operator|=
-name|get_eisa_apic_irq
-argument_list|(
-literal|0
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-comment|/* double bummer, attempt to redirect thru the 8259 */
+comment|/* bummer, attempt to redirect thru the 8259 */
 if|if
 condition|(
 name|bootverbose
@@ -3276,19 +3283,6 @@ literal|"APIC missing 8254 connection\n"
 argument_list|)
 expr_stmt|;
 comment|/* allow 8254 timer to INTerrupt 8259 */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|IO_ICU1
-argument_list|)
-define|#
-directive|define
-name|IO_ICU1
-value|0x20
-endif|#
-directive|endif
 name|x
 operator|=
 name|inb
@@ -3337,7 +3331,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 8259 is on 0 */
-block|}
 block|}
 name|vec
 index|[
@@ -3509,19 +3502,16 @@ argument_list|,
 name|RTCDG_BITS
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|APIC_IO
-argument_list|)
 comment|/* RTC is traditionally on ISA IRQ8 */
 if|if
 condition|(
 operator|(
 name|x
 operator|=
-name|get_isa_apic_irq
+name|isa_apic_pin
 argument_list|(
 literal|8
 argument_list|)
@@ -3529,28 +3519,11 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|x
-operator|=
-name|get_eisa_apic_irq
-argument_list|(
-literal|8
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
 name|panic
 argument_list|(
 literal|"APIC missing RTC connection"
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|vec
 index|[
 name|x
@@ -3652,12 +3625,9 @@ argument_list|,
 name|rtc_statusb
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|APIC_IO
-argument_list|)
 name|printf
 argument_list|(
 literal|"Enabled INTs: "
