@@ -167,7 +167,7 @@ name|r
 decl_stmt|,
 name|n
 decl_stmt|;
-comment|/* XXX read_random() returns unsafe numbers if the entropy 	 * devce is not loaded - MarkM 	 */
+comment|/* 	 * XXX read_random() returns unsafe numbers if the entropy 	 * device is not loaded -- MarkM. 	 */
 name|r
 operator|=
 name|read_random
@@ -177,7 +177,7 @@ argument_list|,
 name|ARC4_KEYBYTES
 argument_list|)
 expr_stmt|;
-comment|/* if r == 0 || -1, just use what was on the stack */
+comment|/* If r == 0 || -1, just use what was on the stack. */
 if|if
 condition|(
 name|r
@@ -333,7 +333,7 @@ name|arc4_initialized
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Now, throw away the first N words out output, as suggested 	 * in the paper "Weaknesses in the Key Scheduling Algorithm 	 * of RC4" by Fluher, Mantin, and Shamir. 	 * 	 * (N = 256 in our case.) 	 */
+comment|/* 	 * Throw away the first N words of output, as suggested in the 	 * paper "Weaknesses in the Key Scheduling Algorithm of RC4" 	 * by Fluher, Mantin, and Shamir.  (N = 256 in our case.) 	 */
 for|for
 control|(
 name|n
@@ -456,7 +456,6 @@ condition|)
 name|arc4_init
 argument_list|()
 expr_stmt|;
-comment|/* Get current time. */
 name|getmicrotime
 argument_list|(
 operator|&
