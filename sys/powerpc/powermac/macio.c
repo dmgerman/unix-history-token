@@ -502,15 +502,27 @@ index|[]
 init|=
 block|{
 block|{
-literal|0x0025106b
+literal|0x0017106b
 block|,
-literal|"Pangea I/O Controller"
+literal|"Paddington I/O Controller"
 block|}
 block|,
 block|{
 literal|0x0022106b
 block|,
 literal|"KeyLargo I/O Controller"
+block|}
+block|,
+block|{
+literal|0x0025106b
+block|,
+literal|"Pangea I/O Controller"
+block|}
+block|,
+block|{
+literal|0x003e106b
+block|,
+literal|"Intrepid I/O Controller"
 block|}
 block|,
 block|{
