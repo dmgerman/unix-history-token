@@ -9,15 +9,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)C.c	8.4 (Berkeley) 4/2/94";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)C.c	8.4 (Berkeley) 4/2/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -425,6 +443,65 @@ name|storec
 goto|;
 comment|/* 		 * store characters until one that can't be part of a token 		 * comes along; check the current token against certain 		 * reserved words. 		 */
 default|default:
+comment|/* ignore whitespace */
+if|if
+condition|(
+name|c
+operator|==
+literal|' '
+operator|||
+name|c
+operator|==
+literal|'\t'
+condition|)
+block|{
+name|int
+name|save
+init|=
+name|c
+decl_stmt|;
+while|while
+condition|(
+name|GETC
+argument_list|(
+operator|!=
+argument_list|,
+name|EOF
+argument_list|)
+operator|&&
+operator|(
+name|c
+operator|==
+literal|' '
+operator|||
+name|c
+operator|==
+literal|'\t'
+operator|)
+condition|)
+empty_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+name|EOF
+condition|)
+return|return;
+operator|(
+name|void
+operator|)
+name|ungetc
+argument_list|(
+name|c
+argument_list|,
+name|inf
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|save
+expr_stmt|;
+block|}
 name|storec
 label|:
 if|if
@@ -818,6 +895,37 @@ name|MAXTOKEN
 index|]
 decl_stmt|;
 comment|/* storage buffer */
+comment|/* ignore leading whitespace */
+while|while
+condition|(
+name|GETC
+argument_list|(
+operator|!=
+argument_list|,
+name|EOF
+argument_list|)
+operator|&&
+operator|(
+name|c
+operator|==
+literal|' '
+operator|||
+name|c
+operator|==
+literal|'\t'
+operator|)
+condition|)
+empty_stmt|;
+operator|(
+name|void
+operator|)
+name|ungetc
+argument_list|(
+name|c
+argument_list|,
+name|inf
+argument_list|)
+expr_stmt|;
 name|curline
 operator|=
 name|lineno
