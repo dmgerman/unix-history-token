@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	5.2 (Berkeley) %G%"
+literal|"@(#)stab.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2030,18 +2030,18 @@ end_comment
 begin_macro
 name|stabgconst
 argument_list|(
-argument|const
+argument|constant
 argument_list|,
 argument|line
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
-operator|*
-specifier|const
-expr_stmt|;
-end_expr_stmt
+modifier|*
+name|constant
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2060,7 +2060,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-specifier|const
+name|constant
 argument_list|,
 name|N_PC
 argument_list|,
