@@ -275,6 +275,21 @@ name|function
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PAM_PERM_DENIED
+case|:
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s: %s: returning PAM_PERM_DENIED"
+argument_list|,
+name|modname
+argument_list|,
+name|function
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|syslog
 argument_list|(
