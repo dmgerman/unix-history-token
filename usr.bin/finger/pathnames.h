@@ -6,6 +6,33 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|PATHNAMES_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_FORWARD
+value|".forward"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_PLAN
+value|".plan"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_PROJECT
+value|".project"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_PATH_FINGERCONF
 end_ifndef
 
@@ -23,6 +50,15 @@ end_endif
 
 begin_comment
 comment|/* _PATH_FINGERCONF */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PATHNAMES_H */
 end_comment
 
 end_unit
