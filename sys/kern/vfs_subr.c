@@ -14379,7 +14379,7 @@ name|vpi_revents
 operator||=
 name|events
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|vp
@@ -14387,6 +14387,8 @@ operator|->
 name|v_pollinfo
 operator|->
 name|vpi_selinfo
+argument_list|,
+name|PRIBIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -14453,7 +14455,7 @@ name|vpi_events
 operator|=
 literal|0
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|vp
@@ -14461,6 +14463,8 @@ operator|->
 name|v_pollinfo
 operator|->
 name|vpi_selinfo
+argument_list|,
+name|PRIBIO
 argument_list|)
 expr_stmt|;
 block|}

@@ -8457,7 +8457,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|so
@@ -8465,6 +8465,8 @@ operator|->
 name|so_rcv
 operator|.
 name|sb_sel
+argument_list|,
+name|PSOCK
 argument_list|)
 expr_stmt|;
 block|}

@@ -5530,12 +5530,14 @@ name|softc
 parameter_list|)
 block|{
 comment|/* 	 * Notify users sleeping via poll(), kqueue(), and 	 * blocking read(). 	 */
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|softc
 operator|->
 name|read_select
+argument_list|,
+name|PRIBIO
 argument_list|)
 expr_stmt|;
 name|KNOTE

@@ -1897,12 +1897,14 @@ operator|&=
 operator|~
 name|PIPE_SEL
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|cpipe
 operator|->
 name|pipe_sel
+argument_list|,
+name|PSOCK
 argument_list|)
 expr_stmt|;
 block|}

@@ -2299,7 +2299,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 operator|(
@@ -2307,6 +2307,8 @@ name|vcp
 operator|->
 name|vc_selproc
 operator|)
+argument_list|,
+name|coda_call_sleep
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2961,7 +2963,7 @@ operator|->
 name|vc_requests
 argument_list|)
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 operator|(
@@ -2969,6 +2971,8 @@ name|vcp
 operator|->
 name|vc_selproc
 operator|)
+argument_list|,
+name|coda_call_sleep
 argument_list|)
 expr_stmt|;
 block|}

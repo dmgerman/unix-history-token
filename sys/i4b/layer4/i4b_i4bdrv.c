@@ -3230,10 +3230,12 @@ name|selflag
 operator|=
 literal|0
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|select_rd_info
+argument_list|,
+name|TTIPRI
 argument_list|)
 expr_stmt|;
 block|}
@@ -3360,10 +3362,12 @@ name|selflag
 operator|=
 literal|0
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|select_rd_info
+argument_list|,
+name|TTIPRI
 argument_list|)
 expr_stmt|;
 block|}

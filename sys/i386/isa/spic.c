@@ -1767,12 +1767,14 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_rsel
+argument_list|,
+name|PZERO
 argument_list|)
 expr_stmt|;
 block|}

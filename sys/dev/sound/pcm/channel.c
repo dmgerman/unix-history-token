@@ -468,12 +468,14 @@ argument_list|(
 name|c
 argument_list|)
 condition|)
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 name|sndbuf_getsel
 argument_list|(
 name|bs
 argument_list|)
+argument_list|,
+name|PRIBIO
 argument_list|)
 expr_stmt|;
 name|wakeup

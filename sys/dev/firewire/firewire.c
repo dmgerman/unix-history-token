@@ -10108,7 +10108,7 @@ directive|else
 argument|if (&xferq->rsel.si_pid != 0)
 endif|#
 directive|endif
-argument|selwakeup(&xferq->rsel); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq->flag&= ~FWXFERQ_WAKEUP; 			wakeup((caddr_t)xferq); 		} 		if (xferq->flag& FWXFERQ_HANDLER) { 			xferq->hand(xferq); 		} 		return; 		break; 	}
+argument|selwakeuppri(&xferq->rsel, FWPRI); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq->flag&= ~FWXFERQ_WAKEUP; 			wakeup((caddr_t)xferq); 		} 		if (xferq->flag& FWXFERQ_HANDLER) { 			xferq->hand(xferq); 		} 		return; 		break; 	}
 endif|#
 directive|endif
 argument|default: 		printf(

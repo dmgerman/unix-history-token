@@ -4133,12 +4133,14 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_selp
+argument_list|,
+name|MSEPRI
 argument_list|)
 expr_stmt|;
 block|}

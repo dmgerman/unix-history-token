@@ -128,6 +128,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|selwakeuppri
+parameter_list|(
+name|struct
+name|selinfo
+modifier|*
+name|sip
+parameter_list|,
+name|int
+name|pri
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

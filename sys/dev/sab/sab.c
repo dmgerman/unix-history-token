@@ -4127,12 +4127,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|tp
 operator|->
 name|t_wsel
+argument_list|,
+name|TTOPRI
 argument_list|)
 expr_stmt|;
 if|if

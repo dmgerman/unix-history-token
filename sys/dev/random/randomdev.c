@@ -1851,12 +1851,14 @@ name|seeded
 operator|=
 literal|1
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|random_systat
 operator|.
 name|rsel
+argument_list|,
+name|PUSER
 argument_list|)
 expr_stmt|;
 name|wakeup

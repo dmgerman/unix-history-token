@@ -4969,12 +4969,14 @@ operator|=
 operator|++
 name|apm_evindex
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_rsel
+argument_list|,
+name|PZERO
 argument_list|)
 expr_stmt|;
 return|return

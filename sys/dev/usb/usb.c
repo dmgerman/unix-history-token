@@ -3699,10 +3699,12 @@ operator|&
 name|usb_events
 argument_list|)
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|usb_selevent
+argument_list|,
+name|PZERO
 argument_list|)
 expr_stmt|;
 if|if

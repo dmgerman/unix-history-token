@@ -797,12 +797,14 @@ name|msgbuftrigger
 operator|=
 literal|0
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|logsoftc
 operator|.
 name|sc_selp
+argument_list|,
+name|LOG_RDPRI
 argument_list|)
 expr_stmt|;
 if|if

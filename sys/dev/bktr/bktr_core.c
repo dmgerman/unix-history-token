@@ -3574,12 +3574,14 @@ name|vbi_select
 argument_list|)
 condition|)
 block|{
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|bktr
 operator|->
 name|vbi_select
+argument_list|,
+name|VBIPRI
 argument_list|)
 expr_stmt|;
 block|}

@@ -11770,12 +11770,14 @@ name|aac_aifq
 argument_list|)
 expr_stmt|;
 comment|/* Wakeup any poll()ers */
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|rcv_select
+argument_list|,
+name|PRIBIO
 argument_list|)
 expr_stmt|;
 block|}

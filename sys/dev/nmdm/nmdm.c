@@ -1873,7 +1873,7 @@ operator|&
 name|FREAD
 condition|)
 block|{
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|otherpart
@@ -1881,6 +1881,8 @@ operator|->
 name|nm_tty
 operator|.
 name|t_rsel
+argument_list|,
+name|TTIPRI
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -1904,7 +1906,7 @@ operator|&
 name|FWRITE
 condition|)
 block|{
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|otherpart
@@ -1912,6 +1914,8 @@ operator|->
 name|nm_tty
 operator|.
 name|t_wsel
+argument_list|,
+name|TTOPRI
 argument_list|)
 expr_stmt|;
 name|wakeup

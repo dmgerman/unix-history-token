@@ -200,15 +200,27 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cv_broadcast
+name|cv_broadcastpri
 parameter_list|(
 name|struct
 name|cv
 modifier|*
 name|cvp
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|cv_broadcast
+parameter_list|(
+name|cvp
+parameter_list|)
+value|cv_broadcastpri(cvp, -1)
+end_define
 
 begin_function_decl
 name|void

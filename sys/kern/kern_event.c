@@ -4688,12 +4688,14 @@ operator|&=
 operator|~
 name|KQ_SEL
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|kq
 operator|->
 name|kq_sel
+argument_list|,
+name|PSOCK
 argument_list|)
 expr_stmt|;
 block|}

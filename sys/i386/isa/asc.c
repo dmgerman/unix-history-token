@@ -2244,12 +2244,14 @@ name|selp
 argument_list|)
 condition|)
 block|{
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|scu
 operator|->
 name|selp
+argument_list|,
+name|ASCPRI
 argument_list|)
 expr_stmt|;
 block|}

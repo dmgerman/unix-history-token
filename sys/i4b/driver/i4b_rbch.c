@@ -3169,7 +3169,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 block|}
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|rbch_softc
@@ -3178,6 +3178,8 @@ name|unit
 index|]
 operator|.
 name|selp
+argument_list|,
+name|TTIPRI
 argument_list|)
 expr_stmt|;
 block|}
@@ -3251,7 +3253,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 block|}
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|rbch_softc
@@ -3260,6 +3262,8 @@ name|unit
 index|]
 operator|.
 name|selp
+argument_list|,
+name|TTOPRI
 argument_list|)
 expr_stmt|;
 block|}
@@ -3301,7 +3305,7 @@ name|last_active_time
 operator|=
 name|SECOND
 expr_stmt|;
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|rbch_softc
@@ -3310,6 +3314,8 @@ name|unit
 index|]
 operator|.
 name|selp
+argument_list|,
+name|TTIPRI
 argument_list|)
 expr_stmt|;
 block|}

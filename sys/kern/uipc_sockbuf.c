@@ -1169,12 +1169,14 @@ modifier|*
 name|sb
 decl_stmt|;
 block|{
-name|selwakeup
+name|selwakeuppri
 argument_list|(
 operator|&
 name|sb
 operator|->
 name|sb_sel
+argument_list|,
+name|PSOCK
 argument_list|)
 expr_stmt|;
 name|sb
