@@ -2421,7 +2421,7 @@ name|DONTFREE
 expr_stmt|;
 if|if
 condition|(
-name|isnumber
+name|is_a_number
 argument_list|(
 name|recloc
 operator|->
@@ -4092,7 +4092,7 @@ operator|==
 literal|0
 operator|&&
 operator|!
-name|isnumber
+name|is_a_number
 argument_list|(
 name|s
 operator|=
@@ -7112,7 +7112,7 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|isnumber
+name|is_a_number
 argument_list|(
 name|s
 argument_list|)
@@ -7270,7 +7270,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isnumber
+name|is_a_number
 argument_list|(
 name|s
 argument_list|)
@@ -7434,7 +7434,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isnumber
+name|is_a_number
 argument_list|(
 name|t
 argument_list|)
@@ -7571,7 +7571,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isnumber
+name|is_a_number
 argument_list|(
 name|t
 argument_list|)

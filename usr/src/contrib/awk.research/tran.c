@@ -851,7 +851,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isnumber
+name|is_a_number
 argument_list|(
 operator|*
 name|av
@@ -994,7 +994,7 @@ expr_stmt|;
 comment|/* split into two strings at = */
 if|if
 condition|(
-name|isnumber
+name|is_a_number
 argument_list|(
 name|p
 argument_list|)
@@ -2478,7 +2478,7 @@ expr_stmt|;
 comment|/* best guess */
 if|if
 condition|(
-name|isnumber
+name|is_a_number
 argument_list|(
 name|vp
 operator|->
