@@ -532,6 +532,9 @@ if|if
 condition|(
 operator|!
 name|v_tty
+operator|||
+operator|!
+name|v_level
 condition|)
 return|return;
 name|gettimeofday
@@ -1025,7 +1028,7 @@ if|if
 condition|(
 name|v_level
 operator|>
-literal|2
+literal|1
 condition|)
 name|strcat
 argument_list|(
@@ -1401,6 +1404,46 @@ goto|goto
 name|success
 goto|;
 block|}
+if|if
+condition|(
+name|v_level
+operator|>
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|sb
+operator|.
+name|st_size
+condition|)
+name|warnx
+argument_list|(
+literal|"local: %lld / %ld"
+argument_list|,
+name|sb
+operator|.
+name|st_size
+argument_list|,
+name|sb
+operator|.
+name|st_mtime
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"remote: %lld / %ld"
+argument_list|,
+name|us
+operator|.
+name|size
+argument_list|,
+name|us
+operator|.
+name|mtime
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* open output file */
 if|if
 condition|(
@@ -1494,14 +1537,6 @@ goto|;
 block|}
 else|else
 block|{
-name|us
-operator|.
-name|size
-operator|+=
-name|url
-operator|->
-name|offset
-expr_stmt|;
 if|if
 condition|(
 name|us
@@ -3160,16 +3195,6 @@ condition|(
 name|a_flag
 condition|)
 continue|continue;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Skipping %s\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 name|argc
