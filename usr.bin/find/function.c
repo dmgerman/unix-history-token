@@ -4092,7 +4092,7 @@ name|new
 operator|->
 name|t_data
 operator|=
-name|parsedate
+name|get_date
 argument_list|(
 name|fn_or_tspec
 argument_list|,

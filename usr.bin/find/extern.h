@@ -108,7 +108,7 @@ end_struct_decl
 
 begin_function_decl
 name|time_t
-name|parsedate
+name|get_date
 parameter_list|(
 name|char
 modifier|*
