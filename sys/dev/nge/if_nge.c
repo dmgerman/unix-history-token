@@ -6580,6 +6580,12 @@ operator|||
 operator|(
 name|status
 operator|&
+name|NGE_ISR_RX_OFLOW
+operator|)
+operator|||
+operator|(
+name|status
+operator|&
 name|NGE_ISR_RX_OK
 operator|)
 condition|)
@@ -6588,6 +6594,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 operator|(
@@ -6601,6 +6610,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|status
