@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.75 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.76 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2830,6 +2830,11 @@ directive|if
 name|defined
 argument_list|(
 name|HP380
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LUNA2
 argument_list|)
 comment|/* default to copyback caching on 68040 */
 if|if
