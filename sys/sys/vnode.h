@@ -1910,23 +1910,6 @@ name|mntvnode_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * This macro is very helpful in defining those offsets in the vdesc struct.  *  * This is stolen from X11R4.  I ignored all the fancy stuff for  * Crays, so if you decide to port this to such a serious machine,  * you might want to consult Intrinsic.h's XtOffset{,Of,To}.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VOPARG_OFFSET
-parameter_list|(
-name|p_type
-parameter_list|,
-name|field
-parameter_list|)
-define|\
-value|((int) (((char *) (&(((p_type)NULL)->field))) - ((char *) NULL)))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1936,8 +1919,7 @@ name|s_type
 parameter_list|,
 name|field
 parameter_list|)
-define|\
-value|VOPARG_OFFSET(s_type*,field)
+value|__offsetof(s_type, field)
 end_define
 
 begin_define
@@ -1945,14 +1927,14 @@ define|#
 directive|define
 name|VOPARG_OFFSETTO
 parameter_list|(
-name|S_TYPE
+name|s_type
 parameter_list|,
-name|S_OFFSET
+name|s_offset
 parameter_list|,
-name|STRUCT_P
+name|struct_p
 parameter_list|)
 define|\
-value|((S_TYPE)(((char*)(STRUCT_P))+(S_OFFSET)))
+value|((s_type)(((char*)(struct_p)) + (s_offset)))
 end_define
 
 begin_comment
