@@ -3,28 +3,6 @@ begin_comment
 comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)daemon.c	5.1 (Berkeley) %G%"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|not lint
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -49,30 +27,15 @@ directive|ifndef
 name|DAEMON
 end_ifndef
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|daemon
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-operator|(
-name|w
-operator|/
-name|o
-name|daemon
-name|mode
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)daemon.c	5.2 (Berkeley) %G%	(w/o daemon mode)"
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -103,28 +66,15 @@ directive|include
 file|<sys/wait.h>
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|daemon
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-operator|(
-name|with
-name|daemon
-name|mode
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)daemon.c	5.2 (Berkeley) %G% (with daemon mode)"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. ** **	The semantics of both of these should be clean. */
