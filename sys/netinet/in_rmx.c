@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1994, Massachusetts Institute of Technology.  All Rights Reserved.  *  * You may copy this file verbatim until I find the official   * Institute boilerplate.  *  * $Id: in_rmx.c,v 1.5 1994/12/02 23:10:32 wollman Exp $  */
+comment|/*  * Copyright 1994, Massachusetts Institute of Technology.  All Rights Reserved.  *  * You may copy this file verbatim until I find the official   * Institute boilerplate.  *  * $Id: in_rmx.c,v 1.6 1994/12/13 22:32:45 wollman Exp $  */
 end_comment
 
 begin_comment
 comment|/*  * This code does two things necessary for the enhanced TCP metrics to  * function in a useful manner:  *  1) It marks all non-host routes as `cloning', thus ensuring that  *     every actual reference to such a route actually gets turned  *     into a reference to a host route to the specific destination  *     requested.  *  2) When such routes lose all their references, it arranges for them  *     to be deleted in some random collection of circumstances, so that  *     a large quantity of stale routing data is not kept in kernel memory  *     indefinitely.  See in_rtqtimo() below for the exact mechanism.  */
-end_comment
-
-begin_comment
-comment|/*  * XXX - look for races  */
 end_comment
 
 begin_include
@@ -630,6 +626,9 @@ name|struct
 name|timeval
 name|atv
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|arg
 operator|.
 name|found
@@ -664,6 +663,11 @@ name|draining
 operator|=
 literal|0
 expr_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|rnh
 operator|->
 name|rnh_walktree
@@ -674,6 +678,11 @@ name|in_rtqkill
 argument_list|,
 operator|&
 name|arg
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|atv
@@ -729,9 +738,6 @@ name|arg
 decl_stmt|;
 name|int
 name|s
-init|=
-name|splnet
-argument_list|()
 decl_stmt|;
 name|arg
 operator|.
@@ -760,6 +766,11 @@ operator|.
 name|draining
 operator|=
 literal|1
+expr_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
 expr_stmt|;
 name|rnh
 operator|->
