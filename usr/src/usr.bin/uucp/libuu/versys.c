@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)versys.c	5.6 (Berkeley) %G%"
+literal|"@(#)versys.c	5.7	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,19 +149,28 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|fp
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-name|CANTOPEN
+literal|"fopen(%s) failed: %m"
 argument_list|,
 name|SYSFILE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|PhoneNumber
 index|[
 literal|0
