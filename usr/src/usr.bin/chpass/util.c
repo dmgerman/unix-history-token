@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.1 (Berkeley) %G%"
+literal|"@(#)util.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,11 +204,7 @@ name|sprintf
 argument_list|(
 name|tbuf
 argument_list|,
-literal|"%02d %s 19%02d"
-argument_list|,
-name|tp
-operator|->
-name|tm_mday
+literal|"%s %d, 19%d"
 argument_list|,
 name|months
 index|[
@@ -216,6 +212,10 @@ name|tp
 operator|->
 name|tm_mon
 index|]
+argument_list|,
+name|tp
+operator|->
+name|tm_mday
 argument_list|,
 name|tp
 operator|->
@@ -343,44 +343,9 @@ operator|!
 operator|(
 name|t
 operator|=
-name|strsep
+name|strtok
 argument_list|(
 name|p
-argument_list|,
-literal|" \t"
-argument_list|)
-operator|)
-operator|||
-operator|!
-name|isdigit
-argument_list|(
-operator|*
-name|t
-argument_list|)
-condition|)
-goto|goto
-name|bad
-goto|;
-name|day
-operator|=
-name|atoi
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|t
-operator|=
-name|strsep
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
 argument_list|,
 literal|" \t"
 argument_list|)
@@ -440,7 +405,7 @@ operator|!
 operator|(
 name|t
 operator|=
-name|strsep
+name|strtok
 argument_list|(
 operator|(
 name|char
@@ -448,7 +413,42 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|" \t"
+literal|" \t,"
+argument_list|)
+operator|)
+operator|||
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+name|t
+argument_list|)
+condition|)
+goto|goto
+name|bad
+goto|;
+name|day
+operator|=
+name|atoi
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|t
+operator|=
+name|strtok
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+literal|" \t,"
 argument_list|)
 operator|)
 operator|||
