@@ -757,7 +757,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.13 1998/07/09 22:51:59 des Exp $"
+literal|"$Id: parsetime.c,v 1.14 1998/08/08 14:02:06 alex Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1586,7 +1586,7 @@ literal|59
 condition|)
 name|panic
 argument_list|(
-literal|"garbeld time"
+literal|"garbled time"
 argument_list|)
 expr_stmt|;
 name|hour
