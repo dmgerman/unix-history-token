@@ -4503,9 +4503,6 @@ return|return;
 block|}
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|twabortrcv
 argument_list|,
 operator|(
@@ -4516,9 +4513,6 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|twabortrcv
 argument_list|,
 operator|(
