@@ -2929,6 +2929,57 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
+comment|/* VScom PCI-200L: 2S */
+block|{
+literal|"VScom PCI-200L"
+block|,
+block|{
+literal|0x14d2
+block|,
+literal|0x8020
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x14
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+operator|*
+literal|8
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x18
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+operator|*
+literal|8
+block|}
+block|, 	    }
+block|, 	}
+block|,
 comment|/* VScom PCI-400: 4S */
 block|{
 literal|"VScom PCI-400"
