@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.8 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3399,7 +3399,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%.1fMb in %d cyl groups (%d c/g, %.2fMb/g, %d i/g)\n"
+literal|"\t%.1fMB in %d cyl groups (%d c/g, %.2fMB/g, %d i/g)\n"
 argument_list|,
 operator|(
 name|float
