@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_port.h,v 1.15 1999/11/16 12:04:28 augustss Exp $	*/
+comment|/*	$NetBSD: usb_port.h,v 1.23 2000/03/24 22:03:32 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -196,32 +196,50 @@ define|\
 value|struct usb_dma_block; \ 	typedef struct { \ 		struct usb_dma_block *block; \ 		u_int offs; \ 	} usb_dma_t
 end_define
 
+begin_typedef
+typedef|typedef
+name|struct
+name|callout
+name|usb_callout_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
-name|usb_timeout
+name|usb_callout_init
 parameter_list|(
-name|f
-parameter_list|,
-name|d
-parameter_list|,
-name|t
-parameter_list|,
 name|h
 parameter_list|)
-value|timeout((f), (d), (t))
+value|callout_handle_init(&(h))
 end_define
 
 begin_define
 define|#
 directive|define
-name|usb_untimeout
+name|usb_callout
 parameter_list|(
+name|h
+parameter_list|,
+name|t
+parameter_list|,
 name|f
 parameter_list|,
 name|d
-parameter_list|,
+parameter_list|)
+value|((h) = timeout((f), (d), (t)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|usb_uncallout
+parameter_list|(
 name|h
+parameter_list|,
+name|f
+parameter_list|,
+name|d
 parameter_list|)
 value|untimeout((f), (d))
 end_define
@@ -660,18 +678,34 @@ define|\
 value|struct usb_dma_block; \ 	typedef struct { \ 		struct usb_dma_block *block; \ 		u_int offs; \ 	} usb_dma_t
 end_define
 
+begin_typedef
+typedef|typedef
+name|char
+name|usb_callout_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
-name|usb_timeout
+name|usb_callout_init
 parameter_list|(
-name|f
-parameter_list|,
-name|d
+name|h
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usb_callout
+parameter_list|(
+name|h
 parameter_list|,
 name|t
 parameter_list|,
-name|h
+name|f
+parameter_list|,
+name|d
 parameter_list|)
 value|timeout((f), (d), (t))
 end_define
@@ -679,13 +713,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|usb_untimeout
+name|usb_uncallout
 parameter_list|(
+name|h
+parameter_list|,
 name|f
 parameter_list|,
 name|d
-parameter_list|,
-name|h
 parameter_list|)
 value|untimeout((f), (d))
 end_define
@@ -1089,34 +1123,52 @@ name|config_pending_decr
 parameter_list|()
 end_define
 
+begin_typedef
+typedef|typedef
+name|struct
+name|callout
+name|usb_callout_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
-name|usb_timeout
+name|usb_callout_init
 parameter_list|(
-name|f
-parameter_list|,
-name|d
-parameter_list|,
-name|t
-parameter_list|,
 name|h
 parameter_list|)
-value|((h) = timeout((f), (d), (t)))
+value|callout_init(&(h), 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|usb_untimeout
+name|usb_callout
 parameter_list|(
+name|h
+parameter_list|,
+name|t
+parameter_list|,
 name|f
 parameter_list|,
 name|d
-parameter_list|,
-name|h
 parameter_list|)
-value|untimeout((f), (d), (h))
+value|callout_reset(&(h), (t), (f), (d))
+end_define
+
+begin_define
+define|#
+directive|define
+name|usb_uncallout
+parameter_list|(
+name|h
+parameter_list|,
+name|f
+parameter_list|,
+name|d
+parameter_list|)
+value|callout_stop(&(h))
 end_define
 
 begin_define
