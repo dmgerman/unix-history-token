@@ -18922,6 +18922,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|cur_console
+operator|=
+name|console
+index|[
+literal|0
+index|]
+expr_stmt|;
 comment|/* copy screen to temporary buffer */
 name|bcopyw
 argument_list|(
@@ -19052,13 +19059,6 @@ operator|=
 name|hw_cursor
 operator|/
 name|COL
-expr_stmt|;
-name|cur_console
-operator|=
-name|console
-index|[
-literal|0
-index|]
 expr_stmt|;
 for|for
 control|(
@@ -23891,6 +23891,12 @@ name|void
 name|set_font_mode
 parameter_list|()
 block|{
+name|int
+name|s
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
 comment|/* setup vga for loading fonts (graphics plane mode) */
 name|inb
 argument_list|(
@@ -24043,6 +24049,11 @@ expr_stmt|;
 comment|/* addr = a0000, 64kb */
 endif|#
 directive|endif
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 specifier|static
 name|void
@@ -25127,22 +25138,14 @@ index|]
 operator||=
 literal|0xff
 expr_stmt|;
-while|while
-condition|(
-operator|!
-operator|(
-name|inb
-argument_list|(
-name|crtc_addr
-operator|+
-literal|6
-argument_list|)
-operator|&
-literal|0x08
-operator|)
-condition|)
+if|#
+directive|if
+literal|0
+block|while (!(inb(crtc_addr+6)& 0x08))
 comment|/* wait for vertical retrace */
-empty_stmt|;
+block|;
+endif|#
+directive|endif
 name|set_font_mode
 argument_list|()
 expr_stmt|;
@@ -26240,22 +26243,14 @@ operator|->
 name|mouse_pos
 expr_stmt|;
 comment|/* wait for vertical retrace to avoid jitter on some videocards */
-while|while
-condition|(
-operator|!
-operator|(
-name|inb
-argument_list|(
-name|crtc_addr
-operator|+
-literal|6
-argument_list|)
-operator|&
-literal|0x08
-operator|)
-condition|)
+if|#
+directive|if
+literal|0
+block|while (!(inb(crtc_addr+6)& 0x08))
 comment|/* idle */
-empty_stmt|;
+block|;
+endif|#
+directive|endif
 name|set_font_mode
 argument_list|()
 expr_stmt|;
