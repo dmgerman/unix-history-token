@@ -1838,9 +1838,6 @@ expr_stmt|;
 comment|/* Mark it as free */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;
@@ -2091,9 +2088,6 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|,
 name|user_msqptr
@@ -3294,9 +3288,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|,
 operator|(
@@ -3673,9 +3664,6 @@ name|MSG_LOCKED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;
@@ -3724,9 +3712,6 @@ name|MSG_LOCKED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;
@@ -3867,9 +3852,6 @@ name|MSG_LOCKED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;
@@ -3940,9 +3922,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;
@@ -4033,9 +4012,6 @@ name|time_second
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;
@@ -4752,9 +4728,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|,
 operator|(
@@ -4915,9 +4888,6 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 operator|(
 name|msghdr
@@ -4961,9 +4931,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;
@@ -5065,9 +5032,6 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|msgpool
 index|[
@@ -5109,9 +5073,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;
@@ -5147,9 +5108,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;

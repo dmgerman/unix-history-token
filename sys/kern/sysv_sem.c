@@ -2583,9 +2583,6 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|semaptr
 argument_list|,
 name|real_arg
@@ -2867,9 +2864,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|semaptr
 argument_list|)
 expr_stmt|;
@@ -2933,9 +2927,6 @@ name|real_arg
 operator|.
 name|buf
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sbuf
 argument_list|,
@@ -3063,9 +3054,6 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|semaptr
 argument_list|,
 name|real_arg
@@ -3319,9 +3307,6 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|semaptr
 operator|->
@@ -3533,9 +3518,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|semaptr
 argument_list|)
 expr_stmt|;
@@ -3616,9 +3598,6 @@ index|[
 name|i
 index|]
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|usval
 argument_list|,
@@ -3677,9 +3656,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|semaptr
 argument_list|)
 expr_stmt|;
@@ -5280,9 +5256,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|semaptr
 argument_list|,
 operator|(
@@ -5685,9 +5658,6 @@ endif|#
 directive|endif
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|semaptr
 argument_list|)
 expr_stmt|;
@@ -6055,9 +6025,6 @@ name|adjval
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|semaptr
 argument_list|)
 expr_stmt|;

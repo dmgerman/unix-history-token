@@ -473,7 +473,8 @@ name|int
 name|vm_refcnt
 decl_stmt|;
 comment|/* number of references */
-name|caddr_t
+name|void
+modifier|*
 name|vm_shm
 decl_stmt|;
 comment|/* SYS5 shared memory private data XXX */
