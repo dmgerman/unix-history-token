@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stty.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stty.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -54,64 +54,6 @@ name|winsize
 name|win
 decl_stmt|;
 comment|/* window info */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|key
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* name */
-name|void
-argument_list|(
-argument|*f
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|info
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* function */
-define|#
-directive|define
-name|F_NEEDARG
-value|0x01
-comment|/* needs an argument */
-define|#
-directive|define
-name|F_OFFOK
-value|0x02
-comment|/* can turn off */
-name|int
-name|flags
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|modes
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|long
-name|set
-decl_stmt|;
-name|long
-name|unset
-decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)key.c	5.2 (Berkeley) %G%"
+literal|"@(#)key.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -286,6 +286,39 @@ name|__END_DECLS
 specifier|static
 expr|struct
 name|key
+block|{
+name|char
+operator|*
+name|name
+block|;
+comment|/* name */
+name|void
+argument_list|(
+argument|*f
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|info
+operator|*
+operator|)
+argument_list|)
+block|;
+comment|/* function */
+define|#
+directive|define
+name|F_NEEDARG
+value|0x01
+comment|/* needs an argument */
+define|#
+directive|define
+name|F_OFFOK
+value|0x02
+comment|/* can turn off */
+name|int
+name|flags
+block|; }
 name|keys
 index|[]
 operator|=

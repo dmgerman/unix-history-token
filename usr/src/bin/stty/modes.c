@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)modes.c	5.3 (Berkeley) %G%"
+literal|"@(#)modes.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,24 @@ include|#
 directive|include
 file|"stty.h"
 end_include
+
+begin_struct
+struct|struct
+name|modes
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|long
+name|set
+decl_stmt|;
+name|long
+name|unset
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * The code in optlist() depends on minus options following regular  * options, i.e. "foo" must immediately precede "-foo".  */

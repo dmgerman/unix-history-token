@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cchar.c	5.3 (Berkeley) %G%"
+literal|"@(#)cchar.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,10 +171,8 @@ name|VWERASE
 block|,
 name|CWERASE
 block|,
-literal|""
-block|,
-comment|/* not NULL */
-block|}
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -215,10 +213,8 @@ name|VSTART
 block|,
 name|CSTART
 block|,
-literal|""
-block|,
-comment|/* not NULL */
-block|}
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -328,6 +324,8 @@ argument_list|(
 expr|struct
 name|cchar
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -365,6 +363,8 @@ argument_list|(
 expr|struct
 name|cchar
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
