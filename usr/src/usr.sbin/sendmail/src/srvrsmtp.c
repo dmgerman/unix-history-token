@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.13 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.14 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.13 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -548,7 +548,7 @@ name|NULL
 condition|)
 name|setproctitle
 argument_list|(
-literal|"talking to %s"
+literal|"srvrsmtp %s"
 argument_list|,
 name|RealHostName
 argument_list|)
@@ -792,7 +792,7 @@ literal|"HELO"
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"talking to %s (%s)"
+literal|"%s: %s"
 argument_list|,
 name|RealHostName
 argument_list|,
@@ -974,13 +974,13 @@ argument_list|()
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"talking to %s (%s - %s)"
-argument_list|,
-name|RealHostName
+literal|"%s %s: %s"
 argument_list|,
 name|CurEnv
 operator|->
 name|e_id
+argument_list|,
+name|RealHostName
 argument_list|,
 name|inp
 argument_list|)
@@ -1045,13 +1045,13 @@ literal|"RCPT"
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"talking to %s (%s - %s)"
-argument_list|,
-name|RealHostName
+literal|"%s %s: %s"
 argument_list|,
 name|CurEnv
 operator|->
 name|e_id
+argument_list|,
+name|RealHostName
 argument_list|,
 name|inp
 argument_list|)
@@ -1231,13 +1231,13 @@ literal|"collect"
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"talking to %s (%s - %s)"
-argument_list|,
-name|RealHostName
+literal|"%s %s: %s"
 argument_list|,
 name|CurEnv
 operator|->
 name|e_id
+argument_list|,
+name|RealHostName
 argument_list|,
 name|inp
 argument_list|)
@@ -1423,7 +1423,7 @@ condition|)
 break|break;
 name|setproctitle
 argument_list|(
-literal|"talking to %s (%s)"
+literal|"%s: %s"
 argument_list|,
 name|RealHostName
 argument_list|,
