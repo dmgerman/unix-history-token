@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)r_mod.c	5.4	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)r_mod.c	5.5	%G%  */
 end_comment
 
 begin_ifndef
@@ -92,7 +92,6 @@ end_block
 begin_else
 else|#
 directive|else
-else|tahoe
 end_else
 
 begin_comment
@@ -102,7 +101,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<tahoemath/FP.h>
+file|<tahoe/math/FP.h>
 end_include
 
 begin_function
@@ -206,7 +205,6 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|tahoe
 end_endif
 
 end_unit

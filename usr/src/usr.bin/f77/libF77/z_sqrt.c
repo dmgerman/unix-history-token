@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)z_sqrt.c	5.2	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)z_sqrt.c	5.3	%G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<tahoemath/FP.h>
+file|<tahoe/math/FP.h>
 end_include
 
 begin_define
@@ -31,7 +31,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|tahoe
 end_endif
 
 begin_macro
