@@ -116,6 +116,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|zflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|err
 name|__P
@@ -293,7 +299,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"n:s:tx"
+literal|"0n:s:tx"
 argument_list|)
 operator|)
 operator|!=
@@ -353,6 +359,14 @@ case|case
 literal|'x'
 case|:
 name|xflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'0'
+case|:
+name|zflag
 operator|=
 literal|1
 expr_stmt|;
@@ -615,6 +629,8 @@ condition|(
 name|insingle
 operator|||
 name|indouble
+operator|||
+name|zflag
 condition|)
 goto|goto
 name|addch
@@ -623,8 +639,28 @@ goto|goto
 name|arg2
 goto|;
 case|case
+literal|'\0'
+case|:
+if|if
+condition|(
+name|zflag
+condition|)
+goto|goto
+name|arg2
+goto|;
+goto|goto
+name|addch
+goto|;
+case|case
 literal|'\n'
 case|:
+if|if
+condition|(
+name|zflag
+condition|)
+goto|goto
+name|addch
+goto|;
 comment|/* Empty lines are skipped. */
 if|if
 condition|(
@@ -738,6 +774,8 @@ case|:
 if|if
 condition|(
 name|indouble
+operator|||
+name|zflag
 condition|)
 goto|goto
 name|addch
@@ -754,6 +792,8 @@ case|:
 if|if
 condition|(
 name|insingle
+operator|||
+name|zflag
 condition|)
 goto|goto
 name|addch
@@ -767,6 +807,13 @@ break|break;
 case|case
 literal|'\\'
 case|:
+if|if
+condition|(
+name|zflag
+condition|)
+goto|goto
+name|addch
+goto|;
 comment|/* Backslash escapes anything, is escaped by quotes. */
 if|if
 condition|(
@@ -1128,7 +1175,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: xargs [-t] [-n number [-x]] [-s size] [utility [argument ...]]\n"
+literal|"usage: xargs [-0] [-t] [-n number [-x]] [-s size] [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
