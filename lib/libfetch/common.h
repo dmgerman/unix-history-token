@@ -277,13 +277,41 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * I don't really like exporting _http_request() from http.c, but ftp.c  * occasionally needs to use an HTTP proxy, and this saves me from adding  * a lot of special-case code to http.c to handle those cases.  *  * Note that _http_request() frees purl, which is way ugly but saves us a  * whole lot of trouble.  */
+comment|/*  * I don't really like exporting _http_request() and _ftp_request(),  * but the HTTP and FTP code occasionally needs to cross-call  * eachother, and this saves me from adding a lot of special-case code  * to handle those cases.  *  * Note that _*_request() free purl, which is way ugly but saves us a  * whole lot of trouble.  */
 end_comment
 
 begin_function_decl
 name|FILE
 modifier|*
 name|_http_request
+parameter_list|(
+name|struct
+name|url
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|url_stat
+modifier|*
+parameter_list|,
+name|struct
+name|url
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|FILE
+modifier|*
+name|_ftp_request
 parameter_list|(
 name|struct
 name|url
