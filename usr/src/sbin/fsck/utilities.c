@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.26 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,9 @@ name|IFLNK
 case|:
 case|case
 name|IFSOCK
+case|:
+case|case
+name|IFIFO
 case|:
 return|return
 operator|(
