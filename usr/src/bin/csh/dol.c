@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dol.c 4.1 %G%"
+literal|"@(#)dol.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1617,7 +1617,9 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|eatbrac
+goto|;
 block|}
 name|udvar
 argument_list|(
