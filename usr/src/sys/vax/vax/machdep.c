@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -193,6 +193,12 @@ begin_include
 include|#
 directive|include
 file|"ka630.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ka650.h"
 end_include
 
 begin_include
@@ -2993,7 +2999,35 @@ operator|&
 name|RB_HALT
 condition|)
 block|{
+switch|switch
+condition|(
+name|cpu
+condition|)
+block|{
 comment|/* 630 can be told to halt, but how? */
+if|#
+directive|if
+name|VAX650
+case|case
+name|VAX_650
+case|:
+name|ka650ssc
+operator|.
+name|ssc_cpmbx
+operator|&=
+operator|~
+name|CPMB650_HALTACT
+expr_stmt|;
+name|ka650ssc
+operator|.
+name|ssc_cpmbx
+operator||=
+name|CPMB650_HALT
+expr_stmt|;
+asm|asm("halt");
+endif|#
+directive|endif
+block|}
 name|printf
 argument_list|(
 literal|"halting (in tight loop); hit\n\t^P\n\tHALT\n\n"
@@ -3101,6 +3135,29 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|VAX650
+case|case
+name|VAX_650
+case|:
+comment|/* set boot-on-halt flag in "console mailbox" */
+name|ka650ssc
+operator|.
+name|ssc_cpmbx
+operator|&=
+operator|~
+name|CPMB650_HALTACT
+expr_stmt|;
+name|ka650ssc
+operator|.
+name|ssc_cpmbx
+operator||=
+name|CPMB650_REBOOT
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 default|default:
 name|tocons
 argument_list|(
@@ -3168,8 +3225,6 @@ operator|||
 name|VAX730
 operator|||
 name|VAX630
-operator|||
-name|VAX650
 case|case
 name|VAX_8200
 case|:
@@ -3184,9 +3239,6 @@ name|VAX_730
 case|:
 case|case
 name|VAX_630
-case|:
-case|case
-name|VAX_650
 case|:
 name|c
 operator||=
@@ -3225,6 +3277,16 @@ literal|0
 condition|)
 continue|continue;
 break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX650
+case|case
+name|VAX_650
+case|:
+comment|/* everything is a real console terminal character on ka650 */
+return|return;
 endif|#
 directive|endif
 block|}
