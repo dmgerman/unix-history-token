@@ -8215,6 +8215,14 @@ name|vp
 expr_stmt|;
 name|bp
 operator|->
+name|b_object
+operator|=
+name|vp
+operator|->
+name|v_object
+expr_stmt|;
+name|bp
+operator|->
 name|b_flags
 operator||=
 name|B_PAGING
@@ -8313,6 +8321,12 @@ name|vnode
 operator|*
 operator|)
 literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|b_object
+operator|=
+name|NULL
 expr_stmt|;
 name|bp
 operator|->

@@ -1564,14 +1564,6 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|bp
-operator|->
-name|b_object
-operator|=
-name|tbp
-operator|->
-name|b_object
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
