@@ -193,7 +193,7 @@ block|,
 block|{
 literal|"host-name"
 block|,
-literal|"X"
+literal|"t"
 block|,
 operator|&
 name|dhcp_universe
