@@ -2945,7 +2945,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.ru.freebsd.org/FreeBSD/"
+literal|"=ftp://ftp.ru.freebsd.org/pub/FreeBSD/"
 block|}
 block|,
 block|{
@@ -2961,6 +2961,21 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp2.ru.freebsd.org/FreeBSD/"
+block|}
+block|,
+block|{
+literal|"Russia #3"
+block|,
+literal|"ftp3.ru.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp3.ru.freebsd.org/pub/FreeBSD/"
 block|}
 block|,
 block|{
