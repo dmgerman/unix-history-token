@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.37	81/12/09	*/
+comment|/*	tcp_input.c	1.38	81/12/09	*/
 end_comment
 
 begin_include
@@ -369,7 +369,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|(
 name|ti
 operator|->
 name|ti_sum
@@ -380,9 +379,6 @@ name|m
 argument_list|,
 name|len
 argument_list|)
-operator|)
-operator|!=
-literal|0xffff
 condition|)
 block|{
 name|tcpstat
@@ -425,9 +421,7 @@ argument_list|)
 operator|||
 name|off
 operator|>
-name|ti
-operator|->
-name|ti_len
+name|tlen
 condition|)
 block|{
 name|tcpstat
@@ -450,7 +444,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (off> sizeof (struct tcphdr)>> 2) 		tcp_options(ti);
+block|if (off> sizeof (struct tcphdr)) 		tcp_options(ti);
 endif|#
 directive|endif
 name|tiflags
@@ -459,6 +453,9 @@ name|ti
 operator|->
 name|ti_flags
 expr_stmt|;
+if|#
+directive|if
+name|vax
 comment|/* 	 * Convert tcp protocol specific fields to host format. 	 */
 name|ti
 operator|->
@@ -504,6 +501,8 @@ operator|->
 name|ti_urp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Locate pcb for segment. 	 */
 name|inp
 operator|=
@@ -590,6 +589,20 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|rcv_wnd
+operator|<
+literal|0
+condition|)
+name|tp
+operator|->
+name|rcv_wnd
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|tp
@@ -668,34 +681,19 @@ name|t_state
 operator|=
 name|TCPS_SYN_RECEIVED
 expr_stmt|;
-if|if
-condition|(
+name|in_pcbconnect
+argument_list|(
 name|inp
-operator|->
-name|inp_faddr
-operator|.
-name|s_addr
-operator|==
-literal|0
-condition|)
-block|{
-name|inp
-operator|->
-name|inp_faddr
-operator|=
+argument_list|,
 name|ti
 operator|->
 name|ti_src
-expr_stmt|;
-name|inp
-operator|->
-name|inp_fport
-operator|=
+argument_list|,
 name|ti
 operator|->
 name|ti_sport
+argument_list|)
 expr_stmt|;
-block|}
 goto|goto
 name|trimthenstep6
 goto|;
@@ -731,7 +729,7 @@ name|ti_ack
 argument_list|,
 name|tp
 operator|->
-name|snd_nxt
+name|snd_max
 argument_list|)
 operator|)
 condition|)
@@ -777,16 +775,11 @@ name|drop
 goto|;
 name|tp
 operator|->
-name|iss
+name|snd_una
 operator|=
 name|ti
 operator|->
 name|ti_ack
-expr_stmt|;
-name|tcp_sendseqinit
-argument_list|(
-name|tp
-argument_list|)
 expr_stmt|;
 name|tp
 operator|->
@@ -842,6 +835,14 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+name|tp
+operator|->
+name|snd_wl1
+operator|=
+name|ti
+operator|->
+name|ti_seq
+expr_stmt|;
 block|}
 else|else
 name|tp
@@ -855,19 +856,12 @@ name|trimthenstep6
 goto|;
 name|trimthenstep6
 label|:
-comment|/* 		 * If had syn, advance ti->ti_seq to correspond 		 * to first data byte. 		 */
-if|if
-condition|(
-name|tiflags
-operator|&
-name|TH_SYN
-condition|)
+comment|/* 		 * Advance ti->ti_seq to correspond to first data byte. 		 * If data, trim to stay within window, 		 * dropping FIN if necessary. 		 */
 name|ti
 operator|->
 name|ti_seq
 operator|++
 expr_stmt|;
-comment|/* 		 * If data, trim to stay within window, 		 * dropping FIN if necessary. 		 */
 if|if
 condition|(
 name|ti
@@ -927,7 +921,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * If window is closed can only take segments at 		 * window edge, and have to drop data and EOL from 		 * incoming segments. 		 */
+comment|/* 		 * If window is closed can only take segments at 		 * window edge, and have to drop data and PUSH from 		 * incoming segments. 		 */
 if|if
 condition|(
 name|tp
@@ -971,7 +965,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * If segment begins before rcv_next, drop leading 		 * data (and SYN); if nothing left, just ack. 		 */
+comment|/* 		 * If segment begins before rcv_nxt, drop leading 		 * data (and SYN); if nothing left, just ack. 		 */
 if|if
 condition|(
 name|SEQ_GT
@@ -1203,13 +1197,10 @@ name|t_state
 operator|=
 name|TCPS_LISTEN
 expr_stmt|;
+name|in_pcbdisconnect
+argument_list|(
 name|inp
-operator|->
-name|inp_faddr
-operator|.
-name|s_addr
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 goto|goto
 name|drop
@@ -1277,7 +1268,7 @@ name|tcp_drop
 argument_list|(
 name|tp
 argument_list|,
-name|ECONNABORTED
+name|ECONNRESET
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1331,7 +1322,7 @@ name|ti_ack
 argument_list|,
 name|tp
 operator|->
-name|snd_nxt
+name|snd_max
 argument_list|)
 condition|)
 goto|goto
@@ -1363,8 +1354,18 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+name|tp
+operator|->
+name|snd_wl1
+operator|=
+name|tp
+operator|->
+name|ti_seq
+operator|-
+literal|1
+expr_stmt|;
 comment|/* fall into ... */
-comment|/* 	 * In ESTABLISHED state: drop duplicate ACKs; ACK out of range 	 * ACKs.  If the ack is in the range 	 *	tp->snd_una< ti->ti_ack<= tp->snd_nxt 	 * then advance tp->snd_una to ti->ti_ack and drop 	 * data from the retransmission queue.  If this ACK reflects 	 * more up to date window information we update our window information. 	 */
+comment|/* 	 * In ESTABLISHED state: drop duplicate ACKs; ACK out of range 	 * ACKs.  If the ack is in the range 	 *	tp->snd_una< ti->ti_ack<= tp->snd_max 	 * then advance tp->snd_una to ti->ti_ack and drop 	 * data from the retransmission queue.  If this ACK reflects 	 * more up to date window information we update our window information. 	 */
 case|case
 name|TCPS_ESTABLISHED
 case|:
@@ -1408,7 +1409,7 @@ name|ti_ack
 argument_list|,
 name|tp
 operator|->
-name|snd_nxt
+name|snd_max
 argument_list|)
 condition|)
 goto|goto
@@ -1470,6 +1471,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|tp
+operator|->
+name|snd_una
+operator|=
+name|ti
+operator|->
+name|ti_ack
+expr_stmt|;
 comment|/* 		 * If transmit timer is running and timed sequence 		 * number was acked, update smoothed round trip time. 		 */
 if|if
 condition|(
@@ -1516,14 +1525,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|tp
-operator|->
-name|snd_una
-operator|=
-name|ti
-operator|->
-name|ti_ack
-expr_stmt|;
 comment|/* 		 * Update window information. 		 */
 if|if
 condition|(
@@ -1929,9 +1930,7 @@ argument_list|,
 name|TH_ACK
 argument_list|)
 expr_stmt|;
-goto|goto
-name|drop
-goto|;
+return|return;
 name|dropwithreset
 label|:
 comment|/* 	 * Generate a RST, then drop incoming segment. 	 * Make ACK acceptable to originator of segment. 	 */
@@ -2002,9 +2001,7 @@ name|TH_ACK
 argument_list|)
 expr_stmt|;
 block|}
-goto|goto
-name|drop
-goto|;
+return|return;
 name|drop
 label|:
 comment|/* 	 * Drop space held by incoming segment and return. 	 */
