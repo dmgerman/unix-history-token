@@ -618,6 +618,40 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* force the busmaster enable bit on */
+if|if
+condition|(
+operator|!
+operator|(
+name|command
+operator|&
+name|PCIM_CMD_BUSMASTEREN
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"busmaster bit not set, enabling\n"
+argument_list|)
+expr_stmt|;
+name|command
+operator||=
+name|PCIM_CMD_BUSMASTEREN
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+name|command
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Allocate the PCI register window.      */
 name|rid
 operator|=

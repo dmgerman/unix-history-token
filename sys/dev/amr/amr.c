@@ -455,6 +455,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Status monitoring  */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|amr_periodic
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Interface-specific shims  */
 end_comment
 
@@ -593,6 +609,18 @@ decl_stmt|;
 name|debug
 argument_list|(
 literal|"called"
+argument_list|)
+expr_stmt|;
+comment|/* cancel status timeout */
+name|untimeout
+argument_list|(
+name|amr_periodic
+argument_list|,
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|amr_timeout
 argument_list|)
 expr_stmt|;
 comment|/* throw away any command buffers */
@@ -1710,6 +1738,20 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/*      * Start the timeout routine.      */
+name|sc
+operator|->
+name|amr_timeout
+operator|=
+name|timeout
+argument_list|(
+name|amr_periodic
+argument_list|,
+name|sc
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2285,13 +2327,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|bus_generic_detach
-argument_list|(
-name|sc
-operator|->
-name|amr_dev
-argument_list|)
-expr_stmt|;
 name|out
 label|:
 name|splx
@@ -2439,37 +2474,13 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|int
-name|worked
-decl_stmt|;
 name|debug
 argument_list|(
-literal|"called on %p"
-argument_list|,
-name|sc
+literal|"called"
 argument_list|)
 expr_stmt|;
-comment|/* spin collecting finished commands, process them if we find anything */
-name|worked
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
+comment|/* collect finished commands, queue anything waiting */
 name|amr_done
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-name|worked
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|worked
-condition|)
-name|amr_complete
 argument_list|(
 name|sc
 argument_list|)
@@ -2744,6 +2755,177 @@ block|}
 end_function
 
 begin_comment
+comment|/********************************************************************************  ********************************************************************************                                                                 Status Monitoring  ********************************************************************************  ********************************************************************************/
+end_comment
+
+begin_comment
+comment|/********************************************************************************  * Perform a periodic check of the controller status  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|amr_periodic
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|struct
+name|amr_softc
+modifier|*
+name|sc
+init|=
+operator|(
+expr|struct
+name|amr_softc
+operator|*
+operator|)
+name|data
+decl_stmt|;
+name|int
+name|s
+decl_stmt|,
+name|i
+decl_stmt|;
+name|debug
+argument_list|(
+literal|"called"
+argument_list|)
+expr_stmt|;
+comment|/*      * Check for commands that are massively late.  This will need to be       * revisited if/when we deal with eg. device format commands.      * The 30 second value is entirely arbitrary.      */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|amr_busycmdcount
+operator|>
+literal|0
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|AMR_MAXCMD
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* 	     * If the command has been busy for more than 30 seconds, declare it 	     * wedged and retire it with an error. 	     */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|amr_busycmd
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|amr_busycmd
+index|[
+name|i
+index|]
+operator|->
+name|ac_status
+operator|==
+name|AMR_STATUS_BUSY
+operator|)
+operator|&&
+operator|(
+operator|(
+name|sc
+operator|->
+name|amr_busycmd
+index|[
+name|i
+index|]
+operator|->
+name|ac_stamp
+operator|+
+literal|30
+operator|)
+operator|<
+name|time_second
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|amr_dev
+argument_list|,
+literal|"command %d wedged after 30 seconds\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|amr_busycmd
+index|[
+name|i
+index|]
+operator|->
+name|ac_status
+operator|=
+name|AMR_STATUS_WEDGED
+expr_stmt|;
+name|amr_completeio
+argument_list|(
+name|sc
+operator|->
+name|amr_busycmd
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* reschedule */
+name|sc
+operator|->
+name|amr_timeout
+operator|=
+name|timeout
+argument_list|(
+name|amr_periodic
+argument_list|,
+name|sc
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/********************************************************************************  ********************************************************************************                                                                  Command Wrappers  ********************************************************************************  ********************************************************************************/
 end_comment
 
@@ -2884,15 +3066,21 @@ name|amr_maxdrives
 operator|=
 literal|8
 expr_stmt|;
+comment|/*  	 * Cap the maximum number of outstanding I/Os.  AMI's Linux driver doesn't trust 	 * the controller's reported value, and lockups have been seen when we do. 	 */
 name|sc
 operator|->
 name|amr_maxio
 operator|=
+name|imin
+argument_list|(
 name|ae
 operator|->
 name|ae_adapter
 operator|.
 name|aa_maxio
+argument_list|,
+name|AMR_LIMITCMD
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -3032,6 +3220,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 	 * The "40LD" (40 logical drive support) firmware is mentioned in the Linux 	 * driver, but no adapters from AMI appear to support it. 	 */
 name|free
 argument_list|(
 name|buf
@@ -3289,22 +3478,9 @@ name|ac
 operator|->
 name|ac_dataphys
 expr_stmt|;
-comment|/* run the command in polled/wait mode as suits the current mode */
+comment|/* can't assume that interrupts are going to work here, so play it safe */
 if|if
 condition|(
-operator|(
-name|sc
-operator|->
-name|amr_state
-operator|&
-name|AMR_STATE_INTEN
-operator|)
-condition|?
-name|amr_wait_command
-argument_list|(
-name|ac
-argument_list|)
-else|:
 name|amr_poll_command
 argument_list|(
 name|ac
@@ -3439,22 +3615,9 @@ name|mb_command
 operator|=
 name|AMR_CMD_FLUSH
 expr_stmt|;
-comment|/* run the command in polled/wait mode as suits the current mode */
+comment|/* we have to poll, as the system may be going down or otherwise damaged */
 if|if
 condition|(
-operator|(
-name|sc
-operator|->
-name|amr_state
-operator|&
-name|AMR_STATE_INTEN
-operator|)
-condition|?
-name|amr_wait_command
-argument_list|(
-name|ac
-argument_list|)
-else|:
 name|amr_poll_command
 argument_list|(
 name|ac
@@ -3532,6 +3695,17 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+comment|/* avoid reentrancy */
+if|if
+condition|(
+name|amr_lock_tas
+argument_list|(
+name|sc
+argument_list|,
+name|AMR_LOCK_STARTING
+argument_list|)
+condition|)
+return|return;
 comment|/* spin until something prevents us from doing any work */
 name|s
 operator|=
@@ -3694,7 +3868,9 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_driver1
+name|b_dev
+operator|->
+name|si_drv1
 expr_stmt|;
 name|driveno
 operator|=
@@ -3702,19 +3878,21 @@ name|amrd
 operator|->
 name|amrd_drive
 operator|-
-operator|&
 name|sc
 operator|->
 name|amr_drive
-index|[
-literal|0
-index|]
 expr_stmt|;
 name|blkcount
 operator|=
+operator|(
 name|bp
 operator|->
 name|b_bcount
+operator|+
+name|AMR_BLKSIZE
+operator|-
+literal|1
+operator|)
 operator|/
 name|AMR_BLKSIZE
 expr_stmt|;
@@ -3851,6 +4029,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|amr_lock_clr
+argument_list|(
+name|sc
+argument_list|,
+name|AMR_LOCK_STARTING
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3892,6 +4077,19 @@ name|ac
 operator|->
 name|ac_private
 decl_stmt|;
+name|int
+name|notify
+decl_stmt|,
+name|release
+decl_stmt|;
+name|notify
+operator|=
+literal|1
+expr_stmt|;
+name|release
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|ac
@@ -3922,6 +4120,24 @@ name|ac_status
 condition|)
 block|{
 comment|/* XXX need more information on I/O error reasons */
+case|case
+name|AMR_STATUS_LATE
+case|:
+name|notify
+operator|=
+literal|0
+expr_stmt|;
+comment|/* we've already notified the parent */
+break|break;
+case|case
+name|AMR_STATUS_WEDGED
+case|:
+name|release
+operator|=
+literal|0
+expr_stmt|;
+comment|/* the command is still outstanding, we can't release */
+break|break;
 default|default:
 name|device_printf
 argument_list|(
@@ -3944,11 +4160,19 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|release
+condition|)
 name|amr_releasecmd
 argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|notify
+condition|)
 name|amrd_intr
 argument_list|(
 name|bp
@@ -4801,7 +5025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Take a command and give it to the controller.  Take care of any completed  * commands we encouter while waiting.  */
+comment|/********************************************************************************  * Take a command and give it to the controller.   */
 end_comment
 
 begin_function
@@ -4825,8 +5049,6 @@ operator|->
 name|ac_sc
 decl_stmt|;
 name|int
-name|worked
-decl_stmt|,
 name|done
 decl_stmt|,
 name|s
@@ -4867,7 +5089,7 @@ name|ac_status
 operator|=
 name|AMR_STATUS_BUSY
 expr_stmt|;
-comment|/* spin waiting for the mailbox */
+comment|/*       * Spin waiting for the mailbox, give up after ~1 second.      */
 name|debug
 argument_list|(
 literal|"wait for mailbox"
@@ -4877,13 +5099,9 @@ for|for
 control|(
 name|i
 operator|=
-literal|100000
+literal|10000
 operator|,
 name|done
-operator|=
-literal|0
-operator|,
-name|worked
 operator|=
 literal|0
 init|;
@@ -4987,11 +5205,10 @@ operator|->
 name|mb_busy
 argument_list|)
 expr_stmt|;
-name|worked
-operator|=
-name|amr_done
+comment|/* this is somewhat ugly */
+name|DELAY
 argument_list|(
-name|sc
+literal|100
 argument_list|)
 expr_stmt|;
 block|}
@@ -5000,17 +5217,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* drop spl to allow completion interrupts */
 block|}
-comment|/* do completion processing if we picked anything up */
-if|if
-condition|(
-name|worked
-condition|)
-name|amr_complete
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* command is enqueued? */
 if|if
 condition|(
@@ -5061,6 +5269,11 @@ name|ac_status
 operator|=
 name|AMR_STATUS_WEDGED
 expr_stmt|;
+name|amr_complete
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -5098,6 +5311,8 @@ name|i
 decl_stmt|,
 name|idx
 decl_stmt|,
+name|s
+decl_stmt|,
 name|result
 decl_stmt|;
 name|debug
@@ -5110,6 +5325,19 @@ name|result
 operator|=
 literal|0
 expr_stmt|;
+comment|/* loop collecting completed commands */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* poll for a completed command's identifier and status */
 if|if
 condition|(
 name|sc
@@ -5123,7 +5351,11 @@ name|mbox
 argument_list|)
 condition|)
 block|{
-comment|/* iterate over completed commands */
+name|result
+operator|=
+literal|1
+expr_stmt|;
+comment|/* iterate over completed commands in this result */
 for|for
 control|(
 name|i
@@ -5184,12 +5416,6 @@ operator|->
 name|amr_busycmdcount
 operator|--
 expr_stmt|;
-comment|/* unmap data buffer */
-name|amr_unmapcmd
-argument_list|(
-name|ac
-argument_list|)
-expr_stmt|;
 comment|/* aborted command? */
 if|if
 condition|(
@@ -5214,9 +5440,48 @@ argument_list|,
 name|idx
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|amr_busycmd
+index|[
+name|idx
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* free the slot again */
 name|ac
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* wedged command? */
+block|}
+elseif|else
+if|if
+condition|(
+name|ac
+operator|->
+name|ac_status
+operator|==
+name|AMR_STATUS_WEDGED
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|amr_dev
+argument_list|,
+literal|"wedged command completed (%d)\n"
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
+name|ac
+operator|->
+name|ac_status
+operator|=
+name|AMR_STATUS_LATE
 expr_stmt|;
 comment|/* completed normally, save status */
 block|}
@@ -5240,13 +5505,30 @@ name|mb_status
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+block|}
+block|}
+else|else
+block|{
+break|break;
+block|}
+block|}
+comment|/* if we've completed any commands, try posting some more */
+if|if
+condition|(
 name|result
-operator|=
-literal|1
+condition|)
+name|amr_startio
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
-block|}
-block|}
-block|}
+comment|/* handle completion and timeouts */
+name|amr_complete
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|result
@@ -5288,15 +5570,26 @@ argument_list|(
 literal|"called"
 argument_list|)
 expr_stmt|;
-name|count
-operator|=
-literal|0
-expr_stmt|;
+if|if
+condition|(
+name|amr_lock_tas
+argument_list|(
+name|sc
+argument_list|,
+name|AMR_LOCK_COMPLETING
+argument_list|)
+condition|)
+return|return;
 name|s
 operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
+comment|/* scan the list of busy/done commands */
 name|ac
 operator|=
 name|TAILQ_FIRST
@@ -5323,7 +5616,7 @@ argument_list|,
 name|ac_link
 argument_list|)
 expr_stmt|;
-comment|/* Skip if command is still active */
+comment|/* Command has been completed in some fashion */
 if|if
 condition|(
 name|ac
@@ -5333,6 +5626,12 @@ operator|!=
 name|AMR_STATUS_BUSY
 condition|)
 block|{
+comment|/* unmap the command's data buffer */
+name|amr_unmapcmd
+argument_list|(
+name|ac
+argument_list|)
+expr_stmt|;
 comment|/*  	     * Is there a completion handler?  	     */
 if|if
 condition|(
@@ -5420,10 +5719,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* queue more work if we can */
-name|amr_startio
+name|amr_lock_clr
 argument_list|(
 name|sc
+argument_list|,
+name|AMR_LOCK_COMPLETING
 argument_list|)
 expr_stmt|;
 block|}
@@ -5754,7 +6054,6 @@ name|mb_ack
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX write barrier? */
 while|while
 condition|(
 name|AMR_QGET_IDB
@@ -5844,11 +6143,7 @@ decl_stmt|;
 name|u_int32_t
 name|outd
 decl_stmt|;
-name|debug
-argument_list|(
-literal|"called"
-argument_list|)
-expr_stmt|;
+comment|/*    debug("called"); */
 name|worked
 operator|=
 literal|0
@@ -6274,7 +6569,7 @@ name|sc
 operator|->
 name|amr_dev
 argument_list|,
-literal|"physaddr %08x  nsg %d\n"
+literal|"sg physaddr %08x  nsg %d\n"
 argument_list|,
 name|ac
 operator|->
@@ -6341,6 +6636,80 @@ operator|->
 name|sg_count
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/********************************************************************************  * Print information on all the controllers in the system, useful mostly   * for calling from DDB.  */
+end_comment
+
+begin_function
+name|void
+name|amr_report
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|amr_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+operator|(
+name|sc
+operator|=
+name|devclass_get_softc
+argument_list|(
+name|amr_devclass
+argument_list|,
+name|i
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|amr_dev
+argument_list|,
+literal|"amr_waitbufs %d  amr_busycmdcount %d  amr_workcount %d\n"
+argument_list|,
+name|sc
+operator|->
+name|amr_waitbufs
+argument_list|,
+name|sc
+operator|->
+name|amr_busycmdcount
+argument_list|,
+name|sc
+operator|->
+name|amr_workcount
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
