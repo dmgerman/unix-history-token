@@ -114,6 +114,10 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
+name|struct
+name|cv
+name|cv
+decl_stmt|;
 name|u_int32_t
 name|flags
 decl_stmt|;
