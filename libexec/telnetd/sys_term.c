@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)sys_term.c	8.2 (Berkeley) 12/15/93";
+unit|static const char sccsid[] = "@(#)sys_term.c	8.2 (Berkeley) 12/15/93";
 endif|#
 directive|endif
 end_endif
@@ -1196,16 +1196,16 @@ argument_list|(
 name|termbuf
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|cp
-argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
 name|termbuf
+argument_list|,
+name|cp
 argument_list|,
 name|len
 argument_list|)
