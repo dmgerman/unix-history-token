@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * hostfile.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Thu Jun 29 07:10:56 1995 ylo  *   * Functions for manipulating the known hosts files.  *   */
+comment|/*  *   * hostfile.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Thu Jun 29 07:10:56 1995 ylo  *   * Functions for manipulating the known hosts files.  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -38,13 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ssl/rsa.h>
+file|<openssl/rsa.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ssl/dsa.h>
+file|<openssl/dsa.h>
 end_include
 
 begin_include

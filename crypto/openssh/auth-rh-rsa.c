@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * auth-rh-rsa.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sun May  7 03:08:06 1995 ylo  *   * Rhosts or /etc/hosts.equiv authentication combined with RSA host  * authentication.  *  */
+comment|/*  *   * auth-rh-rsa.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sun May  7 03:08:06 1995 ylo  *   * Rhosts or /etc/hosts.equiv authentication combined with RSA host  * authentication.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -50,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ssl/rsa.h>
+file|<openssl/rsa.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ssl/dsa.h>
+file|<openssl/dsa.h>
 end_include
 
 begin_include
