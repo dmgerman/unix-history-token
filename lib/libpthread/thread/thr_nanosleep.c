@@ -109,13 +109,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Get the current time: */
+comment|/* 		 * As long as we're going to get the time of day, we 		 * might as well store it in the global time of day: 		 */
 name|gettimeofday
 argument_list|(
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
 operator|&
-name|tv
+name|_sched_tod
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|GET_CURRENT_TOD
+argument_list|(
+name|tv
 argument_list|)
 expr_stmt|;
 name|TIMEVAL_TO_TIMESPEC
@@ -202,13 +212,23 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Get the current time: */
+comment|/* 		 * As long as we're going to get the time of day, we 		 * might as well store it in the global time of day: 		 */
 name|gettimeofday
 argument_list|(
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
 operator|&
-name|tv
+name|_sched_tod
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|GET_CURRENT_TOD
+argument_list|(
+name|tv
 argument_list|)
 expr_stmt|;
 name|TIMEVAL_TO_TIMESPEC
