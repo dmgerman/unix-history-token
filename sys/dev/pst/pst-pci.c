@@ -137,7 +137,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* this should work as well (not tested no hardware) */
+comment|/* support the older SuperTrak 100 as well */
 if|if
 condition|(
 name|pci_get_devid
@@ -145,7 +145,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-literal|0x09628086
+literal|0x19608086
 operator|&&
 name|pci_get_subvendor
 argument_list|(
