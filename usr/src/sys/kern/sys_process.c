@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -1384,14 +1384,17 @@ name|uap
 operator|->
 name|pcscale
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PROFTIMER
-name|initprofclock
-argument_list|()
+if|if
+condition|(
+name|uap
+operator|->
+name|pcscale
+condition|)
+name|startprofclock
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
