@@ -1922,7 +1922,7 @@ case|:
 case|case
 name|EPSV
 case|:
-comment|/* expecting "227 Entering Passive Mode (x,x,x,x,x,x,x)" */
+comment|/* 		 * expecting "227 Entering Passive Mode (x,x,x,x,x,x,x)" 		 * (in some cases result comes without paren) 		 */
 if|if
 condition|(
 name|code
@@ -1999,7 +1999,15 @@ operator|*
 name|p
 operator|!=
 literal|'('
+operator|&&
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+name|p
+argument_list|)
 condition|)
+comment|/*)*/
 name|p
 operator|++
 expr_stmt|;
@@ -2013,6 +2021,14 @@ goto|goto
 name|passivefail0
 goto|;
 comment|/*XXX*/
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'('
+condition|)
+comment|/*)*/
 name|p
 operator|++
 expr_stmt|;
@@ -2855,6 +2871,7 @@ name|p
 operator|!=
 literal|'('
 condition|)
+comment|/*)*/
 name|p
 operator|++
 expr_stmt|;
