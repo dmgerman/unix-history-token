@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.68 1996/04/02 04:54:26 scrappy Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.69 1996/06/22 14:57:55 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -225,17 +225,6 @@ name|DEV
 parameter_list|)
 value|(MODE(DEV) == CTLMODE)
 end_define
-
-begin_define
-define|#
-directive|define
-name|SCSI_2_MAX_DENSITY_CODE
-value|0x17
-end_define
-
-begin_comment
-comment|/* maximum density code specified 					 * in SCSI II spec. */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2488,6 +2477,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Since the device has seen its last close, allow media removal.  	 * Do this before we attempt an eject. 	 */
+name|scsi_prevent
+argument_list|(
+name|sc_link
+argument_list|,
+name|PR_ALLOW
+argument_list|,
+name|SCSI_SILENT
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|mode
@@ -2547,15 +2546,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|scsi_prevent
-argument_list|(
-name|sc_link
-argument_list|,
-name|PR_ALLOW
-argument_list|,
-name|SCSI_SILENT
-argument_list|)
-expr_stmt|;
 name|sc_link
 operator|->
 name|flags
@@ -4968,6 +4958,16 @@ case|case
 name|MTOFFL
 case|:
 comment|/* rewind and put the drive offline */
+comment|/* 				 * Be sure to allow media removal before 				 * attempting the eject. 				 */
+name|scsi_prevent
+argument_list|(
+name|sc_link
+argument_list|,
+name|PR_ALLOW
+argument_list|,
+name|SCSI_SILENT
+argument_list|)
+expr_stmt|;
 name|st_unmount
 argument_list|(
 name|unit
@@ -5105,9 +5105,13 @@ if|if
 condition|(
 name|number
 operator|>
-name|SCSI_2_MAX_DENSITY_CODE
+operator|(
+name|u_int8_t
+operator|)
+literal|0xff
 condition|)
 block|{
+comment|/* Guard against overflows */
 name|errcode
 operator|=
 name|EINVAL
@@ -5121,10 +5125,11 @@ name|density
 operator|=
 name|number
 expr_stmt|;
-block|}
 goto|goto
 name|try_new_value
 goto|;
+block|}
+break|break;
 case|case
 name|MTCOMP
 case|:
@@ -8024,8 +8029,21 @@ name|datalen
 expr_stmt|;
 block|}
 block|}
+name|key
+operator|=
+name|sense
+operator|->
+name|ext
+operator|.
+name|extended
+operator|.
+name|flags
+operator|&
+name|SSD_KEY
+expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|(
 name|sense
 operator|->
@@ -8035,7 +8053,15 @@ name|SSD_ERRCODE
 operator|)
 operator|!=
 literal|0x70
+operator|)
+operator|||
+operator|(
+name|key
+operator|==
+literal|0x7
+operator|)
 condition|)
+comment|/* Media Write Protected */
 block|{
 return|return
 name|SCSIRET_CONTINUE
@@ -8383,18 +8409,6 @@ return|return
 literal|0
 return|;
 block|}
-name|key
-operator|=
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|flags
-operator|&
-name|SSD_KEY
-expr_stmt|;
 if|if
 condition|(
 name|key
