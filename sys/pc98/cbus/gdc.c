@@ -123,22 +123,11 @@ directive|include
 file|<dev/fb/fbreg.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LINE30
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<pc98/pc98/pc98.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -2587,9 +2576,6 @@ block|,
 name|V_INFO_MM_TEXT
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|LINE30
 block|{
 name|M_PC98_80x30
 block|,
@@ -2620,8 +2606,6 @@ block|,
 name|V_INFO_MM_TEXT
 block|}
 block|,
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|GDC_NOGRAPHICS
@@ -2693,9 +2677,6 @@ block|,
 literal|1
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|LINE30
 block|{
 name|M_PC98_PEGC640x480
 block|,
@@ -2732,8 +2713,6 @@ block|,
 literal|1
 block|}
 block|,
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|{
@@ -2911,18 +2890,12 @@ block|,
 name|M_PC98_80x25
 block|, }
 block|,
-ifdef|#
-directive|ifdef
-name|LINE30
 block|{
 name|M_TEXT_80x30
 block|,
 name|M_PC98_80x30
 block|, }
-block|,
-endif|#
-directive|endif
-block|}
+block|,     }
 struct|;
 name|int
 name|i
@@ -3498,12 +3471,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LINE30
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -3528,11 +3495,6 @@ condition|)
 empty_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -3608,12 +3570,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LINE30
-end_ifdef
 
 begin_function
 specifier|static
@@ -3705,11 +3661,6 @@ empty_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -3749,12 +3700,6 @@ empty_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LINE30
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -3790,11 +3735,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -3808,9 +3748,6 @@ name|int
 name|isGraph
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|LINE30
 comment|/* start 30line initialize */
 name|int
 name|m_mode
@@ -4463,36 +4400,6 @@ else|:
 name|_GDC_START
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|master_gdc_wait_vsync
-argument_list|()
-expr_stmt|;
-name|master_gdc_cmd
-argument_list|(
-name|isGraph
-condition|?
-name|_GDC_STOP
-else|:
-name|_GDC_START
-argument_list|)
-expr_stmt|;
-comment|/* text */
-name|gdc_wait_vsync
-argument_list|()
-expr_stmt|;
-name|gdc_cmd
-argument_list|(
-name|isGraph
-condition|?
-name|_GDC_START
-else|:
-name|_GDC_STOP
-argument_list|)
-expr_stmt|;
-comment|/* graphics */
-endif|#
-directive|endif
 block|}
 end_function
 
