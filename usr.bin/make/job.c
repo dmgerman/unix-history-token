@@ -1311,23 +1311,17 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|signo
 operator|==
 name|SIGHUP
-operator|)
 operator|||
-operator|(
 name|signo
 operator|==
 name|SIGTERM
-operator|)
 operator|||
-operator|(
 name|signo
 operator|==
 name|SIGQUIT
-operator|)
 condition|)
 block|{
 name|JobInterrupt
@@ -1903,14 +1897,12 @@ name|commandShell
 operator|->
 name|ignErr
 operator|&&
-operator|(
 operator|*
 name|commandShell
 operator|->
 name|ignErr
 operator|!=
 literal|'\0'
-operator|)
 condition|)
 block|{
 comment|/* 				 * The shell has no error control, so we need to 				 * be weird to get it to ignore any errors from 				 * the command. If echoing is turned on, we turn 				 * it off and use the errCheck template to echo 				 * the command. Leave echoing off so the user 				 * doesn't see the weirdness we go through to 				 * ignore errors. Set cmdTemplate to use the 				 * weirdness instead of the simple "%s\n" 				 * template. 				 */
@@ -2189,9 +2181,6 @@ operator|*
 name|status
 argument_list|)
 operator|&&
-operator|(
-operator|(
-operator|(
 name|WEXITSTATUS
 argument_list|(
 operator|*
@@ -2199,7 +2188,6 @@ name|status
 argument_list|)
 operator|!=
 literal|0
-operator|)
 operator|&&
 operator|!
 operator|(
@@ -2210,8 +2198,6 @@ operator|&
 name|JOB_IGNERR
 operator|)
 operator|)
-operator|)
-operator|)
 operator|||
 operator|(
 name|WIFSIGNALED
@@ -2220,7 +2206,6 @@ operator|*
 name|status
 argument_list|)
 operator|&&
-operator|(
 name|WTERMSIG
 argument_list|(
 operator|*
@@ -2228,7 +2213,6 @@ name|status
 argument_list|)
 operator|!=
 name|SIGCONT
-operator|)
 operator|)
 condition|)
 block|{
@@ -2319,7 +2303,6 @@ operator|*
 name|status
 argument_list|)
 operator|&&
-operator|(
 name|WTERMSIG
 argument_list|(
 operator|*
@@ -2327,7 +2310,6 @@ name|status
 argument_list|)
 operator|==
 name|SIGCONT
-operator|)
 operator|)
 operator|||
 name|DEBUG
@@ -2917,24 +2899,18 @@ if|if
 condition|(
 name|done
 operator|&&
-operator|(
 name|aborting
 operator|!=
 name|ABORT_ERROR
-operator|)
 operator|&&
-operator|(
 name|aborting
 operator|!=
 name|ABORT_INTERRUPT
-operator|)
 operator|&&
-operator|(
 operator|*
 name|status
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* 		 * As long as we aren't aborting and the job didn't return a 		 * non-zero status that we shouldn't ignore, we call 		 * Make_Update to update the parents. In addition, any saved 		 * commands for the node are placed on the .END target. 		 */
@@ -3037,11 +3013,9 @@ operator|&&
 operator|!
 name|keepgoing
 operator|&&
-operator|(
 name|aborting
 operator|!=
 name|ABORT_INTERRUPT
-operator|)
 condition|)
 block|{
 comment|/* 		 * If we found any errors in this batch of children and the -k 		 * flag wasn't given, we set the aborting flag so no more jobs 		 * get started. 		 */
@@ -3052,11 +3026,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|aborting
 operator|==
 name|ABORT_ERROR
-operator|)
 operator|&&
 name|Job_Empty
 argument_list|()
@@ -3371,11 +3343,9 @@ block|{
 comment|/* 		 * No commands. Look for .DEFAULT rule from which we might infer 		 * commands. 		 */
 if|if
 condition|(
-operator|(
 name|DEFAULT
 operator|!=
 name|NULL
-operator|)
 operator|&&
 operator|!
 name|Lst_IsEmpty
@@ -3662,13 +3632,11 @@ block|}
 comment|/* 	 * Some jobs produce no output and it's disconcerting to have 	 * no feedback of their running (since they produce no output, the 	 * banner with their name in it never appears). This is an attempt to 	 * provide that feedback, even if nothing follows it. 	 */
 if|if
 condition|(
-operator|(
 name|lastNode
 operator|!=
 name|job
 operator|->
 name|node
-operator|)
 operator|&&
 operator|(
 name|job
@@ -4199,7 +4167,6 @@ name|commandShell
 operator|->
 name|exit
 operator|&&
-operator|(
 operator|*
 name|commandShell
 operator|->
@@ -4207,21 +4174,18 @@ name|exit
 operator|!=
 literal|'-'
 operator|)
-operator|)
 operator|||
 operator|(
 name|commandShell
 operator|->
 name|echo
 operator|&&
-operator|(
 operator|*
 name|commandShell
 operator|->
 name|echo
 operator|!=
 literal|'-'
-operator|)
 operator|)
 condition|)
 block|{
@@ -4233,7 +4197,6 @@ argument_list|,
 literal|"-%s%s"
 argument_list|,
 operator|(
-operator|(
 name|job
 operator|->
 name|flags
@@ -4243,7 +4206,6 @@ operator|)
 condition|?
 literal|""
 else|:
-operator|(
 name|commandShell
 operator|->
 name|exit
@@ -4253,10 +4215,7 @@ operator|->
 name|exit
 else|:
 literal|""
-operator|)
-operator|)
 argument_list|,
-operator|(
 operator|(
 name|job
 operator|->
@@ -4267,7 +4226,6 @@ operator|)
 condition|?
 literal|""
 else|:
-operator|(
 name|commandShell
 operator|->
 name|echo
@@ -4277,8 +4235,6 @@ operator|->
 name|echo
 else|:
 literal|""
-operator|)
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4427,12 +4383,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
 name|nJobs
 operator|>=
 name|maxJobs
-operator|)
 operator|&&
 operator|!
 operator|(
@@ -4442,10 +4395,9 @@ name|flags
 operator|&
 name|JOB_SPECIAL
 operator|)
-operator|)
 condition|)
 block|{
-comment|/* 			 * Can't be exported and not allowed to run locally -- 			 * put it back on the hold queue and mark the table full 			 */
+comment|/* 			 * Not allowed to run -- put it back on the hold 			 * queue and mark the table full 			 */
 name|DEBUGF
 argument_list|(
 name|JOB
@@ -4522,11 +4474,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
 name|nJobs
 operator|<
 name|maxJobs
-operator|)
 operator|||
 operator|(
 operator|(
@@ -4537,19 +4487,15 @@ operator|&
 name|JOB_SPECIAL
 operator|)
 operator|&&
-operator|(
 name|maxJobs
 operator|==
 literal|0
 operator|)
 operator|)
-operator|)
 operator|&&
-operator|(
 name|nJobs
 operator|!=
 name|maxJobs
-operator|)
 condition|)
 block|{
 comment|/* 			 * If we haven't reached the concurrency limit already 			 * (or the job must be run and maxJobs is 0), it's ok 			 * to resume it. 			 */
@@ -4880,7 +4826,7 @@ name|flags
 operator||=
 name|flags
 expr_stmt|;
-comment|/* 	 * Check the commands now so any attributes from .DEFAULT have a chance 	 * to migrate to the node. 	 */
+comment|/* 	 * Check the commands now so any attributes from .DEFAULT have a chance 	 * to migrate to the node. XXXHB: missing parantheses below? 	 */
 if|if
 condition|(
 operator|!
@@ -5565,11 +5511,9 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
 name|nJobs
 operator|>=
 name|maxJobs
-operator|)
 operator|&&
 operator|!
 operator|(
@@ -5580,11 +5524,9 @@ operator|&
 name|JOB_SPECIAL
 operator|)
 operator|&&
-operator|(
 name|maxJobs
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* 		 * We've hit the limit of concurrency, so put the job on hold 		 * until some other job finishes. Note that the special jobs 		 * (.BEGIN, .INTERRUPT and .END) may be run even when the 		 * limit has been reached (e.g. when maxJobs == 0). 		 */
@@ -5627,7 +5569,7 @@ operator|>=
 name|maxJobs
 condition|)
 block|{
-comment|/* 			 * If we're running this job locally as a special case 			 * (see above), at least say the table is full. 			 */
+comment|/* 			 * If we're running this job as a special case 			 * (see above), at least say the table is full. 			 */
 name|jobFull
 operator|=
 name|TRUE
@@ -5971,19 +5913,15 @@ block|}
 comment|/* 		 * If we hit the end-of-file (the job is dead), we must flush 		 * its remaining output, so pretend we read a newline if 		 * there's any output remaining in the buffer. 		 * Also clear the 'finish' flag so we stop looping. 		 */
 if|if
 condition|(
-operator|(
 name|nr
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
 name|job
 operator|->
 name|curPos
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|job
