@@ -6155,7 +6155,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Find a device given a unit number  *  * This is similar to devclass_get_devices() but only searches for  * devices which have @p dev as a parent.  *  * @param dev		the parent device to search  * @param unit		the unit number to search for  *   * @returns		the device with the given unit number or @c  *			NULL if there is no such device  */
+comment|/**  * @brief Find a device given a unit number  *  * This is similar to devclass_get_devices() but only searches for  * devices which have @p dev as a parent.  *  * @param dev		the parent device to search  * @param unit		the unit number to search for.  If the unit is -1,  *			return the first child of @p dev which has name  *			@p classname (that is, the one with the lowest unit.)  *  * @returns		the device with the given unit number or @c  *			NULL if there is no such device  */
 end_comment
 
 begin_function
@@ -6197,6 +6197,14 @@ operator|(
 name|NULL
 operator|)
 return|;
+if|if
+condition|(
+name|unit
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|child
 operator|=
 name|devclass_get_device
@@ -6221,6 +6229,52 @@ operator|(
 name|child
 operator|)
 return|;
+block|}
+else|else
+block|{
+for|for
+control|(
+name|unit
+operator|=
+literal|0
+init|;
+name|unit
+operator|<
+name|devclass_get_maxunit
+argument_list|(
+name|dc
+argument_list|)
+condition|;
+name|unit
+operator|++
+control|)
+block|{
+name|child
+operator|=
+name|devclass_get_device
+argument_list|(
+name|dc
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|child
+operator|&&
+name|child
+operator|->
+name|parent
+operator|==
+name|dev
+condition|)
+return|return
+operator|(
+name|child
+operator|)
+return|;
+block|}
+block|}
 return|return
 operator|(
 name|NULL
