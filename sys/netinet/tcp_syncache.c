@@ -1739,11 +1739,6 @@ name|sc_tp
 operator|->
 name|t_inpcb
 expr_stmt|;
-name|INP_LOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|slot
@@ -1802,11 +1797,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-name|INP_UNLOCK
-argument_list|(
-name|inp
 argument_list|)
 expr_stmt|;
 name|nsc
