@@ -1202,6 +1202,17 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|cred_free_thread
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DIAGNOSTIC */
 block|}
 end_function
 

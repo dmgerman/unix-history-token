@@ -1087,7 +1087,7 @@ operator|-
 literal|1
 condition|)
 goto|goto
-name|out
+name|userout
 goto|;
 else|#
 directive|else
@@ -1247,7 +1247,7 @@ operator|-
 literal|1
 condition|)
 goto|goto
-name|out
+name|userout
 goto|;
 if|if
 condition|(
@@ -1337,7 +1337,7 @@ name|Giant
 argument_list|)
 expr_stmt|;
 goto|goto
-name|out
+name|userout
 goto|;
 else|#
 directive|else
@@ -1383,7 +1383,7 @@ endif|#
 directive|endif
 comment|/* DDB */
 goto|goto
-name|out
+name|userout
 goto|;
 block|}
 elseif|else
@@ -1442,7 +1442,7 @@ name|npxdna
 argument_list|()
 condition|)
 goto|goto
-name|out
+name|userout
 goto|;
 endif|#
 directive|endif
@@ -1504,7 +1504,7 @@ name|PSL_T
 operator|)
 condition|)
 goto|goto
-name|out
+name|userout
 goto|;
 name|frame
 operator|.
@@ -2250,6 +2250,18 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+name|userout
+label|:
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|cred_free_thread
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|out
 label|:
 return|return;
@@ -4103,6 +4115,16 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|cred_free_thread
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|WITNESS
