@@ -466,9 +466,12 @@ name|mountfrom
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|done
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* don't complain */
 name|printf
 argument_list|(
 literal|"Mounting root from %s\n"
