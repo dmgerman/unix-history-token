@@ -1455,7 +1455,12 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_TTY
-block|, }
+operator||
+name|D_KQFILTER
+block|,
+comment|/* kqfilter */
+name|ttykqfilter
+block|}
 decl_stmt|;
 end_decl_stmt
 
