@@ -168,6 +168,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|bitswab
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|IO
 name|in
@@ -183,16 +198,20 @@ name|st
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
+begin_extern
+extern|extern void (*cfunc
+end_extern
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
 name|void
-function_decl|(
-modifier|*
-name|cfunc
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
