@@ -376,7 +376,7 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Setupt our wait mask. */
+comment|/* Setup our wait mask. */
 name|sigemptyset
 argument_list|(
 operator|&
@@ -918,7 +918,7 @@ argument_list|(
 literal|"FAIL: sigwait doesn't wake up for SIGHUP.\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Add SIGHUP to all threads pending signals.  Since there is 	 * a signal handler installed for SIGHUP and this signal is 	 * blocked from the waiter thread and unblocked in the main 	 * thread, the signal handler should be called once for SIGHUP. 	 */
+comment|/* 	 * Add SIGHUP to the process pending signals.  Since there is 	 * a signal handler installed for SIGHUP and this signal is 	 * blocked from the waiter thread and unblocked in the main 	 * thread, the signal handler should be called once for SIGHUP. 	 */
 name|send_process_signal
 argument_list|(
 name|SIGHUP
@@ -943,14 +943,14 @@ index|[
 name|SIGHUP
 index|]
 operator|!=
-literal|3
+literal|2
 condition|)
 name|printf
 argument_list|(
 literal|"FAIL: sigwait doesn't return for pending SIGHUP.\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Repeat the above test using pthread_kill and SIGUSR1 	 */
+comment|/* 	 * Repeat the above test using pthread_kill and SIGUSR1. 	 */
 name|sigcounts
 index|[
 name|SIGUSR1
