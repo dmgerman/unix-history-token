@@ -61,16 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_comment
-comment|/* For _POSIX_VERSION */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -31742,6 +31732,22 @@ end_block
 begin_escape
 end_escape
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|||
+operator|(
+name|BSD
+operator|<
+literal|199306
+operator|)
+end_if
+
 begin_comment
 comment|/* Entry points compatible with 4.2 BSD regex library.  We don't define    them if this is an Emacs or POSIX compilation.  */
 end_comment
@@ -31759,7 +31765,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|_POSIX_VERSION
+name|_POSIX_SOURCE
 argument_list|)
 operator|)
 operator|||
@@ -32075,7 +32081,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not emacs and not _POSIX_VERSION */
+comment|/* not emacs and not _POSIX_SOURCE */
 end_comment
 
 begin_escape
@@ -32092,12 +32098,6 @@ operator|!
 name|defined
 argument_list|(
 name|emacs
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_VERSION
 argument_list|)
 end_if
 
@@ -33044,7 +33044,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not emacs&& not POSIX */
+comment|/* not emacs */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not BSD4.4 */
 end_comment
 
 end_unit
