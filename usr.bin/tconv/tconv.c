@@ -119,17 +119,21 @@ literal|"@(#) mytinfo tconv.c 3.2 92/02/01 public domain, By Ross Ridge"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* the right margin of the output */
@@ -646,7 +650,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"string to complex to covert\n"
+literal|"string to complex to convert\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6412,9 +6416,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-b] [-c [-OUGd]] [-i] [-B [-D dir]] [-I] [-k] [-V]\n\t[-t term] [file]\n"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-name|prg_name
+literal|"usage: tconv [-b] [-c [-OUGd]] [-i] [-B [-D dir]] [-I] [-k] [-V]"
+argument_list|,
+literal|"             [-t term] [file]"
+argument_list|,
+literal|"       tic [file]"
+argument_list|,
+literal|"       captoinfo [-t term] [-OUGdk] [file]"
 argument_list|)
 expr_stmt|;
 return|return;
