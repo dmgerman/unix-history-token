@@ -825,7 +825,7 @@ operator|)
 name|symtab
 operator|)
 expr_stmt|;
-name|tabsz
+name|symtab
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -849,7 +849,7 @@ operator|)
 name|strtab
 operator|)
 expr_stmt|;
-name|strsz
+name|strtab
 operator|+=
 sizeof|sizeof
 argument_list|(
