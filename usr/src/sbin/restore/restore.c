@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.14	(Berkeley)	83/05/14"
+literal|"@(#)restore.c	3.15	(Berkeley)	83/05/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -606,6 +606,11 @@ init|=
 name|GOOD
 decl_stmt|;
 name|int
+name|lookuptype
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|key
 init|=
 literal|0
@@ -637,7 +642,7 @@ modifier|*
 name|keyval
 parameter_list|()
 function_decl|;
-comment|/* 	 * This routine is called once for each element in the  	 * directory hierarchy, with a full path name. 	 * The "type" value is incorrectly specified as LEAF for 	 * directories that are not on the dump tape. 	 */
+comment|/* 	 * This routine is called once for each element in the  	 * directory hierarchy, with a full path name. 	 * The "type" value is incorrectly specified as LEAF for 	 * directories that are not on the dump tape. 	 * 	 * Check to see if the file is on the tape. 	 */
 if|if
 condition|(
 name|BIT
@@ -651,6 +656,7 @@ name|key
 operator||=
 name|ONTAPE
 expr_stmt|;
+comment|/* 	 * Check to see if the name exists, and if the name is a link. 	 */
 name|np
 operator|=
 name|lookupname
@@ -664,10 +670,43 @@ name|np
 operator|!=
 name|NIL
 condition|)
+block|{
 name|key
 operator||=
 name|NAMEFND
 expr_stmt|;
+name|ip
+operator|=
+name|lookupino
+argument_list|(
+name|np
+operator|->
+name|e_ino
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"corrupted symbol table\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|!=
+name|np
+condition|)
+name|lookuptype
+operator|=
+name|LINK
+expr_stmt|;
+block|}
+comment|/* 	 * Check to see if the inode exists, and if one of its links 	 * corresponds to the name (if one was found). 	 */
 name|ip
 operator|=
 name|lookupino
@@ -691,6 +730,8 @@ control|(
 name|ep
 operator|=
 name|ip
+operator|->
+name|e_links
 init|;
 name|ep
 operator|!=
@@ -702,6 +743,7 @@ name|ep
 operator|->
 name|e_links
 control|)
+block|{
 if|if
 condition|(
 name|ep
@@ -716,7 +758,8 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 	 * If both a name and an inode are found, but they do 	 * not correspond to the same file, then both the inode 	 * which has been found and the inode corresponding to 	 * the name which has been found need to be renamed. 	 * The current pathname is the new name for the inode 	 * which has been found. Since all files to be 	 * deleted have already been removed, the file found by 	 * name must live under a new name in this dump level. 	 * For the time being it is given a temporary name in anticipation 	 * that it will be renamed when it is later found by inode number. 	 */
+block|}
+comment|/* 	 * If both a name and an inode are found, but they do not 	 * correspond to the same file, then both the inode that has 	 * been found and the inode corresponding to the name that 	 * has been found need to be renamed. The current pathname 	 * is the new name for the inode that has been found. Since 	 * all files to be deleted have already been removed, the 	 * named file is either a now unneeded link, or it must live 	 * under a new name in this dump level. If it is a link, it 	 * can be removed. If it is not a link, it is given a 	 * temporary name in anticipation that it will be renamed 	 * when it is later found by inode number. 	 */
 if|if
 condition|(
 operator|(
@@ -742,6 +785,26 @@ operator|!=
 name|np
 condition|)
 block|{
+if|if
+condition|(
+name|lookuptype
+operator|==
+name|LINK
+condition|)
+block|{
+name|removeleaf
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+name|freeentry
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|dprintf
 argument_list|(
 name|stdout
@@ -759,6 +822,7 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
+block|}
 name|np
 operator|=
 name|NIL
@@ -849,7 +913,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * A file on the tape has a name which is the same as a name 	 * corresponding to a different file in the previous dump. 	 * Since all files to be deleted have already been removed, 	 * this file must live under a new name in this dump level. 	 * For the time being it is given a temporary name in anticipation 	 * that it will be renamed when it is later found by inode number 	 * (see INOFND case below). The entry is then treated as a new 	 * file. 	 */
+comment|/* 	 * A file on the tape has a name which is the same as a name 	 * corresponding to a different file in the previous dump. 	 * Since all files to be deleted have already been removed, 	 * this file is either a now unneeded link, or it must live 	 * under a new name in this dump level. If it is a link, it 	 * can simply be removed. If it is not a link, it is given a 	 * temporary name in anticipation that it will be renamed 	 * when it is later found by inode number (see INOFND case 	 * below). The entry is then treated as a new file. 	 */
 case|case
 name|ONTAPE
 operator||
@@ -862,11 +926,32 @@ name|NAMEFND
 operator||
 name|MODECHG
 case|:
+if|if
+condition|(
+name|lookuptype
+operator|==
+name|LINK
+condition|)
+block|{
+name|removeleaf
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+name|freeentry
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|mktempname
 argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* fall through */
 comment|/* 	 * A previously non-existent file. 	 * Add it to the file system, and request its extraction. 	 * If it is a directory, create it immediately. 	 * (Since the name is unused there can be no conflict) 	 */
 case|case
@@ -1092,6 +1177,10 @@ condition|(
 name|type
 operator|==
 name|LEAF
+operator|&&
+name|lookuptype
+operator|!=
+name|LINK
 condition|)
 name|np
 operator|->
@@ -2029,7 +2118,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This is the routine used to extract files for the 'x' command.  * Efficiently extract a subset of the files on a tape  */
+comment|/*  * This is the routine used to extract files for the 'x' and 'i' commands.  * Efficiently extract a subset of the files on a tape.  */
 end_comment
 
 begin_macro
@@ -2550,6 +2639,21 @@ name|e_flags
 operator|&=
 operator|~
 name|KEEP
+expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|->
+name|e_type
+operator|==
+name|NODE
+condition|)
+name|ep
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|NEW
 expr_stmt|;
 if|if
 condition|(
