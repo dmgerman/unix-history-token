@@ -725,6 +725,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|nsap_format
@@ -773,6 +774,7 @@ union|,
 name|u2
 union|;
 specifier|static
+specifier|const
 name|char
 name|nsap_format_DCC
 index|[]
@@ -780,6 +782,7 @@ init|=
 literal|"0x%02x.%02x%02x.%02x.%02x%02x%02x.%02x%02x.%02x%02x.%02x%02x.%02x%02x%02x%02x%02x%02x.%02x"
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|nsap_format_ICD
 index|[]
@@ -787,6 +790,7 @@ init|=
 literal|"0x%02x.%02x%02x.%02x.%02x%02x%02x.%02x%02x.%02x%02x.%02x%02x.%02x%02x%02x%02x%02x%02x.%02x"
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|nsap_format_E164
 index|[]
