@@ -4163,6 +4163,16 @@ name|if_watchdog
 operator|=
 name|fxp_watchdog
 expr_stmt|;
+name|ifp
+operator|->
+name|if_capabilities
+operator|=
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Enable checksum offload for 82550 or better chips */
 if|if
 condition|(
@@ -4182,16 +4192,14 @@ expr_stmt|;
 name|ifp
 operator|->
 name|if_capabilities
-operator|=
+operator||=
 name|IFCAP_HWCSUM
 expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable
-operator|=
-name|ifp
-operator|->
-name|if_capabilities
+operator||=
+name|IFCAP_HWCSUM
 expr_stmt|;
 block|}
 ifdef|#
@@ -4224,7 +4232,7 @@ operator|.
 name|ac_enaddr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
+comment|/* 	 * Tell the upper layer(s) we support long frames. 	 * Must appear after the call to ether_ifattach() because 	 * ether_ifattach() sets ifi_hdrlen to the default value. 	 */
 name|ifp
 operator|->
 name|if_data
