@@ -211,8 +211,11 @@ end_include
 
 begin_function_decl
 name|__BEGIN_DECLS
+comment|/*  * use parens around the ioctl so that people can define ioctl as a macro.  * Note: This will go away in the future, as soon as the current abusers  * have been fixed.  */
 name|int
+function_decl|(
 name|ioctl
+function_decl|)
 parameter_list|(
 name|int
 parameter_list|,
