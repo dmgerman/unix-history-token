@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.21 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1143,19 +1143,29 @@ name|base
 operator|=
 literal|16
 expr_stmt|;
+comment|/* leading 0x/X only if non-zero */
 if|if
 condition|(
 operator|!
 name|_ulong
 condition|)
-comment|/* leading 0x/X only if non-zero */
 name|flags
 operator|&=
 operator|~
 name|ALT
 expr_stmt|;
+comment|/* 			 * ``The result of converting a zero value with an 			 * explicit precision of zero is no characters.'' 			 *	-- ANSI X3J11 			 */
 name|num
 label|:
+if|if
+condition|(
+operator|!
+name|_ulong
+operator|&&
+operator|!
+name|prec
+condition|)
+break|break;
 name|t
 operator|=
 name|buf
