@@ -224,7 +224,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|Fatal
+name|AskAbort
 argument_list|(
 literal|"Couldn't seek for master boot record read\n"
 argument_list|)
@@ -243,7 +243,7 @@ operator|!=
 literal|512
 condition|)
 block|{
-name|Fatal
+name|AskAbort
 argument_list|(
 literal|"Failed to read master boot record\n"
 argument_list|)
@@ -305,7 +305,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|Fatal
+name|AskAbort
 argument_list|(
 literal|"Couldn't seek for master boot record read\n"
 argument_list|)
@@ -324,7 +324,7 @@ operator|!=
 literal|512
 condition|)
 block|{
-name|Fatal
+name|AskAbort
 argument_list|(
 literal|"Failed to read master boot record\n"
 argument_list|)
@@ -361,7 +361,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|Fatal
+name|AskAbort
 argument_list|(
 literal|"Couldn't seek for master boot record read\n"
 argument_list|)
@@ -384,7 +384,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Fatal
+name|AskAbort
 argument_list|(
 literal|"Couldn't enable writing of labels"
 argument_list|)
@@ -402,7 +402,7 @@ argument_list|)
 operator|!=
 literal|512
 condition|)
-name|Fatal
+name|AskAbort
 argument_list|(
 literal|"Failed to write master boot record\n"
 argument_list|)
@@ -425,7 +425,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Fatal
+name|AskAbort
 argument_list|(
 literal|"Couldn't disable writing of labels"
 argument_list|)
@@ -3260,7 +3260,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|Fatal
+name|AskAbort
 argument_list|(
 literal|"Couldn't set label: %s"
 argument_list|,
@@ -3290,7 +3290,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|Fatal
+name|AskAbort
 argument_list|(
 literal|"Couldn't write label: %s"
 argument_list|,
