@@ -3262,6 +3262,13 @@ block|}
 block|,
 comment|/* GVC0505 - GVC 56k Faxmodem */
 block|{
+literal|0x0116c31e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* GVC1601 - Rockwell V.34 Plug& Play Modem */
+block|{
 literal|0x0050c31e
 block|,
 name|NULL
