@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.5 82/11/15"
+literal|"@(#)rlogind.c	4.6 82/12/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -319,12 +319,9 @@ name|sin
 operator|.
 name|sin_port
 operator|=
-name|htons
-argument_list|(
 name|sp
 operator|->
 name|s_port
-argument_list|)
 expr_stmt|;
 name|argc
 operator|--
@@ -392,6 +389,9 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|port
 argument_list|)
 expr_stmt|;
@@ -699,6 +699,9 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|fromp
 operator|->
 name|sin_port
