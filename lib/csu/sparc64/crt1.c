@@ -236,60 +236,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Grab %g1 before it gets used for anything by the compiler.  * Sparc ELF psABI specifies a termination routine (if any) will be in  * %g1  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|fptr
-name|get_term
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|fptr
-name|retval
-decl_stmt|;
-if|#
-directive|if
-literal|0
-ifdef|#
-directive|ifdef
-name|__GNUC__
-block|__asm__ volatile("mov %%g1,%0" : "=r"(retval));
-else|#
-directive|else
-block|retval = (fptr)0;
-comment|/* XXXX Fix this for other compilers */
-endif|#
-directive|endif
-else|#
-directive|else
-name|retval
-operator|=
-operator|(
-name|fptr
-operator|)
-literal|0
-expr_stmt|;
-comment|/* XXXX temporary */
-endif|#
-directive|endif
-return|return
-operator|(
-name|retval
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* The entry function. */
 end_comment
 
 begin_comment
-comment|/*  * %o0 holds ps_strings pointer.  For Solaris compat and/or shared  * libraries, if %g1 is not 0, it is a routine to pass to atexit().  * (By passing the pointer in the usual argument register, we avoid  * having to do any inline assembly, except to recover %g1.)  *  * Note: kernel may (is not set in stone yet) pass ELF aux vector in %o1,  * but for now we do not use it here.  */
+comment|/*  * %o0 holds ps_strings pointer.  *  * Note: kernel may (is not set in stone yet) pass ELF aux vector in %o1,  * but for now we do not use it here.  *  * The SPARC compliance definitions specifies that the kernel pass the  * address of a function to be executed on exit in %g1. We do not make  * use of it as it is quite broken, because gcc can use this register  * as a temporary, so it is not safe from C code. Its even more broken  * for dynamic executables since rtld runs first.  */
 end_comment
 
 begin_comment
@@ -327,15 +278,6 @@ name|ps_strings
 name|__unused
 parameter_list|)
 block|{
-name|void
-function_decl|(
-modifier|*
-name|term
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
 name|int
 name|argc
 decl_stmt|;
@@ -354,11 +296,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|term
-operator|=
-name|get_term
-argument_list|()
-expr_stmt|;
 name|argc
 operator|=
 operator|*
@@ -441,16 +378,6 @@ expr_stmt|;
 block|}
 name|__sparc_utrap_setup
 argument_list|()
-expr_stmt|;
-comment|/* 	 * If the kernel or a shared library wants us to call 	 * a termination function, arrange to do so. 	 */
-if|if
-condition|(
-name|term
-condition|)
-name|atexit
-argument_list|(
-name|term
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
