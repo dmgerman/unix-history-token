@@ -1543,13 +1543,6 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sp
-operator|->
-name|suspend_power
-condition|)
 name|sp
 operator|->
 name|ctrl
@@ -1676,13 +1669,6 @@ name|pccard_dev
 modifier|*
 name|dp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|sp
-operator|->
-name|suspend_power
-condition|)
 name|sp
 operator|->
 name|ctrl
@@ -3093,19 +3079,6 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
-name|sp
-operator|->
-name|suspend_power
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
