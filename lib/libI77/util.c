@@ -5,6 +5,26 @@ directive|ifndef
 name|NON_UNIX_STDIO
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|_INCLUDE_POSIX_SOURCE
+end_define
+
+begin_comment
+comment|/* for HP-UX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_INCLUDE_XOPEN_SOURCE
+end_define
+
+begin_comment
+comment|/* for HP-UX */
+end_comment
+
 begin_include
 include|#
 directive|include

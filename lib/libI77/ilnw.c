@@ -56,7 +56,7 @@ end_ifdef
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|z_putc
 parameter_list|()
 function_decl|;
@@ -69,7 +69,7 @@ end_else
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|z_putc
 parameter_list|(
 name|int
@@ -111,7 +111,8 @@ block|}
 end_function
 
 begin_function
-name|VOID
+specifier|static
+name|void
 ifdef|#
 directive|ifdef
 name|KR_headers

@@ -62,12 +62,35 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Sigarg_t
+value|...
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|Sigarg_t
 value|int
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -134,6 +157,53 @@ name|b
 parameter_list|)
 value|signal(a,(sig_pf)b)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Sigarg
+value|...
+end_define
+
+begin_define
+define|#
+directive|define
+name|Use_Sigarg
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|Sigarg
+value|Int n
+end_define
+
+begin_define
+define|#
+directive|define
+name|Use_Sigarg
+value|n = n
+end_define
+
+begin_comment
+comment|/* shut up compiler warning */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

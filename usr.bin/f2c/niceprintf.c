@@ -1077,6 +1077,8 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
+name|cmax
+decl_stmt|,
 name|inc
 decl_stmt|,
 name|ind
@@ -1171,9 +1173,15 @@ operator|)
 expr_stmt|;
 name|cursor_pos
 operator|=
-name|ind
-operator|+
 name|extra_indent
+expr_stmt|;
+if|if
+condition|(
+name|use_indent
+condition|)
+name|cursor_pos
+operator|+=
+name|ind
 expr_stmt|;
 name|set_cursor
 operator|=
@@ -1184,6 +1192,14 @@ if|if
 condition|(
 name|in_comment
 condition|)
+block|{
+name|cmax
+operator|=
+name|max_line_len
+operator|+
+literal|32
+expr_stmt|;
+comment|/* let comments be wider */
 for|for
 control|(
 name|pointer
@@ -1200,7 +1216,7 @@ literal|'\n'
 operator|&&
 name|cursor_pos
 operator|<=
-name|max_line_len
+name|cmax
 condition|;
 name|pointer
 operator|++
@@ -1208,6 +1224,7 @@ control|)
 name|cursor_pos
 operator|++
 expr_stmt|;
+block|}
 else|else
 for|for
 control|(

@@ -11,35 +11,6 @@ directive|include
 file|"fio.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"fmt.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"fp.h"
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VAX
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"ctype.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -74,6 +45,35 @@ begin_include
 include|#
 directive|include
 file|"string.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"fmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fp.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VAX
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"ctype.h"
 end_include
 
 begin_endif
@@ -641,11 +641,31 @@ index|[
 literal|3
 index|]
 condition|)
+for|for
+control|(
+name|s
+operator|-=
+literal|2
+operator|,
 name|e1
 operator|=
 literal|2
-expr_stmt|;
-comment|/* for(s -= 2, e1 = 2; s[0] = s[1]; s++);  	/* Pedantic gives the behavior that Fortran 77 specifies,	*/
+init|;
+name|s
+index|[
+literal|0
+index|]
+operator|=
+name|s
+index|[
+literal|1
+index|]
+condition|;
+name|s
+operator|++
+control|)
+empty_stmt|;
+comment|/* Pedantic gives the behavior that Fortran 77 specifies,	*/
 comment|/* i.e., requires that E be specified for exponent fields	*/
 comment|/* of more than 3 digits.  With Pedantic undefined, we get	*/
 comment|/* the behavior that Cray displays -- you get a bigger		*/

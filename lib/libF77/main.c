@@ -217,10 +217,11 @@ specifier|static
 name|VOID
 name|sigfdie
 parameter_list|(
-name|Int
-name|n
+name|Sigarg
 parameter_list|)
 block|{
+name|Use_Sigarg
+expr_stmt|;
 name|sig_die
 argument_list|(
 literal|"Floating Exception"
@@ -233,10 +234,11 @@ specifier|static
 name|VOID
 name|sigidie
 parameter_list|(
-name|Int
-name|n
+name|Sigarg
 parameter_list|)
 block|{
+name|Use_Sigarg
+expr_stmt|;
 name|sig_die
 argument_list|(
 literal|"IOT Trap"
@@ -252,10 +254,11 @@ specifier|static
 name|VOID
 name|sigqdie
 parameter_list|(
-name|Int
-name|n
+name|Sigarg
 parameter_list|)
 block|{
+name|Use_Sigarg
+expr_stmt|;
 name|sig_die
 argument_list|(
 literal|"Quit signal"
@@ -270,10 +273,11 @@ specifier|static
 name|VOID
 name|sigindie
 parameter_list|(
-name|Int
-name|n
+name|Sigarg
 parameter_list|)
 block|{
+name|Use_Sigarg
+expr_stmt|;
 name|sig_die
 argument_list|(
 literal|"Interrupt"
@@ -286,10 +290,11 @@ specifier|static
 name|VOID
 name|sigtdie
 parameter_list|(
-name|Int
-name|n
+name|Sigarg
 parameter_list|)
 block|{
+name|Use_Sigarg
+expr_stmt|;
 name|sig_die
 argument_list|(
 literal|"Killed"
@@ -305,10 +310,11 @@ specifier|static
 name|VOID
 name|sigtrdie
 parameter_list|(
-name|Int
-name|n
+name|Sigarg
 parameter_list|)
 block|{
+name|Use_Sigarg
+expr_stmt|;
 name|sig_die
 argument_list|(
 literal|"Trace trap"

@@ -4,7 +4,7 @@ name|char
 name|F2C_version
 index|[]
 init|=
-literal|"19970219"
+literal|"19980913"
 decl_stmt|;
 end_decl_stmt
 
@@ -13,7 +13,7 @@ name|char
 name|xxxvers
 index|[]
 init|=
-literal|"\n@(#) FORTRAN 77 to C Translator, VERSION 19970219\n"
+literal|"\n@(#) FORTRAN 77 to C Translator, VERSION 19980913\n"
 decl_stmt|;
 end_decl_stmt
 

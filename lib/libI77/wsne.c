@@ -72,7 +72,7 @@ literal|1
 expr_stmt|;
 name|f__putn
 operator|=
-name|t_putc
+name|x_putc
 expr_stmt|;
 name|L_len
 operator|=

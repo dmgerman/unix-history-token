@@ -59,13 +59,14 @@ endif|#
 directive|endif
 block|{
 return|return
-operator|(
-operator|(
+call|(
+name|shortint
+call|)
+argument_list|(
 operator|*
 name|x
-operator|)
 operator|>=
-literal|0
+literal|0.
 condition|?
 name|floor
 argument_list|(
@@ -83,7 +84,7 @@ operator|-
 operator|*
 name|x
 argument_list|)
-operator|)
+argument_list|)
 return|;
 block|}
 end_function

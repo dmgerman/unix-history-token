@@ -162,8 +162,9 @@ name|flag
 name|ufmt
 decl_stmt|;
 name|flag
-name|uprnt
+name|urw
 decl_stmt|;
+comment|/* (1 for can read) | (2 for can write) */
 name|flag
 name|ublnk
 decl_stmt|;
@@ -236,26 +237,43 @@ begin_comment
 comment|/*void*/
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|f__getn
-argument_list|)
-argument_list|()
-decl_stmt|,
-argument_list|(
-operator|*
-name|f__putn
-argument_list|)
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*for formatted io*/
+comment|/* for formatted input */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|f__putn
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* for formatted output */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|x_putc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -301,6 +319,9 @@ argument_list|()
 decl_stmt|,
 name|xrd_SL
 argument_list|()
+decl_stmt|,
+name|f__putbuf
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -330,23 +351,33 @@ endif|#
 directive|endif
 specifier|extern
 name|int
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|f__getn
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|void
-argument_list|)
-decl_stmt|,
-argument_list|(
-operator|*
+parameter_list|)
+function_decl|;
+comment|/* for formatted input */
+specifier|extern
+name|void
+function_decl|(
+modifier|*
 name|f__putn
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|int
-argument_list|)
-decl_stmt|;
-comment|/*for formatted io*/
+parameter_list|)
+function_decl|;
+comment|/* for formatted output */
+specifier|extern
+name|void
+name|x_putc
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
 specifier|extern
 name|long
 name|f__inode
@@ -506,6 +537,13 @@ name|int
 name|xrd_SL
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|f__putbuf
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 ifdef|#

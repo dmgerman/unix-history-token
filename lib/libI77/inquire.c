@@ -11,6 +11,12 @@ directive|include
 file|"fio.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"string.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -57,12 +63,6 @@ undef|#
 directive|undef
 name|max
 end_undef
-
-begin_include
-include|#
-directive|include
-file|"string.h"
-end_include
 
 begin_include
 include|#

@@ -5,6 +5,13 @@ directive|include
 file|"f2c.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|log10e
+value|0.43429448190325182765
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -13,7 +20,7 @@ end_ifdef
 
 begin_function_decl
 name|double
-name|log10
+name|log
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -60,7 +67,9 @@ directive|endif
 block|{
 return|return
 operator|(
-name|log10
+name|log10e
+operator|*
+name|log
 argument_list|(
 operator|*
 name|x

@@ -1,23 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|KR_headers
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|FILE
-modifier|*
-name|fdopen
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_ifdef
 ifdef|#

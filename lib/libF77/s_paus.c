@@ -18,6 +18,12 @@ name|PAUSESIG
 value|15
 end_define
 
+begin_include
+include|#
+directive|include
+file|"signal1.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -87,12 +93,6 @@ directive|include
 file|"stdlib.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"signal1.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -135,15 +135,11 @@ specifier|static
 name|VOID
 name|waitpause
 parameter_list|(
-name|Int
-name|n
+name|Sigarg
 parameter_list|)
 block|{
-name|n
-operator|=
-name|n
+name|Use_Sigarg
 expr_stmt|;
-comment|/* shut up compiler warning */
 return|return;
 block|}
 specifier|static
