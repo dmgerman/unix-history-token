@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -556,7 +556,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|int
+name|long
 name|adv
 init|=
 name|win
@@ -571,16 +571,20 @@ operator|->
 name|rcv_nxt
 operator|)
 decl_stmt|;
-comment|/* this was:					XXX 		 * if (so->so_rcv.sb_cc == 0&& adv>= 2 * tp->t_maxseg) 		 */
 if|if
 condition|(
 name|adv
 operator|>=
+call|(
+name|long
+call|)
+argument_list|(
 literal|2
 operator|*
 name|tp
 operator|->
 name|t_maxseg
+argument_list|)
 condition|)
 goto|goto
 name|send
@@ -591,6 +595,9 @@ literal|2
 operator|*
 name|adv
 operator|>=
+operator|(
+name|long
+operator|)
 name|so
 operator|->
 name|so_rcv
