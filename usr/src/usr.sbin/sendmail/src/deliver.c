@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	5.14 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3423,6 +3423,8 @@ decl_stmt|;
 specifier|extern
 name|int
 name|N_SysEx
+decl_stmt|,
+name|h_errno
 decl_stmt|;
 name|char
 name|buf
