@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	8.8 (Berkeley) %G%"
+literal|"@(#)tape.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2629,8 +2629,6 @@ operator|.
 name|dip
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 expr_stmt|;
 name|timep
 index|[
@@ -2643,9 +2641,7 @@ name|curfile
 operator|.
 name|dip
 operator|->
-name|di_atime
-operator|.
-name|ts_nsec
+name|di_atimensec
 operator|/
 literal|1000
 expr_stmt|;
@@ -2661,8 +2657,6 @@ operator|.
 name|dip
 operator|->
 name|di_mtime
-operator|.
-name|ts_sec
 expr_stmt|;
 name|timep
 index|[
@@ -2675,9 +2669,7 @@ name|curfile
 operator|.
 name|dip
 operator|->
-name|di_mtime
-operator|.
-name|ts_nsec
+name|di_mtimensec
 operator|/
 literal|1000
 expr_stmt|;
@@ -5258,8 +5250,6 @@ operator|->
 name|c_dinode
 operator|.
 name|di_atime
-operator|.
-name|ts_sec
 operator|=
 name|u_ospcl
 operator|.
@@ -5274,8 +5264,6 @@ operator|->
 name|c_dinode
 operator|.
 name|di_mtime
-operator|.
-name|ts_sec
 operator|=
 name|u_ospcl
 operator|.
@@ -5290,8 +5278,6 @@ operator|->
 name|c_dinode
 operator|.
 name|di_ctime
-operator|.
-name|ts_sec
 operator|=
 name|u_ospcl
 operator|.

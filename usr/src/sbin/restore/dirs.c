@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	8.6 (Berkeley) %G%"
+literal|"@(#)dirs.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,12 +55,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/dinode.h>
 end_include
 
@@ -68,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
@@ -3573,8 +3573,6 @@ operator|=
 name|dip
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 expr_stmt|;
 name|node
 operator|.
@@ -3587,9 +3585,7 @@ name|tv_usec
 operator|=
 name|dip
 operator|->
-name|di_atime
-operator|.
-name|ts_nsec
+name|di_atimensec
 operator|/
 literal|1000
 expr_stmt|;
@@ -3605,8 +3601,6 @@ operator|=
 name|dip
 operator|->
 name|di_mtime
-operator|.
-name|ts_sec
 expr_stmt|;
 name|node
 operator|.
@@ -3619,9 +3613,7 @@ name|tv_usec
 operator|=
 name|dip
 operator|->
-name|di_mtime
-operator|.
-name|ts_nsec
+name|di_mtimensec
 operator|/
 literal|1000
 expr_stmt|;
