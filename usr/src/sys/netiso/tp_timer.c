@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.c	7.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -540,10 +540,6 @@ operator|<
 name|REF_OPEN
 condition|)
 continue|continue;
-name|t
-operator|=
-name|TM_NTIMERS
-expr_stmt|;
 comment|/* check the timers */
 for|for
 control|(
@@ -598,7 +594,9 @@ argument|D_TIMER
 argument_list|)
 name|printf
 argument_list|(
-literal|"C expired! type 0x%x\n"
+literal|"tp_slowtimo: pcb 0x%x t %d\n"
+argument_list|,
+name|tpcb
 argument_list|,
 name|t
 argument_list|)
