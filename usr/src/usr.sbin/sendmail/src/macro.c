@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	8.1 (Berkeley) %G%"
+literal|"@(#)macro.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,7 +168,7 @@ name|s
 operator|++
 control|)
 block|{
-name|char
+name|int
 name|c
 decl_stmt|;
 comment|/* 		**  Check for non-ordinary (special?) character. 		**	'q' will be the interpolated quantity. 		*/
@@ -473,7 +473,7 @@ name|v
 parameter_list|,
 name|e
 parameter_list|)
-name|char
+name|int
 name|n
 decl_stmt|;
 name|char
@@ -544,7 +544,7 @@ name|n
 parameter_list|,
 name|e
 parameter_list|)
-name|char
+name|int
 name|n
 decl_stmt|;
 specifier|register
