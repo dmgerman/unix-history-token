@@ -2388,7 +2388,7 @@ argument|p
 argument_list|,
 argument|td3
 argument_list|)
-name|td
+name|td3
 operator|->
 name|td_flags
 operator|&=
