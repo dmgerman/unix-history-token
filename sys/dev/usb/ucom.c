@@ -628,7 +628,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|uplcom
+name|ucom
 argument_list|,
 name|usb
 argument_list|,
