@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.58 1997/10/12 15:24:39 peter Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.59 1997/10/28 15:58:10 bde Exp $  */
 end_comment
 
 begin_include
@@ -6347,7 +6347,9 @@ argument_list|)
 expr_stmt|;
 name|newpt
 index|[
-literal|5
+literal|3
+operator|+
+name|UPAGES
 index|]
 operator|=
 literal|0
@@ -6355,7 +6357,9 @@ expr_stmt|;
 comment|/* *prv_CMAP1 */
 name|newpt
 index|[
-literal|6
+literal|4
+operator|+
+name|UPAGES
 index|]
 operator|=
 literal|0
@@ -6363,7 +6367,9 @@ expr_stmt|;
 comment|/* *prv_CMAP2 */
 name|newpt
 index|[
-literal|7
+literal|5
+operator|+
+name|UPAGES
 index|]
 operator|=
 literal|0
@@ -6466,7 +6472,9 @@ operator|)
 operator|&
 name|newpt
 index|[
-literal|5
+literal|3
+operator|+
+name|UPAGES
 index|]
 expr_stmt|;
 comment|/* prv_CMAP1 */
@@ -6481,7 +6489,9 @@ operator|)
 operator|&
 name|newpt
 index|[
-literal|6
+literal|4
+operator|+
+name|UPAGES
 index|]
 expr_stmt|;
 comment|/* prv_CMAP2 */
@@ -6496,7 +6506,9 @@ operator|)
 operator|&
 name|newpt
 index|[
-literal|7
+literal|5
+operator|+
+name|UPAGES
 index|]
 expr_stmt|;
 comment|/* prv_CMAP3 */
