@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rstat_proc.c,v 1.11 1998/09/15 08:15:20 gibbs Exp $"
+literal|"$Id: rstat_proc.c,v 1.12 1998/09/16 21:33:14 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1837,6 +1837,23 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|stats
+operator|.
+name|dinfo
+operator|->
+name|mem_ptr
+condition|)
+name|free
+argument_list|(
+name|stats
+operator|.
+name|dinfo
+operator|->
+name|mem_ptr
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|stats
@@ -2128,6 +2145,23 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|stats
+operator|.
+name|dinfo
+operator|->
+name|mem_ptr
+condition|)
+name|free
+argument_list|(
+name|stats
+operator|.
+name|dinfo
+operator|->
+name|mem_ptr
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|stats
