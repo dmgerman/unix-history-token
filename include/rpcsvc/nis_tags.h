@@ -31,13 +31,6 @@ begin_comment
 comment|/* from file: zns_tags.h	1.7 Copyright (c) 1990 Sun Microsystems */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"$Id: nis_tags.h,v 1.2 1996/07/29 14:26:03 wpaul Exp $"
-end_pragma
-
 begin_ifdef
 ifdef|#
 directive|ifdef

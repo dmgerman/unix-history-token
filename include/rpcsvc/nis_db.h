@@ -27,13 +27,6 @@ begin_comment
 comment|/* From: #pragma ident	"@(#)nis_db.h	1.8	94/05/03 SMI" */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"$Id: nis_db.h,v 1.3 1996/07/29 13:59:13 wpaul Exp $"
-end_pragma
-
 begin_comment
 comment|/*  * Note: although the version of<rpcsvc/nis_db.h> shipped with Solaris  * 2.5/2.5.x is actually older than this one (according to the ident  * string), it contains changes and a few added functions. Those changes  * have been hand merged into this file to bring it up to date.  */
 end_comment

@@ -27,13 +27,6 @@ begin_comment
 comment|/* From: #pragma ident	"@(#)nislib.h	1.16	94/05/03 SMI" */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"$Id: nislib.h,v 1.3 1996/09/19 19:37:07 wpaul Exp wpaul $"
-end_pragma
-
 begin_ifdef
 ifdef|#
 directive|ifdef
