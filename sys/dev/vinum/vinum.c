@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.23 1999/01/15 05:03:15 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.24 1999/03/19 05:35:25 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -166,41 +166,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Why aren't these declared anywhere? XXX */
-end_comment
-
-begin_function_decl
-name|int
-name|setjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|longjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|jmp_buf
-name|command_fail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* return here if config fails */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -806,6 +771,17 @@ operator|)
 condition|)
 block|{
 comment|/* at least one daemon open, we're stopping */
+name|int
+name|timeout
+init|=
+literal|1
+decl_stmt|;
+while|while
+condition|(
+name|timeout
+condition|)
+block|{
+comment|/* until the daemon sees sense */
 name|queue_daemon_request
 argument_list|(
 name|daemonrq_return
@@ -818,6 +794,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* stop the daemon */
+name|timeout
+operator|=
 name|tsleep
 argument_list|(
 operator|&
@@ -827,10 +805,11 @@ name|PUSER
 argument_list|,
 literal|"vstop"
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* and wait for it */
+block|}
 block|}
 if|if
 condition|(
