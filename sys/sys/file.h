@@ -166,6 +166,17 @@ begin_comment
 comment|/* event queue */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_CRYPTO
+value|6
+end_define
+
+begin_comment
+comment|/* crypto */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
