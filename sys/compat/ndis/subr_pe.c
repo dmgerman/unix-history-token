@@ -93,7 +93,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|vm_offset_t
 name|pe_functbl_match
 parameter_list|(
 name|image_patch_table
@@ -2167,7 +2167,7 @@ condition|)
 return|return
 operator|(
 operator|(
-name|uint32_t
+name|vm_offset_t
 operator|)
 name|p
 operator|->
