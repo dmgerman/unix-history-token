@@ -104,14 +104,6 @@ comment|/* #undef off_t */
 end_comment
 
 begin_comment
-comment|/* Define if you need to in order for stat and other things to work.  */
-end_comment
-
-begin_comment
-comment|/* #undef _POSIX_SOURCE */
-end_comment
-
-begin_comment
 comment|/* Define to `unsigned' if<sys/types.h> doesn't define.  */
 end_comment
 
@@ -185,9 +177,12 @@ begin_comment
 comment|/* Define if you have the getc_unlocked function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETC_UNLOCKED */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GETC_UNLOCKED
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the getcwd function.  */
@@ -448,28 +443,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/stat.h> header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_STAT_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the<sys/types.h> header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_TYPES_H
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
 end_comment
 
@@ -504,7 +477,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.13.2" */
+comment|/* #define VERSION "2.15" */
 end_comment
 
 begin_comment
@@ -669,8 +642,19 @@ comment|/* Configured target name. */
 end_comment
 
 begin_comment
-comment|/* #define TARGET "alpha-obrien-freebsd5.0" */
+comment|/* #define TARGET "amd64-unknown-freebsd5.2" */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if user symbol names have a leading underscore, 0 if not. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_PREPENDS_UNDERSCORE
+value|0
+end_define
 
 end_unit
 

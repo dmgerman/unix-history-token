@@ -82,14 +82,6 @@ comment|/* #undef off_t */
 end_comment
 
 begin_comment
-comment|/* Define if you need to in order for stat and other things to work.  */
-end_comment
-
-begin_comment
-comment|/* #undef _POSIX_SOURCE */
-end_comment
-
-begin_comment
 comment|/* Define to `unsigned' if<sys/types.h> doesn't define.  */
 end_comment
 
@@ -341,28 +333,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/stat.h> header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_STAT_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the<sys/types.h> header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_TYPES_H
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
 end_comment
 
@@ -397,7 +367,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.13.2" */
+comment|/* #define VERSION "2.15" */
 end_comment
 
 begin_comment

@@ -204,6 +204,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the realpath function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_REALPATH
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the sbrk function.  */
 end_comment
 
@@ -398,28 +409,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/stat.h> header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_STAT_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the<sys/types.h> header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_TYPES_H
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
 end_comment
 
@@ -454,7 +443,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.13.2" */
+comment|/* #define VERSION "2.15" */
 end_comment
 
 begin_comment

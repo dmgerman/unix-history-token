@@ -89,14 +89,6 @@ comment|/* #undef off_t */
 end_comment
 
 begin_comment
-comment|/* Define if you need to in order for stat and other things to work.  */
-end_comment
-
-begin_comment
-comment|/* #undef _POSIX_SOURCE */
-end_comment
-
-begin_comment
 comment|/* Define to `unsigned' if<sys/types.h> doesn't define.  */
 end_comment
 
@@ -478,7 +470,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.13.2" */
+comment|/* #define VERSION "2.15" */
 end_comment
 
 begin_comment
@@ -514,15 +506,44 @@ comment|/* #undef TARGET_BYTES_BIG_ENDIAN */
 end_comment
 
 begin_comment
+comment|/* Default CPU for MIPS targets.  */
+end_comment
+
+begin_comment
+comment|/* #undef MIPS_CPU_STRING_DEFAULT */
+end_comment
+
+begin_comment
+comment|/* Allow use of E_MIPS_ABI_O32 on MIPS targets.  */
+end_comment
+
+begin_comment
+comment|/* #undef USE_E_MIPS_ABI_O32 */
+end_comment
+
+begin_comment
+comment|/* Generate 64-bit code by default on MIPS targets.  */
+end_comment
+
+begin_comment
+comment|/* #undef MIPS_DEFAULT_64BIT */
+end_comment
+
+begin_comment
+comment|/* Choose a default ABI for MIPS targets.  */
+end_comment
+
+begin_comment
+comment|/* #undef MIPS_DEFAULT_ABI */
+end_comment
+
+begin_comment
 comment|/* Default architecture. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_ARCH
-value|"v9-64"
-end_define
+begin_comment
+comment|/* #define DEFAULT_ARCH "v9-64" */
+end_comment
 
 begin_comment
 comment|/* Using cgen code? */
@@ -688,56 +709,41 @@ begin_comment
 comment|/* Target alias. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TARGET_ALIAS
-value|"sparc64-obrien-freebsd5"
-end_define
+begin_comment
+comment|/* #define TARGET_ALIAS "sparc64-obrien-freebsd5" */
+end_comment
 
 begin_comment
 comment|/* Canonical target. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TARGET_CANONICAL
-value|"sparc64-obrien-freebsd5"
-end_define
+begin_comment
+comment|/* #define TARGET_CANONICAL "sparc64-obrien-freebsd5" */
+end_comment
 
 begin_comment
 comment|/* Target CPU. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TARGET_CPU
-value|"sparc64"
-end_define
+begin_comment
+comment|/* #define TARGET_CPU "sparc64" */
+end_comment
 
 begin_comment
 comment|/* Target vendor. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TARGET_VENDOR
-value|"obrien"
-end_define
+begin_comment
+comment|/* #define TARGET_VENDOR "obrien" */
+end_comment
 
 begin_comment
 comment|/* Target OS. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TARGET_OS
-value|"freebsd5"
-end_define
+begin_comment
+comment|/* #define TARGET_OS "freebsd5" */
+end_comment
 
 begin_comment
 comment|/* Define if you have the stpcpy function */
