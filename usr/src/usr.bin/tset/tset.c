@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	5.6 (Berkeley) %G%"
+literal|"@(#)tset.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,7 +316,7 @@ name|isalnum
 parameter_list|(
 name|c
 parameter_list|)
-value|(c> ' '&& !(index("<@=>!:|\177", c)) )
+value|(c> ' '&& (index("<@=>!:|\177", c) == NULL))
 end_define
 
 begin_define
@@ -1013,6 +1013,16 @@ literal|2
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|HasAM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if terminal has automatic margins */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -1267,28 +1277,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|New
-init|=
-name|NO
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* use new tty discipline */
-end_comment
-
-begin_decl_stmt
-name|int
-name|HasAM
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* True if terminal has automatic margins */
-end_comment
-
-begin_decl_stmt
-name|int
 name|PadBaud
 decl_stmt|;
 end_decl_stmt
@@ -1354,6 +1342,24 @@ literal|16
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_struct
 struct|struct
@@ -1512,9 +1518,15 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CBVIRTTERM
 name|int
 name|j
 decl_stmt|;
+endif|#
+directive|endif
+endif|CBVIRTTERM
 name|int
 name|Break
 decl_stmt|;
@@ -1656,12 +1668,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCLGET
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|lmode
 argument_list|)
@@ -1669,12 +1688,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCGETD
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ldisc
 argument_list|)
@@ -1715,6 +1741,10 @@ name|FILEDES
 argument_list|,
 name|TCGETA
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|mode
 argument_list|)
@@ -1740,9 +1770,17 @@ end_if
 begin_expr_stmt
 name|bmove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|mode
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|oldmode
 argument_list|,
@@ -1768,6 +1806,10 @@ name|FILEDES
 argument_list|,
 name|TIOCGETC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tchar
 argument_list|)
@@ -1777,9 +1819,17 @@ end_expr_stmt
 begin_expr_stmt
 name|bmove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tchar
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|oldtchar
 argument_list|,
@@ -1833,6 +1883,9 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -1843,6 +1896,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -1853,6 +1909,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM
@@ -1935,12 +1994,19 @@ operator|==
 name|NTTYDISC
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCGLTC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ltc
 argument_list|)
@@ -2023,12 +2089,19 @@ argument_list|,
 name|CLNEXT
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCSLTC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ltc
 argument_list|)
@@ -2109,12 +2182,19 @@ name|CEOF
 argument_list|)
 expr_stmt|;
 comment|/* brkc is left alone */
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCSETC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tchar
 argument_list|)
@@ -2122,12 +2202,19 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TIOCLBIC
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCLBIC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|lclear
 argument_list|)
@@ -2201,12 +2288,19 @@ expr_stmt|;
 else|#
 directive|else
 else|USG
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TCGETA
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|mode
 argument_list|)
@@ -2402,12 +2496,19 @@ operator||
 name|NOFLSH
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TCSETAW
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|mode
 argument_list|)
@@ -2537,6 +2638,10 @@ name|FILEDES
 argument_list|,
 name|TIOCSETD
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ldisc
 argument_list|)
@@ -3358,6 +3463,9 @@ name|bufp
 operator|!=
 literal|'/'
 condition|)
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|bufp
@@ -4786,12 +4894,19 @@ expr_stmt|;
 block|}
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCLSET
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|lmode
 argument_list|)
@@ -4837,12 +4952,19 @@ literal|"li"
 argument_list|)
 expr_stmt|;
 comment|/* Set window size */
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCGWINSZ
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|win
 argument_list|)
@@ -4882,12 +5004,19 @@ name|ws_col
 operator|=
 name|columns
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCSWINSZ
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|win
 argument_list|)
@@ -4985,12 +5114,19 @@ name|st_termt
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|LDSETT
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|block
 argument_list|)
@@ -5253,6 +5389,9 @@ operator|)
 operator|&&
 name|CmndLine
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5271,6 +5410,9 @@ condition|)
 endif|#
 directive|endif
 comment|/* running Bourne shell */
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5344,6 +5486,9 @@ if|if
 condition|(
 name|CmndLine
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5353,6 +5498,9 @@ argument_list|,
 literal|12
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5365,6 +5513,9 @@ name|TtyType
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5378,6 +5529,9 @@ if|if
 condition|(
 name|CmndLine
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5390,6 +5544,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5399,6 +5556,9 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5411,6 +5571,9 @@ name|TtyType
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5428,6 +5591,9 @@ condition|(
 name|Report
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5440,6 +5606,9 @@ name|TtyType
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5488,6 +5657,9 @@ if|if
 condition|(
 name|CmndLine
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5499,6 +5671,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5523,6 +5698,9 @@ condition|(
 name|CmndLine
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5532,6 +5710,9 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -5544,6 +5725,9 @@ expr_stmt|;
 block|}
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -6062,9 +6246,17 @@ condition|(
 operator|!
 name|bequal
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|mode
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|oldmode
 argument_list|,
@@ -6140,12 +6332,19 @@ block|{
 ifdef|#
 directive|ifdef
 name|USG
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TCSETAW
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|ttymode
 argument_list|)
 expr_stmt|;
@@ -6154,16 +6353,23 @@ directive|else
 ifndef|#
 directive|ifndef
 name|V6
+comment|/* don't flush */
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCSETN
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|ttymode
 argument_list|)
 expr_stmt|;
-comment|/* don't flush */
 else|#
 directive|else
 name|stty
@@ -6186,12 +6392,19 @@ condition|(
 name|ttytchars
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FILEDES
 argument_list|,
 name|TIOCSETC
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|ttytchars
 argument_list|)
 expr_stmt|;
@@ -6226,6 +6439,10 @@ name|FILEDES
 argument_list|,
 name|LDGETT
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|block
 argument_list|)
@@ -6283,6 +6500,10 @@ name|FILEDES
 argument_list|,
 name|LDSETT
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|block
 argument_list|)
@@ -6750,6 +6971,9 @@ name|OutPtr
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
@@ -6849,6 +7073,9 @@ operator|)
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|FILEDES
@@ -6858,6 +7085,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd
@@ -7347,11 +7577,6 @@ decl_stmt|;
 specifier|register
 name|char
 modifier|*
-name|PortName
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
 name|TtyId
 decl_stmt|;
 name|struct
@@ -7533,10 +7758,6 @@ index|[
 name|CAPBUFSIZ
 index|]
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -7557,6 +7778,16 @@ name|space
 decl_stmt|,
 name|empty
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CBVIRTTERM
+specifier|register
+name|int
+name|i
+decl_stmt|;
+endif|#
+directive|endif
+endif|CBVIRTTERM
 comment|/* discard names with blanks */
 comment|/** May not be desireable ? **/
 while|while
@@ -8173,9 +8404,15 @@ operator|*
 name|bp
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CBVIRTTERM
 name|contin
 label|:
 empty_stmt|;
+endif|#
+directive|endif
+endif|CBVIRTTERM
 block|}
 operator|*
 name|p
@@ -8184,6 +8421,9 @@ operator|=
 literal|':'
 expr_stmt|;
 comment|/* we skipped the last : with the : lookahead hack */
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDOUT
@@ -8370,6 +8610,9 @@ operator|<=
 literal|' '
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
