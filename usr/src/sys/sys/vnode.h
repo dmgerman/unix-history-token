@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -21,11 +21,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The vnode is the focus of all file activity in UNIX.  There is a unique  * vnode allocated for each active file, each current directory, each  * mounted-on file, text file, and the root.  */
+comment|/*  * The vnode is the focus of all file activity in UNIX.  There is a  * unique vnode allocated for each active file, each current directory,  * each mounted-on file, text file, and the root.  */
 end_comment
 
 begin_comment
-comment|/*  * vnode types. VNON means no type.  */
+comment|/*  * Vnode types.  VNON means no type.  */
 end_comment
 
 begin_enum
@@ -54,7 +54,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Vnode tag types.  * These are for the benefit of external programs only (e.g., pstat)  * and should NEVER be inspected inside the kernel.  */
+comment|/*  * Vnode tag types.  * These are for the benefit of external programs only (e.g., pstat)  * and should NEVER be inspected by the kernel.  */
 end_comment
 
 begin_enum
@@ -75,7 +75,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Each underlying filesystem allocates its own private area and hangs  * it from v_data. If non-null, this area is free in getnewvnode().  */
+comment|/*  * Each underlying filesystem allocates its own private area and hangs  * it from v_data.  If non-null, this area is free in getnewvnode().  */
 end_comment
 
 begin_struct
@@ -264,7 +264,7 @@ value|v_un.vu_fifoinfo
 end_define
 
 begin_comment
-comment|/*  * vnode flags.  */
+comment|/*  * Vnode flags.  */
 end_comment
 
 begin_define
@@ -487,40 +487,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Operations on vnodes.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|flock
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|nameidata
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|componentname
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * flags for ioflag  */
+comment|/*  * Flags for ioflag.  */
 end_comment
 
 begin_define
@@ -579,7 +546,7 @@ comment|/* FNDELAY flag set in file table */
 end_comment
 
 begin_comment
-comment|/*  *  Modes. Some values same as Ixxx entries from inode.h for now  */
+comment|/*  *  Modes.  Some values same as Ixxx entries from inode.h for now.  */
 end_comment
 
 begin_define
@@ -619,7 +586,7 @@ begin_define
 define|#
 directive|define
 name|VREAD
-value|0400
+value|00400
 end_define
 
 begin_comment
@@ -630,18 +597,18 @@ begin_define
 define|#
 directive|define
 name|VWRITE
-value|0200
+value|00200
 end_define
 
 begin_define
 define|#
 directive|define
 name|VEXEC
-value|0100
+value|00100
 end_define
 
 begin_comment
-comment|/*  * Token indicating no attribute value yet assigned  */
+comment|/*  * Token indicating no attribute value yet assigned.  */
 end_comment
 
 begin_define
@@ -747,92 +714,11 @@ begin_comment
 comment|/* vclean: close active files */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VREF
-parameter_list|(
-name|vp
-parameter_list|)
-value|(vp)->v_usecount++
-end_define
-
-begin_comment
-comment|/* increase reference */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VHOLD
-parameter_list|(
-name|vp
-parameter_list|)
-value|(vp)->v_holdcnt++
-end_define
-
-begin_comment
-comment|/* increase buf or page ref */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HOLDRELE
-parameter_list|(
-name|vp
-parameter_list|)
-value|(vp)->v_holdcnt--
-end_define
-
-begin_comment
-comment|/* decrease buf or page ref */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VATTR_NULL
-parameter_list|(
-name|vap
-parameter_list|)
-value|(*(vap) = va_null)
-end_define
-
-begin_comment
-comment|/* initialize a vattr */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|VREF
-parameter_list|(
-name|vp
-parameter_list|)
-value|vref(vp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VHOLD
-parameter_list|(
-name|vp
-parameter_list|)
-value|vhold(vp)
-end_define
+end_ifdef
 
 begin_define
 define|#
@@ -852,6 +738,26 @@ parameter_list|(
 name|vap
 parameter_list|)
 value|vattr_null(vap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHOLD
+parameter_list|(
+name|vp
+parameter_list|)
+value|vhold(vp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VREF
+parameter_list|(
+name|vp
+parameter_list|)
+value|vref(vp)
 end_define
 
 begin_decl_stmt
@@ -909,6 +815,67 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|HOLDRELE
+parameter_list|(
+name|vp
+parameter_list|)
+value|(vp)->v_holdcnt--
+end_define
+
+begin_comment
+comment|/* decrease buf or page ref */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VATTR_NULL
+parameter_list|(
+name|vap
+parameter_list|)
+value|(*(vap) = va_null)
+end_define
+
+begin_comment
+comment|/* initialize a vattr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VHOLD
+parameter_list|(
+name|vp
+parameter_list|)
+value|(vp)->v_holdcnt++
+end_define
+
+begin_comment
+comment|/* increase buf or page ref */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VREF
+parameter_list|(
+name|vp
+parameter_list|)
+value|(vp)->v_usecount++
+end_define
+
+begin_comment
+comment|/* increase reference */
+end_comment
 
 begin_endif
 endif|#
@@ -1109,7 +1076,7 @@ comment|/*  * Mods for exensibility.  */
 end_comment
 
 begin_comment
-comment|/*  * flags for vdesc_flags:  */
+comment|/*  * Flags for vdesc_flags:  */
 end_comment
 
 begin_define
@@ -1120,7 +1087,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* low order 16 flag bits are reserved for map flags for vp arguments. */
+comment|/* Low order 16 flag bits are reserved for map flags for vp arguments. */
 end_comment
 
 begin_define
@@ -1162,7 +1129,7 @@ name|int
 name|vdesc_flags
 decl_stmt|;
 comment|/* VDESC_* flags */
-comment|/* 	 * These ops are used by bypass routines 	 * to map and locate arguments. 	 * Creds and procs are not needed in bypass routines, 	 * but sometimes they are useful to (for example) 	 * transport layers. 	 */
+comment|/* 	 * These ops are used by bypass routines to map and locate arguments. 	 * Creds and procs are not needed in bypass routines, but sometimes 	 * they are useful to (for example) transport layers. 	 */
 name|int
 modifier|*
 name|vdesc_vp_offsets
@@ -1180,7 +1147,7 @@ name|int
 name|vdesc_proc_offset
 decl_stmt|;
 comment|/* proc location, if any */
-comment|/* 	 * Finally, we've got a list of private data 	 * (about each operation) for each transport layer. 	 * (Support to manage this list is not yet part of BSD.) 	 */
+comment|/* 	 * Finally, we've got a list of private data (about each operation) 	 * for each transport layer.  (Support to manage this list is not 	 * yet part of BSD.) 	 */
 name|caddr_t
 modifier|*
 name|vdesc_transports
@@ -1278,6 +1245,7 @@ begin_struct
 struct|struct
 name|vnodeopv_desc
 block|{
+comment|/* ptr to the ptr to the vector where op should go */
 name|int
 function_decl|(
 modifier|*
@@ -1287,7 +1255,6 @@ name|opv_desc_vector_p
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* ptr to the ptr to the vector where op should go */
 name|struct
 name|vnodeopv_entry_desc
 modifier|*
@@ -1302,13 +1269,17 @@ begin_comment
 comment|/*  * A default routine which just returns an error.  */
 end_comment
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|int
 name|vn_default_error
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * A generic structure.  * This can be used by bypass routines to identify generic arguments.  */
@@ -1329,53 +1300,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Standards, standards, standards...  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CONCAT2
-parameter_list|(
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|A##B
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CONCAT2
-parameter_list|(
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|A
-comment|/**/
-value|B
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * VOCALL calls an op given an ops vector.  * We break it out because BSD's vclean changes  * the ops vector and then wants to call ops  * with the old vector.  */
+comment|/*  * VOCALL calls an op given an ops vector.  We break it out because BSD's  * vclean changes the ops vector and then wants to call ops with the old  * vector.  */
 end_comment
 
 begin_define
@@ -1417,7 +1342,7 @@ name|VDESC
 parameter_list|(
 name|OP
 parameter_list|)
-value|(& CONCAT2(OP,_desc))
+value|(& __CONCAT(OP,_desc))
 end_define
 
 begin_define
@@ -1441,25 +1366,200 @@ file|<sys/vnode_if.h>
 end_include
 
 begin_comment
-comment|/*  * public vnode manipulation functions  */
+comment|/*  * Public vnode manipulation functions.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|file
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mount
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|nameidata
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ucred
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|uio
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vattr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vnode
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vop_bwrite_args
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 name|int
-name|vn_open
+name|bdevvp
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|dev
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|*
+name|vpp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|getnewvnode
+name|__P
+argument_list|(
+operator|(
+expr|enum
+name|vtagtype
+name|tag
+operator|,
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
+name|int
+argument_list|(
+operator|*
+operator|*
+name|vops
+argument_list|)
+argument_list|()
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|*
+name|vpp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vattr_null
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|nameidata
+name|vattr
 operator|*
-name|ndp
-operator|,
+name|vap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-name|fmode
-operator|,
+name|vcount
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-name|cmode
+name|vget
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vgone
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vgoneall
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vn_bwrite
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bwrite_args
+operator|*
+name|ap
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1488,6 +1588,73 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vn_closefile
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file
+operator|*
+name|fp
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vn_ioctl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file
+operator|*
+name|fp
+operator|,
+name|int
+name|com
+operator|,
+name|caddr_t
+name|data
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vn_open
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nameidata
+operator|*
+name|ndp
+operator|,
+name|int
+name|fmode
+operator|,
+name|int
+name|cmode
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1569,72 +1736,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|vn_write
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|file
-operator|*
-name|fp
-operator|,
-expr|struct
-name|uio
-operator|*
-name|uio
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vn_bwrite
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_bwrite_args
-operator|*
-name|ap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vn_ioctl
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|file
-operator|*
-name|fp
-operator|,
-name|int
-name|com
-operator|,
-name|caddr_t
-name|data
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|vn_select
 name|__P
 argument_list|(
@@ -1658,7 +1759,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|vn_closefile
+name|vn_write
 name|__P
 argument_list|(
 operator|(
@@ -1668,69 +1769,18 @@ operator|*
 name|fp
 operator|,
 expr|struct
-name|proc
+name|uio
 operator|*
-name|p
+name|uio
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|cred
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|getnewvnode
-name|__P
-argument_list|(
-operator|(
-expr|enum
-name|vtagtype
-name|tag
-operator|,
-expr|struct
-name|mount
-operator|*
-name|mp
-operator|,
-name|int
-argument_list|(
-operator|*
-operator|*
-name|vops
-argument_list|)
-argument_list|()
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-name|vpp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|bdevvp
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-name|dev
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-name|vpp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* check for special device aliases */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -1759,22 +1809,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|vattr_null
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vattr
-operator|*
-name|vap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vcount
+name|vput
 name|__P
 argument_list|(
 operator|(
@@ -1786,29 +1821,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* total references to a device */
-end_comment
-
-begin_decl_stmt
-name|int
-name|vget
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* get first reference to a vnode */
-end_comment
 
 begin_decl_stmt
 name|void
@@ -1825,29 +1837,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* increase reference to a vnode */
-end_comment
-
-begin_decl_stmt
-name|void
-name|vput
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* unlock and release vnode */
-end_comment
-
 begin_decl_stmt
 name|void
 name|vrele
@@ -1862,48 +1851,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* release vnode */
-end_comment
-
-begin_decl_stmt
-name|void
-name|vgone
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* completely recycle vnode */
-end_comment
-
-begin_decl_stmt
-name|void
-name|vgoneall
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* recycle vnode and all its aliases */
-end_comment
 
 end_unit
 
