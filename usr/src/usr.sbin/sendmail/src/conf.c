@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.57
+literal|3.58
 operator|%
 name|G
 operator|%
@@ -464,6 +464,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* default logging level */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|SuperSafe
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* always create qf file */
 end_comment
 
 begin_comment

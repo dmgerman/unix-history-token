@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.44
+literal|3.45
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.44
+literal|3.45
 operator|%
 name|G
 operator|%
@@ -699,12 +699,6 @@ argument_list|(
 name|tf
 argument_list|)
 expr_stmt|;
-name|e
-operator|->
-name|e_qf
-operator|=
-name|NULL
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -735,19 +729,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
-comment|/* disconnect this temp file from the job; don't requeue later */
-name|e
-operator|->
-name|e_df
-operator|=
-name|NULL
-expr_stmt|;
-name|e
-operator|->
-name|e_dontqueue
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 end_block
 

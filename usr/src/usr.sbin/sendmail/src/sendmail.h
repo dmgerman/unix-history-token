@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.89		%G%"
+literal|"@(#)sendmail.h	3.90		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1960,6 +1960,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* set if fatal errors during processing */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|SuperSafe
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* be extra careful, despite cost [conf.c] */
 end_comment
 
 begin_decl_stmt
