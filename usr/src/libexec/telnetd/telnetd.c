@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.5 82/03/23"
+literal|"@(#)telnetd.c	4.6 82/03/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,25 +243,11 @@ name|netobuf
 index|[
 name|BUFSIZ
 index|]
-init|=
-block|{
-name|IAC
-block|,
-name|DO
-block|,
-name|TELOPT_ECHO
-block|,
-literal|'\r'
-block|,
-literal|'\n'
-block|}
 decl_stmt|,
 modifier|*
 name|nfrontp
 init|=
 name|netobuf
-operator|+
-literal|5
 decl_stmt|,
 modifier|*
 name|nbackp
@@ -722,8 +708,6 @@ name|b
 operator|.
 name|sg_flags
 operator|=
-name|ECHO
-operator||
 name|CRMOD
 operator||
 name|XTABS
@@ -733,6 +717,34 @@ expr_stmt|;
 name|ioctl
 argument_list|(
 name|t
+argument_list|,
+name|TIOCSETP
+argument_list|,
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|p
+argument_list|,
+name|TIOCGETP
+argument_list|,
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+name|b
+operator|.
+name|sg_flags
+operator|&=
+operator|~
+name|ECHO
+expr_stmt|;
+comment|/* not until remote says to */
+name|ioctl
+argument_list|(
+name|p
 argument_list|,
 name|TIOCSETP
 argument_list|,
