@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)conf.c	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)conf.c	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -52,6 +52,19 @@ name|nodev
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|rawread
+argument_list|()
+decl_stmt|,
+name|rawwrite
+argument_list|()
+decl_stmt|,
+name|swstrategy
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
@@ -157,7 +170,7 @@ begin_define
 define|#
 directive|define
 name|wdsize
-value|0
+value|NULL
 end_define
 
 begin_endif
@@ -269,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|xdsize
-value|0
+value|NULL
 end_define
 
 begin_endif
@@ -381,7 +394,7 @@ begin_define
 define|#
 directive|define
 name|wtsize
-value|0
+value|NULL
 end_define
 
 begin_endif
@@ -405,7 +418,7 @@ end_if
 
 begin_decl_stmt
 name|int
-name|fdopen
+name|Fdopen
 argument_list|()
 decl_stmt|,
 name|fdclose
@@ -440,7 +453,7 @@ begin_define
 define|#
 directive|define
 name|fdsize
-value|0
+value|NULL
 end_define
 
 begin_else
@@ -451,7 +464,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|fdopen
+name|Fdopen
 value|nodev
 end_define
 
@@ -501,7 +514,7 @@ begin_define
 define|#
 directive|define
 name|fdsize
-value|0
+value|NULL
 end_define
 
 begin_endif
@@ -543,7 +556,7 @@ name|wddump
 block|,
 name|wdsize
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -560,11 +573,11 @@ name|nodev
 block|,
 name|nodev
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
-name|fdopen
+name|Fdopen
 block|,
 name|fdclose
 block|,
@@ -577,7 +590,7 @@ name|fddump
 block|,
 name|fdsize
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -611,7 +624,7 @@ name|xddump
 block|,
 name|xdsize
 block|,
-literal|0
+name|NULL
 block|}
 block|, }
 decl_stmt|;
@@ -682,15 +695,12 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|int
-name|mmread
-argument_list|()
-decl_stmt|,
-name|mmwrite
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+name|mmrw
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -838,7 +848,7 @@ begin_define
 define|#
 directive|define
 name|pt_tty
-value|0
+value|NULL
 end_define
 
 begin_define
@@ -893,12 +903,12 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
+begin_define
+define|#
+directive|define
 name|comreset
-parameter_list|()
-function_decl|;
-end_function_decl
+value|nodev
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -960,7 +970,7 @@ begin_define
 define|#
 directive|define
 name|com_tty
-value|0
+value|NULL
 end_define
 
 begin_endif
@@ -1026,6 +1036,8 @@ name|ttselect
 block|,
 name|nodev
 block|,
+name|NULL
+block|,
 name|syopen
 block|,
 name|nulldev
@@ -1041,19 +1053,21 @@ name|nulldev
 block|,
 name|nulldev
 block|,
-literal|0
+name|NULL
 block|,
 name|syselect
 block|,
 name|nodev
 block|,
-name|nulldev
+name|NULL
 block|,
 name|nulldev
 block|,
-name|mmread
+name|nulldev
 block|,
-name|mmwrite
+name|mmrw
+block|,
+name|mmrw
 block|,
 comment|/*2*/
 name|nodev
@@ -1062,11 +1076,13 @@ name|nulldev
 block|,
 name|nulldev
 block|,
-literal|0
+name|NULL
 block|,
 name|mmselect
 block|,
 name|nodev
+block|,
+name|NULL
 block|,
 name|wdopen
 block|,
@@ -1083,19 +1099,21 @@ name|nodev
 block|,
 name|nulldev
 block|,
-literal|0
+name|NULL
 block|,
 name|seltrue
 block|,
 name|nodev
 block|,
-name|nulldev
+name|wdstrategy
 block|,
 name|nulldev
 block|,
-name|swread
+name|nulldev
 block|,
-name|swwrite
+name|rawread
+block|,
+name|rawwrite
 block|,
 comment|/*4*/
 name|nodev
@@ -1104,11 +1122,13 @@ name|nodev
 block|,
 name|nulldev
 block|,
-literal|0
+name|NULL
 block|,
 name|nodev
 block|,
 name|nodev
+block|,
+name|swstrategy
 block|,
 name|ptsopen
 block|,
@@ -1123,13 +1143,15 @@ name|ptyioctl
 block|,
 name|ptsstop
 block|,
-name|nodev
+name|nulldev
 block|,
 name|pt_tty
 block|,
 name|ttselect
 block|,
 name|nodev
+block|,
+name|NULL
 block|,
 name|ptcopen
 block|,
@@ -1144,13 +1166,15 @@ name|ptyioctl
 block|,
 name|nulldev
 block|,
-name|nodev
+name|nulldev
 block|,
 name|pt_tty
 block|,
 name|ptcselect
 block|,
 name|nodev
+block|,
+name|NULL
 block|,
 name|logopen
 block|,
@@ -1167,11 +1191,13 @@ name|nodev
 block|,
 name|nulldev
 block|,
-literal|0
+name|NULL
 block|,
 name|logselect
 block|,
 name|nodev
+block|,
+name|NULL
 block|,
 name|comopen
 block|,
@@ -1194,7 +1220,9 @@ name|ttselect
 block|,
 name|nodev
 block|,
-name|fdopen
+name|NULL
+block|,
+name|Fdopen
 block|,
 name|fdclose
 block|,
@@ -1209,11 +1237,13 @@ name|nodev
 block|,
 name|nulldev
 block|,
-literal|0
+name|NULL
 block|,
 name|seltrue
 block|,
 name|nodev
+block|,
+name|fdstrategy
 block|,
 name|wtopen
 block|,
@@ -1230,11 +1260,13 @@ name|nodev
 block|,
 name|nulldev
 block|,
-literal|0
+name|NULL
 block|,
 name|seltrue
 block|,
 name|nodev
+block|,
+name|wtstrategy
 block|,
 name|xdopen
 block|,
@@ -1251,11 +1283,13 @@ name|nodev
 block|,
 name|nulldev
 block|,
-literal|0
+name|NULL
 block|,
 name|seltrue
 block|,
 name|nodev
+block|,
+name|xdstrategy
 block|, }
 decl_stmt|;
 end_decl_stmt
