@@ -2971,7 +2971,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|BURN_THE_BOATS
+name|BURN_BRIDGES
 comment|/* 	 * The PCI bus code should assign us memory in the absense 	 * of the BIOS doing so.  However, 'should' isn't 'is,' so we kludge 	 * up something here until the PCI/acpi code properly assigns the 	 * resource. 	 */
 endif|#
 directive|endif
@@ -3012,7 +3012,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|BURN_THE_BOATS
+name|BURN_BRIDGES
 name|device_printf
 argument_list|(
 name|brdev
