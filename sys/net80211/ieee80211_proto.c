@@ -1258,7 +1258,24 @@ name|j
 index|]
 argument_list|)
 condition|)
+block|{
+comment|/* 					 * Overwrite with the supported rate 					 * value so any basic rate bit is set. 					 * This insures that response we send 					 * to stations have the necessary basic 					 * rate bit set. 					 */
+name|nrs
+operator|->
+name|rs_rates
+index|[
+name|i
+index|]
+operator|=
+name|srs
+operator|->
+name|rs_rates
+index|[
+name|j
+index|]
+expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
