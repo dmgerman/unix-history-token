@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pwd.h	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pwd.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -32,29 +32,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|_PATH_MKPASSWD
-value|"/usr/sbin/mkpasswd"
+name|_PATH_MP_DB
+value|"/var/db/pwd.db"
 end_define
 
 begin_define
 define|#
 directive|define
-name|_PATH_PTMP
-value|"/etc/ptmp"
+name|_PATH_SMP_DB
+value|"/var/db/spwd.db"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_PWD_MKDB
+value|"/usr/sbin/pwd_mkdb"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PW_KEYBYNAME
-value|'0'
+value|'1'
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PW_KEYBYNUM
+value|'2'
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PW_KEYBYUID
-value|'1'
+value|'3'
 end_define
 
 begin_define
