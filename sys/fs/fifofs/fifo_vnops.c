@@ -818,7 +818,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dispose of fifo resources.  * Should be called with vnode locked  */
+comment|/*  * Dispose of fifo resources.  */
 end_comment
 
 begin_function
@@ -841,18 +841,26 @@ name|vp
 operator|->
 name|v_fifoinfo
 decl_stmt|;
-name|VI_LOCK
+name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
+argument_list|,
+literal|"fifo_cleanup"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vp
+name|fip
 operator|->
-name|v_usecount
+name|fi_readers
 operator|==
-literal|1
+literal|0
+operator|&&
+name|fip
+operator|->
+name|fi_writers
+operator|==
+literal|0
 condition|)
 block|{
 name|vp
@@ -860,11 +868,6 @@ operator|->
 name|v_fifoinfo
 operator|=
 name|NULL
-expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -894,12 +897,6 @@ name|M_VNODE
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
