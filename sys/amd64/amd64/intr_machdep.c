@@ -117,7 +117,7 @@ modifier|*
 name|mask_fn
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 function_decl|;
@@ -248,7 +248,6 @@ operator|(
 name|EEXIST
 operator|)
 return|;
-comment|/* 	 * Ok, so this is kind of a nasty optimization that only works 	 * because sizeof(int) == sizeof(void *) on i386.  If we passed 	 * in the actual vector to ithread_create and then used wrapper 	 * functions for disable_intsrc and enable_intsrc, then we'd 	 * have to go lookup in the table everytime we enabled/disabled 	 * the interrupt source.  That involves looking at a lock, etc. 	 * and is just ugly.  Instead, we cast the pointer to the intsrc 	 * to an int (yuck) and pass in the actual PIC methods meaning 	 * that when we enable/disable an interrupt we call the PIC 	 * methods directly. 	 */
 name|error
 operator|=
 name|ithread_create
@@ -259,7 +258,7 @@ operator|->
 name|is_ithread
 argument_list|,
 operator|(
-name|intptr_t
+name|uintptr_t
 operator|)
 name|isrc
 argument_list|,

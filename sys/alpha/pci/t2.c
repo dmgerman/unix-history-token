@@ -1856,7 +1856,7 @@ specifier|static
 name|void
 name|t2_enable_vec
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{
@@ -1995,7 +1995,7 @@ specifier|static
 name|void
 name|t2_disable_vec
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{

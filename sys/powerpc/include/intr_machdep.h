@@ -78,7 +78,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -86,7 +86,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|)
 function_decl|;

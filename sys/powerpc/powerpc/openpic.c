@@ -373,7 +373,7 @@ specifier|static
 name|void
 name|irq_enable
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -383,7 +383,7 @@ specifier|static
 name|void
 name|irq_disable
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2082,7 +2082,7 @@ specifier|static
 name|void
 name|irq_enable
 parameter_list|(
-name|int
+name|uintptr_t
 name|irq
 parameter_list|)
 block|{
@@ -2103,7 +2103,7 @@ specifier|static
 name|void
 name|irq_disable
 parameter_list|(
-name|int
+name|uintptr_t
 name|irq
 parameter_list|)
 block|{

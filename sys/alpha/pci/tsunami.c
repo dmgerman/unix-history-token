@@ -1296,7 +1296,7 @@ specifier|static
 name|void
 name|tsunami_disable_intr_vec
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{
@@ -1340,7 +1340,7 @@ specifier|static
 name|void
 name|tsunami_enable_intr_vec
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{

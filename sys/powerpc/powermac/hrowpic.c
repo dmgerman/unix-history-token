@@ -279,7 +279,7 @@ specifier|static
 name|void
 name|hrowpic_ext_enable_irq
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -289,7 +289,7 @@ specifier|static
 name|void
 name|hrowpic_ext_disable_irq
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1477,7 +1477,7 @@ specifier|static
 name|void
 name|hrowpic_ext_enable_irq
 parameter_list|(
-name|int
+name|uintptr_t
 name|irq
 parameter_list|)
 block|{
@@ -1498,7 +1498,7 @@ specifier|static
 name|void
 name|hrowpic_ext_disable_irq
 parameter_list|(
-name|int
+name|uintptr_t
 name|irq
 parameter_list|)
 block|{

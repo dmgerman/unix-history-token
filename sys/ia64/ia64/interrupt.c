@@ -1335,7 +1335,7 @@ specifier|static
 name|void
 name|ia64_send_eoi
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{

@@ -1699,7 +1699,7 @@ specifier|static
 name|void
 name|cia_disable_intr
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{
@@ -1743,7 +1743,7 @@ specifier|static
 name|void
 name|cia_enable_intr
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{

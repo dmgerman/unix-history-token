@@ -1313,7 +1313,7 @@ specifier|static
 name|void
 name|mcpcia_disable_intr_vec
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{
@@ -1338,7 +1338,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"EISA disable (0x%x)\n"
+literal|"EISA disable (0x%lx)\n"
 argument_list|,
 name|vector
 argument_list|)
@@ -1411,7 +1411,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Bad slot (%d) for vector %x\n"
+literal|"Bad slot (%d) for vector %lx\n"
 argument_list|,
 name|slot
 argument_list|,
@@ -1475,7 +1475,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"couldn't find MCPCIA softc for vector 0x%x"
+literal|"couldn't find MCPCIA softc for vector 0x%lx"
 argument_list|,
 name|vector
 argument_list|)
@@ -1508,7 +1508,7 @@ specifier|static
 name|void
 name|mcpcia_enable_intr_vec
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{
@@ -1533,7 +1533,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"EISA ensable (0x%x)\n"
+literal|"EISA ensable (0x%lx)\n"
 argument_list|,
 name|vector
 argument_list|)
@@ -1606,7 +1606,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Bad slot (%d) for vector %x\n"
+literal|"Bad slot (%d) for vector %lx\n"
 argument_list|,
 name|slot
 argument_list|,
@@ -1670,7 +1670,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"couldn't find MCPCIA softc for vector 0x%x"
+literal|"couldn't find MCPCIA softc for vector 0x%lx"
 argument_list|,
 name|vector
 argument_list|)

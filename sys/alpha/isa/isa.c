@@ -1330,13 +1330,15 @@ specifier|static
 name|void
 name|isa_disable_intr
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{
 name|int
 name|irq
-init|=
+decl_stmt|;
+name|irq
+operator|=
 operator|(
 name|vector
 operator|-
@@ -1344,7 +1346,7 @@ literal|0x800
 operator|)
 operator|>>
 literal|4
-decl_stmt|;
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1406,7 +1408,7 @@ specifier|static
 name|void
 name|isa_enable_intr
 parameter_list|(
-name|int
+name|uintptr_t
 name|vector
 parameter_list|)
 block|{

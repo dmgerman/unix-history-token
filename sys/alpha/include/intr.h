@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|uintptr_t
 name|vector
 parameter_list|,
 name|driver_intr_t
@@ -62,7 +62,7 @@ modifier|*
 name|disable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -71,7 +71,7 @@ modifier|*
 name|enable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|)
 function_decl|;

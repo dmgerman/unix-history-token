@@ -1245,7 +1245,7 @@ argument_list|)
 name|list
 expr_stmt|;
 comment|/* chain handlers in this hash bucket */
-name|int
+name|uintptr_t
 name|vector
 decl_stmt|;
 comment|/* vector to match */
@@ -1346,7 +1346,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|uintptr_t
 name|vector
 parameter_list|,
 name|driver_intr_t
@@ -1376,7 +1376,7 @@ modifier|*
 name|disable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -1385,7 +1385,7 @@ modifier|*
 name|enable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|)
 block|{

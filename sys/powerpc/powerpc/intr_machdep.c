@@ -195,7 +195,7 @@ modifier|*
 name|irq_enable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -208,7 +208,7 @@ modifier|*
 name|irq_disable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -235,7 +235,7 @@ modifier|*
 name|irq_e
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -244,7 +244,7 @@ modifier|*
 name|irq_d
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|)
 block|{
