@@ -2332,7 +2332,7 @@ return|return
 literal|0
 return|;
 goto|goto
-name|next
+name|emptynode
 goto|;
 block|}
 if|if
@@ -2497,6 +2497,8 @@ name|namelen
 operator|=
 literal|1
 expr_stmt|;
+name|emptynode
+label|:
 operator|*
 name|len
 operator|=
