@@ -6120,7 +6120,7 @@ argument_list|)
 operator|-
 literal|1
 block|,
-comment|/* length - all address space */
+comment|/* length  */
 name|SDT_SYS386TSS
 block|,
 comment|/* segment type */
