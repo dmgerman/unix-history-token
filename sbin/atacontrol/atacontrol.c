@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -672,8 +678,11 @@ name|lbasize48
 condition|)
 name|printf
 argument_list|(
-literal|"%lld sectors\n"
+literal|"%ju sectors\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lbasize48
 argument_list|)
 expr_stmt|;
