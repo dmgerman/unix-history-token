@@ -9826,11 +9826,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|t_flags
@@ -9848,6 +9843,11 @@ expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10170,11 +10170,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|headlocked
@@ -10183,6 +10178,11 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 return|return;
