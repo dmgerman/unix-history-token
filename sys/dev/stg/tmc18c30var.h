@@ -71,11 +71,6 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_ioh
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|400001
 name|int
 name|port_rid
 decl_stmt|;
@@ -104,9 +99,6 @@ name|void
 modifier|*
 name|stg_intrhand
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* __FreeBSD_version */
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
