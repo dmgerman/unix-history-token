@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.26 1998/02/18 04:15:04 eivind Exp $"
+literal|"$Id: mkmakefile.c,v 1.27 1998/02/19 00:51:49 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1300,11 +1300,15 @@ expr_stmt|;
 if|if
 condition|(
 name|warn_make_clean
+operator|!=
+literal|0
+operator|&&
+name|old_config_present
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nUnknown option%s used (not in ../../conf/options or ./options.%s)"
+literal|"Unknown option%s used - it is VERY important that you do\n"
 argument_list|,
 operator|(
 name|warn_make_clean
@@ -1315,38 +1319,25 @@ literal|"s"
 else|:
 literal|""
 operator|)
-argument_list|,
-name|machinename
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|old_config_present
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|" - it is\nVERY important that you do ``make clean&& make depend'' before recompiling!\n\n"
+literal|"         make clean&& make depend\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"before recompiling\n"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|printf
 argument_list|(
-literal|".\n\n"
+literal|"Don't forget to do a ``make depend''\n"
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"Don't forget to do a ``make depend''.\n\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
