@@ -256,13 +256,9 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
+begin_comment
+comment|/* Global mutex for locking access to the ACPI subsystem. */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -270,11 +266,6 @@ name|mtx
 name|acpi_mutex
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Bitmap of device quirks. */
@@ -1411,11 +1402,6 @@ name|started
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 comment|/* Initialise the ACPI mutex */
 name|mtx_init
 argument_list|(
@@ -1429,8 +1415,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/*      * Set the globals from our tunables.  This is needed because ACPI-CA      * uses UINT8 for some values and we have no tunable_byte.      */
 name|AcpiGbl_AllMethodsSerialized
 operator|=
