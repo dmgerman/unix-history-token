@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	2.2 %G%"
+literal|"@(#)lex.c	2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,6 +327,8 @@ end_macro
 begin_block
 block|{
 name|int
+name|eofloop
+decl_stmt|,
 name|prompt
 decl_stmt|,
 name|firstsw
@@ -495,6 +497,10 @@ operator|!
 name|sourcing
 condition|)
 return|return;
+name|eofloop
+operator|=
+literal|0
+expr_stmt|;
 name|top
 label|:
 if|if
@@ -580,6 +586,14 @@ operator|&&
 name|prompt
 condition|)
 block|{
+if|if
+condition|(
+operator|++
+name|eofloop
+operator|<
+literal|25
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Use \"quit\" to quit.\n"
@@ -588,6 +602,7 @@ expr_stmt|;
 goto|goto
 name|top
 goto|;
+block|}
 block|}
 if|if
 condition|(
