@@ -77,6 +77,50 @@ directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
+begin_comment
+comment|/*  * The scope6_lock protects both the global sid default stored in  * sid_default below, but also per-interface sid data.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|scope6_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SCOPE6_LOCK_INIT
+parameter_list|()
+value|mtx_init(&scope6_lock, "scope6_lock", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCOPE6_LOCK
+parameter_list|()
+value|mtx_lock(&scope6_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCOPE6_UNLOCK
+parameter_list|()
+value|mtx_unlock(&scope6_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCOPE6_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&scope6_lock, MA_OWNED)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -101,6 +145,9 @@ name|void
 name|scope6_init
 parameter_list|()
 block|{
+name|SCOPE6_LOCK_INIT
+argument_list|()
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -308,6 +355,9 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|SCOPE6_LOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -421,6 +471,9 @@ index|]
 expr_stmt|;
 block|}
 block|}
+name|SCOPE6_UNLOCK
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -475,11 +528,17 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|SCOPE6_LOCK
+argument_list|()
+expr_stmt|;
 operator|*
 name|idlist
 operator|=
 operator|*
 name|sid
+expr_stmt|;
+name|SCOPE6_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -807,6 +866,10 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: These are all u_int32_t reads, so may not require locking. 	 */
+name|SCOPE6_LOCK
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|scope
@@ -873,6 +936,9 @@ expr_stmt|;
 comment|/* XXX: treat as global. */
 break|break;
 block|}
+name|SCOPE6_UNLOCK
+argument_list|()
+expr_stmt|;
 operator|*
 name|ret_id
 operator|=
@@ -900,6 +966,9 @@ decl_stmt|;
 comment|/* note that this might be NULL */
 block|{
 comment|/* 	 * Currently, this function just set the default "interfaces" 	 * and "links" according to the given interface. 	 * We might eventually have to separate the notion of "link" from 	 * "interface" and provide a user interface to set the default. 	 */
+name|SCOPE6_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -949,6 +1018,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|SCOPE6_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -964,10 +1036,16 @@ modifier|*
 name|idlist
 decl_stmt|;
 block|{
+name|SCOPE6_LOCK
+argument_list|()
+expr_stmt|;
 operator|*
 name|idlist
 operator|=
 name|sid_default
+expr_stmt|;
+name|SCOPE6_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -989,6 +1067,9 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
+name|u_int32_t
+name|id
+decl_stmt|;
 comment|/* 	 * special case: The loopback address should be considered as 	 * link-local, but there's no ambiguity in the syntax. 	 */
 if|if
 condition|(
@@ -1002,8 +1083,12 @@ operator|(
 literal|0
 operator|)
 return|;
-return|return
-operator|(
+comment|/* 	 * XXX: 32-bit read is atomic on all our platforms, is it OK 	 * not to lock here? 	 */
+name|SCOPE6_LOCK
+argument_list|()
+expr_stmt|;
+name|id
+operator|=
 name|sid_default
 operator|.
 name|s6id_list
@@ -1013,6 +1098,13 @@ argument_list|(
 name|addr
 argument_list|)
 index|]
+expr_stmt|;
+name|SCOPE6_UNLOCK
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|id
 operator|)
 return|;
 block|}
