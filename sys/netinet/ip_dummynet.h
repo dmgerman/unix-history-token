@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.h,v 1.1 1998/09/12 22:03:20 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.h,v 1.1.2.1 1998/09/17 04:01:20 luigi Exp $  */
 end_comment
 
 begin_ifndef
@@ -43,9 +43,9 @@ value|hdr.mh_next
 comment|/* packet to be forwarded */
 define|#
 directive|define
-name|dn_hlen
+name|dn_dst
 value|hdr.mh_len
-comment|/* hlen, for ip_output			*/
+comment|/* dst, for ip_output			*/
 define|#
 directive|define
 name|dn_dir
@@ -185,6 +185,7 @@ name|long
 name|numbytes
 decl_stmt|;
 comment|/* which can send or receive */
+comment|/* 990421 -- numbytes is scaled by 8*hz */
 block|}
 struct|;
 end_struct
@@ -284,8 +285,10 @@ name|route
 modifier|*
 name|ro
 parameter_list|,
-name|int
-name|hlen
+name|struct
+name|sockaddr_in
+modifier|*
+name|dst
 parameter_list|,
 name|struct
 name|ip_fw_chain
