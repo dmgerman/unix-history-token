@@ -349,12 +349,28 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (issetugid()) 		strcpy(pathbuf, _PATH_DEF_SEC);
-endif|#
-directive|endif
+comment|/* XXX Should really be issetguid(), but we don't have that */
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+name|geteuid
+argument_list|()
+operator|||
+name|getgid
+argument_list|()
+operator|!=
+name|getegid
+argument_list|()
+condition|)
+name|strcpy
+argument_list|(
+name|pathbuf
+argument_list|,
+name|_PATH_DEF_SEC
+argument_list|)
+expr_stmt|;
 operator|*
 name|fname
 operator|++
