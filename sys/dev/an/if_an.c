@@ -8405,11 +8405,6 @@ name|saanp
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|sig
-decl_stmt|,
-name|noise
-decl_stmt|;
 comment|/* filters: 	 * 1. ip only 	 * 2. configurable filter to throw out unicast packets, 	 * keep multicast only. 	 */
 if|if
 condition|(
