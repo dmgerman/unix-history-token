@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	6.1	83/07/29	*/
+comment|/*	ip_input.c	1.69	83/08/16	*/
 end_comment
 
 begin_include
@@ -2745,7 +2745,9 @@ end_block
 begin_decl_stmt
 name|u_char
 name|inetctlerrmap
-index|[]
+index|[
+name|PRC_NCMDS
+index|]
 init|=
 block|{
 name|ECONNABORTED
@@ -2773,6 +2775,10 @@ block|,
 name|ECONNREFUSED
 block|,
 name|EMSGSIZE
+block|,
+literal|0
+block|,
+literal|0
 block|,
 literal|0
 block|,
