@@ -3635,6 +3635,7 @@ name|p
 operator|>
 name|nbuf
 condition|)
+block|{
 if|if
 condition|(
 name|nbuf
@@ -3666,6 +3667,7 @@ operator|=
 name|nbuf
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 block|}
