@@ -2960,7 +2960,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__alpha__ */
+comment|/* __i386__ */
 end_comment
 
 end_unit
