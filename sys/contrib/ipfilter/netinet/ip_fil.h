@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.3.2.7 2000/01/27 08:49:41 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.3 2000/06/05 13:12:42 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -3058,9 +3058,6 @@ name|ipfr_fastroute
 name|__P
 argument_list|(
 operator|(
-name|qif_t
-operator|*
-operator|,
 name|ip_t
 operator|*
 operator|,

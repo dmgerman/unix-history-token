@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.1.2.3 2000/01/24 12:44:24 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.6 2000/07/15 14:50:06 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -456,17 +456,20 @@ name|u_short
 name|in_pnext
 decl_stmt|;
 name|u_short
-name|in_ppip
-decl_stmt|;
-comment|/* ports per IP */
-name|u_short
 name|in_ippip
 decl_stmt|;
 comment|/* IP #'s per IP# */
-name|u_short
+name|u_32_t
 name|in_flags
 decl_stmt|;
 comment|/* From here to in_dport must be reflected */
+name|u_short
+name|in_spare
+decl_stmt|;
+name|u_short
+name|in_ppip
+decl_stmt|;
+comment|/* ports per IP */
 name|u_short
 name|in_port
 index|[
@@ -967,7 +970,7 @@ begin_define
 define|#
 directive|define
 name|IPN_USERFLAGS
-value|(IPN_TCPUDP|IPN_AUTOPORTMAP|IPN_IPRANGE|\ 			 IPN_SPLIT|IPN_ROUNDR|IPN_FILTER)
+value|(IPN_TCPUDP|IPN_AUTOPORTMAP|IPN_IPRANGE|IPN_SPLIT|\ 			 IPN_ROUNDR|IPN_FILTER|IPN_NOTSRC|IPN_NOTDST)
 end_define
 
 begin_define
@@ -989,6 +992,20 @@ define|#
 directive|define
 name|IPN_ROUNDR
 value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPN_NOTSRC
+value|0x080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPN_NOTDST
+value|0x100000
 end_define
 
 begin_typedef
@@ -1049,6 +1066,20 @@ define|#
 directive|define
 name|NL_NEWRDR
 value|NAT_REDIRECT
+end_define
+
+begin_define
+define|#
+directive|define
+name|NL_NEWBIMAP
+value|NAT_BIMAP
+end_define
+
+begin_define
+define|#
+directive|define
+name|NL_NEWBLOCK
+value|NAT_MAPBLK
 end_define
 
 begin_define

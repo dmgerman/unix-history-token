@@ -301,9 +301,17 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|_BSDI_VERSION
 operator|>=
 literal|199802
+operator|)
+operator|||
+operator|(
+name|__FreeBSD_Version
+operator|>=
+literal|400000
+operator|)
 end_if
 
 begin_include
