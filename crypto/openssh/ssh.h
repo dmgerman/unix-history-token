@@ -4,7 +4,7 @@ comment|/*  *  * ssh.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright 
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: ssh.h,v 1.45 2000/05/08 17:12:16 markus Exp $"); */
+comment|/* RCSID("$Id: ssh.h,v 1.46 2000/05/17 08:20:15 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -1784,6 +1784,36 @@ name|filename
 parameter_list|,
 name|uid_t
 name|my_uid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* remove newline at end of string */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|chop
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* set filedescriptor to non-blocking */
+end_comment
+
+begin_function_decl
+name|void
+name|set_nonblock
+parameter_list|(
+name|int
+name|fd
 parameter_list|)
 function_decl|;
 end_function_decl
