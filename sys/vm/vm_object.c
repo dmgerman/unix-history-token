@@ -5195,6 +5195,11 @@ name|OBSC_COLLAPSE_WAIT
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Move the pager from backing_object to object. 			 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|backing_object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|backing_object
@@ -5204,11 +5209,6 @@ operator|==
 name|OBJT_SWAP
 condition|)
 block|{
-name|VM_OBJECT_LOCK
-argument_list|(
-name|backing_object
-argument_list|)
-expr_stmt|;
 name|vm_object_pip_add
 argument_list|(
 name|backing_object
@@ -5280,11 +5280,6 @@ argument_list|(
 name|backing_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|backing_object
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 			 * Object now shadows whatever backing_object did. 			 * Note that the reference to  			 * backing_object->backing_object moves from within  			 * backing_object to within object. 			 */
 name|TAILQ_REMOVE
@@ -5316,6 +5311,13 @@ operator|->
 name|backing_object
 condition|)
 block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|backing_object
+operator|->
+name|backing_object
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5344,6 +5346,13 @@ operator|->
 name|generation
 operator|++
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|backing_object
+operator|->
+name|backing_object
+argument_list|)
+expr_stmt|;
 block|}
 name|object
 operator|->
@@ -5360,6 +5369,13 @@ operator|->
 name|backing_object
 condition|)
 block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+operator|->
+name|backing_object
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5387,6 +5403,13 @@ name|backing_object
 operator|->
 name|generation
 operator|++
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+operator|->
+name|backing_object
+argument_list|)
 expr_stmt|;
 block|}
 name|object
@@ -5430,6 +5453,11 @@ literal|"backing_object %p somehow has left over pages during collapse!"
 operator|,
 name|backing_object
 operator|)
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|backing_object
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -5486,6 +5514,11 @@ block|{
 break|break;
 block|}
 comment|/* 			 * Make the parent shadow the next object in the 			 * chain.  Deallocating backing_object will not remove 			 * it, since its reference count is at least 2. 			 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|backing_object
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5507,6 +5540,11 @@ name|backing_object
 operator|->
 name|generation
 operator|++
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|backing_object
+argument_list|)
 expr_stmt|;
 name|new_backing_object
 operator|=
@@ -5532,6 +5570,11 @@ argument_list|(
 name|new_backing_object
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|new_backing_object
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5553,6 +5596,11 @@ name|new_backing_object
 operator|->
 name|generation
 operator|++
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|new_backing_object
+argument_list|)
 expr_stmt|;
 name|object
 operator|->
