@@ -454,7 +454,7 @@ begin_define
 define|#
 directive|define
 name|SB16MIDI_BASE
-value|0x300
+value|0x330
 end_define
 
 begin_endif
