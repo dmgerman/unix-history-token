@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.100 1998/12/14 18:09:13 luigi Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.101 1998/12/21 22:40:54 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -323,20 +323,21 @@ name|IPFW_DEFAULT_RULE
 value|((u_int)(u_short)~0)
 end_define
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|LIST_HEAD
 argument_list|(
 argument|ip_fw_head
 argument_list|,
 argument|ip_fw_chain
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|ip_fw_chain
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_IPFW
