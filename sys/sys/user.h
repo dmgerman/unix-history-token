@@ -778,7 +778,7 @@ name|timeval
 name|ki_childutime
 decl_stmt|;
 comment|/* user time used by children */
-name|pid_t
+name|lwpid_t
 name|ki_tid
 decl_stmt|;
 comment|/* XXXKSE thread id */
