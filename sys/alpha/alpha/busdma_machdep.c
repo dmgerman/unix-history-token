@@ -2846,6 +2846,15 @@ operator|->
 name|m_next
 control|)
 block|{
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|>
+literal|0
+condition|)
+block|{
 name|error
 operator|=
 name|_bus_dmamap_load_buffer
@@ -2879,6 +2888,7 @@ name|first
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -3152,6 +3162,13 @@ index|]
 operator|.
 name|iov_base
 decl_stmt|;
+if|if
+condition|(
+name|minlen
+operator|>
+literal|0
+condition|)
+block|{
 name|error
 operator|=
 name|_bus_dmamap_load_buffer
@@ -3185,6 +3202,7 @@ name|resid
 operator|-=
 name|minlen
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
