@@ -50,6 +50,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MOPT_NODEV
+value|{ "dev",	1, MNT_NODEV, 0 }
+end_define
+
+begin_define
+define|#
+directive|define
 name|MOPT_NOEXEC
 value|{ "exec",	1, MNT_NOEXEC, 0 }
 end_define
@@ -205,7 +212,7 @@ define|#
 directive|define
 name|MOPT_STDOPTS
 define|\
-value|MOPT_USERQUOTA,							\ 	MOPT_GROUPQUOTA,						\ 	MOPT_FSTAB_COMPAT,						\ 	MOPT_NOATIME,							\ 	MOPT_NOEXEC,							\ 	MOPT_SUIDDIR,
+value|MOPT_USERQUOTA,							\ 	MOPT_GROUPQUOTA,						\ 	MOPT_FSTAB_COMPAT,						\ 	MOPT_NOATIME,							\ 	MOPT_NODEV,							\ 	MOPT_NOEXEC,							\ 	MOPT_SUIDDIR,
 comment|/* must be before MOPT_NOSUID */
 value|\ 	MOPT_NOSUID,							\ 	MOPT_NOSYMFOLLOW,						\ 	MOPT_RDONLY,							\ 	MOPT_UNION,							\ 	MOPT_NOCLUSTERR,						\ 	MOPT_NOCLUSTERW,						\ 	MOPT_MULTILABEL,						\ 	MOPT_ACLS
 end_define
