@@ -3221,18 +3221,22 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|RL_RX_DESC_CNT
-value|64
-end_define
+begin_comment
+comment|/*  * Rx/Tx descriptor parameters (8139C+ and 8169 only)  *  * Tx/Rx count must be equal.  Shared code like re_dma_map_desc assumes this.  */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|RL_TX_DESC_CNT
 value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_RX_DESC_CNT
+value|RL_RX_DESC_CNT
 end_define
 
 begin_define
