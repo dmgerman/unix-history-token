@@ -6225,6 +6225,10 @@ argument_list|)
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|debug
+operator|!=
+literal|0
 condition|)
 block|{
 name|syslog
@@ -6308,6 +6312,10 @@ name|buf
 argument_list|)
 argument_list|)
 operator|<
+literal|0
+operator|&&
+name|debug
+operator|!=
 literal|0
 condition|)
 block|{
