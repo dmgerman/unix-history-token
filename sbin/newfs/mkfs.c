@@ -2369,7 +2369,7 @@ name|fs_size
 argument_list|)
 operator|+
 operator|(
-name|numfrags
+name|fragnum
 argument_list|(
 operator|&
 name|sblock
@@ -2383,7 +2383,7 @@ name|sblock
 operator|.
 name|fs_frag
 operator|-
-name|numfrags
+name|fragnum
 argument_list|(
 operator|&
 name|sblock
