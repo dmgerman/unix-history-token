@@ -1893,7 +1893,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Enable bus mastering. Enable memory space too, in case 	 * BIOS/Prom forgot about it. 	 */
+comment|/* 	 * Enable bus mastering. Enable memory/port space too, in case 	 * BIOS/Prom forgot about it. 	 */
 name|val
 operator|=
 name|pci_read_config
@@ -1908,6 +1908,8 @@ expr_stmt|;
 name|val
 operator||=
 operator|(
+name|PCIM_CMD_PORTEN
+operator||
 name|PCIM_CMD_MEMEN
 operator||
 name|PCIM_CMD_BUSMASTEREN
