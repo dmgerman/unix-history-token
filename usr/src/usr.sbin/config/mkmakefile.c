@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.3 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2309,6 +2309,29 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|och
+operator|==
+literal|'o'
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"%so:\n\t-cp ../%so .\n"
+argument_list|,
+name|tail
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|np
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|fprintf
 argument_list|(
 name|f
