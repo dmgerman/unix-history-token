@@ -216,33 +216,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"adding feeder %s, %x -> %x\n"
-argument_list|,
-name|fc
-operator|->
-name|name
-argument_list|,
-name|fc
-operator|->
-name|desc
-index|[
-name|i
-index|]
-operator|.
-name|in
-argument_list|,
-name|fc
-operator|->
-name|desc
-index|[
-name|i
-index|]
-operator|.
-name|out
-argument_list|)
-expr_stmt|;
+comment|/* printf("adding feeder %s, %x -> %x\n", fc->name, fc->desc[i].in, fc->desc[i].out); */
 name|fte
 operator|=
 name|malloc
