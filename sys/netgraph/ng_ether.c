@@ -3221,6 +3221,12 @@ operator|->
 name|if_type
 operator|==
 name|IFT_ETHER
+operator|||
+name|ifp
+operator|->
+name|if_type
+operator|==
+name|IFT_L2VLAN
 condition|)
 name|ng_ether_attach
 argument_list|(
