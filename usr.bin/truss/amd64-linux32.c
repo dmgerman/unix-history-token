@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: i386-linux.c,v 1.3 1998/01/05 07:30:25 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/reg.h>
+file|<i386/include/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
+file|<i386/include/psl.h>
 end_include
 
 begin_include
