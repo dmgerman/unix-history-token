@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acu.c	5.8 (Berkeley) %G%"
+literal|"@(#)acu.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -331,6 +331,24 @@ name|CU
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|CM
+operator|!=
+name|NOSTR
+condition|)
+name|pwrite
+argument_list|(
+name|FD
+argument_list|,
+name|CM
+argument_list|,
+name|size
+argument_list|(
+name|CM
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|logent
 argument_list|(
 name|value
@@ -566,6 +584,24 @@ block|{
 name|fclose
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CM
+operator|!=
+name|NOSTR
+condition|)
+name|pwrite
+argument_list|(
+name|FD
+argument_list|,
+name|CM
+argument_list|,
+name|size
+argument_list|(
+name|CM
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|logent
