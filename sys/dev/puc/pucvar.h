@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|PUC_MAX_PORTS
-value|8
+value|12
 end_define
 
 begin_struct
