@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -33,29 +33,8 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* program name */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|PATH_T
 name|to
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|iflag
-decl_stmt|,
-name|pflag
 decl_stmt|;
 end_decl_stmt
 
@@ -69,7 +48,9 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|exit_val
+name|iflag
+decl_stmt|,
+name|pflag
 decl_stmt|,
 name|myumask
 decl_stmt|;
@@ -83,7 +64,7 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-name|void
+name|int
 name|copy_fifo
 name|__P
 argument_list|(
@@ -99,7 +80,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|copy_file
 name|__P
 argument_list|(
@@ -114,7 +95,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|copy_link
 name|__P
 argument_list|(
@@ -129,7 +110,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|copy_special
 name|__P
 argument_list|(
@@ -145,24 +126,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|fmt
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
+name|int
 name|setfile
 name|__P
 argument_list|(
