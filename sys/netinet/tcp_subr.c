@@ -6622,7 +6622,7 @@ name|isn_offset_old
 operator|+
 name|ISN_BYTES_PER_SECOND
 operator|/
-name|hz
+literal|100
 expr_stmt|;
 if|if
 condition|(
@@ -6643,7 +6643,9 @@ argument_list|(
 operator|&
 name|isn_callout
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|100
 argument_list|,
 name|tcp_isn_tick
 argument_list|,
