@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -2626,6 +2638,37 @@ argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_kld_load
+argument_list|(
+name|curthread
+operator|->
+name|td_ucred
+argument_list|,
+name|nd
+operator|.
+name|ni_vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|firstpage
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+endif|#
+directive|endif
 comment|/*      * Read the elf header from the file.      */
 name|firstpage
 operator|=
