@@ -8,7 +8,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"apilib.h"
+file|<apilib/apilib.h>
 end_include
 
 begin_include

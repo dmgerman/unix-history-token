@@ -59,18 +59,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ascii/ascebc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ctlr/ebc_disp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../ctlr/function.h"
 end_include
 

@@ -53,13 +53,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ascii/ascebc.h"
+file|"../apilib/asc_ebc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ctlr/ebc_disp.h"
+file|"../apilib/ebc_disp.h"
 end_include
 
 begin_function
@@ -112,10 +112,7 @@ name|printf
 argument_list|(
 literal|"\t0x%02x,"
 argument_list|,
-name|ebcasc
-index|[
-literal|0
-index|]
+name|ebc_asc
 index|[
 name|disp_ebc
 index|[

@@ -63,13 +63,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ascii/ascebc.h"
+file|"../apilib/asc_ebc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ctlr/ebc_disp.h"
+file|"../apilib/ebc_disp.h"
 end_include
 
 begin_include
@@ -863,10 +863,7 @@ name|code
 operator|=
 name|ebc_disp
 index|[
-name|ascebc
-index|[
-name|AE_IN
-index|]
+name|asc_ebc
 index|[
 name|type
 index|[

@@ -59,7 +59,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ascii/ascebc.h"
+file|"../apilib/asc_ebc.h"
 end_include
 
 begin_include
@@ -83,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ascii/astosc.h"
+file|"../apilib/astosc.h"
 end_include
 
 begin_include
@@ -597,10 +597,7 @@ decl_stmt|;
 block|{
 name|putChar
 argument_list|(
-name|ebcasc
-index|[
-literal|0
-index|]
+name|ebc_asc
 index|[
 name|character
 index|]
