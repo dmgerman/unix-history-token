@@ -1209,6 +1209,15 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+condition|)
+block|{
 name|ifp
 operator|->
 name|if_init
@@ -1224,9 +1233,8 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_UP
+name|IFF_RUNNING
 condition|)
-block|{
 name|ifp
 operator|->
 name|if_start
