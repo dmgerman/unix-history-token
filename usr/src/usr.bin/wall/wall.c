@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wall.c	4.3 (Berkeley) 81/05/06"
+literal|"@(#)wall.c	4.4 (Berkeley) 81/05/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,9 @@ end_decl_stmt
 begin_decl_stmt
 name|long
 name|clock
+decl_stmt|,
+name|time
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
