@@ -14640,6 +14640,7 @@ name|EX_DATAERR
 argument_list|,
 literal|"invalid protocol ``%s''"
 argument_list|,
+operator|*
 name|av
 argument_list|)
 expr_stmt|;
@@ -16227,6 +16228,7 @@ name|EX_DATAERR
 argument_list|,
 literal|"invalid protocol ``%s''"
 argument_list|,
+operator|*
 name|av
 argument_list|)
 expr_stmt|;
@@ -16464,6 +16466,7 @@ name|EX_DATAERR
 argument_list|,
 literal|"invalid mac type %s"
 argument_list|,
+operator|*
 name|av
 argument_list|)
 expr_stmt|;
