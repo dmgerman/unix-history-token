@@ -36,7 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -481,6 +493,28 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * On this platform, isa can also attach to the legacy bus.  */
+end_comment
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|isa
+argument_list|,
+name|legacy
+argument_list|,
+name|isa_driver
+argument_list|,
+name|isa_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

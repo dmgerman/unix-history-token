@@ -141,13 +141,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|devclass_t
-name|isa_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|isa_running
 decl_stmt|;
@@ -4621,7 +4614,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|driver_t
 name|isa_driver
 init|=
@@ -4637,8 +4629,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|devclass_t
+name|isa_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * ISA can be attached to a PCI-ISA bridge or directly to the legacy device.  */
+comment|/*  * ISA can be attached to a PCI-ISA bridge, or other locations on some  * platforms.  */
 end_comment
 
 begin_expr_stmt
@@ -4676,43 +4674,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_if
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|isa
-argument_list|,
-name|legacy
-argument_list|,
-name|isa_driver
-argument_list|,
-name|isa_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|MODULE_VERSION
