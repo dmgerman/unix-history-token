@@ -2739,6 +2739,10 @@ name|bootinfo
 operator|.
 name|envp
 expr_stmt|;
+comment|/* Do basic tuning, hz etc */
+name|init_param
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Initalize the (temporary) bootstrap console interface, so 	 * we can use printf until the VM system starts being setup. 	 * The real console is initialized before then. 	 */
 name|init_bootstrap_console
 argument_list|()

@@ -1708,6 +1708,10 @@ name|bootinfo
 operator|.
 name|envp
 expr_stmt|;
+comment|/* Init basic tunables, including hz */
+name|init_param
+argument_list|()
+expr_stmt|;
 name|p
 operator|=
 name|getenv
