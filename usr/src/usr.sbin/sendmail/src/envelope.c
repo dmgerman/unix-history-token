@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.4 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -518,10 +518,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|saveit
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 block|}
 comment|/* 	**  See if the message timed out. 	*/
@@ -936,6 +932,76 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+comment|/* 	**  Arrange to send warning messages to postmaster as requested. 	*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_PM_NOTIFY
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|&&
+name|PostMasterCopy
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+specifier|auto
+name|ADDRESS
+modifier|*
+name|rlist
+init|=
+name|NULL
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|sendtolist
+argument_list|(
+name|PostMasterCopy
+argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|&
+name|rlist
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|returntosender
+argument_list|(
+name|e
+operator|->
+name|e_message
+argument_list|,
+name|rlist
+argument_list|,
+name|FALSE
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**  Instantiate or deinstantiate the queue. 	*/
 if|if
 condition|(
