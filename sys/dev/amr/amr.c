@@ -1437,7 +1437,10 @@ name|sc
 init|=
 name|devclass_get_softc
 argument_list|(
-name|amr_devclass
+name|devclass_find
+argument_list|(
+literal|"amr"
+argument_list|)
 argument_list|,
 name|unit
 argument_list|)
@@ -1499,7 +1502,10 @@ name|sc
 init|=
 name|devclass_get_softc
 argument_list|(
-name|amr_devclass
+name|devclass_find
+argument_list|(
+literal|"amr"
+argument_list|)
 argument_list|,
 name|unit
 argument_list|)

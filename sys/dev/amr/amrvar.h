@@ -626,13 +626,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|devclass_t
-name|amr_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Command buffer allocation.  */
 end_comment
