@@ -2660,17 +2660,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|quantum
-index|[]
-init|=
-literal|"QUANTUM"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|const
 name|struct
 name|sense_key_table_entry
