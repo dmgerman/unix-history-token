@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ansi.h,v 1.2 1998/03/09 05:53:07 jb Exp $ */
+comment|/* $Id: ansi.h,v 1.3 1998/10/12 23:57:58 alex Exp $ */
 end_comment
 
 begin_comment
@@ -156,39 +156,6 @@ begin_comment
 comment|/* useconds_t */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_BSD_UINT8_T_
-value|unsigned char
-end_define
-
-begin_comment
-comment|/* uint8_t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSD_UINT16_T_
-value|unsigned short
-end_define
-
-begin_comment
-comment|/* uint16_t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSD_UINT32_T_
-value|unsigned int
-end_define
-
-begin_comment
-comment|/* uint32_t */
-end_comment
-
 begin_comment
 comment|/*  * Types which are fundamental to the implementation and must be used  * in more than one standard header although they are only declared in  * one (perhaps nonstandard) header are defined here.  Standard headers  * use _BSD_XXX_T_ without undef'ing it.  */
 end_comment
@@ -280,6 +247,86 @@ directive|define
 name|_BSD_CLOCKS_PER_SEC_
 value|100
 end_define
+
+begin_comment
+comment|/*  * Internal names for basic integral types.  Omit the typedef if  * not possible for a machine/compiler combination.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__signed
+name|char
+name|__int8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|__uint8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|short
+name|__int16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|__uint16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|__int32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|__uint32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|long
+name|__int64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|__uint64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|long
+name|__intptr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|__uintptr_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#

@@ -43,12 +43,6 @@ name|_POSIX_SOURCE
 argument_list|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<machine/types.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -883,7 +877,7 @@ comment|/* getcap(3) functions */
 end_comment
 
 begin_decl_stmt
-name|u_int32_t
+name|__uint32_t
 name|arc4random
 name|__P
 argument_list|(
@@ -1417,7 +1411,7 @@ name|__STRICT_ANSI__
 end_ifndef
 
 begin_decl_stmt
-name|int64_t
+name|__int64_t
 name|strtoq
 name|__P
 argument_list|(
@@ -1437,7 +1431,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int64_t
+name|__uint64_t
 name|strtouq
 name|__P
 argument_list|(
