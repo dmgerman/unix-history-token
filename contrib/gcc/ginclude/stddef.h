@@ -1,27 +1,66 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|_STDDEF_H
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|_STDDEF_H_
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|_ANSI_STDDEF_H
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+argument_list|)
+expr|\
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|__STDDEF_H__
-end_ifndef
+argument_list|)
+operator|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__need_wchar_t
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__need_size_t
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__need_ptrdiff_t
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__need_NULL
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__need_wint_t
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Any one of these symbols __need_* means that GNU libc    wants us just to define one data type.  So don't define    the symbols that indicate this file's entire job has been done.  */
@@ -54,6 +93,13 @@ operator|!
 name|defined
 argument_list|(
 name|__need_NULL
+argument_list|)
+expr|\
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__need_wint_t
 argument_list|)
 operator|)
 end_if
@@ -402,7 +448,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|TYPE_ptrdiff_t
+name|_TYPE_ptrdiff_t
 argument_list|)
 operator|&&
 operator|(
@@ -775,6 +821,16 @@ end_if
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__size_t__
+end_ifndef
+
+begin_comment
+comment|/* BeOS */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_SIZE_T
 end_ifndef
 
@@ -853,6 +909,16 @@ ifndef|#
 directive|ifndef
 name|__size_t
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__size_t__
+end_define
+
+begin_comment
+comment|/* BeOS */
+end_comment
 
 begin_define
 define|#
@@ -973,6 +1039,28 @@ name|__SIZE_TYPE__
 name|size_t
 typedef|;
 end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__BEOS__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|long
+name|ssize_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BEOS__ */
+end_comment
 
 begin_endif
 endif|#
@@ -1100,6 +1188,15 @@ begin_comment
 comment|/* _SIZE_T */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __size_t__ */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -1136,6 +1233,16 @@ argument_list|(
 name|__need_wchar_t
 argument_list|)
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__wchar_t__
+end_ifndef
+
+begin_comment
+comment|/* BeOS */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1208,6 +1315,16 @@ ifndef|#
 directive|ifndef
 name|_GCC_WCHAR_T
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__wchar_t__
+end_define
+
+begin_comment
+comment|/* BeOS */
+end_comment
 
 begin_define
 define|#
@@ -1347,12 +1464,35 @@ directive|ifndef
 name|__WCHAR_TYPE__
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__BEOS__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__WCHAR_TYPE__
+value|unsigned char
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|__WCHAR_TYPE__
 value|int
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1437,6 +1577,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __wchar_t__ */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -1452,8 +1601,79 @@ begin_comment
 comment|/* _STDDEF_H or __need_wchar_t.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_STDDEF_H
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__need_wint_t
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WINT_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_WINT_T
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__WINT_TYPE__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__WINT_TYPE__
+value|unsigned int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+name|__WINT_TYPE__
+name|wint_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|__need_wint_t
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.     are already defined.  */
+end_comment
+
+begin_comment
+comment|/*  BSD/OS 3.1 requires the MACHINE_ANSI_H check here.  FreeBSD 2.x apparently     does not, even though there is a check for MACHINE_ANSI_H above.  */
 end_comment
 
 begin_if
@@ -1464,10 +1684,17 @@ argument_list|(
 name|_ANSI_H_
 argument_list|)
 operator|||
+operator|(
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
+operator|&&
 name|defined
 argument_list|(
 name|_MACHINE_ANSI_H_
 argument_list|)
+operator|)
 end_if
 
 begin_comment
@@ -1622,7 +1849,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(_ANSI_H_) || defined(_MACHINE_ANSI_H_) */
+comment|/* _ANSI_H_ || ( __bsdi__&& _MACHINE_ANSI_H_ ) */
 end_comment
 
 begin_endif
@@ -1662,12 +1889,43 @@ begin_comment
 comment|/* in case<stdio.h> has defined it. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUG__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|__null
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* G++ */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NULL
 value|((void *)0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* G++ */
+end_comment
 
 begin_endif
 endif|#
@@ -1721,34 +1979,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __STDDEF_H__ was not defined before */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _ANSI_STDDEF_H was not defined before */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _STDDEF_H_ was not defined before */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _STDDEF_H was not defined before */
+comment|/* !_STDDEF_H&& !_STDDEF_H_&& !_ANSI_STDDEF_H&& !__STDDEF_H__ 	  || __need_XXX was not defined before */
 end_comment
 
 end_unit
