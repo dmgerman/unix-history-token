@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -95,7 +95,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* hold the address of the routine which is actually called if  * the ramdomdev is loaded  */
+comment|/* hold the address of the routine which is actually called if  * the randomdev is loaded  */
 end_comment
 
 begin_function_decl
@@ -106,9 +106,7 @@ modifier|*
 name|reap_func
 function_decl|)
 parameter_list|(
-name|struct
-name|timespec
-modifier|*
+name|u_int64_t
 parameter_list|,
 name|void
 modifier|*
@@ -158,9 +156,7 @@ modifier|*
 name|reaper
 function_decl|)
 parameter_list|(
-name|struct
-name|timespec
-modifier|*
+name|u_int64_t
 parameter_list|,
 name|void
 modifier|*
@@ -245,28 +241,17 @@ name|u_int
 name|origin
 parameter_list|)
 block|{
-name|struct
-name|timespec
-name|timebuf
-decl_stmt|;
 if|if
 condition|(
 name|reap_func
 condition|)
-block|{
-name|nanotime
-argument_list|(
-operator|&
-name|timebuf
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|reap_func
 call|)
 argument_list|(
-operator|&
-name|timebuf
+name|get_cyclecount
+argument_list|()
 argument_list|,
 name|entropy
 argument_list|,
@@ -279,7 +264,6 @@ argument_list|,
 name|origin
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -330,10 +314,6 @@ name|u_int
 name|count
 parameter_list|)
 block|{
-name|struct
-name|timespec
-name|timebuf
-decl_stmt|;
 name|u_long
 name|randval
 decl_stmt|;
@@ -348,36 +328,21 @@ name|initialised
 init|=
 literal|0
 decl_stmt|;
-comment|/* Try to give random(9) a half decent initialisation 	 * DO not make the mistake of thinking this is secure!! 	 */
+comment|/* Try to give random(9) a half decent initialisation 	 * DO NOT make the mistake of thinking this is secure!! 	 */
 if|if
 condition|(
 operator|!
 name|initialised
 condition|)
-block|{
-name|nanotime
-argument_list|(
-operator|&
-name|timebuf
-argument_list|)
-expr_stmt|;
 name|srandom
 argument_list|(
-call|(
+operator|(
 name|u_long
-call|)
-argument_list|(
-name|timebuf
-operator|.
-name|tv_sec
-operator|^
-name|timebuf
-operator|.
-name|tv_nsec
-argument_list|)
+operator|)
+name|get_cyclecount
+argument_list|()
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Fill buf[] with random(9) output */
 for|for
 control|(

@@ -81,9 +81,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|struct
-name|timespec
-modifier|*
+name|u_int64_t
 parameter_list|,
 name|void
 modifier|*

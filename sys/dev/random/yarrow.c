@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -83,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -140,9 +140,7 @@ specifier|static
 name|void
 name|random_harvest_internal
 parameter_list|(
-name|struct
-name|timespec
-modifier|*
+name|u_int64_t
 parameter_list|,
 name|void
 modifier|*
@@ -214,11 +212,10 @@ begin_struct
 struct|struct
 name|harvest
 block|{
-name|struct
-name|timespec
-name|time
+name|u_int64_t
+name|somecounter
 decl_stmt|;
-comment|/* nanotime for clock jitter */
+comment|/* fast counter for clock jitter */
 name|u_char
 name|entropy
 index|[
@@ -566,13 +563,13 @@ argument_list|,
 operator|&
 name|event
 operator|->
-name|time
+name|somecounter
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|event
 operator|->
-name|time
+name|somecounter
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1938,11 +1935,7 @@ block|{
 name|u_int
 name|i
 decl_stmt|;
-name|struct
-name|timespec
-name|timebuf
-decl_stmt|;
-comment|/* arbitrarily break the input up into HARVESTSIZE chunks */
+comment|/* Break the input up into HARVESTSIZE chunks. 	 * The writer has too much control here, so "estimate" the 	 * the entropy as zero. 	 */
 for|for
 control|(
 name|i
@@ -1958,16 +1951,10 @@ operator|+=
 name|HARVESTSIZE
 control|)
 block|{
-name|nanotime
-argument_list|(
-operator|&
-name|timebuf
-argument_list|)
-expr_stmt|;
 name|random_harvest_internal
 argument_list|(
-operator|&
-name|timebuf
+name|get_cyclecount
+argument_list|()
 argument_list|,
 operator|(
 name|char
@@ -1998,7 +1985,7 @@ name|i
 operator|-=
 name|HARVESTSIZE
 expr_stmt|;
-comment|/* Get the last bytes even if the input length is not a multiple of HARVESTSIZE */
+comment|/* Get the last bytes even if the input length is not 	 * a multiple of HARVESTSIZE. 	 */
 name|count
 operator|%=
 name|HARVESTSIZE
@@ -2008,16 +1995,10 @@ condition|(
 name|count
 condition|)
 block|{
-name|nanotime
-argument_list|(
-operator|&
-name|timebuf
-argument_list|)
-expr_stmt|;
 name|random_harvest_internal
 argument_list|(
-operator|&
-name|timebuf
+name|get_cyclecount
+argument_list|()
 argument_list|,
 operator|(
 name|char
@@ -2174,10 +2155,8 @@ specifier|static
 name|void
 name|random_harvest_internal
 parameter_list|(
-name|struct
-name|timespec
-modifier|*
-name|timep
+name|u_int64_t
+name|somecounter
 parameter_list|,
 name|void
 modifier|*
@@ -2202,15 +2181,14 @@ name|harvest
 modifier|*
 name|event
 decl_stmt|;
-if|#
-directive|if
-literal|0
 ifdef|#
 directive|ifdef
-name|DEBUG
-block|printf("Random harvest\n");
-endif|#
-directive|endif
+name|DEBUG1
+name|printf
+argument_list|(
+literal|"Random harvest\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|event
@@ -2239,13 +2217,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* nanotime provides clock jitter */
+comment|/* fast counter provides clock jitter */
 name|event
 operator|->
-name|time
+name|somecounter
 operator|=
-operator|*
-name|timep
+name|somecounter
 expr_stmt|;
 comment|/* the harvested entropy */
 name|count
