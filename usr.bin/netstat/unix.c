@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: unix.c,v 1.9 1998/07/06 21:01:27 bde Exp $"
+literal|"$Id: unix.c,v 1.10 1998/08/08 08:13:04 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,7 +237,7 @@ operator|=
 name|SOCK_STREAM
 init|;
 name|type
-operator|<
+operator|<=
 name|SOCK_SEQPACKET
 condition|;
 name|type
