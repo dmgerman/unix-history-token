@@ -2516,6 +2516,9 @@ name|auio
 operator|.
 name|uio_resid
 expr_stmt|;
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
