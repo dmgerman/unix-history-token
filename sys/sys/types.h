@@ -505,17 +505,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__intrmask_t
-name|intrmask_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Interrupt mask (spl, xxx_imask...) */
-end_comment
-
-begin_typedef
-typedef|typedef
 name|long
 name|key_t
 typedef|;
@@ -725,6 +714,21 @@ name|__intfptr_t
 name|intfptr_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*-  * XXX this is fixed width for historical reasons.  It should have had type  * __int_fast32_t.  Fixed-width types should not be used unless binary  * compatibility is essential.  Least-width types should be used even less  * since they provide smaller benefits.  * XXX should be MD.  * XXX this is bogus in -current, but still used for spl*().  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__uint32_t
+name|intrmask_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Interrupt mask (spl, xxx_imask...) */
+end_comment
 
 begin_typedef
 typedef|typedef

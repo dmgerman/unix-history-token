@@ -70,13 +70,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|__uint32_t
-name|__intrmask_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|__uint32_t
 name|__gid_t
 typedef|;
 end_typedef
