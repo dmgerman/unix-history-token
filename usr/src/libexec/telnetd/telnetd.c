@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.13 82/12/25"
+literal|"@(#)telnetd.c	4.14 82/12/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -2633,14 +2633,10 @@ decl_stmt|;
 name|rmut
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 name|vhangup
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* XXX */
 name|ioctl
 argument_list|(
 name|net
