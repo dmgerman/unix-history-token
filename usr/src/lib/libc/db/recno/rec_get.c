@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_get.c	5.2 (Berkeley) %G%"
+literal|"@(#)rec_get.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,8 +137,6 @@ name|recno_t
 name|nrec
 decl_stmt|;
 name|int
-name|exact
-decl_stmt|,
 name|status
 decl_stmt|;
 if|if
@@ -231,31 +229,6 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-if|if
-condition|(
-operator|!
-name|exact
-condition|)
-block|{
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|e
-operator|->
-name|page
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|RET_SPECIAL
-operator|)
-return|;
-block|}
 name|status
 operator|=
 name|__rec_ret
@@ -308,10 +281,6 @@ name|recno_t
 name|top
 decl_stmt|;
 block|{
-specifier|static
-name|int
-name|eof
-decl_stmt|;
 name|DBT
 name|data
 decl_stmt|;
@@ -330,7 +299,9 @@ name|p
 decl_stmt|;
 if|if
 condition|(
-name|eof
+name|t
+operator|->
+name|bt_reof
 condition|)
 return|return
 operator|(
@@ -488,7 +459,9 @@ operator|<
 name|top
 condition|)
 block|{
-name|eof
+name|t
+operator|->
+name|bt_reof
 operator|=
 literal|1
 expr_stmt|;
@@ -526,10 +499,6 @@ name|recno_t
 name|top
 decl_stmt|;
 block|{
-specifier|static
-name|int
-name|eof
-decl_stmt|;
 name|DBT
 name|data
 decl_stmt|;
@@ -553,7 +522,9 @@ name|p
 decl_stmt|;
 if|if
 condition|(
-name|eof
+name|t
+operator|->
+name|bt_reof
 condition|)
 return|return
 operator|(
@@ -740,7 +711,9 @@ operator|<
 name|top
 condition|)
 block|{
-name|eof
+name|t
+operator|->
+name|bt_reof
 operator|=
 literal|1
 expr_stmt|;
@@ -778,10 +751,6 @@ name|recno_t
 name|top
 decl_stmt|;
 block|{
-specifier|static
-name|int
-name|eof
-decl_stmt|;
 name|DBT
 name|data
 decl_stmt|;
@@ -802,7 +771,9 @@ name|p
 decl_stmt|;
 if|if
 condition|(
-name|eof
+name|t
+operator|->
+name|bt_reof
 condition|)
 return|return
 operator|(
@@ -906,7 +877,9 @@ operator|>=
 name|ep
 condition|)
 block|{
-name|eof
+name|t
+operator|->
+name|bt_reof
 operator|=
 literal|1
 expr_stmt|;
@@ -1013,10 +986,6 @@ name|recno_t
 name|top
 decl_stmt|;
 block|{
-specifier|static
-name|int
-name|eof
-decl_stmt|;
 name|DBT
 name|data
 decl_stmt|;
@@ -1033,7 +1002,9 @@ name|bval
 decl_stmt|;
 if|if
 condition|(
-name|eof
+name|t
+operator|->
+name|bt_reof
 condition|)
 return|return
 operator|(
@@ -1081,7 +1052,9 @@ operator|>=
 name|ep
 condition|)
 block|{
-name|eof
+name|t
+operator|->
+name|bt_reof
 operator|=
 literal|1
 expr_stmt|;
