@@ -6037,19 +6037,20 @@ argument_list|,
 name|passwd
 argument_list|)
 expr_stmt|;
-name|opieunlock
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|rval
 operator|>=
 literal|0
 condition|)
+block|{
+name|opieunlock
+argument_list|()
+expr_stmt|;
 goto|goto
 name|skip
 goto|;
+block|}
 endif|#
 directive|endif
 if|if
