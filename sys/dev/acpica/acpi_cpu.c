@@ -2292,7 +2292,7 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/*      * Bus mastering arbitration control is needed to keep caches coherent      * while sleeping in C3.  If it's not present, we flush the caches before      * entering C3 instead.      */
+comment|/*      * Bus mastering arbitration control is needed to keep caches coherent      * while sleeping in C3.  If it's not present but a working flush cache      * instruction is present, flush the caches before entering C3 instead.      * Otherwise, just disable C3 completely.      */
 if|if
 condition|(
 name|AcpiGbl_FADT
@@ -2304,6 +2304,19 @@ operator|||
 name|AcpiGbl_FADT
 operator|->
 name|Pm2CntLen
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|AcpiGbl_FADT
+operator|->
+name|WbInvd
+operator|&&
+name|AcpiGbl_FADT
+operator|->
+name|WbInvdFlush
 operator|==
 literal|0
 condition|)
@@ -2328,6 +2341,30 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|cpu_quirks
+operator||=
+name|CPU_QUIRK_NO_C3
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"acpi_cpu%d: no BM control, C3 not available\n"
+operator|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|cpu_dev
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/*      * First, check for the ACPI 2.0 _CST sleep states object.      * If not usable, fall back to the P_BLK's P_LVL2 and P_LVL3.      */
 name|sc
@@ -3909,7 +3946,7 @@ name|i
 expr_stmt|;
 break|break;
 block|}
-comment|/*      * Check for bus master activity.  If there was activity, clear      * the bit and use the lowest non-C3 state.  Note that the USB      * driver polling for new devices keeps this bit set all the      * time if USB is loaded.  If bus mastering control is not available,      * flush caches.  This can be quite slow but may be useful since not      * all systems support BM control.      */
+comment|/*      * Check for bus master activity.  If there was activity, clear      * the bit and use the lowest non-C3 state.  Note that the USB      * driver polling for new devices keeps this bit set all the      * time if USB is loaded.      */
 if|if
 condition|(
 operator|(
@@ -3958,10 +3995,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-name|ACPI_FLUSH_CPU_CACHE
-argument_list|()
-expr_stmt|;
 comment|/* Select the next state and update statistics. */
 name|cx_next
 operator|=
@@ -4015,7 +4048,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* For C3, disable bus master arbitration and enable bus master wake. */
+comment|/*      * For C3, disable bus master arbitration and enable bus master wake      * if BM control is available, otherwise flush the CPU cache.      */
 if|if
 condition|(
 name|cx_next
@@ -4023,6 +4056,17 @@ operator|->
 name|type
 operator|==
 name|ACPI_STATE_C3
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|cpu_quirks
+operator|&
+name|CPU_QUIRK_NO_BM_CTRL
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|AcpiSetRegister
@@ -4042,6 +4086,11 @@ literal|1
 argument_list|,
 name|ACPI_MTX_DO_NOT_LOCK
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|ACPI_FLUSH_CPU_CACHE
+argument_list|()
 expr_stmt|;
 block|}
 comment|/*      * Read from P_LVLx to enter C2(+), checking time spent asleep.      * Use the ACPI timer for measuring sleep time.  Since we need to      * get the time very close to the CPU start/stop clock logic, this      * is the only reliable time source.      */
@@ -4253,7 +4302,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/*      * C3 is not supported on multiple CPUs since this would require      * flushing all caches which is currently too expensive.      */
+comment|/*      * C3 on multiple CPUs requires using the expensive flush cache      * instruction.      */
 if|if
 condition|(
 name|mp_ncpus
