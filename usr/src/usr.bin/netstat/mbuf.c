@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	4.1 82/08/25"
+literal|"@(#)mbuf.c	4.2 82/12/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,7 +23,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -65,6 +65,12 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|totmem
+decl_stmt|,
+name|totfree
+decl_stmt|;
 if|if
 condition|(
 name|mbaddr
@@ -81,7 +87,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"mbufs:"
+literal|"memory utilization:\n"
 argument_list|)
 expr_stmt|;
 name|klseek
@@ -107,35 +113,110 @@ argument_list|(
 name|mbstat
 argument_list|)
 argument_list|)
-operator|==
+operator|!=
 sizeof|sizeof
 argument_list|(
 name|mbstat
 argument_list|)
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|" mbufs %d mbfree %d clusters %d clfree %d drops %d\n"
+literal|"mbstat: bad read\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|printf
+argument_list|(
+literal|"\t%d/%d mbufs in use\n"
 argument_list|,
 name|mbstat
 operator|.
 name|m_mbufs
-argument_list|,
+operator|-
 name|mbstat
 operator|.
 name|m_mbfree
 argument_list|,
 name|mbstat
 operator|.
-name|m_clusters
+name|m_mbufs
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d/%d mapped pages in use\n"
 argument_list|,
+name|mbstat
+operator|.
+name|m_clusters
+operator|-
 name|mbstat
 operator|.
 name|m_clfree
 argument_list|,
 name|mbstat
 operator|.
+name|m_clusters
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d requests for memory denied\n"
+argument_list|,
+name|mbstat
+operator|.
 name|m_drops
+argument_list|)
+expr_stmt|;
+name|totmem
+operator|=
+name|mbstat
+operator|.
+name|m_mbufs
+operator|*
+name|MSIZE
+operator|+
+name|mbstat
+operator|.
+name|m_clusters
+operator|*
+name|CLBYTES
+expr_stmt|;
+name|totfree
+operator|=
+name|mbstat
+operator|.
+name|m_mbfree
+operator|*
+name|MSIZE
+operator|+
+name|mbstat
+operator|.
+name|m_clusters
+operator|*
+name|CLBYTES
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%dKbytes allocated to network (%d%% in use)\n"
+argument_list|,
+name|totmem
+operator|/
+literal|1024
+argument_list|,
+operator|(
+name|totmem
+operator|-
+name|totfree
+operator|+
+name|totmem
+operator|-
+literal|1
+operator|)
+operator|/
+name|totmem
 argument_list|)
 expr_stmt|;
 block|}
