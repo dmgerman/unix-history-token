@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	8.1 (Berkeley) %G%"
+literal|"@(#)bt_open.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,6 +175,8 @@ parameter_list|,
 name|mode
 parameter_list|,
 name|openinfo
+parameter_list|,
+name|dflags
 parameter_list|)
 specifier|const
 name|char
@@ -185,6 +187,8 @@ name|int
 name|flags
 decl_stmt|,
 name|mode
+decl_stmt|,
+name|dflags
 decl_stmt|;
 specifier|const
 name|BTREEINFO
@@ -682,8 +686,6 @@ argument_list|(
 name|fname
 argument_list|,
 name|flags
-operator|&
-name|__USE_OPEN_FLAGS
 argument_list|,
 name|mode
 argument_list|)
@@ -1281,6 +1283,46 @@ condition|)
 goto|goto
 name|err
 goto|;
+comment|/* Global flags. */
+if|if
+condition|(
+name|dflags
+operator|&
+name|DB_LOCK
+condition|)
+name|SET
+argument_list|(
+name|t
+argument_list|,
+name|B_DB_LOCK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dflags
+operator|&
+name|DB_SHMEM
+condition|)
+name|SET
+argument_list|(
+name|t
+argument_list|,
+name|B_DB_SHMEM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dflags
+operator|&
+name|DB_TXN
+condition|)
+name|SET
+argument_list|(
+name|t
+argument_list|,
+name|B_DB_TXN
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|dbp
@@ -1764,6 +1806,37 @@ name|dbp
 operator|->
 name|internal
 expr_stmt|;
+comment|/* Toss any page pinned across calls. */
+if|if
+condition|(
+name|t
+operator|->
+name|bt_pinned
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mpool_put
+argument_list|(
+name|t
+operator|->
+name|bt_mp
+argument_list|,
+name|t
+operator|->
+name|bt_pinned
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* In-memory database can't have a file descriptor. */
 if|if
 condition|(
 name|ISSET
