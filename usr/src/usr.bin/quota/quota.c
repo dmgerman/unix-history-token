@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quota.c	4.3 (Berkeley, from Melbourne) %G%"
+literal|"@(#)quota.c	4.4 (Berkeley, from Melbourne) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -933,7 +933,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8s%8d%c%7d%8d%8s%8d%c%7d%8d%8s\n"
+literal|"%10s%8d%c%7d%8d%8s%8d%c%7d%8d%8s\n"
 argument_list|,
 name|fs
 operator|->
@@ -1146,7 +1146,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8s%8s %7s%8s%8s%8s %7s%8s%8s\n"
+literal|"%10s%8s %7s%8s%8s%8s %7s%8s%8s\n"
 argument_list|,
 literal|"Filsys"
 argument_list|,
