@@ -2357,7 +2357,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * We deffinately must sleep for this lock. 		 */
+comment|/* 		 * We definitely must sleep for this lock. 		 */
 name|mtx_assert
 argument_list|(
 name|m
