@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)lgamma.c	4.2	%G% */
+comment|/*	@(#)lgamma.c	4.3	%G% */
 end_comment
 
 begin_comment
-comment|/* 	C program for floating point log gamma function  	gamma(x) computes the log of the absolute 	value of the gamma function. 	The sign of the gamma function is returned in the 	external quantity signgam.  	The coefficients for expansion around zero 	are #5243 from Hart& Cheney; for expansion 	around infinity they are #5404.  	Calls log, drem and sin. */
+comment|/* 	C program for floating point log gamma function  	gamma(x) computes the log of the absolute 	value of the gamma function. 	The sign of the gamma function is returned in the 	external quantity signgam.  	The coefficients for expansion around zero 	are #5243 from Hart& Cheney; for expansion 	around infinity they are #5404.  	Calls log, floor and sin. */
 end_comment
 
 begin_include
@@ -361,7 +361,7 @@ name|arg
 decl_stmt|;
 block|{
 name|double
-name|temp
+name|t
 decl_stmt|;
 name|double
 name|log
@@ -370,7 +370,7 @@ decl_stmt|,
 name|sin
 argument_list|()
 decl_stmt|,
-name|drem
+name|floor
 argument_list|()
 decl_stmt|,
 name|pos
@@ -382,20 +382,39 @@ operator|-
 name|arg
 expr_stmt|;
 comment|/*       * to see if arg were a true integer, the old code used the       * mathematically correct observation:       * sin(n*pi) = 0<=> n is an integer.       * but in finite precision arithmetic, sin(n*PI) will NEVER       * be zero simply because n*PI is a rational number.  hence       *	it failed to work with our newer, more accurate sin()       * which uses true pi to do the argument reduction...       *	temp = sin(pi*arg);       */
-name|temp
+name|t
 operator|=
-name|drem
+name|floor
 argument_list|(
 name|arg
-argument_list|,
-literal|1.e0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|temp
+name|arg
+operator|-
+name|t
+operator|>
+literal|0.5e0
+condition|)
+name|t
+operator|+=
+literal|1.e0
+expr_stmt|;
+comment|/* t := integer nearest arg */
+if|#
+directive|if
+operator|!
+operator|(
+name|IEEE
+operator||
+name|NATIONAL
+operator|)
+if|if
+condition|(
+name|arg
 operator|==
-literal|0.
+name|t
 condition|)
 block|{
 name|errno
@@ -420,32 +439,63 @@ return|;
 endif|#
 directive|endif
 block|}
-name|temp
+endif|#
+directive|endif
+name|signgam
 operator|=
-name|drem
+call|(
+name|int
+call|)
 argument_list|(
-name|arg
-argument_list|,
-literal|2.e0
+name|t
+operator|-
+literal|2
+operator|*
+name|floor
+argument_list|(
+name|t
+operator|/
+literal|2
+argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* signgam =  1 if t was odd, */
+comment|/*            0 if t was even */
+name|signgam
+operator|=
+name|signgam
+operator|-
+literal|1
+operator|+
+name|signgam
+expr_stmt|;
+comment|/* signgam =  1 if t was odd, */
+comment|/*           -1 if t was even */
+name|t
+operator|=
+name|arg
+operator|-
+name|t
+expr_stmt|;
+comment|/*  -0.5<= t<= 0.5 */
 if|if
 condition|(
-name|temp
+name|t
 operator|<
-literal|0.
+literal|0.e0
 condition|)
-name|temp
+block|{
+name|t
 operator|=
 operator|-
-name|temp
+name|t
 expr_stmt|;
-else|else
 name|signgam
 operator|=
 operator|-
-literal|1
+name|signgam
 expr_stmt|;
+block|}
 return|return
 operator|(
 operator|-
@@ -462,7 +512,7 @@ name|sin
 argument_list|(
 name|pi
 operator|*
-name|temp
+name|t
 argument_list|)
 operator|/
 name|pi
