@@ -634,7 +634,7 @@ name|Quiet
 condition|?
 literal|"@pkgdep %s\n"
 else|:
-literal|"\tPackage depends on: %s\n"
+literal|"\t%s\n"
 argument_list|,
 name|p
 operator|->

@@ -791,6 +791,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Flags
+operator|&
+name|SHOW_REQUIRE
+condition|)
+name|show_plist
+argument_list|(
+literal|"Depends on:\n"
+argument_list|,
+operator|&
+name|plist
+argument_list|,
+name|PLIST_PKGDEP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|Flags
 operator|&
