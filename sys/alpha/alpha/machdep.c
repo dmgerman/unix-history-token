@@ -152,12 +152,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/random.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/netisr.h>
 end_include
 
@@ -4050,10 +4044,6 @@ operator|.
 name|pcb_hw
 operator|.
 name|apcb_ksp
-expr_stmt|;
-comment|/* 	 * Initialise entropy pool. 	 */
-name|rand_initialize
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 name|boothowto
