@@ -4744,6 +4744,7 @@ name|USBD_NORMAL_COMPLETION
 operator|)
 return|;
 block|}
+comment|/* 	 * Free subdevs so we can reallocate it larger for the number of 	 * interfaces  	 */
 name|tmpdv
 operator|=
 name|dev
@@ -5419,25 +5420,6 @@ name|USBD_NORMAL_COMPLETION
 operator|)
 return|;
 block|}
-name|tmpdv
-operator|=
-name|dev
-operator|->
-name|subdevs
-expr_stmt|;
-name|dev
-operator|->
-name|subdevs
-operator|=
-literal|0
-expr_stmt|;
-name|free
-argument_list|(
-name|tmpdv
-argument_list|,
-name|M_USB
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The generic attach failed, but leave the device as it is. 	 * We just did not find any drivers, that's all.  The device is 	 * fully operational and not harming anyone. 	 */
 name|DPRINTF
 argument_list|(
@@ -7149,7 +7131,19 @@ name|i
 operator|++
 control|)
 block|{
-name|strncpy
+if|if
+condition|(
+name|device_is_attached
+argument_list|(
+name|dev
+operator|->
+name|subdevs
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+name|strlcpy
 argument_list|(
 name|di
 operator|->
@@ -7171,6 +7165,7 @@ argument_list|,
 name|USB_MAX_DEVNAMELEN
 argument_list|)
 expr_stmt|;
+else|else
 name|di
 operator|->
 name|udi_devnames
@@ -7178,12 +7173,10 @@ index|[
 name|i
 index|]
 index|[
-name|USB_MAX_DEVNAMELEN
-operator|-
-literal|1
+literal|0
 index|]
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 block|}
 block|}
