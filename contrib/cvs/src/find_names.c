@@ -992,7 +992,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fnmatch
+name|CVS_FNMATCH
 argument_list|(
 name|RCSPAT
 argument_list|,
@@ -1283,7 +1283,7 @@ directive|endif
 comment|/* don't bother stating ,v files */
 if|if
 condition|(
-name|fnmatch
+name|CVS_FNMATCH
 argument_list|(
 name|RCSPAT
 argument_list|,

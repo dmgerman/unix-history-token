@@ -1539,7 +1539,7 @@ name|x
 control|)
 if|if
 condition|(
-name|fnmatch
+name|CVS_FNMATCH
 argument_list|(
 name|wrap_list
 index|[
@@ -1685,7 +1685,7 @@ name|x
 control|)
 if|if
 condition|(
-name|fnmatch
+name|CVS_FNMATCH
 argument_list|(
 name|wrap_list
 index|[

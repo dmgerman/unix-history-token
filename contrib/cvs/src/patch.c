@@ -2428,6 +2428,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+comment|/* I believe this timestamp only affects the dates in our diffs, 	       and therefore should be on the server, not the client.  */
 operator|(
 name|void
 operator|)
@@ -2570,6 +2571,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+comment|/* I believe this timestamp only affects the dates in our diffs, 	       and therefore should be on the server, not the client.  */
 operator|(
 name|void
 operator|)

@@ -1734,7 +1734,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fnmatch
+name|CVS_FNMATCH
 argument_list|(
 name|CVSRFLPAT
 argument_list|,

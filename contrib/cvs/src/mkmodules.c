@@ -2747,6 +2747,10 @@ name|char
 modifier|*
 name|info_v
 decl_stmt|;
+comment|/* Exit status.  */
+name|int
+name|err
+decl_stmt|;
 specifier|const
 name|struct
 name|admin_file
@@ -2848,7 +2852,7 @@ argument_list|(
 name|adm
 argument_list|)
 expr_stmt|;
-comment|/* This is needed by the call to "ci" below.  */
+comment|/* This is needed because we pass "fileptr->filename" not "info"        to add_rcs_file below.  I think this would be easy to change,        thus nuking the need for CVS_CHDIR here, but I haven't looked        closely (e.g. see wrappers calls within add_rcs_file).  */
 if|if
 condition|(
 name|CVS_CHDIR
@@ -3059,43 +3063,30 @@ name|info
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now check the file in.  FIXME: we could be using 	       add_rcs_file from import.c which is faster (if it were 	       tweaked slightly).  */
-name|run_setup
-argument_list|(
-literal|"%s%s -x,v/ -q -u -t-"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS_CI
-argument_list|)
-expr_stmt|;
-name|run_args
-argument_list|(
-literal|"-minitial checkin of %s"
-argument_list|,
-name|fileptr
-operator|->
-name|filename
-argument_list|)
-expr_stmt|;
-name|run_arg
-argument_list|(
-name|fileptr
-operator|->
-name|filename
-argument_list|)
-expr_stmt|;
+comment|/* The message used to say " of " and fileptr->filename after 	       "initial checkin" but I fail to see the point as we know what 	       file it is from the name.  */
 name|retcode
 operator|=
-name|run_exec
+name|add_rcs_file
 argument_list|(
-name|RUN_TTY
+literal|"initial checkin"
 argument_list|,
-name|RUN_TTY
+name|info_v
 argument_list|,
-name|RUN_TTY
+name|fileptr
+operator|->
+name|filename
 argument_list|,
-name|RUN_NORMAL
+literal|"1.1"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3104,23 +3095,10 @@ name|retcode
 operator|!=
 literal|0
 condition|)
-name|error
-argument_list|(
+comment|/* add_rcs_file already printed an error message.  */
+name|err
+operator|=
 literal|1
-argument_list|,
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-name|errno
-else|:
-literal|0
-argument_list|,
-literal|"failed to check in %s"
-argument_list|,
-name|info
-argument_list|)
 expr_stmt|;
 block|}
 block|}

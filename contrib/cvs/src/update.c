@@ -2115,18 +2115,49 @@ operator|->
 name|file
 argument_list|)
 condition|)
+if|#
+directive|if
+literal|0
+comment|/* Look, we can't clobber the user's file.  We 			   know it is modified and we're going to 			   overwrite their mod?  Puh-leeze.  The 			   correct behavior is probably something like 			   what merge_file does for -kb, which is to 			   give the users both files and tell them 			   what the two filenames are.  Of course, -m 			   in wrappers needs to be documented *much* 			   better.  Anyway, until then, make this a 			   fatal error.  */
 comment|/* Should we be warning the user that we are 			 * overwriting the user's copy of the file?  */
-name|retval
-operator|=
-name|checkout_file
+then|retval = 			  checkout_file (finfo, vers, 0);
+else|#
+directive|else
+block|{
+name|error
 argument_list|(
-name|finfo
-argument_list|,
-name|vers
+literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|"A -m 'COPY' wrapper is specified"
 argument_list|)
 expr_stmt|;
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"but file %s needs merge"
+argument_list|,
+name|finfo
+operator|->
+name|fullname
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"\ You probably want to avoid -m 'COPY' wrappers"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 else|else
 name|retval
 operator|=
