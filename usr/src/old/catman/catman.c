@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)catman.c	5.5 (Berkeley) %G%"
+literal|"@(#)catman.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -556,7 +556,7 @@ name|void
 operator|)
 name|umask
 argument_list|(
-literal|02
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -710,7 +710,7 @@ name|mkdir
 argument_list|(
 name|buf
 argument_list|,
-literal|0775
+literal|0777
 argument_list|)
 operator|<
 literal|0
