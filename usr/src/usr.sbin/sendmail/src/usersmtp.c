@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -466,6 +466,9 @@ name|gte
 operator|=
 name|setevent
 argument_list|(
+operator|(
+name|time_t
+operator|)
 literal|300
 argument_list|,
 name|greettimeout

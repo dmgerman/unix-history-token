@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.2		%G%"
+literal|"@(#)sendmail.h	4.3		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2237,7 +2237,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|time_t
 name|ReadTimeout
 decl_stmt|;
 end_decl_stmt

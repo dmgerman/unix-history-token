@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -1872,6 +1872,24 @@ name|CtxReadTimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETIMEDOUT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETIMEDOUT
+value|EINTR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|char
 modifier|*
@@ -1934,6 +1952,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|errno
+operator|=
+name|ETIMEDOUT
+expr_stmt|;
 name|syserr
 argument_list|(
 literal|"sfgets: timeout on read (mailer may be hung)"
@@ -1949,6 +1971,9 @@ name|ev
 operator|=
 name|setevent
 argument_list|(
+operator|(
+name|time_t
+operator|)
 name|ReadTimeout
 argument_list|,
 name|readtimeout
