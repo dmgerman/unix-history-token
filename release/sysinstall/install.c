@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.224 1999/01/27 02:32:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.225 1999/01/29 11:39:04 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -894,6 +894,8 @@ argument_list|(
 name|DISK_PARTITIONED
 argument_list|,
 literal|"yes"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* If we refuse to proceed, bail. */
@@ -997,6 +999,8 @@ argument_list|(
 name|RUNNING_ON_ROOT
 argument_list|,
 literal|"yes"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Configure various files in /etc */
@@ -1090,6 +1094,8 @@ argument_list|(
 name|SYSTEM_STATE
 argument_list|,
 literal|"fixit"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1344,6 +1350,8 @@ argument_list|(
 name|SYSTEM_STATE
 argument_list|,
 literal|"fixit"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|Mkdir
@@ -1899,6 +1907,8 @@ argument_list|(
 name|SYSTEM_STATE
 argument_list|,
 literal|"express"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -2011,6 +2021,8 @@ argument_list|(
 name|SYSTEM_STATE
 argument_list|,
 literal|"novice"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -2266,6 +2278,8 @@ argument_list|(
 literal|"gateway_enable"
 argument_list|,
 literal|"YES"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|dialog_clear_norefresh
@@ -2316,6 +2330,8 @@ argument_list|(
 literal|"nfs_client_enable"
 argument_list|,
 literal|"YES"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|dialog_clear_norefresh
@@ -2518,6 +2534,8 @@ argument_list|(
 literal|"root_password"
 argument_list|,
 literal|"YES"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|restorescr
@@ -2813,6 +2831,8 @@ condition|?
 literal|"error-install"
 else|:
 literal|"full-install"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2943,7 +2963,7 @@ if|if
 condition|(
 name|kget
 argument_list|(
-literal|"/kernel.config"
+literal|"/boot/kernel.conf"
 argument_list|)
 condition|)
 block|{
@@ -2953,6 +2973,77 @@ literal|"Kernel copied OK, but unable to save boot -c changes\n"
 literal|"to it.  See the debug screen (ALT-F2) for details."
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+literal|"/boot/loader.rc"
+argument_list|)
+condition|)
+block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|fp
+operator|=
+name|fopen
+argument_list|(
+literal|"/boot/loader.rc"
+argument_list|,
+literal|"w"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"load /kernel\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"load -t userconfig_script /boot/kernel.conf\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"autoboot 5\n"
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|msgConfirm
+argument_list|(
+literal|"You already have a /boot/loader.rc file so I won't touch it.\n"
+literal|"You will need to add a: load -t userconfig_script /boot/kernel.conf\n"
+literal|"line to your /boot/loader.rc before your saved kernel changes\n"
+literal|"(if any) can go into effect."
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -3181,35 +3272,6 @@ comment|/* BOGON #5: aliases database not build for bin */
 name|vsystem
 argument_list|(
 literal|"newaliases"
-argument_list|)
-expr_stmt|;
-comment|/* BOGON #6: deal with new boot files */
-name|vsystem
-argument_list|(
-literal|"touch /kernel.config"
-argument_list|)
-expr_stmt|;
-name|vsystem
-argument_list|(
-literal|"touch /boot.config"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|file_readable
-argument_list|(
-literal|"/stand/boot.help"
-argument_list|)
-operator|&&
-operator|!
-name|file_readable
-argument_list|(
-literal|"/boot.help"
-argument_list|)
-condition|)
-name|vsystem
-argument_list|(
-literal|"mv /stand/boot.help /"
 argument_list|)
 expr_stmt|;
 comment|/* Now run all the mtree stuff to fix things up */
@@ -4320,6 +4382,8 @@ name|VAR_RELNAME
 argument_list|,
 name|getRelname
 argument_list|()
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4327,6 +4391,8 @@ argument_list|(
 name|VAR_CPIO_VERBOSITY
 argument_list|,
 literal|"high"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4334,6 +4400,8 @@ argument_list|(
 name|VAR_TAPE_BLOCKSIZE
 argument_list|,
 name|DEFAULT_TAPE_BLOCKSIZE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4341,6 +4409,8 @@ argument_list|(
 name|VAR_INSTALL_ROOT
 argument_list|,
 literal|"/"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4348,6 +4418,8 @@ argument_list|(
 name|VAR_INSTALL_CFG
 argument_list|,
 literal|"install.cfg"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|cp
@@ -4371,6 +4443,8 @@ argument_list|(
 name|VAR_EDITOR
 argument_list|,
 name|cp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4378,6 +4452,8 @@ argument_list|(
 name|VAR_FTP_USER
 argument_list|,
 literal|"ftp"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4385,6 +4461,8 @@ argument_list|(
 name|VAR_BROWSER_PACKAGE
 argument_list|,
 literal|"lynx"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4392,6 +4470,8 @@ argument_list|(
 name|VAR_BROWSER_BINARY
 argument_list|,
 literal|"/usr/local/bin/lynx"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4399,6 +4479,8 @@ argument_list|(
 name|VAR_FTP_STATE
 argument_list|,
 literal|"passive"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4406,6 +4488,8 @@ argument_list|(
 name|VAR_NFS_SECURE
 argument_list|,
 literal|"YES"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4413,6 +4497,8 @@ argument_list|(
 name|VAR_PKG_TMPDIR
 argument_list|,
 literal|"/usr/tmp"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4420,6 +4506,8 @@ argument_list|(
 name|VAR_GATED_PKG
 argument_list|,
 literal|"gated"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4427,6 +4515,8 @@ argument_list|(
 name|VAR_PCNFSD_PKG
 argument_list|,
 literal|"pcnfsd"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -4437,6 +4527,8 @@ name|itoa
 argument_list|(
 name|MEDIA_TIMEOUT
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4451,6 +4543,8 @@ argument_list|(
 name|SYSTEM_STATE
 argument_list|,
 literal|"update"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -4459,6 +4553,8 @@ argument_list|(
 name|SYSTEM_STATE
 argument_list|,
 literal|"init"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -4478,13 +4574,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-name|file_readable
-argument_list|(
-literal|"/etc/rc.conf"
-argument_list|)
-condition|)
 name|configEnvironmentRC_conf
 argument_list|()
 expr_stmt|;

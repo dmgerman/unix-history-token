@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.93 1998/12/02 03:27:37 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.94 1998/12/22 12:31:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1214,6 +1214,8 @@ argument_list|(
 name|VAR_FTP_PATH
 argument_list|,
 literal|"ftp://"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|dialog_clear_norefresh
@@ -1232,6 +1234,8 @@ literal|"in the Options screen.\n\n"
 literal|"A URL looks like this:  ftp://<hostname>/<path>\n"
 literal|"Where<path> is relative to the anonymous ftp directory or the\n"
 literal|"home directory of the user being logged in as."
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1616,6 +1620,8 @@ argument_list|(
 name|VAR_FTP_HOST
 argument_list|,
 name|hostname
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -1627,6 +1633,8 @@ condition|?
 name|dir
 else|:
 literal|"/"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -1637,6 +1645,8 @@ name|itoa
 argument_list|(
 name|FtpPort
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ftpDevice
@@ -1698,6 +1708,8 @@ argument_list|(
 name|VAR_FTP_STATE
 argument_list|,
 literal|"active"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1723,6 +1735,8 @@ argument_list|(
 name|VAR_FTP_STATE
 argument_list|,
 literal|"passive"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1765,6 +1779,8 @@ name|VAR_UFS_PATH
 argument_list|,
 literal|"Enter a fully qualified pathname for the directory\n"
 literal|"containing the FreeBSD distribution files:"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1876,6 +1892,8 @@ argument_list|,
 literal|"Please enter the full NFS file specification for the remote\n"
 literal|"host and directory containing the FreeBSD distribution files.\n"
 literal|"This should be in the format:  hostname:/some/freebsd/dir"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2071,6 +2089,8 @@ argument_list|(
 name|VAR_NFS_HOST
 argument_list|,
 name|hostname
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nfsDevice
@@ -3468,6 +3488,8 @@ argument_list|(
 name|VAR_FTP_USER
 argument_list|,
 literal|"Please enter the username you wish to login as:"
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -3485,6 +3507,8 @@ argument_list|(
 name|VAR_FTP_PASS
 argument_list|,
 literal|"Please enter the password for this user:"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|DialogInputAttrs
@@ -3566,6 +3590,8 @@ argument_list|(
 name|VAR_CPIO_VERBOSITY
 argument_list|,
 literal|"medium"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3584,6 +3610,8 @@ argument_list|(
 name|VAR_CPIO_VERBOSITY
 argument_list|,
 literal|"high"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -3593,6 +3621,8 @@ argument_list|(
 name|VAR_CPIO_VERBOSITY
 argument_list|,
 literal|"low"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
