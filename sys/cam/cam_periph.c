@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Common functions for CAM "type" (peripheral) drivers.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id$  */
+comment|/*  * Common functions for CAM "type" (peripheral) drivers.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_periph.c,v 1.1 1998/09/15 06:33:23 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -5252,70 +5252,20 @@ case|case
 name|CAM_SEL_TIMEOUT
 case|:
 block|{
-name|struct
-name|cam_path
-modifier|*
-name|newpath
-decl_stmt|;
+comment|/* 		 * XXX 		 * A single selection timeout should not be enough 		 * to invalidate a device.  We should retry for multiple 		 * seconds assuming this isn't a probe.  We'll probably 		 * need a special flag for that. 		 */
+if|#
+directive|if
+literal|0
+block|struct cam_path *newpath;
+comment|/* Should we do more if we can't create the path?? */
+block|if (xpt_create_path(&newpath, xpt_path_periph(ccb->ccb_h.path), 				    xpt_path_path_id(ccb->ccb_h.path), 				    xpt_path_target_id(ccb->ccb_h.path), 				    CAM_LUN_WILDCARD) != CAM_REQ_CMP)  			break;
+comment|/* 		 * Let peripheral drivers know that this device has gone 		 * away. 		 */
+block|xpt_async(AC_LOST_DEVICE, newpath, NULL); 		xpt_free_path(newpath);
+endif|#
+directive|endif
 name|error
 operator|=
 name|ENXIO
-expr_stmt|;
-comment|/* Should we do more if we can't create the path?? */
-if|if
-condition|(
-name|xpt_create_path
-argument_list|(
-operator|&
-name|newpath
-argument_list|,
-name|xpt_path_periph
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-argument_list|,
-name|xpt_path_path_id
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-argument_list|,
-name|xpt_path_target_id
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-argument_list|,
-name|CAM_LUN_WILDCARD
-argument_list|)
-operator|!=
-name|CAM_REQ_CMP
-condition|)
-break|break;
-comment|/* 		 * Let peripheral drivers know that this device has gone 		 * away. 		 */
-name|xpt_async
-argument_list|(
-name|AC_LOST_DEVICE
-argument_list|,
-name|newpath
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|xpt_free_path
-argument_list|(
-name|newpath
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
