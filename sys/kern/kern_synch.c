@@ -1443,21 +1443,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|KASSERT
+name|mtx_assert
 argument_list|(
 name|mtx
-operator|->
-name|mtx_recurse
-operator|==
-literal|0
 argument_list|,
-operator|(
-literal|"sleeping on recursed mutex %s"
-operator|,
-name|mtx
-operator|->
-name|mtx_description
-operator|)
+name|MA_OWNED
+operator||
+name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
