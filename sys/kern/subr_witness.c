@@ -945,6 +945,7 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * spin locks 	 */
 if|#
 directive|if
 name|defined
@@ -1042,9 +1043,6 @@ comment|/* 	 * leaf locks 	 */
 ifdef|#
 directive|ifdef
 name|SMP
-ifdef|#
-directive|ifdef
-name|__i386__
 block|{
 literal|"ap boot"
 block|,
@@ -1052,6 +1050,9 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"imen"
 block|,
