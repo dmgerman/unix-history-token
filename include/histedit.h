@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: histedit.h,v 1.3 1997/06/25 09:47:31 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -454,6 +454,36 @@ end_comment
 begin_decl_stmt
 name|void
 name|el_resize
+name|__P
+argument_list|(
+operator|(
+name|EditLine
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|el_data_set
+name|__P
+argument_list|(
+operator|(
+name|EditLine
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|el_data_get
 name|__P
 argument_list|(
 operator|(

@@ -387,6 +387,11 @@ name|el_signal_t
 name|el_signal
 decl_stmt|;
 comment|/* Signal handling stuff		*/
+name|void
+modifier|*
+name|data
+decl_stmt|;
+comment|/* user data */
 block|}
 struct|;
 end_struct
