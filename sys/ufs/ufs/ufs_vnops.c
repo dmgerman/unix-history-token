@@ -10141,12 +10141,7 @@ literal|0
 operator|)
 operator|)
 condition|)
-name|VTOI
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
+name|ip
 operator|->
 name|i_flag
 operator||=
@@ -10252,12 +10247,7 @@ literal|0
 operator|)
 operator|)
 condition|)
-name|VTOI
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
+name|ip
 operator|->
 name|i_flag
 operator||=
