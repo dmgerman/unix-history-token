@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $RISS: if_arl/dev/arl/if_arl_isa.c,v 1.4 2004/01/22 12:08:48 count Exp $  */
+comment|/*  * $RISS: if_arl/dev/arl/if_arl_isa.c,v 1.7 2004/03/16 05:30:38 count Exp $  */
 end_comment
 
 begin_include
@@ -16,6 +16,29 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ARLCACHE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -634,7 +657,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"in identify\n"
+literal|"arl: in identify\n"
 argument_list|)
 expr_stmt|;
 comment|/* Try avoid already added devices */
@@ -1387,11 +1410,6 @@ argument_list|)
 expr_stmt|;
 name|GET_ARL_PARAM
 argument_list|(
-name|registrationMode
-argument_list|)
-expr_stmt|;
-name|GET_ARL_PARAM
-argument_list|(
 name|spreadingCode
 argument_list|)
 expr_stmt|;
@@ -1405,6 +1423,13 @@ argument_list|(
 name|receiveMode
 argument_list|)
 expr_stmt|;
+name|arcfg
+operator|.
+name|registrationMode
+operator|=
+literal|1
+expr_stmt|;
+comment|/* set default TMA mode */
 name|arcfg
 operator|.
 name|txRetry

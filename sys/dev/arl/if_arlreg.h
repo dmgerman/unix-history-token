@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $RISS: if_arl/dev/arl/if_arlreg.h,v 1.2 2004/01/22 09:18:13 count Exp $  * $FreeBSD$  */
+comment|/*  * $RISS: if_arl/dev/arl/if_arlreg.h,v 1.4 2004/03/16 04:43:27 count Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -800,16 +800,36 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARLCACHE
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|ARLAN_MAX_QUALITY
+name|MAXARLCACHE
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARLCACHE_RX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARLCACHE_TX
+value|1
 end_define
 
 begin_struct
 struct|struct
-name|arl_quality
+name|arl_sigcache
 block|{
 name|u_int8_t
 name|macsrc
@@ -817,15 +837,27 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-name|int
-name|rx_quality
+comment|/* unique MAC address for entry */
+name|u_int8_t
+name|level
+index|[
+literal|2
+index|]
 decl_stmt|;
-name|int
-name|tx_quality
+name|u_int8_t
+name|quality
+index|[
+literal|2
+index|]
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -979,13 +1011,18 @@ decl_stmt|;
 name|int
 name|rx_len
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ARLCACHE
 name|struct
-name|arl_quality
-name|quality
+name|arl_sigcache
+name|arl_sigcache
 index|[
-name|ARLAN_MAX_QUALITY
+name|MAXARLCACHE
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1021,13 +1058,6 @@ define|#
 directive|define
 name|arcfg
 value|sc->arl_cfg
-end_define
-
-begin_define
-define|#
-directive|define
-name|aqual
-value|sc->quality
 end_define
 
 begin_define
