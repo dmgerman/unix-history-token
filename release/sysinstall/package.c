@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: package.c,v 1.65.2.1 1999/02/05 22:20:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: package.c,v 1.65.2.2 1999/04/28 06:58:15 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -64,8 +64,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|PkgNode
+name|Top
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* Like package_extract, but assumes current media device */
+comment|/* Like package_extract, but assumes current media device and chases deps */
 end_comment
 
 begin_function
@@ -77,6 +84,12 @@ modifier|*
 name|name
 parameter_list|)
 block|{
+name|PkgNodePtr
+name|tmp
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -86,16 +99,69 @@ condition|)
 return|return
 name|DITEM_FAILURE
 return|;
+name|i
+operator|=
+name|index_initialize
+argument_list|(
+literal|"packages/INDEX"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|i
+argument_list|)
+operator|!=
+name|DITEM_SUCCESS
+condition|)
 return|return
-name|package_extract
+name|i
+return|;
+name|tmp
+operator|=
+name|index_search
+argument_list|(
+operator|&
+name|Top
+argument_list|,
+name|name
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+condition|)
+return|return
+name|index_extract_one
 argument_list|(
 name|mediaDevice
 argument_list|,
-name|name
+operator|&
+name|Top
+argument_list|,
+name|tmp
 argument_list|,
 name|FALSE
 argument_list|)
 return|;
+else|else
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Sorry, package %s was not found in the INDEX."
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
 block|}
 end_function
 
@@ -343,18 +409,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|strpbrk
+argument_list|(
 name|name
-index|[
-literal|0
-index|]
-operator|==
-literal|'@'
+argument_list|,
+literal|"-_"
+argument_list|)
 condition|)
-block|{
-comment|/* @ at the beginning of the package name means "get latest" */
-name|name
-operator|++
-expr_stmt|;
 name|sprintf
 argument_list|(
 name|path
@@ -364,7 +426,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(

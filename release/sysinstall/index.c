@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.60.2.2 1999/03/10 02:51:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.60.2.3 1999/04/06 08:27:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -98,27 +98,6 @@ end_typedef
 
 begin_function_decl
 specifier|static
-name|int
-name|index_extract_one
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|,
-name|PkgNodePtr
-name|top
-parameter_list|,
-name|PkgNodePtr
-name|who
-parameter_list|,
-name|Boolean
-name|depended
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|index_recorddeps
 parameter_list|(
@@ -133,6 +112,18 @@ name|ie
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Shared between index_initialize() and the various clients of it */
+end_comment
+
+begin_decl_stmt
+name|PkgNode
+name|Top
+decl_stmt|,
+name|Plist
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Smarter strdup */
@@ -2032,18 +2023,13 @@ operator|!
 name|tp
 operator|&&
 operator|!
-name|strncmp
+name|strcmp
 argument_list|(
 name|p
 operator|->
 name|name
 argument_list|,
 name|str
-argument_list|,
-name|strlen
-argument_list|(
-name|str
-argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -3321,7 +3307,7 @@ operator|->
 name|next
 control|)
 name|status
-operator|=
+operator||=
 name|index_extract_one
 argument_list|(
 name|dev
@@ -3340,7 +3326,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|index_extract_one
 parameter_list|(
@@ -3751,6 +3736,179 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|Boolean
+name|index_initted
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Read and initialize global index */
+end_comment
+
+begin_function
+name|int
+name|index_initialize
+parameter_list|(
+name|char
+modifier|*
+name|path
+parameter_list|)
+block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|index_initted
+condition|)
+block|{
+comment|/* Got any media? */
+if|if
+condition|(
+operator|!
+name|mediaVerify
+argument_list|()
+condition|)
+return|return
+name|DITEM_FAILURE
+return|;
+comment|/* Does it move when you kick it? */
+if|if
+condition|(
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+return|return
+name|DITEM_FAILURE
+return|;
+name|msgNotify
+argument_list|(
+literal|"Attempting to fetch %s file from selected media."
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|mediaDevice
+operator|->
+name|get
+argument_list|(
+name|mediaDevice
+argument_list|,
+name|path
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fp
+condition|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Unable to get packages/INDEX file from selected media.\n"
+literal|"This may be because the packages collection is not available at\n"
+literal|"on the distribution media you've chosen (most likely an FTP site\n"
+literal|"without the packages collection mirrored).  Please verify media\n"
+literal|"(or path to media) and try again.  If your local site does not\n"
+literal|"carry the packages collection, then we recommend either a CD\n"
+literal|"distribution or the master distribution on ftp.freebsd.org."
+argument_list|)
+expr_stmt|;
+name|mediaDevice
+operator|->
+name|shutdown
+argument_list|(
+name|mediaDevice
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+name|msgNotify
+argument_list|(
+literal|"Located INDEX, now reading package data from it..."
+argument_list|)
+expr_stmt|;
+name|index_init
+argument_list|(
+operator|&
+name|Top
+argument_list|,
+operator|&
+name|Plist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|index_read
+argument_list|(
+name|fp
+argument_list|,
+operator|&
+name|Top
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"I/O or format error on packages/INDEX file.\n"
+literal|"Please verify media (or path to media) and try again."
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|index_sort
+argument_list|(
+operator|&
+name|Top
+argument_list|)
+expr_stmt|;
+name|index_initted
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
+return|;
 block|}
 end_function
 
