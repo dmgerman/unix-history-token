@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)name.c	4.4 %G%"
+literal|"@(#)name.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_empty
 empty|#
