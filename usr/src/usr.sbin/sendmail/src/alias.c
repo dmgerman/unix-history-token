@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -590,10 +590,6 @@ operator|!
 name|init
 operator|&&
 operator|(
-name|atcnt
-operator|<
-literal|0
-operator|||
 name|stat
 argument_list|(
 name|buf
@@ -609,6 +605,10 @@ operator|.
 name|st_mtime
 operator|<
 name|modtime
+operator|||
+name|atcnt
+operator|<
+literal|0
 operator|)
 condition|)
 block|{
@@ -660,25 +660,25 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|bool
-name|oldverb
-init|=
-name|Verbose
-decl_stmt|;
-name|Verbose
-operator|=
-name|TRUE
+ifdef|#
+directive|ifdef
+name|LOG
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"alias database out of date"
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|LOG
 name|message
 argument_list|(
 name|Arpa_Info
 argument_list|,
 literal|"Warning: alias database out of date"
 argument_list|)
-expr_stmt|;
-name|Verbose
-operator|=
-name|oldverb
 expr_stmt|;
 block|}
 block|}
