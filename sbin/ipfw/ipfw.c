@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.32 1996/08/13 19:43:24 pst Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.33 1996/08/31 17:58:23 nate Exp $  *  */
 end_comment
 
 begin_include
@@ -67,6 +67,18 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sockio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
 end_include
 
 begin_include
@@ -3176,6 +3188,85 @@ block|}
 end_function
 
 begin_function
+name|int
+name|verify_interface
+parameter_list|(
+name|rule
+parameter_list|)
+name|struct
+name|ip_fw
+modifier|*
+name|rule
+decl_stmt|;
+block|{
+name|struct
+name|ifreq
+name|ifr
+decl_stmt|;
+comment|/* 	 *	If a unit was specified, check for that exact interface. 	 *	If a wildcard was specified, check for unit 0. 	 */
+name|snprintf
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|)
+argument_list|,
+literal|"%s%d"
+argument_list|,
+name|rule
+operator|->
+name|fw_via_name
+argument_list|,
+name|rule
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_IFUWILD
+condition|?
+literal|0
+else|:
+name|rule
+operator|->
+name|fw_via_unit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCGIFFLAGS
+argument_list|,
+operator|&
+name|ifr
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* interface isn't recognized by the kernel */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* interface exists */
+block|}
+end_function
+
+begin_function
 name|void
 name|add
 parameter_list|(
@@ -4058,6 +4149,23 @@ operator|.
 name|fw_flg
 operator||=
 name|IP_FW_F_IFNAME
+expr_stmt|;
+if|if
+condition|(
+name|verify_interface
+argument_list|(
+operator|&
+name|rule
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: interface does not exist\n"
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
