@@ -411,6 +411,9 @@ operator|||
 operator|(
 name|id
 operator|==
+operator|(
+name|uid_t
+operator|)
 name|ULONG_MAX
 operator|&&
 name|errno
@@ -574,6 +577,9 @@ operator|||
 operator|(
 name|id
 operator|==
+operator|(
+name|uid_t
+operator|)
 name|ULONG_MAX
 operator|&&
 name|errno

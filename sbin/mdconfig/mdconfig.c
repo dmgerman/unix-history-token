@@ -923,13 +923,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|unsigned
-operator|)
 name|mdio
 operator|.
 name|md_unit
 operator|==
+operator|(
+name|unsigned
+operator|)
 name|ULONG_MAX
 operator|||
 operator|*
