@@ -528,6 +528,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|wdustart
 parameter_list|(
@@ -539,6 +540,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|wdstart
 parameter_list|()
@@ -546,6 +548,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|wdcommand
 parameter_list|(
@@ -559,6 +562,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|wdcontrol
 parameter_list|(
@@ -570,6 +574,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|wdsetctlr
 parameter_list|(
@@ -583,6 +588,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|wdgetctlr
 parameter_list|(
@@ -1765,6 +1771,11 @@ operator||
 name|DKFL_BADSECT
 operator|)
 condition|)
+comment|/* XXX 	     * BAD144END was done to clean up some old bad code that was 	     * attempting to compare a u_short to -1.  This makes the compilers 	     * happy and clearly shows what is going on. 	     * rgrimes 93/06/17 	     */
+define|#
+directive|define
+name|BAD144END
+value|(u_short)(-1)
 for|for
 control|(
 name|bt_ptr
@@ -1779,8 +1790,7 @@ name|bt_ptr
 operator|->
 name|bt_cyl
 operator|!=
-operator|-
-literal|1
+name|BAD144END
 condition|;
 name|bt_ptr
 operator|++

@@ -4011,10 +4011,11 @@ return|;
 block|}
 name|tmp
 operator|=
-operator|&
 operator|(
 name|long
+operator|*
 operator|)
+operator|&
 name|REG
 argument_list|(
 name|rm
