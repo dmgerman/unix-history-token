@@ -20,30 +20,8 @@ comment|/*  * Various 'tests in progress' and configuration parameters.  */
 end_comment
 
 begin_comment
-comment|/*  * Control the "giant lock" pushdown by logical steps.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PUSHDOWN_LEVEL_1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PUSHDOWN_LEVEL_2
-end_define
-
-begin_comment
 comment|/*  * Put FAST_INTR() ISRs at an APIC priority above the regular INTs.  * Allow the mp_lock() routines to handle FAST interrupts while spinning.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PUSHDOWN_LEVEL_1
-end_ifdef
 
 begin_define
 define|#
@@ -51,40 +29,14 @@ directive|define
 name|FAST_HI
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * These defines enable critical region locking of areas that were  * protected via cli/sti in the UP kernel.  *  * COMLOCK protects the sio/cy drivers.  * known to be incomplete:  *	joystick lkm  *	?  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PUSHDOWN_LEVEL_1
-end_ifdef
 
 begin_define
 define|#
 directive|define
 name|USE_COMLOCK
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Portions of the old TEST_LOPRIO code, back from the grave!  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GRAB_LOPRIO
 end_define
 
 begin_comment
@@ -95,16 +47,6 @@ begin_define
 define|#
 directive|define
 name|CPUSTOP_ON_DDBBREAK
-end_define
-
-begin_comment
-comment|/*  * Bracket code/comments relevant to the current 'giant lock' model.  * Everything is now the 'giant lock' model, but we will use this as  * we start to "push down" the lock.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GIANT_LOCK
 end_define
 
 begin_ifdef
