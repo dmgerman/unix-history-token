@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)err.c	5.2 (Berkeley) %G%"
+literal|"@(#)err.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,10 +209,6 @@ name|errspl
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Reset the state of the input. 	 * This buffered seek to end of file will also 	 * clear the while/foreach stack. 	 */
-name|btoeof
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Go away if -e or we are a child shell 	 */
 if|if
 condition|(
@@ -224,6 +220,10 @@ name|exit
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Reset the state of the input. 	 * This buffered seek to end of file will also 	 * clear the while/foreach stack. 	 */
+name|btoeof
+argument_list|()
 expr_stmt|;
 name|setq
 argument_list|(
