@@ -2497,7 +2497,7 @@ name|len
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Usage: send %s<value|option>\n"
+literal|"usage: send %s<value|option>\n"
 argument_list|,
 name|cmd
 argument_list|)

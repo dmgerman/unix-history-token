@@ -146,23 +146,6 @@ end_define
 begin_if
 if|#
 directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|FORWARD
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|defined
 argument_list|(
 name|IPSEC
@@ -243,7 +226,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s %s%s%s%s\n"
+literal|"usage: %s %s%s%s%s\n"
 argument_list|,
 name|prompt
 argument_list|,

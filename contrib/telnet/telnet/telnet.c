@@ -1098,7 +1098,7 @@ argument_list|(
 name|modenegotiated
 argument_list|)
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|TELOPT_STATUS
 case|:
@@ -1293,7 +1293,7 @@ operator|!
 name|kludgelinemode
 condition|)
 break|break;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 endif|#
 directive|endif
 case|case
@@ -5886,14 +5886,14 @@ operator|=
 name|OLD_ENV_VALUE
 expr_stmt|;
 block|}
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 endif|#
 directive|endif
 case|case
 name|OLD_ENV_VALUE
 case|:
 comment|/* 				 * Although OLD_ENV_VALUE is not legal, we will 				 * still recognize it, just in case it is an 				 * old server that has VAR& VALUE mixed up... 				 */
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 else|#
 directive|else
 case|case
@@ -5939,7 +5939,7 @@ case|:
 name|i
 operator|++
 expr_stmt|;
-comment|/*FALL THROUGH*/
+comment|/*FALLTHROUGH*/
 default|default:
 if|if
 condition|(
@@ -6866,7 +6866,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* Else, fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|TS_DATA
 case|:
