@@ -1209,12 +1209,21 @@ name|negate
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|savecheckkwd
+init|=
+name|checkkwd
+decl_stmt|;
 name|TRACE
 argument_list|(
 operator|(
 literal|"pipeline: entered\n"
 operator|)
 argument_list|)
+expr_stmt|;
+name|checkkwd
+operator|=
+literal|2
 expr_stmt|;
 while|while
 condition|(
@@ -1239,6 +1248,10 @@ expr_stmt|;
 block|}
 name|tokpushback
 operator|++
+expr_stmt|;
+name|checkkwd
+operator|=
+name|savecheckkwd
 expr_stmt|;
 name|n1
 operator|=
