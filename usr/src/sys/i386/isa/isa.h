@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)isa.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)isa.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * AT bus specific definitions.  */
+comment|/*  * ISA Bus conventions  */
 end_comment
 
 begin_ifndef
@@ -13,82 +13,6 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_define
-define|#
-directive|define
-name|Rd
-parameter_list|(
-name|s
-parameter_list|)
-value|({u_char rtn; u_short ioa; \ 	ioa = (s); \ 	asm volatile ("movw %1,%%dx; nop ; in %%dx,%%al ; nop ; movb %%al,%0" \ 		: "=g" (rtn) \ 		: "g" (ioa) \ 		: "ax", "dx"); \ 	rtn; \ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|Wr
-parameter_list|(
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|({u_char val; u_short ioa; \ 	ioa = (s); \ 	val = (n); \ 	asm volatile ("movb %1,%%al; movw %0,%%dx; nop; out %%al,%%dx ; nop" \ 		:
-comment|/* nothing returned */
-value|\ 		: "g" (ioa), "g" (val) \ 		: "ax", "dx"); \ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|rdw
-parameter_list|(
-name|s
-parameter_list|)
-value|({u_short rtn; u_short ioa; \ 	ioa = (s); \ 	asm volatile ("movw %1,%%dx; nop ; in %%dx,%%ax ; nop ; movw %%ax,%0" \ 		: "=g" (rtn) \ 		: "g" (ioa) \ 		: "ax", "dx"); \ 	rtn; \ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|wrw
-parameter_list|(
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|({u_short val; u_short ioa; \ 	ioa = (s); \ 	val = (n); \ 	asm volatile ("movw %1,%%ax; movw %0,%%dx; nop;  out %%ax,%%dx; nop" \ 		:
-comment|/* nothing returned */
-value|\ 		: "g" (ioa), "g" (val) \ 		: "ax", "dx"); \ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|Outsw
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|,
-name|n
-parameter_list|)
-value|({short *addr; u_short ioa; int cnt,rtn; \ 	ioa = (s); \ 	addr = (a); \ 	cnt = (n); \ 	asm volatile ("movw %1,%%dx; movl %2,%%esi; movl %3,%%ecx; cld; nop; .byte 0x66,0xf2,0x6f; nop ; movl %%esi,%0" \ 		: "=g" (rtn) \ 		: "g" (ioa), "g" (addr), "g" (cnt) \ 		: "si", "dx", "cx"); \ 	rtn; \ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|Insw
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|,
-name|n
-parameter_list|)
-value|({short  *addr; u_short ioa; int cnt,rtn; \ 	ioa = (s); \ 	addr = (a); \ 	cnt = (n); \ 	asm volatile ("movw %1,%%dx; movl %2,%%edi; movl %3,%%ecx; cld; nop; .byte 0x66,0xf2,0x6d; nop ; movl %%edi,%0" \ 		: "=g" (rtn) \ 		: "g" (ioa), "g" (addr), "g" (cnt)  \ 		: "di", "dx", "cx"); \ 	rtn; \ })
-end_define
-
 begin_function_decl
 name|unsigned
 name|char
@@ -96,6 +20,10 @@ name|inb
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_extern
 extern|extern outb(
@@ -111,26 +39,158 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Input / Output Port Assignments  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IO_BEGIN
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|IO_KBD
-value|0x60
+name|IO_ISABEGIN
+value|0x000
 end_define
 
 begin_comment
-comment|/* keyboard */
+comment|/* 0x000 - Beginning of I/O Registers */
+end_comment
+
+begin_comment
+comment|/* CPU Board */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IO_WD0
-value|0x1f0
+name|IO_DMA0
+value|0x000
 end_define
 
 begin_comment
-comment|/* primary base i/o address */
+comment|/* 8237A DMA Controller #1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_ICU0
+value|0x020
+end_define
+
+begin_comment
+comment|/* 8259A Interrupt Controller #1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_TIMER0
+value|0x040
+end_define
+
+begin_comment
+comment|/* 8252 Timer #1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_TIMER1
+value|0x048
+end_define
+
+begin_comment
+comment|/* 8252 Timer #2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_KBD
+value|0x060
+end_define
+
+begin_comment
+comment|/* 8042 Keyboard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_RTC
+value|0x070
+end_define
+
+begin_comment
+comment|/* RTC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_NMI
+value|IO_RTC
+end_define
+
+begin_comment
+comment|/* NMI Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_DMAPG
+value|0x080
+end_define
+
+begin_comment
+comment|/* DMA Page Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_ICU1
+value|0x0A0
+end_define
+
+begin_comment
+comment|/* 8259A Interrupt Controller #2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_DMA1
+value|0x0C0
+end_define
+
+begin_comment
+comment|/* 8237A DMA Controller #2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_NPX
+value|0x0F0
+end_define
+
+begin_comment
+comment|/* Numeric Coprocessor */
+end_comment
+
+begin_comment
+comment|/* Cards */
+end_comment
+
+begin_comment
+comment|/* 0x100 - 0x16F Open */
 end_comment
 
 begin_define
@@ -141,29 +201,152 @@ value|0x170
 end_define
 
 begin_comment
-comment|/* secondary base i/o address */
+comment|/* Secondary Fixed Disk Controller */
+end_comment
+
+begin_comment
+comment|/* 0x178 - 0x1EF Open */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IO_FD0
-value|0x3f2
+name|IO_WD0
+value|0x1f0
 end_define
 
 begin_comment
-comment|/* primary base i/o address */
+comment|/* Primary Fixed Disk Controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_GAME
+value|0x200
+end_define
+
+begin_comment
+comment|/* Game Controller */
+end_comment
+
+begin_comment
+comment|/* 0x208 - 0x277 Open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_LPT1
+value|0x278
+end_define
+
+begin_comment
+comment|/* Parallel Port #2 */
+end_comment
+
+begin_comment
+comment|/* 0x280 - 0x2F7 Open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_COM1
+value|0x2f8
+end_define
+
+begin_comment
+comment|/* COM2 i/o address */
+end_comment
+
+begin_comment
+comment|/* 0x300 - 0x36F Open */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IO_FD1
-value|0x372
+value|0x370
 end_define
 
 begin_comment
 comment|/* secondary base i/o address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_LPT0
+value|0x378
+end_define
+
+begin_comment
+comment|/* Parallel Port #1 */
+end_comment
+
+begin_comment
+comment|/* 0x380 - 0x3AF Open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_MDA
+value|0x3B0
+end_define
+
+begin_comment
+comment|/* Monochome Adapter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_LPT2
+value|0x3BC
+end_define
+
+begin_comment
+comment|/* Monochome Adapter Printer Port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_VGA
+value|0x3C0
+end_define
+
+begin_comment
+comment|/* E/VGA Ports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_CGA
+value|0x3D0
+end_define
+
+begin_comment
+comment|/* CGA Ports */
+end_comment
+
+begin_comment
+comment|/* 0x3E0 - 0x3EF Open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_FD0
+value|0x3f0
+end_define
+
+begin_comment
+comment|/* primary base i/o address */
 end_comment
 
 begin_define
@@ -180,12 +363,142 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_COM1
-value|0x2f8
+name|IO_ISAEND
+value|0x3FF
 end_define
 
 begin_comment
-comment|/* COM2 i/o address */
+comment|/* - 0x3FF End of I/O Registers */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|IO_ISABEGIN
+end_endif
+
+begin_comment
+comment|/*  * Input / Output Memory Physical Addresses  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IOM_BEGIN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IOM_BEGIN
+value|0xa0000
+end_define
+
+begin_comment
+comment|/* Start of I/O Memory "hole" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOM_END
+value|0xFFFFF
+end_define
+
+begin_comment
+comment|/* End of I/O Memory "hole" */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|IOM_BEGIN
+end_endif
+
+begin_comment
+comment|/*  * RAM Physical Address Space (ignoring the above mentioned "hole")  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RAM_BEGIN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RAM_BEGIN
+value|0x000000
+end_define
+
+begin_comment
+comment|/* Start of RAM Memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOM_END
+value|0xFFFFFF
+end_define
+
+begin_comment
+comment|/* End of RAM Memory */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|IOM_BEGIN
+end_endif
+
+begin_comment
+comment|/*  * Oddball Physical Memory Addresses  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMPAQ_RAMRELOC
+value|0x80c00000
+end_define
+
+begin_comment
+comment|/* Compaq RAM relocation/diag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMPAQ_RAMSETUP
+value|0x80c00002
+end_define
+
+begin_comment
+comment|/* Compaq RAM setup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WEITEK_FPU
+value|0xC0000000
+end_define
+
+begin_comment
+comment|/* WTL 2167 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CYRIX_EMC
+value|0xC0000000
+end_define
+
+begin_comment
+comment|/* Cyrix EMC */
 end_comment
 
 end_unit
