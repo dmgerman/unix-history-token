@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<alias.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"command.h"
 end_include
 
@@ -63,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"alias.h"
 end_include
 
 begin_function_decl
