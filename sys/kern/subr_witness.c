@@ -3794,6 +3794,8 @@ goto|;
 if|if
 condition|(
 name|cold
+operator|||
+name|panicstr
 condition|)
 goto|goto
 name|out
