@@ -1160,7 +1160,7 @@ name|td
 operator|->
 name|td_kstack
 operator|+
-name|td2
+name|td
 operator|->
 name|td_kstack_pages
 operator|*
