@@ -15,14 +15,6 @@ directive|include
 file|"dgm.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NDGM
-operator|>
-literal|0
-end_if
-
 begin_comment
 comment|/* Helg: i.e.25 times per sec board will be polled */
 end_comment
@@ -11009,15 +11001,6 @@ name|TS_CAN_BYPASS_L_RINT
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NDGM> 0 */
-end_comment
 
 end_unit
 
