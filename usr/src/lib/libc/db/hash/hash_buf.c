@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_buf.c	5.9 (Berkeley) %G%"
+literal|"@(#)hash_buf.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -547,6 +547,12 @@ operator|(
 name|NULL
 operator|)
 return|;
+if|if
+condition|(
+name|hashp
+operator|->
+name|nbufs
+condition|)
 name|hashp
 operator|->
 name|nbufs
