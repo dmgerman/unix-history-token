@@ -88,11 +88,9 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
+begin_comment
+comment|/*#ifdef notdef This is OK now because we have these headers available, and someone might actually want to use these. */
+end_comment
 
 begin_define
 define|#
@@ -130,10 +128,9 @@ directive|include
 file|<netiso/iso_var.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*#endif*/
+end_comment
 
 begin_include
 include|#
@@ -354,6 +351,28 @@ name|NEXTARG
 value|0xffffff
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IFF_ALTPHYS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IFF_ALTPHYS
+value|IFF_LLC0
+end_define
+
+begin_comment
+comment|/* grrr... */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|cmd
@@ -449,7 +468,7 @@ block|,
 block|{
 literal|"aui"
 block|,
-name|IFF_LLC0
+name|IFF_ALTPHYS
 block|,
 name|setifflags
 block|}
@@ -459,7 +478,7 @@ block|{
 literal|"bnc"
 block|,
 operator|-
-name|IFF_LLC0
+name|IFF_ALTPHYS
 block|,
 name|setifflags
 block|}
@@ -3404,26 +3423,20 @@ name|AF_INET
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|val
-operator|=
-name|inet_addr
+name|inet_aton
 argument_list|(
 name|s
-argument_list|)
-operator|)
-operator|!=
-operator|-
-literal|1
-condition|)
+argument_list|,
+operator|&
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
-operator|=
-name|val
-expr_stmt|;
+argument_list|)
+operator|!=
+literal|0
+condition|)
+empty_stmt|;
+comment|/* work done by inet_aton */
 elseif|else
 if|if
 condition|(
@@ -4031,7 +4044,7 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|notdef
+name|EON
 end_ifdef
 
 begin_expr_stmt
@@ -4081,7 +4094,7 @@ begin_block
 block|{
 ifdef|#
 directive|ifdef
-name|notdef
+name|EON
 name|fixnsel
 argument_list|(
 name|sisotab
