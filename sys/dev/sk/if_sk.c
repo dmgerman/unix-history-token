@@ -11,14 +11,6 @@ begin_comment
 comment|/*  * Copyright (c) 2003 Nathan L. Binkert<binkertn@umich.edu>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
-begin_comment
-comment|/*  * SysKonnect SK-NET gigabit ethernet driver for FreeBSD. Supports  * the SK-984x series adapters, both single port and dual port.  * References:  * 	The XaQti XMAC II datasheet,  *  http://www.freebsd.org/~wpaul/SysKonnect/xmacii_datasheet_rev_c_9-29.pdf  *	The SysKonnect GEnesis manual, http://www.syskonnect.com  *  * Note: XaQti has been aquired by Vitesse, and Vitesse does not have the  * XMAC II datasheet online. I have put my copy at people.freebsd.org as a  * convenience to others until Vitesse corrects this problem:  *  * http://people.freebsd.org/~wpaul/SysKonnect/xmacii_datasheet_rev_c_9-29.pdf  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Department of Electrical Engineering  * Columbia University, New York City  */
-end_comment
-
-begin_comment
-comment|/*  * The SysKonnect gigabit ethernet adapters consist of two main  * components: the SysKonnect GEnesis controller chip and the XaQti Corp.  * XMAC II gigabit ethernet MAC. The XMAC provides all of the MAC  * components and a PHY while the GEnesis controller provides a PCI  * interface with DMA support. Each card may have between 512K and  * 2MB of SRAM on board depending on the configuration.  *  * The SysKonnect GEnesis controller can have either one or two XMAC  * chips connected to it, allowing single or dual port NIC configurations.  * SysKonnect has the distinction of being the only vendor on the market  * with a dual port gigabit ethernet NIC. The GEnesis provides dual FIFOs,  * dual DMA queues, packet/MAC/transmit arbiters and direct access to the  * XMAC registers. This driver takes advantage of these features to allow  * both XMACs to operate as independent interfaces.  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -32,6 +24,14 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * SysKonnect SK-NET gigabit ethernet driver for FreeBSD. Supports  * the SK-984x series adapters, both single port and dual port.  * References:  * 	The XaQti XMAC II datasheet,  *  http://www.freebsd.org/~wpaul/SysKonnect/xmacii_datasheet_rev_c_9-29.pdf  *	The SysKonnect GEnesis manual, http://www.syskonnect.com  *  * Note: XaQti has been aquired by Vitesse, and Vitesse does not have the  * XMAC II datasheet online. I have put my copy at people.freebsd.org as a  * convenience to others until Vitesse corrects this problem:  *  * http://people.freebsd.org/~wpaul/SysKonnect/xmacii_datasheet_rev_c_9-29.pdf  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Department of Electrical Engineering  * Columbia University, New York City  */
+end_comment
+
+begin_comment
+comment|/*  * The SysKonnect gigabit ethernet adapters consist of two main  * components: the SysKonnect GEnesis controller chip and the XaQti Corp.  * XMAC II gigabit ethernet MAC. The XMAC provides all of the MAC  * components and a PHY while the GEnesis controller provides a PCI  * interface with DMA support. Each card may have between 512K and  * 2MB of SRAM on board depending on the configuration.  *  * The SysKonnect GEnesis controller can have either one or two XMAC  * chips connected to it, allowing single or dual port NIC configurations.  * SysKonnect has the distinction of being the only vendor on the market  * with a dual port gigabit ethernet NIC. The GEnesis provides dual FIFOs,  * dual DMA queues, packet/MAC/transmit arbiters and direct access to the  * XMAC registers. This driver takes advantage of these features to allow  * both XMACs to operate as independent interfaces.  */
+end_comment
 
 begin_include
 include|#
