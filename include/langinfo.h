@@ -24,8 +24,32 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nl_types.h>
+file|<sys/_types.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NL_ITEM_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__nl_item
+name|nl_item
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_NL_ITEM_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -485,6 +509,16 @@ begin_comment
 comment|/* negative response expression */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+operator|<=
+literal|500
+end_if
+
 begin_define
 define|#
 directive|define
@@ -507,6 +541,11 @@ begin_comment
 comment|/* negative response for yes/no queries */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -518,6 +557,12 @@ begin_comment
 comment|/* currency symbol */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -528,6 +573,11 @@ end_define
 begin_comment
 comment|/* month/day order (local extension) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|__BEGIN_DECLS
