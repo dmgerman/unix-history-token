@@ -197,14 +197,7 @@ condition|(
 name|pwent
 operator|==
 name|NULL
-condition|)
-name|PAM_RETURN
-argument_list|(
-name|PAM_SERVICE_ERR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|opielookup
 argument_list|(
 operator|&
