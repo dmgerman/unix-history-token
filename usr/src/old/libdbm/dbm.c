@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbm.c	4.3 (Berkeley) %G%"
+literal|"@(#)dbm.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,7 +163,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot open database %s\n"
+literal|"dbm: %s: cannot open database\n"
 argument_list|,
 name|file
 argument_list|)
@@ -359,7 +359,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"items not in pairs\n"
+literal|"dbm: items not in pairs\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -699,7 +699,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"entry too big\n"
+literal|"dbm: entry too big\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -791,7 +791,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"split not paired\n"
+literal|"dbm: split not paired\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2314,7 +2314,7 @@ name|bad
 label|:
 name|printf
 argument_list|(
-literal|"bad delitem\n"
+literal|"dbm: bad delitem\n"
 argument_list|)
 expr_stmt|;
 name|abort
