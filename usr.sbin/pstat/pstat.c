@@ -329,7 +329,7 @@ directive|define
 name|SCONS
 value|NLMANDATORYEND + 1
 block|{
-literal|"_cons"
+literal|"_constty"
 block|}
 block|,
 define|#
