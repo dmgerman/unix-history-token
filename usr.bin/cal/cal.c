@@ -556,7 +556,7 @@ name|char
 modifier|*
 name|day_headings
 init|=
-literal|" S  M Tu  W Th  F  S"
+literal|"Su Mo Tu We Th Fr Sa"
 decl_stmt|;
 end_decl_stmt
 
@@ -565,7 +565,7 @@ name|char
 modifier|*
 name|j_day_headings
 init|=
-literal|"  S   M  Tu   W  Th   F   S"
+literal|" Su  Mo  Tu  We  Th  Fr  Sa"
 decl_stmt|;
 end_decl_stmt
 
