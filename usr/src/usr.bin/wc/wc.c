@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980, 1987 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wc.c	5.2 (Berkeley) %G%"
+literal|"@(#)wc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* wc line, word and char count */
@@ -88,45 +94,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ERR
-value|1
-end_define
-
-begin_comment
-comment|/* error exit */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NL
 value|012
 end_define
 
 begin_comment
 comment|/* newline char */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO
-value|0
-end_define
-
-begin_comment
-comment|/* no/false */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OK
-value|0
-end_define
-
-begin_comment
-comment|/* okay exit */
 end_comment
 
 begin_define
@@ -151,50 +124,27 @@ begin_comment
 comment|/* tab char */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|YES
-value|1
-end_define
-
-begin_comment
-comment|/* yes/true */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|long
 name|tlinect
 decl_stmt|,
-comment|/* total line count */
 name|twordct
 decl_stmt|,
-comment|/* total word count */
 name|tcharct
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* total character count */
-end_comment
-
 begin_decl_stmt
 specifier|static
-name|short
+name|int
 name|doline
 decl_stmt|,
-comment|/* if want line count */
 name|doword
 decl_stmt|,
-comment|/* if want word count */
 name|dochar
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* if want character count */
-end_comment
 
 begin_function
 name|main
@@ -213,12 +163,6 @@ name|argv
 decl_stmt|;
 block|{
 specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-comment|/* getopt arguments */
-specifier|extern
 name|int
 name|optind
 decl_stmt|;
@@ -226,7 +170,6 @@ specifier|register
 name|int
 name|ch
 decl_stmt|;
-comment|/* getopt character */
 comment|/* 	 * wc is unusual in that its flags are on by default, so, 	 * if you don't get any arguments, you have to turn them 	 * all on. 	 */
 if|if
 condition|(
@@ -283,7 +226,7 @@ literal|'l'
 case|:
 name|doline
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -291,7 +234,7 @@ literal|'w'
 case|:
 name|doword
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -299,7 +242,7 @@ literal|'c'
 case|:
 name|dochar
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -308,14 +251,14 @@ case|:
 default|default:
 name|fputs
 argument_list|(
-literal|"Usage: wc [-lwc] [files]\n"
+literal|"usage: wc [-lwc] [files]\n"
 argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERR
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -342,7 +285,7 @@ name|doword
 operator|=
 name|dochar
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 block|}
 comment|/* should print "stdin" as the file name, here */
@@ -403,7 +346,7 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-name|OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -502,7 +445,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -527,44 +470,35 @@ name|u_char
 modifier|*
 name|C
 decl_stmt|;
-comment|/* traveling pointer */
 specifier|register
 name|short
 name|gotsp
 decl_stmt|;
-comment|/* space toggle */
 specifier|register
 name|int
 name|len
 decl_stmt|;
-comment|/* length of read */
 specifier|register
 name|long
 name|linect
 decl_stmt|,
-comment|/* line count */
 name|wordct
 decl_stmt|,
-comment|/* word count */
 name|charct
 decl_stmt|;
-comment|/* character count */
 name|struct
 name|stat
 name|sbuf
 decl_stmt|;
-comment|/* stat buffer */
 name|int
 name|fd
 decl_stmt|;
-comment|/* file descriptor */
 name|u_char
 name|buf
 index|[
 name|MAXBSIZE
 index|]
 decl_stmt|;
-comment|/* read buffer */
 name|linect
 operator|=
 name|wordct
@@ -588,6 +522,8 @@ argument_list|(
 name|file
 argument_list|,
 name|O_RDONLY
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|<
@@ -601,7 +537,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERR
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -646,7 +582,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERR
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -738,7 +674,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERR
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -792,7 +728,7 @@ for|for
 control|(
 name|gotsp
 operator|=
-name|YES
+literal|1
 init|;
 name|len
 operator|=
@@ -822,7 +758,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERR
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -862,13 +798,13 @@ name|SPACE
 case|:
 name|gotsp
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 continue|continue;
 default|default:
 ifdef|#
 directive|ifdef
-name|NOT_DEFINED
+name|notdef
 comment|/* 					 * This line of code implements the 					 * original V7 wc algorithm, i.e. 					 * a non-printing character doesn't 					 * toggle the "word" count, so that 					 * "  ^D^F  " counts as 6 spaces, 					 * while "foo^D^Fbar" counts as 8 					 * characters. 					 * 					 * test order is important -- gotsp 					 * will normally be NO, so test it 					 * first 					 */
 if|if
 condition|(
@@ -887,7 +823,6 @@ condition|)
 block|{
 endif|#
 directive|endif
-endif|NOT_DEFINED
 comment|/* 					 * This line implements the manual 					 * page, i.e. a word is a "maximal 					 * string of characters delimited by 					 * spaces, tabs or newlines."  Notice 					 * nothing was said about a character 					 * being printing or non-printing. 					 */
 if|if
 condition|(
@@ -896,7 +831,7 @@ condition|)
 block|{
 name|gotsp
 operator|=
-name|NO
+literal|0
 expr_stmt|;
 operator|++
 name|wordct
