@@ -3917,6 +3917,8 @@ argument_list|,
 name|CREATE
 argument_list|,
 name|LOCKPARENT
+operator||
+name|SAVENAME
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
@@ -4367,6 +4369,8 @@ argument_list|,
 name|CREATE
 argument_list|,
 name|LOCKPARENT
+operator||
+name|SAVENAME
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
@@ -4824,6 +4828,8 @@ argument_list|,
 name|LOCKPARENT
 operator||
 name|NOOBJ
+operator||
+name|SAVENAME
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
@@ -5099,6 +5105,8 @@ argument_list|,
 name|LOCKPARENT
 operator||
 name|NOOBJ
+operator||
+name|SAVENAME
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
@@ -13511,6 +13519,8 @@ argument_list|,
 name|CREATE
 argument_list|,
 name|LOCKPARENT
+operator||
+name|SAVENAME
 argument_list|,
 name|segflg
 argument_list|,
