@@ -654,7 +654,7 @@ name|OID_AUTO
 argument_list|,
 name|start_mem
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pccbb_start_mem
@@ -698,7 +698,7 @@ name|OID_AUTO
 argument_list|,
 name|start_16_io
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pccbb_start_16_io
@@ -742,7 +742,7 @@ name|OID_AUTO
 argument_list|,
 name|start_32_io
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pccbb_start_32_io
@@ -782,7 +782,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|cbb_debug
