@@ -230,6 +230,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_AHA_39320_B_DELL
+value|0x8015900501681028ull
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_AHA_39320A
 value|0x8016900500409005ull
 end_define
@@ -541,6 +548,16 @@ name|ahd_aic7902_setup
 block|}
 block|,
 block|{
+name|ID_AHA_39320_B_DELL
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec (Dell OEM) 39320 Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7902_setup
+block|}
+block|,
+block|{
 name|ID_AHA_39320A
 block|,
 name|ID_ALL_MASK
@@ -596,7 +613,7 @@ name|ID_AIC7901
 operator|&
 name|ID_9005_GENERIC_MASK
 block|,
-name|ID_DEV_VENDOR_MASK
+name|ID_9005_GENERIC_MASK
 block|,
 literal|"Adaptec AIC7901 Ultra320 SCSI adapter"
 block|,
