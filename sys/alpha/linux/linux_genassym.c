@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: linux_genassym.c,v 1.5 1997/07/20 16:05:56 bde Exp $ */
+comment|/* $Id: linux_genassym.c,v 1.6 1997/08/25 23:36:23 bde Exp $ */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -28,6 +22,22 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|printf
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
