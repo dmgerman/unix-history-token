@@ -6186,7 +6186,6 @@ name|delta
 operator|=
 operator|(
 operator|(
-operator|(
 literal|0x00FFFFFF
 operator|-
 name|start
@@ -6198,7 +6197,6 @@ literal|1
 operator|)
 operator|&
 literal|0x00FFFFFF
-operator|)
 expr_stmt|;
 else|else
 name|delta
