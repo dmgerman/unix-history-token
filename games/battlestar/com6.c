@@ -299,13 +299,21 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * sigh -- this program thinks "time" is an int.  It's easier to not load  *<time.h> than try and fix it.  */
+comment|/*  * sigh -- this program thinks `clock' and `time' are ints.  It's easier  * to hack around this than to fix it properly.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|KERNEL
+name|clock
+value|not_our_clock
+end_define
+
+begin_define
+define|#
+directive|define
+name|time
+value|not_our_time
 end_define
 
 begin_include
@@ -317,7 +325,13 @@ end_include
 begin_undef
 undef|#
 directive|undef
-name|KERNEL
+name|clock
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|time
 end_undef
 
 begin_macro
