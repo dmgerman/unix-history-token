@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.29 1997/09/21 21:42:18 gibbs Exp $ */
+comment|/* $Id: matcd.c,v 1.30 1997/11/07 08:52:48 phk Exp $ */
 end_comment
 
 begin_comment
@@ -7932,9 +7932,7 @@ name|addr
 operator|=
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|mbx
 operator|->

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.32 1997/07/20 14:10:10 bde Exp $ */
+comment|/* $Id: scd.c,v 1.33 1997/09/21 21:41:32 gibbs Exp $ */
 end_comment
 
 begin_comment
@@ -4983,9 +4983,7 @@ name|addr
 operator|=
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|mbx
 operator|->

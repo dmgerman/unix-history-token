@@ -3375,9 +3375,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 expr_stmt|;
 name|ctlr
 operator|->
@@ -3702,9 +3700,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 expr_stmt|;
 for|for
 control|(
@@ -3828,9 +3824,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 expr_stmt|;
 for|for
 control|(
@@ -4039,9 +4033,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 expr_stmt|;
 for|for
 control|(
@@ -4164,9 +4156,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 expr_stmt|;
 for|for
 control|(

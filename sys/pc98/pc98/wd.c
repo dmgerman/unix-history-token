@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.35 1997/11/04 12:58:48 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.36 1997/11/07 12:54:01 kato Exp $  */
 end_comment
 
 begin_comment
@@ -3932,7 +3932,7 @@ argument|{ 			if (du->dk_flags& DKFL_SINGLE) { 				command = (bp->b_flags& B_REA
 literal|1
 argument|; 				du->dk_currentiosize =
 literal|1
-argument|; 			} else { 				if((du->dk_flags& DKFL_USEDMA)&& 				   wddma[du->dk_interface].wdd_dmaverify(du->dk_dmacookie, 				   	(void *)((int)bp->b_un.b_addr +  					     du->dk_skip * DEV_BSIZE), 					du->dk_bc, 					bp->b_flags& B_READ)) { 					du->dk_flags |= DKFL_DMA; 					if( bp->b_flags& B_READ) 						command = WDCC_READ_DMA; 					else 						command = WDCC_WRITE_DMA; 					du->dk_currentiosize = count1; 				} else if( (count1>
+argument|; 			} else { 				if((du->dk_flags& DKFL_USEDMA)&& 				   wddma[du->dk_interface].wdd_dmaverify(du->dk_dmacookie, 				   	(void *)((int)bp->b_data +  					     du->dk_skip * DEV_BSIZE), 					du->dk_bc, 					bp->b_flags& B_READ)) { 					du->dk_flags |= DKFL_DMA; 					if( bp->b_flags& B_READ) 						command = WDCC_READ_DMA; 					else 						command = WDCC_WRITE_DMA; 					du->dk_currentiosize = count1; 				} else if( (count1>
 literal|1
 argument|)&& (du->dk_multi>
 literal|1
@@ -3952,7 +3952,7 @@ argument|); 				wdunwedge(du); 			} 		} 		if(du->dk_dkunit>=
 literal|0
 argument|) { 			dk_busy |=
 literal|1
-argument|<< du->dk_dkunit; 		}  		if ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA) { 			wddma[du->dk_interface].wdd_dmaprep(du->dk_dmacookie, 					   (void *)((int)bp->b_un.b_addr +  						    du->dk_skip * DEV_BSIZE), 					   du->dk_bc, 					   bp->b_flags& B_READ); 		} 		while (wdcommand(du, cylin, head, sector, count1, command) 		       !=
+argument|<< du->dk_dkunit; 		}  		if ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA) { 			wddma[du->dk_interface].wdd_dmaprep(du->dk_dmacookie, 					   (void *)((int)bp->b_data +  						    du->dk_skip * DEV_BSIZE), 					   du->dk_bc, 					   bp->b_flags& B_READ); 		} 		while (wdcommand(du, cylin, head, sector, count1, command) 		       !=
 literal|0
 argument|) { 			wderror(bp, du,
 literal|"wdstart: timeout waiting to give command"
@@ -3962,7 +3962,7 @@ directive|ifdef
 name|WDDEBUG
 argument|printf(
 literal|"cylin %ld head %ld sector %ld addr %x sts "
-argument|, 		       cylin, head, sector, 		       (int)bp->b_un.b_addr + du->dk_skip * DEV_BSIZE); 		if (old_epson_note) 			printf(
+argument|, 		       cylin, head, sector, 		       (int)bp->b_data + du->dk_skip * DEV_BSIZE); 		if (old_epson_note) 			printf(
 literal|"%x\n"
 argument|, epson_inb(du->dk_altport)); 		else 			printf(
 literal|"%x\n"
@@ -3995,7 +3995,7 @@ argument|);
 comment|/* 		 * XXX what do we do now?  If we've just issued the command, 		 * then we can treat this failure the same as a command 		 * failure.  But if we are continuing a multi-sector write, 		 * the command was issued ages ago, so we can't simply 		 * restart it. 		 * 		 * XXX we waste a lot of time unnecessarily translating block 		 * numbers to cylin/head/sector for continued i/o's. 		 */
 argument|}  	count =
 literal|1
-argument|; 	if( du->dk_flags& DKFL_MULTI) { 		count = howmany(du->dk_bc, DEV_BSIZE); 		if( count> du->dk_multi) 			count = du->dk_multi; 		if( du->dk_currentiosize> count) 			du->dk_currentiosize = count; 	} 	if (!old_epson_note) { 		if (du->dk_flags& DKFL_32BIT) 			outsl(du->dk_port + wd_data, 			      (void *)((int)bp->b_un.b_addr 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(long)); 		else 			outsw(du->dk_port + wd_data, 			      (void *)((int)bp->b_un.b_addr 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(short)); 		} 	else 		epson_outsw(du->dk_port + wd_data, 		      (void *)((int)bp->b_un.b_addr + du->dk_skip * DEV_BSIZE), 		      (count * DEV_BSIZE) / sizeof(short)); 		 	du->dk_bc -= DEV_BSIZE * count; 	if (du->dk_dkunit>=
+argument|; 	if( du->dk_flags& DKFL_MULTI) { 		count = howmany(du->dk_bc, DEV_BSIZE); 		if( count> du->dk_multi) 			count = du->dk_multi; 		if( du->dk_currentiosize> count) 			du->dk_currentiosize = count; 	} 	if (!old_epson_note) { 		if (du->dk_flags& DKFL_32BIT) 			outsl(du->dk_port + wd_data, 			      (void *)((int)bp->b_data 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(long)); 		else 			outsw(du->dk_port + wd_data, 			      (void *)((int)bp->b_data 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(short)); 		} 	else 		epson_outsw(du->dk_port + wd_data, 		      (void *)((int)bp->b_data + du->dk_skip * DEV_BSIZE), 		      (count * DEV_BSIZE) / sizeof(short)); 		 	du->dk_bc -= DEV_BSIZE * count; 	if (du->dk_dkunit>=
 literal|0
 argument|) {
 comment|/* 		 * `wd's are blocks of 32 16-bit `word's according to 		 * iostat.  dk_wds[] is the one disk i/o statistic that 		 * we can record correctly. 		 * XXX perhaps we shouldn't record words for failed 		 * transfers. 		 */
@@ -4141,7 +4141,7 @@ argument|) { 			wderror(bp, du,
 literal|"wdintr: read error detected late"
 argument|); 			goto oops; 		}
 comment|/* suck in data */
-argument|if( du->dk_flags& DKFL_32BIT) 			insl(du->dk_port + wd_data, 			     (void *)((int)bp->b_un.b_addr + du->dk_skip * DEV_BSIZE), 					chk / sizeof(long)); 		else 			insw(du->dk_port + wd_data, 			     (void *)((int)bp->b_un.b_addr + du->dk_skip * DEV_BSIZE), 					chk / sizeof(short)); 		du->dk_bc -= chk;
+argument|if( du->dk_flags& DKFL_32BIT) 			insl(du->dk_port + wd_data, 			     (void *)((int)bp->b_data + du->dk_skip * DEV_BSIZE), 					chk / sizeof(long)); 		else 			insw(du->dk_port + wd_data, 			     (void *)((int)bp->b_data + du->dk_skip * DEV_BSIZE), 					chk / sizeof(short)); 		du->dk_bc -= chk;
 comment|/* XXX for obsolete fractional sector reads. */
 argument|while (chk< multisize) { 			insw(du->dk_port + wd_data,&dummy,
 literal|1
