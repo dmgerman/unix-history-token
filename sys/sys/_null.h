@@ -9,6 +9,24 @@ directive|ifndef
 name|NULL
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|(void *)0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_if
 if|#
 directive|if
@@ -46,6 +64,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
