@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pathnames.h"
 end_include
 
@@ -2251,9 +2245,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|time_t
+call|)
+argument_list|(
 name|this_time
 operator|+
 name|delta
+argument_list|)
 operator|<
 name|next_time
 condition|)
