@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.96		%G%"
+literal|"@(#)sendmail.h	3.97		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2330,24 +2330,24 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|XcriptFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* template for Transcript [conf.c] */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
 name|ConfFile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* location of configuration file [conf.c] */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|FreezeFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* location of frozen memory image [conf.c] */
 end_comment
 
 begin_decl_stmt

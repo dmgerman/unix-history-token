@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.62
+literal|3.63
 operator|%
 name|G
 operator|%
@@ -216,14 +216,14 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|XcriptFile
+name|FreezeFile
 init|=
-literal|"/tmp/mailxXXXXXX"
+literal|"/usr/lib/sendmail.fc"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* template for transcript */
+comment|/* frozen version of above */
 end_comment
 
 begin_comment
