@@ -9187,21 +9187,7 @@ literal|"keymap=pt.iso"
 block|}
 block|,
 block|{
-literal|"Russia CP866"
-block|,
-literal|"Russian CP866 keymap"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuSetKmapVariable
-block|,
-name|NULL
-block|,
-literal|"keymap=ru.cp866"
-block|}
-block|,
-block|{
-literal|" Russia KOI8-R"
+literal|"Russia KOI8-R"
 block|,
 literal|"Russian KOI8-R keymap"
 block|,
@@ -9979,7 +9965,7 @@ block|,
 block|{
 literal|"5 IBM 866"
 block|,
-literal|"Russian, IBM encoding"
+literal|"Russian, IBM encoding (use with screenmap)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9987,7 +9973,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"font8x8=cp866-8x8,font8x14=cp866-8x14,font8x16=cp866-8x16"
+literal|"font8x8=cp866-8x8,font8x14=cp866-8x14,font8x16=cp866b-8x16"
 block|}
 block|,
 block|{
@@ -10030,20 +10016,6 @@ block|,
 name|NULL
 block|,
 literal|"font8x8=iso02-8x8,font8x14=iso02-8x14,font8x16=iso02-8x16"
-block|}
-block|,
-block|{
-literal|"9 KOI8-R"
-block|,
-literal|"Russian, KOI8-R encoding"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"font8x8=koi8-r-8x8,font8x14=koi8-r-8x14,font8x16=koi8-r-8x16"
 block|}
 block|,
 block|{
