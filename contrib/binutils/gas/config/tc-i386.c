@@ -331,6 +331,7 @@ argument_list|(
 name|TE_I386AIX
 argument_list|)
 operator|||
+operator|(
 name|defined
 argument_list|(
 name|OBJ_ELF
@@ -339,6 +340,13 @@ operator|||
 name|defined
 argument_list|(
 name|OBJ_MAYBE_ELF
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TE_FreeBSD
 argument_list|)
 end_if
 
@@ -392,6 +400,7 @@ argument_list|(
 name|TE_I386AIX
 argument_list|)
 operator|||
+operator|(
 name|defined
 argument_list|(
 name|OBJ_ELF
@@ -400,6 +409,13 @@ operator|||
 name|defined
 argument_list|(
 name|OBJ_MAYBE_ELF
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TE_FreeBSD
 argument_list|)
 end_if
 
