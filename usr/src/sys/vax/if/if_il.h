@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.h	6.1	83/07/29	*/
+comment|/*	if_il.h	6.2	84/03/22	*/
 end_comment
 
 begin_comment
@@ -22,18 +22,14 @@ name|u_short
 name|ilr_length
 decl_stmt|;
 comment|/* Frame Length */
-name|u_char
+name|struct
+name|ether_addr
 name|ilr_dhost
-index|[
-literal|6
-index|]
 decl_stmt|;
 comment|/* Destination Host */
-name|u_char
+name|struct
+name|ether_addr
 name|ilr_shost
-index|[
-literal|6
-index|]
 decl_stmt|;
 comment|/* Source Host */
 name|u_short
@@ -59,11 +55,9 @@ name|u_short
 name|ils_length
 decl_stmt|;
 comment|/* Length (should be 62) */
-name|u_char
+name|struct
+name|ether_addr
 name|ils_addr
-index|[
-literal|6
-index|]
 decl_stmt|;
 comment|/* Ethernet Address */
 name|u_short
