@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.36 1996/01/25 07:21:33 phk Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.37 1996/03/28 14:28:51 scrappy Exp $  */
 end_comment
 
 begin_ifndef
@@ -223,16 +223,6 @@ begin_comment
 comment|/* turn on poller to generate buffer empty interrupt */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|FASTPOLL
-end_undef
-
-begin_comment
-comment|/* turn on 100Hz poller, (XXX: NOTYET!) */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -249,6 +239,28 @@ directive|define
 name|SI_I_HIGH_WATER
 value|(TTYHOG - 2 * SI_BUFFERSIZE)
 end_define
+
+begin_define
+define|#
+directive|define
+name|INT_COUNT
+value|25000
+end_define
+
+begin_comment
+comment|/* max of 125 ints per second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RXINT_COUNT
+value|1
+end_define
+
+begin_comment
+comment|/* one rxint per 10 milliseconds */
+end_comment
 
 begin_enum
 enum|enum
@@ -1161,12 +1173,43 @@ directive|ifdef
 name|POLL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|POLL_INTERVAL
-value|(hz/2)
-end_define
+begin_decl_stmt
+specifier|static
+name|int
+name|si_pollrate
+init|=
+operator|(
+name|hz
+operator|/
+literal|10
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 10 per second, in addition to irq */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|si_pollrate
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|si_pollrate
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2910,14 +2953,14 @@ name|regp
 operator|->
 name|int_count
 operator|=
-literal|25000
+name|INT_COUNT
 expr_stmt|;
 comment|/* rx intr max of 25 timer per second */
 name|regp
 operator|->
 name|rx_int_count
 operator|=
-literal|4
+name|RXINT_COUNT
 expr_stmt|;
 name|regp
 operator|->
@@ -3985,7 +4028,7 @@ name|caddr_t
 operator|)
 literal|0L
 argument_list|,
-name|POLL_INTERVAL
+name|si_pollrate
 argument_list|)
 expr_stmt|;
 name|init_finished
@@ -8521,7 +8564,7 @@ name|caddr_t
 operator|)
 literal|0L
 argument_list|,
-name|POLL_INTERVAL
+name|si_pollrate
 argument_list|)
 expr_stmt|;
 block|}
