@@ -789,7 +789,7 @@ operator|=
 operator|&
 name|tc
 operator|->
-name|offset_sec
+name|tc_offset_sec
 expr_stmt|;
 name|time_maxerror
 operator|+=
@@ -1002,7 +1002,7 @@ operator|)
 expr_stmt|;
 name|tc
 operator|->
-name|adjustment
+name|tc_adjustment
 operator|=
 name|time_adj
 expr_stmt|;
