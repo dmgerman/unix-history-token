@@ -584,9 +584,8 @@ comment|/* process 0 */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
-name|nextpid
+name|lastpid
 init|=
 literal|0
 decl_stmt|;
@@ -604,7 +603,7 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|nextpid
+name|lastpid
 argument_list|,
 literal|0
 argument_list|,
@@ -614,7 +613,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Random component to nextpid generation.  We mix in a random factor to make  * it a little harder to predict.  We sanity check the modulus value to avoid  * doing it in critical paths.  Don't let it be too small or we pointlessly  * waste randomness entropy, and don't let it be impossibly large.  Using a  * modulus that is too big causes a LOT more process table scans and slows  * down fork processing as the pidchecked caching is defeated.  */
+comment|/*  * Random component to lastpid generation.  We mix in a random factor to make  * it a little harder to predict.  We sanity check the modulus value to avoid  * doing it in critical paths.  Don't let it be too small or we pointlessly  * waste randomness entropy, and don't let it be impossibly large.  Using a  * modulus that is too big causes a LOT more process table scans and slows  * down fork processing as the pidchecked caching is defeated.  */
 end_comment
 
 begin_decl_stmt
@@ -1131,7 +1130,7 @@ name|p_vmspace
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Find an unused process ID.  We remember a range of unused IDs 	 * ready to use (from nextpid+1 through pidchecked-1). 	 * 	 * If RFHIGHPID is set (used during system boot), do not allocate 	 * low-numbered pids. 	 */
+comment|/* 	 * Find an unused process ID.  We remember a range of unused IDs 	 * ready to use (from lastpid+1 through pidchecked-1). 	 * 	 * If RFHIGHPID is set (used during system boot), do not allocate 	 * low-numbered pids. 	 */
 name|sx_xlock
 argument_list|(
 operator|&
@@ -1140,7 +1139,7 @@ argument_list|)
 expr_stmt|;
 name|trypid
 operator|=
-name|nextpid
+name|lastpid
 operator|+
 literal|1
 expr_stmt|;
@@ -1387,7 +1386,7 @@ name|again
 goto|;
 block|}
 block|}
-comment|/* 	 * RFHIGHPID does not mess with the nextpid counter during boot. 	 */
+comment|/* 	 * RFHIGHPID does not mess with the lastpid counter during boot. 	 */
 if|if
 condition|(
 name|flags
@@ -1399,7 +1398,7 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
-name|nextpid
+name|lastpid
 operator|=
 name|trypid
 expr_stmt|;

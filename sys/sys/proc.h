@@ -1973,6 +1973,13 @@ name|proc_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nextpid
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * XXX macros for scheduler.  Shouldn't be here, but currently needed for  * bounding the dubious p_estcpu inheritance in wait1().  * INVERSE_ESTCPU_WEIGHT is only suitable for statclock() frequencies in  * the range 100-256 Hz (approximately).  */
 end_comment
