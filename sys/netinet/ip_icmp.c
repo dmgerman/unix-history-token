@@ -3672,7 +3672,7 @@ decl_stmt|;
 name|u_long
 name|t
 decl_stmt|;
-name|microtime
+name|getmicrotime
 argument_list|(
 operator|&
 name|atv
