@@ -291,7 +291,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate (or lookup) pager for a vnode.  * Handle is a vnode pointer.  */
+comment|/*  * Allocate (or lookup) pager for a vnode.  * Handle is a vnode pointer.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -320,8 +320,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Pageout to vnode, no can do yet. 	 */
 if|if
 condition|(
@@ -342,6 +340,12 @@ name|vnode
 operator|*
 operator|)
 name|handle
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Prevent race condition when allocating the object. This 	 * can happen with NFS vnodes since the nfsnode isn't locked. 	 */
 while|while
@@ -451,12 +455,6 @@ argument_list|)
 expr_stmt|;
 name|object
 operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|object
-operator|->
 name|un_pager
 operator|.
 name|vnp
@@ -477,11 +475,6 @@ name|v_object
 operator|=
 name|object
 expr_stmt|;
-name|vp
-operator|->
-name|v_usecount
-operator|++
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -490,12 +483,12 @@ operator|->
 name|ref_count
 operator|++
 expr_stmt|;
+block|}
 name|vp
 operator|->
 name|v_usecount
 operator|++
 expr_stmt|;
-block|}
 name|vp
 operator|->
 name|v_flag
@@ -525,6 +518,12 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|object
