@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	6.2	84/08/29	*/
+comment|/*	socket.h	6.3	84/09/01	*/
 end_comment
 
 begin_comment
@@ -201,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|SO_DONTUSELOOPBACK
-value|(~SO_LOOPBACK)
+value|(~SO_USELOOPBACK)
 end_define
 
 begin_define
