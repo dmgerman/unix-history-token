@@ -4262,9 +4262,9 @@ operator|=
 operator|(
 name|vcp
 operator|->
-name|vc_flags
+name|vc_hflags2
 operator|&
-name|SMBV_LONGNAMES
+name|SMB_FLAGS2_KNOWS_LONG_NAMES
 operator|)
 condition|?
 literal|255
