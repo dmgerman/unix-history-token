@@ -395,6 +395,17 @@ name|data
 operator|++
 expr_stmt|;
 block|}
+name|__syncicache
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|addr
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
