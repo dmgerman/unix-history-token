@@ -3245,8 +3245,6 @@ name|cd
 argument_list|,
 literal|"USER %s@%s"
 argument_list|,
-name|url
-operator|->
 name|user
 argument_list|,
 name|url
@@ -3267,8 +3265,6 @@ name|cd
 argument_list|,
 literal|"USER %s@%s@%d"
 argument_list|,
-name|url
-operator|->
 name|user
 argument_list|,
 name|url
@@ -3289,8 +3285,6 @@ name|cd
 argument_list|,
 literal|"USER %s"
 argument_list|,
-name|url
-operator|->
 name|user
 argument_list|)
 expr_stmt|;
