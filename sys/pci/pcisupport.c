@@ -6407,7 +6407,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|"Intel 824?? host to PCI bridge"
+literal|"Intel 82454KX/GX (Orion) host to PCI bridge"
 operator|)
 return|;
 case|case
