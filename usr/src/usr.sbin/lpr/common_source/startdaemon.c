@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startdaemon.c	8.1 (Berkeley) %G%"
+literal|"@(#)startdaemon.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,19 @@ literal|0
 operator|)
 return|;
 block|}
+name|memset
+argument_list|(
+operator|&
+name|un
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|un
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|un
 operator|.
 name|sun_family
