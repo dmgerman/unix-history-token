@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -75,62 +75,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|sigaddset
-parameter_list|(
-name|set
-parameter_list|,
-name|signo
-parameter_list|)
-value|(*(set) |= 1<< ((signo) - 1), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigdelset
-parameter_list|(
-name|set
-parameter_list|,
-name|signo
-parameter_list|)
-value|(*(set)&= ~(1<< ((signo) - 1)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigemptyset
-parameter_list|(
-name|set
-parameter_list|)
-value|(*(set) = 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigfillset
-parameter_list|(
-name|set
-parameter_list|)
-value|(*(set) = ~(sigset_t)0, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigismember
-parameter_list|(
-name|set
-parameter_list|,
-name|signo
-parameter_list|)
-value|((*(set)& (1<< ((signo) - 1))) != 0)
-end_define
 
 begin_decl_stmt
 name|__BEGIN_DECLS
@@ -465,6 +409,66 @@ end_comment
 begin_macro
 name|__END_DECLS
 end_macro
+
+begin_comment
+comment|/* List definitions after function declarations, or Reiser cpp gets upset. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sigaddset
+parameter_list|(
+name|set
+parameter_list|,
+name|signo
+parameter_list|)
+value|(*(set) |= 1<< ((signo) - 1), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigdelset
+parameter_list|(
+name|set
+parameter_list|,
+name|signo
+parameter_list|)
+value|(*(set)&= ~(1<< ((signo) - 1)), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigemptyset
+parameter_list|(
+name|set
+parameter_list|)
+value|(*(set) = 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigfillset
+parameter_list|(
+name|set
+parameter_list|)
+value|(*(set) = ~(sigset_t)0, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigismember
+parameter_list|(
+name|set
+parameter_list|,
+name|signo
+parameter_list|)
+value|((*(set)& (1<< ((signo) - 1))) != 0)
+end_define
 
 begin_endif
 endif|#
