@@ -1088,6 +1088,8 @@ operator|->
 name|flags
 operator||=
 name|ATA_USE_16BIT
+operator||
+name|ATA_USE_PC98GEOM
 expr_stmt|;
 name|ch
 operator|->
