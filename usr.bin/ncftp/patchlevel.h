@@ -1,10 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 name|v1
-literal|.9.2
+literal|.9.3
 operator|-
-name|January
-literal|20
+name|March
+literal|5
+operator|,
+literal|1995.
+name|Support
+end_expr_stmt
+
+begin_for
+for|for NetBSD and DELL added.  Linger works   with passive mode now.  v1.9.2 - January 20
 operator|,
 literal|1995.
 name|Another
@@ -24,7 +31,7 @@ name|into
 name|the
 name|interactive
 name|shell
-end_expr_stmt
+end_for
 
 begin_if
 if|if colon-mode fails.  v1.9.1 - January 1
