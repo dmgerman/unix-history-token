@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.101 (Berkeley) %G%"
+literal|"@(#)main.c	8.102 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3960,11 +3960,6 @@ operator|<
 literal|6
 condition|)
 block|{
-comment|/* need config support for group:; handling */
-name|ColonOkInAddr
-operator|=
-name|TRUE
-expr_stmt|;
 comment|/* heuristic tweaking of local mailer for back compat */
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.83 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.84 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2147,6 +2147,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+comment|/* 			**  Do heuristic tweaking for back compatibility. 			*/
 if|if
 condition|(
 name|ConfigLevel
@@ -2189,6 +2190,19 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ConfigLevel
+operator|>=
+literal|6
+condition|)
+block|{
+name|ColonOkInAddr
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+comment|/* 			**  Look for vendor code. 			*/
 if|if
 condition|(
 operator|*
