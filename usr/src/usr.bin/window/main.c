@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.6 83/08/25"
+literal|"@(#)main.c	3.7 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,11 @@ literal|0
 decl_stmt|;
 name|char
 name|dflag
+init|=
+literal|0
+decl_stmt|;
+name|char
+name|xflag
 init|=
 literal|0
 decl_stmt|;
@@ -197,6 +202,13 @@ name|debug
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'x'
+case|:
+name|xflag
+operator|++
+expr_stmt|;
+break|break;
 default|default:
 operator|(
 name|void
@@ -298,7 +310,6 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
 name|wwnewtty
 operator|.
 name|ww_tchars
@@ -311,6 +322,42 @@ name|ww_tchars
 operator|.
 name|t_quitc
 expr_stmt|;
+if|if
+condition|(
+name|xflag
+condition|)
+block|{
+name|wwnewtty
+operator|.
+name|ww_tchars
+operator|.
+name|t_stopc
+operator|=
+name|wwoldtty
+operator|.
+name|ww_tchars
+operator|.
+name|t_stopc
+expr_stmt|;
+name|wwnewtty
+operator|.
+name|ww_tchars
+operator|.
+name|t_startc
+operator|=
+name|wwoldtty
+operator|.
+name|ww_tchars
+operator|.
+name|t_startc
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|debug
+operator|||
+name|xflag
+condition|)
 operator|(
 name|void
 operator|)
@@ -322,7 +369,6 @@ operator|&
 name|wwnewtty
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
