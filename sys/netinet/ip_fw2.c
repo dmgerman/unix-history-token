@@ -2201,14 +2201,11 @@ argument_list|)
 argument_list|,
 literal|":%d"
 argument_list|,
-name|ntohs
-argument_list|(
 name|sa
 operator|->
 name|sa
 operator|.
 name|sin_port
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
