@@ -11794,7 +11794,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"handle_workitem_freeblocks: block count"
+literal|"handle_workitem_freeblocks: block count\n"
 argument_list|)
 expr_stmt|;
 if|if
