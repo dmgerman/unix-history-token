@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	5.7 (Berkeley) %G%"
+literal|"@(#)restore.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -710,7 +710,7 @@ operator|=
 name|LINK
 expr_stmt|;
 block|}
-comment|/* 	 * Check to see if the inode exists, and if one of its links 	 * corresponds to the name (if one was found). 	 */
+comment|/* 	 * Check to see if the inode exists. 	 */
 name|ip
 operator|=
 name|lookupino
@@ -724,45 +724,10 @@ name|ip
 operator|!=
 name|NIL
 condition|)
-block|{
 name|key
 operator||=
 name|INOFND
 expr_stmt|;
-for|for
-control|(
-name|ep
-operator|=
-name|ip
-operator|->
-name|e_links
-init|;
-name|ep
-operator|!=
-name|NIL
-condition|;
-name|ep
-operator|=
-name|ep
-operator|->
-name|e_links
-control|)
-block|{
-if|if
-condition|(
-name|ep
-operator|==
-name|np
-condition|)
-block|{
-name|ip
-operator|=
-name|ep
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
 comment|/* 	 * If both a name and an inode are found, but they do not 	 * correspond to the same file, then both the inode that has 	 * been found and the inode corresponding to the name that 	 * has been found need to be renamed. The current pathname 	 * is the new name for the inode that has been found. Since 	 * all files to be deleted have already been removed, the 	 * named file is either a now unneeded link, or it must live 	 * under a new name in this dump level. If it is a link, it 	 * can be removed. If it is not a link, it is given a 	 * temporary name in anticipation that it will be renamed 	 * when it is later found by inode number. 	 */
 if|if
 condition|(
