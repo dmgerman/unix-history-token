@@ -1916,11 +1916,13 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|libbuf
 argument_list|,
 name|ibcs2_emul_path
+argument_list|,
+name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 for|for

@@ -561,6 +561,9 @@ index|]
 operator|-
 name|buf
 expr_stmt|;
+if|if
+condition|(
+operator|(
 operator|*
 name|pbuf
 operator|=
@@ -572,7 +575,10 @@ name|sz
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+condition|)
 name|error
 operator|=
 name|copyout
@@ -584,6 +590,11 @@ name|pbuf
 argument_list|,
 name|sz
 argument_list|)
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|ENAMETOOLONG
 expr_stmt|;
 name|free
 argument_list|(

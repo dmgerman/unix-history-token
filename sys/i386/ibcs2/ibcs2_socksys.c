@@ -834,13 +834,32 @@ literal|'\0'
 expr_stmt|;
 block|}
 else|else
-name|strcat
+block|{
+if|if
+condition|(
+name|strlcat
 argument_list|(
 name|hname
 argument_list|,
 literal|"."
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hname
 argument_list|)
-expr_stmt|;
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|hname
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 comment|/* Set ptr to the end of the string so we can append to it */
 name|hlen
 operator|=
@@ -881,7 +900,7 @@ return|;
 comment|/* Append the ipdomain to the end */
 name|error
 operator|=
-name|copyin
+name|copyinstr
 argument_list|(
 operator|(
 name|caddr_t
@@ -895,6 +914,8 @@ argument_list|,
 name|uap
 operator|->
 name|len
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
