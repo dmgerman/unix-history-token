@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fmt.c	1.1 %G%"
+literal|"@(#)fmt.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -886,7 +886,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-literal|".:!"
+literal|".:!?"
 argument_list|)
 condition|)
 operator|*
