@@ -4,7 +4,7 @@ comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * 
 end_comment
 
 begin_comment
-comment|/*   * Use this file as ffs_softdep.c if you do not wish the real ffs_softdep.c  * to be included in your system. (e.g for legal reasons )  */
+comment|/*   * Use this file as ffs_softdep.c if you do not wish the real ffs_softdep.c  * to be included in your system. (e.g for legal reasons )  * The real files are in /usr/src/contrib/sys/softupdates.  * You must copy them here before you can use soft updates.  * Read the README for legal and technical information.  */
 end_comment
 
 begin_include
