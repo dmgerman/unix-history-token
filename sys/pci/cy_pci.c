@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cy_pci.c,v 1.9 1999/01/11 23:43:54 bde Exp $  */
+comment|/*  * Copyright (c) 1996, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cy_pci.c,v 1.10 1999/01/15 10:00:12 bde Exp $  */
 end_comment
 
 begin_comment
@@ -190,33 +190,20 @@ name|pcidi_t
 name|device_id
 decl_stmt|;
 block|{
+name|device_id
+operator|&=
+operator|~
+literal|0x00060000
+expr_stmt|;
 if|if
 condition|(
-operator|(
 name|device_id
-operator|&
-literal|0xffff
-operator|)
 operator|==
-name|CY_VENDORID_CYCLADES
-operator|&&
-operator|(
-operator|(
-name|device_id
-operator|>>
-literal|16
-operator|)
-operator|==
-name|CY_DEVICEID_CYCLOM_Y_1
+literal|0x0100120e
 operator|||
-operator|(
 name|device_id
-operator|>>
-literal|16
-operator|)
 operator|==
-name|CY_DEVICEID_CYCLOM_Y_2
-operator|)
+literal|0x0101120e
 condition|)
 return|return
 operator|(
@@ -224,7 +211,9 @@ literal|"Cyclades Cyclom-Y Serial Adapter"
 operator|)
 return|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -322,7 +311,7 @@ block|{
 comment|/* 		 * No ports found. Release resources and punt. 		 */
 name|printf
 argument_list|(
-literal|"cy%d: no ports found!"
+literal|"cy%d: no ports found!\n"
 argument_list|,
 name|unit
 argument_list|)
