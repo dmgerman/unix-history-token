@@ -117,7 +117,22 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dbg_dump_ino
+name|dbg_dump_csum_total
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|csum_total
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dbg_dump_ufs1_ino
 parameter_list|(
 name|struct
 name|fs
@@ -128,7 +143,26 @@ name|char
 modifier|*
 parameter_list|,
 name|struct
-name|dinode
+name|ufs1_dinode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dbg_dump_ufs2_ino
+parameter_list|(
+name|struct
+name|fs
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|ufs2_dinode
 modifier|*
 parameter_list|)
 function_decl|;
@@ -331,7 +365,7 @@ name|C
 parameter_list|,
 name|M
 parameter_list|)
-value|dbg_dump_ino((F),(C),(M))
+value|(F)->fs_magic == FS_UFS1_MAGIC \ 	? dbg_dump_ufs1_ino((F),(C),(struct ufs1_dinode *)(M)) \ 	: dbg_dump_ufs2_ino((F),(C),(struct ufs2_dinode *)(M))
 end_define
 
 begin_define
@@ -406,6 +440,12 @@ parameter_list|)
 value|dbg_dump_clsum((F),(C),(M))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOT_CURRENTLY
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -419,6 +459,11 @@ name|M
 parameter_list|)
 value|dbg_dump_sptbl((F),(C),(M))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

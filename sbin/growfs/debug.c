@@ -417,7 +417,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"sblkno        ufs_daddr_t       0x%08x\n"
+literal|"sblkno            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -428,7 +428,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"cblkno        ufs_daddr_t       0x%08x\n"
+literal|"cblkno            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -439,7 +439,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"iblkno        ufs_daddr_t       0x%08x\n"
+literal|"iblkno            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -450,7 +450,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"dblkno        ufs_daddr_t       0x%08x\n"
+literal|"dblkno            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -461,29 +461,29 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"cgoffset      int32_t           0x%08x\n"
+literal|"old_cgoffset      int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_cgoffset
+name|fs_old_cgoffset
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"cgmask        int32_t           0x%08x\n"
+literal|"old_cgmask        int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_cgmask
+name|fs_old_cgmask
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"time          time_t            %10u\n"
+literal|"old_time          int32_t          %10u\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -491,36 +491,36 @@ name|int
 operator|)
 name|sb
 operator|->
-name|fs_time
+name|fs_old_time
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"size          int32_t           0x%08x\n"
+literal|"old_size          int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_size
+name|fs_old_size
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"dsize         int32_t           0x%08x\n"
+literal|"old_dsize         int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_dsize
+name|fs_old_dsize
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"ncg           int32_t           0x%08x\n"
+literal|"ncg               int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -531,7 +531,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"bsize         int32_t           0x%08x\n"
+literal|"bsize             int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -542,7 +542,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"fsize         int32_t           0x%08x\n"
+literal|"fsize             int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -553,7 +553,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"frag          int32_t           0x%08x\n"
+literal|"frag              int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -564,7 +564,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"minfree       int32_t           0x%08x\n"
+literal|"minfree           int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -575,29 +575,29 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"rotdelay      int32_t           0x%08x\n"
+literal|"old_rotdelay      int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_rotdelay
+name|fs_old_rotdelay
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"rps           int32_t           0x%08x\n"
+literal|"old_rps           int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_rps
+name|fs_old_rps
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"bmask         int32_t           0x%08x\n"
+literal|"bmask             int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -608,7 +608,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"fmask         int32_t           0x%08x\n"
+literal|"fmask             int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -619,7 +619,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"bshift        int32_t           0x%08x\n"
+literal|"bshift            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -630,7 +630,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"fshift        int32_t           0x%08x\n"
+literal|"fshift            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -641,7 +641,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"maxcontig     int32_t           0x%08x\n"
+literal|"maxcontig         int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -652,7 +652,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"maxbpg        int32_t           0x%08x\n"
+literal|"maxbpg            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -663,7 +663,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"fragshift     int32_t           0x%08x\n"
+literal|"fragshift         int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -674,7 +674,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"fsbtodb       int32_t           0x%08x\n"
+literal|"fsbtodb           int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -685,7 +685,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"sbsize        int32_t           0x%08x\n"
+literal|"sbsize            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -696,29 +696,28 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"csmask        int32_t           0x%08x\n"
+literal|"spare1            int32_t[2]       0x%08x 0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_csmask
+name|fs_spare1
+index|[
+literal|0
+index|]
+argument_list|,
+name|sb
+operator|->
+name|fs_spare1
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"csshift       int32_t           0x%08x\n"
-argument_list|,
-name|sb
-operator|->
-name|fs_csshift
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|dbg_log
-argument_list|,
-literal|"nindir        int32_t           0x%08x\n"
+literal|"nindir            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -729,7 +728,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"inopb         int32_t           0x%08x\n"
+literal|"inopb             int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -740,18 +739,18 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"nspf          int32_t           0x%08x\n"
+literal|"old_nspf          int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_nspf
+name|fs_old_nspf
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"optim         int32_t           0x%08x\n"
+literal|"optim             int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -762,40 +761,40 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"npsect        int32_t           0x%08x\n"
+literal|"old_npsect        int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_npsect
+name|fs_old_npsect
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"interleave    int32_t           0x%08x\n"
+literal|"old_interleave    int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_interleave
+name|fs_old_interleave
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"trackskew     int32_t           0x%08x\n"
+literal|"old_trackskew     int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_trackskew
+name|fs_old_trackskew
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"id            int32_t[2]        %08x %08x\n"
+literal|"id                int32_t[2]       0x%08x 0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -816,18 +815,18 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"csaddr        ufs_daddr_t       0x%08x\n"
+literal|"old_csaddr        int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_csaddr
+name|fs_old_csaddr
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"cssize        int32_t           0x%08x\n"
+literal|"cssize            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -838,7 +837,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"cgsize        int32_t           0x%08x\n"
+literal|"cgsize            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -849,62 +848,62 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"ntrak         int32_t           0x%08x\n"
+literal|"spare2            int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_ntrak
+name|fs_spare2
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"nsect         int32_t           0x%08x\n"
+literal|"old_nsect         int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_nsect
+name|fs_old_nsect
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"spc           int32_t           0x%08x\n"
+literal|"old_spc           int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_spc
+name|fs_old_spc
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"ncyl          int32_t           0x%08x\n"
+literal|"old_ncyl          int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_ncyl
+name|fs_old_ncyl
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"cpg           int32_t           0x%08x\n"
+literal|"old_cpg           int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_cpg
+name|fs_old_cpg
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"ipg           int32_t           0x%08x\n"
+literal|"ipg               int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -915,7 +914,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"fpg           int32_t           0x%08x\n"
+literal|"fpg               int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -923,6 +922,211 @@ name|fs_fpg
 argument_list|)
 expr_stmt|;
 name|dbg_dump_csum
+argument_list|(
+literal|"internal old_cstotal"
+argument_list|,
+operator|&
+name|sb
+operator|->
+name|fs_old_cstotal
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"fmod              int8_t           0x%02x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_fmod
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"clean             int8_t           0x%02x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_clean
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"ronly             int8_t           0x%02x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_ronly
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"old_flags         int8_t           0x%02x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_old_flags
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"fsmnt             u_char[MAXMNTLEN] \"%s\"\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"volname           u_char[MAXVOLLEN] \"%s\"\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_volname
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"swuid             u_int64_t        0x%08x%08x\n"
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|sb
+operator|->
+name|fs_swuid
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|sb
+operator|->
+name|fs_swuid
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"pad               int32_t          0x%08x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_pad
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"cgrotor           int32_t          0x%08x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_cgrotor
+argument_list|)
+expr_stmt|;
+comment|/*  * struct csum[MAXCSBUFS] - is only maintained in memory  */
+comment|/*	fprintf(dbg_log, " int32_t\n", sb->*fs_maxcluster);*/
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"old_cpc           int32_t          0x%08x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_old_cpc
+argument_list|)
+expr_stmt|;
+comment|/*  * int16_t fs_opostbl[16][8] - is dumped when used in dbg_dump_sptbl  */
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"maxbsize          int32_t          0x%08x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_maxbsize
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"sblockloc         int64_t          0x%08x%08x\n"
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|sb
+operator|->
+name|fs_sblockloc
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|sb
+operator|->
+name|fs_sblockloc
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|dbg_dump_csum_total
 argument_list|(
 literal|"internal cstotal"
 argument_list|,
@@ -936,82 +1140,192 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"fmod          int8_t            0x%02x\n"
+literal|"time              ufs_time_t       %10u\n"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|sb
 operator|->
-name|fs_fmod
+name|fs_time
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"clean         int8_t            0x%02x\n"
+literal|"size              int64_t          0x%08x%08x\n"
 argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
 name|sb
 operator|->
-name|fs_clean
+name|fs_size
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|sb
+operator|->
+name|fs_size
+operator|)
+operator|)
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"ronly         int8_t            0x%02x\n"
+literal|"dsize             int64_t          0x%08x%08x\n"
 argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
 name|sb
 operator|->
-name|fs_ronly
+name|fs_dsize
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|sb
+operator|->
+name|fs_dsize
+operator|)
+operator|)
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"flags         int8_t            0x%02x\n"
+literal|"csaddr            ufs2_daddr_t     0x%08x%08x\n"
 argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
 name|sb
 operator|->
-name|fs_flags
+name|fs_csaddr
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|sb
+operator|->
+name|fs_csaddr
+operator|)
+operator|)
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"fsmnt         u_char[MAXMNTLEN] \"%s\"\n"
+literal|"pendingblocks     int64_t          0x%08x%08x\n"
 argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
 name|sb
 operator|->
-name|fs_fsmnt
+name|fs_pendingblocks
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|sb
+operator|->
+name|fs_pendingblocks
+operator|)
+operator|)
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"cgrotor       int32_t           0x%08x\n"
+literal|"pendinginodes     int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_cgrotor
+name|fs_pendinginodes
 argument_list|)
 expr_stmt|;
-comment|/*  * struct csum[MAXCSBUFS] - is only maintained in memory  */
-comment|/*	fprintf(dbg_log, " int32_t\n", sb->*fs_maxcluster);*/
-name|fprintf
-argument_list|(
-name|dbg_log
-argument_list|,
-literal|"cpc           int32_t           0x%08x\n"
-argument_list|,
-name|sb
-operator|->
-name|fs_cpc
-argument_list|)
-expr_stmt|;
-comment|/*  * int16_t fs_opostbl[16][8] - is dumped when used in dbg_dump_sptbl  */
 ifdef|#
 directive|ifdef
 name|FSMAXSNAP
@@ -1033,7 +1347,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"snapinum      int32_t[%2d]       0x%08x\n"
+literal|"snapinum          int32_t[%2d]      0x%08x\n"
 argument_list|,
 name|j
 argument_list|,
@@ -1067,7 +1381,51 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"contigsumsize int32_t           0x%08x\n"
+literal|"avgfilesize       int32_t          0x%08x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_avgfilesize
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"avgfpdir          int32_t          0x%08x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_avgfpdir
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"save_cgsize       int32_t          0x%08x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_save_cgsize
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"flags             int32_t          0x%08x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_flags
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"contigsumsize     int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -1078,7 +1436,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"maxsymlinklen int32_t           0x%08x\n"
+literal|"maxsymlinklen     int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -1089,18 +1447,18 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"inodefmt      int32_t           0x%08x\n"
+literal|"old_inodefmt      int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_inodefmt
+name|fs_old_inodefmt
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"maxfilesize   u_int64_t         0x%08x%08x\n"
+literal|"maxfilesize       u_int64_t        0x%08x%08x\n"
 argument_list|,
 operator|(
 operator|(
@@ -1141,7 +1499,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"qbmask        int64_t           0x%08x%08x\n"
+literal|"qbmask            int64_t          0x%08x%08x\n"
 argument_list|,
 operator|(
 operator|(
@@ -1182,7 +1540,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"qfmask        int64_t           0x%08x%08x\n"
+literal|"qfmask            int64_t          0x%08x%08x\n"
 argument_list|,
 operator|(
 operator|(
@@ -1223,7 +1581,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"state         int32_t           0x%08x\n"
+literal|"state             int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -1234,51 +1592,50 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"postblformat  int32_t           0x%08x\n"
+literal|"old_postblformat  int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_postblformat
+name|fs_old_postblformat
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"nrpos         int32_t           0x%08x\n"
+literal|"old_nrpos         int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_nrpos
+name|fs_old_nrpos
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"postbloff     int32_t           0x%08x\n"
+literal|"spare5            int32_t[2]       0x%08x 0x%08x\n"
 argument_list|,
 name|sb
 operator|->
-name|fs_postbloff
+name|fs_spare5
+index|[
+literal|0
+index|]
+argument_list|,
+name|sb
+operator|->
+name|fs_spare5
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"rotbloff      int32_t           0x%08x\n"
-argument_list|,
-name|sb
-operator|->
-name|fs_rotbloff
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|dbg_log
-argument_list|,
-literal|"magic         int32_t           0x%08x\n"
+literal|"magic             int32_t          0x%08x\n"
 argument_list|,
 name|sb
 operator|->
@@ -1375,15 +1732,11 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"time          time_t     %10u\n"
+literal|"old_time      int32_t    0x%08x\n"
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|cgr
 operator|->
-name|cg_time
+name|cg_old_time
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1401,22 +1754,22 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"ncyl          int16_t    0x%04x\n"
+literal|"old_ncyl      int16_t    0x%04x\n"
 argument_list|,
 name|cgr
 operator|->
-name|cg_ncyl
+name|cg_old_ncyl
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"niblk         int16_t    0x%04x\n"
+literal|"old_niblk     int16_t    0x%04x\n"
 argument_list|,
 name|cgr
 operator|->
-name|cg_niblk
+name|cg_old_niblk
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1508,22 +1861,22 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"btotoff       int32_t    0x%08x\n"
+literal|"old_btotoff   int32_t    0x%08x\n"
 argument_list|,
 name|cgr
 operator|->
-name|cg_btotoff
+name|cg_old_btotoff
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"boff          int32_t    0x%08x\n"
+literal|"old_boff      int32_t    0x%08x\n"
 argument_list|,
 name|cgr
 operator|->
-name|cg_boff
+name|cg_old_boff
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1574,7 +1927,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"clusterof     int32_t    0x%08x\n"
+literal|"clusteroff    int32_t    0x%08x\n"
 argument_list|,
 name|cgr
 operator|->
@@ -1590,6 +1943,43 @@ argument_list|,
 name|cgr
 operator|->
 name|cg_nclusterblks
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"niblk         int32_t    0x%08x\n"
+argument_list|,
+name|cgr
+operator|->
+name|cg_niblk
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"initediblk    int32_t    0x%08x\n"
+argument_list|,
+name|cgr
+operator|->
+name|cg_initediblk
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"time          ufs_time_t %10u\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|cgr
+operator|->
+name|cg_initediblk
 argument_list|)
 expr_stmt|;
 name|indent
@@ -1716,6 +2106,283 @@ argument_list|(
 name|dbg_log
 argument_list|,
 literal|"===== END CYLINDER SUMMARY =====\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/* ************************************************ dbg_dump_csum_total ***** */
+end_comment
+
+begin_comment
+comment|/*  * Dump a cylinder summary.  */
+end_comment
+
+begin_function
+name|void
+name|dbg_dump_csum_total
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|comment
+parameter_list|,
+name|struct
+name|csum_total
+modifier|*
+name|cs
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|dbg_log
+condition|)
+block|{
+return|return;
+block|}
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"===== START CYLINDER SUMMARY TOTAL =====\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"# %d@%lx: %s\n"
+argument_list|,
+name|indent
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|cs
+argument_list|,
+name|comment
+argument_list|)
+expr_stmt|;
+name|indent
+operator|++
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"ndir        int64_t 0x%08x%08x\n"
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|cs
+operator|->
+name|cs_ndir
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|cs
+operator|->
+name|cs_ndir
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"nbfree      int64_t 0x%08x%08x\n"
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|cs
+operator|->
+name|cs_nbfree
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|cs
+operator|->
+name|cs_nbfree
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"nifree      int64_t 0x%08x%08x\n"
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|cs
+operator|->
+name|cs_nifree
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|cs
+operator|->
+name|cs_nifree
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"nffree      int64_t 0x%08x%08x\n"
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|cs
+operator|->
+name|cs_nffree
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|cs
+operator|->
+name|cs_nffree
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"numclusters int64_t 0x%08x%08x\n"
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|cs
+operator|->
+name|cs_numclusters
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|cs
+operator|->
+name|cs_numclusters
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|indent
+operator|--
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"===== END CYLINDER SUMMARY TOTAL =====\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2075,6 +2742,12 @@ argument_list|(
 name|cgr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sb
+operator|->
+name|fs_old_nspf
+condition|)
 name|e
 operator|=
 name|howmany
@@ -2082,20 +2755,24 @@ argument_list|(
 operator|(
 name|sb
 operator|->
-name|fs_cpg
+name|fs_old_cpg
 operator|*
 name|sb
 operator|->
-name|fs_spc
+name|fs_old_spc
 operator|/
-name|NSPF
-argument_list|(
 name|sb
-argument_list|)
+operator|->
+name|fs_old_nspf
 operator|)
 argument_list|,
 name|CHAR_BIT
 argument_list|)
+expr_stmt|;
+else|else
+name|e
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2353,25 +3030,41 @@ argument_list|(
 name|cgr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sb
+operator|->
+name|fs_old_nspf
+condition|)
 name|e
 operator|=
 name|howmany
 argument_list|(
 name|sb
 operator|->
-name|fs_cpg
+name|fs_old_cpg
 operator|*
 name|sb
 operator|->
-name|fs_spc
+name|fs_old_spc
 operator|/
-name|NSPB
-argument_list|(
+operator|(
 name|sb
-argument_list|)
+operator|->
+name|fs_old_nspf
+operator|<<
+name|sb
+operator|->
+name|fs_fragshift
+operator|)
 argument_list|,
 name|CHAR_BIT
 argument_list|)
+expr_stmt|;
+else|else
+name|e
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2665,6 +3358,16 @@ return|return;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOT_CURRENTLY
+end_ifdef
+
+begin_comment
+comment|/*  * This code dates from before the UFS2 integration, and doesn't compile  * post-UFS2 due to the use of cg_blks().  I'm not sure how best to update  * this for UFS2, where the rotational bits of UFS no longer apply, so  * will leave it disabled for now; it should probably be re-enabled  * specifically for UFS1.  */
+end_comment
+
 begin_comment
 comment|/* **************************************************** dbg_dump_sptbl ***** */
 end_comment
@@ -2758,7 +3461,7 @@ name|j
 operator|<
 name|sb
 operator|->
-name|fs_cpg
+name|fs_old_cpg
 condition|;
 name|j
 operator|++
@@ -2787,7 +3490,7 @@ name|k
 operator|<
 name|sb
 operator|->
-name|fs_nrpos
+name|fs_old_nrpos
 condition|;
 name|k
 operator|++
@@ -2818,7 +3521,7 @@ name|k
 operator|<
 name|sb
 operator|->
-name|fs_nrpos
+name|fs_old_nrpos
 operator|-
 literal|1
 condition|)
@@ -2854,17 +3557,22 @@ return|return;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* ****************************************************** dbg_dump_ino ***** */
+comment|/* ************************************************** dbg_dump_ufs1_ino ***** */
 end_comment
 
 begin_comment
-comment|/*  * Dump an inode structure.  */
+comment|/*  * Dump a UFS1 inode structure.  */
 end_comment
 
 begin_function
 name|void
-name|dbg_dump_ino
+name|dbg_dump_ufs1_ino
 parameter_list|(
 name|struct
 name|fs
@@ -2877,7 +3585,7 @@ modifier|*
 name|comment
 parameter_list|,
 name|struct
-name|dinode
+name|ufs1_dinode
 modifier|*
 name|ino
 parameter_list|)
@@ -2900,7 +3608,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"===== START INODE DUMP =====\n"
+literal|"===== START UFS1 INODE DUMP =====\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3138,7 +3846,7 @@ name|fs_bsize
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ufs_daddr_t
+name|ufs1_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3183,7 +3891,7 @@ name|fs_bsize
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ufs_daddr_t
+name|ufs1_daddr_t
 argument_list|)
 argument_list|)
 argument_list|)
@@ -3275,7 +3983,521 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"===== END INODE DUMP =====\n"
+literal|"===== END UFS1 INODE DUMP =====\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/* ************************************************** dbg_dump_ufs2_ino ***** */
+end_comment
+
+begin_comment
+comment|/*  * Dump a UFS2 inode structure.  */
+end_comment
+
+begin_function
+name|void
+name|dbg_dump_ufs2_ino
+parameter_list|(
+name|struct
+name|fs
+modifier|*
+name|sb
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|comment
+parameter_list|,
+name|struct
+name|ufs2_dinode
+modifier|*
+name|ino
+parameter_list|)
+block|{
+name|int
+name|ictr
+decl_stmt|;
+name|int
+name|remaining_blocks
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dbg_log
+condition|)
+block|{
+return|return;
+block|}
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"===== START UFS2 INODE DUMP =====\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"# %d@%lx: %s\n"
+argument_list|,
+name|indent
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|ino
+argument_list|,
+name|comment
+argument_list|)
+expr_stmt|;
+name|indent
+operator|++
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"mode       u_int16_t      0%o\n"
+argument_list|,
+name|ino
+operator|->
+name|di_mode
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"nlink      int16_t        0x%04x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_nlink
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"uid        u_int32_t      0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_uid
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"gid        u_int32_t      0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_gid
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"blksize    u_int32_t      0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_blksize
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"size       u_int64_t      0x%08x%08x\n"
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|ino
+operator|->
+name|di_size
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|ino
+operator|->
+name|di_size
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"blocks     u_int64_t      0x%08x%08x\n"
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|ino
+operator|->
+name|di_blocks
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|&
+operator|(
+name|ino
+operator|->
+name|di_blocks
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"atime      ufs_time_t     %10u\n"
+argument_list|,
+name|ino
+operator|->
+name|di_atime
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"mtime      ufs_time_t     %10u\n"
+argument_list|,
+name|ino
+operator|->
+name|di_mtime
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"ctime      ufs_time_t     %10u\n"
+argument_list|,
+name|ino
+operator|->
+name|di_ctime
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"birthtime  ufs_time_t     %10u\n"
+argument_list|,
+name|ino
+operator|->
+name|di_birthtime
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"mtimensec  int32_t        0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_mtimensec
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"atimensec  int32_t        0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_atimensec
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"ctimensec  int32_t        0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_ctimensec
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"birthnsec  int32_t        0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_birthnsec
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"gen        int32_t        0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_gen
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"kernflags  u_int32_t      0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_kernflags
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"flags      u_int32_t      0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_flags
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"extsize    int32_t        0x%08x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_extsize
+argument_list|)
+expr_stmt|;
+comment|/* XXX: What do we do with di_extb[NXADDR]? */
+name|remaining_blocks
+operator|=
+name|howmany
+argument_list|(
+name|ino
+operator|->
+name|di_size
+argument_list|,
+name|sb
+operator|->
+name|fs_bsize
+argument_list|)
+expr_stmt|;
+comment|/* XXX ts - +1? */
+for|for
+control|(
+name|ictr
+operator|=
+literal|0
+init|;
+name|ictr
+operator|<
+name|MIN
+argument_list|(
+name|NDADDR
+argument_list|,
+name|remaining_blocks
+argument_list|)
+condition|;
+name|ictr
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"db         ufs2_daddr_t[%x] 0x%16x\n"
+argument_list|,
+name|ictr
+argument_list|,
+name|ino
+operator|->
+name|di_db
+index|[
+name|ictr
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|remaining_blocks
+operator|-=
+name|NDADDR
+expr_stmt|;
+if|if
+condition|(
+name|remaining_blocks
+operator|>
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"ib         ufs2_daddr_t[0] 0x%16x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_ib
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|remaining_blocks
+operator|-=
+name|howmany
+argument_list|(
+name|sb
+operator|->
+name|fs_bsize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ufs2_daddr_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|remaining_blocks
+operator|>
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"ib         ufs2_daddr_t[1] 0x%16x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_ib
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+define|#
+directive|define
+name|SQUARE
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)*(a))
+name|remaining_blocks
+operator|-=
+name|SQUARE
+argument_list|(
+name|howmany
+argument_list|(
+name|sb
+operator|->
+name|fs_bsize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ufs2_daddr_t
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+undef|#
+directive|undef
+name|SQUARE
+if|if
+condition|(
+name|remaining_blocks
+operator|>
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"ib         ufs2_daddr_t[2] 0x%16x\n"
+argument_list|,
+name|ino
+operator|->
+name|di_ib
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|indent
+operator|--
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"===== END UFS2 INODE DUMP =====\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3321,6 +4543,8 @@ name|int
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|size
 decl_stmt|;
 if|if
 condition|(
@@ -3357,6 +4581,29 @@ expr_stmt|;
 name|indent
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|sb
+operator|->
+name|fs_magic
+operator|==
+name|FS_UFS1_MAGIC
+condition|)
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ufs1_daddr_t
+argument_list|)
+expr_stmt|;
+else|else
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ufs2_daddr_t
+argument_list|)
+expr_stmt|;
 name|mem
 operator|=
 operator|(
@@ -3385,10 +4632,7 @@ name|sb
 operator|->
 name|fs_bsize
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ufs_daddr_t
-argument_list|)
+name|size
 argument_list|)
 argument_list|,
 name|length
