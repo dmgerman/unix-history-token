@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.104
+literal|3.105
 operator|%
 name|G
 operator|%
@@ -1287,6 +1287,40 @@ end_while
 begin_comment
 comment|/* 	**  Do basic initialization. 	**	Read system control file. 	**	Extract special fields for local use. 	*/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOG
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+condition|)
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"entered, uid=%d, pid=%d"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+endif|LOG
+end_endif
 
 begin_expr_stmt
 name|readcf
