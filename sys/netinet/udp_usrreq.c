@@ -4558,9 +4558,17 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|udbinfo
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
+block|}
 name|inp
 operator|=
 operator|(
