@@ -558,6 +558,12 @@ name|u_int16_t
 name|cur_write_speed
 decl_stmt|;
 comment|/* current data rate in bytes/1000  */
+name|u_int16_t
+name|copy_protect_rev
+decl_stmt|;
+name|u_int16_t
+name|reserved4
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -910,7 +916,18 @@ decl_stmt|;
 name|u_int8_t
 name|sub_hdr_byte3
 decl_stmt|;
-comment|/*     u_int8_t	vendor_specific_byte0;     u_int8_t	vendor_specific_byte1;     u_int8_t	vendor_specific_byte2;     u_int8_t	vendor_specific_byte3; */
+name|u_int8_t
+name|vendor_specific_byte0
+decl_stmt|;
+name|u_int8_t
+name|vendor_specific_byte1
+decl_stmt|;
+name|u_int8_t
+name|vendor_specific_byte2
+decl_stmt|;
+name|u_int8_t
+name|vendor_specific_byte3
+decl_stmt|;
 block|}
 name|__attribute__
 argument_list|(
@@ -1068,19 +1085,6 @@ name|toc
 name|toc
 decl_stmt|;
 comment|/* table of disc contents */
-struct|struct
-block|{
-name|u_int32_t
-name|volsize
-decl_stmt|;
-comment|/* volume size in blocks */
-name|u_int32_t
-name|blksize
-decl_stmt|;
-comment|/* block size in bytes */
-block|}
-name|info
-struct|;
 name|struct
 name|audiopage
 name|au
@@ -1150,6 +1154,10 @@ name|time_t
 name|timestamp
 decl_stmt|;
 comment|/* this instance timestamp */
+name|int
+name|disk_size
+decl_stmt|;
+comment|/* size of current media */
 name|int
 name|block_size
 decl_stmt|;

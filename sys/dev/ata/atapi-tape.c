@@ -3858,7 +3858,7 @@ literal|16
 index|]
 init|=
 block|{
-name|ATAPI_REWIND
+name|ATAPI_REZERO
 block|,
 literal|0x01
 block|,

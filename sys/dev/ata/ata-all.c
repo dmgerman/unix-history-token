@@ -1361,6 +1361,15 @@ literal|0x06861106
 argument_list|,
 literal|0x40
 argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x30741106
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 return|return
 literal|"VIA 82C686 ATA100 controller"
@@ -1466,6 +1475,15 @@ literal|0x4d30105a
 case|:
 return|return
 literal|"Promise ATA100 controller"
+return|;
+case|case
+literal|0x4d68105a
+case|:
+case|case
+literal|0x6268105a
+case|:
+return|return
+literal|"Promise TX2 ATA100 controller"
 return|;
 case|case
 literal|0x00041103
@@ -1842,7 +1860,7 @@ break|break;
 case|case
 literal|0x4d38105a
 case|:
-comment|/* Promise 66& 100 need their clock changed */
+comment|/* Promise 66& 100 (before TX2) need the clock changed */
 case|case
 literal|0x4d30105a
 case|:
@@ -1879,7 +1897,7 @@ comment|/* FALLTHROUGH */
 case|case
 literal|0x4d33105a
 case|:
-comment|/* Promise (all) need burst mode to be turned on */
+comment|/* Promise (before TX2) need burst mode turned on */
 name|outb
 argument_list|(
 name|rman_get_start
@@ -2157,9 +2175,10 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* prepare for ATA-66 on the 82C686 and rev 0x12 and newer 82C596's */
+comment|/* prepare for ATA-66 on the 82C686a and rev 0x12 and newer 82C596's */
 if|if
 condition|(
+operator|(
 name|ata_find_dev
 argument_list|(
 name|dev
@@ -2168,6 +2187,17 @@ literal|0x06861106
 argument_list|,
 literal|0
 argument_list|)
+operator|&&
+operator|!
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x06861106
+argument_list|,
+literal|0x40
+argument_list|)
+operator|)
 operator|||
 name|ata_find_dev
 argument_list|(
@@ -2194,7 +2224,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator||
-literal|0x070f070f
+literal|0x030b030b
 argument_list|,
 literal|4
 argument_list|)
@@ -2779,9 +2809,6 @@ argument_list|,
 literal|1
 argument_list|,
 name|flags
-operator|&
-operator|~
-name|RF_SHAREABLE
 argument_list|)
 return|;
 endif|#
@@ -5719,6 +5746,14 @@ case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA100 */
+case|case
+literal|0x4d68105a
+case|:
+comment|/* Promise TX2 ATA100 */
+case|case
+literal|0x6268105a
+case|:
+comment|/* Promise TX2v2 ATA100 */
 if|if
 condition|(
 operator|!

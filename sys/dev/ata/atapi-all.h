@@ -323,7 +323,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_REWIND
+name|ATAPI_REZERO
 value|0x01
 end_define
 
@@ -1119,6 +1119,10 @@ define|#
 directive|define
 name|ATPR_F_INTERNAL
 value|0x0008
+define|#
+directive|define
+name|ATPR_F_QUIET
+value|0x0010
 name|caddr_t
 name|data
 decl_stmt|;

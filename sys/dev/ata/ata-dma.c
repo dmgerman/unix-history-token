@@ -185,6 +185,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ATAPI_DEVICE
+parameter_list|(
+name|scp
+parameter_list|,
+name|device
+parameter_list|)
+define|\
+value|((device == ATA_MASTER&& scp->devices& ATA_ATAPI_MASTER) || \ 	 (device == ATA_SLAVE&& scp->devices& ATA_ATAPI_SLAVE))
+end_define
+
 begin_function
 name|void
 modifier|*
@@ -2459,6 +2472,15 @@ literal|0x06861106
 argument_list|,
 literal|0x40
 argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
+literal|0x30741106
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* 82C686b */
@@ -3128,7 +3150,7 @@ literal|0x53
 operator|-
 name|devno
 argument_list|,
-literal|0x82
+literal|0x0b
 argument_list|,
 literal|1
 argument_list|)
@@ -4600,14 +4622,6 @@ block|}
 comment|/* we could set PIO mode timings, but we assume the BIOS did that */
 break|break;
 case|case
-literal|0x4d33105a
-case|:
-comment|/* Promise Ultra/FastTrak 33 controllers */
-case|case
-literal|0x4d38105a
-case|:
-comment|/* Promise Ultra/FastTrak 66 controllers */
-case|case
 literal|0x4d30105a
 case|:
 comment|/* Promise Ultra/FastTrak 100 controllers */
@@ -4615,53 +4629,27 @@ case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA100 controllers */
-comment|/* the Promise can only do DMA on ATA disks not on ATAPI devices */
+case|case
+literal|0x4d68105a
+case|:
+comment|/* Promise TX2 ATA100 controllers */
+case|case
+literal|0x6268105a
+case|:
+comment|/* Promise TX2v2 ATA100 controllers */
 if|if
 condition|(
-operator|(
-name|device
-operator|==
-name|ATA_MASTER
-operator|&&
+operator|!
+name|ATAPI_DEVICE
+argument_list|(
 name|scp
-operator|->
-name|devices
-operator|&
-name|ATA_ATAPI_MASTER
-operator|)
-operator|||
-operator|(
+argument_list|,
 name|device
-operator|==
-name|ATA_SLAVE
+argument_list|)
 operator|&&
-name|scp
-operator|->
-name|devices
-operator|&
-name|ATA_ATAPI_SLAVE
-operator|)
-condition|)
-break|break;
-if|if
-condition|(
 name|udmamode
 operator|>=
 literal|5
-operator|&&
-operator|(
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x4d30105a
-operator|||
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x0d30105a
-operator|)
 operator|&&
 operator|!
 operator|(
@@ -4764,31 +4752,24 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+comment|/* FALLTHROUGH */
+case|case
+literal|0x4d38105a
+case|:
+comment|/* Promise Ultra/FastTrak 66 controllers */
 if|if
 condition|(
+operator|!
+name|ATAPI_DEVICE
+argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|)
+operator|&&
 name|udmamode
 operator|>=
 literal|4
-operator|&&
-operator|(
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x4d38105a
-operator|||
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x4d30105a
-operator|||
-name|scp
-operator|->
-name|chiptype
-operator|==
-literal|0x0d30105a
-operator|)
 operator|&&
 operator|!
 operator|(
@@ -4891,8 +4872,21 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+comment|/* FALLTHROUGH */
+case|case
+literal|0x4d33105a
+case|:
+comment|/* Promise Ultra/FastTrak 33 controllers */
 if|if
 condition|(
+operator|!
+name|ATAPI_DEVICE
+argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|)
+operator|&&
 name|udmamode
 operator|>=
 literal|2
@@ -4974,6 +4968,14 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|ATAPI_DEVICE
+argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|)
+operator|&&
 name|wdmamode
 operator|>=
 literal|2
@@ -5146,36 +5148,16 @@ case|case
 literal|0x00041103
 case|:
 comment|/* HighPoint HPT366/368/370 controllers */
-comment|/* no ATAPI devices for now */
 if|if
 condition|(
-operator|(
-name|device
-operator|==
-name|ATA_MASTER
-operator|&&
+operator|!
+name|ATAPI_DEVICE
+argument_list|(
 name|scp
-operator|->
-name|devices
-operator|&
-name|ATA_ATAPI_MASTER
-operator|)
-operator|||
-operator|(
+argument_list|,
 name|device
-operator|==
-name|ATA_SLAVE
+argument_list|)
 operator|&&
-name|scp
-operator|->
-name|devices
-operator|&
-name|ATA_ATAPI_SLAVE
-operator|)
-condition|)
-break|break;
-if|if
-condition|(
 name|udmamode
 operator|>=
 literal|5
@@ -5286,6 +5268,14 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|ATAPI_DEVICE
+argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|)
+operator|&&
 name|udmamode
 operator|>=
 literal|4
@@ -5389,6 +5379,14 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|ATAPI_DEVICE
+argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|)
+operator|&&
 name|udmamode
 operator|>=
 literal|2
@@ -5470,6 +5468,14 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|ATAPI_DEVICE
+argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|)
+operator|&&
 name|wdmamode
 operator|>=
 literal|2
@@ -7087,6 +7093,15 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
+case|case
+literal|0x4d68105a
+case|:
+comment|/* Promise TX2 ATA 100 */
+case|case
+literal|0x6268105a
+case|:
+comment|/* Promise TX2v2 ATA 100 */
+return|return;
 block|}
 name|pci_write_config
 argument_list|(
