@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.18 1998/06/20 00:19:38 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.19 1998/06/25 22:33:24 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_comment
@@ -137,11 +137,45 @@ name|OPEN_PASSIVE
 value|-1
 end_define
 
+begin_define
+define|#
+directive|define
+name|FSM_REQ_TIMER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSM_TRM_TIMER
+value|2
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|fsm
 struct_decl|;
 end_struct_decl
+
+begin_struct
+struct|struct
+name|fsm_retry
+block|{
+name|u_int
+name|timeout
+decl_stmt|;
+comment|/* FSM retry frequency */
+name|u_int
+name|maxreq
+decl_stmt|;
+comment|/* Max Config REQ retries */
+name|u_int
+name|maxtrm
+decl_stmt|;
+comment|/* Max Term REQ retries */
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -239,6 +273,8 @@ parameter_list|(
 name|struct
 name|fsm
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 comment|/* Set fsm timer load */
@@ -455,10 +491,23 @@ name|int
 name|restart
 decl_stmt|;
 comment|/* Restart counter value */
+struct|struct
+block|{
 name|int
-name|maxconfig
+name|reqs
 decl_stmt|;
-comment|/* Max config REQ before a close() */
+comment|/* Max config REQs before a close() */
+name|int
+name|naks
+decl_stmt|;
+comment|/* Max config NAKs before a close() */
+name|int
+name|rejs
+decl_stmt|;
+comment|/* Max config REJs before a close() */
+block|}
+name|more
+struct|;
 name|struct
 name|pppTimer
 name|FsmTimer
@@ -686,8 +735,6 @@ name|char
 modifier|*
 parameter_list|,
 name|u_short
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|,
