@@ -635,6 +635,9 @@ case|:
 case|case
 name|Letter
 case|:
+case|case
+name|DIGIT
+case|:
 operator|*
 name|tp
 operator|++
