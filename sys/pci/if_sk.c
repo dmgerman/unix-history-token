@@ -8141,11 +8141,6 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-name|mii_pollstat
-argument_list|(
-name|mii
-argument_list|)
-expr_stmt|;
 name|untimeout
 argument_list|(
 name|sk_tick
@@ -8376,11 +8371,6 @@ operator||
 name|SK_LINKLED_LINKSYNC_OFF
 operator||
 name|SK_LINKLED_BLINK_OFF
-argument_list|)
-expr_stmt|;
-name|mii_pollstat
-argument_list|(
-name|mii
 argument_list|)
 expr_stmt|;
 block|}
