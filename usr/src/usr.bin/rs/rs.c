@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rs.c	4.1	(Berkeley)	%G%"
+literal|"@(#)rs.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +157,13 @@ define|#
 directive|define
 name|ONEPERCHAR
 value|0100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOARGS
+value|0200000
 end_define
 
 begin_decl_stmt
@@ -444,6 +451,20 @@ expr_stmt|;
 block|}
 name|getline
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|NOARGS
+operator|&&
+name|curlen
+operator|<
+name|owidth
+condition|)
+name|flags
+operator||=
+name|ONEPERLINE
 expr_stmt|;
 if|if
 condition|(
@@ -1103,7 +1124,23 @@ name|owidth
 operator|/
 name|colw
 expr_stmt|;
-comment|/* not a good idea */
+if|if
+condition|(
+name|ocols
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Display width %d is less than column width %d\n"
+argument_list|,
+name|owidth
+argument_list|,
+name|colw
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ocols
@@ -1883,7 +1920,7 @@ condition|)
 block|{
 name|flags
 operator||=
-name|ONEPERLINE
+name|NOARGS
 operator||
 name|TRANSPOSE
 expr_stmt|;
