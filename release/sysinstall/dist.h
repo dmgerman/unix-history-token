@@ -143,7 +143,7 @@ define|#
 directive|define
 name|_DIST_DEVELOPER
 define|\
-value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC)
+value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC | DIST_COMPAT22)
 end_define
 
 begin_define
@@ -151,7 +151,7 @@ define|#
 directive|define
 name|_DIST_USER
 define|\
-value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT)
+value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_COMPAT22)
 end_define
 
 begin_comment
@@ -309,20 +309,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_SRC_SMAILCF
-value|0x10000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_SRC_ALL
 value|0xFFFF
 end_define
-
-begin_comment
-comment|/* no SMAILCF, it's part of USBIN */
-end_comment
 
 begin_comment
 comment|/* Subtypes for XFree86 distribution */
