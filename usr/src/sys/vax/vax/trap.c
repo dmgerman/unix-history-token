@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -160,25 +160,31 @@ literal|"Trace trap"
 block|,
 literal|"Compatibility mode trap"
 block|,
-ifdef|#
-directive|ifdef
-name|notdef
 literal|"Page fault"
 block|,
 literal|"Page table fault"
 block|,
-endif|#
-directive|endif
-block|}
+literal|"Kernel debugger trap"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|TRAP_TYPES
-value|(sizeof trap_type / sizeof trap_type[0])
-end_define
+init|=
+operator|(
+sizeof|sizeof
+name|trap_type
+operator|/
+sizeof|sizeof
+name|trap_type
+index|[
+literal|0
+index|]
+operator|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Called from the trap handler when a processor trap occurs.  */
@@ -293,6 +299,20 @@ name|type
 condition|)
 block|{
 default|default:
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|kdb_trap
+argument_list|(
+operator|&
+name|psl
+argument_list|)
+condition|)
+return|return;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"trap type %d, code = %x, pc = %x\n"

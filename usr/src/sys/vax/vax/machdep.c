@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -428,6 +428,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|KDB
+name|kdb_init
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
@@ -1324,6 +1332,13 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up CPU-specific registers, cache, etc. 	 */
 name|initcpu
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
+name|bhinit
+argument_list|()
+expr_stmt|;
+name|binit
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Configure the system. 	 */
@@ -4285,6 +4300,13 @@ name|rp_flag
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|dumpdev
+operator|==
+name|NODEV
+condition|)
+return|return;
 ifdef|#
 directive|ifdef
 name|notdef
@@ -4304,6 +4326,53 @@ condition|)
 return|return;
 endif|#
 directive|endif
+comment|/* 	 * For dumps during autoconfiguration, 	 * if dump device has already configured... 	 */
+if|if
+condition|(
+name|dumplo
+operator|==
+literal|0
+operator|&&
+name|bdevsw
+index|[
+name|major
+argument_list|(
+name|dumpdev
+argument_list|)
+index|]
+operator|.
+name|d_psize
+condition|)
+name|dumplo
+operator|=
+operator|(
+operator|*
+name|bdevsw
+index|[
+name|major
+argument_list|(
+name|dumpdev
+argument_list|)
+index|]
+operator|.
+name|d_psize
+operator|)
+operator|(
+name|dumpdev
+operator|)
+operator|-
+name|physmem
+expr_stmt|;
+if|if
+condition|(
+name|dumplo
+operator|<
+literal|0
+condition|)
+name|dumplo
+operator|=
+literal|0
+expr_stmt|;
 name|dumpsize
 operator|=
 name|physmem
