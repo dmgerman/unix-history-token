@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.44	82/10/22	*/
+comment|/*	kern_proc.c	4.45	82/10/23	*/
 end_comment
 
 begin_include
@@ -2863,6 +2863,16 @@ specifier|register
 name|int
 name|x
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+name|m_getclr
+argument_list|(
+name|M_WAIT
+argument_list|)
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PGINPROF
@@ -3351,17 +3361,6 @@ name|p_xstat
 operator|=
 name|rv
 expr_stmt|;
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|m
-init|=
-name|m_getclr
-argument_list|(
-name|M_DONTWAIT
-argument_list|)
-decl_stmt|;
 name|p
 operator|->
 name|p_ru
@@ -3375,7 +3374,6 @@ name|rusage
 operator|*
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|p
 operator|->
