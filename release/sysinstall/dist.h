@@ -19,119 +19,126 @@ begin_define
 define|#
 directive|define
 name|DIST_BIN
-value|0x0001
+value|0x00001
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_GAMES
-value|0x0002
+value|0x00002
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_MANPAGES
-value|0x0004
+value|0x00004
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_PROFLIBS
-value|0x0008
+value|0x00008
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_DICT
-value|0x0010
+value|0x00010
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC
-value|0x0020
+value|0x00020
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_DOC
-value|0x0040
+value|0x00040
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_INFO
-value|0x0080
+value|0x00080
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_COMPAT1X
-value|0x0100
+value|0x00100
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_COMPAT20
-value|0x0200
+value|0x00200
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_COMPAT21
-value|0x0400
+value|0x00400
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_COMPAT22
-value|0x0800
+value|0x00800
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_COMPAT3X
+value|0x01000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86
-value|0x1000
+value|0x02000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_DES
-value|0x2000
+value|0x04000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_CATPAGES
-value|0x4000
+value|0x08000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_PORTS
-value|0x8000
+value|0x10000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_ALL
-value|0xFFFF
+value|0xFFFFF
 end_define
 
 begin_comment
