@@ -1818,6 +1818,26 @@ operator|=
 name|INFTIM
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|pthread
+operator|->
+name|wakeup_time
+operator|.
+name|tv_sec
+operator|-
+name|ts
+operator|.
+name|tv_sec
+operator|>
+literal|60000
+condition|)
+comment|/* Limit maximum timeout to prevent rollover. */
+name|timeout_ms
+operator|=
+literal|60000
+expr_stmt|;
 else|else
 block|{
 comment|/* 			 * Calculate the time left for the next thread to 			 * timeout: 			 */
