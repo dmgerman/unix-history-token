@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_random_ip_id.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1287,23 +1281,6 @@ begin_comment
 comment|/* DupAddrDetectionTransmits */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RANDOM_IP_ID
-end_ifndef
-
-begin_decl_stmt
-name|u_int32_t
-name|ip6_flow_seq
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|ip6_auto_flowlabel
@@ -1351,25 +1328,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RANDOM_IP_ID
-end_ifndef
-
-begin_decl_stmt
-name|u_int32_t
-name|ip6_id
-init|=
-literal|0UL
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int

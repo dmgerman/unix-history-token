@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_random_ip_id.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -613,6 +607,35 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable the transmission of source quench packets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|ip_do_randomid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|random_id
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ip_do_randomid
+argument_list|,
+literal|0
+argument_list|,
+literal|"Assign random ip_id values"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1386,17 +1409,12 @@ name|maxfragsperpacket
 operator|=
 literal|16
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RANDOM_IP_ID
 name|ip_id
 operator|=
 name|time_second
 operator|&
 literal|0xffff
 expr_stmt|;
-endif|#
-directive|endif
 name|ipintrq
 operator|.
 name|ifq_maxlen

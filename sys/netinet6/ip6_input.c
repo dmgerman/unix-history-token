@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_random_ip_id.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -817,16 +811,6 @@ expr_stmt|;
 name|frag6_init
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RANDOM_IP_ID
-name|ip6_flow_seq
-operator|=
-name|arc4random
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|ip6_desync_factor
 operator|=
 name|arc4random

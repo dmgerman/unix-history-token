@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_random_ip_id.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -4157,9 +4151,6 @@ name|sc
 operator|->
 name|sc_flowlabel
 operator|=
-ifdef|#
-directive|ifdef
-name|RANDOM_IP_ID
 operator|(
 name|htonl
 argument_list|(
@@ -4170,20 +4161,6 @@ operator|&
 name|IPV6_FLOWLABEL_MASK
 operator|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|htonl
-argument_list|(
-name|ip6_flow_seq
-operator|++
-argument_list|)
-operator|&
-name|IPV6_FLOWLABEL_MASK
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 endif|#
 directive|endif

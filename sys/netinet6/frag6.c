@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_random_ip_id.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -359,16 +353,6 @@ expr_stmt|;
 name|IP6Q_LOCK_INIT
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RANDOM_IP_ID
-name|ip6_id
-operator|=
-name|arc4random
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|ip6q
 operator|.
 name|ip6q_next

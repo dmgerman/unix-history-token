@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_random_ip_id.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_pf.h"
 end_include
 
@@ -46,20 +40,6 @@ include|#
 directive|include
 file|<sys/random.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|RANDOM_IP_ID
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|DEV_PF
-argument_list|)
-end_if
 
 begin_define
 define|#
@@ -753,15 +733,6 @@ name|ru_msb
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* RANDOM_IP_ID || DEV_PF */
-end_comment
 
 end_unit
 

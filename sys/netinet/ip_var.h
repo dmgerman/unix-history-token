@@ -440,12 +440,6 @@ name|ipstat
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RANDOM_IP_ID
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|u_short
@@ -456,11 +450,6 @@ end_decl_stmt
 begin_comment
 comment|/* ip packet ctr, for ids */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -791,12 +780,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RANDOM_IP_ID
-end_ifdef
-
 begin_function_decl
 name|u_int16_t
 name|ip_randomid
@@ -805,11 +788,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
@@ -1010,6 +988,51 @@ name|m
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|uint16_t
+name|ip_newid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip_do_randomid
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|uint16_t
+name|ip_newid
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ip_do_randomid
+condition|)
+return|return
+name|ip_randomid
+argument_list|()
+return|;
+return|return
+name|htons
+argument_list|(
+name|ip_id
+operator|++
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

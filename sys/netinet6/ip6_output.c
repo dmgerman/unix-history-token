@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_random_ip_id.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -3877,9 +3871,6 @@ name|ip6_frag
 modifier|*
 name|ip6f
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|RANDOM_IP_ID
 name|u_int32_t
 name|id
 init|=
@@ -3889,19 +3880,6 @@ name|ip6_randomid
 argument_list|()
 argument_list|)
 decl_stmt|;
-else|#
-directive|else
-name|u_int32_t
-name|id
-init|=
-name|htonl
-argument_list|(
-name|ip6_id
-operator|++
-argument_list|)
-decl_stmt|;
-endif|#
-directive|endif
 name|u_char
 name|nextproto
 decl_stmt|;
