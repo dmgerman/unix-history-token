@@ -6524,10 +6524,16 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_deactivate
 argument_list|(
 name|m_in
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 name|vm_page_protect
