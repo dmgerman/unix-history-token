@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	namei.h	6.8	85/02/15	*/
+comment|/*	namei.h	6.9	85/03/07	*/
 end_comment
 
 begin_ifndef
@@ -73,12 +73,6 @@ modifier|*
 name|ni_pdir
 decl_stmt|;
 comment|/* inode of parent directory of dirp */
-name|struct
-name|buf
-modifier|*
-name|ni_pathbp
-decl_stmt|;
-comment|/* unresolved pathname */
 name|struct
 name|iovec
 name|ni_iovec
