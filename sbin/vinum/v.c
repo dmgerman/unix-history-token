@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: v.c,v 1.24 1999/01/17 02:53:38 grog Exp grog $ */
+comment|/* $Id: v.c,v 1.25 1999/03/21 01:18:23 grog Exp grog $ */
 end_comment
 
 begin_include
@@ -699,7 +699,7 @@ name|WNOHANG
 argument_list|,
 name|NULL
 argument_list|)
-operator|>=
+operator|>
 literal|0
 condition|)
 empty_stmt|;
