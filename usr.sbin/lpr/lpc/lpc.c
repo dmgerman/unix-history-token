@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpc.c,v 1.6 1997/12/02 20:45:43 wollman Exp $"
+literal|"$Id: lpc.c,v 1.7 1998/03/22 20:19:27 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,12 +198,14 @@ value|20
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fromatty
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|cmdline
 index|[
@@ -213,12 +215,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|margc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|margv
@@ -229,6 +233,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|top
 decl_stmt|;
@@ -243,8 +248,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|toplevel
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

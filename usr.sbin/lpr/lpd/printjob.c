@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: printjob.c,v 1.18 1997/12/02 20:45:58 wollman Exp $"
+literal|"$Id: printjob.c,v 1.19 1998/08/21 18:08:46 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -949,23 +949,6 @@ expr|struct
 name|printer
 operator|*
 name|pp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|msearch
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-expr|struct
-name|termios
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6652,8 +6635,9 @@ name|c
 decl_stmt|;
 block|{
 specifier|register
+name|int
 name|scnwidth
-expr_stmt|;
+decl_stmt|;
 for|for
 control|(
 name|scnwidth
@@ -6734,10 +6718,11 @@ modifier|*
 name|strp
 decl_stmt|;
 specifier|register
+name|int
 name|nchrs
-operator|,
+decl_stmt|,
 name|j
-expr_stmt|;
+decl_stmt|;
 name|char
 name|outbuf
 index|[
@@ -8937,6 +8922,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|msearch
 argument_list|(
 name|tmp

@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: modes.c,v 1.4 1997/12/02 20:45:56 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,18 @@ begin_include
 include|#
 directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lp.local.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_struct

@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lpq.c,v 1.5 1997/12/02 20:46:04 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +208,22 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

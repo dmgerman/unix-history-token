@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lprm.c,v 1.3 1997/09/24 06:48:17 charnier Exp $"
+literal|"$Id: lprm.c,v 1.4 1997/12/02 20:46:15 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,6 +224,22 @@ end_decl_stmt
 begin_comment
 comment|/* buffer for person */
 end_comment
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

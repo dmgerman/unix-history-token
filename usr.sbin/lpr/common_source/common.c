@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: common.c,v 1.10 1997/12/02 20:45:18 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,8 +180,9 @@ init|=
 name|line
 decl_stmt|;
 specifier|register
+name|int
 name|c
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 operator|(

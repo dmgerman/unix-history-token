@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pac.c,v 1.7 1997/09/24 06:48:24 charnier Exp $"
+literal|"$Id: pac.c,v 1.8 1997/12/02 20:46:22 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -99,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -316,6 +328,22 @@ end_decl_stmt
 begin_comment
 comment|/* Hash table proper */
 end_comment
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

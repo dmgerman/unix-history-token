@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpr.c,v 1.23 1997/12/06 17:55:07 jdp Exp $"
+literal|"$Id: lpr.c,v 1.24 1998/04/17 17:25:49 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2863,8 +2863,9 @@ name|signo
 decl_stmt|;
 block|{
 specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 name|signal
 argument_list|(
 name|SIGHUP
@@ -3172,6 +3173,7 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 	 * XXX Shall we add a similar test for ELF? 	 */
 if|if
 condition|(
 name|read

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpd.c,v 1.8 1997/09/24 06:47:54 charnier Exp $"
+literal|"$Id: lpd.c,v 1.9 1997/12/02 20:45:54 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -246,6 +246,22 @@ end_decl_stmt
 begin_comment
 comment|/* from remote socket */
 end_comment
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: cmds.c,v 1.11 1997/12/02 20:45:37 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,15 +170,6 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|uid_t
-name|uid
-decl_stmt|,
-name|euid
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static

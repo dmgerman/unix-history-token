@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -243,6 +249,15 @@ name|struct
 name|cmd
 name|cmdtab
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uid_t
+name|uid
+decl_stmt|,
+name|euid
 decl_stmt|;
 end_decl_stmt
 
