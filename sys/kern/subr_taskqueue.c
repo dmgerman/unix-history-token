@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -74,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -96,6 +96,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|taskqueue_giant_ih
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|taskqueue_ih
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|STAILQ_HEAD
@@ -107,22 +123,6 @@ argument_list|)
 name|taskqueue_queues
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|taskqueue_ih
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|taskqueue_giant_ih
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -505,7 +505,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|queue
@@ -514,6 +513,8 @@ name|tq_name
 argument_list|,
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|mtx_unlock
@@ -542,7 +543,7 @@ name|taskqueue_queues_mutex
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
