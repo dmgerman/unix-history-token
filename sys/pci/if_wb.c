@@ -4999,6 +4999,10 @@ argument_list|,
 name|wb_bfree
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|EXT_NET_DRV
 argument_list|)
 expr_stmt|;
 block|}

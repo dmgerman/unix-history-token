@@ -3755,6 +3755,10 @@ name|ti_softc
 operator|*
 operator|)
 name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|EXT_NET_DRV
 argument_list|)
 expr_stmt|;
 block|}

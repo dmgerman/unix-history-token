@@ -3719,6 +3719,10 @@ name|sk_if_softc
 operator|*
 operator|)
 name|sc_if
+argument_list|,
+literal|0
+argument_list|,
+name|EXT_NET_DRV
 argument_list|)
 expr_stmt|;
 name|m_new
