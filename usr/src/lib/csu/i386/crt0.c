@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.8 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,24 @@ begin_comment
 comment|/*  *	C start up routine.  *	Robert Henry, UCB, 20 Oct 81  *  *	We make the following (true) assumption:  *	1) The only register variable that we can trust is ebp,  *	which points to the base of the kernel calling frame.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -44,6 +62,25 @@ operator|*
 operator|*
 operator|)
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|empty
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+init|=
+name|empty
 decl_stmt|;
 end_decl_stmt
 
@@ -172,12 +209,10 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-else|not lint
 asm|asm("lea 4(%ebp),%ebx");
 comment|/* catch it quick */
 endif|#
 directive|endif
-endif|not lint
 for|for
 control|(
 name|argv
@@ -256,7 +291,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|paranoid
 ifdef|#
 directive|ifdef
 name|MCRT0
@@ -276,10 +310,45 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|MCRT0
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+condition|)
+if|if
+condition|(
+operator|(
+name|__progname
+operator|=
+name|strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|__progname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|else
+operator|++
+name|__progname
 expr_stmt|;
 name|exit
 argument_list|(
@@ -329,10 +398,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* CRT0 */
-end_comment
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.1 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,24 @@ begin_comment
 comment|/*  *	C start up routine.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -44,6 +62,25 @@ operator|*
 operator|*
 operator|)
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|empty
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+init|=
+name|empty
 decl_stmt|;
 end_decl_stmt
 
@@ -84,16 +121,6 @@ name|void
 name|_mcleanup
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|volatile
-name|void
-name|exit
-parameter_list|(
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -266,6 +293,42 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+condition|)
+if|if
+condition|(
+operator|(
+name|__progname
+operator|=
+name|strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|__progname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|else
+operator|++
+name|__progname
+expr_stmt|;
 name|exit
 argument_list|(
 name|main
@@ -278,7 +341,6 @@ name|envp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -307,7 +369,6 @@ end_asm
 begin_endif
 endif|#
 directive|endif
-endif|CRT0
 end_endif
 
 end_unit
