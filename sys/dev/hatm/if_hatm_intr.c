@@ -731,7 +731,7 @@ name|hdr
 operator|.
 name|phys
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1990,7 +1990,7 @@ index|]
 operator|.
 name|phys
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 operator|)
 operator|!=

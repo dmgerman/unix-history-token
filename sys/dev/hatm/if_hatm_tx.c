@@ -2171,7 +2171,7 @@ argument_list|,
 operator|&
 name|arg
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2241,7 +2241,7 @@ argument_list|,
 operator|&
 name|arg
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 block|}

@@ -1301,6 +1301,12 @@ block|}
 name|rsr0
 operator||=
 name|HE_REGM_RSR0_AAL_RAW
+operator||
+name|HE_REGM_RSR0_PTI7
+operator||
+name|HE_REGM_RSR0_RM
+operator||
+name|HE_REGM_RSR0_F5OAM
 expr_stmt|;
 block|}
 name|rsr0

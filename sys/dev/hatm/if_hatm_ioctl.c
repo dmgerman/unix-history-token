@@ -979,6 +979,8 @@ operator||
 operator|(
 name|arg
 operator|->
+name|param
+operator|.
 name|vpi
 operator|<<
 literal|16
@@ -986,6 +988,8 @@ operator|)
 operator||
 name|arg
 operator|->
+name|param
+operator|.
 name|vci
 argument_list|)
 expr_stmt|;
