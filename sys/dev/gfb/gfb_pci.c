@@ -26,20 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -187,33 +173,6 @@ directive|include
 file|<dev/gfb/gfb_pci.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/rpb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __alpha__ */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -225,31 +184,6 @@ unit|static devclass_t gfb_devclass;
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|sccnattach
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __alpha__ */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -303,17 +237,6 @@ name|rid
 decl_stmt|,
 name|va_index
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__alpha__
-name|struct
-name|ctb
-modifier|*
-name|ctb
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* __alpha__ */
 name|s
 operator|=
 name|splimp
@@ -602,8 +525,14 @@ name|adp
 operator|->
 name|va_io_base
 operator|=
-literal|0
+operator|(
+name|vm_offset_t
+operator|)
+name|sc
+operator|->
+name|res
 expr_stmt|;
+comment|/* XXX */
 name|adp
 operator|->
 name|va_io_size
@@ -1093,45 +1022,6 @@ operator|=
 name|sc
 expr_stmt|;
 block|}
-comment|/* 	   This is a back-door for PCI devices--since FreeBSD no longer supports 	   PCI configuration-space accesses during the *configure() phase for 	   video adapters, we cannot identify a PCI device as the console during 	   the first call to sccnattach(). There must be a second chance for PCI 	   adapters to be recognized as the console, and this is it... 	*/
-ifdef|#
-directive|ifdef
-name|__alpha__
-name|ctb
-operator|=
-operator|(
-expr|struct
-name|ctb
-operator|*
-operator|)
-operator|(
-operator|(
-operator|(
-name|caddr_t
-operator|)
-name|hwrpb
-operator|)
-operator|+
-name|hwrpb
-operator|->
-name|rpb_ctb_off
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|ctb
-operator|->
-name|ctb_term_type
-operator|==
-literal|3
-condition|)
-comment|/* Display adapter */
-name|sccnattach
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* __alpha__ */
 name|device_printf
 argument_list|(
 name|dev

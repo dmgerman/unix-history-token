@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/eventhandler.h>
 end_include
 
@@ -855,13 +861,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-operator|!
-name|__alpha__
-end_if
-
 begin_function_decl
 specifier|static
 name|void
@@ -875,11 +874,6 @@ name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1440,26 +1434,6 @@ name|cn_term_t
 name|sccnterm
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|__alpha__
-end_if
-
-begin_function_decl
-name|void
-name|sccnattach
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|CONS_DRIVER
@@ -7875,10 +7849,6 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-if|#
-directive|if
-operator|!
-name|__alpha__
 name|int
 name|unit
 decl_stmt|;
@@ -7946,22 +7916,6 @@ argument_list|,
 literal|"consolectl"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !__alpha__ */
-if|#
-directive|if
-name|__alpha__
-comment|/*      * alpha use sccnattach() rather than cnprobe()/cninit()/cnterm()      * interface to install the console.  Always return CN_DEAD from      * here.      */
-name|cp
-operator|->
-name|cn_pri
-operator|=
-name|CN_DEAD
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* __alpha__ */
 block|}
 end_function
 
@@ -7976,10 +7930,6 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-if|#
-directive|if
-operator|!
-name|__alpha__
 name|int
 name|unit
 decl_stmt|;
@@ -8029,16 +7979,6 @@ name|sc_consptr
 operator|=
 name|cp
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !__alpha__ */
-if|#
-directive|if
-name|__alpha__
-comment|/* SHOULDN'T REACH HERE */
-endif|#
-directive|endif
-comment|/* __alpha__ */
 block|}
 end_function
 
@@ -8064,10 +8004,6 @@ return|return;
 comment|/* shouldn't happen */
 if|#
 directive|if
-operator|!
-name|__alpha__
-if|#
-directive|if
 literal|0
 comment|/* XXX */
 block|sc_clear_screen(sc_console);     sccnupdate(sc_console);
@@ -8089,180 +8025,8 @@ name|sc_console
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !__alpha__ */
-if|#
-directive|if
-name|__alpha__
-comment|/* do nothing XXX */
-endif|#
-directive|endif
-comment|/* __alpha__ */
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_function
-name|void
-name|sccnattach
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-specifier|static
-name|struct
-name|consdev
-name|consdev
-decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|bcopy
-argument_list|(
-operator|&
-name|sc_consdev
-argument_list|,
-operator|&
-name|consdev
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc_consdev
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|consdev
-operator|.
-name|cn_pri
-operator|=
-name|sc_get_cons_priority
-argument_list|(
-operator|&
-name|unit
-argument_list|,
-operator|&
-name|flags
-argument_list|)
-expr_stmt|;
-comment|/* a video card is always required */
-if|if
-condition|(
-operator|!
-name|scvidprobe
-argument_list|(
-name|unit
-argument_list|,
-name|flags
-argument_list|,
-name|TRUE
-argument_list|)
-condition|)
-name|consdev
-operator|.
-name|cn_pri
-operator|=
-name|CN_DEAD
-expr_stmt|;
-comment|/* alpha doesn't allow the console being without a keyboard... Why? */
-if|if
-condition|(
-operator|!
-name|sckbdprobe
-argument_list|(
-name|unit
-argument_list|,
-name|flags
-argument_list|,
-name|TRUE
-argument_list|)
-condition|)
-name|consdev
-operator|.
-name|cn_pri
-operator|=
-name|CN_DEAD
-expr_stmt|;
-if|if
-condition|(
-name|consdev
-operator|.
-name|cn_pri
-operator|==
-name|CN_DEAD
-condition|)
-return|return;
-name|scinit
-argument_list|(
-name|unit
-argument_list|,
-name|flags
-operator||
-name|SC_KERNEL_CONSOLE
-argument_list|)
-expr_stmt|;
-name|sc_console_unit
-operator|=
-name|unit
-expr_stmt|;
-name|sc_consptr
-operator|=
-operator|&
-name|consdev
-expr_stmt|;
-name|sc_console
-operator|=
-name|sc_get_stat
-argument_list|(
-name|sc_get_softc
-argument_list|(
-name|unit
-argument_list|,
-name|SC_KERNEL_CONSOLE
-argument_list|)
-operator|->
-name|dev
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|consdev
-operator|.
-name|cn_name
-argument_list|,
-literal|"ttyv%r"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cnadd
-argument_list|(
-operator|&
-name|consdev
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __alpha__ */
-end_comment
 
 begin_function
 specifier|static
@@ -15401,13 +15165,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-operator|!
-name|__alpha__
-end_if
-
 begin_function
 specifier|static
 name|void
@@ -15668,15 +15425,6 @@ literal|1
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__alpha__ */
-end_comment
 
 begin_function
 specifier|static
@@ -17839,31 +17587,14 @@ name|DBG
 case|:
 ifndef|#
 directive|ifndef
-name|SC_DISABLE_DDBKEY
-ifdef|#
-directive|ifdef
-name|DDB
-name|Debugger
+name|SC_DISABLE_KDBKEY
+name|kdb_enter
 argument_list|(
 literal|"manual escape to debugger"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"No debugger in kernel\n"
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
-else|#
-directive|else
-comment|/* SC_DISABLE_DDBKEY */
-comment|/* do nothing */
-endif|#
-directive|endif
-comment|/* SC_DISABLE_DDBKEY */
 break|break;
 case|case
 name|PNC
