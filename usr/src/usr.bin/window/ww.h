@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.11 83/08/26	  */
+comment|/*  *	@(#)ww.h	3.12 83/09/01	  */
 end_comment
 
 begin_include
@@ -118,6 +118,12 @@ literal|1
 decl_stmt|;
 comment|/* has fake cursor */
 name|char
+name|ww_hasframe
+range|:
+literal|1
+decl_stmt|;
+comment|/* frame it */
+name|char
 name|ww_index
 decl_stmt|;
 comment|/* the index, for wwindex[] */
@@ -193,12 +199,6 @@ index|]
 decl_stmt|;
 comment|/* "/dev/ttyp?" */
 comment|/* below are things for the user */
-name|char
-name|ww_hasframe
-range|:
-literal|1
-decl_stmt|;
-comment|/* frame it */
 name|char
 name|ww_center
 range|:
