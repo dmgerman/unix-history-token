@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.30 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -605,6 +605,17 @@ name|ch
 decl_stmt|,
 name|what
 decl_stmt|;
+name|char
+modifier|*
+name|namelist
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|memfile
+init|=
+name|NULL
+decl_stmt|;
 name|arg
 operator|=
 literal|0
@@ -624,7 +635,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fnp:u:v"
+literal|"fnp:u:vNM"
 argument_list|)
 operator|)
 operator|!=
@@ -646,20 +657,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-case|case
-literal|'M'
-case|:
-comment|/* NOTYET: set kernel to optarg. */
-name|usage
-argument_list|()
-expr_stmt|;
-case|case
-literal|'N'
-case|:
-comment|/* NOTYET: set memory to optarg. */
-name|usage
-argument_list|()
-expr_stmt|;
 case|case
 literal|'n'
 case|:
@@ -771,6 +768,22 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'N'
+case|:
+name|namelist
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+name|memfile
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -857,14 +870,13 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* modify the following to make work on dead kernels */
 if|if
 condition|(
 name|kvm_openfiles
 argument_list|(
-name|NULL
+name|namelist
 argument_list|,
-name|NULL
+name|memfile
 argument_list|,
 name|NULL
 argument_list|)
@@ -3376,7 +3388,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: fstat [-fnv] [-p pid] [-u user] [filename ...]\n"
+literal|"usage: fstat [-fnv] [-p pid] [-u user] [-N system] [-M core] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
