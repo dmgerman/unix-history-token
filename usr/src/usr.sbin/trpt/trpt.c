@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	5.9 (Berkeley) %G%"
+literal|"@(#)trpt.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1691,6 +1691,29 @@ name|ti
 operator|->
 name|ti_flags
 expr_stmt|;
+define|#
+directive|define
+name|IDENT
+parameter_list|(
+name|a
+parameter_list|)
+value|a
+define|#
+directive|define
+name|CAT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|IDENT(a)b
+define|#
+directive|define
+name|pf
+parameter_list|(
+name|flag
+parameter_list|)
+value|{ \ 	if (ti->ti_flags&CAT(TH_,flag)) \ 		printf("%s%s", cp, "flag"); \ 		cp = ","; \ 	}
 if|if
 condition|(
 name|flags
@@ -1703,41 +1726,34 @@ name|cp
 init|=
 literal|"<"
 decl_stmt|;
-define|#
-directive|define
-name|pf
-parameter_list|(
-name|flag
-parameter_list|)
-value|{ \ 	if (ti->ti_flags&flag) \ 		printf("%s%s", cp, "f"); \ 		cp = ","; \ 	}
 name|pf
 argument_list|(
-name|TH_SYN
+name|SYN
 argument_list|)
 expr_stmt|;
 name|pf
 argument_list|(
-name|TH_ACK
+name|ACK
 argument_list|)
 expr_stmt|;
 name|pf
 argument_list|(
-name|TH_FIN
+name|FIN
 argument_list|)
 expr_stmt|;
 name|pf
 argument_list|(
-name|TH_RST
+name|RST
 argument_list|)
 expr_stmt|;
 name|pf
 argument_list|(
-name|TH_PUSH
+name|PUSH
 argument_list|)
 expr_stmt|;
 name|pf
 argument_list|(
-name|TH_URG
+name|URG
 argument_list|)
 expr_stmt|;
 name|printf
