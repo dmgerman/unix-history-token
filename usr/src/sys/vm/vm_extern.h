@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_extern.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_extern.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -1019,26 +1019,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
-name|vm_move
-name|__P
-argument_list|(
-operator|(
-name|vm_map_t
-operator|,
-name|vm_offset_t
-operator|,
-name|vm_map_t
-operator|,
-name|vm_offset_t
-operator|,
-name|boolean_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|vm_protect
 name|__P
@@ -1053,42 +1033,6 @@ operator|,
 name|boolean_t
 operator|,
 name|vm_prot_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vm_region
-name|__P
-argument_list|(
-operator|(
-name|vm_map_t
-operator|,
-name|vm_offset_t
-operator|*
-operator|,
-name|vm_size_t
-operator|*
-operator|,
-name|vm_prot_t
-operator|*
-operator|,
-name|vm_prot_t
-operator|*
-operator|,
-name|vm_inherit_t
-operator|*
-operator|,
-name|boolean_t
-operator|*
-operator|,
-name|vm_object_t
-operator|*
-operator|,
-name|vm_offset_t
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
