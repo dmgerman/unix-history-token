@@ -117,6 +117,46 @@ begin_comment
 comment|/* Equivilent to any 					 * MAC_BIBA_TYPE_LABEL. */
 end_comment
 
+begin_comment
+comment|/*  * Biba compartments bit test/set macros.  * The range is 1 to MAC_BIBA_MAX_COMPARTMENTS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAC_BIBA_BIT_TEST
+parameter_list|(
+name|b
+parameter_list|,
+name|w
+parameter_list|)
+define|\
+value|((w)[(((b) - 1)>> 3)]& (1<< (((b) - 1)& 7)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_BIBA_BIT_SET
+parameter_list|(
+name|b
+parameter_list|,
+name|w
+parameter_list|)
+define|\
+value|((w)[(((b) - 1)>> 3)] |= (1<< (((b) - 1)& 7)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_BIBA_BIT_SET_EMPTY
+parameter_list|(
+name|set
+parameter_list|)
+value|biba_bit_set_empty(set)
+end_define
+
 begin_endif
 endif|#
 directive|endif

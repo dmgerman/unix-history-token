@@ -79,6 +79,13 @@ begin_comment
 comment|/*  * Structures and constants associated with a Biba Integrity policy.  * mac_biba represents a Biba label, with mb_type determining its properties,  * and mb_grade represents the hierarchal grade if valid for the current  * mb_type.  These structures will move to mac_biba.h once we have dymamic  * labels exposed to userland.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAC_BIBA_MAX_COMPARTMENTS
+value|256
+end_define
+
 begin_struct
 struct|struct
 name|mac_biba_element
@@ -89,6 +96,14 @@ decl_stmt|;
 name|u_short
 name|mbe_grade
 decl_stmt|;
+name|u_char
+name|mbe_compartments
+index|[
+name|MAC_BIBA_MAX_COMPARTMENTS
+operator|>>
+literal|3
+index|]
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -122,6 +137,13 @@ begin_comment
 comment|/*  * Structures and constants associated with a Multi-Level Security policy.  * mac_mls represents an MLS label, with mm_type determining its properties,  * and mm_level represents the hierarchal sensitivity level if valid for the  * current mm_type.  These structures will move to mac_mls.h once we have  * dynamic labels exposed to userland.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAC_MLS_MAX_COMPARTMENTS
+value|256
+end_define
+
 begin_struct
 struct|struct
 name|mac_mls_element
@@ -132,6 +154,14 @@ decl_stmt|;
 name|u_short
 name|mme_level
 decl_stmt|;
+name|u_char
+name|mme_compartments
+index|[
+name|MAC_MLS_MAX_COMPARTMENTS
+operator|>>
+literal|3
+index|]
+expr_stmt|;
 block|}
 struct|;
 end_struct
