@@ -13387,6 +13387,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|mntvnode_mtx
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 if|if
