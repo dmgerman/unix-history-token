@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md5.c,v 1.4 1995/02/26 02:00:35 phk Exp $  *  * Derived from:  */
+comment|/*  * $Id: md5.c,v 1.5 1995/05/30 06:09:19 rgrimes Exp $  *  * Derived from:  */
 end_comment
 
 begin_comment
@@ -140,6 +140,12 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|33
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -257,6 +263,8 @@ name|argv
 index|[
 name|i
 index|]
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 if|if
@@ -325,6 +333,12 @@ argument_list|(
 name|string
 argument_list|)
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|33
+index|]
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"MD5 (\"%s\") = %s\n"
@@ -336,6 +350,8 @@ argument_list|(
 name|string
 argument_list|,
 name|len
+argument_list|,
+name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -374,6 +390,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
+decl_stmt|,
+name|buf
+index|[
+literal|33
+index|]
 decl_stmt|;
 name|printf
 argument_list|(
@@ -456,6 +477,8 @@ name|MD5End
 argument_list|(
 operator|&
 name|context
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 comment|/* Stop timer */
@@ -612,6 +635,12 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|33
+index|]
+decl_stmt|;
 name|MD5Init
 argument_list|(
 operator|&
@@ -684,6 +713,8 @@ name|MD5End
 argument_list|(
 operator|&
 name|context
+argument_list|,
+name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
