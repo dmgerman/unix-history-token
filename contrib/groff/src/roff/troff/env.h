@@ -1206,7 +1206,12 @@ parameter_list|)
 function_decl|;
 name|void
 name|do_break
-parameter_list|()
+parameter_list|(
+name|int
+name|spread
+init|=
+literal|0
+parameter_list|)
 function_decl|;
 comment|// .br
 name|void
@@ -1555,13 +1560,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|break_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|compatible_flag
 decl_stmt|;
 end_decl_stmt
 
