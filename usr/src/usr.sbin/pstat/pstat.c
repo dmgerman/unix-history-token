@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#) (Berkeley) 82/10/19"
+literal|"@(#) (Berkeley) 82/12/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<sys/map.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -1047,7 +1053,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ILOCK
+name|ILOCKED
 argument_list|,
 literal|'L'
 argument_list|)
@@ -1187,7 +1193,7 @@ literal|"%4d"
 argument_list|,
 name|ip
 operator|->
-name|i_rdlockc
+name|i_shlockc
 operator|&
 literal|0377
 argument_list|)
@@ -1198,7 +1204,7 @@ literal|"%4d"
 argument_list|,
 name|ip
 operator|->
-name|i_wrlockc
+name|i_exlockc
 operator|&
 literal|0377
 argument_list|)
@@ -2237,15 +2243,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %u"
-argument_list|,
-name|pp
-operator|->
-name|p_clktim
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -2845,7 +2842,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8.1o"
+literal|"%8.1x"
 argument_list|,
 name|tp
 operator|->
@@ -2956,7 +2953,17 @@ argument_list|,
 literal|'X'
 argument_list|)
 expr_stmt|;
-comment|/* 	putf(tp->t_state&TS_HUPCLS, 'H');  */
+name|putf
+argument_list|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_HUPCLS
+argument_list|,
+literal|'H'
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%6d"
@@ -3231,7 +3238,9 @@ literal|"%9.1x"
 argument_list|,
 name|U
 operator|.
-name|u_ssav
+name|u_ssave
+operator|.
+name|val
 index|[
 name|i
 index|]
@@ -3528,7 +3537,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ssav"
+literal|"ssave"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3572,7 +3581,9 @@ literal|"%9.1x"
 argument_list|,
 name|U
 operator|.
-name|u_ssav
+name|u_ssave
+operator|.
+name|val
 index|[
 name|i
 index|]
@@ -3696,15 +3707,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sep\t%d\n"
-argument_list|,
-name|U
-operator|.
-name|u_sep
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"ttyp\t%.1x\n"
 argument_list|,
 name|U
@@ -3803,15 +3805,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"fpflag\t%D\n"
-argument_list|,
-name|U
-operator|.
-name|u_fpflag
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"cmask\t%D\n"
 argument_list|,
 name|U
@@ -3838,7 +3831,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"vm\t"
+literal|"ru\t"
 argument_list|)
 expr_stmt|;
 name|ip
@@ -3850,7 +3843,7 @@ operator|)
 operator|&
 name|U
 operator|.
-name|u_vm
+name|u_ru
 expr_stmt|;
 for|for
 control|(
@@ -3864,7 +3857,7 @@ sizeof|sizeof
 argument_list|(
 name|U
 operator|.
-name|u_vm
+name|u_ru
 argument_list|)
 operator|/
 sizeof|sizeof
@@ -3899,11 +3892,11 @@ operator|)
 operator|&
 name|U
 operator|.
-name|u_cvm
+name|u_cru
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cvm\t"
+literal|"cru\t"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3918,7 +3911,7 @@ sizeof|sizeof
 argument_list|(
 name|U
 operator|.
-name|u_vm
+name|u_cru
 argument_list|)
 operator|/
 sizeof|sizeof
