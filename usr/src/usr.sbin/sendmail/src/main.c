@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.6 (Berkeley) %G%"
+literal|"@(#)main.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ define|#
 directive|define
 name|_DEFINE
 end_define
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -636,7 +642,22 @@ condition|(
 operator|--
 name|i
 operator|>
-literal|2
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|i
+operator|!=
+name|STDIN_FILENO
+operator|&&
+name|i
+operator|!=
+name|STDOUT_FILENO
+operator|&&
+name|i
+operator|!=
+name|STDERR_FILENO
 condition|)
 operator|(
 name|void
@@ -646,6 +667,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 end_while
 
 begin_expr_stmt

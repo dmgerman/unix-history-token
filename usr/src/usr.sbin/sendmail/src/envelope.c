@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.1 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -654,6 +654,29 @@ name|e_dfp
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|10
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: done"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOG */
 block|}
 end_block
 
@@ -1649,10 +1672,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-name|SuprErrs
-operator|=
-name|TRUE
-expr_stmt|;
+comment|/* 	SuprErrs = TRUE; */
 if|if
 condition|(
 name|from
@@ -1726,18 +1746,30 @@ block|}
 endif|#
 directive|endif
 comment|/* LOG */
+if|if
+condition|(
+name|from
+operator|!=
+name|NULL
+condition|)
+name|SuprErrs
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+name|from
+operator|==
+name|realname
+operator|||
+name|parseaddr
+argument_list|(
 name|from
 operator|=
 name|newstr
 argument_list|(
 name|realname
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|parseaddr
-argument_list|(
-name|from
 argument_list|,
 operator|&
 name|e
@@ -1752,7 +1784,14 @@ name|e
 argument_list|)
 operator|==
 name|NULL
-operator|&&
+condition|)
+block|{
+name|SuprErrs
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
 name|parseaddr
 argument_list|(
 literal|"postmaster"
@@ -1771,7 +1810,6 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|syserr
 argument_list|(
 literal|"setsender: can't even parse postmaster!"

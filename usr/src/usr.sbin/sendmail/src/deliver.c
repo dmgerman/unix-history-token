@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.8 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1915,12 +1915,19 @@ name|rcode
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|to
 operator|->
 name|q_flags
 operator||=
 name|QSENT
 expr_stmt|;
+name|e
+operator|->
+name|e_nsent
+operator|++
+expr_stmt|;
+block|}
 block|}
 comment|/* 	**  Restore state and return. 	*/
 name|errno
@@ -5364,9 +5371,6 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
-name|int
-name|nsent
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|LOCKF
@@ -5475,7 +5479,9 @@ name|q_paddr
 argument_list|,
 name|e
 operator|->
-name|e_to
+name|e_sendqueue
+operator|->
+name|q_paddr
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5832,7 +5838,9 @@ comment|/* LOCKF */
 break|break;
 block|}
 comment|/* 	**  Run through the list and send everything. 	*/
-name|nsent
+name|e
+operator|->
+name|e_nsent
 operator|=
 literal|0
 expr_stmt|;
@@ -5912,7 +5920,9 @@ name|QUEUE
 comment|/* 			**  Checkpoint the send list every few addresses 			*/
 if|if
 condition|(
-name|nsent
+name|e
+operator|->
+name|e_nsent
 operator|>=
 name|CheckpointInterval
 condition|)
@@ -5926,7 +5936,9 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|nsent
+name|e
+operator|->
+name|e_nsent
 operator|=
 literal|0
 expr_stmt|;
@@ -5934,19 +5946,15 @@ block|}
 endif|#
 directive|endif
 comment|/* QUEUE */
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|deliver
 argument_list|(
 name|e
 argument_list|,
 name|q
 argument_list|)
-operator|==
-name|EX_OK
-condition|)
-name|nsent
-operator|++
 expr_stmt|;
 block|}
 block|}

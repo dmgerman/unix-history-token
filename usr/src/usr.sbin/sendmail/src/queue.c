@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.3 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.4 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.3 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.4 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -5072,6 +5072,14 @@ name|DefUser
 argument_list|)
 expr_stmt|;
 block|}
+name|a
+operator|->
+name|q_user
+operator|=
+name|a
+operator|->
+name|q_ruser
+expr_stmt|;
 name|a
 operator|->
 name|q_flags

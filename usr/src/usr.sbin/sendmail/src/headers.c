@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.3 (Berkeley) %G%"
+literal|"@(#)headers.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1547,6 +1547,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|extern
+name|char
+modifier|*
+name|arpatounix
+parameter_list|()
+function_decl|;
 name|define
 argument_list|(
 literal|'a'
@@ -1556,7 +1562,33 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-comment|/* we don't have a good way to do canonical conversion .... 		define('d', newstr(arpatounix(p)), e); 		.... so we will ignore the problem for the time being */
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|arpatounix
+argument_list|(
+name|p
+argument_list|,
+name|e
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|define
+argument_list|(
+literal|'d'
+argument_list|,
+name|newstr
+argument_list|(
+name|p
+argument_list|)
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	**  Log collection information. 	*/
 ifdef|#
@@ -1649,7 +1681,7 @@ name|sprintf
 argument_list|(
 name|sbuf
 argument_list|,
-literal|"from=%.200s, size=%ld, class=%d, msgid=%.100s"
+literal|"from=%.200s, size=%ld, class=%d, pri=%ld, nrcpts=%d, msgid=%.100s"
 argument_list|,
 name|e
 operator|->
@@ -1664,6 +1696,14 @@ argument_list|,
 name|e
 operator|->
 name|e_class
+argument_list|,
+name|e
+operator|->
+name|e_msgpriority
+argument_list|,
+name|e
+operator|->
+name|e_nrcpts
 argument_list|,
 name|msgid
 argument_list|)
@@ -2493,6 +2533,33 @@ end_escape
 begin_comment
 comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		fp -- file to put it on. **		m -- mailer to use. **		e -- envelope to use. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
+
+begin_comment
+comment|/*  * Macro for fast max (not available in e.g. DG/UX, 386/ix).  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)>(b))?(a):(b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|putheader

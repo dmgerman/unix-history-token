@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	6.1 (Berkeley) %G%"
+literal|"@(#)macro.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,6 +110,10 @@ comment|/* set if recursion required */
 name|int
 name|i
 decl_stmt|;
+name|int
+name|iflev
+decl_stmt|;
+comment|/* if nesting level */
 name|char
 name|xbuf
 index|[
@@ -151,6 +155,10 @@ block|}
 name|skipping
 operator|=
 name|FALSE
+expr_stmt|;
+name|iflev
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -199,6 +207,14 @@ case|case
 name|CONDIF
 case|:
 comment|/* see if var set */
+if|if
+condition|(
+name|iflev
+operator|++
+operator|<=
+literal|0
+condition|)
+block|{
 name|c
 operator|=
 operator|*
@@ -217,10 +233,18 @@ operator|==
 name|NULL
 expr_stmt|;
 continue|continue;
+block|}
+break|break;
 case|case
 name|CONDELSE
 case|:
 comment|/* change state of skipping */
+if|if
+condition|(
+name|iflev
+operator|==
+literal|1
+condition|)
 name|skipping
 operator|=
 operator|!
@@ -231,11 +255,21 @@ case|case
 name|CONDFI
 case|:
 comment|/* stop skipping */
+if|if
+condition|(
+operator|--
+name|iflev
+operator|<=
+literal|0
+condition|)
+block|{
 name|skipping
 operator|=
 name|FALSE
 expr_stmt|;
 continue|continue;
+block|}
+break|break;
 case|case
 literal|'\001'
 case|:
