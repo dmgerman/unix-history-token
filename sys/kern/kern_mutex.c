@@ -294,18 +294,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|propagate_priority
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|proc
-operator|*
-argument_list|)
-name|__unused
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -416,6 +415,14 @@ name|p
 operator|->
 name|p_blocked
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -462,6 +469,19 @@ operator|==
 name|P_MAGIC
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+operator|->
+name|p_stat
+operator|!=
+name|SSLEEP
+argument_list|,
+operator|(
+literal|"sleeping process owns a mutex"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -471,17 +491,26 @@ operator|<=
 name|pri
 condition|)
 return|return;
-comment|/* 		 * If lock holder is actually running, just bump priority. 		 */
-if|if
-condition|(
-name|TAILQ_NEXT
+comment|/* 		 * Bump this process' priority. 		 */
+name|SET_PRIO
 argument_list|(
 name|p
 argument_list|,
-name|p_procq
+name|pri
 argument_list|)
-operator|==
-name|NULL
+expr_stmt|;
+comment|/* 		 * If lock holder is actually running, just bump priority. 		 */
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* 		 * For SMP, we can check the p_oncpu field to see if we are 		 * running. 		 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_oncpu
+operator|!=
+literal|0xff
 condition|)
 block|{
 name|MPASS
@@ -499,15 +528,27 @@ operator|==
 name|SZOMB
 argument_list|)
 expr_stmt|;
-name|SET_PRIO
-argument_list|(
+return|return;
+block|}
+else|#
+directive|else
+comment|/* 		 * For UP, we check to see if p is curproc (this shouldn't 		 * ever happen however as it would mean we are in a deadlock.) 		 */
+if|if
+condition|(
 name|p
-argument_list|,
-name|pri
+operator|==
+name|curproc
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"Deadlock detected"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 comment|/* 		 * If on run queue move to new run queue, and 		 * quit. 		 */
 if|if
 condition|(
@@ -518,6 +559,19 @@ operator|==
 name|SRUN
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"XXX: moving process %d(%s) to a new run queue\n"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|)
+expr_stmt|;
 name|MPASS
 argument_list|(
 name|p
@@ -532,13 +586,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|SET_PRIO
-argument_list|(
-name|p
-argument_list|,
-name|pri
-argument_list|)
-expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|p
@@ -546,39 +593,36 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * If we aren't blocked on a mutex, give up and quit. 		 */
-if|if
-condition|(
+comment|/* 		 * If we aren't blocked on a mutex, we should be. 		 */
+name|KASSERT
+argument_list|(
 name|p
 operator|->
 name|p_stat
-operator|!=
+operator|==
 name|SMTX
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"XXX: process %d(%s):%d holds %s but isn't blocked on a mutex\n"
 argument_list|,
+operator|(
+literal|"process %d(%s):%d holds %s but isn't blocked on a mutex\n"
+operator|,
 name|p
 operator|->
 name|p_pid
-argument_list|,
+operator|,
 name|p
 operator|->
 name|p_comm
-argument_list|,
+operator|,
 name|p
 operator|->
 name|p_stat
-argument_list|,
+operator|,
 name|m
 operator|->
 name|mtx_description
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 comment|/* 		 * Pick up the mutex that p is blocked on. 		 */
 name|m
 operator|=
@@ -613,7 +657,24 @@ expr_stmt|;
 comment|/* 		 * Check if the proc needs to be moved up on 		 * the blocked chain 		 */
 if|if
 condition|(
-operator|(
+name|p
+operator|==
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|m
+operator|->
+name|mtx_blocked
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"XXX: process at head of run queue\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|p1
 operator|=
 name|TAILQ_PREV
@@ -624,10 +685,9 @@ name|rq
 argument_list|,
 name|p_procq
 argument_list|)
-operator|)
-operator|==
-name|NULL
-operator|||
+expr_stmt|;
+if|if
+condition|(
 name|p1
 operator|->
 name|p_priority
@@ -635,10 +695,6 @@ operator|<=
 name|pri
 condition|)
 block|{
-if|if
-condition|(
-name|p1
-condition|)
 name|printf
 argument_list|(
 literal|"XXX: previous process %d(%s) has higher priority\n"
@@ -652,15 +708,9 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"XXX: process at head of run queue\n"
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Remove proc from blocked chain 		 */
+comment|/* 		 * Remove proc from blocked chain and determine where 		 * it should be moved up to.  Since we know that p1 has 		 * a lower priority than p, we know that at least one 		 * process in the chain has a lower priority and that 		 * p1 will thus not be NULL after the loop. 		 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -701,26 +751,16 @@ name|pri
 condition|)
 break|break;
 block|}
-if|if
-condition|(
+name|MPASS
+argument_list|(
 name|p1
-condition|)
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_BEFORE
 argument_list|(
 name|p1
-argument_list|,
-name|p
-argument_list|,
-name|p_procq
-argument_list|)
-expr_stmt|;
-else|else
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|m
-operator|->
-name|mtx_blocked
 argument_list|,
 name|p
 argument_list|,
@@ -731,7 +771,7 @@ name|CTR4
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"propagate priority: p 0x%p moved before 0x%p on [0x%p] %s"
+literal|"propagate_priority: p 0x%p moved before 0x%p on [0x%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -857,6 +897,15 @@ argument_list|(
 name|m
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* 		 * Save our priority.  Even though p_nativepri is protected 		 * by sched_lock, we don't obtain it here as it can be 		 * expensive.  Since this is the only place p_nativepri is 		 * set, and since two CPUs will not be executing the same 		 * process concurrently, we know that no other CPU is going 		 * to be messing with this.  Also, p_nativepri is only read 		 * when we are blocked on a mutex, so that can't be happening 		 * right now either. 		 */
+name|p
+operator|->
+name|p_nativepri
+operator|=
+name|p
+operator|->
+name|p_priority
 expr_stmt|;
 while|while
 condition|(

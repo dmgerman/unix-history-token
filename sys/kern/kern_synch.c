@@ -1639,14 +1639,6 @@ name|priority
 operator|&
 name|PRIMASK
 expr_stmt|;
-name|p
-operator|->
-name|p_nativepri
-operator|=
-name|p
-operator|->
-name|p_priority
-expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_PROC
