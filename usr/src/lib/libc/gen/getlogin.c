@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getlogin.c	5.4 (Berkeley) %G%"
+literal|"@(#)getlogin.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,7 +112,7 @@ operator|(
 name|char
 operator|*
 operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 name|notcalled
@@ -122,7 +122,16 @@ expr_stmt|;
 block|}
 return|return
 operator|(
+operator|*
 name|logname
+condition|?
+name|logname
+else|:
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 operator|)
 return|;
 block|}
