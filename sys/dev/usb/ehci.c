@@ -1246,7 +1246,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
 name|void
 name|ehci_dump
 parameter_list|(
