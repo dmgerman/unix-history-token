@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.71	82/10/24	*/
+comment|/*	if_en.c	4.71	82/10/31	*/
 end_comment
 
 begin_include
@@ -650,7 +650,7 @@ name|es
 operator|->
 name|es_if
 operator|.
-name|if_ubareset
+name|if_reset
 operator|=
 name|enreset
 expr_stmt|;

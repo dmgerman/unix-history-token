@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.c	4.12	82/10/10	*/
+comment|/*	if_il.c	4.13	82/10/31	*/
 end_comment
 
 begin_include
@@ -951,7 +951,7 @@ name|iloutput
 expr_stmt|;
 name|ifp
 operator|->
-name|if_ubareset
+name|if_reset
 operator|=
 name|ilreset
 expr_stmt|;

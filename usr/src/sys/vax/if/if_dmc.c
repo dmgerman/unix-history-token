@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.19	82/10/10	*/
+comment|/*	if_dmc.c	4.20	82/10/31	*/
 end_comment
 
 begin_include
@@ -680,7 +680,7 @@ name|sc
 operator|->
 name|sc_if
 operator|.
-name|if_ubareset
+name|if_reset
 operator|=
 name|dmcreset
 expr_stmt|;
