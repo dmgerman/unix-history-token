@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.27 (Berkeley) %G%"
+literal|"@(#)main.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -830,6 +830,20 @@ block|}
 block|}
 end_while
 
+begin_expr_stmt
+name|InChannel
+operator|=
+name|stdin
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|OutChannel
+operator|=
+name|stdout
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|if
 condition|(
@@ -973,24 +987,6 @@ endif|#
 directive|endif
 endif|SETPROCTITLE
 end_endif
-
-begin_comment
-comment|/* 	**  Now do basic initialization 	*/
-end_comment
-
-begin_expr_stmt
-name|InChannel
-operator|=
-name|stdin
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|OutChannel
-operator|=
-name|stdout
-expr_stmt|;
-end_expr_stmt
 
 begin_if
 if|if
