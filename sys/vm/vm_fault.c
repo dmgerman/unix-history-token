@@ -4,7 +4,7 @@ comment|/*   * Copyright (c) 1991 Regents of the University of California.  * Al
 end_comment
 
 begin_comment
-comment|/*  * $Id: vm_fault.c,v 1.13 1994/01/17 09:33:31 davidg Exp $  */
+comment|/*  * $Id: vm_fault.c,v 1.14 1994/01/31 04:19:59 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2795,6 +2795,20 @@ name|offset
 operator|-
 name|NBPG
 expr_stmt|;
+if|if
+condition|(
+name|rbehind
+operator|*
+name|NBPG
+operator|>
+name|offset
+condition|)
+name|rbehind
+operator|=
+name|offset
+operator|/
+name|NBPG
+expr_stmt|;
 name|startoffset
 operator|=
 name|offset
@@ -2805,19 +2819,6 @@ name|NBPG
 expr_stmt|;
 while|while
 condition|(
-operator|(
-call|(
-name|int
-call|)
-argument_list|(
-name|toffset
-operator|+
-name|NBPG
-argument_list|)
-operator|)
-operator|>=
-literal|0
-operator|&&
 name|toffset
 operator|>=
 name|startoffset
@@ -2861,6 +2862,13 @@ name|NBPG
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|toffset
+operator|==
+literal|0
+condition|)
+break|break;
 name|toffset
 operator|-=
 name|NBPG
@@ -2928,10 +2936,6 @@ operator|!=
 name|object
 condition|)
 block|{
-name|endoffset
-operator|=
-name|toffset
-expr_stmt|;
 break|break;
 block|}
 name|toffset
@@ -2939,6 +2943,10 @@ operator|+=
 name|NBPG
 expr_stmt|;
 block|}
+name|endoffset
+operator|=
+name|toffset
+expr_stmt|;
 comment|/* calculate number of bytes of pages */
 name|size
 operator|=

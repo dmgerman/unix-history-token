@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990, 1991, 1992 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ   * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS   * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.   * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT   * NOT MAKE USE THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN   * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES   * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING   * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND   * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE   * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS   * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern__physio.c,v 1.7 1994/01/17 09:32:59 davidg Exp $  */
+comment|/*  * Copyright (c) 1989, 1990, 1991, 1992 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ   * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS   * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.   * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT   * NOT MAKE USE THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN   * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES   * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING   * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND   * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE   * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS   * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_physio.c,v 1.1 1994/01/17 09:43:52 davidg Exp $  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"vm/vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm/vm_page.h"
 end_include
 
 begin_include
@@ -230,6 +236,8 @@ name|vm_offset_t
 name|v
 decl_stmt|,
 name|lastv
+decl_stmt|,
+name|pa
 decl_stmt|;
 name|caddr_t
 name|adr
@@ -528,7 +536,7 @@ operator|+=
 name|NBPG
 control|)
 block|{
-comment|/*  * make sure that the pde is valid and wired  */
+comment|/*  * make sure that the pde is valid and held  */
 name|v
 operator|=
 name|trunc_page
@@ -551,25 +559,36 @@ operator|!=
 name|lastv
 condition|)
 block|{
-name|vm_map_pageable
+operator|*
+operator|(
+specifier|volatile
+name|int
+operator|*
+operator|)
+name|v
+operator|+=
+literal|0
+expr_stmt|;
+name|pa
+operator|=
+name|pmap_extract
 argument_list|(
 operator|&
 name|p
 operator|->
 name|p_vmspace
 operator|->
-name|vm_map
+name|vm_pmap
 argument_list|,
 name|v
-argument_list|,
-name|round_page
-argument_list|(
-name|v
-operator|+
-literal|1
 argument_list|)
-argument_list|,
-name|FALSE
+expr_stmt|;
+name|vm_page_hold
+argument_list|(
+name|PHYS_TO_VM_PAGE
+argument_list|(
+name|pa
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|lastv
@@ -597,26 +616,44 @@ operator|+=
 literal|0
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|else {
-comment|/* 				 * this clause is not really necessary because  				 * vslock does a vm_map_pageable FALSE. 				 * It is not optimally efficient to reference the 				 * page with the possiblity of it being paged out, but 				 * if this page is faulted here, it will be placed on the 				 * active queue, with the probability of it being paged 				 * out being very very low.  This is here primarily for 				 * "symmetry". 				 */
-block|*(volatile int *) adr; 			}
-endif|#
-directive|endif
+else|else
+block|{
+operator|*
+operator|(
+specifier|volatile
+name|int
+operator|*
+operator|)
+name|adr
+expr_stmt|;
 block|}
-comment|/*  * if the process has been blocked by the wiring of the page table pages  * above or faults of other pages, then the vm_map_pageable contained in the  * vslock will fault the pages back in if they have been paged out since  * being referenced in the loop above. (vm_map_pageable calls vm_fault_wire  * which calls vm_fault to get the pages if needed.)  */
-comment|/* lock in core (perform vm_map_pageable, FALSE) */
-name|vslock
+name|pa
+operator|=
+name|pmap_extract
 argument_list|(
-name|base
-argument_list|,
-name|bp
+operator|&
+name|p
 operator|->
-name|b_bcount
+name|p_vmspace
+operator|->
+name|vm_pmap
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|adr
 argument_list|)
 expr_stmt|;
+comment|/*  * hold the data page  */
+name|vm_page_hold
+argument_list|(
+name|PHYS_TO_VM_PAGE
+argument_list|(
+name|pa
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* perform transfer */
 name|physstrat
 argument_list|(
@@ -627,23 +664,11 @@ argument_list|,
 name|PRIBIO
 argument_list|)
 expr_stmt|;
-comment|/* unlock (perform vm_map_pageable, TRUE) */
-name|vsunlock
-argument_list|(
-name|base
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/*  * unhold the pde, and data pages  */
 name|lastv
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  * unwire the pde  */
 for|for
 control|(
 name|adr
@@ -691,25 +716,26 @@ operator|!=
 name|lastv
 condition|)
 block|{
-name|vm_map_pageable
+name|pa
+operator|=
+name|pmap_extract
 argument_list|(
 operator|&
 name|p
 operator|->
 name|p_vmspace
 operator|->
-name|vm_map
+name|vm_pmap
 argument_list|,
 name|v
-argument_list|,
-name|round_page
-argument_list|(
-name|v
-operator|+
-literal|1
 argument_list|)
-argument_list|,
-name|TRUE
+expr_stmt|;
+name|vm_page_unhold
+argument_list|(
+name|PHYS_TO_VM_PAGE
+argument_list|(
+name|pa
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|lastv
@@ -717,6 +743,31 @@ operator|=
 name|v
 expr_stmt|;
 block|}
+name|pa
+operator|=
+name|pmap_extract
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_vmspace
+operator|->
+name|vm_pmap
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|adr
+argument_list|)
+expr_stmt|;
+name|vm_page_unhold
+argument_list|(
+name|PHYS_TO_VM_PAGE
+argument_list|(
+name|pa
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 name|amtdone
 operator|=

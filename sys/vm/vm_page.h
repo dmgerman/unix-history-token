@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.h	7.3 (Berkeley) 4/21/91  *	$Id: vm_page.h,v 1.7 1994/01/14 16:27:27 davidg Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.h	7.3 (Berkeley) 4/21/91  *	$Id: vm_page.h,v 1.8 1994/01/31 04:21:19 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -22,6 +22,12 @@ define|#
 directive|define
 name|_VM_PAGE_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<systm.h>
+end_include
 
 begin_comment
 comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O) or by the lock on the page  *	queues (P).  */
@@ -158,6 +164,10 @@ name|short
 name|deact
 decl_stmt|;
 comment|/* deactivation count */
+name|int
+name|hold_count
+decl_stmt|;
+comment|/* page hold count -- don't pageout */
 name|vm_offset_t
 name|phys_addr
 decl_stmt|;
@@ -579,19 +589,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|vm_page_wire
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_function_decl
-name|void
-name|vm_page_unwire
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_endif
+unit|void		vm_page_wire(); void		vm_page_unwire();
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *	Functions implemented as macros  */
@@ -824,6 +832,59 @@ name|spl
 parameter_list|)
 value|enable_intr()
 end_define
+
+begin_comment
+comment|/*  * Keep page from being freed by the page daemon  * much of the same effect as wiring, except much lower  * overhead and should be used only for *very* temporary  * holding ("wiring").  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|vm_page_hold
+parameter_list|(
+name|mem
+parameter_list|)
+name|vm_page_t
+name|mem
+decl_stmt|;
+block|{
+name|mem
+operator|->
+name|hold_count
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|vm_page_unhold
+parameter_list|(
+name|mem
+parameter_list|)
+name|vm_page_t
+name|mem
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|--
+name|mem
+operator|->
+name|hold_count
+operator|<
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vm_page_unhold: hold count< 0!!!"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#
