@@ -1780,6 +1780,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * Disable 16bit access to shared memory - we leave it 	 * disabled so that 1) machines reboot properly when the board 	 * is set 16 bit mode and there are conflicting 8bit 	 * devices/ROMS in the same 128k address space as this boards 	 * shared memory. and 2) so that other 8 bit devices with 	 * shared memory can be used in this 128k region, too. 	 */
 name|error
 operator|=
 name|ed_clear_memory
@@ -1787,11 +1788,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
 name|ed_disable_16bit_access
 argument_list|(
 name|sc
@@ -1800,18 +1796,6 @@ expr_stmt|;
 return|return
 operator|(
 name|error
-operator|)
-return|;
-block|}
-comment|/* 	 * Disable 16bit access to shared memory - we leave it 	 * disabled so that 1) machines reboot properly when the board 	 * is set 16 bit mode and there are conflicting 8bit 	 * devices/ROMS in the same 128k address space as this boards 	 * shared memory. and 2) so that other 8 bit devices with 	 * shared memory can be used in this 128k region, too. 	 */
-name|ed_disable_16bit_access
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
