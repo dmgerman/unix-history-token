@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights res
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_epreg.h,v 1.10 1996/01/30 22:55:43 mpp Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_epreg.h,v 1.11 1996/02/06 18:50:42 wollman Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -81,6 +81,10 @@ name|u_short
 name|ep_connectors
 decl_stmt|;
 comment|/* Connectors on this card.	 */
+name|u_short
+name|ep_connector
+decl_stmt|;
+comment|/* Configured connector.	 */
 name|int
 name|stat
 decl_stmt|;
@@ -109,6 +113,14 @@ name|struct
 name|ep_board
 modifier|*
 name|epb
+decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
+name|struct
+name|kern_devconf
+modifier|*
+name|kdc
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -150,10 +162,6 @@ name|epb_used
 decl_stmt|;
 comment|/* was this entry already used for configuring ? */
 comment|/* data from EEPROM for later use */
-name|char
-name|epb_isa
-decl_stmt|;
-comment|/* flag: this is an ISA card */
 name|u_short
 name|eth_addr
 index|[
@@ -278,6 +286,17 @@ directive|define
 name|EP_ID_PORT
 value|0x100
 end_define
+
+begin_define
+define|#
+directive|define
+name|EP_IOSIZE
+value|16
+end_define
+
+begin_comment
+comment|/* 16 bytes of I/O space used. */
+end_comment
 
 begin_comment
 comment|/*  * some macros to acces long named fields  */
@@ -1549,23 +1568,115 @@ name|RX_BYTES_MASK
 value|(u_short) (0x07ff)
 end_define
 
-begin_comment
-comment|/* EISA support */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ep_board
+name|ep_board
+index|[]
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|EP_EISA_START
-value|0x1000
-end_define
+begin_decl_stmt
+specifier|extern
+name|int
+name|ep_boards
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|EP_EISA_W0
-value|0x0c80
-end_define
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|ep_unit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ep_softc
+modifier|*
+name|ep_alloc
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+expr|struct
+name|ep_board
+operator|*
+name|epb
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ep_free
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ep_softc
+operator|*
+name|sc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ep_intr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|sc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ep_attach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ep_softc
+operator|*
+name|sc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int16_t
+name|get_e
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ep_softc
+operator|*
+name|sc
+operator|,
+name|int
+name|offset
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
