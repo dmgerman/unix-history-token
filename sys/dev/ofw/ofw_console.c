@@ -690,6 +690,10 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|tp
+operator|=
+name|ofw_tp
+expr_stmt|;
 if|if
 condition|(
 name|unit
