@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.80 1998/12/17 19:23:09 bde Exp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.81 1998/12/19 16:28:57 bde Exp $  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ file|"cy.h"
 end_include
 
 begin_comment
-comment|/*  * TODO:  * Fix overflows when closing line.  * Atomic COR change.  * Consoles.  */
+comment|/*  * TODO:  * Atomic COR change.  * Consoles.  */
 end_comment
 
 begin_comment
@@ -3407,32 +3407,6 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|(void)commctl(com, TIOCM_DTR | TIOCM_RTS, DMSET); 		com->poll = com->no_irq; 		com->poll_output = com->loses_outints;
-endif|#
-directive|endif
-operator|++
-name|com
-operator|->
-name|wopeners
-expr_stmt|;
-comment|/* reset this channel */
-name|cd1400_channel_cmd
-argument_list|(
-name|com
-argument_list|,
-name|CD1400_CCR_CMDRESET
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Resetting disables the transmitter and receiver as well as 		 * flushing the fifos so some of our cached state becomes 		 * invalid.  The documentation suggests that all registers 		 * for the current channel are reset to defaults, but 		 * apparently none are.  We wouldn't want DTR cleared. 		 */
-name|com
-operator|->
-name|channel_control
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Encode per-board unit in LIVR for access in intr routines. */
 name|cd_setreg
 argument_list|(
@@ -3449,7 +3423,31 @@ operator|<<
 name|CD1400_xIVR_CHAN_SHIFT
 argument_list|)
 expr_stmt|;
-comment|/* 		 * raise dtr and generally set things up correctly.  this 		 * has the side-effect of selecting the appropriate cd1400 		 * channel, to help us with subsequent channel control stuff 		 */
+operator|(
+name|void
+operator|)
+name|commctl
+argument_list|(
+name|com
+argument_list|,
+name|TIOCM_DTR
+operator||
+name|TIOCM_RTS
+argument_list|,
+name|DMSET
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|com->poll = com->no_irq; 		com->poll_output = com->loses_outints;
+endif|#
+directive|endif
+operator|++
+name|com
+operator|->
+name|wopeners
+expr_stmt|;
 name|error
 operator|=
 name|comparam
@@ -3476,29 +3474,32 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 		 * XXX we should goto open_top if comparam() slept. 		 */
 if|#
 directive|if
 literal|0
 block|if (com->hasfifo) {
-comment|/* 			 * (Re)enable and drain fifos. 			 * 			 * Certain SMC chips cause problems if the fifos 			 * are enabled while input is ready.  Turn off the 			 * fifo if necessary to clear the input.  We test 			 * the input ready bit after enabling the fifos 			 * since we've already enabled them in comparam() 			 * and to handle races between enabling and fresh 			 * input. 			 */
+comment|/* 			 * (Re)enable and flush fifos. 			 * 			 * Certain SMC chips cause problems if the fifos 			 * are enabled while input is ready.  Turn off the 			 * fifo if necessary to clear the input.  We test 			 * the input ready bit after enabling the fifos 			 * since we've already enabled them in comparam() 			 * and to handle races between enabling and fresh 			 * input. 			 */
 block|while (TRUE) { 				outb(iobase + com_fifo, 				     FIFO_RCV_RST | FIFO_XMT_RST 				     | com->fifo_image); 				DELAY(100); 				if (!(inb(com->line_status_port)& LSR_RXRDY)) 					break; 				outb(iobase + com_fifo, 0); 				DELAY(100); 				(void) inb(com->data_port); 			} 		}  		disable_intr(); 		(void) inb(com->line_status_port); 		(void) inb(com->data_port); 		com->prev_modem_status = com->last_modem_status 		    = inb(com->modem_status_port); 		outb(iobase + com_ier, IER_ERXRDY | IER_ETXRDY | IER_ERLS 				       | IER_EMSC); 		enable_intr();
 else|#
 directive|else
 comment|/* !0 */
-comment|/* XXX raise RTS too */
-operator|(
-name|void
-operator|)
-name|commctl
+comment|/* 		 * Flush fifos.  This requires a full channel reset which 		 * also disables the transmitter and receiver.  Recover 		 * from this. 		 */
+name|cd1400_channel_cmd
 argument_list|(
 name|com
 argument_list|,
-name|TIOCM_DTR
+name|CD1400_CCR_CMDRESET
 operator||
-name|TIOCM_RTS
+name|CD1400_CCR_CHANRESET
+argument_list|)
+expr_stmt|;
+name|cd1400_channel_cmd
+argument_list|(
+name|com
 argument_list|,
-name|DMSET
+name|com
+operator|->
+name|channel_control
 argument_list|)
 expr_stmt|;
 name|disable_intr
