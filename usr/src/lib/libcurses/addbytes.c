@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.16 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -623,7 +623,7 @@ name|SYNCH_IN
 expr_stmt|;
 if|if
 condition|(
-name|origtermio
+name|__orig_termios
 operator|.
 name|c_oflag
 operator|&

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.15 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -957,7 +957,7 @@ condition|(
 operator|(
 operator|!
 operator|(
-name|origtermio
+name|__orig_termios
 operator|.
 name|c_oflag
 operator|&
@@ -1104,7 +1104,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|origtermio
+name|__orig_termios
 operator|.
 name|c_oflag
 operator|&
