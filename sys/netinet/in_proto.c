@@ -673,7 +673,7 @@ name|ah4_input
 block|,
 literal|0
 block|,
-literal|0
+name|ah4_ctlinput
 block|,
 literal|0
 block|,
@@ -707,7 +707,7 @@ name|esp4_input
 block|,
 literal|0
 block|,
-literal|0
+name|esp4_ctlinput
 block|,
 literal|0
 block|,
