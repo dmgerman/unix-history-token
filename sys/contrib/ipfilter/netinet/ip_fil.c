@@ -498,6 +498,13 @@ operator|>=
 literal|501108
 operator|)
 operator|&&
+expr|\
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|600001
+operator|)
+operator|&&
 operator|!
 name|defined
 argument_list|(
