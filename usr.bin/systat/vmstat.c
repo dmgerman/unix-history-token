@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.29 1998/10/08 09:56:10 obrien Exp $"
+literal|"$Id: vmstat.c,v 1.30 1998/12/27 08:15:37 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -310,6 +310,15 @@ init|=
 name|TIME
 enum|;
 end_enum
+
+begin_decl_stmt
+specifier|static
+name|int
+name|want_fd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1953,11 +1962,11 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|WANT_FD
 if|if
 condition|(
+operator|!
+name|want_fd
+operator|&&
 literal|0
 operator|==
 name|strcmp
@@ -1973,8 +1982,6 @@ name|device_name
 argument_list|)
 condition|)
 continue|continue;
-endif|#
-directive|endif
 name|sprintf
 argument_list|(
 name|tmpstr
@@ -3557,11 +3564,11 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|WANT_FD
 if|if
 condition|(
+operator|!
+name|want_fd
+operator|&&
 literal|0
 operator|==
 name|strcmp
@@ -3577,8 +3584,6 @@ name|device_name
 argument_list|)
 condition|)
 continue|continue;
-endif|#
-directive|endif
 name|sprintf
 argument_list|(
 name|tmpstr
@@ -3977,6 +3982,27 @@ block|{
 name|state
 operator|=
 name|TIME
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|prefix
+argument_list|(
+name|cmd
+argument_list|,
+literal|"want_fd"
+argument_list|)
+condition|)
+block|{
+name|want_fd
+operator|=
+operator|!
+name|want_fd
 expr_stmt|;
 return|return
 operator|(
