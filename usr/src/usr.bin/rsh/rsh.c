@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	4.6 83/02/09"
+literal|"@(#)rsh.c	4.7 83/02/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -820,6 +820,10 @@ argument_list|)
 expr_stmt|;
 name|reread
 label|:
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|cc
 operator|=
 name|read
@@ -964,12 +968,6 @@ name|rewrite
 goto|;
 name|done
 label|:
-block|{
-name|int
-name|flags
-init|=
-literal|1
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -977,11 +975,9 @@ name|shutdown
 argument_list|(
 name|rem
 argument_list|,
-operator|&
-name|flags
+literal|1
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
