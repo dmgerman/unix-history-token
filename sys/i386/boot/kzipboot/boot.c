@@ -277,9 +277,12 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|!
+operator|(
 name|stat
 operator|&
 literal|0x20
+operator|)
 condition|)
 do|;
 name|outb
