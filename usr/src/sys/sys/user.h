@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -178,15 +178,15 @@ name|u_gid
 value|u_cred->cr_gid
 comment|/* effective group id */
 comment|/* 1.2 - memory management */
-name|size_t
+name|segsz_t
 name|u_tsize
 decl_stmt|;
 comment|/* text size (clicks) */
-name|size_t
+name|segsz_t
 name|u_dsize
 decl_stmt|;
 comment|/* data size (clicks) */
-name|size_t
+name|segsz_t
 name|u_ssize
 decl_stmt|;
 comment|/* stack size (clicks) */
@@ -214,7 +214,7 @@ name|label_t
 name|u_ssave
 decl_stmt|;
 comment|/* label variable for swapping */
-name|size_t
+name|segsz_t
 name|u_odsize
 decl_stmt|,
 name|u_ossize

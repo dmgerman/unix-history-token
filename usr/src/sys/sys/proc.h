@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -230,31 +230,31 @@ name|short
 name|p_szpt
 decl_stmt|;
 comment|/* copy of page table size */
-name|size_t
+name|segsz_t
 name|p_tsize
 decl_stmt|;
 comment|/* size of text (clicks) */
-name|size_t
+name|segsz_t
 name|p_dsize
 decl_stmt|;
 comment|/* size of data space (clicks) */
-name|size_t
+name|segsz_t
 name|p_mmsize
 decl_stmt|;
 comment|/* size of mapmem beyond p_dsize (clicks) */
-name|size_t
+name|segsz_t
 name|p_ssize
 decl_stmt|;
 comment|/* copy of stack size (clicks) */
-name|size_t
+name|segsz_t
 name|p_rssize
 decl_stmt|;
 comment|/* current resident set size in clicks */
-name|size_t
+name|segsz_t
 name|p_maxrss
 decl_stmt|;
 comment|/* copy of u.u_limit[MAXRSS] */
-name|size_t
+name|segsz_t
 name|p_swrss
 decl_stmt|;
 comment|/* resident set size before last swap */
@@ -471,7 +471,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* wchan message */
-name|size_t
+name|segsz_t
 name|e_xsize
 decl_stmt|;
 comment|/* text size */
