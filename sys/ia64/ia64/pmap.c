@@ -2983,20 +2983,7 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
-comment|/* 	 * Allocate object for the upages. 	 */
-name|upobj
-operator|=
-name|p
-operator|->
-name|p_upages_obj
-expr_stmt|;
-if|if
-condition|(
-name|upobj
-operator|==
-name|NULL
-condition|)
-block|{
+comment|/* 	 * Allocate object for the upage. 	 */
 name|upobj
 operator|=
 name|vm_object_allocate
@@ -3012,24 +2999,7 @@ name|p_upages_obj
 operator|=
 name|upobj
 expr_stmt|;
-block|}
 comment|/* 	 * Get a kernel virtual address for the U area for this process. 	 */
-name|up
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|p
-operator|->
-name|p_uarea
-expr_stmt|;
-if|if
-condition|(
-name|up
-operator|==
-literal|0
-condition|)
-block|{
 name|up
 operator|=
 name|kmem_alloc_nofault
@@ -3063,7 +3033,6 @@ operator|*
 operator|)
 name|up
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -3251,28 +3220,22 @@ argument_list|,
 name|UAREA_PAGES
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the process got swapped out some of its UPAGES might have gotten 	 * swapped.  Just get rid of the object to clean up the swap use 	 * proactively.  NOTE! might block waiting for paging I/O to complete. 	 */
-if|if
-condition|(
-name|upobj
-operator|->
-name|type
-operator|==
-name|OBJT_SWAP
-condition|)
-block|{
-name|p
-operator|->
-name|p_upages_obj
-operator|=
-name|NULL
+name|kmem_free
+argument_list|(
+name|kernel_map
+argument_list|,
+name|up
+argument_list|,
+name|UAREA_PAGES
+operator|*
+name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
 name|upobj
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
