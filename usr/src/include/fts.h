@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -99,18 +99,28 @@ value|0x020
 comment|/* return dot and dot-dot */
 define|#
 directive|define
-name|FTS_STOP
+name|FTS_XDEV
 value|0x040
-comment|/* (private) unrecoverable error */
+comment|/* don't cross devices */
 define|#
 directive|define
-name|FTS_XDEV
+name|FTS_OPTIONMASK
+value|0x07f
+comment|/* valid user option mask */
+define|#
+directive|define
+name|FTS_NAMEONLY
 value|0x080
-comment|/* don't cross devices */
+comment|/* (private) child names only */
+define|#
+directive|define
+name|FTS_STOP
+value|0x100
+comment|/* (private) unrecoverable error */
 name|int
 name|fts_options
 decl_stmt|;
-comment|/* openfts() options */
+comment|/* fts_open options, global flags */
 block|}
 name|FTS
 typedef|;
@@ -352,6 +362,8 @@ argument_list|(
 operator|(
 name|FTS
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
