@@ -3873,7 +3873,7 @@ operator|+
 name|s
 operator|->
 name|m_len
-operator|>
+operator|>=
 name|bodyoff
 condition|)
 block|{
@@ -4941,7 +4941,7 @@ operator|+
 name|s
 operator|->
 name|m_len
-operator|>
+operator|>=
 name|bodyoff
 condition|)
 block|{
