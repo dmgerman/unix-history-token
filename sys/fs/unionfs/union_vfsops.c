@@ -191,7 +191,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Mount union filesystem  */
+comment|/*  * Mount union filesystem.  */
 end_comment
 
 begin_function
@@ -312,7 +312,7 @@ name|mnt_flag
 operator|&
 name|MNT_UPDATE
 condition|)
-comment|/* 		 * Need to provide. 		 * 1. a way to convert between rdonly and rdwr mounts. 		 * 2. support for nfs exports. 		 */
+comment|/* 		 * Need to provide: 		 * 1. a way to convert between rdonly and rdwr mounts. 		 * 2. support for nfs exports. 		 */
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -691,7 +691,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * Unless the mount is readonly, ensure that the top layer 	 * supports whiteout operations 	 */
+comment|/* 	 * Unless the mount is readonly, ensure that the top layer 	 * supports whiteout operations. 	 */
 if|if
 condition|(
 operator|(
@@ -1067,7 +1067,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free reference to union layer  */
+comment|/*  * Free reference to union layer.  */
 end_comment
 
 begin_function
@@ -1213,7 +1213,7 @@ operator|=
 name|n
 expr_stmt|;
 block|}
-comment|/* If the most recent vflush failed, the filesystem is still busy. */
+comment|/* 	 * If the most recent vflush failed, the filesystem is still busy. 	 */
 if|if
 condition|(
 name|error
@@ -1251,7 +1251,7 @@ operator|->
 name|um_cred
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Finally, throw away the union_mount structure 	 */
+comment|/* 	 * Finally, throw away the union_mount structure. 	 */
 name|free
 argument_list|(
 name|mp
@@ -1533,7 +1533,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* now copy across the "interesting" information and fake the rest */
+comment|/* 	 * Now copy across the "interesting" information and fake the rest. 	 */
 if|#
 directive|if
 literal|0
@@ -1635,7 +1635,7 @@ name|mstat
 operator|.
 name|f_iosize
 expr_stmt|;
-comment|/* 	 * if the lower and upper blocksizes differ, then frig the 	 * block counts so that the sizes reported by df make some 	 * kind of sense.  none of this makes sense though. 	 */
+comment|/* 	 * If the lower and upper blocksizes differ, then frig the 	 * block counts so that the sizes reported by df make some 	 * kind of sense.  None of this makes sense though. 	 */
 if|if
 condition|(
 name|mstat

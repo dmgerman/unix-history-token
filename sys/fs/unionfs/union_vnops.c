@@ -886,7 +886,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	union_lookup:  *  *	udvp	must be exclusively locked on call and will remain   *		exclusively locked on return.  This is the mount point   *		for out filesystem.  *  *	dvp	Our base directory, locked and referenced.  *		The passed dvp will be dereferenced and unlocked on return  *		and a new dvp will be returned which is locked and   *		referenced in the same variable.  *  *	vpp	is filled in with the result if no error occured,  *		locked and ref'd.  *  *		If an error is returned, *vpp is set to NULLVP.  If no  *		error occurs, *vpp is returned with a reference and an  *		exclusive lock.  */
+comment|/*  *	union_lookup:  *  *	udvp	must be exclusively locked on call and will remain   *		exclusively locked on return.  This is the mount point   *		for our filesystem.  *  *	dvp	Our base directory, locked and referenced.  *		The passed dvp will be dereferenced and unlocked on return  *		and a new dvp will be returned which is locked and   *		referenced in the same variable.  *  *	vpp	is filled in with the result if no error occured,  *		locked and ref'd.  *  *		If an error is returned, *vpp is set to NULLVP.  If no  *		error occurs, *vpp is returned with a reference and an  *		exclusive lock.  */
 end_comment
 
 begin_function
@@ -1024,7 +1024,7 @@ name|pdvp
 operator|=
 name|dvp
 expr_stmt|;
-comment|/* 	 * If the VOP_LOOKUP call generates an error, tdvp is invalid and no 	 * changes will have been made to dvp, so we are set to return. 	 */
+comment|/* 	 * If the VOP_LOOKUP() call generates an error, tdvp is invalid and 	 * no changes will have been made to dvp, so we are set to return. 	 */
 name|error
 operator|=
 name|VOP_LOOKUP
@@ -1360,7 +1360,7 @@ name|a_vpp
 operator|=
 name|NULLVP
 expr_stmt|;
-comment|/* 	 * Disallow write attemps to the filesystem mounted read-only. 	 */
+comment|/* 	 * Disallow write attempts to the filesystem mounted read-only. 	 */
 if|if
 condition|(
 operator|(
@@ -1402,7 +1402,7 @@ name|EROFS
 operator|)
 return|;
 block|}
-comment|/* 	 * For any lookup's we do, always return with the parent locked 	 */
+comment|/* 	 * For any lookups we do, always return with the parent locked. 	 */
 name|cnp
 operator|->
 name|cn_flags
@@ -1445,7 +1445,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * do the lookup in the upper level. 	 * if that level comsumes additional pathnames, 	 * then assume that something special is going 	 * on and just return that vnode. 	 */
+comment|/* 	 * Do the lookup in the upper level. 	 * If that level consumes additional pathnames, 	 * then assume that something special is going 	 * on and just return that vnode. 	 */
 if|if
 condition|(
 name|upperdvp
@@ -1463,7 +1463,7 @@ name|upperdvp
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Do the lookup.   We must supply a locked and referenced 		 * upperdvp to the function and will get a new locked and 		 * referenced upperdvp back with the old having been  		 * dereferenced. 		 * 		 * If an error is returned, uppervp will be NULLVP.  If no 		 * error occurs, uppervp will be the locked and referenced 		 * return vnode or possibly NULL, depending on what is being 		 * requested.  It is possible that the returned uppervp 		 * will be the same as upperdvp. 		 */
+comment|/* 		 * Do the lookup.   We must supply a locked and referenced 		 * upperdvp to the function and will get a new locked and 		 * referenced upperdvp back, with the old having been  		 * dereferenced. 		 * 		 * If an error is returned, uppervp will be NULLVP.  If no 		 * error occurs, uppervp will be the locked and referenced. 		 * Return vnode, or possibly NULL, depending on what is being 		 * requested.  It is possible that the returned uppervp 		 * will be the same as upperdvp. 		 */
 name|uerror
 operator|=
 name|union_lookup1
@@ -1530,7 +1530,7 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Disallow write attemps to the filesystem mounted read-only. 		 */
+comment|/* 		 * Disallow write attempts to the filesystem mounted read-only. 		 */
 if|if
 condition|(
 name|uerror
@@ -1578,7 +1578,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 		 * Special case.  If cn_consume != 0 skip out.  The result 		 * of the lookup is transfered to our return variable.  If 		 * an error occured we have to throw away the results. 		 */
+comment|/* 		 * Special case: If cn_consume != 0 then skip out.  The result 		 * of the lookup is transfered to our return variable.  If 		 * an error occured we have to throw away the results. 		 */
 if|if
 condition|(
 name|cnp
@@ -1615,7 +1615,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 		 * Calculate whiteout, fall through 		 */
+comment|/* 		 * Calculate whiteout, fall through. 		 */
 if|if
 condition|(
 name|uerror
@@ -1691,7 +1691,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * in a similar way to the upper layer, do the lookup 	 * in the lower layer.   this time, if there is some 	 * component magic going on, then vput whatever we got 	 * back from the upper layer and return the lower vnode 	 * instead. 	 */
+comment|/* 	 * In a similar way to the upper layer, do the lookup 	 * in the lower layer.   This time, if there is some 	 * component magic going on, then vput whatever we got 	 * back from the upper layer and return the lower vnode 	 * instead. 	 */
 if|if
 condition|(
 name|lowerdvp
@@ -1935,7 +1935,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * Ok.  Now we have uerror, uppervp, upperdvp, lerror, and lowervp. 	 * 	 * 1. If both layers returned an error, select the upper layer. 	 * 	 * 2. If the upper layer faile and the bottom layer succeeded, 	 *    two subcases occur: 	 * 	 *	a.  The bottom vnode is not a directory, in which case 	 *	    just return a new union vnode referencing an 	 *	    empty top layer and the existing bottom layer. 	 * 	 *	b.  The button vnode is a directory, in which case 	 *	    create a new directory in the top layer and 	 *	    and fall through to case 3. 	 * 	 * 3. If the top layer succeeded then return a new union 	 *    vnode referencing whatever the new top layer and 	 *    whatever the bottom layer returned. 	 */
+comment|/* 	 * Ok.  Now we have uerror, uppervp, upperdvp, lerror, and lowervp. 	 * 	 * 1. If both layers returned an error, select the upper layer. 	 * 	 * 2. If the upper layer failed and the bottom layer succeeded, 	 *    two subcases occur: 	 * 	 *	a.  The bottom vnode is not a directory, in which case 	 *	    just return a new union vnode referencing an 	 *	    empty top layer and the existing bottom layer. 	 * 	 *	b.  The bottom vnode is a directory, in which case 	 *	    create a new directory in the top layer and 	 *	    and fall through to case 3. 	 * 	 * 3. If the top layer succeeded, then return a new union 	 *    vnode referencing whatever the new top layer and 	 *    whatever the bottom layer returned. 	 */
 comment|/* case 1. */
 if|if
 condition|(
@@ -1990,7 +1990,7 @@ literal|"uppervp unexpectedly non-NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * oops, uppervp has a problem, we may have to shadow. 			 */
+comment|/* 			 * Oops, uppervp has a problem, we may have to shadow. 			 */
 name|uerror
 operator|=
 name|union_mkshadow
@@ -2020,7 +2020,7 @@ goto|;
 block|}
 block|}
 block|}
-comment|/* 	 * Must call union_allocvp with both the upper and lower vnodes 	 * referenced and the upper vnode locked.   ap->a_vpp is returned  	 * referenced and locked.  lowervp, uppervp, and upperdvp are  	 * absorbed by union_allocvp() whether it succeeds or fails. 	 * 	 * upperdvp is the parent directory of uppervp which may be 	 * different, depending on the path, from dvp->un_uppervp.  That's 	 * why it is a separate argument.  Note that it must be unlocked. 	 * 	 * dvp must be locked on entry to the call and will be locked on 	 * return. 	 */
+comment|/* 	 * Must call union_allocvp() with both the upper and lower vnodes 	 * referenced and the upper vnode locked.   ap->a_vpp is returned  	 * referenced and locked.  lowervp, uppervp, and upperdvp are  	 * absorbed by union_allocvp() whether it succeeds or fails. 	 * 	 * upperdvp is the parent directory of uppervp which may be 	 * different, depending on the path, from dvp->un_uppervp.  That's 	 * why it is a separate argument.  Note that it must be unlocked. 	 * 	 * dvp must be locked on entry to the call and will be locked on 	 * return. 	 */
 if|if
 condition|(
 name|uppervp
@@ -2734,7 +2734,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	union_open:  *  *	run open VOP.  When opening the underlying vnode we have to mimic  *	vn_open.  What we *really* need to do to avoid screwups if the  *	open semantics change is to call vn_open().  For example, ufs blows  *	up if you open a file but do not vmio it prior to writing.  */
+comment|/*  *	union_open:  *  *	run open VOP.  When opening the underlying vnode we have to mimic  *	vn_open().  What we *really* need to do to avoid screwups if the  *	open semantics change is to call vn_open().  For example, ufs blows  *	up if you open a file but do not vmio it prior to writing.  */
 end_comment
 
 begin_function
@@ -2908,7 +2908,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * We are holding the correct vnode, open it 	 */
+comment|/* 	 * We are holding the correct vnode, open it. 	 */
 if|if
 condition|(
 name|error
@@ -2928,7 +2928,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Absolutely necessary or UFS will blowup 	 */
+comment|/* 	 * This is absolutely necessary or UFS will blow up. 	 */
 if|if
 condition|(
 name|error
@@ -2955,7 +2955,7 @@ name|cred
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Release any locks held 	 */
+comment|/* 	 * Release any locks held. 	 */
 if|if
 condition|(
 name|tvpisupper
@@ -3383,7 +3383,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We handle getattr only to change the fsid and  * track object sizes  *  * It's not clear whether VOP_GETATTR is to be  * called with the vnode locked or not.  stat() calls  * it with (vp) locked, and fstat calls it with  * (vp) unlocked.   *  * Because of this we cannot use our normal locking functions  * if we do not intend to lock the main a_vp node.  At the moment  * we are running without any specific locking at all, but beware  * to any programmer that care must be taken if locking is added  * to this function.  */
+comment|/*  * We handle getattr only to change the fsid and  * track object sizes  *  * It's not clear whether VOP_GETATTR is to be  * called with the vnode locked or not.  stat() calls  * it with (vp) locked, and fstat() calls it with  * (vp) unlocked.   *  * Because of this we cannot use our normal locking functions  * if we do not intend to lock the main a_vp node.  At the moment  * we are running without any specific locking at all, but beware  * to any programmer that care must be taken if locking is added  * to this function.  */
 end_comment
 
 begin_function
@@ -3475,7 +3475,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* XXX isn't this dangerouso without a lock? */
+comment|/* XXX isn't this dangerous without a lock? */
 name|union_newsize
 argument_list|(
 name|ap
@@ -3748,7 +3748,7 @@ name|EROFS
 operator|)
 return|;
 block|}
-comment|/* 	 * Handle case of truncating lower object to zero size, 	 * by creating a zero length upper object.  This is to 	 * handle the case of open with O_TRUNC and O_CREAT. 	 */
+comment|/* 	 * Handle case of truncating lower object to zero size 	 * by creating a zero length upper object.  This is to 	 * handle the case of open with O_TRUNC and O_CREAT. 	 */
 if|if
 condition|(
 name|un
@@ -3985,7 +3985,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * perhaps the size of the underlying object has changed under 	 * our feet.  take advantage of the offset information present 	 * in the uio structure. 	 */
+comment|/* 	 * XXX 	 * Perhaps the size of the underlying object has changed under 	 * our feet.  Take advantage of the offset information present 	 * in the uio structure. 	 */
 if|if
 condition|(
 name|error
@@ -4158,7 +4158,7 @@ operator|->
 name|a_cred
 argument_list|)
 expr_stmt|;
-comment|/* 	 * the size of the underlying object may be changed by the 	 * write. 	 */
+comment|/* 	 * The size of the underlying object may be changed by the 	 * write. 	 */
 if|if
 condition|(
 name|error
@@ -4725,7 +4725,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	union_link:  *  *	tdvp and vp will be locked on entry.  *	tdvp and vp should remain locked on return.  *	on return.  */
+comment|/*  *	union_link:  *  *	tdvp and vp will be locked on entry.  *	tdvp and vp should remain locked on return.  */
 end_comment
 
 begin_function
@@ -4887,7 +4887,7 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Make sure upper is locked, then unlock the union directory we were  	 * called with to avoid a deadlock while we are calling VOP_LINK on  	 * the upper (with tdvp locked and vp not locked).  Our ap->a_tdvp 	 * is expected to be locked on return. 	 */
+comment|/* 	 * Make sure upper is locked, then unlock the union directory we were  	 * called with to avoid a deadlock while we are calling VOP_LINK() on  	 * the upper (with tdvp locked and vp not locked).  Our ap->a_tdvp 	 * is expected to be locked on return. 	 */
 if|if
 condition|(
 operator|(
@@ -5282,7 +5282,7 @@ name|a_fvp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Figure out what tdvp (destination directory) to pass to the 	 * lower level.  If we replace it with uppervp, we need to vput the  	 * old one.  The exclusive lock is transfered to what we will pass 	 * down in the VOP_RENAME and we replace uppervp with a simple 	 * reference. 	 */
+comment|/* 	 * Figure out what tdvp (destination directory) to pass to the 	 * lower level.  If we replace it with uppervp, we need to vput the  	 * old one.  The exclusive lock is transfered to what we will pass 	 * down in the VOP_RENAME() and we replace uppervp with a simple 	 * reference. 	 */
 if|if
 condition|(
 name|tdvp
@@ -5311,7 +5311,7 @@ operator|==
 name|NULLVP
 condition|)
 block|{
-comment|/* 			 * this should never happen in normal 			 * operation but might if there was 			 * a problem creating the top-level shadow 			 * directory. 			 */
+comment|/* 			 * This should never happen in normal 			 * operation but might if there was 			 * a problem creating the top-level shadow 			 * directory. 			 */
 name|error
 operator|=
 name|EXDEV
@@ -5320,7 +5320,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 		 * new tdvp is a lock and reference on uppervp, put away 		 * the old tdvp. 		 */
+comment|/* 		 * New tdvp is a lock and reference on uppervp. 		 * Put away the old tdvp. 		 */
 name|tdvp
 operator|=
 name|union_lock_upper
@@ -5342,7 +5342,7 @@ name|a_tdvp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Figure out what tvp (destination file) to pass to the 	 * lower level. 	 * 	 * If the uppervp file does not exist put away the (wrong) 	 * file and change tvp to NULL. 	 */
+comment|/* 	 * Figure out what tvp (destination file) to pass to the 	 * lower level. 	 * 	 * If the uppervp file does not exist, put away the (wrong) 	 * file and change tvp to NULL. 	 */
 if|if
 condition|(
 name|tvp
@@ -5388,7 +5388,7 @@ argument_list|)
 expr_stmt|;
 comment|/* note: tvp may be NULL */
 block|}
-comment|/* 	 * VOP_RENAME releases/vputs prior to returning, so we have no 	 * cleanup to do. 	 */
+comment|/* 	 * VOP_RENAME() releases/vputs prior to returning, so we have no 	 * cleanup to do. 	 */
 return|return
 operator|(
 name|VOP_RENAME
@@ -5949,7 +5949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * union_readdir works in concert with getdirentries and  * readdir(3) to provide a list of entries in the unioned  * directories.  getdirentries is responsible for walking  * down the union stack.  readdir(3) is responsible for  * eliminating duplicate names from the returned data stream.  */
+comment|/*  * union_readdir ()works in concert with getdirentries() and  * readdir(3) to provide a list of entries in the unioned  * directories.  getdirentries()  is responsible for walking  * down the union stack.  readdir(3) is responsible for  * eliminating duplicate names from the returned data stream.  */
 end_comment
 
 begin_function
