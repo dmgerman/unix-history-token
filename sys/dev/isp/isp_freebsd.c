@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: isp_freebsd.c,v 1.11 1998/09/14 23:22:12 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.c,v 1.3 1998/09/15 08:42:55 gibbs Exp $ */
 end_comment
 
 begin_comment
@@ -1134,6 +1134,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|tgt
 argument_list|)

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: isp_freebsd_cam.h,v 1.1 1998/09/15 08:42:55 gibbs Exp $ */
+comment|/* $Id: isp_freebsd_cam.h,v 1.2 1998/09/15 09:59:37 gibbs Exp $ */
 end_comment
 
 begin_comment
@@ -420,7 +420,7 @@ name|XS_CDBP
 parameter_list|(
 name|ccb
 parameter_list|)
-value|((ccb)->ccb_h.flags& CAM_CDB_POINTER)? \ 	(ccb)->cdb_io.cdb_ptr : (ccb)->cdb_io.cdb_bytes
+value|(((ccb)->ccb_h.flags& CAM_CDB_POINTER)? \ 	(ccb)->cdb_io.cdb_ptr : (ccb)->cdb_io.cdb_bytes)
 end_define
 
 begin_define
