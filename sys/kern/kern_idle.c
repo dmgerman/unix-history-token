@@ -286,12 +286,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_state
-operator|=
-name|PRS_NORMAL
-expr_stmt|;
 name|td
 operator|=
 name|FIRST_THREAD_IN_PROC

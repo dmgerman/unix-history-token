@@ -2709,7 +2709,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If RFSTOPPED not requested, make child runnable and add to 	 * run queue. 	 */
+comment|/* 	 * Set the child start time and mark the process as being complete. 	 */
 name|microuptime
 argument_list|(
 operator|&
@@ -2720,17 +2720,6 @@ operator|->
 name|p_start
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|RFSTOPPED
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2743,6 +2732,18 @@ name|p_state
 operator|=
 name|PRS_NORMAL
 expr_stmt|;
+comment|/* 	 * If RFSTOPPED not requested, make child runnable and add to 	 * run queue. 	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|RFSTOPPED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|TD_SET_CAN_RUN
 argument_list|(
 name|td2
@@ -2753,13 +2754,13 @@ argument_list|(
 name|td2
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Now can be swapped. 	 */
 name|PROC_LOCK
 argument_list|(
@@ -3065,11 +3066,18 @@ argument_list|(
 name|cpuid
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
 name|p
 operator|->
 name|p_state
-operator|=
+operator|==
 name|PRS_NORMAL
+argument_list|,
+operator|(
+literal|"executing process is still new"
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Finish setting up thread glue so that it begins execution in a 	 * non-nested critical section with sched_lock held but not recursed. 	 */
 name|sched_lock
