@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.10	81/04/26	*/
+comment|/*	vm_meter.c	4.11	81/04/28	*/
 end_comment
 
 begin_include
@@ -202,11 +202,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|nclust
-decl_stmt|,
-name|nkb
-decl_stmt|;
 comment|/* 	 * Setup thresholds for paging: 	 *	lotsfree	is threshold where paging daemon turns on 	 *	desfree		is amount of memory desired free.  if less 	 *			than this for extended period, do swapping 	 *	minfree		is minimal amount of free memory which is 	 *			tolerable. 	 * 	 * Strategy of 4/22/81: 	 *	lotsfree is 1/4 of memory free. 	 *	desfree is 200k bytes, but at most 1/8 of memory 	 *	minfree is 64k bytes, but at most 1/2 of desfree 	 */
 if|if
 condition|(
@@ -600,7 +595,7 @@ index|]
 operator|>=
 literal|2
 operator|&&
-name|max
+name|imax
 argument_list|(
 name|avefree
 argument_list|,
@@ -1465,7 +1460,7 @@ name|x_ccount
 expr_stmt|;
 name|gives
 operator|=
-name|min
+name|imin
 argument_list|(
 name|gives
 argument_list|,
