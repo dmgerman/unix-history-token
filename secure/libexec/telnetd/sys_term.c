@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	8.4 (Berkeley) 5/30/95"
+literal|"@(#)sys_term.c	8.4+1 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -7332,7 +7332,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pututxline
+name|makeutx
 argument_list|(
 operator|&
 name|utmpx
@@ -7344,11 +7344,14 @@ name|fatal
 argument_list|(
 name|net
 argument_list|,
-literal|"pututxline failed"
+literal|"makeutx failed"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|scrub_env
+argument_list|()
+expr_stmt|;
 comment|/* 	 * -h : pass on name of host. 	 *		WARNING:  -h is accepted by login if and only if 	 *			getuid() == 0. 	 * -p : don't clobber the environment (so terminal type stays set). 	 * 	 * -f : force this login, he has already been authenticated 	 */
 name|argv
 operator|=
@@ -8347,6 +8350,104 @@ end_endif
 begin_comment
 comment|/* NEWINIT */
 end_comment
+
+begin_comment
+comment|/*  * scrub_env()  *  * Remove a few things from the environment that  * don't need to be there.  */
+end_comment
+
+begin_macro
+name|scrub_env
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|cpp
+decl_stmt|,
+modifier|*
+modifier|*
+name|cpp2
+decl_stmt|;
+for|for
+control|(
+name|cpp2
+operator|=
+name|cpp
+operator|=
+name|environ
+init|;
+operator|*
+name|cpp
+condition|;
+name|cpp
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+literal|"LD_"
+argument_list|,
+literal|3
+argument_list|)
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+literal|"_RLD_"
+argument_list|,
+literal|5
+argument_list|)
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+literal|"LIBPATH="
+argument_list|,
+literal|8
+argument_list|)
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+literal|"IFS="
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+operator|*
+name|cpp2
+operator|++
+operator|=
+operator|*
+name|cpp
+expr_stmt|;
+block|}
+operator|*
+name|cpp2
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * cleanup()  *  * This is the routine to call when we are all through, to  * clean up anything that needs to be cleaned up.  */
