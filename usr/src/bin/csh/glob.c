@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c	5.7 (Berkeley) %G%"
+literal|"@(#)glob.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1948,6 +1948,17 @@ operator|++
 name|vl
 condition|)
 do|;
+if|if
+condition|(
+name|gflag
+operator|&
+name|G_CSH
+condition|)
+name|blkfree
+argument_list|(
+name|vo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|globv
