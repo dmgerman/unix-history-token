@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1261,6 +1261,23 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
+name|puts
+argument_list|(
+literal|"login names may not start with '-'."
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 operator|!
