@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.78 1999/04/16 21:22:05 peter Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.79 1999/04/18 15:10:58 dfr Exp $  */
 end_comment
 
 begin_include
@@ -1970,12 +1970,18 @@ argument_list|(
 name|root_bus
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX Shouldn't ignore the error like this, but should 		 * instead fix the newbus code.  Until that happens, 		 * I'm doing this to get suspend working again. 		 */
 if|if
 condition|(
 name|error
 condition|)
-return|return;
-comment|/* XXX no error reporting */
+name|printf
+argument_list|(
+literal|"DEVICE_SUSPEND error %d, ignored\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|apm_execute_hook
 argument_list|(
 name|hook
