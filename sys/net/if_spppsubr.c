@@ -13875,6 +13875,7 @@ literal|1
 control|)
 if|if
 condition|(
+operator|(
 name|sp
 operator|->
 name|lcp
@@ -13882,6 +13883,7 @@ operator|.
 name|protos
 operator|&
 name|mask
+operator|)
 operator|&&
 operator|(
 operator|(
@@ -14021,6 +14023,7 @@ literal|1
 control|)
 if|if
 condition|(
+operator|(
 name|sp
 operator|->
 name|lcp
@@ -14028,6 +14031,7 @@ operator|.
 name|protos
 operator|&
 name|mask
+operator|)
 operator|&&
 operator|(
 operator|(
@@ -14599,6 +14603,7 @@ literal|1
 control|)
 if|if
 condition|(
+operator|(
 name|sp
 operator|->
 name|lcp
@@ -14606,6 +14611,7 @@ operator|.
 name|protos
 operator|&
 name|mask
+operator|)
 operator|&&
 operator|(
 name|cps
@@ -26025,6 +26031,7 @@ literal|1
 control|)
 if|if
 condition|(
+operator|(
 name|sp
 operator|->
 name|lcp
@@ -26032,6 +26039,7 @@ operator|.
 name|protos
 operator|&
 name|mask
+operator|)
 operator|&&
 operator|(
 operator|(
