@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.48 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.47		%G%"
+literal|"@(#)sendmail.h	8.48		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -716,6 +716,14 @@ modifier|*
 name|m_execdir
 decl_stmt|;
 comment|/* directory to chdir to before execv */
+name|uid_t
+name|m_uid
+decl_stmt|;
+comment|/* UID to run as */
+name|gid_t
+name|m_gid
+decl_stmt|;
+comment|/* GID to run as */
 block|}
 struct|;
 end_struct
@@ -1004,12 +1012,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_RESTR
+name|M_SPECFIC_UID
 value|'S'
 end_define
 
 begin_comment
-comment|/* must be daemon to execute */
+comment|/* run as specific uid/gid */
 end_comment
 
 begin_define
