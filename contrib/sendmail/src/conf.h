@@ -7,10 +7,6 @@ begin_comment
 comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	Send updates to sendmail@Sendmail.ORG so they will be **	included in the next release. */
 end_comment
 
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.863.2.22 2002/12/19 18:00:39 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.863.2.28 2003/02/11 17:17:22 ca Exp $"
 argument_list|)
 end_macro
 
@@ -21,27 +21,6 @@ include|#
 directive|include
 file|<dirent.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|SM_CONF_SHM
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sm/shm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SM_CONF_SHM */
-end_comment
 
 begin_define
 define|#
@@ -25343,12 +25322,15 @@ sizeof|sizeof
 name|basedir
 argument_list|)
 expr_stmt|;
+comment|/* Provide space for trailing '/' */
 if|if
 condition|(
 name|len
 operator|>=
 sizeof|sizeof
 name|basedir
+operator|-
+literal|1
 condition|)
 block|{
 name|syserr
@@ -25362,6 +25344,8 @@ name|int
 operator|)
 sizeof|sizeof
 name|basedir
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|ExitStat

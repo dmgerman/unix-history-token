@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: listener.c,v 8.85.2.7 2002/12/10 04:02:25 ca Exp $"
+literal|"@(#)$Id: listener.c,v 8.85.2.9 2003/01/03 22:14:40 ca Exp $"
 argument_list|)
 end_macro
 
@@ -30,12 +30,6 @@ begin_include
 include|#
 directive|include
 file|<sm/errstring.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sm/fdset.h>
 end_include
 
 begin_if
@@ -250,6 +244,10 @@ return|return
 name|MI_FAILURE
 return|;
 block|}
+if|#
+directive|if
+operator|!
+name|_FFR_USE_POLL
 if|if
 condition|(
 operator|!
@@ -287,6 +285,9 @@ return|return
 name|MI_FAILURE
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* !_FFR_USE_POLL */
 return|return
 name|MI_SUCCESS
 return|;
@@ -2279,11 +2280,13 @@ decl_stmt|;
 name|SMFICTX_PTR
 name|ctx
 decl_stmt|;
-name|fd_set
-name|readset
-decl_stmt|,
-name|excset
-decl_stmt|;
+name|FD_RD_VAR
+argument_list|(
+name|rds
+argument_list|,
+name|excs
+argument_list|)
+expr_stmt|;
 name|struct
 name|timeval
 name|chktime
@@ -2357,40 +2360,13 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* select on interface ports */
-name|FD_ZERO
+name|FD_RD_INIT
 argument_list|(
-operator|&
-name|readset
-argument_list|)
-expr_stmt|;
-name|FD_ZERO
-argument_list|(
-operator|&
-name|excset
-argument_list|)
-expr_stmt|;
-name|FD_SET
-argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|)
 name|listenfd
 argument_list|,
-operator|&
-name|readset
-argument_list|)
-expr_stmt|;
-name|FD_SET
-argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|)
-name|listenfd
+name|rds
 argument_list|,
-operator|&
-name|excset
+name|excs
 argument_list|)
 expr_stmt|;
 name|chktime
@@ -2407,19 +2383,13 @@ literal|0
 expr_stmt|;
 name|r
 operator|=
-name|select
+name|FD_RD_READY
 argument_list|(
 name|listenfd
-operator|+
-literal|1
 argument_list|,
-operator|&
-name|readset
+name|rds
 argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|excset
+name|excs
 argument_list|,
 operator|&
 name|chktime
@@ -2522,12 +2492,13 @@ block|}
 if|if
 condition|(
 operator|!
-name|FD_ISSET
+name|FD_IS_RD_RDY
 argument_list|(
 name|listenfd
 argument_list|,
-operator|&
-name|readset
+name|rds
+argument_list|,
+name|excs
 argument_list|)
 condition|)
 block|{
@@ -2549,11 +2520,13 @@ name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: select() returned exception for socket, abort"
+literal|"%s: %s() returned exception for socket, abort"
 argument_list|,
 name|smfi
 operator|->
 name|xxfi_name
+argument_list|,
+name|MI_POLLSELECT
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2659,6 +2632,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
+if|#
+directive|if
+operator|!
+name|_FFR_USE_POLL
 comment|/* check if acceptable for select() */
 if|if
 condition|(
@@ -2691,6 +2668,9 @@ operator|=
 name|ERANGE
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !_FFR_USE_POLL */
 if|if
 condition|(
 operator|!
