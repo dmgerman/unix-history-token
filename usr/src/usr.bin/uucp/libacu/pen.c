@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pen.c	4.3 (Berkeley) %G%"
+literal|"@(#)pen.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../condevs.h"
+file|"condevs.h"
 end_include
 
 begin_macro

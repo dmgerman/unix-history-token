@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bsdtcp.c	4.4 (Berkeley) %G%"
+literal|"@(#)bsdtcp.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,7 +23,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../condevs.h"
+file|"condevs.h"
 end_include
 
 begin_include
@@ -321,7 +321,8 @@ argument_list|(
 name|s
 argument_list|,
 operator|(
-name|char
+expr|struct
+name|sockaddr
 operator|*
 operator|)
 operator|&
@@ -331,8 +332,6 @@ sizeof|sizeof
 argument_list|(
 name|hisctladdr
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -398,7 +397,8 @@ argument_list|(
 name|s
 argument_list|,
 operator|(
-name|char
+expr|struct
+name|sockaddr
 operator|*
 operator|)
 operator|&
@@ -408,8 +408,6 @@ sizeof|sizeof
 argument_list|(
 name|hisctladdr
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0

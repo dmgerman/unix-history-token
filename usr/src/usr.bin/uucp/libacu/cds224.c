@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cds224.c	1.2 (Berkeley) %G%"
+literal|"@(#)cds224.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,7 +24,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../condevs.h"
+file|"condevs.h"
 end_include
 
 begin_comment
@@ -103,7 +103,6 @@ literal|20
 index|]
 decl_stmt|;
 name|char
-modifier|*
 name|tempbuf
 index|[
 literal|20
