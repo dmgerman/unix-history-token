@@ -50,7 +50,8 @@ modifier|*
 name|sem_base
 decl_stmt|;
 comment|/* pointer to first semaphore in set */
-name|u_short
+name|unsigned
+name|short
 name|sem_nsems
 decl_stmt|;
 comment|/* number of sems in set */
@@ -91,7 +92,8 @@ begin_struct
 struct|struct
 name|sembuf
 block|{
-name|u_short
+name|unsigned
+name|short
 name|sem_num
 decl_stmt|;
 comment|/* semaphore # */
@@ -132,7 +134,8 @@ modifier|*
 name|buf
 decl_stmt|;
 comment|/* buffer for IPC_STAT& IPC_SET */
-name|u_short
+name|unsigned
+name|short
 modifier|*
 name|array
 decl_stmt|;
@@ -518,7 +521,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_SEM_H_ */
+comment|/* !_SYS_SEM_H_ */
 end_comment
 
 end_unit
