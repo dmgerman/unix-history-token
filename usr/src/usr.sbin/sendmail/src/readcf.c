@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.7 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4431,6 +4431,17 @@ case|case
 literal|'L'
 case|:
 comment|/* log level */
+if|if
+condition|(
+name|safe
+operator|||
+name|LogLevel
+operator|<
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+condition|)
 name|LogLevel
 operator|=
 name|atoi
