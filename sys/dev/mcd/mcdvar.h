@@ -24,9 +24,6 @@ name|bio
 modifier|*
 name|bp
 decl_stmt|;
-name|int
-name|p_offset
-decl_stmt|;
 name|short
 name|count
 decl_stmt|;
