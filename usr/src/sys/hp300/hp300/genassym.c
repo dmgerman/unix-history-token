@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -19,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"sys/buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/vmmeter.h"
 end_include
 
 begin_include
@@ -363,42 +357,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tV_PDMA %d\n"
-argument_list|,
-operator|&
-name|vm
-operator|->
-name|v_pdma
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tV_FAULTS %d\n"
 argument_list|,
 operator|&
 name|vm
 operator|->
 name|v_faults
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tV_PGREC %d\n"
-argument_list|,
-operator|&
-name|vm
-operator|->
-name|v_pgrec
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tV_FASTPGREC %d\n"
-argument_list|,
-operator|&
-name|vm
-operator|->
-name|v_fastpgrec
 argument_list|)
 expr_stmt|;
 name|printf
