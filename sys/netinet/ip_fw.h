@@ -955,6 +955,11 @@ comment|/* grabbed from IP header	*/
 name|u_int32_t
 name|retval
 decl_stmt|;
+name|struct
+name|inpcb
+modifier|*
+name|inp
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -996,6 +1001,11 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1017,6 +1027,11 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 function_decl|;
 end_function_decl

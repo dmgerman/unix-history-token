@@ -69,6 +69,12 @@ name|ifnet
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|inpcb
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * The packet filter hooks are designed for anything to call them to  * possibly intercept the packet.  */
 end_comment
@@ -102,6 +108,10 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
 parameter_list|)
 function_decl|;
 name|void
@@ -257,6 +267,11 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -284,6 +299,10 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
 parameter_list|)
 parameter_list|,
 name|void
@@ -321,6 +340,10 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
 parameter_list|)
 parameter_list|,
 name|void

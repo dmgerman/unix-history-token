@@ -1965,6 +1965,8 @@ operator|->
 name|rt_ifp
 argument_list|,
 name|PFIL_OUT
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

@@ -980,6 +980,11 @@ name|ifp
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1006,6 +1011,11 @@ name|ifp
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1038,6 +1048,11 @@ name|ifp
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1064,6 +1079,11 @@ name|ifp
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -17201,6 +17221,11 @@ name|ifp
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 block|{
 comment|/* 	 * XXX Wed Jul 9 22:03:16 2003 UTC 	 * OpenBSD has changed its byte ordering convention on ip_len/ip_off 	 * in network stack. OpenBSD's network stack have converted 	 * ip_len/ip_off to host byte order frist as FreeBSD. 	 * Now this is not true anymore , so we should convert back to network 	 * byte order.  	 */
@@ -17272,6 +17297,8 @@ argument_list|,
 name|ifp
 argument_list|,
 name|m
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 if|if
@@ -17355,6 +17382,11 @@ name|ifp
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 block|{
 comment|/* 	 * XXX Wed Jul 9 22:03:16 2003 UTC 	 * OpenBSD has changed its byte ordering convention on ip_len/ip_off 	 * in network stack. OpenBSD's network stack have converted 	 * ip_len/ip_off to host byte order frist as FreeBSD. 	 * Now this is not true anymore , so we should convert back to network 	 * byte order.  	 */
@@ -17460,6 +17492,8 @@ argument_list|,
 name|ifp
 argument_list|,
 name|m
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 if|if
@@ -17546,6 +17580,11 @@ name|ifp
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 block|{
 comment|/* 	 * IPv6 does not affected ip_len/ip_off byte order changes. 	 */
@@ -17561,6 +17600,8 @@ argument_list|,
 name|ifp
 argument_list|,
 name|m
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 if|if
@@ -17608,6 +17649,11 @@ name|ifp
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 block|{
 comment|/* 	 * IPv6 does not affected ip_len/ip_off byte order changes. 	 */
@@ -17657,6 +17703,8 @@ argument_list|,
 name|ifp
 argument_list|,
 name|m
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 if|if
