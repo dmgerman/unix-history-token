@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.24 (Berkeley) %G%"
+literal|"@(#)table.c	1.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1333,6 +1333,8 @@ block|,
 name|TANY
 block|,
 name|SCON
+operator||
+name|SNAME
 block|,
 name|TANY
 block|,
@@ -1351,6 +1353,8 @@ block|,
 name|TANY
 block|,
 name|SCON
+operator||
+name|SNAME
 block|,
 name|TANY
 block|,
@@ -1369,6 +1373,8 @@ block|,
 name|TWORD
 block|,
 name|SCON
+operator||
+name|SNAME
 block|,
 name|TANY
 block|,
@@ -1387,6 +1393,8 @@ block|,
 name|TWORD
 block|,
 name|SCON
+operator||
+name|SNAME
 block|,
 name|TANY
 block|,
@@ -1408,6 +1416,8 @@ block|,
 name|TANY
 block|,
 name|SCON
+operator||
+name|SNAME
 block|,
 name|TANY
 block|,
@@ -1428,6 +1438,8 @@ block|,
 name|TANY
 block|,
 name|SCON
+operator||
+name|SNAME
 block|,
 name|TANY
 block|,
@@ -1448,6 +1460,8 @@ block|,
 name|TWORD
 block|,
 name|SCON
+operator||
+name|SNAME
 block|,
 name|TANY
 block|,
@@ -1468,6 +1482,8 @@ block|,
 name|TWORD
 block|,
 name|SCON
+operator||
+name|SNAME
 block|,
 name|TANY
 block|,
