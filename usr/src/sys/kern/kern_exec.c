@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.71 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.72 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3420,6 +3420,8 @@ name|size
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
+name|VM_PROT_ALL
+argument_list|,
 name|MAP_COPY
 operator||
 name|MAP_FIXED
@@ -3492,6 +3494,8 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_EXECUTE
 argument_list|,
+name|VM_PROT_ALL
+argument_list|,
 name|MAP_COPY
 operator||
 name|MAP_FIXED
@@ -3542,6 +3546,8 @@ operator|&
 name|addr
 argument_list|,
 name|size
+argument_list|,
+name|VM_PROT_ALL
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
