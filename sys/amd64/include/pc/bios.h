@@ -826,6 +826,20 @@ name|PCIBIOS_WRITE_CONFIG_DWORD
 value|0xb10d
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCIBIOS_GET_IRQ_ROUTING
+value|0xb10e
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIBIOS_ROUTE_INTERRUPT
+value|0xb10f
+end_define
+
 begin_function_decl
 specifier|extern
 name|int
