@@ -341,7 +341,7 @@ block|{
 comment|/* 	 * u_ilen overlays IP checksum, which is now zero. 	 * ulen is the actual number of bytes we got on input 	 * from IP; u_len is what UDP says we should have 	 * (sizeof(udp_specific) + datalen) 	 */
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_WARNING
 argument_list|,
 literal|"UDP len %d, but got %d\n"
 argument_list|,
