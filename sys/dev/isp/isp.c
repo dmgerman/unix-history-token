@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp.c,v 1.19 1998/09/14 23:23:47 mjacob Exp $ */
+comment|/* $Id: isp.c,v 1.2 1998/09/15 08:42:55 gibbs Exp $ */
 end_comment
 
 begin_comment
@@ -6263,6 +6263,10 @@ name|PRINTF
 argument_list|(
 literal|" XS_ERR=0x%x\n"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|XS_ERR
 argument_list|(
 name|xs
