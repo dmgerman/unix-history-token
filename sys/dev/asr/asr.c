@@ -15988,7 +15988,7 @@ name|ccb_h
 operator|.
 name|status
 operator||=
-name|CAM_REQ_CMP
+name|CAM_SCSI_STATUS_ERROR
 operator||
 name|CAM_AUTOSNS_VALID
 expr_stmt|;
