@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.4 (Berkeley) 83/07/09"
+literal|"@(#)main.c	4.5 (Berkeley) 83/08/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -1189,6 +1189,9 @@ operator|>
 literal|0
 condition|)
 block|{
+name|oflush
+argument_list|()
+expr_stmt|;
 name|sleep
 argument_list|(
 name|PF
