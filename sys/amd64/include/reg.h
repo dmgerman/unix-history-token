@@ -140,17 +140,79 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Register set accessible via /proc/$pid/dbregs.  */
+end_comment
+
 begin_struct
 struct|struct
 name|dbreg
 block|{
 name|unsigned
 name|long
-name|grrr
+name|dr
+index|[
+literal|16
+index|]
 decl_stmt|;
+comment|/* debug registers */
+comment|/* Index 0-3: debug address registers */
+comment|/* Index 4-5: reserved */
+comment|/* Index 6: debug status */
+comment|/* Index 7: debug control */
+comment|/* Index 8-15: reserved */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|DBREG_DR7_EXEC
+value|0x00
+end_define
+
+begin_comment
+comment|/* break on execute       */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBREG_DR7_WRONLY
+value|0x01
+end_define
+
+begin_comment
+comment|/* break on write         */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBREG_DR7_RDWR
+value|0x03
+end_define
+
+begin_comment
+comment|/* break on read or write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBREG_DRX
+parameter_list|(
+name|d
+parameter_list|,
+name|x
+parameter_list|)
+value|((d)->dr[(x)])
+end_define
+
+begin_comment
+comment|/* reference dr0 - dr15 by                                          register number */
+end_comment
 
 begin_ifdef
 ifdef|#

@@ -83,6 +83,24 @@ decl_stmt|;
 name|u_int32_t
 name|pcb_gs
 decl_stmt|;
+name|u_int64_t
+name|pcb_dr0
+decl_stmt|;
+name|u_int64_t
+name|pcb_dr1
+decl_stmt|;
+name|u_int64_t
+name|pcb_dr2
+decl_stmt|;
+name|u_int64_t
+name|pcb_dr3
+decl_stmt|;
+name|u_int64_t
+name|pcb_dr6
+decl_stmt|;
+name|u_int64_t
+name|pcb_dr7
+decl_stmt|;
 name|struct
 name|savefpu
 name|pcb_save
@@ -92,13 +110,18 @@ name|pcb_flags
 decl_stmt|;
 define|#
 directive|define
+name|PCB_DBREGS
+value|0x02
+comment|/* process using debug registers */
+define|#
+directive|define
 name|PCB_FPUINITDONE
-value|0x01
+value|0x08
 comment|/* fpu state is initialized */
 define|#
 directive|define
 name|PCB_FULLCTX
-value|0x02
+value|0x80
 comment|/* full context restore on sysret */
 name|caddr_t
 name|pcb_onfault
