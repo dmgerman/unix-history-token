@@ -237,6 +237,14 @@ begin_comment
 comment|/* Compress accounting file */
 end_comment
 
+begin_decl_stmt
+name|uid_t
+name|uid
+decl_stmt|,
+name|euid
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Grossness follows:  *  Names to be accumulated are hashed into the following  *  table.  */
 end_comment
@@ -457,6 +465,17 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|euid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+comment|/* these aren't used in pac(1) */
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -841,7 +860,7 @@ if|if
 condition|(
 name|mflag
 operator|&&
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -850,7 +869,7 @@ argument_list|)
 condition|)
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,

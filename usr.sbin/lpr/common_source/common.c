@@ -603,6 +603,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|uid_t
+name|uid
+decl_stmt|,
+name|euid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|compar
@@ -824,12 +833,22 @@ expr_stmt|;
 comment|/* 	 * Try connecting to the server. 	 */
 name|retry
 label|:
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|rresvport
 argument_list|(
 operator|&
 name|lport
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
 argument_list|)
 expr_stmt|;
 if|if
@@ -979,6 +998,15 @@ argument_list|)
 operator|)
 operator|!=
 literal|'\n'
+operator|&&
+name|linel
+operator|+
+literal|1
+operator|<
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1020,6 +1048,15 @@ literal|07
 operator|)
 operator|!=
 literal|0
+operator|&&
+name|linel
+operator|+
+literal|1
+operator|<
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 condition|)
 do|;
 continue|continue;
@@ -1102,6 +1139,11 @@ decl_stmt|;
 name|int
 name|arraysz
 decl_stmt|;
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1138,7 +1180,12 @@ condition|)
 goto|goto
 name|errdone
 goto|;
-comment|/* 	 * Estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry. 	 */
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry.  	 */
 name|arraysz
 operator|=
 operator|(
@@ -1218,6 +1265,11 @@ literal|'f'
 condition|)
 continue|continue;
 comment|/* daemon control files only */
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -1234,6 +1286,11 @@ literal|0
 condition|)
 continue|continue;
 comment|/* Doesn't exist */
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 name|q
 operator|=
 operator|(
@@ -1761,11 +1818,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -1791,8 +1848,8 @@ end_endif
 
 begin_function
 name|void
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|fatal
 parameter_list|(
@@ -1822,8 +1879,8 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
