@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ecreg.h	4.1	82/04/11	*/
+comment|/*	if_ecreg.h	4.2	82/06/26	*/
 end_comment
 
 begin_comment
@@ -292,6 +292,13 @@ define|#
 directive|define
 name|EC_WRITE
 value|(EC_JINTEN|EC_XINTEN|EC_XWBN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_CLEAR
+value|(EC_JINTEN|EC_XINTEN|EC_JCLR)
 end_define
 
 begin_comment
