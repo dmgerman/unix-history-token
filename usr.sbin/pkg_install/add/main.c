@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.21 1999/01/25 21:08:13 billf Exp $"
+literal|"$Id: main.c,v 1.22 1999/01/26 22:31:23 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -891,7 +891,7 @@ literal|"i386/packages-3.0-aout/Latest/"
 return|;
 return|return
 operator|(
-literal|0
+literal|""
 operator|)
 return|;
 block|}
