@@ -1224,8 +1224,6 @@ operator|&&
 name|prison_ip
 argument_list|(
 name|p
-operator|->
-name|p_ucred
 argument_list|,
 literal|0
 argument_list|,
