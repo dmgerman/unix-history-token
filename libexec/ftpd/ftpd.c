@@ -8841,7 +8841,7 @@ name|pdata
 operator|=
 name|s
 expr_stmt|;
-comment|/* 		 * Unset the blocking I/O flag on the child socket 		 * again so stdio can work on it. 		 */
+comment|/* 		 * Unset the inherited non-blocking I/O flag 		 * on the child socket so stdio can work on it. 		 */
 if|if
 condition|(
 operator|(
