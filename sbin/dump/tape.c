@@ -2849,6 +2849,13 @@ name|enslave
 argument_list|()
 expr_stmt|;
 comment|/* Share open tape file descriptor with slaves */
+name|signal
+argument_list|(
+name|SIGINFO
+argument_list|,
+name|infosch
+argument_list|)
+expr_stmt|;
 name|asize
 operator|=
 literal|0

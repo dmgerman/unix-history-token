@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -708,10 +714,6 @@ name|void
 operator|)
 name|time
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
 operator|&
 name|tnow
 argument_list|)
@@ -782,6 +784,27 @@ literal|60
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Schedule a printout of the estimate in the next call to timeest().  */
+end_comment
+
+begin_function
+name|void
+name|infosch
+parameter_list|(
+name|signal
+parameter_list|)
+name|int
+name|signal
+decl_stmt|;
+block|{
+name|tschedule
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
