@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_system[] = "@(#)system_.c	1.3";  *  * execute a unix command  *  * calling sequence:  *	iexit = system(command)  * where:  *	iexit will return the exit status of the command  *	command is a character string containing the command to be executed  */
+comment|/* char id_system[] = "@(#)system_.c	1.4";  *  * execute a unix command  *  * calling sequence:  *	iexit = system(command)  * where:  *	iexit will return the exit status of the command  *	command is a character string containing the command to be executed  */
 end_comment
 
 begin_include
@@ -37,7 +37,7 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|int
+name|long
 name|i
 decl_stmt|;
 if|if
@@ -70,13 +70,15 @@ name|i
 operator|<
 name|MXUNIT
 condition|;
-name|flush
-argument_list|(
 name|i
 operator|++
-argument_list|)
 control|)
-empty_stmt|;
+name|flush_
+argument_list|(
+operator|&
+name|i
+argument_list|)
+expr_stmt|;
 name|g_char
 argument_list|(
 name|s
