@@ -853,7 +853,7 @@ name|p
 operator|->
 name|p_oncpu
 operator|==
-literal|0xff
+name|NOCPU
 operator|&&
 comment|/* idle */
 endif|#
@@ -3362,6 +3362,9 @@ name|sched_lock
 operator|.
 name|mtx_lock
 operator|=
+operator|(
+name|uintptr_t
+operator|)
 name|curproc
 expr_stmt|;
 name|CTR4
