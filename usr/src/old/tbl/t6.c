@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t6.c	4.2 %G%"
+literal|"@(#)t6.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1511,7 +1511,7 @@ name|fprintf
 argument_list|(
 name|tabout
 argument_list|,
-literal|".if t .if (\\n(TW+\\n(.o)>7.65i .tm Table at line %d file %s is too wide - \\n(TW units\n"
+literal|".if t .if \\n(TW>\\n(.li .tm Table at line %d file %s is too wide - \\n(TW units\n"
 argument_list|,
 name|iline
 operator|-
