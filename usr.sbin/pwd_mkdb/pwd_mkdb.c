@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pwd_mkdb.c,v 1.20 1997/10/10 06:27:07 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -488,9 +488,9 @@ decl_stmt|,
 name|methoduid
 decl_stmt|;
 name|int
-name|cflag
+name|Cflag
 decl_stmt|;
-name|cflag
+name|Cflag
 operator|=
 literal|0
 expr_stmt|;
@@ -520,7 +520,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cd:pu:v"
+literal|"Cd:pu:v"
 argument_list|)
 operator|)
 operator|!=
@@ -533,10 +533,10 @@ name|ch
 condition|)
 block|{
 case|case
-literal|'c'
+literal|'C'
 case|:
 comment|/* verify only */
-name|cflag
+name|Cflag
 operator|=
 literal|1
 expr_stmt|;
@@ -719,7 +719,7 @@ expr_stmt|;
 comment|/* check only if password database is valid */
 if|if
 condition|(
-name|cflag
+name|Cflag
 condition|)
 block|{
 for|for
