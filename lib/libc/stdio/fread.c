@@ -117,7 +117,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|count
+name|resid
 operator|)
 return|;
 if|if
