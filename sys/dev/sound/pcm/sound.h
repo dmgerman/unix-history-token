@@ -482,9 +482,9 @@ name|sysctl_oid
 modifier|*
 name|sysctl_tree_top
 decl_stmt|;
-name|struct
-name|mtx
-name|mutex
+name|void
+modifier|*
+name|lock
 decl_stmt|;
 block|}
 struct|;
