@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -642,17 +642,6 @@ decl_stmt|;
 name|off_t
 name|osize
 decl_stmt|;
-if|if
-condition|(
-name|length
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|oip
 operator|=
 name|VTOI
@@ -660,6 +649,29 @@ argument_list|(
 name|ovp
 argument_list|)
 expr_stmt|;
+name|fs
+operator|=
+name|oip
+operator|->
+name|i_fs
+expr_stmt|;
+if|if
+condition|(
+name|length
+operator|<
+literal|0
+operator|||
+name|length
+operator|>
+name|fs
+operator|->
+name|fs_maxfilesize
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|tv
 operator|=
 name|time
@@ -811,12 +823,6 @@ name|u_long
 operator|)
 name|length
 argument_list|)
-expr_stmt|;
-name|fs
-operator|=
-name|oip
-operator|->
-name|i_fs
 expr_stmt|;
 name|osize
 operator|=
