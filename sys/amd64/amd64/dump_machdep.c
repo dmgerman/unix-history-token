@@ -260,6 +260,49 @@ operator|&
 name|kdh
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|di
+operator|->
+name|mediasize
+operator|<
+operator|(
+operator|(
+name|Maxmem
+operator|*
+operator|(
+name|off_t
+operator|)
+name|PAGE_SIZE
+operator|)
+operator|+
+comment|/* Memory to save */
+operator|(
+sizeof|sizeof
+name|kdh
+operator|*
+literal|2
+operator|)
+operator|+
+comment|/* header + trailer */
+operator|(
+literal|64
+operator|*
+literal|1024
+operator|)
+operator|)
+condition|)
+block|{
+comment|/* Room to leave untouched */
+comment|/* at partition head. */
+comment|/* (an arbitrary amount). */
+name|printf
+argument_list|(
+literal|"\nDump failed. Partition too small.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|dumplo
 operator|=
 name|di
