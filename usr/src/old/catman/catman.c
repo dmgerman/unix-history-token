@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)catman.c	5.6 (Berkeley) %G%"
+literal|"@(#)catman.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,10 +159,10 @@ name|lncat
 index|[
 name|MAXNAMLEN
 operator|+
-literal|6
+literal|9
 index|]
 init|=
-literal|"catx/"
+literal|"../catx/"
 decl_stmt|;
 end_decl_stmt
 
@@ -1006,11 +1006,15 @@ operator|||
 name|fgets
 argument_list|(
 name|lncat
+operator|+
+literal|3
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|lncat
 argument_list|)
+operator|-
+literal|3
 argument_list|,
 name|inf
 argument_list|)
@@ -1056,6 +1060,8 @@ condition|(
 name|strncmp
 argument_list|(
 name|lncat
+operator|+
+literal|3
 argument_list|,
 literal|"man"
 argument_list|,
@@ -1072,26 +1078,19 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|bcopy
+argument_list|(
+literal|"../cat"
+argument_list|,
 name|lncat
-index|[
-literal|0
-index|]
-operator|=
-literal|'c'
-expr_stmt|;
-name|lncat
-index|[
+argument_list|,
+sizeof|sizeof
+argument_list|(
+literal|"../cat"
+argument_list|)
+operator|-
 literal|1
-index|]
-operator|=
-literal|'a'
-expr_stmt|;
-name|lncat
-index|[
-literal|2
-index|]
-operator|=
-literal|'t'
+argument_list|)
 expr_stmt|;
 name|makelink
 operator|=
@@ -1174,6 +1173,8 @@ condition|(
 name|stat
 argument_list|(
 name|lncat
+operator|+
+literal|3
 argument_list|,
 operator|&
 name|sbuf
@@ -1181,6 +1182,7 @@ argument_list|)
 operator|>=
 literal|0
 operator|&&
+operator|(
 operator|(
 operator|(
 name|sbuf
@@ -1191,6 +1193,19 @@ name|S_IFMT
 operator|)
 operator|==
 name|S_IFREG
+operator|)
+operator|||
+operator|(
+operator|(
+name|sbuf
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFLNK
+operator|)
 operator|)
 condition|)
 operator|(
@@ -1207,7 +1222,7 @@ name|pflag
 condition|)
 name|printf
 argument_list|(
-literal|"ln %s %s\n"
+literal|"ln -s %s %s\n"
 argument_list|,
 name|lncat
 argument_list|,
@@ -1217,7 +1232,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|link
+name|symlink
 argument_list|(
 name|lncat
 argument_list|,
@@ -1232,7 +1247,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"catman: link: %s"
+literal|"catman: symlink: %s"
 argument_list|,
 name|cat
 argument_list|)
