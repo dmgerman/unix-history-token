@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.13 (Berkeley) %G%"
+literal|"@(#)login.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,10 @@ begin_define
 define|#
 directive|define
 name|WRITEGID
-value|write_gid()
+parameter_list|(
+name|gid
+parameter_list|)
+value|write_gid(gid)
 end_define
 
 begin_comment
@@ -1933,6 +1936,11 @@ operator|->
 name|pw_uid
 argument_list|,
 name|WRITEGID
+argument_list|(
+name|pwd
+operator|->
+name|pw_gid
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3396,8 +3404,16 @@ end_block
 
 begin_macro
 name|write_gid
-argument_list|()
+argument_list|(
+argument|default_gid
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|default_gid
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3413,7 +3429,7 @@ decl_stmt|;
 name|int
 name|gid
 init|=
-literal|0
+name|default_gid
 decl_stmt|;
 name|gr
 operator|=
@@ -3443,7 +3459,9 @@ name|endgrent
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|gid
+operator|)
 return|;
 block|}
 end_block
