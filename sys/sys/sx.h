@@ -194,7 +194,7 @@ name|SX_ASSERT_XLOCKED
 parameter_list|(
 name|sx
 parameter_list|)
-value|do {					\ 	mtx_lock(&(sx)->sx_lock);					\ 	KASSERT(((sx)->sx_xholder == curproc),				\ 	    ("%s: thread %p lacking xlock %s\n", __FUNCTION__,		\ 	    (sx)->sx_descr, curproc));					\ 	mtx_unlock(&(sx)->sx_lock);					\ } while (0)
+value|do {					\ 	mtx_lock(&(sx)->sx_lock);					\ 	KASSERT(((sx)->sx_xholder == curproc),				\ 	    ("%s: thread %p lacking xlock %s\n", __FUNCTION__,		\ 	    curproc, (sx)->sx_descr));					\ 	mtx_unlock(&(sx)->sx_lock);					\ } while (0)
 end_define
 
 begin_else
