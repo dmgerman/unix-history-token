@@ -1478,10 +1478,12 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|__restrict
 name|kfaddr
 parameter_list|,
 name|void
 modifier|*
+name|__restrict
 name|kdaddr
 parameter_list|,
 name|size_t
@@ -1489,6 +1491,7 @@ name|len
 parameter_list|,
 name|size_t
 modifier|*
+name|__restrict
 name|lencopied
 parameter_list|)
 function_decl|__nonnull
@@ -1512,10 +1515,12 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|__restrict
 name|udaddr
 parameter_list|,
 name|void
 modifier|*
+name|__restrict
 name|kaddr
 parameter_list|,
 name|size_t
@@ -1523,6 +1528,7 @@ name|len
 parameter_list|,
 name|size_t
 modifier|*
+name|__restrict
 name|lencopied
 parameter_list|)
 function_decl|__nonnull
@@ -1546,10 +1552,12 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|__restrict
 name|udaddr
 parameter_list|,
 name|void
 modifier|*
+name|__restrict
 name|kaddr
 parameter_list|,
 name|size_t
@@ -1576,10 +1584,12 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|__restrict
 name|kaddr
 parameter_list|,
 name|void
 modifier|*
+name|__restrict
 name|udaddr
 parameter_list|,
 name|size_t

@@ -245,10 +245,12 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|__restrict
 name|src
 parameter_list|,
 name|void
 modifier|*
+name|__restrict
 name|dst
 parameter_list|,
 name|size_t
@@ -267,10 +269,12 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|__restrict
 name|src
 parameter_list|,
 name|void
 modifier|*
+name|__restrict
 name|dst
 parameter_list|,
 name|size_t
@@ -278,6 +282,7 @@ name|len
 parameter_list|,
 name|size_t
 modifier|*
+name|__restrict
 name|copied
 parameter_list|,
 name|int
