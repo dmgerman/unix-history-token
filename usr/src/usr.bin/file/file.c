@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.12 (Berkeley) %G%"
+literal|"@(#)file.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,18 +55,21 @@ file|<a.out.h>
 end_include
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|sys_nerr
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|sys_errlist
