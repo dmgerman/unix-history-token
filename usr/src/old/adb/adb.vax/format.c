@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	4.5 %G%"
+literal|"@(#)format.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1045,14 +1045,14 @@ argument_list|(
 name|wx
 operator|&
 operator|~
-literal|0xFFFF00FF
+literal|0xFFFF007F
 argument_list|)
 operator|==
 literal|0x8000
 name|THEN
 name|printf
 argument_list|(
-literal|"(reserved oprnd)"
+literal|"(reserved operand)"
 argument_list|)
 expr_stmt|;
 name|ELSE
@@ -1092,7 +1092,7 @@ argument_list|(
 name|wx
 operator|&
 operator|~
-literal|0xFFFF00FF
+literal|0xFFFF007F
 argument_list|)
 operator|==
 literal|0x8000
@@ -1101,7 +1101,7 @@ name|printf
 argument_list|(
 literal|"%-32s"
 argument_list|,
-literal|"(reserved oprnd)"
+literal|"(reserved operand)"
 argument_list|)
 expr_stmt|;
 name|ELSE
