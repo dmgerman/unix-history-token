@@ -888,7 +888,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns the index to the place in the stack or 0 for error.  Uses a    direct reference to the prompt.  */
+comment|/* Returns the index to the place in the stack or -1 for error.  Uses a    direct reference to the prompt.  */
 end_comment
 
 begin_function

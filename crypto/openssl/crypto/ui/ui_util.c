@@ -161,7 +161,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ok
-operator|==
+operator|>=
 literal|0
 operator|&&
 name|verify
@@ -190,7 +190,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ok
-operator|==
+operator|>=
 literal|0
 condition|)
 name|ok
@@ -206,6 +206,16 @@ name|ui
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ok
+operator|>
+literal|0
+condition|)
+name|ok
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|ok
