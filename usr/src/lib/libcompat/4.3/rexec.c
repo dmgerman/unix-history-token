@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexec.c	5.6 (Berkeley) %G%"
+literal|"@(#)rexec.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,6 +156,22 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|sockaddr_in
+name|sin
+decl_stmt|,
+name|sin2
+decl_stmt|,
+name|from
+decl_stmt|;
+name|struct
+name|hostent
+modifier|*
+name|hp
+decl_stmt|;
+name|u_short
+name|port
+decl_stmt|;
 name|int
 name|s
 decl_stmt|,
@@ -165,24 +181,8 @@ literal|1
 decl_stmt|,
 name|s3
 decl_stmt|;
-name|struct
-name|sockaddr_in
-name|sin
-decl_stmt|,
-name|sin2
-decl_stmt|,
-name|from
-decl_stmt|;
 name|char
 name|c
-decl_stmt|;
-name|short
-name|port
-decl_stmt|;
-name|struct
-name|hostent
-modifier|*
-name|hp
 decl_stmt|;
 name|hp
 operator|=
@@ -508,7 +508,7 @@ name|sprintf
 argument_list|(
 name|num
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 name|port
 argument_list|)
