@@ -161,6 +161,12 @@ directive|include
 file|"machine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"screen.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -248,7 +254,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|cmdlength
+name|cmdlengthdelta
 decl_stmt|;
 end_decl_stmt
 
@@ -1341,16 +1347,14 @@ argument_list|,
 name|uname_field
 argument_list|)
 expr_stmt|;
-name|cmdlength
+name|cmdlengthdelta
 operator|=
-literal|80
-operator|-
 name|strlen
 argument_list|(
 name|Header
 argument_list|)
-operator|+
-literal|6
+operator|-
+literal|7
 expr_stmt|;
 return|return
 name|Header
@@ -3052,7 +3056,15 @@ literal|100.0
 operator|*
 name|pct
 argument_list|,
-name|cmdlength
+name|screen_width
+operator|>
+name|cmdlengthdelta
+condition|?
+name|screen_width
+operator|-
+name|cmdlengthdelta
+else|:
+literal|0
 argument_list|,
 name|printable
 argument_list|(
