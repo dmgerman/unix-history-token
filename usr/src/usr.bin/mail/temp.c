@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)temp.c	2.1 %G%"
+literal|"@(#)temp.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,10 +263,6 @@ name|myname
 argument_list|)
 expr_stmt|;
 block|}
-name|mailname
-operator|=
-name|mailspace
-expr_stmt|;
 name|cp
 operator|=
 name|value
