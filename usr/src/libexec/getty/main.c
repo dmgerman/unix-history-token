@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.7 (Berkeley) %G%"
+literal|"@(#)main.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,16 +50,34 @@ begin_comment
 comment|/*  * getty -- adapt to terminal speed on dialup, and call login  *  * Melbourne getty, June 83, kre.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USE_OLD_TTY
+end_define
+
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
 end_include
 
 begin_include
@@ -83,13 +101,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"gettytab.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -190,7 +214,7 @@ begin_decl_stmt
 name|char
 name|hostname
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -209,16 +233,7 @@ name|char
 name|dev
 index|[]
 init|=
-literal|"/dev/"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|ctty
-index|[]
-init|=
-literal|"/dev/console"
+name|_PATH_DEV
 decl_stmt|;
 end_decl_stmt
 
@@ -908,6 +923,26 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"TIOCSCTTY failed %m"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|gettable
@@ -1273,7 +1308,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"login names may not start with '-'."
+literal|"user names may not start with '-'."
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1703,13 +1738,10 @@ break|break;
 block|}
 if|if
 condition|(
+name|islower
+argument_list|(
 name|c
-operator|>=
-literal|'a'
-operator|&&
-name|c
-operator|<=
-literal|'z'
+argument_list|)
 condition|)
 name|lower
 operator|++
@@ -1717,13 +1749,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|isupper
+argument_list|(
 name|c
-operator|>=
-literal|'A'
-operator|&&
-name|c
-operator|<=
-literal|'Z'
+argument_list|)
 condition|)
 name|upper
 operator|++
@@ -1836,13 +1865,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|isdigit
+argument_list|(
 name|c
-operator|>=
-literal|'0'
-operator|&&
-name|c
-operator|<=
-literal|'9'
+argument_list|)
 condition|)
 name|digit
 operator|++
