@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fsdb.c	8.2 (Berkeley) %G%"
+literal|"@(#)fsdb.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -15819,6 +15819,9 @@ argument_list|)
 expr_stmt|;
 name|print
 argument_list|(
+operator|(
+name|int
+operator|)
 name|ip
 operator|->
 name|di_size
