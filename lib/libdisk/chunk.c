@@ -1428,6 +1428,9 @@ case|case
 name|fat
 case|:
 case|case
+name|efi
+case|:
+case|case
 name|mbr
 case|:
 name|c1
