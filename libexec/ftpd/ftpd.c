@@ -2347,6 +2347,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|pid
 operator|=
@@ -2393,6 +2400,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
