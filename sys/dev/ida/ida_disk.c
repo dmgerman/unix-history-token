@@ -253,15 +253,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|disks_registered
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|device_method_t
 name|idad_methods
 index|[]
@@ -1122,9 +1113,6 @@ operator|=
 name|DFLTPHYS
 expr_stmt|;
 comment|/* XXX guess? */
-name|disks_registered
-operator|++
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1167,17 +1155,12 @@ operator|->
 name|stats
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|--
-name|disks_registered
-operator|==
-literal|0
-condition|)
-name|cdevsw_remove
+name|disk_destroy
 argument_list|(
 operator|&
-name|idaddisk_cdevsw
+name|drv
+operator|->
+name|disk
 argument_list|)
 expr_stmt|;
 return|return
