@@ -2010,11 +2010,11 @@ literal|"%p %8ld %8lu %8lu %-8s %-8s 0x%02x %s"
 argument|, 		c1, c1->offset, c1->size, c1->end, c1->name,
 endif|#
 directive|endif
-argument|chunk_n[c1->type],c1->subtype, 		ShowChunkFlags(c1)); 	putchar(
+argument|chunk_n[c1->type], c1->subtype, 		ShowChunkFlags(c1)); 	putchar(
 literal|'\n'
-argument|); 	Print_Chunk(c1->part,offset +
+argument|); 	Print_Chunk(c1->part, offset +
 literal|2
-argument|); 	Print_Chunk(c1->next,offset); }  void Debug_Chunk(struct chunk *c1) { 	Print_Chunk(c1,
+argument|); 	Print_Chunk(c1->next, offset); }  void Debug_Chunk(struct chunk *c1) { 	Print_Chunk(c1,
 literal|2
 argument|); }  int Delete_Chunk(struct disk *d, struct chunk *c) { 	struct chunk *c1=
 literal|0
@@ -2027,19 +2027,19 @@ argument|;
 ifndef|#
 directive|ifndef
 name|PC98
-argument|if(!c1&& (type == freebsd || type == fat || type == unknown)) 		c1 = Find_Mother_Chunk(d->chunks,c->offset,c->end,extended);
+argument|if(!c1&& (type == freebsd || type == fat || type == unknown)) 		c1 = Find_Mother_Chunk(d->chunks, c->offset, c->end, extended);
 endif|#
 directive|endif
-argument|if(!c1&& (type == freebsd || type == fat || type == unknown)) 		c1 = Find_Mother_Chunk(d->chunks,c->offset,c->end,whole);
+argument|if(!c1&& (type == freebsd || type == fat || type == unknown)) 		c1 = Find_Mother_Chunk(d->chunks, c->offset, c->end, whole);
 ifndef|#
 directive|ifndef
 name|PC98
-argument|if(!c1&& type == extended) 		c1 = Find_Mother_Chunk(d->chunks,c->offset,c->end,whole);
+argument|if(!c1&& type == extended) 		c1 = Find_Mother_Chunk(d->chunks, c->offset, c->end, whole);
 endif|#
 directive|endif
-argument|if(!c1&& type == part) 		c1 = Find_Mother_Chunk(d->chunks,c->offset,c->end,freebsd); 	if(!c1) 		return
+argument|if(!c1&& type == part) 		c1 = Find_Mother_Chunk(d->chunks, c->offset, c->end, freebsd); 	if(!c1) 		return
 literal|1
-argument|; 	for(c2=c1->part;c2;c2=c2->next) { 		if (c2 == c) { 			c2->type = unused; 			c2->subtype =
+argument|; 	for(c2 = c1->part; c2; c2 = c2->next) { 		if (c2 == c) { 			c2->type = unused; 			c2->subtype =
 literal|0
 argument|; 			c2->flags =
 literal|0
@@ -2058,7 +2058,7 @@ argument|); 			Free_Chunk(c2->part); 			c2->part =
 literal|0
 argument|; 			goto scan; 		} 	} 	return
 literal|1
-argument|;     scan: 	for(c2=c1->part;c2;c2=c2->next) { 		if (c2->type != unused) 			continue; 		if (!c2->next) 			continue; 		if (c2->next->type != unused) 			continue; 		c3 = c2->next; 		c2->size += c3->size; 		c2->end = c3->end; 		c2->next = c3->next; 		c3->next =
+argument|;     scan: 	for(c2 = c1->part; c2; c2 = c2->next) { 		if (c2->type != unused) 			continue; 		if (!c2->next) 			continue; 		if (c2->next->type != unused) 			continue; 		c3 = c2->next; 		c2->size += c3->size; 		c2->end = c3->end; 		c2->next = c3->next; 		c3->next =
 literal|0
 argument|; 		Free_Chunk(c3); 		goto scan; 	} 	Fixup_Names(d); 	return
 literal|0
@@ -2072,7 +2072,7 @@ literal|0
 end_if
 
 begin_ifdef
-unit|int Collapse_Chunk(struct disk *d, struct chunk *c1) { 	struct chunk *c2, *c3;  	if(c1->next&& Collapse_Chunk(d,c1->next)) 		return 1;  	if(c1->type == unused&& c1->next&& c1->next->type == unused) { 		c3 = c1->next; 		c1->size += c3->size; 		c1->end = c3->end; 		c1->next = c3->next; 		c3->next = 0; 		Free_Chunk(c3); 		return 1; 	} 	c3 = c1->part; 	if(!c3) 		return 0; 	if (Collapse_Chunk(d,c1->part)) 		return 1;  	if (c1->type == whole) 		return 0;  	if(c3->type == unused&& c3->size == c1->size) { 		Delete_Chunk(d,c1); 		return 1; 	} 	if(c3->type == unused) { 		c2 = new_chunk(); 		if (!c2) barfout(1,"malloc failed"); 		*c2 = *c1; 		c1->next = c2; 		c1->disk = d;
+unit|int Collapse_Chunk(struct disk *d, struct chunk *c1) { 	struct chunk *c2, *c3;  	if(c1->next&& Collapse_Chunk(d, c1->next)) 		return 1;  	if(c1->type == unused&& c1->next&& c1->next->type == unused) { 		c3 = c1->next; 		c1->size += c3->size; 		c1->end = c3->end; 		c1->next = c3->next; 		c3->next = 0; 		Free_Chunk(c3); 		return 1; 	} 	c3 = c1->part; 	if(!c3) 		return 0; 	if (Collapse_Chunk(d, c1->part)) 		return 1;  	if (c1->type == whole) 		return 0;  	if(c3->type == unused&& c3->size == c1->size) { 		Delete_Chunk(d, c1); 		return 1; 	} 	if(c3->type == unused) { 		c2 = new_chunk(); 		if (!c2) barfout(1, "malloc failed"); 		*c2 = *c1; 		c1->next = c2; 		c1->disk = d;
 ifdef|#
 directive|ifdef
 name|PC98
