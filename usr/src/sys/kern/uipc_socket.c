@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	6.1	83/08/20	*/
+comment|/*	uipc_socket.c	4.78	83/08/23	*/
 end_comment
 
 begin_include
@@ -2752,6 +2752,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 operator|*
@@ -2764,6 +2767,8 @@ argument_list|(
 literal|"receive 2b"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
