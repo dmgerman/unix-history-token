@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: extern.h,v 1.41 2001/04/25 01:46:25 lukem Exp $	*/
+comment|/*	$NetBSD: extern.h,v 1.43 2001/12/04 13:54:12 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -903,11 +903,14 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD4_4
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -1129,32 +1132,47 @@ operator|<<
 literal|0
 block|,
 comment|/* Check port commands */
-name|FLAG_modify
+name|FLAG_denyquick
 init|=
 literal|1
 operator|<<
 literal|1
+block|,
+comment|/* Check ftpusers(5) before PASS */
+name|FLAG_modify
+init|=
+literal|1
+operator|<<
+literal|2
 block|,
 comment|/* Allow CHMOD, DELE, MKD, RMD, RNFR, 					   UMASK */
 name|FLAG_passive
 init|=
 literal|1
 operator|<<
-literal|2
+literal|3
 block|,
 comment|/* Allow PASV mode */
+name|FLAG_private
+init|=
+literal|1
+operator|<<
+literal|4
+block|,
+comment|/* Don't publish class info in STAT */
 name|FLAG_sanenames
 init|=
 literal|1
 operator|<<
-literal|3
+literal|5
 block|,
 comment|/* Restrict names of uploaded files */
 name|FLAG_upload
 init|=
 literal|1
 operator|<<
-literal|4
+literal|6
+block|,
 comment|/* As per modify, but also allow 					   APPE, STOR, STOU */
 block|}
 name|classflag_t
@@ -1306,15 +1324,8 @@ name|ftp_loop
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(noreturn
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
