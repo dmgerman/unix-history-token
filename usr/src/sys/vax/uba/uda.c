@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.14 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*   * uda.c - UDA50A Driver  *   * Date:        Jan  30 1984  *  * This thing has been beaten beyound belief.  It still has two main features.  * 1) When this device is on the same unibus as another DMA device  * like a versatec or a rk07. the Udstrat routine complains that it still  * has a buffered data path that it shouldn't.  I don't know why.  *  * decvax!rich.  *  */
+comment|/*   * uda.c - UDA50A Driver  *  * decvax!rich  */
 end_comment
 
 begin_define
@@ -453,7 +453,7 @@ literal|8
 index|]
 init|=
 block|{
-comment|/*  * These are the new standard partition sizes for ra81's.  * A COMPAT_42 system is compiled with D, E, and F corresponding  * to the 4.2 partitions for G, H, and F respectively.  */
+comment|/*  * These are the new standard partition sizes for ra81's.  * An RA_COMPAT system is compiled with D, E, and F corresponding  * to the 4.2 partitions for G, H, and F respectively.  */
 ifndef|#
 directive|ifndef
 name|UCBRA
@@ -474,7 +474,7 @@ block|,
 comment|/* C=sectors 0 thru 891071 */
 ifdef|#
 directive|ifdef
-name|COMPAT_42
+name|RA_COMPAT
 literal|82080
 block|,
 literal|49324
@@ -509,7 +509,7 @@ block|,
 comment|/* F=sectors 699720 thru 891071 */
 endif|#
 directive|endif
-endif|COMPAT_42
+endif|RA_COMPAT
 literal|515508
 block|,
 literal|375564
@@ -3381,6 +3381,25 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_750
+condition|)
+name|i
+operator|&=
+literal|0xfffffff
+expr_stmt|;
+comment|/* mask off bdp */
+endif|#
+directive|endif
 name|ubarelse
 argument_list|(
 name|um
@@ -5494,6 +5513,14 @@ condition|(
 name|cpu
 operator|==
 name|VAX_750
+operator|&&
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|==
+literal|0
 operator|&&
 name|udwtab
 index|[
