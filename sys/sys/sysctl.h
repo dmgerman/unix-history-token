@@ -43,7 +43,7 @@ comment|/* largest number of components supported */
 end_comment
 
 begin_comment
-comment|/*  * Each subsystem defined by sysctl defines a list of variables  * for that subsystem. Each name is either a node with further  * levels defined below it, or it is a leaf of some particular  * type given below. Each sysctl level defines a set of name/type  * pairs to be used by sysctl(1) in manipulating the subsystem.  */
+comment|/*  * Each subsystem defined by sysctl defines a list of variables  * for that subsystem. Each name is either a node with further  * levels defined below it, or it is a leaf of some particular  * type given below. Each sysctl level defines a set of name/type  * pairs to be used by sysctl(8) in manipulating the subsystem.  */
 end_comment
 
 begin_struct
