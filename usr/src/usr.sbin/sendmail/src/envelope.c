@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.13 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1499,7 +1499,6 @@ name|OpMode
 operator|==
 name|MD_DAEMON
 operator|&&
-operator|!
 name|bitset
 argument_list|(
 name|EF_QUEUERUN
