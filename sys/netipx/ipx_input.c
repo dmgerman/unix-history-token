@@ -535,7 +535,7 @@ argument_list|,
 operator|&
 name|ipxintrq
 argument_list|,
-literal|0
+name|NETISR_MPSAFE
 argument_list|)
 expr_stmt|;
 block|}
