@@ -2212,6 +2212,9 @@ expr_stmt|;
 name|SetOiaModified
 argument_list|()
 expr_stmt|;
+name|SetPsModified
+argument_list|()
+expr_stmt|;
 name|TerminalIn
 argument_list|()
 expr_stmt|;

@@ -748,5 +748,13 @@ parameter_list|()
 value|oia_modified = 1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SetPsModified
+parameter_list|()
+value|ps_modified = 1
+end_define
+
 end_unit
 
