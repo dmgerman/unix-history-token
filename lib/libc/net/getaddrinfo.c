@@ -970,7 +970,7 @@ end_typedef
 begin_function_decl
 specifier|static
 name|int
-name|str_isnumber
+name|str2number
 parameter_list|(
 specifier|const
 name|char
@@ -1917,7 +1917,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|str_isnumber
+name|str2number
 parameter_list|(
 name|p
 parameter_list|)
@@ -1931,6 +1931,10 @@ name|char
 modifier|*
 name|ep
 decl_stmt|;
+name|unsigned
+name|long
+name|v
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -1939,7 +1943,8 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-name|NO
+operator|-
+literal|1
 return|;
 name|ep
 operator|=
@@ -1949,9 +1954,8 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|v
+operator|=
 name|strtoul
 argument_list|(
 name|p
@@ -1974,13 +1978,18 @@ operator|*
 name|ep
 operator|==
 literal|'\0'
+operator|&&
+name|v
+operator|<=
+name|UINT_MAX
 condition|)
 return|return
-name|YES
+name|v
 return|;
 else|else
 return|return
-name|NO
+operator|-
+literal|1
 return|;
 block|}
 end_function
@@ -6920,7 +6929,7 @@ modifier|*
 name|servname
 decl_stmt|;
 block|{
-comment|/* get_port does not touch first argument. when matchonly == 1. */
+comment|/* get_port does not touch first argument when matchonly == 1. */
 comment|/* LINTED const cast */
 return|return
 name|get_port
@@ -7051,12 +7060,18 @@ return|return
 name|EAI_SOCKTYPE
 return|;
 block|}
-if|if
-condition|(
-name|str_isnumber
+name|port
+operator|=
+name|str2number
 argument_list|(
 name|servname
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|port
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
@@ -7067,13 +7082,6 @@ condition|)
 return|return
 name|EAI_SERVICE
 return|;
-name|port
-operator|=
-name|atoi
-argument_list|(
-name|servname
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|port
@@ -7097,6 +7105,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|ai
+operator|->
+name|ai_flags
+operator|&
+name|AI_NUMERICSERV
+condition|)
+return|return
+name|EAI_NONAME
+return|;
 switch|switch
 condition|(
 name|ai
