@@ -7822,15 +7822,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|len
-operator|>
-name|buf
-operator|->
-name|nb_size
-condition|)
-return|return;
 name|buf
 operator|->
 name|nb_bytecount
