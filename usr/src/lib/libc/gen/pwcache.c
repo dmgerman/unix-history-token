@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwcache.c	5.2 (Berkeley) %G%"
+literal|"@(#)pwcache.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_define
@@ -107,9 +113,14 @@ modifier|*
 name|user_from_uid
 parameter_list|(
 name|uid
+parameter_list|,
+name|nouser
 parameter_list|)
 name|uid_t
 name|uid
+decl_stmt|;
+name|int
+name|nouser
 decl_stmt|;
 block|{
 specifier|static
@@ -194,7 +205,6 @@ name|pwopen
 operator|++
 expr_stmt|;
 block|}
-comment|/* if can't find owner, use user id instead */
 if|if
 condition|(
 operator|!
@@ -208,6 +218,19 @@ argument_list|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|nouser
+condition|)
+return|return
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+operator|)
+return|;
 operator|(
 name|void
 operator|)
@@ -274,9 +297,14 @@ modifier|*
 name|group_from_gid
 parameter_list|(
 name|gid
+parameter_list|,
+name|nogroup
 parameter_list|)
 name|gid_t
 name|gid
+decl_stmt|;
+name|int
+name|nogroup
 decl_stmt|;
 block|{
 specifier|static
@@ -359,7 +387,6 @@ name|gropen
 operator|++
 expr_stmt|;
 block|}
-comment|/* if can't find group, use group id instead */
 if|if
 condition|(
 operator|!
@@ -373,6 +400,19 @@ argument_list|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|nogroup
+condition|)
+return|return
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+operator|)
+return|;
 operator|(
 name|void
 operator|)
