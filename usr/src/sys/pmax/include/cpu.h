@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -90,10 +90,11 @@ name|cpu_exec
 parameter_list|(
 name|p
 parameter_list|)
+value|(p->p_md.md_ss_addr = 0)
 end_define
 
 begin_comment
-comment|/* nothing */
+comment|/* init single step */
 end_comment
 
 begin_define
@@ -316,7 +317,21 @@ begin_define
 define|#
 directive|define
 name|MIPS_R2000
-value|2
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_R3000
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_R4000
+value|0x04
 end_define
 
 begin_comment
@@ -327,8 +342,42 @@ begin_define
 define|#
 directive|define
 name|MIPS_R2010
-value|3
+value|0x03
 end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_R3010
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_R4010
+value|0x05
+end_define
+
+begin_struct
+struct|struct
+name|intr_tab
+block|{
+name|void
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* pointer to interrupt routine */
+name|int
+name|unit
+decl_stmt|;
+comment|/* logical unit number */
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -359,6 +408,15 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int
 name|machInstCacheSize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|intr_tab
+name|intr_tab
+index|[]
 decl_stmt|;
 end_decl_stmt
 
