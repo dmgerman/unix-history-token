@@ -540,16 +540,6 @@ block|,
 literal|0
 block|}
 block|,
-block|{
-block|{
-name|USB_VENDOR_CANON
-block|,
-name|USB_PRODUCT_CANON_Lide20
-block|}
-block|,
-literal|0
-block|}
-block|,
 comment|/* Kye */
 block|{
 block|{
