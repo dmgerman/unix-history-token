@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.48 1996/04/07 14:28:00 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.49 1996/05/02 10:43:01 phk Exp $  */
 end_comment
 
 begin_comment
@@ -256,7 +256,7 @@ operator|&
 literal|0x80
 condition|)
 block|{
-comment|/* 		 * Hard drive.  Adjust.  Guess that the FreeBSD unit number 		 * is the BIOS drive number biased by BOOT_HD_BIAS, 		 */
+comment|/* Hard drive.  Adjust. */
 name|maj
 operator|=
 literal|0
@@ -268,14 +268,21 @@ operator|>
 literal|0
 if|if
 condition|(
-name|BOOT_HD_BIAS
-operator|<=
 name|unit
+operator|>=
+name|BOOT_HD_BIAS
 condition|)
+block|{
+comment|/* 			 * The drive is probably a SCSI drive with a unit 			 * number BOOT_HD_BIAS less than the BIOS drive 			 * number. 			 */
+name|maj
+operator|=
+literal|4
+expr_stmt|;
 name|unit
 operator|-=
 name|BOOT_HD_BIAS
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
