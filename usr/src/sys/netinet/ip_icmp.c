@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -143,57 +143,38 @@ begin_comment
 comment|/*  * Generate an error packet of type error  * in response to bad packet ip.  */
 end_comment
 
-begin_comment
-comment|/*VARARGS3*/
-end_comment
-
-begin_macro
+begin_function
+name|void
 name|icmp_error
-argument_list|(
-argument|n
-argument_list|,
-argument|type
-argument_list|,
-argument|code
-argument_list|,
-argument|dest
-argument_list|,
-argument|destifp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|n
+parameter_list|,
+name|type
+parameter_list|,
+name|code
+parameter_list|,
+name|dest
+parameter_list|,
+name|destifp
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|type
 decl_stmt|,
 name|code
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|in_addr
+name|n_long
 name|dest
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ifnet
 modifier|*
 name|destifp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -462,6 +443,8 @@ condition|)
 name|icp
 operator|->
 name|icmp_gwaddr
+operator|.
+name|s_addr
 operator|=
 name|dest
 expr_stmt|;
@@ -719,7 +702,7 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static

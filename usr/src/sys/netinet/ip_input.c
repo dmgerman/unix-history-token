@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4877,8 +4877,7 @@ name|mbuf
 modifier|*
 name|mcopy
 decl_stmt|;
-name|struct
-name|in_addr
+name|n_long
 name|dest
 decl_stmt|;
 name|struct
@@ -4887,8 +4886,6 @@ modifier|*
 name|destifp
 decl_stmt|;
 name|dest
-operator|.
-name|s_addr
 operator|=
 literal|0
 expr_stmt|;
@@ -4977,6 +4974,8 @@ argument_list|,
 name|ICMP_TIMXCEED_INTRANS
 argument_list|,
 name|dest
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5093,6 +5092,8 @@ argument_list|,
 name|ICMP_UNREACH_HOST
 argument_list|,
 name|dest
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5280,6 +5281,8 @@ name|rt_gateway
 argument_list|)
 operator|->
 name|sin_addr
+operator|.
+name|s_addr
 expr_stmt|;
 else|else
 name|dest
@@ -5287,6 +5290,8 @@ operator|=
 name|ip
 operator|->
 name|ip_dst
+operator|.
+name|s_addr
 expr_stmt|;
 comment|/* Router requirements says to only send host redirects */
 name|type
@@ -5306,13 +5311,14 @@ name|ipprintfs
 condition|)
 name|printf
 argument_list|(
-literal|"redirect (%d) to %x\n"
+literal|"redirect (%d) to %lx\n"
 argument_list|,
 name|code
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|dest
-operator|.
-name|s_addr
 argument_list|)
 expr_stmt|;
 endif|#
