@@ -248,10 +248,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OnVTY
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -344,6 +340,10 @@ literal|1
 return|;
 block|}
 block|}
+name|OnVTY
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 return|return
 literal|0
