@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fbbm_lcdm.c,v 4.300 91/06/09 06:33:38 root Rel41 $ SONY  *  *	@(#)fbbm_lcdm.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fbbm_lcdm.c,v 4.300 91/06/09 06:33:38 root Rel41 $ SONY  *  *	@(#)fbbm_lcdm.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_include
@@ -67,69 +67,26 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iop/framebuf.h"
+file|<news3400/iop/framebuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iop/fbreg.h"
+file|<news3400/iop/fbreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../fb/fbdefs.h"
+file|<news3400/fb/fbdefs.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news1200
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../hbdev/scsic.h"
-end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pend_1185_ioptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|val_1185_ioptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|scsi_stat
-name|scsi_stat
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* news1200 */
-end_comment
 
 begin_function_decl
 specifier|extern

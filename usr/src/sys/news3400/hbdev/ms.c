@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: ms.c,v 4.300 91/06/09 06:22:04 root Rel41 $ SONY  *  *	@(#)ms.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: ms.c,v 4.300 91/06/09 06:22:04 root Rel41 $ SONY  *  *	@(#)ms.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_include
@@ -30,97 +30,97 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/pte.h"
+file|<machine/pte.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|<sys/uio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iop/mouse.h"
+file|<news3400/iop/mouse.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iop/msreg.h"
+file|<news3400/iop/msreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sio/scc.h"
+file|<news3400/sio/scc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hbdev/hbvar.h"
+file|<news3400/hbdev/hbvar.h>
 end_include
 
 begin_ifndef

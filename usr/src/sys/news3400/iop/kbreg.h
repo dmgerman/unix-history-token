@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: kbreg.h,v 4.300 91/06/09 06:42:47 root Rel41 $ SONY  *  *	@(#)kbreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: kbreg.h,v 4.300 91/06/09 06:42:47 root Rel41 $ SONY  *  *	@(#)kbreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"machine/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_define

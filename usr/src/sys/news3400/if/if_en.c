@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: if_en.c,v 4.300 91/06/09 06:25:54 root Rel41 $ SONY  *  *	@(#)if_en.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: if_en.c,v 4.300 91/06/09 06:25:54 root Rel41 $ SONY  *  *	@(#)if_en.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -36,97 +36,97 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/pte.h"
+file|<machine/pte.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cdefs.h"
+file|<sys/cdefs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/netisr.h"
+file|<net/netisr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/route.h"
+file|<net/route.h>
 end_include
 
 begin_ifdef
@@ -138,31 +138,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"netinet/in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_var.h"
+file|<netinet/in_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/ip.h"
+file|<netinet/ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/if_ether.h"
+file|<netinet/if_ether.h>
 end_include
 
 begin_endif
@@ -173,13 +173,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../if/if_news.h"
+file|<news3400/if/if_news.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../if/if_en.h"
+file|<news3400/if/if_en.h>
 end_include
 
 begin_ifdef
@@ -191,7 +191,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../hbdev/hbvar.h"
+file|<news3400/hbdev/hbvar.h>
 end_include
 
 begin_define
@@ -237,7 +237,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|"../iop/iopvar.h"
+file|<news3400/iop/iopvar.h>
 end_include
 
 begin_endif
@@ -432,7 +432,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../net/bpf.h"
+file|<net/bpf.h>
 end_include
 
 begin_endif
@@ -2202,7 +2202,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_macro

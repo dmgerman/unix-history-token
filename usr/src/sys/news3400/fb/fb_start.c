@@ -1,24 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fb_start.c,v 4.300 91/06/27 20:42:40 root Rel41 $ SONY  *  *	@(#)fb_start.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fb_start.c,v 4.300 91/06/27 20:42:40 root Rel41 $ SONY  *  *	@(#)fb_start.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_ifdef
@@ -53,13 +53,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|"../iop/framebuf.h"
+file|<news3400/iop/framebuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iop/fbreg.h"
+file|<news3400/iop/fbreg.h>
 end_include
 
 begin_endif
@@ -70,7 +70,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../fb/fbdefs.h"
+file|<news3400/fb/fbdefs.h>
 end_include
 
 begin_ifdef
@@ -82,7 +82,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_decl_stmt

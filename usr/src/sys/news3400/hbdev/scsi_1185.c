@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scsi_1185.c,v 4.300 91/06/09 06:22:20 root Rel41 $ SONY  *  *	@(#)scsi_1185.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scsi_1185.c,v 4.300 91/06/09 06:22:20 root Rel41 $ SONY  *  *	@(#)scsi_1185.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,139 +18,104 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/pte.h"
+file|<machine/pte.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|<sys/map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dkstat.h"
+file|<sys/dkstat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hbdev/hbvar.h"
+file|<news3400/hbdev/hbvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hbdev/screg_1185.h"
+file|<news3400/hbdev/screg_1185.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hbdev/scsic.h"
+file|<news3400/hbdev/scsic.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news1200
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../hbdev/dmac_0266.h"
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDMACMAP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NDMACMAP
-value|NVSCSIREG
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -161,7 +126,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../hbdev/dmac_0448.h"
+file|<news3400/hbdev/dmac_0448.h>
 end_include
 
 begin_ifndef
@@ -190,7 +155,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../iodev/scsireg.h"
+file|<news3400/iodev/scsireg.h>
 end_include
 
 begin_ifdef

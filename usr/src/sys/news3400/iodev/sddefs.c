@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: sddefs.c,v 4.300 91/06/09 06:38:25 root Rel41 $ SONY  *  *	@(#)sddefs.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: sddefs.c,v 4.300 91/06/09 06:38:25 root Rel41 $ SONY  *  *	@(#)sddefs.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,69 +25,29 @@ begin_comment
 comment|/*  * SD device configuration file  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iodev/sdreg.h"
+file|<news3400/iodev/sdreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iodev/scsireg.h"
+file|<news3400/iodev/scsireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iodev/scu.h"
+file|<news3400/iodev/scu.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"/sys/h/param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"/sys/iodev/sdreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"/sys/iodev/scsireg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"/sys/iodev/scu.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char

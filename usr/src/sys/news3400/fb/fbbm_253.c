@@ -13,7 +13,7 @@ operator|)
 name|fbbm_253
 operator|.
 name|c
-literal|7.1
+literal|7.2
 operator|(
 name|Berkeley
 operator|)
@@ -25,7 +25,7 @@ operator|/
 comment|/*  * NWB-253 frame buffer driver  */
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 include|#
 directive|include
 file|"nwb253.h"
@@ -36,16 +36,16 @@ operator|>
 literal|0
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 include|#
 directive|include
-file|"../iop/framebuf.h"
+file|<news3400/iop/framebuf.h>
 include|#
 directive|include
-file|"../iop/fbreg.h"
+file|<news3400/iop/fbreg.h>
 include|#
 directive|include
-file|"../fb/fbdefs.h"
+file|<news3400/fb/fbdefs.h>
 specifier|extern
 name|int
 name|error

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: psd.c,v 4.300 91/06/09 06:38:07 root Rel41 $ SONY  *  *	@(#)psd.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: psd.c,v 4.300 91/06/09 06:38:07 root Rel41 $ SONY  *  *	@(#)psd.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -14,78 +14,67 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dkstat.h"
+file|<sys/dkstat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|<sys/uio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD4_3
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_ifdef
@@ -97,7 +86,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_endif
@@ -137,13 +126,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../hbdev/hbvar.h"
+file|<news3400/hbdev/hbvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hbdev/scsic.h"
+file|<news3400/hbdev/scsic.h>
 end_include
 
 begin_endif
@@ -154,19 +143,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../iodev/scsireg.h"
+file|<news3400/iodev/scsireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iodev/scu.h"
+file|<news3400/iodev/scu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iodev/ioptohb.h"
+file|<news3400/iodev/ioptohb.h>
 end_include
 
 begin_define

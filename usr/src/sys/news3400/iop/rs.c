@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: rs.c,v 4.300 91/06/09 06:43:03 root Rel41 $ SONY  *  *	@(#)rs.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: rs.c,v 4.300 91/06/09 06:43:03 root Rel41 $ SONY  *  *	@(#)rs.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_if
@@ -53,55 +53,55 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|<sys/tty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_ifdef
@@ -113,7 +113,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../hbdev/hbvar.h"
+file|<news3400/hbdev/hbvar.h>
 end_include
 
 begin_else
@@ -135,13 +135,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../iop/rsreg.h"
+file|<news3400/iop/rsreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sio/sccparam.h"
+file|<news3400/sio/sccparam.h>
 end_include
 
 begin_define
@@ -4089,19 +4089,19 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../hbdev/hbvar.h"
+file|<news3400/hbdev/hbvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hbdev/rsreg.h"
+file|<news3400/hbdev/rsreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sio/scc.h"
+file|<news3400/sio/scc.h>
 end_include
 
 begin_decl_stmt

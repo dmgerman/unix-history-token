@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scc.c,v 4.300 91/06/09 06:44:53 root Rel41 $ SONY  *  *	@(#)scc.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scc.c,v 4.300 91/06/09 06:44:53 root Rel41 $ SONY  *  *	@(#)scc.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,37 +10,14 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/adrsmap.h"
+file|<machine/adrsmap.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news700
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"ms.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bm.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -48,57 +25,52 @@ directive|include
 file|"rs.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|<sys/tty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sccparam.h"
+file|<news3400/sio/sccparam.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sccreg.h"
+file|<news3400/sio/sccreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scc.h"
+file|<news3400/sio/scc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scc.conf"
+file|<news3400/sio/scc.conf>
 end_include
 
 begin_define

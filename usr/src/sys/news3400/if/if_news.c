@@ -1,90 +1,84 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: if_news.c,v 4.300 91/06/09 06:26:01 root Rel41 $ SONY  *  *	@(#)if_news.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: if_news.c,v 4.300 91/06/09 06:26:01 root Rel41 $ SONY  *  *	@(#)if_news.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|<sys/types.h" #include<machine/fix_machine_type.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/pte.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/pte.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|<news3400/net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<news3400/if/if_news.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../if/if_news.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../include/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: sdreg.h,v 4.300 91/06/09 06:38:28 root Rel41 $ SONY  *  *	@(#)sdreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: sdreg.h,v 4.300 91/06/09 06:38:28 root Rel41 $ SONY  *  *	@(#)sdreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,33 +24,11 @@ name|__SDREG__
 value|1
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"machine/fix_machine_type.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

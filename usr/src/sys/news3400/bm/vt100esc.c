@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: vt100esc.c,v 4.300 91/06/09 06:14:59 root Rel41 $ SONY  *  *	@(#)vt100esc.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: vt100esc.c,v 4.300 91/06/09 06:14:59 root Rel41 $ SONY  *  *	@(#)vt100esc.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_ifdef
@@ -45,19 +45,19 @@ end_else
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iop/framebuf.h"
+file|<news3400/iop/framebuf.h>
 end_include
 
 begin_endif
@@ -68,19 +68,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../bm/vt100.h"
+file|<news3400/bm/vt100.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bm/bitmapif.h"
+file|<news3400/bm/bitmapif.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../fb/fbdefs.h"
+file|<news3400/fb/fbdefs.h>
 end_include
 
 begin_ifdef
@@ -109,13 +109,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|"../iop/kbreg.h"
+file|<news3400/iop/kbreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iop/keyboard.h"
+file|<news3400/iop/keyboard.h>
 end_include
 
 begin_endif
@@ -132,7 +132,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../sio/scc.h"
+file|<news3400/sio/scc.h>
 end_include
 
 begin_endif
