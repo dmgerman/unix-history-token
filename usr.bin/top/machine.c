@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.15 1998/09/11 14:38:12 dt Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.16 1998/11/25 09:45:28 dfr Exp $  */
 end_comment
 
 begin_include
@@ -371,7 +371,6 @@ block|{
 literal|"_ccpu"
 block|}
 block|,
-comment|/* 0 */
 define|#
 directive|define
 name|X_CP_TIME
@@ -380,39 +379,19 @@ block|{
 literal|"_cp_time"
 block|}
 block|,
-comment|/* 1 */
-define|#
-directive|define
-name|X_HZ
-value|2
-block|{
-literal|"_hz"
-block|}
-block|,
-comment|/* 2 */
-define|#
-directive|define
-name|X_STATHZ
-value|3
-block|{
-literal|"_stathz"
-block|}
-block|,
-comment|/* 3 */
 define|#
 directive|define
 name|X_AVENRUN
-value|4
+value|2
 block|{
 literal|"_averunnable"
 block|}
 block|,
-comment|/* 4 */
 comment|/* Swap */
 define|#
 directive|define
 name|VM_SWAPLIST
-value|5
+value|3
 block|{
 literal|"_swaplist"
 block|}
@@ -421,7 +400,7 @@ comment|/* list of free swap areas */
 define|#
 directive|define
 name|VM_SWDEVT
-value|6
+value|4
 block|{
 literal|"_swdevt"
 block|}
@@ -430,7 +409,7 @@ comment|/* list of swap devices and sizes */
 define|#
 directive|define
 name|VM_NSWAP
-value|7
+value|5
 block|{
 literal|"_nswap"
 block|}
@@ -439,7 +418,7 @@ comment|/* size of largest swap device */
 define|#
 directive|define
 name|VM_NSWDEV
-value|8
+value|6
 block|{
 literal|"_nswdev"
 block|}
@@ -448,7 +427,7 @@ comment|/* number of swap devices */
 define|#
 directive|define
 name|VM_DMMAX
-value|9
+value|7
 block|{
 literal|"_dmmax"
 block|}
@@ -457,7 +436,7 @@ comment|/* maximum size of a swap block */
 define|#
 directive|define
 name|X_BUFSPACE
-value|10
+value|8
 block|{
 literal|"_bufspace"
 block|}
@@ -466,7 +445,7 @@ comment|/* K in buffer cache */
 define|#
 directive|define
 name|X_CNT
-value|11
+value|9
 block|{
 literal|"_cnt"
 block|}
@@ -476,7 +455,7 @@ comment|/* Last pid */
 define|#
 directive|define
 name|X_LASTPID
-value|12
+value|10
 block|{
 literal|"_nextpid"
 block|}
@@ -580,13 +559,6 @@ end_decl_stmt
 begin_comment
 comment|/* these are retrieved from the kernel in _init */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|long
-name|hz
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1176,77 +1148,6 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
-comment|/* get the symbol values out of kmem */
-operator|(
-name|void
-operator|)
-name|getkval
-argument_list|(
-name|nlst
-index|[
-name|X_STATHZ
-index|]
-operator|.
-name|n_value
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-operator|(
-operator|&
-name|hz
-operator|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hz
-argument_list|)
-argument_list|,
-literal|"!"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hz
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|getkval
-argument_list|(
-name|nlst
-index|[
-name|X_HZ
-index|]
-operator|.
-name|n_value
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-operator|(
-operator|&
-name|hz
-operator|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hz
-argument_list|)
-argument_list|,
-name|nlst
-index|[
-name|X_HZ
-index|]
-operator|.
-name|n_name
-argument_list|)
-expr_stmt|;
 block|}
 operator|(
 name|void
