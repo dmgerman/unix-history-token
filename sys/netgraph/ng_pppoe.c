@@ -5402,7 +5402,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * As long as we have somewhere to store teh timeout handle, 		 * we may have a timeout pending.. get rid of it. 		 */
+comment|/* 		 * As long as we have somewhere to store the timeout handle, 		 * we may have a timeout pending.. get rid of it. 		 */
 if|if
 condition|(
 name|sp
