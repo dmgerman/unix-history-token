@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.14	82/10/20	*/
+comment|/*	kern_descrip.c	5.15	82/10/22	*/
 end_comment
 
 begin_include
@@ -875,6 +875,23 @@ decl_stmt|;
 name|label_t
 name|lqsave
 decl_stmt|;
+name|obits
+index|[
+literal|0
+index|]
+operator|=
+name|obits
+index|[
+literal|1
+index|]
+operator|=
+name|obits
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -890,7 +907,9 @@ name|u_error
 operator|=
 name|EINVAL
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 define|#
 directive|define
@@ -901,7 +920,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		if (copyin((caddr_t)uap->name, (caddr_t)&ibits[x], \ 		    sizeof (ibits[x]))) { \ 			u.u_error = EFAULT; \ 			return; \ 		} \ 	} else \ 		ibits[x] = 0;
+value|if (uap->name) { \ 		if (copyin((caddr_t)uap->name, (caddr_t)&ibits[x], \ 		    sizeof (ibits[x]))) { \ 			u.u_error = EFAULT; \ 			goto done; \ 		} \ 	} else \ 		ibits[x] = 0;
 name|getbits
 argument_list|(
 name|in
@@ -963,7 +982,9 @@ name|u_error
 operator|=
 name|EFAULT
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 if|if
 condition|(
@@ -980,7 +1001,9 @@ name|u_error
 operator|=
 name|EINVAL
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 name|s
 operator|=
@@ -1034,10 +1057,7 @@ condition|(
 name|u
 operator|.
 name|u_error
-condition|)
-return|return;
-if|if
-condition|(
+operator|||
 name|u
 operator|.
 name|u_r
@@ -1172,7 +1192,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 name|timeout
 argument_list|(
@@ -1251,7 +1273,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		if (copyout((caddr_t)obits[x], (caddr_t)uap->name, \ 		    sizeof (obits[x]))) { \ 			u.u_error = EFAULT; \ 			return; \ 		} \ 	}
+value|if (uap->name) { \ 		if (copyout((caddr_t)obits[x], (caddr_t)uap->name, \ 		    sizeof (obits[x]))) \ 			u.u_error = EFAULT; \ 	}
 name|putbits
 argument_list|(
 name|in
