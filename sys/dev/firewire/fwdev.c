@@ -4008,6 +4008,7 @@ operator|->
 name|rx
 operator|.
 name|npacket
+comment|/* XXX psize must be 2^n and less or 						equal to PAGE_SIZE */
 operator|*
 operator|(
 operator|(
@@ -4097,6 +4098,7 @@ operator|->
 name|tx
 operator|.
 name|npacket
+comment|/* XXX psize must be 2^n and less or 						equal to PAGE_SIZE */
 operator|*
 operator|(
 operator|(
