@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.24	82/02/12	*/
+comment|/*	ip_output.c	1.25	82/02/18	*/
 end_comment
 
 begin_include
@@ -356,6 +356,8 @@ operator|<
 name|ip
 operator|->
 name|ip_len
+operator|-
+name|hlen
 condition|;
 name|off
 operator|+=
@@ -475,6 +477,8 @@ operator|>=
 name|ip
 operator|->
 name|ip_len
+operator|-
+name|hlen
 condition|)
 name|len
 operator|=
@@ -485,6 +489,8 @@ operator|=
 name|ip
 operator|->
 name|ip_len
+operator|-
+name|hlen
 operator|-
 name|off
 expr_stmt|;
@@ -569,7 +575,7 @@ block|}
 if|#
 directive|if
 name|vax
-name|ip
+name|mhip
 operator|->
 name|ip_off
 operator|=
@@ -578,26 +584,26 @@ argument_list|(
 operator|(
 name|u_short
 operator|)
-name|ip
+name|mhip
 operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ip
+name|mhip
 operator|->
 name|ip_sum
 operator|=
 literal|0
 expr_stmt|;
-name|ip
+name|mhip
 operator|->
 name|ip_sum
 operator|=
 name|in_cksum
 argument_list|(
-name|m
+name|mh
 argument_list|,
 name|hlen
 argument_list|)
