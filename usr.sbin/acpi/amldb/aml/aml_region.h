@@ -16,6 +16,119 @@ name|_AML_REGION_H_
 end_define
 
 begin_comment
+comment|/*  * Note that common part of region I/O is implemented in aml_common.c.  */
+end_comment
+
+begin_comment
+comment|/*  * Debug macros for region I/O  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_REGION_READ_DEBUG
+parameter_list|(
+name|regtype
+parameter_list|,
+name|flags
+parameter_list|,
+name|addr
+parameter_list|,
+name|bitoffset
+parameter_list|,
+name|bitlen
+parameter_list|)
+define|\
+value|AML_DEBUGPRINT("\n[aml_region_read(%d, %d, 0x%x, 0x%x, 0x%x)]\n",\     regtype, flags, addr, bitoffset, bitlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_REGION_READ_INTO_BUFFER_DEBUG
+parameter_list|(
+name|regtype
+parameter_list|,
+name|flags
+parameter_list|,		\
+name|addr
+parameter_list|,
+name|bitoffset
+parameter_list|,
+name|bitlen
+parameter_list|)
+define|\
+value|AML_DEBUGPRINT("\n[aml_region_read_into_buffer(%d, %d, 0x%x, 0x%x, 0x%x)]\n",\     regtype, flags, addr, bitoffset, bitlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_REGION_WRITE_DEBUG
+parameter_list|(
+name|regtype
+parameter_list|,
+name|flags
+parameter_list|,
+name|value
+parameter_list|,			\
+name|addr
+parameter_list|,
+name|bitoffset
+parameter_list|,
+name|bitlen
+parameter_list|)
+define|\
+value|AML_DEBUGPRINT("\n[aml_region_write(%d, %d, 0x%x, 0x%x, 0x%x, 0x%x)]\n",\     regtype, flags, value, addr, bitoffset, bitlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_REGION_WRITE_FROM_BUFFER_DEBUG
+parameter_list|(
+name|regtype
+parameter_list|,
+name|flags
+parameter_list|,		\
+name|addr
+parameter_list|,
+name|bitoffset
+parameter_list|,
+name|bitlen
+parameter_list|)
+define|\
+value|AML_DEBUGPRINT("\n[aml_region_write_from_buffer(%d, %d, 0x%x, 0x%x, 0x%x)]\n",\     regtype, flags, addr, bitoffset, bitlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_REGION_BCOPY_DEBUG
+parameter_list|(
+name|regtype
+parameter_list|,
+name|flags
+parameter_list|,
+name|addr
+parameter_list|,
+name|bitoffset
+parameter_list|,
+name|bitlen
+parameter_list|,	\
+name|dflags
+parameter_list|,
+name|daddr
+parameter_list|,
+name|dbitoffset
+parameter_list|,
+name|dbitlen
+parameter_list|)
+define|\
+value|AML_DEBUGPRINT("\n[aml_region_bcopy(%d, %d, 0x%x, 0x%x, 0x%x, %d, 0x%x, 0x%x, 0x%x)]\n",\     regtype, flags, addr, bitoffset, bitlen,				\     dflags, daddr, dbitoffset, dbitlen)
+end_define
+
+begin_comment
 comment|/*  * Region I/O subroutine  */
 end_comment
 
