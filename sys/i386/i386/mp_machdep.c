@@ -4433,7 +4433,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"assign_apic_irq: inconsistent table"
+literal|"revoke_apiq_irq: inconsistent table"
 argument_list|)
 expr_stmt|;
 name|oldapic
@@ -4533,7 +4533,7 @@ name|x
 index|]
 operator|.
 name|int_vector
-operator|==
+operator|!=
 literal|0xff
 operator|&&
 name|io_apic_ints
