@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)test.c	5.1 (Berkeley) %G%"
+literal|"@(#)test.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,19 +113,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"editline.h"
+file|"histedit.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"tokenizer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"history.h"
 end_include
 
 begin_decl_stmt
