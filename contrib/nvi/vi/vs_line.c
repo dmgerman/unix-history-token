@@ -203,6 +203,8 @@ decl_stmt|,
 name|is_partial
 decl_stmt|,
 name|is_tab
+decl_stmt|,
+name|no_draw
 decl_stmt|;
 name|int
 name|list_tab
@@ -254,6 +256,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * If ex modifies the screen after ex output is already on the screen, 	 * don't touch it -- we'll get scrolling wrong, at best. 	 */
+name|no_draw
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -273,11 +279,10 @@ name|totalcount
 operator|>
 literal|1
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|no_draw
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|F_ISSET
@@ -296,11 +301,10 @@ argument_list|(
 name|sp
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|no_draw
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Assume that, if the cache entry for the line is filled in, the 	 * line is already on the screen, and all we need to do is return 	 * the cursor position.  If the calling routine doesn't need the 	 * cursor position, we can just return. 	 */
 name|is_cached
 operator|=
@@ -315,7 +319,11 @@ name|yp
 operator|==
 name|NULL
 operator|&&
+operator|(
 name|is_cached
+operator|||
+name|no_draw
+operator|)
 condition|)
 return|return
 operator|(
@@ -569,6 +577,8 @@ comment|/* If the line is on the screen, quit. */
 if|if
 condition|(
 name|is_cached
+operator|||
+name|no_draw
 condition|)
 goto|goto
 name|ret1
@@ -1218,6 +1228,8 @@ comment|/* If the line is on the screen, quit. */
 if|if
 condition|(
 name|is_cached
+operator|||
+name|no_draw
 condition|)
 goto|goto
 name|ret1
@@ -1493,6 +1505,8 @@ comment|/* If the line is on the screen, quit. */
 if|if
 condition|(
 name|is_cached
+operator|||
+name|no_draw
 condition|)
 goto|goto
 name|ret1
@@ -1502,6 +1516,8 @@ comment|/* If the line is on the screen, don't display anything. */
 if|if
 condition|(
 name|is_cached
+operator|||
+name|no_draw
 condition|)
 continue|continue;
 define|#
