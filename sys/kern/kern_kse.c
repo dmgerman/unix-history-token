@@ -4688,11 +4688,6 @@ name|void
 name|thread_user_enter
 parameter_list|(
 name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td
@@ -4943,7 +4938,9 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_flag
 operator|&
