@@ -3161,15 +3161,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s %s\n"
-argument_list|,
-name|buf
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|strcmp
