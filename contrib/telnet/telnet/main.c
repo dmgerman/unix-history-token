@@ -253,17 +253,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|char
-modifier|*
-name|line
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the telnetd side of libtelnet needs this */
-end_comment
-
-begin_decl_stmt
 name|int
 name|family
 init|=
