@@ -1039,26 +1039,36 @@ name|copy
 operator|.
 name|dist
 expr_stmt|;
+block|{
+comment|/* XXX work around a gcc bug. */
+specifier|volatile
+name|inflate_blocks_statef
+modifier|*
+name|s1
+init|=
+name|s
+decl_stmt|;
 while|while
 condition|(
 name|f
 operator|<
-name|s
+name|s1
 operator|->
 name|window
 condition|)
 comment|/* modulo window size-"while" instead */
 name|f
 operator|+=
-name|s
+name|s1
 operator|->
 name|end
 operator|-
-name|s
+name|s1
 operator|->
 name|window
 expr_stmt|;
 comment|/* of "if" handles invalid distances */
+block|}
 while|while
 condition|(
 name|c
