@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	4.7 83/03/10"
+literal|"@(#)kgmon.c	4.8 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,6 +295,10 @@ operator|++
 expr_stmt|;
 while|while
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 name|argv
 index|[
 literal|0
