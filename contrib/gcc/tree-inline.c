@@ -4370,6 +4370,37 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|TREE_CODE_CLASS
+argument_list|(
+name|code
+argument_list|)
+operator|==
+literal|'t'
+condition|)
+block|{
+name|WALK_SUBTREE
+argument_list|(
+name|TYPE_SIZE
+argument_list|(
+operator|*
+name|tp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|WALK_SUBTREE
+argument_list|(
+name|TYPE_SIZE_UNIT
+argument_list|(
+operator|*
+name|tp
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Also examine various special fields, below.  */
+block|}
 name|result
 operator|=
 call|(
@@ -4710,6 +4741,9 @@ return|;
 undef|#
 directive|undef
 name|WALK_SUBTREE
+undef|#
+directive|undef
+name|WALK_SUBTREE_TAIL
 block|}
 end_function
 
@@ -4960,8 +4994,15 @@ name|code
 argument_list|)
 operator|==
 literal|'t'
+operator|&&
+operator|!
+name|variably_modified_type_p
+argument_list|(
+operator|*
+name|tp
+argument_list|)
 condition|)
-comment|/* There's no need to copy types, or anything beneath them.  */
+comment|/* Types only need to be copied if they are variably modified.  */
 operator|*
 name|walk_subtrees
 operator|=

@@ -5761,7 +5761,7 @@ argument_list|)
 argument_list|)
 operator|==
 name|t
-comment|/* whos name's type is non-null */
+comment|/* whose name's type is non-null */
 operator|&&
 name|TREE_TYPE
 argument_list|(
@@ -5770,7 +5770,7 @@ argument_list|(
 name|t
 argument_list|)
 argument_list|)
-comment|/* and whos type is a struct */
+comment|/* and whose type is a struct */
 operator|&&
 name|TREE_CODE
 argument_list|(
@@ -5781,7 +5781,16 @@ argument_list|)
 argument_list|)
 operator|==
 name|RECORD_TYPE
-comment|/* with a first field of our pseudo type info */
+comment|/* with a field */
+operator|&&
+name|TYPE_FIELDS
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+comment|/* which is our pseudo type info */
 operator|&&
 name|TREE_TYPE
 argument_list|(

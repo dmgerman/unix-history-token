@@ -2672,7 +2672,7 @@ name|build
 argument_list|(
 name|COMPONENT_REF
 argument_list|,
-name|build_qualified_type
+name|cp_build_qualified_type
 argument_list|(
 name|TREE_TYPE
 argument_list|(

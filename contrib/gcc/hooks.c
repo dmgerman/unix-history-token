@@ -51,5 +51,26 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Generic hook that takes (tree) and returns false.  */
+end_comment
+
+begin_function
+name|bool
+name|hook_tree_bool_false
+parameter_list|(
+name|a
+parameter_list|)
+name|tree
+name|a
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
 end_unit
 

@@ -1057,7 +1057,7 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpgtss
+name|__builtin_ia32_movss
 argument_list|(
 operator|(
 name|__v4sf
@@ -1067,7 +1067,18 @@ argument_list|,
 operator|(
 name|__v4sf
 operator|)
+name|__builtin_ia32_cmpltss
+argument_list|(
+operator|(
+name|__v4sf
+operator|)
 name|__B
+argument_list|,
+operator|(
+name|__v4sf
+operator|)
+name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -1090,7 +1101,7 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpgess
+name|__builtin_ia32_movss
 argument_list|(
 operator|(
 name|__v4sf
@@ -1100,7 +1111,18 @@ argument_list|,
 operator|(
 name|__v4sf
 operator|)
+name|__builtin_ia32_cmpless
+argument_list|(
+operator|(
+name|__v4sf
+operator|)
 name|__B
+argument_list|,
+operator|(
+name|__v4sf
+operator|)
+name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -1222,7 +1244,7 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpngtss
+name|__builtin_ia32_movss
 argument_list|(
 operator|(
 name|__v4sf
@@ -1232,7 +1254,18 @@ argument_list|,
 operator|(
 name|__v4sf
 operator|)
+name|__builtin_ia32_cmpnltss
+argument_list|(
+operator|(
+name|__v4sf
+operator|)
 name|__B
+argument_list|,
+operator|(
+name|__v4sf
+operator|)
+name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -1255,7 +1288,7 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpngess
+name|__builtin_ia32_movss
 argument_list|(
 operator|(
 name|__v4sf
@@ -1265,7 +1298,18 @@ argument_list|,
 operator|(
 name|__v4sf
 operator|)
+name|__builtin_ia32_cmpnless
+argument_list|(
+operator|(
+name|__v4sf
+operator|)
 name|__B
+argument_list|,
+operator|(
+name|__v4sf
+operator|)
+name|__A
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -4613,6 +4657,10 @@ name|__builtin_ia32_movntq
 argument_list|(
 name|__P
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|__A
 argument_list|)
 expr_stmt|;
@@ -4706,7 +4754,7 @@ parameter_list|,
 name|row3
 parameter_list|)
 define|\
-value|do {									\   __v4sf __r0 = (row0), __r1 = (row1), __r2 = (row2), __r3 = (row3);	\   __v4sf __t0 = __builtin_ia32_shufps (__r0, __r1, 0x44);		\   __v4sf __t1 = __builtin_ia32_shufps (__r0, __r1, 0xEE);		\   __v4sf __t2 = __builtin_ia32_shufps (__r2, __r3, 0x44);		\   __v4sf __t3 = __builtin_ia32_shufps (__r2, __r3, 0xEE);		\   (row0) = __builtin_ia32_shufps (__t0, __t1, 0x88);			\   (row1) = __builtin_ia32_shufps (__t0, __t1, 0xDD);			\   (row2) = __builtin_ia32_shufps (__t2, __t3, 0x88);			\   (row3) = __builtin_ia32_shufps (__t2, __t3, 0xDD);			\ } while (0)
+value|do {									\   __v4sf __r0 = (row0), __r1 = (row1), __r2 = (row2), __r3 = (row3);	\   __v4sf __t0 = __builtin_ia32_shufps (__r0, __r1, 0x44);		\   __v4sf __t2 = __builtin_ia32_shufps (__r0, __r1, 0xEE);		\   __v4sf __t1 = __builtin_ia32_shufps (__r2, __r3, 0x44);		\   __v4sf __t3 = __builtin_ia32_shufps (__r2, __r3, 0xEE);		\   (row0) = __builtin_ia32_shufps (__t0, __t1, 0x88);			\   (row1) = __builtin_ia32_shufps (__t0, __t1, 0xDD);			\   (row2) = __builtin_ia32_shufps (__t2, __t3, 0x88);			\   (row3) = __builtin_ia32_shufps (__t2, __t3, 0xDD);			\ } while (0)
 end_define
 
 begin_endif

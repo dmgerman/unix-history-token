@@ -3489,12 +3489,17 @@ name|non_zero_init
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|contains_empty_class_p
+range|:
+literal|1
+decl_stmt|;
 comment|/* When adding a flag here, consider whether or not it ought to      apply to a template instance if it applies to the template.  If      so, make sure to copy it in instantiate_class_template!  */
 comment|/* There are some bits left to fill out a 32-bit word.  Keep track      of this by updating the size of this bitfield whenever you add or      remove a flag.  */
 name|unsigned
 name|dummy
 range|:
-literal|7
+literal|6
 decl_stmt|;
 name|int
 name|vsize
@@ -4444,6 +4449,21 @@ value|(TYPE_LANG_SPECIFIC (NODE)->nearly_empty_p)
 end_define
 
 begin_comment
+comment|/* Nonzero if this class contains an empty subobject.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASSTYPE_CONTAINS_EMPTY_CLASS_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TYPE_LANG_SPECIFIC (NODE)->contains_empty_class_p)
+end_define
+
+begin_comment
 comment|/* A list of class types of which this type is a friend.  The    TREE_VALUE is normally a TYPE, but will be a TEMPLATE_DECL in the    case of a template friend.  */
 end_comment
 
@@ -4489,7 +4509,7 @@ value|(TYPE_LANG_SPECIFIC (NODE)->declared_class)
 end_define
 
 begin_comment
-comment|/* Nonzero if this class has const members which have no specified initialization.  */
+comment|/* Nonzero if this class has const members    which have no specified initialization.  */
 end_comment
 
 begin_define
@@ -4500,11 +4520,24 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(TYPE_LANG_SPECIFIC (NODE)->const_needs_init)
+value|(TYPE_LANG_SPECIFIC (NODE)				\    ? TYPE_LANG_SPECIFIC (NODE)->const_needs_init : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_CLASSTYPE_READONLY_FIELDS_NEED_INIT
+parameter_list|(
+name|NODE
+parameter_list|,
+name|VALUE
+parameter_list|)
+define|\
+value|(TYPE_LANG_SPECIFIC (NODE)->const_needs_init = (VALUE))
 end_define
 
 begin_comment
-comment|/* Nonzero if this class has ref members which have no specified initialization.  */
+comment|/* Nonzero if this class has ref members    which have no specified initialization.  */
 end_comment
 
 begin_define
@@ -4515,7 +4548,20 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(TYPE_LANG_SPECIFIC (NODE)->ref_needs_init)
+value|(TYPE_LANG_SPECIFIC (NODE)				\    ? TYPE_LANG_SPECIFIC (NODE)->ref_needs_init : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_CLASSTYPE_REF_FIELDS_NEED_INIT
+parameter_list|(
+name|NODE
+parameter_list|,
+name|VALUE
+parameter_list|)
+define|\
+value|(TYPE_LANG_SPECIFIC (NODE)->ref_needs_init = (VALUE))
 end_define
 
 begin_comment

@@ -17707,7 +17707,11 @@ if|if
 condition|(
 name|system_include_depth
 operator|>
-literal|0
+operator|(
+name|file_change
+operator|==
+name|leave_file
+operator|)
 condition|)
 name|strcat
 argument_list|(

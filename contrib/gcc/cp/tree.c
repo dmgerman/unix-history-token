@@ -7435,42 +7435,10 @@ name|t
 parameter_list|)
 name|tree
 name|t
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|t
-operator|=
-name|strip_array_types
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-comment|/* NULL pointers to data members are initialized with -1.  */
-if|if
-condition|(
-name|TYPE_PTRMEM_P
-argument_list|(
-name|t
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Classes that contain types that can't be zero-initialized, cannot      be zero-initialized themselves.  */
-if|if
-condition|(
-name|CLASS_TYPE_P
-argument_list|(
-name|t
-argument_list|)
-operator|&&
-name|CLASSTYPE_NON_ZERO_INIT_P
-argument_list|(
-name|t
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
+comment|/* This is not a correct implementation of this function.  As a      result, pointers-to-members will not be correctly      zero-initialized.       However, using a correct implementation of this function results      in many other failures.  Correcting these other failures required      a major infrastructure improvement, which was undertaken in the      GCC 3.3 source base.         In order to reduce risk, these changes were not ported to the GCC      3.2 source base.  */
 return|return
 literal|1
 return|;

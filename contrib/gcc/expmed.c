@@ -4965,9 +4965,9 @@ argument_list|)
 expr_stmt|;
 else|else
 comment|/* Else we've got some float mode source being extracted into 		   a different float mode destination -- this combination of 		   subregs results in Severe Tire Damage.  */
-name|abort
-argument_list|()
-expr_stmt|;
+goto|goto
+name|no_subreg_mode_swap
+goto|;
 block|}
 if|if
 condition|(
@@ -5022,6 +5022,8 @@ return|return
 name|op0
 return|;
 block|}
+name|no_subreg_mode_swap
+label|:
 comment|/* Handle fields bigger than a word.  */
 if|if
 condition|(
