@@ -280,7 +280,7 @@ begin_define
 define|#
 directive|define
 name|NFS_MAXASYNCDAEMON
-value|20
+value|64
 end_define
 
 begin_comment

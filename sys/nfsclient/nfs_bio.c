@@ -4762,7 +4762,7 @@ literal|0
 init|;
 name|iod
 operator|<
-name|NFS_MAXASYNCDAEMON
+name|nfs_numasync
 condition|;
 name|iod
 operator|++
@@ -4805,44 +4805,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* 	 * If none are free, we may already have an iod working on this mount 	 * point.  If so, it will process our request. 	 */
-if|if
-condition|(
-operator|!
-name|gotiod
-condition|)
-block|{
-if|if
-condition|(
-name|nmp
-operator|->
-name|nm_bufqiods
-operator|>
-literal|0
-condition|)
-block|{
-name|NFS_DPF
-argument_list|(
-name|ASYNCIO
-argument_list|,
-operator|(
-literal|"nfs_asyncio: %d iods are already processing mount %p\n"
-operator|,
-name|nmp
-operator|->
-name|nm_bufqiods
-operator|,
-name|nmp
-operator|)
-argument_list|)
-expr_stmt|;
-name|gotiod
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-block|}
-comment|/* 	 * If we have an iod which can process the request, then queue 	 * the buffer. 	 */
 if|if
 condition|(
 name|gotiod
@@ -4898,6 +4860,50 @@ name|iod
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * If none are free, we may already have an iod working on this mount 	 * point.  If so, it will process our request. 	 */
+if|if
+condition|(
+operator|!
+name|gotiod
+condition|)
+block|{
+if|if
+condition|(
+name|nmp
+operator|->
+name|nm_bufqiods
+operator|>
+literal|0
+condition|)
+block|{
+name|NFS_DPF
+argument_list|(
+name|ASYNCIO
+argument_list|,
+operator|(
+literal|"nfs_asyncio: %d iods are already processing mount %p\n"
+operator|,
+name|nmp
+operator|->
+name|nm_bufqiods
+operator|,
+name|nmp
+operator|)
+argument_list|)
+expr_stmt|;
+name|gotiod
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+block|}
+comment|/* 	 * If we have an iod which can process the request, then queue 	 * the buffer. 	 */
+if|if
+condition|(
+name|gotiod
+condition|)
+block|{
 comment|/* 		 * Ensure that the queue never grows too large.  We still want 		 * to asynchronize so we block rather then return EIO. 		 */
 while|while
 condition|(
