@@ -3529,7 +3529,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"extract_oob:  neg off\n"
 argument_list|)

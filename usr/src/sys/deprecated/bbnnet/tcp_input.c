@@ -1009,7 +1009,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"tcp bad state: tcb=%x state=%d INRECV\n"
 argument_list|,

@@ -586,7 +586,7 @@ name|r_tvnull
 expr_stmt|;
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"Incorrect ACK strategy on rdpcb 0x%x\n"
 argument_list|,

@@ -2811,7 +2811,7 @@ break|break;
 default|default:
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"ip_forward: error %d\n"
 argument_list|,
@@ -3497,7 +3497,7 @@ block|{
 comment|/* Use both loose and strict source routing? */
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"ip_nhops %d\n"
 argument_list|,
@@ -3529,7 +3529,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"save_rte: olen %d\n"
 argument_list|,
@@ -5146,7 +5146,7 @@ name|s_addr
 expr_stmt|;
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"%s checksum was 0x%x not 0x%x src %d.%d.%d.%d dst %d.%d.%d.%d\n"
 argument_list|,
@@ -5280,7 +5280,7 @@ name|s_addr
 expr_stmt|;
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"%s: src %d.%d.%d.%d dst %d.%d.%d.%d\n"
 argument_list|,
@@ -5414,7 +5414,7 @@ name|s_addr
 expr_stmt|;
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"%s: no route %d.%d.%d.%d -> %d.%d.%d.%d\n"
 argument_list|,

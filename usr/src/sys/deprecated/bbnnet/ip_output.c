@@ -1016,7 +1016,7 @@ block|}
 else|else
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"ip_send: optlen %d inpcb 0x%x\n"
 argument_list|,

@@ -525,7 +525,7 @@ argument_list|)
 expr_stmt|;
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"%d + %d != %d\n"
 argument_list|,

@@ -652,7 +652,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"ic_errmsg len %d"
 argument_list|,

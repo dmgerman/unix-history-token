@@ -1604,7 +1604,7 @@ break|break;
 default|default:
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"rdp_synsent_timer:  timer %d\n"
 argument_list|,
@@ -1919,7 +1919,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"RDP too large packet %d> %d\n"
 argument_list|,
@@ -1984,7 +1984,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"RDP %d length NULL packet\n"
 argument_list|,
@@ -2013,7 +2013,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"RDP NULL 0x%x rcvq baseseq 0x%x\n"
 argument_list|,
@@ -2770,7 +2770,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"RDP pkt too large %d> %d\n"
 argument_list|,
@@ -2849,7 +2849,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"RDP %d length NULL pkt\n"
 argument_list|,
@@ -2878,7 +2878,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"RDP NULL 0x%x rcvq baseseq 0x%x\n"
 argument_list|,
@@ -3722,7 +3722,7 @@ break|break;
 default|default:
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"rdp_estab_timer:  timer %d\n"
 argument_list|,
@@ -4308,7 +4308,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"rdp_closew_timer:  timer %d\n"
 argument_list|,

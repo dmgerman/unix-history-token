@@ -765,7 +765,7 @@ name|s_addr
 expr_stmt|;
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"gw %d.%d.%d.%d pinged out\n"
 argument_list|,
@@ -1670,7 +1670,7 @@ name|s_addr
 expr_stmt|;
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"Ignoring redirect from %d.%d.%d.%d\n"
 argument_list|,
@@ -2476,7 +2476,7 @@ name|s_addr
 expr_stmt|;
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"Ignoring ICMP redirect from gw %d.%d.%d.%d? to go from %d.%d.%d.%d to %d.%d.%d.%d via %d.%d.%d.%d : %s\n"
 argument_list|,
@@ -2922,7 +2922,7 @@ block|}
 else|else
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"ICMP Redirect to down route\n"
 argument_list|)
@@ -2931,7 +2931,7 @@ block|}
 else|else
 name|log
 argument_list|(
-name|KERN_RECOV
+name|LOG_INFO
 argument_list|,
 literal|"ICMP Redirect route not installed?\n"
 argument_list|)
