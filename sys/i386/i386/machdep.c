@@ -4754,26 +4754,6 @@ begin_comment
 comment|/*  * Hook to idle the CPU when possible.   This is disabled by default for  * the SMP case as there is a small window of opportunity whereby a ready  * process is delayed to the next clock tick.  It should be safe to enable  * for SMP if power is a concern.  *  * On -stable, cpu_idle() is called with interrupts disabled and must  * return with them enabled.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|cpu_idle_hlt
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -4782,11 +4762,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -4816,6 +4791,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
+if|if
+condition|(
+name|mp_grab_cpu_hlt
+argument_list|()
+condition|)
+return|return;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cpu_idle_hlt
