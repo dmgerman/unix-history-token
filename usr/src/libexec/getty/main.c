@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.17 (Berkeley) %G%"
+literal|"@(#)main.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -956,8 +956,6 @@ control|)
 block|{
 name|int
 name|off
-init|=
-literal|0
 decl_stmt|;
 name|gettable
 argument_list|(
@@ -988,13 +986,18 @@ expr_stmt|;
 name|setdefaults
 argument_list|()
 expr_stmt|;
+name|off
+operator|=
+literal|0
+expr_stmt|;
 name|ioctl
 argument_list|(
 literal|0
 argument_list|,
 name|TIOCFLUSH
 argument_list|,
-literal|0
+operator|&
+name|off
 argument_list|)
 expr_stmt|;
 comment|/* clear out the crap */
