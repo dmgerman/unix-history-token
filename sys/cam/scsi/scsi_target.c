@@ -2709,9 +2709,6 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|error
 operator|=
 name|uiomove
