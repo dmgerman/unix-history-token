@@ -1,29 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the create module.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -49,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNOhvyf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:o:b:"
+literal|"YNOhjvyzf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:o:b:"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,10 +215,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|UseBzip2
+name|enum
+name|zipper
+name|Zipper
 init|=
-name|FALSE
+name|GZIP
 decl_stmt|;
 end_decl_stmt
 
@@ -479,9 +472,20 @@ break|break;
 case|case
 literal|'y'
 case|:
-name|UseBzip2
+case|case
+literal|'j'
+case|:
+name|Zipper
 operator|=
-name|TRUE
+name|BZIP2
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|Zipper
+operator|=
+name|GZIP
 expr_stmt|;
 break|break;
 case|case
