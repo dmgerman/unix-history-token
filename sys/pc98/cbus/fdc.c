@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/disk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/disklabel.h>
 end_include
 
