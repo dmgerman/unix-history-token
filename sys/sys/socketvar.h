@@ -160,7 +160,7 @@ comment|/* [sg] information for async I/O or 					   out of band data (SIGURG) *
 name|u_long
 name|so_oobmark
 decl_stmt|;
-comment|/* chars to oob mark */
+comment|/* (c) chars to oob mark */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
