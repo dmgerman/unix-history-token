@@ -1091,6 +1091,14 @@ name|p
 operator|->
 name|p_pri
 operator|.
+name|pri_native
+operator|=
+name|PRI_MAX
+expr_stmt|;
+name|p
+operator|->
+name|p_pri
+operator|.
 name|pri_user
 operator|=
 name|PUSER

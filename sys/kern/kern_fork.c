@@ -1329,6 +1329,14 @@ literal|0
 expr_stmt|;
 name|p2
 operator|->
+name|p_pri
+operator|.
+name|pri_native
+operator|=
+name|PRI_MAX
+expr_stmt|;
+name|p2
+operator|->
 name|p_stat
 operator|=
 name|SIDL
