@@ -4359,8 +4359,6 @@ decl_stmt|,
 name|nb
 decl_stmt|,
 name|wb
-decl_stmt|,
-name|width
 decl_stmt|;
 name|char
 modifier|*
