@@ -7174,6 +7174,8 @@ block|{
 name|int
 name|i
 decl_stmt|,
+name|r
+decl_stmt|,
 name|s
 decl_stmt|;
 name|struct
@@ -7530,7 +7532,7 @@ name|NULL
 condition|)
 block|{
 comment|/* a new pipe */
-name|s
+name|r
 operator|=
 name|alloc_hash
 argument_list|(
@@ -7546,7 +7548,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|s
+name|r
 condition|)
 block|{
 name|free
@@ -7556,8 +7558,13 @@ argument_list|,
 name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
-return|return
+name|splx
+argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+return|return
+name|r
 return|;
 block|}
 name|x
@@ -7800,7 +7807,7 @@ name|NULL
 condition|)
 block|{
 comment|/* a new flow_set */
-name|s
+name|r
 operator|=
 name|alloc_hash
 argument_list|(
@@ -7811,7 +7818,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|s
+name|r
 condition|)
 block|{
 name|free
@@ -7821,8 +7828,13 @@ argument_list|,
 name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
-return|return
+name|splx
+argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+return|return
+name|r
 return|;
 block|}
 name|x
