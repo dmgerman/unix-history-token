@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)finger.c	4.3 (Berkeley) %G%"
+literal|"@(#)finger.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  This is a finger program.  It prints out useful information about users  *  by digging it up from various system files.  It is not very portable  *  because the most useful parts of the information (the full user name,  *  office, and phone numbers) are all stored in the VAX-unused gecos field  *  of /etc/passwd, which, unfortunately, other UNIXes use for other things.  *  *  There are three output formats, all of which give login name, teletype  *  line number, and login time.  The short output format is reminiscent  *  of finger on ITS, and gives one line of information per user containing  *  in addition to the minimum basic requirements (MBR), the full name of  *  the user, his idle time and office location and phone number.  The  *  quick style output is UNIX who-like, giving only name, teletype and  *  login time.  Finally, the long style output give the same information  *  as the short (in more legible format), the home directory and shell  *  of the user, and, if it exits, a copy of the file .plan in the users  *  home directory.  Finger may be called with or without a list of people  *  to finger -- if no list is given, all the people currently logged in  *  are fingered.  *  *  The program is validly called by one of the following:  *  *	finger			{short form list of users}  *	finger -l		{long form list of users}  *	finger -b		{briefer long form list of users}  *	finger -q		{quick list of users}  *	finger -i		{quick list of users with idle times}  *	finger namelist		{long format list of specified users}  *	finger -s namelist	{short format list of specified users}  *	finger -w namelist	{narrow short format list of specified users}  *  *  where 'namelist' is a list of users login names.  *  The other options can all be given after one '-', or each can have its  *  own '-'.  The -f option disables the printing of headers for short and  *  quick outputs.  The -b option briefens long format outputs.  The -p  *  option turns off plans for long format outputs.  */
@@ -58,19 +69,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sccs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<lastlog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_decl_stmt

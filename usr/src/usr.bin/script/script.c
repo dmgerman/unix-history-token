@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)script.c	4.4 83/06/10"
+literal|"@(#)script.c	4.5 (Berkeley) 83/07/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_function_decl
@@ -470,7 +470,7 @@ end_block
 begin_include
 include|#
 directive|include
-file|<wait.h>
+file|<sys/wait.h>
 end_include
 
 begin_macro
