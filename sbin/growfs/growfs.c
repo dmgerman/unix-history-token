@@ -1089,7 +1089,7 @@ name|B2MBFACTOR
 value|(1 / (1024.0 * 1024.0))
 name|printf
 argument_list|(
-literal|"growfs: %.1fMB (%qd sectors) block size %d, fragment size %d\n"
+literal|"growfs: %.1fMB (%jd sectors) block size %d, fragment size %d\n"
 argument_list|,
 operator|(
 name|float
@@ -1104,6 +1104,9 @@ name|fs_fsize
 operator|*
 name|B2MBFACTOR
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|fsbtodb
 argument_list|(
 operator|&
@@ -1664,7 +1667,8 @@ argument_list|(
 literal|"initcg"
 argument_list|)
 specifier|static
-name|caddr_t
+name|void
+modifier|*
 name|iobuf
 decl_stmt|;
 name|long
@@ -8983,7 +8987,7 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|char
+name|int
 name|ch
 decl_stmt|;
 name|unsigned
