@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egrep.c	5.12 (Berkeley) %G%"
+literal|"@(#)egrep.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1588,6 +1588,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|file
@@ -1621,11 +1625,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: can't open %s\n"
+literal|"%s: %s: %s\n"
 argument_list|,
 name|progname
 argument_list|,
 name|file
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nsuccess
