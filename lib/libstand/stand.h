@@ -699,7 +699,7 @@ name|isascii
 parameter_list|(
 name|c
 parameter_list|)
-value|(((unsigned char)c)<= 0x7f)
+value|(((c)& ~0x7F) == 0)
 end_define
 
 begin_define
