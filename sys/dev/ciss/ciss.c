@@ -4421,7 +4421,7 @@ operator|)
 operator|||
 operator|(
 name|ndrives
-operator|>
+operator|>=
 name|CISS_MAX_LOGICAL
 operator|)
 condition|)
@@ -9038,16 +9038,13 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-return|return
-operator|(
 name|ciss_cam_rescan_target
 argument_list|(
 name|sc
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -9673,7 +9670,7 @@ operator|)
 operator|||
 operator|(
 name|target
-operator|>
+operator|>=
 name|CISS_MAX_LOGICAL
 operator|)
 operator|||
