@@ -1557,6 +1557,8 @@ block|}
 block|,
 comment|/* 115 = obsolete vtrace */
 block|{
+name|SYF_MPSAFE
+operator||
 name|AS
 argument_list|(
 name|gettimeofday_args
