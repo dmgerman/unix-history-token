@@ -2103,7 +2103,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: id [user]"
 argument_list|,
