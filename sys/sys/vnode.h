@@ -79,6 +79,12 @@ directive|include
 file|<sys/acl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/ktr.h>
+end_include
+
 begin_comment
 comment|/*  * The vnode is the focus of all file activity in UNIX.  There is a  * unique vnode allocated for each active file, each current directory,  * each mounted-on file, text file, and the root.  */
 end_comment
