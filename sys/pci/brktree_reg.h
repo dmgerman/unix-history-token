@@ -43,6 +43,20 @@ name|BROOKTREE_849_ID
 value|0x0351109E
 end_define
 
+begin_define
+define|#
+directive|define
+name|BROOKTREE_878_ID
+value|0x036E109E
+end_define
+
+begin_define
+define|#
+directive|define
+name|BROOKTREE_879_ID
+value|0x036F109E
+end_define
+
 begin_typedef
 typedef|typedef
 specifier|volatile
@@ -145,6 +159,10 @@ define|#
 directive|define
 name|BT848_IFORM_M_MUX2
 value|(0x01<<5)
+define|#
+directive|define
+name|BT848_IFORM_M_MUX3
+value|(0x0)
 define|#
 directive|define
 name|BT848_IFORM_M_RSVD
@@ -1941,6 +1959,9 @@ name|bt848_tuner
 decl_stmt|;
 name|int
 name|bt848_card
+decl_stmt|;
+name|u_long
+name|id
 decl_stmt|;
 block|}
 struct|;
