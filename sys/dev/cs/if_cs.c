@@ -1835,7 +1835,7 @@ operator|=
 name|TX_CS8920_AFTER_ALL
 expr_stmt|;
 block|}
-comment|/*          * Clear some fields so that fail of EEPROM will left them clean          */
+comment|/* 	 * Clear some fields so that fail of EEPROM will left them clean 	 */
 name|sc
 operator|->
 name|auto_neg_cnf
@@ -2037,7 +2037,7 @@ operator|>>
 literal|8
 expr_stmt|;
 block|}
-comment|/*                                  * If no interrupt specified (or "?"),                                  * use what the board tells us.                                  */
+comment|/* 				 * If no interrupt specified, 				 * use what the board tells us. 				 */
 if|if
 condition|(
 name|error
@@ -2291,7 +2291,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*          * Temporary disabled          *         if (drq>0) 		cs_writereg(sc, pp_isadma, drq); 	else { 		device_printf(dev, "incorrect drq\n",); 		return 0; 	}         */
+comment|/* 	 * Temporary disabled 	 * 	if (drq>0) 		cs_writereg(sc, pp_isadma, drq); 	else { 		device_printf(dev, "incorrect drq\n",); 		return 0; 	} 	*/
 if|if
 condition|(
 name|bootverbose
@@ -3540,7 +3540,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now enable everything 	 */
-comment|/* #ifdef	CS_USE_64K_DMA 	cs_writereg(sc, PP_BusCTL, ENABLE_IRQ | RX_DMA_SIZE_64K); #else         cs_writereg(sc, PP_BusCTL, ENABLE_IRQ); #endif */
+comment|/* #ifdef	CS_USE_64K_DMA 	cs_writereg(sc, PP_BusCTL, ENABLE_IRQ | RX_DMA_SIZE_64K); #else 	cs_writereg(sc, PP_BusCTL, ENABLE_IRQ); #endif */
 name|cs_writereg
 argument_list|(
 name|sc
@@ -4899,7 +4899,7 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
-comment|/* 		 * Switch interface state between "running" and 		 * "stopped", reflecting the UP flag.                  */
+comment|/* 		 * Switch interface state between "running" and 		 * "stopped", reflecting the UP flag. 		 */
 if|if
 condition|(
 name|sc
