@@ -214,6 +214,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Non-boolean long options that have no corresponding short equivalents.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|BINARY_FILES_OPTION
+init|=
+name|CHAR_MAX
+operator|+
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/* Long options equivalences. */
 end_comment
 
@@ -253,6 +269,16 @@ block|,
 name|NULL
 block|,
 literal|'B'
+block|}
+block|,
+block|{
+literal|"binary-files"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|BINARY_FILES_OPTION
 block|}
 block|,
 block|{
@@ -2392,15 +2418,22 @@ begin_comment
 comment|/* Flags controlling the style of output. */
 end_comment
 
-begin_decl_stmt
+begin_enum
 specifier|static
-name|int
-name|always_text
-decl_stmt|;
-end_decl_stmt
+enum|enum
+block|{
+name|BINARY_BINARY_FILES
+block|,
+name|TEXT_BINARY_FILES
+block|,
+name|WITHOUT_MATCH_BINARY_FILES
+block|}
+name|binary_files
+enum|;
+end_enum
 
 begin_comment
-comment|/* Assume the input is always text. */
+comment|/* How to handle binary files.  */
 end_comment
 
 begin_decl_stmt
@@ -3628,17 +3661,25 @@ name|errno
 argument_list|)
 expr_stmt|;
 return|return
-name|nlines
+literal|0
 return|;
 block|}
 name|not_text
 operator|=
 operator|(
-operator|!
 operator|(
-name|always_text
-operator||
+operator|(
+name|binary_files
+operator|==
+name|BINARY_BINARY_FILES
+operator|&&
+operator|!
 name|out_quiet
+operator|)
+operator|||
+name|binary_files
+operator|==
+name|WITHOUT_MATCH_BINARY_FILES
 operator|)
 operator|&&
 name|memchr
@@ -3657,6 +3698,17 @@ name|bufbeg
 argument_list|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|not_text
+operator|&&
+name|binary_files
+operator|==
+name|WITHOUT_MATCH_BINARY_FILES
+condition|)
+return|return
+literal|0
+return|;
 name|done_on_match
 operator|+=
 name|not_text
@@ -4700,7 +4752,7 @@ name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"\ \n\ Output control:\n\   -b, --byte-offset         print the byte offset with output lines\n\   -n, --line-number         print line number with output lines\n\   -H, --with-filename       print the filename for each match\n\   -h, --no-filename         suppress the prefixing filename on output\n\   -q, --quiet, --silent     suppress all normal output\n\   -a, --text                do not suppress binary output\n\   -d, --directories=ACTION  how to handle directories\n\                             ACTION is 'read', 'recurse', or 'skip'.\n\   -r, --recursive           equivalent to --directories=recurse.\n\   -L, --files-without-match only print FILE names containing no match\n\   -l, --files-with-matches  only print FILE names containing matches\n\   -c, --count               only print a count of matching lines per FILE\n\   -Z, --null                print 0 byte after FILE name\n"
+literal|"\ \n\ Output control:\n\   -b, --byte-offset         print the byte offset with output lines\n\   -n, --line-number         print line number with output lines\n\   -H, --with-filename       print the filename for each match\n\   -h, --no-filename         suppress the prefixing filename on output\n\   -q, --quiet, --silent     suppress all normal output\n\   -a, --text                equivalent to --binary-files=text\n\       --binary-files=TYPE   assume that binary files are TYPE\n\                             TYPE is 'binary', 'text', or 'without-match'.\n\   -d, --directories=ACTION  how to handle directories\n\                             ACTION is 'read', 'recurse', or 'skip'.\n\   -r, --recursive           equivalent to --directories=recurse.\n\   -L, --files-without-match only print FILE names containing no match\n\   -l, --files-with-matches  only print FILE names containing matches\n\   -c, --count               only print a count of matching lines per FILE\n\   -Z, --null                print 0 byte after FILE name\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5846,9 +5898,9 @@ break|break;
 case|case
 literal|'a'
 case|:
-name|always_text
+name|binary_files
 operator|=
-literal|1
+name|TEXT_BINARY_FILES
 expr_stmt|;
 break|break;
 case|case
@@ -6265,6 +6317,68 @@ case|:
 name|eolbyte
 operator|=
 literal|'\0'
+expr_stmt|;
+break|break;
+case|case
+name|BINARY_FILES_OPTION
+case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"binary"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|binary_files
+operator|=
+name|BINARY_BINARY_FILES
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"text"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|binary_files
+operator|=
+name|TEXT_BINARY_FILES
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"without-match"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|binary_files
+operator|=
+name|WITHOUT_MATCH_BINARY_FILES
+expr_stmt|;
+else|else
+name|fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"unknown binary-files type"
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
