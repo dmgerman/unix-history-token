@@ -1,15 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 1998,2000 Doug Rabson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	from:	i386 Id: pmap.c,v 1.193 1998/04/19 15:22:48 bde Exp  *		with some ideas from NetBSD's alpha pmap  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 1998,2000 Doug Rabson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	from:	i386 Id: pmap.c,v 1.193 1998/04/19 15:22:48 bde Exp  *		with some ideas from NetBSD's alpha pmap  */
 end_comment
 
-begin_comment
-comment|/*  *	Manages physical address maps.  *  *	In addition to hardware address maps, this  *	module is called upon to provide software-use-only  *	maps which may or may not be stored in the same  *	form as hardware maps.  These pseudo-maps are  *	used to store intermediate results from copy  *	operations to and from address spaces.  *  *	Since the information managed by this module is  *	also stored by the logical address mapping module,  *	this module may throw away valid virtual-to-physical  *	mappings at almost any time.  However, invalidations  *	of virtual-to-physical mappings must be done as  *	requested.  *  *	In order to cope with hardware architectures which  *	make virtual-to-physical map invalidates expensive,  *	this module may delay invalidate or reduced protection  *	operations until such time as they are actually  *	necessary.  This module is given full information as  *	to which processors are currently using which maps,  *	and to when physical maps must be made correct.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_comment
-comment|/*  * Following the Linux model, region IDs are allocated in groups of  * eight so that a single region ID can be used for as many RRs as we  * want by encoding the RR number into the low bits of the ID.  *  * We reserve region ID 0 for the kernel and allocate the remaining  * IDs for user pmaps.  *  * Region 0..4  *	User virtually mapped  *  * Region 5  *	Kernel virtually mapped  *  * Region 6  *	Kernel physically mapped uncacheable  *  * Region 7  *	Kernel physically mapped cacheable  */
-end_comment
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -32,19 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/msgbuf.h>
 end_include
 
 begin_include
@@ -62,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -74,37 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vmmeter.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_kern.h>
 end_include
 
 begin_include
@@ -128,19 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_pageout.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_pager.h>
 end_include
 
 begin_include
@@ -152,19 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/uma_int.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
+file|<machine/md_var.h>
 end_include
 
 begin_include
@@ -173,11 +113,13 @@ directive|include
 file|<machine/pal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
-end_include
+begin_comment
+comment|/*  *	Manages physical address maps.  *  *	In addition to hardware address maps, this  *	module is called upon to provide software-use-only  *	maps which may or may not be stored in the same  *	form as hardware maps.  These pseudo-maps are  *	used to store intermediate results from copy  *	operations to and from address spaces.  *  *	Since the information managed by this module is  *	also stored by the logical address mapping module,  *	this module may throw away valid virtual-to-physical  *	mappings at almost any time.  However, invalidations  *	of virtual-to-physical mappings must be done as  *	requested.  *  *	In order to cope with hardware architectures which  *	make virtual-to-physical map invalidates expensive,  *	this module may delay invalidate or reduced protection  *	operations until such time as they are actually  *	necessary.  This module is given full information as  *	to which processors are currently using which maps,  *	and to when physical maps must be made correct.  */
+end_comment
+
+begin_comment
+comment|/*  * Following the Linux model, region IDs are allocated in groups of  * eight so that a single region ID can be used for as many RRs as we  * want by encoding the RR number into the low bits of the ID.  *  * We reserve region ID 0 for the kernel and allocate the remaining  * IDs for user pmaps.  *  * Region 0..4  *	User virtually mapped  *  * Region 5  *	Kernel virtually mapped  *  * Region 6  *	Kernel physically mapped uncacheable  *  * Region 7  *	Kernel physically mapped cacheable  */
+end_comment
 
 begin_comment
 comment|/* XXX move to a header. */
@@ -2066,236 +2008,22 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-unit|}  void
-operator|*
-name|uma_small_alloc
-argument_list|(
-argument|uma_zone_t zone
-argument_list|,
-argument|int bytes
-argument_list|,
-argument|u_int8_t *flags
-argument_list|,
-argument|int wait
-argument_list|)
-block|{
-specifier|static
-name|vm_pindex_t
-name|color
-block|;
-name|vm_page_t
-name|m
-block|;
-name|int
-name|pflags
-block|;
-name|void
-operator|*
-name|va
-block|;
-operator|*
-name|flags
-operator|=
-name|UMA_SLAB_PRIV
-block|;
-if|if
-condition|(
-operator|(
-name|wait
-operator|&
-operator|(
-name|M_NOWAIT
-operator||
-name|M_USE_RESERVE
-operator|)
-operator|)
-operator|==
-name|M_NOWAIT
-condition|)
-name|pflags
-operator|=
-name|VM_ALLOC_INTERRUPT
-expr_stmt|;
-else|else
-name|pflags
-operator|=
-name|VM_ALLOC_SYSTEM
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|wait
-operator|&
-name|M_ZERO
-condition|)
-name|pflags
-operator||=
-name|VM_ALLOC_ZERO
-expr_stmt|;
-end_if
-
-begin_for
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|m
-operator|=
-name|vm_page_alloc
-argument_list|(
-name|NULL
-argument_list|,
-name|color
-operator|++
-argument_list|,
-name|pflags
-operator||
-name|VM_ALLOC_NOOBJ
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|wait
-operator|&
-name|M_NOWAIT
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-else|else
-name|VM_WAIT
-expr_stmt|;
-block|}
-else|else
-break|break;
-block|}
-end_for
-
-begin_expr_stmt
-name|va
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|IA64_PHYS_TO_RR7
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-operator|(
-name|wait
-operator|&
-name|M_ZERO
-operator|)
-operator|&&
-operator|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_ZERO
-operator|)
-operator|==
-literal|0
-condition|)
-name|bzero
-argument_list|(
-name|va
-argument_list|,
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-end_if
-
-begin_return
-return|return
-operator|(
-name|va
-operator|)
-return|;
-end_return
+begin_comment
+unit|}
+comment|/*  *	Initialize the pmap module.  *	Called by vm_init, to initialize any structures that the pmap  *	system needs to map virtual memory.  *	pmap_init has been enhanced to support in a fairly consistant  *	way, discontiguous physical memory.  */
+end_comment
 
 begin_macro
-unit|}  void
-name|uma_small_free
+unit|void
+name|pmap_init
 argument_list|(
-argument|void *mem
+argument|vm_offset_t phys_start
 argument_list|,
-argument|int size
-argument_list|,
-argument|u_int8_t flags
+argument|vm_offset_t phys_end
 argument_list|)
 end_macro
 
 begin_block
-block|{
-name|vm_page_t
-name|m
-decl_stmt|;
-name|m
-operator|=
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|IA64_RR_MASK
-argument_list|(
-operator|(
-name|u_int64_t
-operator|)
-name|mem
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  *	Initialize the pmap module.  *	Called by vm_init, to initialize any structures that the pmap  *	system needs to map virtual memory.  *	pmap_init has been enhanced to support in a fairly consistant  *	way, discontiguous physical memory.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_init
-parameter_list|(
-name|vm_offset_t
-name|phys_start
-parameter_list|,
-name|vm_offset_t
-name|phys_end
-parameter_list|)
 block|{
 name|int
 name|i
@@ -2447,7 +2175,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Initialize the address space (zone) for the pv_entries.  Set a  * high water mark so that the system can recover from excessive  * numbers of pv entries.  */
