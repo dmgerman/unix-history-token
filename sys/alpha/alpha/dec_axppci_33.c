@@ -831,7 +831,7 @@ default|default:
 comment|/* XXX gcc -Wuninitialized */
 name|panic
 argument_list|(
-literal|"dec_axppci_33_intr_route bogus: PCI pin %d\n"
+literal|"dec_axppci_33_intr_route: bogus PCI pin %d\n"
 argument_list|,
 name|pin
 argument_list|)
