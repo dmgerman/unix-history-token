@@ -31,6 +31,12 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/_limits.h>
+end_include
+
 begin_comment
 comment|/*  * ANSI/POSIX  */
 end_comment
@@ -99,23 +105,15 @@ begin_define
 define|#
 directive|define
 name|FP_ILOGB0
-value|(-0x7fffffff - 1)
+value|(-__INT_MAX)
 end_define
-
-begin_comment
-comment|/* INT_MIN */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|FP_ILOGBNAN
-value|0x7fffffff
+value|__INT_MAX
 end_define
-
-begin_comment
-comment|/* INT_MAX */
-end_comment
 
 begin_define
 define|#
