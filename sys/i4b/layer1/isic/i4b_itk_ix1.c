@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998, 1999 Martin Husemann<martin@rumolt.teuto.de>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_itk_ix1.c - ITK ix1 micro passive card driver for isdn4bsd  *	--------------------------------------------------------------  *  *	$Id: i4b_itk_ix1.c,v 1.1 2000/08/24 14:08:41 hm Exp $  *  *      last edit-date: [Thu Aug 24 15:44:33 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------  *  * The ITK ix1 micro ISDN card is an ISA card with one region  * of four io ports mapped and a fixed irq all jumpered on the card.  * Access to the board is straight forward and simmilar to  * the ELSA and DYNALINK cards. If a PCI version of this card  * exists all we need is probably a pci-bus attachment, all  * this low level routines should work imediately.  *  * To reset the card:  *   - write 0x01 to ITK_CONFIG  *   - wait>= 10 ms  *   - write 0x00 to ITK_CONFIG  *  * To read or write data:  *  - write address to ITK_ALE port  *  - read data from or write data to ITK_ISAC_DATA port or ITK_HSCX_DATA port  * The two HSCX channel registers are offset by HSCXA (0x00) and HSCXB (0x40).  *  * The probe routine was derived by trial and error from a representative  * sample of two cards ;-) The standard way (checking HSCX versions)  * was extended by reading a zero from a non existant HSCX register (register  * 0xff). Reading the config register gives varying results, so this doesn't  * seem to be used as an id register (like the Teles S0/16.3).  *  * If the probe fails for your card use "options ITK_PROBE_DEBUG" to get  * additional debug output.  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1998, 1999 Martin Husemann<martin@rumolt.teuto.de>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_itk_ix1.c - ITK ix1 micro passive card driver for isdn4bsd  *	--------------------------------------------------------------  *  *      last edit-date: [Wed Jan 24 09:27:06 2001]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------  *  * The ITK ix1 micro ISDN card is an ISA card with one region  * of four io ports mapped and a fixed irq all jumpered on the card.  * Access to the board is straight forward and simmilar to  * the ELSA and DYNALINK cards. If a PCI version of this card  * exists all we need is probably a pci-bus attachment, all  * this low level routines should work imediately.  *  * To reset the card:  *   - write 0x01 to ITK_CONFIG  *   - wait>= 10 ms  *   - write 0x00 to ITK_CONFIG  *  * To read or write data:  *  - write address to ITK_ALE port  *  - read data from or write data to ITK_ISAC_DATA port or ITK_HSCX_DATA port  * The two HSCX channel registers are offset by HSCXA (0x00) and HSCXB (0x40).  *  * The probe routine was derived by trial and error from a representative  * sample of two cards ;-) The standard way (checking HSCX versions)  * was extended by reading a zero from a non existant HSCX register (register  * 0xff). Reading the config register gives varying results, so this doesn't  * seem to be used as an id register (like the Teles S0/16.3).  *  * If the probe fails for your card use "options ITK_PROBE_DEBUG" to get  * additional debug output.  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -56,6 +56,18 @@ begin_include
 include|#
 directive|include
 file|<machine/i4b_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/i4b_trace.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i4b/layer1/i4b_l1.h>
 end_include
 
 begin_include
@@ -814,13 +826,6 @@ operator|=
 name|unit
 expr_stmt|;
 comment|/* set unit */
-name|sc
-operator|->
-name|sc_flags
-operator|=
-name|FLAG_ITK_IX1
-expr_stmt|;
-comment|/* set flags */
 if|#
 directive|if
 name|defined

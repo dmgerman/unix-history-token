@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ihfc_pnp.c - common hfc ISA PnP-bus interface  *	-------------------------------------------------  *  *	- Everything which has got anything to to with "PnP" bus setup has  *	  been put here, except the chip spesific "PnP" setup.  *  *  *      last edit-date: [Wed Jul 19 09:41:07 2000]  *  *      $Id: i4b_ihfc_pnp.c,v 1.9 2000/09/19 13:50:36 hm Exp $  *  * $FreeBSD$  *       *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 2000 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ihfc_pnp.c - common hfc ISA PnP-bus interface  *	-------------------------------------------------  *  *	- Everything which has got anything to to with "PnP" bus setup has  *	  been put here, except the chip spesific "PnP" setup.  *  *  *      last edit-date: [Tue Jan 23 16:03:33 2001]  *  *      $Id: i4b_ihfc_pnp.c,v 1.9 2000/09/19 13:50:36 hm Exp $  *  * $FreeBSD$  *       *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -227,7 +227,7 @@ block|{
 block|{
 literal|0x10262750
 block|,
-name|FLAG_TELES_S0_163C
+name|CARD_TYPEP_16_3C
 block|,
 name|HFC_S
 block|,
@@ -241,7 +241,7 @@ block|,
 block|{
 literal|0x20262750
 block|,
-name|FLAG_TELES_S0_163C
+name|CARD_TYPEP_16_3C
 block|,
 name|HFC_SP
 block|,
@@ -255,7 +255,7 @@ block|,
 block|{
 literal|0x1411d805
 block|,
-name|FLAG_ACER_P10
+name|CARD_TYPEP_ACERP10
 block|,
 name|HFC_S
 block|,
@@ -965,9 +965,9 @@ expr_stmt|;
 comment|/* set chip type	*/
 name|S_I4BFLAG
 operator|=
-name|FLAG_TELEINT_NO_1
+name|CARD_TYPEP_TELEINT_NO_1
 expr_stmt|;
-comment|/* set flag		*/
+comment|/* set flag	*/
 name|S_NTMODE
 operator|=
 name|IHFC_NTMODE

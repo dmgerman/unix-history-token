@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_isic.c - global isic stuff  *	==============================  *  *	$Id: i4b_isic.c,v 1.6 2000/05/29 15:41:41 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon May 29 16:45:24 2000]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_isic.c - global isic stuff  *	==============================  *  * $FreeBSD$  *  *      last edit-date: [Wed Jan 24 09:29:42 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -1264,11 +1264,11 @@ switch|switch
 condition|(
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 condition|)
 block|{
 case|case
-name|FLAG_TELES_S0_8
+name|CARD_TYPEP_8
 case|:
 name|drvid
 operator|=
@@ -1276,7 +1276,7 @@ literal|"Teles S0/8 (or compatible)"
 expr_stmt|;
 break|break;
 case|case
-name|FLAG_TELES_S0_16
+name|CARD_TYPEP_16
 case|:
 name|drvid
 operator|=
@@ -1284,7 +1284,7 @@ literal|"Teles S0/16 (or compatible)"
 expr_stmt|;
 break|break;
 case|case
-name|FLAG_TELES_S0_163
+name|CARD_TYPEP_16_3
 case|:
 name|drvid
 operator|=
@@ -1292,7 +1292,7 @@ literal|"Teles S0/16.3"
 expr_stmt|;
 break|break;
 case|case
-name|FLAG_AVM_A1
+name|CARD_TYPEP_AVMA1
 case|:
 name|drvid
 operator|=
@@ -1300,7 +1300,7 @@ literal|"AVM A1 or Fritz!Card Classic"
 expr_stmt|;
 break|break;
 case|case
-name|FLAG_AVM_A1_PCMCIA
+name|CARD_TYPEP_PCFRITZ
 case|:
 name|drvid
 operator|=
@@ -1308,7 +1308,7 @@ literal|"AVM Fritz!Card PCMCIA"
 expr_stmt|;
 break|break;
 case|case
-name|FLAG_USR_ISDN_TA_INT
+name|CARD_TYPEP_USRTA
 case|:
 name|drvid
 operator|=
@@ -1316,7 +1316,7 @@ literal|"USRobotics Sportster ISDN TA intern"
 expr_stmt|;
 break|break;
 case|case
-name|FLAG_ITK_IX1
+name|CARD_TYPEP_ITKIX1
 case|:
 name|drvid
 operator|=
@@ -1324,7 +1324,7 @@ literal|"ITK ix1 micro"
 expr_stmt|;
 break|break;
 case|case
-name|FLAG_ELSA_PCC16
+name|CARD_TYPEP_PCC16
 case|:
 name|drvid
 operator|=
@@ -1468,9 +1468,9 @@ name|i
 decl_stmt|;
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-literal|0
+name|CARD_TYPEP_UNK
 expr_stmt|;
 comment|/* free interrupt resources */
 if|if

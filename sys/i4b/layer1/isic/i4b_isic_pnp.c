@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   Copyright (c) 1998 Eivind Eklund. All rights reserved.  *  *   Copyright (c) 1998, 1999 German Tischler. All rights reserved.  *  *   Copyright (c) 1998, 2000 Hellmuth Michaelis. All rights reserved.   *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_isic_pnp.c - i4b pnp support  *	--------------------------------  *  *	$Id: i4b_isic_pnp.c,v 1.2 2000/03/09 16:12:51 hm Exp $  *  * $FreeBSD$  *  *      last edit-date: [Thu Mar  9 16:04:10 2000]  *  *---------------------------------------------------------------------------*/
+comment|/*  *   Copyright (c) 1998 Eivind Eklund. All rights reserved.  *  *   Copyright (c) 1998, 1999 German Tischler. All rights reserved.  *  *   Copyright (c) 1998, 2001 Hellmuth Michaelis. All rights reserved.   *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_isic_pnp.c - i4b pnp support  *	--------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Wed Jan 24 09:31:38 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -762,9 +762,9 @@ name|VID_TEL163PNP
 case|:
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-name|FLAG_TELES_S0_163_PnP
+name|CARD_TYPEP_163P
 expr_stmt|;
 name|ret
 operator|=
@@ -779,9 +779,9 @@ name|VID_CREATIXPP
 case|:
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-name|FLAG_CREATIX_S0_PnP
+name|CARD_TYPEP_CS0P
 expr_stmt|;
 name|ret
 operator|=
@@ -801,9 +801,9 @@ name|VID_DYNALINK
 case|:
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-name|FLAG_DYNALINK
+name|CARD_TYPEP_DYNALINK
 expr_stmt|;
 name|ret
 operator|=
@@ -823,9 +823,9 @@ name|VID_SEDLBAUER
 case|:
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-name|FLAG_SWS
+name|CARD_TYPEP_SWS
 expr_stmt|;
 name|ret
 operator|=
@@ -845,9 +845,9 @@ name|VID_NICCYGO
 case|:
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-name|FLAG_DRN_NGO
+name|CARD_TYPEP_DRNNGO
 expr_stmt|;
 name|ret
 operator|=
@@ -867,9 +867,9 @@ name|VID_ELSAQS1P
 case|:
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-name|FLAG_ELSA_QS1P_ISA
+name|CARD_TYPEP_ELSAQS1ISA
 expr_stmt|;
 name|ret
 operator|=
@@ -889,35 +889,13 @@ name|VID_ITK0025
 case|:
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-name|FLAG_ITK_IX1
+name|CARD_TYPEP_ITKIX1
 expr_stmt|;
 name|ret
 operator|=
 name|isic_attach_itkix1
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|AVM_PNP
-case|case
-name|VID_AVMPNP
-case|:
-name|sc
-operator|->
-name|sc_flags
-operator|=
-name|FLAG_AVM_PNP
-expr_stmt|;
-name|ret
-operator|=
-name|isic_attach_avm_pnp
 argument_list|(
 name|dev
 argument_list|)
@@ -933,9 +911,9 @@ name|VID_SIESURF2
 case|:
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-name|FLAG_SIEMENS_ISURF2
+name|CARD_TYPEP_SIE_ISURF2
 expr_stmt|;
 name|ret
 operator|=
@@ -955,9 +933,9 @@ name|VID_ASUSCOM_IPAC
 case|:
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-name|FLAG_ASUSCOM_IPAC
+name|CARD_TYPEP_ASUSCOMIPAC
 expr_stmt|;
 name|ret
 operator|=
@@ -1010,9 +988,9 @@ block|{
 comment|/* unset flag */
 name|sc
 operator|->
-name|sc_flags
+name|sc_cardtyp
 operator|=
-literal|0
+name|CARD_TYPEP_UNK
 expr_stmt|;
 comment|/* free irq here, it hasn't been attached yet */
 name|bus_release_resource
