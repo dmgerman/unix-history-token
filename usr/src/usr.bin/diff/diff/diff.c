@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diff.c 4.4 %G%"
+literal|"@(#)diff.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,6 +235,14 @@ name|D_REVERSE
 expr_stmt|;
 continue|continue;
 case|case
+literal|'n'
+case|:
+name|opt
+operator|=
+name|D_NREVERSE
+expr_stmt|;
+continue|continue;
+case|case
 literal|'b'
 case|:
 name|bflag
@@ -449,7 +457,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"diff: -h doesn't support -e, -f, -c, or -I\n"
+literal|"diff: -h doesn't support -e, -f, -n, -c, or -I\n"
 argument_list|)
 expr_stmt|;
 name|done

@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.12 %G%"
+literal|"@(#)diffreg.c 4.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5184,6 +5184,68 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|D_NREVERSE
+case|:
+if|if
+condition|(
+name|a
+operator|>
+name|b
+condition|)
+name|printf
+argument_list|(
+literal|"a%d %d\n"
+argument_list|,
+name|b
+argument_list|,
+name|d
+operator|-
+name|c
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"d%d %d\n"
+argument_list|,
+name|a
+argument_list|,
+name|b
+operator|-
+name|a
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|c
+operator|>
+name|d
+operator|)
+condition|)
+comment|/* add changed lines */
+name|printf
+argument_list|(
+literal|"a%d %d\n"
+argument_list|,
+name|b
+argument_list|,
+name|d
+operator|-
+name|c
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 if|if
