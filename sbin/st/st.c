@@ -488,7 +488,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mt: don't grok \"%s\"\n"
+literal|"st: don't grok \"%s\"\n"
 argument_list|,
 name|cp
 argument_list|)
@@ -585,7 +585,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mt: negative repeat count\n"
+literal|"st: negative repeat count\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -661,7 +661,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"mt"
+literal|"st"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -947,102 +947,86 @@ name|tape_desc
 modifier|*
 name|mt
 decl_stmt|;
-for|for
-control|(
-name|mt
-operator|=
-name|tapes
-init|;
-name|mt
-operator|->
-name|t_type
-condition|;
-name|mt
-operator|++
-control|)
-if|if
-condition|(
-name|mt
-operator|->
-name|t_type
-operator|==
-name|bp
-operator|->
-name|mt_type
-condition|)
-break|break;
-if|if
-condition|(
-name|mt
-operator|->
-name|t_type
-operator|==
-literal|0
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|"unknown tape drive type (%d)\n"
+literal|"Present Mode:	Density = 0x%02x, Blocksize = %d bytes\n"
 argument_list|,
 name|bp
 operator|->
-name|mt_type
+name|mt_density
+argument_list|,
+name|bp
+operator|->
+name|mt_blksiz
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|printf
 argument_list|(
-literal|"%s tape drive, residual=%d, blocksize=%d\n"
+literal|"---------available modes----------\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Mode 0:		Density = 0x%02x, Blocksize = %d bytes\n"
 argument_list|,
-name|mt
+name|bp
 operator|->
-name|t_name
+name|mt_density0
+argument_list|,
+name|bp
+operator|->
+name|mt_blksiz0
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Mode 1:		Density = 0x%02x, Blocksize = %d bytes\n"
+argument_list|,
+name|bp
+operator|->
+name|mt_density1
+argument_list|,
+name|bp
+operator|->
+name|mt_blksiz1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Mode 2:		Density = 0x%02x, Blocksize = %d bytes\n"
+argument_list|,
+name|bp
+operator|->
+name|mt_density2
+argument_list|,
+name|bp
+operator|->
+name|mt_blksiz2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Mode 3:		Density = 0x%02x, Blocksize = %d bytes\n"
+argument_list|,
+name|bp
+operator|->
+name|mt_density3
+argument_list|,
+name|bp
+operator|->
+name|mt_blksiz3
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOTYET
+name|printf
+argument_list|(
+literal|"tape drive: residual=%d\n"
 argument_list|,
 name|bp
 operator|->
 name|mt_resid
-argument_list|,
-name|bp
-operator|->
-name|mt_bsiz
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Density: dflt(0) = %d(0x%x) 1 = %d(0x%x), 2 = %d(0x%x), 3 = %d(0x%x)\n"
-argument_list|,
-name|bp
-operator|->
-name|mt_dns_dflt
-argument_list|,
-name|bp
-operator|->
-name|mt_dns_dflt
-argument_list|,
-name|bp
-operator|->
-name|mt_dns_dsty1
-argument_list|,
-name|bp
-operator|->
-name|mt_dns_dsty1
-argument_list|,
-name|bp
-operator|->
-name|mt_dns_dsty2
-argument_list|,
-name|bp
-operator|->
-name|mt_dns_dsty2
-argument_list|,
-name|bp
-operator|->
-name|mt_dns_dsty3
-argument_list|,
-name|bp
-operator|->
-name|mt_dns_dsty3
 argument_list|)
 expr_stmt|;
 name|printreg
@@ -1076,6 +1060,8 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
