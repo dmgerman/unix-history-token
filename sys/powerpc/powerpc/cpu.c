@@ -814,7 +814,7 @@ name|PMCN_CYCLES
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|delay
+name|DELAY
 argument_list|(
 literal|100000
 argument_list|)
@@ -955,7 +955,7 @@ argument_list|)
 expr_stmt|;
 asm|__asm __volatile("sync");
 comment|/* Wait for L2 clock to be stable (640 L2 clocks). */
-name|delay
+name|DELAY
 argument_list|(
 literal|100
 argument_list|)

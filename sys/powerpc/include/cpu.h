@@ -110,16 +110,6 @@ parameter_list|()
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|n
-parameter_list|)
-value|delay(n)
-end_define
-
 begin_if
 if|#
 directive|if

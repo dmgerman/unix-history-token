@@ -888,7 +888,7 @@ end_comment
 
 begin_function
 name|void
-name|delay
+name|DELAY
 parameter_list|(
 name|int
 name|n
