@@ -1,59 +1,54 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)printf.c	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)printf.c	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Scaled down version of printf(3).  *  * Used to print diagnostic information directly on the console tty.  Since  * it is not interrupt driven, all system activities are suspended.  Printf  * should not be used for chit-chat.  *  * One additional format: %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  */
+comment|/*  * Scaled down version of printf(3).  *  * One additional format:  *  * The format %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
 
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|<sys/cdefs.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/*  * Note that stdarg.h and the ANSI style va_start macro is used for both  * ANSI and traditional C compilers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
 
 begin_include
 include|#
 directive|include
-file|<varargs.h>
+file|<machine/stdarg.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_undef
+undef|#
+directive|undef
+name|KERNEL
+end_undef
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
-name|abort
-parameter_list|()
-block|{}
-end_function
-
-begin_comment
-comment|/* Needed by stdarg macros. */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|number
-parameter_list|()
-function_decl|;
-end_function_decl
+name|kprintn
+name|__P
+argument_list|(
+operator|(
+name|u_long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -74,14 +69,12 @@ directive|else
 function|printf
 parameter_list|(
 name|fmt
-parameter_list|,
-name|va_alist
+comment|/* , va_alist */
 parameter_list|)
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-function|va_dcl
 endif|#
 directive|endif
 block|{
@@ -108,9 +101,6 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -118,15 +108,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 init|;
@@ -206,7 +187,7 @@ name|char
 operator|*
 argument_list|)
 expr_stmt|;
-name|number
+name|kprintn
 argument_list|(
 name|ul
 argument_list|,
@@ -356,6 +337,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+name|lflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 literal|'d'
 case|:
 name|ul
@@ -400,7 +389,7 @@ operator|)
 name|ul
 expr_stmt|;
 block|}
-name|number
+name|kprintn
 argument_list|(
 name|ul
 argument_list|,
@@ -408,6 +397,14 @@ literal|10
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'O'
+case|:
+name|lflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'o'
 case|:
@@ -419,17 +416,17 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|long
+name|u_long
 argument_list|)
 else|:
 name|va_arg
 argument_list|(
-argument|ap
+name|ap
 argument_list|,
-argument|unsigned int
+name|u_int
 argument_list|)
 expr_stmt|;
-name|number
+name|kprintn
 argument_list|(
 name|ul
 argument_list|,
@@ -437,6 +434,14 @@ literal|8
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'U'
+case|:
+name|lflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'u'
 case|:
@@ -448,17 +453,17 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|long
+name|u_long
 argument_list|)
 else|:
 name|va_arg
 argument_list|(
-argument|ap
+name|ap
 argument_list|,
-argument|unsigned int
+name|u_int
 argument_list|)
 expr_stmt|;
-name|number
+name|kprintn
 argument_list|(
 name|ul
 argument_list|,
@@ -466,6 +471,14 @@ literal|10
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'X'
+case|:
+name|lflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'x'
 case|:
@@ -477,17 +490,17 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|long
+name|u_long
 argument_list|)
 else|:
 name|va_arg
 argument_list|(
-argument|ap
+name|ap
 argument_list|,
-argument|unsigned int
+name|u_int
 argument_list|)
 expr_stmt|;
-name|number
+name|kprintn
 argument_list|(
 name|ul
 argument_list|,
@@ -528,7 +541,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|number
+name|kprintn
 parameter_list|(
 name|ul
 parameter_list|,
