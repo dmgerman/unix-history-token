@@ -4668,7 +4668,9 @@ parameter_list|)
 block|{
 name|ucontext_t
 name|uc
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|ucontext_t
 modifier|*
 name|ucp
 decl_stmt|;
