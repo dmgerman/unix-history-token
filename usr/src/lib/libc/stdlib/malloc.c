@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)malloc.c	5.3 (Berkeley) %G%"
+literal|"@(#)malloc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -249,11 +249,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DEBUG
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|RCHECK
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -264,6 +272,12 @@ name|p
 parameter_list|)
 value|if (!(p)) botch("p")
 end_define
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_expr_stmt
 specifier|static
@@ -279,13 +293,24 @@ end_expr_stmt
 
 begin_block
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"assertion botched: %s\n"
+name|stderr
+argument_list|,
+literal|"\r\nassertion botched: %s\r\n"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+comment|/* just in case user buffered it */
 name|abort
 argument_list|()
 expr_stmt|;
@@ -1125,7 +1150,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Already free, doing "compaction". 		 * 		 * Search for the old block of memory on the 		 * free list.  First, check the most common 		 * case (last element free'd), then (this failing) 		 * the last ``realloc_srchlen'' items free'd. 		 * If all lookups fail, then assume the size of 		 * the memory block being realloc'd is the 		 * smallest possible. 		 */
+comment|/* 		 * Already free, doing "compaction". 		 * 		 * Search for the old block of memory on the 		 * free list.  First, check the most common 		 * case (last element free'd), then (this failing) 		 * the last ``realloc_srchlen'' items free'd. 		 * If all lookups fail, then assume the size of 		 * the memory block being realloc'd is the 		 * largest possible (so that all "nbytes" of new 		 * memory are copied into).  Note that this could cause 		 * a memory fault if the old area was tiny, and the moon 		 * is gibbous.  However, that is very unlikely. 		 */
 if|if
 condition|(
 operator|(
@@ -1154,22 +1179,10 @@ operator|)
 operator|<
 literal|0
 condition|)
-ifndef|#
-directive|ifndef
-name|RCHECK
 name|i
 operator|=
-literal|0
+name|NBUCKETS
 expr_stmt|;
-else|#
-directive|else
-name|i
-operator|=
-literal|1
-expr_stmt|;
-comment|/* smallest possible w/ RCHECK */
-endif|#
-directive|endif
 block|}
 name|onb
 operator|=
@@ -1355,7 +1368,7 @@ name|cp
 operator|!=
 name|res
 condition|)
-comment|/* common optimization */
+comment|/* common optimization if "compacting" */
 name|bcopy
 argument_list|(
 name|cp
