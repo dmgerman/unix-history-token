@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.9
+literal|4.10
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.9
+literal|4.10
 operator|%
 name|G
 operator|%
@@ -820,6 +820,16 @@ name|smtpquit
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CurEnv
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
 expr_stmt|;
 end_expr_stmt
 
