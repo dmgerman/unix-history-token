@@ -3037,6 +3037,17 @@ name|partition
 index|]
 operator|.
 name|p_offset
+operator|-
+name|lp
+operator|->
+name|d_partitions
+index|[
+name|RAW_PART
+index|]
+operator|.
+name|p_offset
+operator|+
+name|sector
 expr_stmt|;
 block|}
 name|out
