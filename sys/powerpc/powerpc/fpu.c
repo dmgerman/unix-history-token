@@ -77,8 +77,6 @@ parameter_list|)
 block|{
 name|int
 name|msr
-decl_stmt|,
-name|scratch
 decl_stmt|;
 name|struct
 name|pcb
@@ -103,6 +101,26 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Save the thread's FPU CPU number, and set the CPU's current  	 * FPU thread 	 */
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_fpcpu
+operator|=
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|fputhread
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Enable the FPU for when the thread returns from the exception. 	 * If this is the first time the FPU has been used by the thread, 	 * initialise the FPU registers and FPSCR to 0, and set the flag 	 * to indicate that the FPU is in use. 	 */
 name|tf
 operator|->
 name|srr1
@@ -143,31 +161,24 @@ operator||=
 name|PCB_FPU
 expr_stmt|;
 block|}
-asm|__asm __volatile ("mfmsr %0; ori %1,%0,%2; mtmsr %1; isync"
-block|:
-literal|"=r"
-operator|(
+comment|/* 	 * Temporarily enable floating-point so the registers 	 * can be restored. 	 */
 name|msr
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|scratch
-operator|)
-operator|:
-literal|"K"
-operator|(
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+operator||
 name|PSL_FP
-operator|)
-block|)
-function|;
-end_function
-
-begin_asm
+argument_list|)
+expr_stmt|;
+name|isync
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Load the floating point registers and FPSCR from the PCB. 	 * (A value of 0xff for mtfsf specifies that all 8 4-bit fields 	 * of the saved FPSCR are to be loaded from the FPU reg). 	 */
 asm|__asm __volatile ("lfd 0,0(%0); mtfsf 0xff,0"
-end_asm
-
-begin_expr_stmt
 operator|::
 literal|"b"
 operator|(
@@ -178,72 +189,295 @@ name|pcb_fpu
 operator|.
 name|fpscr
 operator|)
-end_expr_stmt
+block|)
+function|;
+end_function
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_asm
-asm|__asm ("lfd 0,0(%0);"
-end_asm
+begin_define
+define|#
+directive|define
+name|LFP
+parameter_list|(
+name|n
+parameter_list|)
+value|__asm ("lfd " #n ", 0(%0)" \ 		:: "b"(&pcb->pcb_fpu.fpr[n]));
+end_define
 
 begin_expr_stmt
-literal|"lfd 1,8(%0);"
-literal|"lfd 2,16(%0);"
-literal|"lfd 3,24(%0);"
-literal|"lfd 4,32(%0);"
-literal|"lfd 5,40(%0);"
-literal|"lfd 6,48(%0);"
-literal|"lfd 7,56(%0);"
-literal|"lfd 8,64(%0);"
-literal|"lfd 9,72(%0);"
-literal|"lfd 10,80(%0);"
-literal|"lfd 11,88(%0);"
-literal|"lfd 12,96(%0);"
-literal|"lfd 13,104(%0);"
-literal|"lfd 14,112(%0);"
-literal|"lfd 15,120(%0);"
-literal|"lfd 16,128(%0);"
-literal|"lfd 17,136(%0);"
-literal|"lfd 18,144(%0);"
-literal|"lfd 19,152(%0);"
-literal|"lfd 20,160(%0);"
-literal|"lfd 21,168(%0);"
-literal|"lfd 22,176(%0);"
-literal|"lfd 23,184(%0);"
-literal|"lfd 24,192(%0);"
-literal|"lfd 25,200(%0);"
-literal|"lfd 26,208(%0);"
-literal|"lfd 27,216(%0);"
-literal|"lfd 28,224(%0);"
-literal|"lfd 29,232(%0);"
-literal|"lfd 30,240(%0);"
-literal|"lfd 31,248(%0)"
-operator|::
-literal|"b"
-operator|(
-operator|&
-name|pcb
-operator|->
-name|pcb_fpu
-operator|.
-name|fpr
-index|[
+name|LFP
+argument_list|(
 literal|0
-index|]
-operator|)
+argument_list|)
+expr_stmt|;
 end_expr_stmt
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_asm
-asm|__asm __volatile ("mtmsr %0; isync" :: "r"(msr));
-end_asm
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|7
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|9
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|11
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|12
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|13
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|14
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|15
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|16
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|17
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|18
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|19
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|21
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|22
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|23
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|24
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|25
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|26
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|27
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|28
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|29
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|30
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LFP
+argument_list|(
+literal|31
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|LFP
+end_undef
+
+begin_expr_stmt
+name|isync
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|mtmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|}  void
@@ -257,8 +491,6 @@ begin_block
 block|{
 name|int
 name|msr
-decl_stmt|,
-name|scratch
 decl_stmt|;
 name|struct
 name|pcb
@@ -271,103 +503,210 @@ name|td
 operator|->
 name|td_pcb
 expr_stmt|;
-asm|__asm __volatile ("mfmsr %0; ori %1,%0,%2; mtmsr %1; isync"
-block|:
-literal|"=r"
-operator|(
+comment|/* 	 * Temporarily re-enable floating-point during the save 	 */
 name|msr
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|scratch
-operator|)
-operator|:
-literal|"K"
-operator|(
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+operator||
 name|PSL_FP
-operator|)
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_asm
-asm|__asm ("stfd 0,0(%0);"
-end_asm
-
-begin_expr_stmt
-literal|"stfd 1,8(%0);"
-literal|"stfd 2,16(%0);"
-literal|"stfd 3,24(%0);"
-literal|"stfd 4,32(%0);"
-literal|"stfd 5,40(%0);"
-literal|"stfd 6,48(%0);"
-literal|"stfd 7,56(%0);"
-literal|"stfd 8,64(%0);"
-literal|"stfd 9,72(%0);"
-literal|"stfd 10,80(%0);"
-literal|"stfd 11,88(%0);"
-literal|"stfd 12,96(%0);"
-literal|"stfd 13,104(%0);"
-literal|"stfd 14,112(%0);"
-literal|"stfd 15,120(%0);"
-literal|"stfd 16,128(%0);"
-literal|"stfd 17,136(%0);"
-literal|"stfd 18,144(%0);"
-literal|"stfd 19,152(%0);"
-literal|"stfd 20,160(%0);"
-literal|"stfd 21,168(%0);"
-literal|"stfd 22,176(%0);"
-literal|"stfd 23,184(%0);"
-literal|"stfd 24,192(%0);"
-literal|"stfd 25,200(%0);"
-literal|"stfd 26,208(%0);"
-literal|"stfd 27,216(%0);"
-literal|"stfd 28,224(%0);"
-literal|"stfd 29,232(%0);"
-literal|"stfd 30,240(%0);"
-literal|"stfd 31,248(%0)"
-operator|::
-literal|"b"
-operator|(
-operator|&
-name|pcb
-operator|->
-name|pcb_fpu
-operator|.
-name|fpr
-index|[
+argument_list|)
+expr_stmt|;
+name|isync
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Save the floating-point registers and FPSCR to the PCB 	 */
+define|#
+directive|define
+name|SFP
+parameter_list|(
+name|n
+parameter_list|)
+value|__asm ("stfd " #n ", 0(%0)" \ 		:: "b"(&pcb->pcb_fpu.fpr[n]));
+name|SFP
+argument_list|(
 literal|0
-index|]
-operator|)
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_asm
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|7
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|9
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|11
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|12
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|13
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|14
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|15
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|16
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|17
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|18
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|19
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|21
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|22
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|23
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|24
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|25
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|26
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|27
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|28
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|29
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|30
+argument_list|)
+expr_stmt|;
+name|SFP
+argument_list|(
+literal|31
+argument_list|)
+expr_stmt|;
+undef|#
+directive|undef
+name|SFP
 asm|__asm __volatile ("mffs 0; stfd 0,0(%0)" :: "b"(&pcb->pcb_fpu.fpscr));
-end_asm
-
-begin_asm
-asm|__asm __volatile ("mtmsr %0; isync" :: "r"(msr));
-end_asm
-
-begin_expr_stmt
+comment|/* 	 * Disable floating-point again 	 */
+name|isync
+argument_list|()
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Clear the current fp thread and pcb's CPU id 	 * XXX should this be left clear to allow lazy save/restore ? 	 */
 name|pcb
 operator|->
 name|pcb_fpcpu
 operator|=
 name|NULL
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PCPU_SET
 argument_list|(
 name|fputhread
@@ -375,8 +714,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
-unit|}
 end_unit
 

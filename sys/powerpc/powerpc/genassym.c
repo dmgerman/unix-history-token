@@ -1233,6 +1233,16 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
+name|PCB_FPU
+argument_list|,
+name|PCB_FPU
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
 name|TD_PROC
 argument_list|,
 name|offsetof
