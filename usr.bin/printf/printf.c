@@ -98,34 +98,11 @@ directive|include
 file|<limits.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SHELL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|EOF
-value|-1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -138,10 +115,6 @@ include|#
 directive|include
 file|<string.h>
 end_include
-
-begin_comment
-comment|/*  * XXX  * This *has* to go away.  TK.  */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -156,24 +129,10 @@ name|main
 value|printfcmd
 end_define
 
-begin_define
-define|#
-directive|define
-name|warnx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|{						\ 	char buf[64];							\ 	(void)sprintf(buf, sizeof(buf), a, b, c);			\ 	error(buf);							\ }
-end_define
-
 begin_include
 include|#
 directive|include
-file|"../../bin/sh/bltin/bltin.h"
+file|"bltin/bltin.h"
 end_include
 
 begin_endif
