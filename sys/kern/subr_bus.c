@@ -114,6 +114,42 @@ directive|ifdef
 name|BUS_DEBUG
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bus_debug
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bus_debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bus_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Debug bus code"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -121,7 +157,7 @@ name|PDEBUG
 parameter_list|(
 name|a
 parameter_list|)
-value|(printf(__FUNCTION__ ":%d: ", __LINE__), printf a, printf("\n"))
+value|if (bus_debug) {printf(__FUNCTION__ ":%d: ", __LINE__), printf a, printf("\n");}
 end_define
 
 begin_define
