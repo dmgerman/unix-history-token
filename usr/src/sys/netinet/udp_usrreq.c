@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1874,12 +1874,7 @@ goto|goto
 name|release
 goto|;
 block|}
-comment|/* 	 * block udp_input while changing udp pcb queue, 	 * addresses; should be done for individual cases, 	 * but it's not worth it. 	 */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
+comment|/* 	 * Note: need to block udp_input while changing 	 * the udp pcb queue and/or pcb addresses. 	 */
 switch|switch
 condition|(
 name|req
@@ -1963,7 +1958,7 @@ break|break;
 case|case
 name|PRU_DETACH
 case|:
-name|in_pcbdetach
+name|udp_detach
 argument_list|(
 name|inp
 argument_list|)
@@ -1972,6 +1967,11 @@ break|break;
 case|case
 name|PRU_BIND
 case|:
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|in_pcbbind
@@ -1979,6 +1979,11 @@ argument_list|(
 name|inp
 argument_list|,
 name|addr
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2010,6 +2015,11 @@ name|EISCONN
 expr_stmt|;
 break|break;
 block|}
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|in_pcbconnect
@@ -2017,6 +2027,11 @@ argument_list|(
 name|inp
 argument_list|,
 name|addr
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -2067,6 +2082,11 @@ name|ENOTCONN
 expr_stmt|;
 break|break;
 block|}
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|in_pcbdisconnect
 argument_list|(
 name|inp
@@ -2079,6 +2099,11 @@ operator|.
 name|s_addr
 operator|=
 name|INADDR_ANY
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|so
 operator|->
@@ -2101,11 +2126,6 @@ break|break;
 case|case
 name|PRU_SEND
 case|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|udp_output
@@ -2128,7 +2148,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|in_pcbdetach
+name|udp_detach
 argument_list|(
 name|inp
 argument_list|)
@@ -2204,11 +2224,6 @@ literal|"udp_usrreq"
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|release
 label|:
 if|if
@@ -2241,6 +2256,53 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
+end_block
+
+begin_macro
+name|udp_detach
+argument_list|(
+argument|inp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|inpcb
+modifier|*
+name|inp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|s
+init|=
+name|splnet
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|inp
+operator|==
+name|udp_last_inpcb
+condition|)
+name|udp_last_inpcb
+operator|=
+operator|&
+name|udb
+expr_stmt|;
+name|in_pcbdetach
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
