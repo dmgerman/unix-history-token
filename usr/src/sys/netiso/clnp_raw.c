@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_raw.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_raw.c	7.5 (Berkeley) %G% */
+comment|/*	@(#)clnp_raw.c	7.6 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -149,38 +149,6 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|sockaddr_iso
-name|rclnp_src
-init|=
-block|{
-sizeof|sizeof
-argument_list|(
-name|rclnp_src
-argument_list|)
-block|,
-name|AF_ISO
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|sockaddr_iso
-name|rclnp_dst
-init|=
-block|{
-sizeof|sizeof
-argument_list|(
-name|rclnp_src
-argument_list|)
-block|,
-name|AF_ISO
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|sockproto
 name|rclnp_proto
 init|=
@@ -223,7 +191,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|iso_addr
+name|sockaddr_iso
 modifier|*
 name|src
 decl_stmt|;
@@ -235,7 +203,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|iso_addr
+name|sockaddr_iso
 modifier|*
 name|dst
 decl_stmt|;
@@ -279,20 +247,6 @@ block|}
 endif|#
 directive|endif
 endif|TROLL
-name|rclnp_src
-operator|.
-name|siso_addr
-operator|=
-operator|*
-name|src
-expr_stmt|;
-name|rclnp_dst
-operator|.
-name|siso_addr
-operator|=
-operator|*
-name|dst
-expr_stmt|;
 if|if
 condition|(
 name|raw_input
@@ -307,16 +261,14 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|&
-name|rclnp_src
+name|src
 argument_list|,
 operator|(
 expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|&
-name|rclnp_dst
+name|dst
 argument_list|)
 operator|==
 literal|0
