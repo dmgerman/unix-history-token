@@ -2530,7 +2530,7 @@ argument_list|)
 expr_stmt|;
 name|sched_fork_ksegrp
 argument_list|(
-name|kg
+name|td
 argument_list|,
 name|newkg
 argument_list|)
@@ -2656,8 +2656,6 @@ expr_stmt|;
 name|sched_fork_kse
 argument_list|(
 name|td
-operator|->
-name|td_kse
 argument_list|,
 name|newke
 argument_list|)

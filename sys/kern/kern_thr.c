@@ -239,7 +239,7 @@ argument_list|,
 name|ke_kglist
 argument_list|)
 argument_list|,
-name|ke
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we were stopped while waiting for all threads to exit and this 	 * is the last thread wakeup the exiting thread. 	 */
@@ -649,8 +649,6 @@ expr_stmt|;
 name|sched_fork_kse
 argument_list|(
 name|td
-operator|->
-name|td_kse
 argument_list|,
 name|ke0
 argument_list|)

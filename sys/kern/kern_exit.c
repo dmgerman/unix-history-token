@@ -1929,7 +1929,7 @@ name|p
 operator|->
 name|p_pptr
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure the scheduler takes this thread out of its tables etc. 	 * This will also release this thread's reference to the ucred. 	 * Other thread parts to release include pcb bits and such. 	 */

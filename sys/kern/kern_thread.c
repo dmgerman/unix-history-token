@@ -2709,7 +2709,7 @@ argument_list|(
 name|p
 argument_list|)
 argument_list|,
-name|ke
+name|td
 argument_list|)
 expr_stmt|;
 name|ke
@@ -2755,7 +2755,7 @@ argument_list|(
 name|p
 argument_list|)
 argument_list|,
-name|kg
+name|td
 argument_list|)
 expr_stmt|;
 name|ksegrp_unlink

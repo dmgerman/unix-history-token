@@ -2061,7 +2061,7 @@ expr_stmt|;
 comment|/* 	 * Allow the scheduler to adjust the priority of the child and 	 * parent while we hold the sched_lock. 	 */
 name|sched_fork
 argument_list|(
-name|p1
+name|td
 argument_list|,
 name|p2
 argument_list|)
