@@ -1947,9 +1947,7 @@ argument|: 			poll_hz = strtoul(optarg, NULL,
 literal|0
 argument|); 			if (poll_hz ==
 literal|0
-argument|) 				poll_hz = DCONS_POLL_HZ; 			printf(
-literal|"poll_hz = %d\n"
-argument|, poll_hz); 			break; 		case
+argument|) 				poll_hz = DCONS_POLL_HZ; 			break; 		case
 literal|'r'
 argument|: 			dc->flags |= F_REPLAY; 			break; 		case
 literal|'t'
