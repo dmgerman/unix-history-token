@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.14 1995/05/29 16:39:52 wpaul Exp $"
+literal|"$Id: ypbind.c,v 1.15 1995/05/30 03:55:13 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1515,6 +1515,8 @@ block|{
 name|int
 name|st
 decl_stmt|;
+while|while
+condition|(
 name|wait3
 argument_list|(
 operator|&
@@ -1524,6 +1526,11 @@ name|WNOHANG
 argument_list|,
 name|NULL
 argument_list|)
+operator|>
+literal|0
+condition|)
+name|children
+operator|--
 expr_stmt|;
 block|}
 end_function
@@ -2300,9 +2307,6 @@ name|handle_children
 argument_list|(
 name|ypdb
 argument_list|)
-expr_stmt|;
-name|children
-operator|--
 expr_stmt|;
 if|if
 condition|(

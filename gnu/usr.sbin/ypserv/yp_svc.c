@@ -1289,6 +1289,15 @@ name|sa_handler
 operator|=
 name|reapchild
 expr_stmt|;
+name|sa
+operator|.
+name|sa_mask
+operator|=
+name|sigmask
+argument_list|(
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 name|sigaction
 argument_list|(
 name|SIGCHLD
