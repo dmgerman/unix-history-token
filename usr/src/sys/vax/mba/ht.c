@@ -274,59 +274,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * States for b_active for device.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIO
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSFOR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSREV
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SRETRY
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCOM
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOK
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEOF
-value|7
-end_define
-
-begin_comment
 comment|/*  * Bits for sc_flags.  */
 end_comment
 
@@ -476,7 +423,7 @@ name|ENXIO
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * The NOP below serves two purposes: 	 * 1. To get a recent copy of the status registers. 	 * 2. To ensure that any outstanding rewinds are truly finished 	 *	so that the test for BOT is valid. 	 */
+comment|/* 	 * The NOP below serves two purposes: 	 * 1. To get a recent copy of the status registers. 	 * 2. To ensure that any outstanding rewinds are truly finished 	 */
 name|htcommand
 argument_list|(
 name|dev
@@ -546,7 +493,18 @@ operator|)
 operator||
 name|HTTC_PDP11
 operator||
-name|unit
+name|mi
+operator|->
+name|mi_slave
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"dens %o\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_dens
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -751,7 +709,6 @@ operator|)
 name|spl5
 argument_list|()
 expr_stmt|;
-comment|/* 	 * The B_DONE test is to allow the rewind on close not to wait at 	 * all.  We just must make sure that it was an asynchronous rewind, 	 * otherwise if it isn't we might wake up before the process 	 * waiting for the command (we are waiting for the buffer here). 	 */
 while|while
 condition|(
 name|bp
@@ -761,21 +718,6 @@ operator|&
 name|B_BUSY
 condition|)
 block|{
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_DONE
-operator|&&
-name|bp
-operator|->
-name|b_repcnt
-operator|==
-literal|0
-condition|)
-break|break;
 name|bp
 operator|->
 name|b_flags
@@ -798,6 +740,8 @@ operator|->
 name|b_flags
 operator|=
 name|B_BUSY
+operator||
+name|B_READ
 expr_stmt|;
 operator|(
 name|void
@@ -902,6 +846,11 @@ name|struct
 name|mba_info
 modifier|*
 name|mi
+init|=
+name|htinfo
+index|[
+name|unit
+index|]
 decl_stmt|;
 specifier|register
 name|struct
@@ -1275,11 +1224,21 @@ name|b_command
 operator|==
 name|HT_SENSE
 condition|)
+block|{
+name|T
+argument_list|(
+literal|10
+argument_list|)
+argument_list|(
+literal|"sense complete\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|MBU_NEXT
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|bp
@@ -1313,6 +1272,18 @@ operator|->
 name|b_command
 operator||
 name|HT_GO
+expr_stmt|;
+name|T
+argument_list|(
+literal|10
+argument_list|)
+argument_list|(
+literal|"started cmd %d\n"
+argument_list|,
+name|bp
+operator|->
+name|b_command
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1460,6 +1431,21 @@ operator|->
 name|b_blkno
 argument_list|)
 expr_stmt|;
+name|T
+argument_list|(
+literal|10
+argument_list|)
+argument_list|(
+literal|"spacing fwd %d\n"
+argument_list|,
+name|MASKREG
+argument_list|(
+name|htaddr
+argument_list|)
+operator|->
+name|htfc
+argument_list|)
+expr_stmt|;
 name|htaddr
 operator|->
 name|htcs1
@@ -1483,6 +1469,21 @@ name|b_blkno
 argument_list|)
 operator|-
 name|blkno
+expr_stmt|;
+name|T
+argument_list|(
+literal|10
+argument_list|)
+argument_list|(
+literal|"spacing back %d\n"
+argument_list|,
+name|MASKREG
+argument_list|(
+name|htaddr
+argument_list|)
+operator|->
+name|htfc
+argument_list|)
 expr_stmt|;
 name|htaddr
 operator|->
@@ -1582,13 +1583,6 @@ name|ds
 decl_stmt|,
 name|er
 decl_stmt|;
-if|if
-condition|(
-name|bp
-operator|==
-name|NULL
-condition|)
-return|return;
 name|sc
 operator|=
 operator|&
@@ -1974,13 +1968,6 @@ name|ds
 decl_stmt|,
 name|fc
 decl_stmt|;
-if|if
-condition|(
-name|bp
-operator|==
-name|NULL
-condition|)
-return|return;
 name|sc
 operator|=
 operator|&
