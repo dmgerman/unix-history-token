@@ -15,18 +15,6 @@ directive|include
 file|<syslog.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../conf/portability.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../conf/options.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -49,7 +37,7 @@ name|char
 name|RCSid
 index|[]
 init|=
-literal|"$Id: storage.c,v 4.9.1.2 1993/09/08 00:01:17 vixie Exp $"
+literal|"$Id: storage.c,v 1.1.1.1 1994/09/22 19:46:14 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dmalloc - debugging layer on top of malloc  * vix 25mar92 [fixed bug in round-up calcs in alloc()]  * vix 24mar92 [added size calcs, improved printout]  * vix 22mar92 [original work]  *  * $Id: dmalloc.c,v 4.9.1.3 1994/07/02 16:28:11 vixie Exp $  */
+comment|/* dmalloc - debugging layer on top of malloc  * vix 25mar92 [fixed bug in round-up calcs in alloc()]  * vix 24mar92 [added size calcs, improved printout]  * vix 22mar92 [original work]  *  * $Id: dmalloc.c,v 1.1.1.1 1994/09/22 19:46:14 pst Exp $  */
 end_comment
 
 begin_comment
@@ -17,18 +17,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../conf/portability.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../conf/options.h"
 end_include
 
 begin_ifdef

@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../conf/portability.h"
+file|"options.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../conf/options.h"
+file|"portability.h"
 end_include
 
 begin_include
