@@ -63,14 +63,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|Boolean
-name|Quiet
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Boolean
 name|QUIET
 init|=
 name|FALSE

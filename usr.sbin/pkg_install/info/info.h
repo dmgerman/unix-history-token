@@ -243,13 +243,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|Boolean
-name|Quiet
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|Boolean
 name|QUIET
 decl_stmt|;
 end_decl_stmt

@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"dhl:L:s:XtTv"
+literal|"dhl:L:qs:XtTv"
 decl_stmt|;
 end_decl_stmt
 
@@ -264,6 +264,14 @@ case|:
 name|PreventChars
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|Quiet
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case

@@ -1557,9 +1557,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-34s<"
+literal|"%-34s  %c"
 argument_list|,
 name|tmp
+argument_list|,
+name|Quiet
+condition|?
+literal|'\0'
+else|:
+literal|'<'
 argument_list|)
 expr_stmt|;
 if|if
@@ -1596,9 +1602,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-34s  ="
+literal|"%-34s  %c"
 argument_list|,
 name|tmp
+argument_list|,
+name|Quiet
+condition|?
+literal|'\0'
+else|:
+literal|'='
 argument_list|)
 expr_stmt|;
 if|if
@@ -1633,9 +1645,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-34s>"
+literal|"%-34s  %c"
 argument_list|,
 name|tmp
+argument_list|,
+name|Quiet
+condition|?
+literal|'\0'
+else|:
+literal|'>'
 argument_list|)
 expr_stmt|;
 if|if
