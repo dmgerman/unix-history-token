@@ -7754,7 +7754,7 @@ name|source
 argument_list|)
 expr_stmt|;
 comment|/* Referenced by new_object */
-name|TAILQ_INSERT_TAIL
+name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|source
@@ -10955,13 +10955,8 @@ condition|(
 name|oldobject
 condition|)
 block|{
-name|TAILQ_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|oldobject
-operator|->
-name|shadow_head
-argument_list|,
 name|first_object
 argument_list|,
 name|shadow_list
@@ -10979,7 +10974,7 @@ name|oldobject
 argument_list|)
 expr_stmt|;
 block|}
-name|TAILQ_INSERT_TAIL
+name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|srcobject
@@ -11302,7 +11297,7 @@ condition|(
 operator|(
 name|robject
 operator|=
-name|TAILQ_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
 name|object
@@ -11529,13 +11524,8 @@ operator|->
 name|ref_count
 operator|--
 expr_stmt|;
-name|TAILQ_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|object
-operator|->
-name|shadow_head
-argument_list|,
 name|robject
 argument_list|,
 name|shadow_list

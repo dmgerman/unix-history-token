@@ -72,7 +72,7 @@ argument_list|)
 name|object_list
 expr_stmt|;
 comment|/* list of all objects */
-name|TAILQ_HEAD
+name|LIST_HEAD
 argument_list|(
 argument_list|,
 argument|vm_object
@@ -80,7 +80,7 @@ argument_list|)
 name|shadow_head
 expr_stmt|;
 comment|/* objects that this is a shadow for */
-name|TAILQ_ENTRY
+name|LIST_ENTRY
 argument_list|(
 argument|vm_object
 argument_list|)

@@ -389,7 +389,7 @@ operator|->
 name|memq
 argument_list|)
 expr_stmt|;
-name|TAILQ_INIT
+name|LIST_INIT
 argument_list|(
 operator|&
 name|object
@@ -1074,7 +1074,7 @@ name|robject
 decl_stmt|;
 name|robject
 operator|=
-name|TAILQ_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
 name|object
@@ -1223,13 +1223,8 @@ condition|(
 name|temp
 condition|)
 block|{
-name|TAILQ_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|temp
-operator|->
-name|shadow_head
-argument_list|,
 name|object
 argument_list|,
 name|shadow_list
@@ -3632,7 +3627,7 @@ condition|(
 name|source
 condition|)
 block|{
-name|TAILQ_INSERT_TAIL
+name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|source
@@ -4434,15 +4429,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * Object now shadows whatever backing_object did. 			 * Note that the reference to  			 * backing_object->backing_object moves from within  			 * backing_object to within object. 			 */
-name|TAILQ_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|object
-operator|->
-name|backing_object
-operator|->
-name|shadow_head
-argument_list|,
 name|object
 argument_list|,
 name|shadow_list
@@ -4469,15 +4457,8 @@ operator|->
 name|backing_object
 condition|)
 block|{
-name|TAILQ_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|backing_object
-operator|->
-name|backing_object
-operator|->
-name|shadow_head
-argument_list|,
 name|backing_object
 argument_list|,
 name|shadow_list
@@ -4513,7 +4494,7 @@ operator|->
 name|backing_object
 condition|)
 block|{
-name|TAILQ_INSERT_TAIL
+name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|object
@@ -4630,13 +4611,8 @@ block|{
 break|break;
 block|}
 comment|/* 			 * Make the parent shadow the next object in the 			 * chain.  Deallocating backing_object will not remove 			 * it, since its reference count is at least 2. 			 */
-name|TAILQ_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|backing_object
-operator|->
-name|shadow_head
-argument_list|,
 name|object
 argument_list|,
 name|shadow_list
@@ -4676,7 +4652,7 @@ argument_list|(
 name|new_backing_object
 argument_list|)
 expr_stmt|;
-name|TAILQ_INSERT_TAIL
+name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|new_backing_object
