@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -990,6 +990,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|else
+name|brelse
+argument_list|(
+name|rabp
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -1603,6 +1609,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|else
+name|brelse
+argument_list|(
+name|rabp
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|on
