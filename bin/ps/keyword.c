@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: keyword.c,v 1.16 1997/08/11 02:29:50 steve Exp $"
+literal|"$Id: keyword.c,v 1.17 1997/08/11 02:35:16 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,24 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ucred.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
 end_include
 
 begin_include
