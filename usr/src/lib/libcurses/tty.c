@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.14 (Berkeley) %G%"
+literal|"@(#)tty.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,7 @@ operator|&=
 operator|~
 name|OXTABS
 expr_stmt|;
+comment|/* 	 * XXX 	 * System V and SMI systems overload VMIN and VTIME, such that 	 * VMIN is the same as the VEOF element, and VTIME is the same 	 * as the VEOL element.  This means that, if VEOF was ^D, the 	 * default VMIN is 4.  Majorly stupid. 	 */
 name|rawt
 operator|=
 name|norawt
@@ -197,6 +198,24 @@ argument_list|(
 operator|&
 name|rawt
 argument_list|)
+expr_stmt|;
+name|rawt
+operator|.
+name|c_cc
+index|[
+name|VMIN
+index|]
+operator|=
+literal|1
+expr_stmt|;
+name|rawt
+operator|.
+name|c_cc
+index|[
+name|VTIME
+index|]
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
