@@ -3644,43 +3644,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	bowrite:  *  *	Ordered write.  Start output on a buffer, and flag it so that the   *	device will write it in the order it was queued.  The buffer is   *	released when the output completes.  bwrite() ( or the VOP routine  *	anyway ) is responsible for handling B_INVAL buffers.  */
-end_comment
-
-begin_function
-name|int
-name|bowrite
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-block|{
-name|bp
-operator|->
-name|b_ioflags
-operator||=
-name|BIO_ORDERED
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ASYNC
-expr_stmt|;
-return|return
-operator|(
-name|BUF_WRITE
-argument_list|(
-name|bp
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  *	bwillwrite:  *  *	Called prior to the locking of any vnodes when we are expecting to  *	write.  We do not want to starve the buffer cache with too many  *	dirty buffers so we block here.  By blocking prior to the locking  *	of any vnodes we attempt to avoid the situation where a locked vnode  *	prevents the various system daemons from flushing related buffers.  */
 end_comment
 

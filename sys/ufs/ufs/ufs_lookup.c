@@ -4000,7 +4000,7 @@ else|else
 block|{
 name|error
 operator|=
-name|bowrite
+name|BUF_WRITE
 argument_list|(
 name|bp
 argument_list|)
@@ -4542,7 +4542,7 @@ block|}
 else|else
 name|error
 operator|=
-name|bowrite
+name|BUF_WRITE
 argument_list|(
 name|bp
 argument_list|)
@@ -4802,7 +4802,7 @@ else|else
 block|{
 name|error
 operator|=
-name|bowrite
+name|BUF_WRITE
 argument_list|(
 name|bp
 argument_list|)
