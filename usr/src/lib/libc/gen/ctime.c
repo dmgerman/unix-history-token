@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.10 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1133,6 +1133,7 @@ directive|ifdef
 name|USG_COMPAT
 name|timezone
 operator|=
+operator|-
 name|s
 operator|.
 name|ttis
@@ -1236,6 +1237,7 @@ directive|ifdef
 name|USG_COMPAT
 name|timezone
 operator|=
+operator|-
 name|ttisp
 operator|->
 name|tt_gmtoff
