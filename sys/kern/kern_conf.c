@@ -1351,6 +1351,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|devsw
+operator|->
+name|d_maj
+operator|==
+literal|256
+condition|)
+comment|/* XXX: tty_cons.c is magic */
+name|devsw
+operator|->
+name|d_maj
+operator|=
+literal|0
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|devsw
