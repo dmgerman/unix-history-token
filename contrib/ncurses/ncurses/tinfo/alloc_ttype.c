@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: alloc_ttype.c,v 1.8 2000/03/25 17:03:11 tom Exp $"
+literal|"$Id: alloc_ttype.c,v 1.10 2000/08/12 21:56:24 tom Exp $"
 argument_list|)
 end_macro
 
@@ -81,8 +81,12 @@ decl_stmt|;
 while|while
 condition|(
 name|na
+operator|>
+literal|0
 operator|&&
 name|nb
+operator|>
+literal|0
 condition|)
 block|{
 name|int
@@ -1081,7 +1085,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|bool
 name|_nc_del_ext_name
 parameter_list|(
 name|TERMTYPE
@@ -1338,7 +1342,13 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+return|return
+name|TRUE
+return|;
 block|}
+return|return
+name|FALSE
+return|;
 block|}
 end_function
 
@@ -1848,6 +1858,8 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|_nc_del_ext_name
 argument_list|(
 name|to
@@ -1856,7 +1868,17 @@ name|name
 argument_list|,
 name|STRING
 argument_list|)
-expr_stmt|;
+operator|||
+name|_nc_del_ext_name
+argument_list|(
+name|to
+argument_list|,
+name|name
+argument_list|,
+name|NUMBER
+argument_list|)
+condition|)
+block|{
 name|k
 operator|=
 name|_nc_ins_ext_name
@@ -1877,6 +1899,13 @@ index|]
 operator|=
 name|FALSE
 expr_stmt|;
+block|}
+else|else
+block|{
+name|j
+operator|++
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1902,6 +1931,8 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|_nc_del_ext_name
 argument_list|(
 name|to
@@ -1910,7 +1941,17 @@ name|name
 argument_list|,
 name|STRING
 argument_list|)
-expr_stmt|;
+operator|||
+name|_nc_del_ext_name
+argument_list|(
+name|to
+argument_list|,
+name|name
+argument_list|,
+name|BOOLEAN
+argument_list|)
+condition|)
+block|{
 name|k
 operator|=
 name|_nc_ins_ext_name
@@ -1931,6 +1972,13 @@ index|]
 operator|=
 name|CANCELLED_NUMERIC
 expr_stmt|;
+block|}
+else|else
+block|{
+name|j
+operator|++
+expr_stmt|;
+block|}
 block|}
 block|}
 else|else

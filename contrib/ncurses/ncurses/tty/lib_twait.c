@@ -107,7 +107,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_twait.c,v 1.37 2000/06/29 23:03:09 tom Exp $"
+literal|"$Id: lib_twait.c,v 1.39 2000/08/26 19:34:15 tom Exp $"
 argument_list|)
 end_macro
 
@@ -343,6 +343,18 @@ expr_stmt|;
 if|#
 directive|if
 name|USE_FUNC_POLL
+name|memset
+argument_list|(
+name|fds
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fds
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mode
@@ -432,7 +444,7 @@ name|defined
 argument_list|(
 name|__BEOS__
 argument_list|)
-comment|/* 	 * BeOS's select() is declared in socket.h, so the configure script does 	 * not see it.  That's just as well, since that function works only for 	 * sockets.  This (using snooze and ioctl) was distilled from Be's patch 	 * for ncurses which uses a separate thread to simulate select(). 	 * 	 * FIXME: the return values from the ioctl aren't very clear if we get 	 * interrupted. 	 */
+comment|/*      * BeOS's select() is declared in socket.h, so the configure script does      * not see it.  That's just as well, since that function works only for      * sockets.  This (using snooze and ioctl) was distilled from Be's patch      * for ncurses which uses a separate thread to simulate select().      *      * FIXME: the return values from the ioctl aren't very clear if we get      * interrupted.      */
 name|result
 operator|=
 literal|0
@@ -558,7 +570,7 @@ block|}
 elif|#
 directive|elif
 name|HAVE_SELECT
-comment|/* 	 * select() modifies the fd_set arguments; do this in the 	 * loop. 	 */
+comment|/*      * select() modifies the fd_set arguments; do this in the      * loop.      */
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -724,7 +736,7 @@ expr_stmt|;
 if|#
 directive|if
 name|PRECISE_GETTIME
-comment|/* 	 * If the timeout hasn't expired, and we've gotten no data, 	 * this is probably a system where 'select()' needs to be left 	 * alone so that it can complete.  Make this process sleep, 	 * then come back for more. 	 */
+comment|/*      * If the timeout hasn't expired, and we've gotten no data,      * this is probably a system where 'select()' needs to be left      * alone so that it can complete.  Make this process sleep,      * then come back for more.      */
 if|if
 condition|(
 name|result
@@ -774,7 +786,7 @@ name|milliseconds
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Both 'poll()' and 'select()' return the number of file descriptors 	 * that are active.  Translate this back to the mask that denotes which 	 * file-descriptors, so that we don't need all of this system-specific 	 * code everywhere. 	 */
+comment|/*      * Both 'poll()' and 'select()' return the number of file descriptors      * that are active.  Translate this back to the mask that denotes which      * file-descriptors, so that we don't need all of this system-specific      * code everywhere.      */
 if|if
 condition|(
 name|result

@@ -98,7 +98,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: write_entry.c,v 1.52 2000/03/11 12:23:42 tom Exp $"
+literal|"$Id: write_entry.c,v 1.53 2000/10/04 02:32:14 tom Exp $"
 argument_list|)
 end_macro
 
@@ -457,6 +457,22 @@ decl_stmt|;
 if|if
 condition|(
 name|dir
+operator|==
+literal|0
+operator|&&
+name|use_terminfo_vars
+argument_list|()
+condition|)
+name|dir
+operator|=
+name|getenv
+argument_list|(
+literal|"TERMINFO"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dir
 operator|!=
 literal|0
 condition|)
@@ -466,27 +482,6 @@ operator|)
 name|_nc_tic_dir
 argument_list|(
 name|dir
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|getenv
-argument_list|(
-literal|"TERMINFO"
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-operator|(
-name|void
-operator|)
-name|_nc_tic_dir
-argument_list|(
-name|getenv
-argument_list|(
-literal|"TERMINFO"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|destination

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey<dickey@clark.net> 1998                        *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey<dickey@clark.net> 1998,2000                   *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -13,12 +13,79 @@ directive|include
 file|<curses.priv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<tic.h>
+end_include
+
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: access.c,v 1.1 1998/07/25 20:17:09 tom Exp $"
+literal|"$Id: access.c,v 1.4 2000/10/08 01:25:06 tom Exp $"
 argument_list|)
 end_macro
+
+begin_function
+name|char
+modifier|*
+name|_nc_basename
+parameter_list|(
+name|char
+modifier|*
+name|path
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|result
+init|=
+name|strrchr
+argument_list|(
+name|path
+argument_list|,
+literal|'/'
+argument_list|)
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__EMX__
+if|if
+condition|(
+name|result
+operator|==
+literal|0
+condition|)
+name|result
+operator|=
+name|strrchr
+argument_list|(
+name|path
+argument_list|,
+literal|'\\'
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|result
+operator|==
+literal|0
+condition|)
+name|result
+operator|=
+name|path
+expr_stmt|;
+else|else
+name|result
+operator|++
+expr_stmt|;
+return|return
+name|result
+return|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -58,6 +125,13 @@ operator|&&
 name|errno
 operator|==
 name|ENOENT
+operator|&&
+name|strlen
+argument_list|(
+name|path
+argument_list|)
+operator|<
+name|PATH_MAX
 condition|)
 block|{
 name|char
@@ -70,7 +144,7 @@ name|char
 modifier|*
 name|leaf
 init|=
-name|strrchr
+name|_nc_basename
 argument_list|(
 name|strcpy
 argument_list|(
@@ -78,8 +152,6 @@ name|head
 argument_list|,
 name|path
 argument_list|)
-argument_list|,
-literal|'/'
 argument_list|)
 decl_stmt|;
 if|if
@@ -136,6 +208,73 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_ROOT_ENVIRON
+end_ifndef
+
+begin_comment
+comment|/*  * Returns true if we allow application to use environment variables that are  * used for searching lists of directories, etc.  */
+end_comment
+
+begin_function
+name|int
+name|_nc_env_access
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|#
+directive|if
+name|HAVE_ISSETUGID
+if|if
+condition|(
+name|issetugid
+argument_list|()
+condition|)
+return|return
+name|FALSE
+return|;
+elif|#
+directive|elif
+name|HAVE_GETEUID
+operator|&&
+name|HAVE_GETEGID
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+name|geteuid
+argument_list|()
+operator|||
+name|getgid
+argument_list|()
+operator|!=
+name|getegid
+argument_list|()
+condition|)
+return|return
+name|FALSE
+return|;
+endif|#
+directive|endif
+return|return
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+return|;
+comment|/* ...finally, disallow root */
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

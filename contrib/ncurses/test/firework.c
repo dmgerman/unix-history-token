@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: firework.c,v 1.16 1999/11/13 23:39:16 tom Exp $  */
+comment|/*  * $Id: firework.c,v 1.17 2000/09/02 18:41:12 tom Exp $  */
 end_comment
 
 begin_include
@@ -782,8 +782,8 @@ block|{
 name|start_color
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(

@@ -36,10 +36,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|SVR4_TERMIO
-argument_list|)
 operator|&&
 operator|!
 name|defined
@@ -72,7 +69,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_setup.c,v 1.59 2000/02/13 01:01:26 tom Exp $"
+literal|"$Id: lib_setup.c,v 1.60 2000/09/02 18:13:12 tom Exp $"
 argument_list|)
 end_macro
 
@@ -868,8 +865,9 @@ operator|!=
 literal|1
 condition|)
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|PURE_TERMINFO
 comment|/* 	 * Try falling back on the termcap file. 	 * Note:  allowing this call links the entire terminfo/termcap 	 * compiler into the startup code.  It's preferable to build a 	 * real terminfo database and use that. 	 */
 name|status

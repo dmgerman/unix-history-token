@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Author:  Thomas E. Dickey<dickey@clark.net> 1998  *  * $Id: filter.c,v 1.3 1999/11/13 23:39:19 tom Exp $  */
+comment|/*  * Author:  Thomas E. Dickey<dickey@clark.net> 1998  *  * $Id: filter.c,v 1.4 2000/09/02 18:50:38 tom Exp $  */
 end_comment
 
 begin_include
@@ -181,8 +181,8 @@ decl_stmt|;
 name|start_color
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(

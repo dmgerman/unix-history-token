@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: read_entry.c,v 1.67 2000/03/11 12:35:45 tom Exp $"
+literal|"$Id: read_entry.c,v 1.69 2000/10/10 00:57:40 Todd.Miller Exp $"
 argument_list|)
 end_macro
 
@@ -183,6 +183,9 @@ if|if
 condition|(
 operator|!
 name|have_tic_directory
+operator|&&
+name|use_terminfo_vars
+argument_list|()
 condition|)
 block|{
 name|char
@@ -2463,6 +2466,12 @@ literal|1
 return|;
 if|if
 condition|(
+name|use_terminfo_vars
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|envp
 operator|=
@@ -2493,6 +2502,7 @@ condition|)
 return|return
 literal|1
 return|;
+comment|/* this is an ncurses extension */
 if|if
 condition|(
 operator|(
@@ -2554,6 +2564,7 @@ argument_list|,
 name|tp
 argument_list|)
 return|;
+block|}
 comment|/* Try the system directory.  Note that the TERMINFO_DIRS value, if      * defined by the configure script, begins with a ":", which will be      * interpreted as TERMINFO.      */
 ifdef|#
 directive|ifdef

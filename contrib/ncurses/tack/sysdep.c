@@ -101,7 +101,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: sysdep.c,v 1.7 2000/03/04 21:02:11 tom Exp $"
+literal|"$Id: sysdep.c,v 1.9 2000/09/02 19:17:39 tom Exp $"
 argument_list|)
 end_macro
 
@@ -117,6 +117,46 @@ name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TERMIOS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PUT_TTY
+parameter_list|(
+name|fd
+parameter_list|,
+name|buf
+parameter_list|)
+value|tcsetattr(fd, TCSAFLUSH, buf)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PUT_TTY
+parameter_list|(
+name|fd
+parameter_list|,
+name|buf
+parameter_list|)
+value|stty(fd, buf)
+end_define
 
 begin_endif
 endif|#
@@ -168,6 +208,12 @@ begin_comment
 comment|/* TRUE if NDELAY is set */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TERMIOS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -202,6 +248,51 @@ directive|define
 name|TTY_WAS_XON_XOFF
 value|(old_modes.c_iflag& (IXON|IXOFF))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TTY_IS_NOECHO
+value|!(new_modes.sg_flags& (ECHO))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTY_IS_OUT_TRANS
+value|(new_modes.sg_flags& (CRMOD))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTY_IS_CHAR_MODE
+value|(new_modes.sg_flags& (RAW|CBREAK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTY_WAS_CS8
+value|(old_modes.sg_flags& (PASS8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTY_WAS_XON_XOFF
+value|(old_modes.sg_flags& (TANDEM|MDMBUF|DECCTQ))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -332,6 +423,9 @@ name|new_modes
 operator|=
 name|old_modes
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TERMIOS
 if|#
 directive|if
 name|HAVE_SELECT
@@ -472,19 +566,27 @@ operator||
 name|IXOFF
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|new_modes
+operator|.
+name|sg_flags
+operator||=
+name|RAW
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|not_a_tty
 condition|)
 return|return;
-name|tcsetattr
+name|PUT_TTY
 argument_list|(
 name|fileno
 argument_list|(
 name|stdin
 argument_list|)
-argument_list|,
-name|TCSAFLUSH
 argument_list|,
 operator|&
 name|new_modes
@@ -505,6 +607,9 @@ name|new_modes
 operator|=
 name|old_modes
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TERMIOS
 name|new_modes
 operator|.
 name|c_cc
@@ -629,6 +734,11 @@ literal|1
 case|:
 if|#
 directive|if
+name|defined
+argument_list|(
+name|sequent
+argument_list|)
+operator|&&
 name|sequent
 comment|/* the sequent System V emulation is broken */
 name|new_modes
@@ -754,19 +864,27 @@ operator|&=
 operator|~
 name|OPOST
 expr_stmt|;
+else|#
+directive|else
+name|new_modes
+operator|.
+name|sg_flags
+operator||=
+name|RAW
+expr_stmt|;
 if|if
 condition|(
 name|not_a_tty
 condition|)
 return|return;
-name|tcsetattr
+endif|#
+directive|endif
+name|PUT_TTY
 argument_list|(
 name|fileno
 argument_list|(
 name|stdin
 argument_list|)
-argument_list|,
-name|TCSAFLUSH
 argument_list|,
 operator|&
 name|new_modes
@@ -793,14 +911,12 @@ condition|(
 name|not_a_tty
 condition|)
 return|return;
-name|tcsetattr
+name|PUT_TTY
 argument_list|(
 name|fileno
 argument_list|(
 name|stdin
 argument_list|)
-argument_list|,
-name|TCSAFLUSH
 argument_list|,
 operator|&
 name|old_modes
@@ -865,7 +981,7 @@ name|FALSE
 expr_stmt|;
 if|if
 condition|(
-name|tcgetattr
+name|GET_TTY
 argument_list|(
 name|fileno
 argument_list|(
@@ -917,6 +1033,9 @@ name|old_modes
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|TERMIOS
+ifdef|#
+directive|ifdef
 name|TABDLY
 name|new_modes
 operator|.
@@ -928,16 +1047,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TABDLY */
+endif|#
+directive|endif
 if|if
 condition|(
-name|tcsetattr
+name|PUT_TTY
 argument_list|(
 name|fileno
 argument_list|(
 name|stdin
 argument_list|)
-argument_list|,
-name|TCSAFLUSH
 argument_list|,
 operator|&
 name|new_modes
@@ -988,6 +1107,9 @@ directive|endif
 name|catchsig
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TERMIOS
 switch|switch
 condition|(
 name|old_modes
@@ -1118,6 +1240,26 @@ else|:
 literal|2
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|tty_frame_size
+operator|=
+literal|6
+operator|+
+operator|(
+name|old_modes
+operator|.
+name|sg_flags
+operator|&
+name|PASS8
+operator|)
+condition|?
+literal|16
+else|:
+literal|14
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

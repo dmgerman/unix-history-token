@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Name: Towers of Hanoi.  *  *	Desc:  *		This is a playable copy of towers of hanoi.  *		Its sole purpose is to demonstrate my Amiga Curses package.  *		This program should compile on any system that has Curses.  *		'hanoi'		will give a manual game with 7 playing pieces.  *		'hanoi n'	will give a manual game with n playing pieces.  *		'hanoi n a' will give an auto solved game with n playing pieces.  *  *	Author: Simon J Raybould	(sie@fulcrum.bt.co.uk).  * 	(This version has been slightly modified by the ncurses maintainers.)  *  *	Date: 05.Nov.90  *  * $Id: hanoi.c,v 1.18 2000/04/01 20:01:08 tom Exp $  */
+comment|/*  *	Name: Towers of Hanoi.  *  *	Desc:  *		This is a playable copy of towers of hanoi.  *		Its sole purpose is to demonstrate my Amiga Curses package.  *		This program should compile on any system that has Curses.  *		'hanoi'		will give a manual game with 7 playing pieces.  *		'hanoi n'	will give a manual game with n playing pieces.  *		'hanoi n a' will give an auto solved game with n playing pieces.  *  *	Author: Simon J Raybould	(sie@fulcrum.bt.co.uk).  * 	(This version has been slightly modified by the ncurses maintainers.)  *  *	Date: 05.Nov.90  *  * $Id: hanoi.c,v 1.19 2000/09/02 18:51:16 tom Exp $  */
 end_comment
 
 begin_include
@@ -486,8 +486,8 @@ decl_stmt|;
 name|start_color
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(

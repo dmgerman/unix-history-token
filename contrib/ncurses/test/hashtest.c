@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hashtest.c -- test hash mapping  *  * Generate timing statistics for vertical-motion optimization.  *  * $Id: hashtest.c,v 1.14 1998/06/13 22:45:39 tom Exp $  */
+comment|/*  * hashtest.c -- test hash mapping  *  * Generate timing statistics for vertical-motion optimization.  *  * $Id: hashtest.c,v 1.15 2000/09/02 19:23:33 tom Exp $  */
 end_comment
 
 begin_ifdef
@@ -43,6 +43,13 @@ end_define
 begin_comment
 comment|/* nothing */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_TRACE
+value|0
+end_define
 
 begin_endif
 endif|#

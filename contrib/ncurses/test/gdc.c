@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Grand digital clock for curses compatible terminals  * Usage: gdc [-s] [n]   -- run for n seconds (default infinity)  * Flags: -s: scroll  *  * modified 10-18-89 for curses (jrl)  * 10-18-89 added signal handling  *  * $Id: gdc.c,v 1.14 2000/04/23 00:03:11 tom Exp $  */
+comment|/*  * Grand digital clock for curses compatible terminals  * Usage: gdc [-s] [n]   -- run for n seconds (default infinity)  * Flags: -s: scroll  *  * modified 10-18-89 for curses (jrl)  * 10-18-89 added signal handling  *  * $Id: gdc.c,v 1.15 2000/09/02 18:40:39 tom Exp $  */
 end_comment
 
 begin_include
@@ -847,8 +847,8 @@ decl_stmt|;
 name|start_color
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(

@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_addstr.c,v 1.17 2000/04/29 21:15:55 tom Exp $"
+literal|"$Id: lib_addstr.c,v 1.18 2000/07/29 16:42:41 tom Exp $"
 argument_list|)
 end_macro
 
@@ -91,8 +91,12 @@ literal|0
 operator|)
 condition|)
 block|{
-name|T
+name|TR
 argument_list|(
+name|TRACE_VIRTPUT
+operator||
+name|TRACE_ATTRS
+argument_list|,
 operator|(
 literal|"... current %s"
 operator|,
