@@ -285,7 +285,6 @@ name|krb5_mk_rep
 argument_list|(
 name|ssh_context
 argument_list|,
-operator|&
 name|auth_context
 argument_list|,
 operator|&
@@ -312,7 +311,7 @@ name|tkt_client
 expr_stmt|;
 name|packet_start
 argument_list|(
-name|SSH_SMSG_AUTH_KRB5_RESPONSE
+name|SSH_SMSG_AUTH_KERBEROS_RESPONSE
 argument_list|)
 expr_stmt|;
 name|packet_put_string
@@ -462,7 +461,7 @@ goto|;
 block|}
 name|problem
 operator|=
-name|krb5_rd_cred
+name|krb5_rd_cred2
 argument_list|(
 name|ssh_context
 argument_list|,

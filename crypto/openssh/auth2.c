@@ -542,13 +542,21 @@ operator|=
 name|authctxt
 expr_stmt|;
 comment|/*XXX*/
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
 comment|/* turn off kerberos, not supported by SSH2 */
 name|options
 operator|.
-name|krb4_authentication
+name|kerberos_authentication
 operator|=
 literal|0
 expr_stmt|;
