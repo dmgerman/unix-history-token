@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -130,7 +130,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Count swap devices, and adjust total swap space available. 	 * Some of this space will not be available until a swapon() 	 * system is issued, usually when the system goes multi-user. 	 */
+comment|/* 	 * Count swap devices, and adjust total swap space available. 	 * Some of this space will not be available until a swapon() 	 * system is issued, usually when the system goes multi-user. 	 * 	 * If using NFS for swap, swdevt[0] will already be bdevvp'd.	XXX 	 */
 name|nswdev
 operator|=
 literal|0
@@ -148,6 +148,14 @@ init|;
 name|swp
 operator|->
 name|sw_dev
+operator|!=
+name|NODEV
+operator|||
+name|swp
+operator|->
+name|sw_vp
+operator|!=
+name|NULL
 condition|;
 name|swp
 operator|++
@@ -210,6 +218,15 @@ name|nswdev
 expr_stmt|;
 if|if
 condition|(
+name|swdevt
+index|[
+literal|0
+index|]
+operator|.
+name|sw_vp
+operator|==
+name|NULL
+operator|&&
 name|bdevvp
 argument_list|(
 name|swdevt
@@ -761,6 +778,8 @@ init|;
 name|sp
 operator|->
 name|sw_dev
+operator|!=
+name|NODEV
 condition|;
 name|sp
 operator|++
