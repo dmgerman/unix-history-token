@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -179,7 +185,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ida_wait
 parameter_list|(
 name|struct
@@ -191,9 +197,6 @@ name|struct
 name|ida_qcb
 modifier|*
 name|qcb
-parameter_list|,
-name|int
-name|delay
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1163,6 +1166,8 @@ argument_list|)
 argument_list|,
 name|IDA_CONTROLLER
 argument_list|,
+literal|0
+argument_list|,
 name|DMA_DATA_IN
 argument_list|)
 expr_stmt|;
@@ -1252,6 +1257,8 @@ name|data
 argument_list|)
 argument_list|,
 name|IDA_CONTROLLER
+argument_list|,
+literal|0
 argument_list|,
 name|DMA_DATA_IN
 argument_list|)
@@ -1512,6 +1519,9 @@ parameter_list|,
 name|int
 name|drive
 parameter_list|,
+name|u_int32_t
+name|pblkno
+parameter_list|,
 name|int
 name|flags
 parameter_list|)
@@ -1531,6 +1541,8 @@ name|op
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|error
 decl_stmt|;
 name|s
 operator|=
@@ -1563,7 +1575,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|EAGAIN
 operator|)
 return|;
 block|}
@@ -1652,6 +1664,14 @@ name|hwqcb
 operator|->
 name|req
 operator|.
+name|blkno
+operator|=
+name|pblkno
+expr_stmt|;
+name|hwqcb
+operator|->
+name|req
+operator|.
 name|bcount
 operator|=
 name|howmany
@@ -1701,13 +1721,13 @@ argument_list|(
 name|ida
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|ida_wait
 argument_list|(
 name|ida
 argument_list|,
 name|qcb
-argument_list|,
-literal|500
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1719,7 +1739,7 @@ comment|/* XXX should have status returned here? */
 comment|/* XXX have "status pointer" area in QCB? */
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -2093,7 +2113,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ida_wait
 parameter_list|(
 name|struct
@@ -2105,9 +2125,6 @@ name|struct
 name|ida_qcb
 modifier|*
 name|qcb
-parameter_list|,
-name|int
-name|delay
 parameter_list|)
 block|{
 name|struct
@@ -2120,13 +2137,16 @@ decl_stmt|;
 name|bus_addr_t
 name|completed
 decl_stmt|;
+name|int
+name|delay
+decl_stmt|;
 if|if
 condition|(
 name|ida
 operator|->
 name|flags
 operator|&
-name|IDA_ATTACHED
+name|IDA_INTERRUPTS
 condition|)
 block|{
 if|if
@@ -2142,16 +2162,33 @@ name|PRIBIO
 argument_list|,
 literal|"idacmd"
 argument_list|,
-name|delay
+literal|5
+operator|*
+name|hz
 argument_list|)
 condition|)
-name|panic
-argument_list|(
-literal|"ida_command: timeout waiting for interrupt"
-argument_list|)
-expr_stmt|;
-return|return;
+return|return
+operator|(
+name|ETIMEDOUT
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
+name|again
+label|:
+name|delay
+operator|=
+literal|5
+operator|*
+literal|1000
+operator|*
+literal|100
+expr_stmt|;
+comment|/* 5 sec delay */
 while|while
 condition|(
 operator|(
@@ -2177,11 +2214,11 @@ operator|--
 operator|==
 literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"ida_wait: timeout waiting for completion"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|ETIMEDOUT
+operator|)
+return|;
 name|DELAY
 argument_list|(
 literal|10
@@ -2206,11 +2243,9 @@ name|qcb_done
 operator|!=
 name|qcb
 condition|)
-name|panic
-argument_list|(
-literal|"ida_wait: incorrect qcb returned"
-argument_list|)
-expr_stmt|;
+goto|goto
+name|again
+goto|;
 name|ida_done
 argument_list|(
 name|ida
@@ -2218,7 +2253,11 @@ argument_list|,
 name|qcb
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2505,7 +2544,7 @@ name|ida
 operator|->
 name|flags
 operator|&
-name|IDA_ATTACHED
+name|IDA_INTERRUPTS
 condition|)
 name|wakeup
 argument_list|(

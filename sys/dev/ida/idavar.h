@@ -421,7 +421,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* attached, interrupts okay */
+comment|/* attached */
 end_comment
 
 begin_define
@@ -433,6 +433,17 @@ end_define
 
 begin_comment
 comment|/* firmware must be started */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDA_INTERRUPTS
+value|0x04
+end_define
+
+begin_comment
+comment|/* interrupts enabled */
 end_comment
 
 begin_struct
@@ -720,6 +731,9 @@ name|datasize
 parameter_list|,
 name|int
 name|drive
+parameter_list|,
+name|u_int32_t
+name|pblkno
 parameter_list|,
 name|int
 name|flags
