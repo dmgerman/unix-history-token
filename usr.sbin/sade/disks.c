@@ -2395,7 +2395,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Are you SURE you want to Undo everything?"
 argument_list|)
@@ -2481,7 +2481,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"WARNING:  This should only be used when modifying an EXISTING\n"
 literal|"installation.  If you are installing FreeBSD for the first time\n"
@@ -2681,7 +2681,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Are you SURE you want to go into Wizard mode?\n"
 literal|"No seat belts whatsoever are provided!"

@@ -2440,7 +2440,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Do you really want to delete %s from the system?"
 argument_list|,

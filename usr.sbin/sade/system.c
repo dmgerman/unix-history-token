@@ -1905,7 +1905,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"There seems to be an emergency holographic shell\n"
 literal|"already running on VTY 4.\n\n"

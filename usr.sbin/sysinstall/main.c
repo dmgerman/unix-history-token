@@ -464,7 +464,7 @@ directive|ifdef
 name|__alpha__
 operator|||
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Are you sure you wish to exit?  The system will halt."
 argument_list|)
@@ -472,7 +472,7 @@ else|#
 directive|else
 operator|||
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Are you sure you wish to exit?  The system will reboot\n"
 literal|"(be sure to remove any floppies/CDROMs from the drives)."
