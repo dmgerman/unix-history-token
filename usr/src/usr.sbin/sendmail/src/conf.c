@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.105 (Berkeley) %G%"
+literal|"@(#)conf.c	8.106 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -987,14 +987,10 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NAMED_BIND
-if|#
-directive|if
 literal|0
 block|MAPDEF("dns", NULL, 0, 		dns_map_init, null_map_open, null_map_close, 		dns_map_lookup, null_map_store);
 endif|#
 directive|endif
-comment|/* old name for back compat */
 name|MAPDEF
 argument_list|(
 literal|"host"
@@ -1014,8 +1010,6 @@ argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|MAPDEF
 argument_list|(
 literal|"stab"
