@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount.c,v 1.28 1998/07/06 07:12:38 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -831,6 +831,13 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|!
+operator|(
+name|init_flags
+operator|&
+name|MNT_UPDATE
+operator|)
+operator|&&
 name|ismounted
 argument_list|(
 name|fs
