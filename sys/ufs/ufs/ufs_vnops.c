@@ -10460,7 +10460,7 @@ literal|0
 operator|)
 return|;
 case|case
-name|_POSIX_ACL_EXTENDED
+name|_PC_ACL_EXTENDED
 case|:
 ifdef|#
 directive|ifdef
@@ -10509,7 +10509,7 @@ literal|0
 operator|)
 return|;
 case|case
-name|_POSIX_ACL_PATH_MAX
+name|_PC_ACL_PATH_MAX
 case|:
 ifdef|#
 directive|ifdef
@@ -10558,7 +10558,7 @@ literal|0
 operator|)
 return|;
 case|case
-name|_POSIX_MAC_PRESENT
+name|_PC_MAC_PRESENT
 case|:
 ifdef|#
 directive|ifdef

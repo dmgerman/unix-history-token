@@ -545,42 +545,38 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
-begin_comment
-comment|/* XXX: These symbols are in the WRONG namespace (should be _PC_*). */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|_POSIX_ACL_EXTENDED
+name|_PC_ACL_EXTENDED
 value|59
 end_define
 
 begin_define
 define|#
 directive|define
-name|_POSIX_ACL_PATH_MAX
+name|_PC_ACL_PATH_MAX
 value|60
 end_define
 
 begin_define
 define|#
 directive|define
-name|_POSIX_CAP_PRESENT
+name|_PC_CAP_PRESENT
 value|61
 end_define
 
 begin_define
 define|#
 directive|define
-name|_POSIX_INF_PRESENT
+name|_PC_INF_PRESENT
 value|62
 end_define
 
 begin_define
 define|#
 directive|define
-name|_POSIX_MAC_PRESENT
+name|_PC_MAC_PRESENT
 value|63
 end_define
 
