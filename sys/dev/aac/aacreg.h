@@ -331,14 +331,10 @@ begin_struct
 struct|struct
 name|aac_fib_list_entry
 block|{
-name|struct
-name|fib_list_entry
-modifier|*
+name|u_int32_t
 name|Flink
 decl_stmt|;
-name|struct
-name|fib_list_entry
-modifier|*
+name|u_int32_t
 name|Blink
 decl_stmt|;
 block|}
@@ -949,6 +945,10 @@ value|3
 name|u_int32_t
 name|MiniPortRevision
 decl_stmt|;
+define|#
+directive|define
+name|AAC_INIT_STRUCT_MINIPORT_REVISION
+value|1
 name|u_int32_t
 name|FilesystemRevision
 decl_stmt|;
@@ -961,8 +961,7 @@ decl_stmt|;
 name|u_int32_t
 name|AdapterFibsPhysicalAddress
 decl_stmt|;
-name|void
-modifier|*
+name|u_int32_t
 name|AdapterFibsVirtualAddress
 decl_stmt|;
 name|u_int32_t
@@ -977,6 +976,10 @@ decl_stmt|;
 name|u_int32_t
 name|PrintfBufferSize
 decl_stmt|;
+define|#
+directive|define
+name|AAC_PAGE_SIZE
+value|4096
 name|u_int32_t
 name|HostPhysMemPages
 decl_stmt|;
@@ -2926,10 +2929,10 @@ decl_stmt|;
 name|u_int32_t
 name|Capacity
 decl_stmt|;
-name|AAC_FSAVolType
+name|u_int32_t
 name|VolType
 decl_stmt|;
-name|AAC_FType
+name|u_int32_t
 name|ObjType
 decl_stmt|;
 name|u_int32_t
@@ -2968,10 +2971,10 @@ begin_struct
 struct|struct
 name|aac_mntinfo
 block|{
-name|AAC_VMCommand
+name|u_int32_t
 name|Command
 decl_stmt|;
-name|AAC_FType
+name|u_int32_t
 name|MntType
 decl_stmt|;
 name|u_int32_t
@@ -2991,10 +2994,10 @@ begin_struct
 struct|struct
 name|aac_mntinforesp
 block|{
-name|AAC_FSAStatus
+name|u_int32_t
 name|Status
 decl_stmt|;
-name|AAC_FType
+name|u_int32_t
 name|MntType
 decl_stmt|;
 name|u_int32_t
@@ -3056,7 +3059,7 @@ begin_struct
 struct|struct
 name|aac_ctcfg
 block|{
-name|AAC_VMCommand
+name|u_int32_t
 name|Command
 decl_stmt|;
 name|u_int32_t
@@ -3079,7 +3082,7 @@ begin_struct
 struct|struct
 name|aac_ctcfg_resp
 block|{
-name|AAC_FSAStatus
+name|u_int32_t
 name|Status
 decl_stmt|;
 name|u_int32_t
@@ -3183,10 +3186,10 @@ begin_struct
 struct|struct
 name|aac_vmioctl
 block|{
-name|AAC_VMCommand
+name|u_int32_t
 name|Command
 decl_stmt|;
-name|AAC_FType
+name|u_int32_t
 name|ObjType
 decl_stmt|;
 name|u_int32_t
@@ -3219,10 +3222,10 @@ begin_struct
 struct|struct
 name|aac_vmi_businf_resp
 block|{
-name|AAC_FSAStatus
+name|u_int32_t
 name|Status
 decl_stmt|;
-name|AAC_FType
+name|u_int32_t
 name|ObjType
 decl_stmt|;
 name|u_int32_t
@@ -3274,10 +3277,10 @@ begin_struct
 struct|struct
 name|aac_vmi_devinfo_resp
 block|{
-name|AAC_FSAStatus
+name|u_int32_t
 name|Status
 decl_stmt|;
-name|AAC_FType
+name|u_int32_t
 name|ObjType
 decl_stmt|;
 name|u_int32_t
@@ -3489,7 +3492,7 @@ begin_struct
 struct|struct
 name|aac_blockread
 block|{
-name|AAC_VMCommand
+name|u_int32_t
 name|Command
 decl_stmt|;
 comment|/* not FSACommand! */
@@ -3521,7 +3524,7 @@ begin_struct
 struct|struct
 name|aac_blockread_response
 block|{
-name|AAC_FSAStatus
+name|u_int32_t
 name|Status
 decl_stmt|;
 name|u_int32_t
@@ -3541,7 +3544,7 @@ begin_struct
 struct|struct
 name|aac_blockwrite
 block|{
-name|AAC_VMCommand
+name|u_int32_t
 name|Command
 decl_stmt|;
 comment|/* not FSACommand! */
@@ -3554,7 +3557,7 @@ decl_stmt|;
 name|u_int32_t
 name|ByteCount
 decl_stmt|;
-name|AAC_CacheLevel
+name|u_int32_t
 name|Stable
 decl_stmt|;
 name|struct
@@ -3576,13 +3579,13 @@ begin_struct
 struct|struct
 name|aac_blockwrite_response
 block|{
-name|AAC_FSAStatus
+name|u_int32_t
 name|Status
 decl_stmt|;
 name|u_int32_t
 name|ByteCount
 decl_stmt|;
-name|AAC_CommitLevel
+name|u_int32_t
 name|Committed
 decl_stmt|;
 block|}
@@ -3603,7 +3606,7 @@ begin_struct
 struct|struct
 name|aac_close_command
 block|{
-name|AAC_VMCommand
+name|u_int32_t
 name|Command
 decl_stmt|;
 name|u_int32_t

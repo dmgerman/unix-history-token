@@ -455,7 +455,7 @@ name|label
 decl_stmt|;
 name|debug_called
 argument_list|(
-literal|4
+literal|0
 argument_list|)
 expr_stmt|;
 name|sc
@@ -475,11 +475,18 @@ name|sc
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"aac_disk_open: No Softc\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 comment|/* check that the controller is up and running */
 if|if
 condition|(
@@ -491,11 +498,24 @@ name|aac_state
 operator|&
 name|AAC_STATE_SUSPEND
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Controller Suspended controller state = 0x%x\n"
+argument_list|,
+name|sc
+operator|->
+name|ad_controller
+operator|->
+name|aac_state
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 comment|/* build synthetic label */
 name|label
 operator|=
@@ -617,7 +637,7 @@ name|sc
 decl_stmt|;
 name|debug_called
 argument_list|(
-literal|4
+literal|0
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1258,7 +1278,7 @@ name|sc
 decl_stmt|;
 name|debug_called
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|sc
