@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hertz.c	1.1 (Berkeley) %G%"
+literal|"@(#)hertz.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/*      *	discover the tick frequency of the machine      */
+comment|/*      *	discover the tick frequency of the machine      *	if something goes wrong, we return HZ_DEFAULT.      */
 end_comment
 
 begin_include
@@ -37,6 +37,20 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|HZ_SYMBOL
+value|"_hz"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HZ_DEFAULT
+value|1
+end_define
+
 begin_decl_stmt
 name|struct
 name|nlist
@@ -45,7 +59,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"_hz"
+name|HZ_SYMBOL
 block|}
 block|,
 comment|/* clock ticks per second */
@@ -115,13 +129,34 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"no %s namelist entry for _hz\n"
+literal|"no %s namelist entry for %s\n"
 argument_list|,
 name|VMUNIX
+argument_list|,
+name|HZ_SYMBOL
+argument_list|)
+expr_stmt|;
+name|wrong
+label|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"times are in units of %d tick%s, not seconds\n"
+argument_list|,
+name|HZ_DEFAULT
+argument_list|,
+name|HZ_DEFAULT
+operator|==
+literal|1
+condition|?
+literal|""
+else|:
+literal|"s"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|HZ_DEFAULT
 return|;
 block|}
 define|#
@@ -160,9 +195,9 @@ argument_list|,
 name|KMEM
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|wrong
+goto|;
 block|}
 name|seeked
 operator|=
@@ -202,9 +237,9 @@ operator|.
 name|n_value
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|wrong
+goto|;
 block|}
 name|red
 operator|=
@@ -242,9 +277,9 @@ argument_list|,
 name|red
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|wrong
+goto|;
 block|}
 name|closed
 operator|=
@@ -274,9 +309,9 @@ argument_list|,
 name|KMEM
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|wrong
+goto|;
 block|}
 return|return
 name|hz
