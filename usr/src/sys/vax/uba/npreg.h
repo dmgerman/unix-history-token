@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)npreg.h	7.3 (Berkeley) %G%  *  * Merged header file for MICOM-Interlan NP100.  */
+comment|/*-  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)npreg.h	7.4 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * Merged header file for MICOM-Interlan NP100.  */
 end_comment
 
 begin_comment
