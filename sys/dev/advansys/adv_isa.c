@@ -342,6 +342,10 @@ index|]
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"adv%d: Invalid baseport of 0x%lx specified. "
