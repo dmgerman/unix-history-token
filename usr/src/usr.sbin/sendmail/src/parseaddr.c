@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.61
+literal|3.62
 operator|%
 name|G
 operator|%
@@ -1622,7 +1622,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rewrite: ruleset %d, original pvp:"
+literal|"rewrite: ruleset %2d   input:"
 argument_list|,
 name|ruleset
 argument_list|)
@@ -2521,7 +2521,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rewrite: ruleset %d returns:"
+literal|"rewrite: ruleset %2d returns:"
 argument_list|,
 name|ruleset
 argument_list|)
@@ -3374,7 +3374,7 @@ literal|"@"
 argument|) !=
 literal|0
 argument|) 			pxp++; 		if (*pxp == NULL) 		{ 			register char **qxq = CurEnv->e_fromdomain;  			while (*qxq != NULL) 				*pxp++ = *qxq++; 		} 	}
-comment|/* 	**  Now do more specific rewriting. 	**	Rewrite using ruleset 1 or 2 depending on whether this is 	**		a sender address or not. 	**	Then run it through any receiving-mailer-specific rulesets. 	*/
+comment|/* 	**  Do more specific rewriting. 	**	Rewrite using ruleset 1 or 2 depending on whether this is 	**		a sender address or not. 	**	Then run it through any receiving-mailer-specific rulesets. 	*/
 argument|if (senderaddress) 	{ 		rewrite(pvp,
 literal|1
 argument|); 		if (m->m_s_rwset>
@@ -3384,6 +3384,10 @@ literal|2
 argument|); 		if (m->m_r_rwset>
 literal|0
 argument|) 			rewrite(pvp, m->m_r_rwset); 	}
+comment|/* 	**  Do any final sanitation the address may require. 	**	This will normally be used to turn internal forms 	**	(e.g., user@host.LOCAL) into external form.  This 	**	may be used as a default to the above rules. 	*/
+argument|rewrite(pvp,
+literal|4
+argument|);
 comment|/* 	**  Now restore the comment information we had at the beginning. 	*/
 argument|cataddr(pvp, lbuf, sizeof lbuf); 	define(
 literal|'g'
