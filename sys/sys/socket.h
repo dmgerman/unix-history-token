@@ -47,22 +47,6 @@ begin_comment
 comment|/*  * Data types.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<machine/types.h>
-end_include
-
-begin_comment
-comment|/*  * needed for __CMSG_ALIGN  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/param.h>
-end_include
-
 begin_typedef
 typedef|typedef
 name|u_char
@@ -1599,39 +1583,8 @@ name|CMSG_DATA
 parameter_list|(
 name|cmsg
 parameter_list|)
-value|((u_char *)(cmsg) + \ 				 __CMSG_ALIGN(sizeof(struct cmsghdr)))
+value|((u_char *)(cmsg) + \ 				 _ALIGN(sizeof(struct cmsghdr)))
 end_define
-
-begin_define
-define|#
-directive|define
-name|__CMSG_ALIGN
-parameter_list|(
-name|n
-parameter_list|)
-value|ALIGN(n)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CMSG_ALIGN
-parameter_list|(
-name|n
-parameter_list|)
-value|__CMSG_ALIGN(n)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* given pointer to struct cmsghdr, return pointer to next cmsghdr */
@@ -1647,7 +1600,7 @@ parameter_list|,
 name|cmsg
 parameter_list|)
 define|\
-value|(((caddr_t)(cmsg) + __CMSG_ALIGN((cmsg)->cmsg_len) + \ 	  __CMSG_ALIGN(sizeof(struct cmsghdr))> \ 	    (caddr_t)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((caddr_t)(cmsg) + __CMSG_ALIGN((cmsg)->cmsg_len)))
+value|(((caddr_t)(cmsg) + _ALIGN((cmsg)->cmsg_len) + \ 	  _ALIGN(sizeof(struct cmsghdr))> \ 	    (caddr_t)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((caddr_t)(cmsg) + _ALIGN((cmsg)->cmsg_len)))
 end_define
 
 begin_define
@@ -1671,7 +1624,7 @@ name|CMSG_SPACE
 parameter_list|(
 name|l
 parameter_list|)
-value|(__CMSG_ALIGN(sizeof(struct cmsghdr)) + __CMSG_ALIGN(l))
+value|(_ALIGN(sizeof(struct cmsghdr)) + _ALIGN(l))
 end_define
 
 begin_define
@@ -1681,8 +1634,29 @@ name|CMSG_LEN
 parameter_list|(
 name|l
 parameter_list|)
-value|(__CMSG_ALIGN(sizeof(struct cmsghdr)) + (l))
+value|(_ALIGN(sizeof(struct cmsghdr)) + (l))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CMSG_ALIGN
+parameter_list|(
+name|n
+parameter_list|)
+value|_ALIGN(n)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* "Socket"-level control message types: */
