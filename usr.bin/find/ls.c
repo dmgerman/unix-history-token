@@ -497,6 +497,8 @@ argument_list|,
 name|path
 argument_list|,
 name|MAXPATHLEN
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|==

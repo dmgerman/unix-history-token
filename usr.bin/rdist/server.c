@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: server.c,v 1.7 1998/04/06 06:18:32 charnier Exp $"
+literal|"$Id: server.c,v 1.8 1998/04/20 06:20:24 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2380,6 +2380,8 @@ argument_list|,
 name|buf
 argument_list|,
 name|BUFSIZ
+operator|-
+literal|1
 argument_list|)
 operator|!=
 name|stb
@@ -4578,6 +4580,8 @@ argument_list|,
 name|tbuf
 argument_list|,
 name|BUFSIZ
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|>=
