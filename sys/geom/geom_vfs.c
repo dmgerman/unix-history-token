@@ -56,6 +56,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_comment
+comment|/* XXX Temporary for VFS_LOCK_GIANT */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<geom/geom.h>
 end_include
 
@@ -167,6 +177,9 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 if|if
 condition|(
 name|bip
@@ -245,9 +258,28 @@ argument_list|(
 name|bip
 argument_list|)
 expr_stmt|;
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|)
+name|NULL
+operator|)
+argument_list|)
+expr_stmt|;
 name|bufdone
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 block|}
