@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dumpcis.c,v 1.9 1997/11/18 21:08:06 nate Exp $"
+literal|"$Id: dumpcis.c,v 1.10 1999/02/05 16:00:15 kuriyama Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,6 +96,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|scan
 parameter_list|(
@@ -151,6 +152,8 @@ return|return;
 name|nocards
 operator|++
 expr_stmt|;
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -159,6 +162,13 @@ name|PIOCGSTATE
 argument_list|,
 operator|&
 name|st
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"ioctl (PIOCGSTATE)"
 argument_list|)
 expr_stmt|;
 if|if

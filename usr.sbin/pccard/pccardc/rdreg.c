@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rdreg.c,v 1.9 1997/11/18 21:08:07 nate Exp $"
+literal|"$Id: rdreg.c,v 1.10 1999/02/05 16:00:16 kuriyama Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,7 +115,7 @@ name|open
 argument_list|(
 name|name
 argument_list|,
-name|O_RDWR
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -174,9 +174,11 @@ name|r
 argument_list|)
 condition|)
 block|{
-name|warn
+name|err
 argument_list|(
-literal|"ioctl"
+literal|1
+argument_list|,
+literal|"ioctl (PIOCGREG)"
 argument_list|)
 expr_stmt|;
 break|break;

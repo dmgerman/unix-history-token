@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pccardmem.c,v 1.9 1997/11/18 21:08:06 nate Exp $"
+literal|"$Id: pccardmem.c,v 1.10 1999/02/05 16:00:15 kuriyama Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,9 +203,11 @@ operator|&
 name|addr
 argument_list|)
 condition|)
-name|warn
+name|err
 argument_list|(
-literal|"ioctl"
+literal|1
+argument_list|,
+literal|"ioctl (PIOCRWMEM)"
 argument_list|)
 expr_stmt|;
 else|else
@@ -216,11 +218,9 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
 literal|0
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 

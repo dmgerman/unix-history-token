@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: wrreg.c,v 1.9 1997/11/18 21:08:08 nate Exp $"
+literal|"$Id: wrreg.c,v 1.10 1999/02/05 16:00:16 kuriyama Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,9 +244,11 @@ operator|&
 name|r
 argument_list|)
 condition|)
-name|warn
+name|err
 argument_list|(
-literal|"ioctl"
+literal|1
+argument_list|,
+literal|"ioctl (PIOCSREG)"
 argument_list|)
 expr_stmt|;
 return|return

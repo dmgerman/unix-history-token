@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -85,12 +91,11 @@ name|argc
 operator|!=
 literal|4
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"usage: %s rdattr slot offs length\n"
+literal|"Usage: %s rdattr slot offs length"
 argument_list|,
 name|argv
 index|[
@@ -98,12 +103,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|sprintf
 argument_list|(
 name|name
@@ -134,18 +133,15 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|reg
 operator|=
 name|MDF_ATTR
@@ -162,18 +158,13 @@ operator|&
 name|reg
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl (PIOCRWFLAG)"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|sscanf
@@ -206,20 +197,13 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"arg error\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"arg error"
 argument_list|)
 expr_stmt|;
-block|}
 name|offs
 operator|=
 name|reg
@@ -237,18 +221,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 name|lseek
 argument_list|(
 name|fd
@@ -271,18 +250,15 @@ argument_list|)
 operator|!=
 name|length
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: enabler.c,v 1.10 1997/11/18 21:08:06 nate Exp $"
+literal|"$Id: enabler.c,v 1.11 1999/02/05 16:00:15 kuriyama Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -770,9 +770,11 @@ modifier|*
 name|msg
 decl_stmt|;
 block|{
-name|warnx
+name|fprintf
 argument_list|(
-literal|"enabler: %s"
+name|stderr
+argument_list|,
+literal|"enabler: %s\n"
 argument_list|,
 name|msg
 argument_list|)

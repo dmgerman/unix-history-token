@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: wrattr.c,v 1.10 1997/11/18 21:08:08 nate Exp $"
+literal|"$Id: wrattr.c,v 1.11 1999/02/05 16:00:16 kuriyama Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,8 +275,10 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|warn
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|name

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rdmap.c,v 1.9 1997/11/18 21:08:07 nate Exp $"
+literal|"$Id: rdmap.c,v 1.10 1999/02/05 16:00:16 kuriyama Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -78,6 +84,7 @@ file|<pccard/cis.h>
 end_include
 
 begin_function
+specifier|static
 name|void
 name|dump_io
 parameter_list|(
@@ -118,6 +125,8 @@ name|window
 operator|=
 name|i
 expr_stmt|;
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -126,6 +135,13 @@ name|PIOCGIO
 argument_list|,
 operator|&
 name|io
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"ioctl (PIOCGIO)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -154,6 +170,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dump_mem
 parameter_list|(
@@ -194,6 +211,8 @@ name|window
 operator|=
 name|i
 expr_stmt|;
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -202,6 +221,13 @@ name|PIOCGMEM
 argument_list|,
 operator|&
 name|mem
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"ioctl (PIOCGMEM)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -282,6 +308,8 @@ operator|<
 literal|0
 condition|)
 return|return;
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -290,6 +318,13 @@ name|PIOCGSTATE
 argument_list|,
 operator|&
 name|st
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"ioctl (PIOCGSTATE)"
 argument_list|)
 expr_stmt|;
 comment|/* 	if (st.state == filled)  */
