@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.55 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.56 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -661,9 +661,16 @@ operator||
 name|IMOD
 operator|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * I'm not real sure what to do here; once we have fsync and partial 	 * segments working in the LFS context, this must be fixed to be 	 * correct.  The contents of the inode have to be pushed back to 	 * stable storage. 	 */
+comment|/* Push back the vnode and any dirty blocks it may have. */
 return|return
 operator|(
+name|waitfor
+condition|?
+name|lfs_vflush
+argument_list|(
+name|vp
+argument_list|)
+else|:
 literal|0
 operator|)
 return|;
@@ -740,6 +747,11 @@ name|bp
 decl_stmt|,
 modifier|*
 name|sup_bp
+decl_stmt|;
+name|struct
+name|ifile
+modifier|*
+name|ifp
 decl_stmt|;
 name|struct
 name|inode
@@ -824,6 +836,44 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|fs
+operator|=
+name|ip
+operator|->
+name|i_lfs
+expr_stmt|;
+comment|/* If truncating the file to 0, update the version number. */
+if|if
+condition|(
+name|length
+operator|==
+literal|0
+condition|)
+block|{
+name|LFS_IENTRY
+argument_list|(
+name|ifp
+argument_list|,
+name|fs
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+operator|++
+name|ifp
+operator|->
+name|if_version
+expr_stmt|;
+name|LFS_UBWRITE
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* If length is larger than the file, just update the times. */
 if|if
 condition|(
@@ -860,12 +910,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Calculate index into inode's block list of last direct and indirect 	 * blocks (if any) which we want to keep.  Lastblock is 0 when the 	 * file is truncated to 0. 	 */
-name|fs
-operator|=
-name|ip
-operator|->
-name|i_lfs
-expr_stmt|;
 name|lastblock
 operator|=
 name|lblkno
