@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/imgact.h>
 end_include
 
@@ -48,19 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pioctl.h>
 end_include
 
 begin_include
@@ -78,19 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/signalvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/syscall.h>
 end_include
 
 begin_include
@@ -102,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syscall.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -120,25 +102,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/frame.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<machine/md_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
+file|<vm/vm.h>
 end_include
 
 begin_include
@@ -157,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_object.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
 end_include
 
 begin_function_decl
