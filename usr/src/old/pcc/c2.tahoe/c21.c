@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c	1.4 (Berkeley/CCI) %G%"
+literal|"@(#)c21.c	1.5 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5851,13 +5851,23 @@ name|cp1
 argument_list|,
 name|r
 argument_list|)
-operator|&&
+condition|)
+block|{
+name|int
+name|isunused
+decl_stmt|;
+if|if
+condition|(
+name|isunused
+operator|=
+operator|(
 name|uses
 index|[
 name|r
 index|]
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|uses
@@ -5978,6 +5988,7 @@ index|]
 operator|=
 name|LONG
 expr_stmt|;
+block|}
 comment|/* ediv/emod's 2nd operand is quad */
 if|if
 condition|(
@@ -6029,6 +6040,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|isunused
+condition|)
 operator|*
 name|cp2
 operator|=
@@ -6056,7 +6071,23 @@ name|p
 operator|->
 name|subop
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isunused
+condition|)
+operator|*
+name|cp2
+operator|=
+literal|0
+expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|isunused
+condition|)
+continue|continue;
 if|if
 condition|(
 name|p
