@@ -176,7 +176,7 @@ parameter_list|,
 name|r1
 parameter_list|)
 define|\
-value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	SET(9b, r1, %o2) ; \ 	clr	%o1 ; \ 	clr	%o0 ; \ 	call	__panic ; \ 	 nop
+value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	SET(9b, r1, %o0) ; \ 	call	panic ; \ 	 nop
 end_define
 
 begin_ifdef

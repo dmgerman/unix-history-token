@@ -1801,16 +1801,8 @@ end_comment
 
 begin_function
 name|void
-name|__panic
+name|panic
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1945,13 +1937,9 @@ name|buf
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"panic: %s\nat line %d in file %s\n"
+literal|"panic: %s\n"
 argument_list|,
 name|buf
-argument_list|,
-name|line
-argument_list|,
-name|file
 argument_list|)
 expr_stmt|;
 block|}
@@ -1971,11 +1959,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nat line %d in file %s"
-argument_list|,
-name|line
-argument_list|,
-name|file
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

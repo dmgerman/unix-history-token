@@ -678,16 +678,8 @@ end_ifdef
 
 begin_function_decl
 name|void
-name|__panic
+name|panic
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -696,9 +688,9 @@ modifier|...
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
-function_decl|3
+function_decl|1
 operator|,
-function_decl|4
+function_decl|2
 end_function_decl
 
 begin_empty_stmt
@@ -713,16 +705,8 @@ end_else
 
 begin_decl_stmt
 name|void
-name|__panic
+name|panic
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|file
-argument_list|,
-name|int
-name|line
-argument_list|,
 specifier|const
 name|char
 operator|*
@@ -732,9 +716,9 @@ argument_list|)
 name|__dead2
 name|__printflike
 argument_list|(
-literal|3
+literal|1
 argument_list|,
-literal|4
+literal|2
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -743,16 +727,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|panic
-parameter_list|(
-modifier|...
-parameter_list|)
-value|__panic(__FILE__, __LINE__, __VA_ARGS__)
-end_define
 
 begin_function_decl
 name|void
