@@ -215,6 +215,7 @@ name|kaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX The vm object containing kern_pg needs locking. 	 */
 if|if
 condition|(
 operator|(
@@ -253,6 +254,11 @@ name|EFAULT
 operator|)
 return|;
 block|}
+name|VM_OBJECT_LOCK
+argument_list|(
+name|uobject
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -443,6 +449,11 @@ name|VM_PAGE_BITS_ALL
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|uobject
+argument_list|)
 expr_stmt|;
 name|vm_map_lookup_done
 argument_list|(
