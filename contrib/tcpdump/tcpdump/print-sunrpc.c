@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-sunrpc.c,v 1.1 92/06/02 11:36:37 mccanne Exp $ (LBL)"
+literal|"@(#) $Header: /a/cvs/386BSD/src/contrib/tcpdump/tcpdump/print-sunrpc.c,v 1.1.1.1 1993/06/12 14:42:07 rgrimes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,37 +99,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rpc/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/auth.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/auth_unix.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/svc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/xdr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/rpc_msg.h>
+file|<rpc/rpc.h>
 end_include
 
 begin_include
