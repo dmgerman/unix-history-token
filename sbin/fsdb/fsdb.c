@@ -3382,6 +3382,13 @@ operator|*
 name|cp
 operator|!=
 literal|'\0'
+operator|||
+operator|(
+name|modebits
+operator|&
+operator|~
+literal|07777
+operator|)
 condition|)
 block|{
 name|warnx
