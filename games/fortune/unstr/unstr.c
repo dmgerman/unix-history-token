@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,11 +37,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unstr.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)unstr.c     8.1 (Berkeley) 5/31/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,19 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"strfile.h"
 end_include
 
 begin_include
@@ -87,27 +77,17 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXPATHLEN
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|MAXPATHLEN
-value|1024
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MAXPATHLEN */
-end_comment
+begin_include
+include|#
+directive|include
+file|"strfile.h"
+end_include
 
 begin_decl_stmt
 name|char
@@ -140,13 +120,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|strcat
+name|void
+name|getargs
 argument_list|()
 decl_stmt|,
-modifier|*
-name|strcpy
+name|order_unstr
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -156,6 +134,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+name|void
 name|main
 parameter_list|(
 name|ac
@@ -375,20 +354,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|getargs
-argument_list|(
+parameter_list|(
 name|av
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|av
 index|[]
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -440,21 +417,19 @@ literal|".dat"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|order_unstr
-argument_list|(
+parameter_list|(
 name|tbl
-argument_list|)
+parameter_list|)
 specifier|register
 name|STRFILE
-operator|*
+modifier|*
 name|tbl
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -465,8 +440,7 @@ name|char
 modifier|*
 name|sp
 decl_stmt|;
-specifier|auto
-name|off_t
+name|long
 name|pos
 decl_stmt|;
 name|char
@@ -586,7 +560,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
