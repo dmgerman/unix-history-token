@@ -761,7 +761,7 @@ expr_stmt|;
 if|if
 condition|(
 name|dk_ndrive
-operator|<=
+operator|<
 literal|0
 condition|)
 name|errx
