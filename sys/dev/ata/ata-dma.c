@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ata.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pci.h"
 end_include
 
@@ -20,14 +14,6 @@ include|#
 directive|include
 file|"apm.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NATA
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -1758,6 +1744,35 @@ return|;
 block|}
 break|break;
 default|default:
+comment|/* unknown controller chip */
+comment|/* better not try generic DMA on ATAPI devices it almost never works */
+if|if
+condition|(
+operator|(
+name|device
+operator|==
+name|ATA_MASTER
+operator|&&
+name|scp
+operator|->
+name|devices
+operator|&
+name|ATA_ATAPI_MASTER
+operator|)
+operator|||
+operator|(
+name|device
+operator|==
+name|ATA_SLAVE
+operator|&&
+name|scp
+operator|->
+name|devices
+operator|&
+name|ATA_ATAPI_SLAVE
+operator|)
+condition|)
+break|break;
 comment|/* well, we have no support for this, but try anyways */
 if|if
 condition|(
@@ -2560,15 +2575,6 @@ end_endif
 
 begin_comment
 comment|/* NPCI> 0 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NATA> 0 */
 end_comment
 
 end_unit

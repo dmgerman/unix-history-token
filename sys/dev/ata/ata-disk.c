@@ -6,32 +6,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ata.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"atadisk.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"apm.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NATA
-operator|>
-literal|0
-operator|&&
-name|NATADISK
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -1648,6 +1624,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|dev
+operator|->
+name|si_iosize_max
+operator|=
+literal|256
+operator|*
+name|DEV_BSIZE
+expr_stmt|;
 name|dl
 operator|=
 operator|&
@@ -3617,21 +3601,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|ad_cdevsw
-operator|.
-name|d_maxio
-condition|)
-name|ad_cdevsw
-operator|.
-name|d_maxio
-operator|=
-literal|256
-operator|*
-name|DEV_BSIZE
-expr_stmt|;
 name|fakewd_cdevsw
 operator|=
 name|ad_cdevsw
@@ -3745,15 +3714,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NATA&& NATADISK */
-end_comment
 
 end_unit
 

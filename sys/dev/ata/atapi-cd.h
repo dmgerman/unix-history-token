@@ -1248,10 +1248,6 @@ name|u_int8_t
 name|dummy
 decl_stmt|;
 comment|/* use dummy writes */
-name|u_int8_t
-name|speed
-decl_stmt|;
-comment|/* select drive speed */
 name|u_int32_t
 name|next_writeable_addr
 decl_stmt|;

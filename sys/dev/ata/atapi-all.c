@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ata.h"
+file|"apm.h"
 end_include
 
 begin_include
@@ -26,34 +26,6 @@ include|#
 directive|include
 file|"atapifd.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"apm.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NATA
-operator|>
-literal|0
-operator|&&
-operator|(
-name|NATAPICD
-operator|>
-literal|0
-operator|||
-name|NATAPIFD
-operator|>
-literal|0
-operator|||
-name|NATAPIST
-operator|>
-literal|0
-operator|)
-end_if
 
 begin_include
 include|#
@@ -4589,15 +4561,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NATA> 0&& (NATAPICD> 0 || NATAPIFD> 0 || NATAPIST> 0) */
-end_comment
 
 end_unit
 

@@ -710,6 +710,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_SET_SPEED
+value|0xbb
+end_define
+
+begin_comment
+comment|/* set drive speed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_MECH_STATUS
 value|0xbd
 end_define
