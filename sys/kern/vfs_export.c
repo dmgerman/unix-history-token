@@ -294,6 +294,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Number of vnodes in existence.  Increased whenever getnewvnode()  * allocates a new vnode, never decreased.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -322,6 +326,10 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Conversion tables for conversion from vnode types to inode formats  * and back.  */
+end_comment
 
 begin_decl_stmt
 name|enum
@@ -396,6 +404,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* vnode free list */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|TAILQ_HEAD
@@ -409,7 +421,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* vnode free list */
+comment|/*  * Minimum number of free vnodes.  If there are fewer than this free vnodes,  * getnewvnode() will return a newly allocated vnode.  */
 end_comment
 
 begin_decl_stmt
@@ -442,6 +454,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Number of vnodes in the free list. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -472,6 +488,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Various variables used for debugging the new implementation of reassignbuf().  * XXX These are probably of (very) limited utility now.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -583,6 +603,10 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Set to 0 for old insertion-sort based reassignbuf, 1 for modern method. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -620,6 +644,10 @@ directive|ifdef
 name|ENABLE_VFS_IOOPT
 end_ifdef
 
+begin_comment
+comment|/* See NOTES for description */
+end_comment
+
 begin_decl_stmt
 name|int
 name|vfs_ioopt
@@ -654,6 +682,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* mounted fs */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|mntlist
@@ -667,7 +699,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* mounted fs */
+comment|/* For any iteration/modification of mountlist */
 end_comment
 
 begin_decl_stmt
@@ -677,12 +709,20 @@ name|mountlist_slock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* For any iteration/modification of mnt_vnodelist */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|simplelock
 name|mntvnode_slock
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Cache for the mount type id assigned to NFS.  This is used for  * special checks in nfs/nfs_nqlease.c and vm/vnode_pager.c.  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -699,6 +739,10 @@ directive|ifndef
 name|NULL_SIMPLELOCKS
 end_ifndef
 
+begin_comment
+comment|/* To keep more than one thread at a time from running vfs_getnewfsid */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -707,6 +751,10 @@ name|mntid_slock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* For any iteration/modification of vnode_free_list */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -714,6 +762,10 @@ name|simplelock
 name|vnode_free_list_slock
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * For any iteration/modification of dev->si_hlist (linked through  * v_specnext)  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -728,6 +780,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Publicly exported FS */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|nfs_public
@@ -736,7 +792,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* publicly exported FS */
+comment|/* Zone for allocation of new vnodes - used exclusively by getnewvnode() */
 end_comment
 
 begin_decl_stmt
@@ -745,6 +801,10 @@ name|vm_zone_t
 name|vnode_zone
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Set to 1 to print out reclaim of active vnodes */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -755,12 +815,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1 => print out reclaim of active vnodes */
+comment|/*  * The workitem queue.  *   * It is useful to delay writes of file data and filesystem metadata  * for tens of seconds so that quickly created and deleted files need  * not waste disk bandwidth being created and removed. To realize this,  * we append vnodes to a "workitem" queue. When running with a soft  * updates implementation, most pending metadata dependencies should  * not wait for more than a few seconds. Thus, mounted on block devices  * are delayed only about a half the time that file data is delayed.  * Similarly, directory updates are more critical, so are only delayed  * about a third the time that file data is delayed. Thus, there are  * SYNCER_MAXDELAY queues that are processed round-robin at a rate of  * one each second (driven off the filesystem syncer process). The  * syncer_delayno variable indicates the next queue that is to be processed.  * Items that need to be processed soon are placed in this queue:  *  *	syncer_workitem_pending[syncer_delayno]  *  * A delay of fifteen seconds is done by placing the request fifteen  * entries later in the queue:  *  *	syncer_workitem_pending[(syncer_delayno + 15)& syncer_mask]  *  */
 end_comment
 
-begin_comment
-comment|/*  * The workitem queue.  */
-end_comment
+begin_decl_stmt
+specifier|static
+name|int
+name|syncer_delayno
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|long
+name|syncer_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|synclist
+argument_list|,
+name|vnode
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|synclist
+modifier|*
+name|syncer_workitem_pending
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -936,40 +1027,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|syncer_delayno
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|syncer_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|LIST_HEAD
-argument_list|(
-name|synclist
-argument_list|,
-name|vnode
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|synclist
-modifier|*
-name|syncer_workitem_pending
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * Number of vnodes we want to exist at any one time.  Used all over the place.  * XXX Better documentation gladly accepted.  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -4460,10 +4520,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The workitem queue.  *   * It is useful to delay writes of file data and filesystem metadata  * for tens of seconds so that quickly created and deleted files need  * not waste disk bandwidth being created and removed. To realize this,  * we append vnodes to a "workitem" queue. When running with a soft  * updates implementation, most pending metadata dependencies should  * not wait for more than a few seconds. Thus, mounted on block devices  * are delayed only about a half the time that file data is delayed.  * Similarly, directory updates are more critical, so are only delayed  * about a third the time that file data is delayed. Thus, there are  * SYNCER_MAXDELAY queues that are processed round-robin at a rate of  * one each second (driven off the filesystem syncer process). The  * syncer_delayno variable indicates the next queue that is to be processed.  * Items that need to be processed soon are placed in this queue:  *  *	syncer_workitem_pending[syncer_delayno]  *  * A delay of fifteen seconds is done by placing the request fifteen  * entries later in the queue:  *  *	syncer_workitem_pending[(syncer_delayno + 15)& syncer_mask]  *  */
-end_comment
-
-begin_comment
 comment|/*  * Add an item to the syncer work queue.  */
 end_comment
 
@@ -5113,6 +5169,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Change the vnode a pager buffer is associated with.  */
+end_comment
+
 begin_function
 name|void
 name|pbreassignbuf
@@ -5132,27 +5192,21 @@ modifier|*
 name|newvp
 decl_stmt|;
 block|{
-if|if
-condition|(
-operator|(
+name|KASSERT
+argument_list|(
 name|bp
 operator|->
 name|b_flags
 operator|&
 name|B_PAGING
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"pbreassignbuf() on non phys bp %p"
 argument_list|,
+operator|(
+literal|"pbreassignbuf() on non phys bp %p"
+operator|,
 name|bp
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|bp
 operator|->
 name|b_vp
@@ -6042,6 +6096,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Local helper function  - same as addaliasu, but for a dev_t */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -6060,23 +6118,23 @@ name|dev_t
 name|dev
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|nvp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
-operator|&&
-name|nvp
-operator|->
-name|v_type
-operator|!=
-name|VCHR
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
+name|nvp
+operator|->
+name|v_type
+operator|==
+name|VBLK
+operator|||
+name|nvp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+argument_list|,
+operator|(
 literal|"addalias on non-special vnode"
+operator|)
 argument_list|)
 expr_stmt|;
 name|nvp
@@ -6155,7 +6213,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|simple_lock
 argument_list|(
 operator|&
@@ -6164,7 +6221,6 @@ operator|->
 name|v_interlock
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|vp
@@ -6308,6 +6364,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*   * Increase reference count of a vnode  */
+end_comment
 
 begin_function
 name|void
@@ -6508,6 +6568,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*   * Release an already locked vnode.  * This gives almost the exact same effects as unlock+vrele()  */
+end_comment
+
 begin_function
 name|void
 name|vput
@@ -6704,7 +6768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * One less who cares about this vnode.  */
+comment|/*  * One less who cares about this vnode (opposite of vhold())  */
 end_comment
 
 begin_function
@@ -8826,6 +8890,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* XXX The below code does not compile; vfs_sysctl does not exist. */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -9185,7 +9250,7 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|0
+name|COMPILING_LINT
 end_if
 
 begin_define
@@ -9203,54 +9268,315 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_comment
-unit|static int sysctl_vnode(SYSCTL_HANDLER_ARGS) { 	struct proc *p = curproc;
+begin_function
+specifier|static
+name|int
+name|sysctl_vnode
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
 comment|/* XXX */
-end_comment
-
-begin_define
-unit|struct mount *mp, *nmp; 	struct vnode *nvp, *vp; 	int error;
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|,
+modifier|*
+name|nmp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|nvp
+decl_stmt|,
+modifier|*
+name|vp
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 define|#
 directive|define
 name|VPTRSZ
 value|sizeof (struct vnode *)
-end_define
-
-begin_define
 define|#
 directive|define
 name|VNODESZ
 value|sizeof (struct vnode)
-end_define
-
-begin_comment
-unit|req->lock = 0; 	if (!req->oldptr)
+name|req
+operator|->
+name|lock
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|req
+operator|->
+name|oldptr
+condition|)
 comment|/* Make an estimate */
-end_comment
-
-begin_comment
-unit|return (SYSCTL_OUT(req, 0, 			(numvnodes + KINFO_VNODESLOP) * (VPTRSZ + VNODESZ)));  	simple_lock(&mountlist_slock); 	for (mp = TAILQ_FIRST(&mountlist); mp != NULL; mp = nmp) { 		if (vfs_busy(mp, LK_NOWAIT,&mountlist_slock, p)) { 			nmp = TAILQ_NEXT(mp, mnt_list); 			continue; 		} again: 		simple_lock(&mntvnode_slock); 		for (vp = LIST_FIRST(&mp->mnt_vnodelist); 		     vp != NULL; 		     vp = nvp) {
+return|return
+operator|(
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|numvnodes
+operator|+
+name|KINFO_VNODESLOP
+operator|)
+operator|*
+operator|(
+name|VPTRSZ
+operator|+
+name|VNODESZ
+operator|)
+argument_list|)
+operator|)
+return|;
+name|simple_lock
+argument_list|(
+operator|&
+name|mountlist_slock
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|mp
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|mountlist
+argument_list|)
+init|;
+name|mp
+operator|!=
+name|NULL
+condition|;
+name|mp
+operator|=
+name|nmp
+control|)
+block|{
+if|if
+condition|(
+name|vfs_busy
+argument_list|(
+name|mp
+argument_list|,
+name|LK_NOWAIT
+argument_list|,
+operator|&
+name|mountlist_slock
+argument_list|,
+name|p
+argument_list|)
+condition|)
+block|{
+name|nmp
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|mp
+argument_list|,
+name|mnt_list
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|again
+label|:
+name|simple_lock
+argument_list|(
+operator|&
+name|mntvnode_slock
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|vp
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_vnodelist
+argument_list|)
+init|;
+name|vp
+operator|!=
+name|NULL
+condition|;
+name|vp
+operator|=
+name|nvp
+control|)
+block|{
 comment|/* 			 * Check that the vp is still associated with 			 * this filesystem.  RACE: could have been 			 * recycled onto the same filesystem. 			 */
-end_comment
-
-begin_endif
-unit|if (vp->v_mount != mp) { 				simple_unlock(&mntvnode_slock); 				goto again; 			} 			nvp = LIST_NEXT(vp, v_mntvnodes); 			simple_unlock(&mntvnode_slock); 			if ((error = SYSCTL_OUT(req,&vp, VPTRSZ)) || 			    (error = SYSCTL_OUT(req, vp, VNODESZ))) 				return (error); 			simple_lock(&mntvnode_slock); 		} 		simple_unlock(&mntvnode_slock); 		simple_lock(&mountlist_slock); 		nmp = TAILQ_NEXT(mp, mnt_list); 		vfs_unbusy(mp, p); 	} 	simple_unlock(&mountlist_slock);  	return (0); }
-endif|#
-directive|endif
-end_endif
+if|if
+condition|(
+name|vp
+operator|->
+name|v_mount
+operator|!=
+name|mp
+condition|)
+block|{
+name|simple_unlock
+argument_list|(
+operator|&
+name|mntvnode_slock
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
+name|nvp
+operator|=
+name|LIST_NEXT
+argument_list|(
+name|vp
+argument_list|,
+name|v_mntvnodes
+argument_list|)
+expr_stmt|;
+name|simple_unlock
+argument_list|(
+operator|&
+name|mntvnode_slock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+operator|&
+name|vp
+argument_list|,
+name|VPTRSZ
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+name|vp
+argument_list|,
+name|VNODESZ
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|simple_lock
+argument_list|(
+operator|&
+name|mntvnode_slock
+argument_list|)
+expr_stmt|;
+block|}
+name|simple_unlock
+argument_list|(
+operator|&
+name|mntvnode_slock
+argument_list|)
+expr_stmt|;
+name|simple_lock
+argument_list|(
+operator|&
+name|mountlist_slock
+argument_list|)
+expr_stmt|;
+name|nmp
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|mp
+argument_list|,
+name|mnt_list
+argument_list|)
+expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+name|simple_unlock
+argument_list|(
+operator|&
+name|mountlist_slock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * XXX  * Exporting the vnode list on large systems causes them to crash.  * Exporting the vnode list on medium systems causes sysctl to coredump.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_kern
+argument_list|,
+name|KERN_VNODE
+argument_list|,
+name|vnode
+argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
+name|CTLFLAG_RD
+argument_list|,
 literal|0
-end_if
+argument_list|,
+literal|0
+argument_list|,
+name|sysctl_vnode
+argument_list|,
+literal|"S,vnode"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
-unit|SYSCTL_PROC(_kern, KERN_VNODE, vnode, CTLTYPE_OPAQUE|CTLFLAG_RD, 	0, 0, sysctl_vnode, "S,vnode", "");
 endif|#
 directive|endif
 end_endif
@@ -9913,6 +10239,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Helper for vfs_free_addrlist */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -11033,6 +11363,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Mark a vnode as free, putting it up for recycling.  */
+end_comment
+
 begin_function
 name|void
 name|vfree
@@ -11138,6 +11472,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*   * Opposite of vfree() - mark a vnode as in use.  */
+end_comment
 
 begin_function
 name|void
@@ -12474,6 +12812,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Free data allocated by namei().  * See namei(9) for details.  */
+end_comment
 
 begin_function
 name|void
