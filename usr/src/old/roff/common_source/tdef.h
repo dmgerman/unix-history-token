@@ -1,25 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tdef.h	4.7	86/10/19	*/
+comment|/*	tdef.h	4.8	87/04/30	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<machine/machparam.h>
+file|<sys/param.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/vmparam.h>
-end_include
+begin_undef
+undef|#
+directive|undef
+name|CMASK
+end_undef
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|BIG
+end_undef
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXPTR
-value|(USRSTACK-1)
+value|(-1)
 end_define
 
 begin_comment
@@ -1023,17 +1037,6 @@ end_define
 
 begin_comment
 comment|/*number of overstrike chars*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ZONE
-value|5
-end_define
-
-begin_comment
-comment|/*5hrs for EST*/
 end_comment
 
 begin_define
