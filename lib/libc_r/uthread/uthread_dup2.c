@@ -60,6 +60,20 @@ operator|||
 name|newfd
 operator|>=
 name|_thread_dtablesize
+operator|||
+name|newfd
+operator|==
+name|_thread_kern_pipe
+index|[
+literal|0
+index|]
+operator|||
+name|newfd
+operator|==
+name|_thread_kern_pipe
+index|[
+literal|1
+index|]
 condition|)
 block|{
 comment|/* Return a bad file descriptor error: */
