@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.32.1.2 (Berkeley) %G%"
+literal|"@(#)login.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,12 @@ directive|include
 file|<strings.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -174,48 +180,6 @@ end_define
 begin_comment
 comment|/* name of group to own ttys */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MOTDFILE
-value|"/etc/motd"
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAILDIR
-value|"/usr/spool/mail"
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOLOGIN
-value|"/etc/nologin"
-end_define
-
-begin_define
-define|#
-directive|define
-name|HUSHLOGIN
-value|".hushlogin"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LASTLOG
-value|"/usr/adm/lastlog"
-end_define
-
-begin_define
-define|#
-directive|define
-name|BSHELL
-value|"/bin/sh"
-end_define
 
 begin_comment
 comment|/*  * This bounds the time given to login.  Not a define so it can  * be patched on machines where it's too small.  */
@@ -1858,7 +1822,7 @@ name|quietlog
 operator|=
 name|access
 argument_list|(
-name|HUSHLOGIN
+name|_PATH_HUSHLOGIN
 argument_list|,
 name|F_OK
 argument_list|)
@@ -2004,7 +1968,7 @@ name|pwd
 operator|->
 name|pw_shell
 operator|=
-name|BSHELL
+name|_PATH_BSHELL
 expr_stmt|;
 comment|/* turn on new line discipline for the csh */
 elseif|else
@@ -2221,7 +2185,7 @@ name|tbuf
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|MAILDIR
+name|_PATH_MAILDIR
 argument_list|,
 name|pwd
 operator|->
@@ -2607,7 +2571,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|MOTDFILE
+name|_PATH_MOTDFILE
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -2735,7 +2699,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|NOLOGIN
+name|_PATH_NOLOGIN
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -2829,7 +2793,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|LASTLOG
+name|_PATH_LASTLOG
 argument_list|,
 name|O_RDWR
 argument_list|,
