@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.65 (Berkeley) %G%"
+literal|"@(#)main.c	8.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,12 +235,6 @@ begin_comment
 comment|/* **  Pointers for setproctitle. **	This allows "ps" listings to give more useful information. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SETPROCTITLE
-end_ifdef
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -266,15 +260,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* end of argv */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SETPROCTITLE */
 end_comment
 
 begin_function_decl
@@ -1396,12 +1381,6 @@ name|UserEnviron
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SETPROCTITLE
-end_ifdef
-
 begin_comment
 comment|/* 	**  Save start and extent of argv for setproctitle. 	*/
 end_comment
@@ -1460,15 +1439,6 @@ index|]
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SETPROCTITLE */
-end_comment
 
 begin_if
 if|if

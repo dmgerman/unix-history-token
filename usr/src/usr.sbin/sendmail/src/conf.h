@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.119 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.120 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -286,17 +286,6 @@ end_define
 
 begin_comment
 comment|/* include internet support */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SETPROCTITLE
-value|1
-end_define
-
-begin_comment
-comment|/* munge argv to display current status */
 end_comment
 
 begin_define
@@ -678,6 +667,17 @@ end_define
 
 begin_comment
 comment|/* use<sys/statfs.h> statfs() impl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPT_PADCHAR
+value|'\0'
+end_define
+
+begin_comment
+comment|/* pad process title with nulls */
 end_comment
 
 begin_endif
@@ -1330,11 +1330,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
-name|SETPROCTITLE
-end_undef
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_NONE
+end_define
+
+begin_comment
+comment|/* don't use setproctitle */
+end_comment
 
 begin_define
 define|#
@@ -1918,6 +1923,17 @@ begin_comment
 comment|/* use<sys/mount.h> statfs() impl */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_PSSTRINGS
+end_define
+
+begin_comment
+comment|/* use PS_STRINGS pointer */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -2017,25 +2033,21 @@ begin_comment
 comment|/* version 1.1 or later */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|SPT_TYPE
+end_undef
+
 begin_define
 define|#
 directive|define
-name|HASSETPROCTITLE
-value|1
+name|SPT_TYPE
+value|SPT_BUILTIN
 end_define
 
 begin_comment
 comment|/* setproctitle is in libc */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SETPROCTITLE
-end_undef
-
-begin_comment
-comment|/* so don't redefine it in conf.c */
 end_comment
 
 begin_else
@@ -2068,6 +2080,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SPT_PADCHAR
+value|'\0'
+end_define
+
+begin_comment
+comment|/* pad process title with nulls */
+end_comment
 
 begin_endif
 endif|#
@@ -3831,11 +3854,16 @@ begin_comment
 comment|/* use<sys/statfs.h> statfs() impl */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|SETPROCTITLE
-end_undef
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_NONE
+end_define
+
+begin_comment
+comment|/* don't use setproctitle */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -3994,11 +4022,16 @@ begin_comment
 comment|/* has initgroups(2) call */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|SETPROCTITLE
-end_undef
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_NONE
+end_define
+
+begin_comment
+comment|/* don't use setproctitle */
+end_comment
 
 begin_define
 define|#
