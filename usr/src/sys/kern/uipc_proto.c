@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.12	81/12/12	*/
+comment|/*	uipc_proto.c	4.13	81/12/20	*/
 end_comment
 
 begin_include
@@ -779,13 +779,13 @@ if|if
 condition|(
 name|pr
 operator|->
-name|pr_slowtimo
+name|pr_fasttimo
 condition|)
 call|(
 modifier|*
 name|pr
 operator|->
-name|pr_slowtimo
+name|pr_fasttimo
 call|)
 argument_list|()
 expr_stmt|;
