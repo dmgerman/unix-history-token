@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Common functions for CAM "type" (peripheral) drivers.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_periph.c,v 1.13 1999/05/09 01:25:04 ken Exp $  */
+comment|/*  * Common functions for CAM "type" (peripheral) drivers.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_periph.c,v 1.14 1999/05/22 21:58:45 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -5454,14 +5454,14 @@ case|:
 block|{
 comment|/* no decrement */
 name|struct
-name|ccb_getdev
-name|cgd
+name|ccb_getdevstats
+name|cgds
 decl_stmt|;
 comment|/* 			 * First off, find out what the current 			 * transaction counts are. 			 */
 name|xpt_setup_ccb
 argument_list|(
 operator|&
-name|cgd
+name|cgds
 operator|.
 name|ccb_h
 argument_list|,
@@ -5475,13 +5475,13 @@ comment|/*priority*/
 literal|1
 argument_list|)
 expr_stmt|;
-name|cgd
+name|cgds
 operator|.
 name|ccb_h
 operator|.
 name|func_code
 operator|=
-name|XPT_GDEV_TYPE
+name|XPT_GDEV_STATS
 expr_stmt|;
 name|xpt_action
 argument_list|(
@@ -5491,23 +5491,36 @@ name|ccb
 operator|*
 operator|)
 operator|&
-name|cgd
+name|cgds
 argument_list|)
 expr_stmt|;
 comment|/* 			 * If we were the only transaction active, treat 			 * the QUEUE FULL as if it were a BUSY condition. 			 */
 if|if
 condition|(
-name|cgd
+name|cgds
 operator|.
 name|dev_active
 operator|!=
 literal|0
 condition|)
 block|{
+name|int
+name|total_openings
+decl_stmt|;
 comment|/* 			 	 * Reduce the number of openings to 				 * be 1 less than the amount it took 				 * to get a queue full bounded by the 				 * minimum allowed tag count for this 				 * device. 			 	 */
+name|total_openings
+operator|=
+name|cgds
+operator|.
+name|dev_active
+operator|+
+name|cgds
+operator|.
+name|dev_openings
+expr_stmt|;
 name|openings
 operator|=
-name|cgd
+name|cgds
 operator|.
 name|dev_active
 expr_stmt|;
@@ -5515,13 +5528,13 @@ if|if
 condition|(
 name|openings
 operator|<
-name|cgd
+name|cgds
 operator|.
 name|mintags
 condition|)
 name|openings
 operator|=
-name|cgd
+name|cgds
 operator|.
 name|mintags
 expr_stmt|;
@@ -5529,13 +5542,7 @@ if|if
 condition|(
 name|openings
 operator|<
-name|cgd
-operator|.
-name|dev_active
-operator|+
-name|cgd
-operator|.
-name|dev_openings
+name|total_openings
 condition|)
 name|relsim_flags
 operator|=
