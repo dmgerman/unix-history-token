@@ -167,6 +167,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|jail_sysvipc_allowed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_jail
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|sysvipc_allowed
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|jail_sysvipc_allowed
+argument_list|,
+literal|0
+argument_list|,
+literal|"Processes in jail can use System V IPC primitives"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|jail
