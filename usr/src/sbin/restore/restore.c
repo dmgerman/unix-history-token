@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.7	(Berkeley)	83/03/08"
+literal|"@(#)restore.c	3.8	(Berkeley)	83/03/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,307 @@ directive|include
 file|"restore.h"
 end_include
 
+begin_comment
+comment|/*  * This implements the 't' option.  * List entries on the tape.  */
+end_comment
+
+begin_function
+name|long
+name|listfile
+parameter_list|(
+name|name
+parameter_list|,
+name|ino
+parameter_list|,
+name|type
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+block|{
+name|long
+name|descend
+init|=
+name|hflag
+condition|?
+name|GOOD
+else|:
+name|FAIL
+decl_stmt|;
+if|if
+condition|(
+name|BIT
+argument_list|(
+name|ino
+argument_list|,
+name|dumpmap
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|descend
+operator|)
+return|;
+block|}
+name|vprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s"
+argument_list|,
+name|type
+operator|==
+name|LEAF
+condition|?
+literal|"leaf"
+else|:
+literal|"dir "
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%10d\t%s\n"
+argument_list|,
+name|ino
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|descend
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * This implements the 'x' option.  * Request that new entries be extracted.  */
+end_comment
+
+begin_function
+name|long
+name|addfile
+parameter_list|(
+name|name
+parameter_list|,
+name|ino
+parameter_list|,
+name|type
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|entry
+modifier|*
+name|ep
+decl_stmt|;
+name|long
+name|descend
+init|=
+name|hflag
+condition|?
+name|GOOD
+else|:
+name|FAIL
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|100
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|BIT
+argument_list|(
+name|ino
+argument_list|,
+name|dumpmap
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|vprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s: not on the tape\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|descend
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|mflag
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"./%u"
+argument_list|,
+name|ino
+argument_list|)
+expr_stmt|;
+name|name
+operator|=
+name|buf
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|NODE
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|genliteraldir
+argument_list|(
+name|name
+argument_list|,
+name|ino
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|descend
+operator|)
+return|;
+block|}
+block|}
+if|if
+condition|(
+name|ino
+operator|==
+name|ROOTINO
+condition|)
+return|return
+operator|(
+name|descend
+operator|)
+return|;
+name|ep
+operator|=
+name|lookupino
+argument_list|(
+name|ino
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|!=
+name|NIL
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+name|myname
+argument_list|(
+name|ep
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|descend
+operator|)
+return|;
+name|type
+operator||=
+name|LINK
+expr_stmt|;
+block|}
+name|ep
+operator|=
+name|addentry
+argument_list|(
+name|name
+argument_list|,
+name|ino
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|NODE
+condition|)
+block|{
+name|newnode
+argument_list|(
+name|ep
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|descend
+operator|)
+return|;
+block|}
+name|ep
+operator|->
+name|e_flags
+operator||=
+name|NEW
+expr_stmt|;
+return|return
+operator|(
+name|descend
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*   * The following four routines implement the incremental  * restore algorithm. The first removes old entries, the second  * does renames and calculates the extraction list, the third  * cleans up link names missed by the first two, and the final  * one deletes old directories.  *  * Directories cannot be immediately deleted, as they may have  * other files in them which need to be moved out first. As  * directories to be deleted are found, they are put on the   * following deletion list. After all deletions and renames  * are done, this list is actually deleted.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -38,10 +339,6 @@ modifier|*
 name|removelist
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* list of nodes to be deleted */
-end_comment
 
 begin_comment
 comment|/*  *	Remove unneeded leaves from the old tree.  *	Remove directories from the lookup chains.  */
@@ -188,254 +485,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	List entries on the tape.  */
-end_comment
-
-begin_function
-name|void
-name|listfile
-parameter_list|(
-name|name
-parameter_list|,
-name|ino
-parameter_list|,
-name|type
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-name|int
-name|type
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|BIT
-argument_list|(
-name|ino
-argument_list|,
-name|dumpmap
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-return|return;
-block|}
-name|vprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"%s"
-argument_list|,
-name|type
-operator|==
-name|LEAF
-condition|?
-literal|"leaf"
-else|:
-literal|"dir "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"%10d\t%s\n"
-argument_list|,
-name|ino
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *	Request that new entries be extracted.  */
-end_comment
-
-begin_function
-name|void
-name|addfile
-parameter_list|(
-name|name
-parameter_list|,
-name|ino
-parameter_list|,
-name|type
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-name|int
-name|type
-decl_stmt|;
-block|{
-specifier|register
-name|struct
-name|entry
-modifier|*
-name|ep
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|100
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|BIT
-argument_list|(
-name|ino
-argument_list|,
-name|dumpmap
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|vprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"%s: not on the tape\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|!
-name|mflag
-condition|)
-block|{
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"./%u"
-argument_list|,
-name|ino
-argument_list|)
-expr_stmt|;
-name|name
-operator|=
-name|buf
-expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|NODE
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|genliteraldir
-argument_list|(
-name|name
-argument_list|,
-name|ino
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-if|if
-condition|(
-name|ino
-operator|==
-name|ROOTINO
-condition|)
-return|return;
-name|ep
-operator|=
-name|lookupino
-argument_list|(
-name|ino
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ep
-operator|!=
-name|NIL
-condition|)
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|name
-argument_list|,
-name|myname
-argument_list|(
-name|ep
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return;
-name|type
-operator||=
-name|LINK
-expr_stmt|;
-block|}
-name|ep
-operator|=
-name|addentry
-argument_list|(
-name|name
-argument_list|,
-name|ino
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|NODE
-condition|)
-block|{
-name|newnode
-argument_list|(
-name|ep
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|ep
-operator|->
-name|e_flags
-operator||=
-name|NEW
-expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_comment
 comment|/*  *	For each directory entry on the incremental tape, determine which  *	category it falls into as follows:  *	KEEP - entries that are to be left alone.  *	NEW - new entries to be added.  *	EXTRACT - files that must be updated with new contents.  *	LINK - new links to be added.  *	Renames are done at the same time.  */
 end_comment
 
 begin_function
-name|void
+name|long
 name|nodeupdates
 parameter_list|(
 name|name
@@ -467,6 +521,11 @@ decl_stmt|,
 modifier|*
 name|ip
 decl_stmt|;
+name|long
+name|descend
+init|=
+name|GOOD
+decl_stmt|;
 name|int
 name|key
 init|=
@@ -477,18 +536,22 @@ define|#
 directive|define
 name|ONTAPE
 value|0x1
+comment|/* inode is on the tape */
 define|#
 directive|define
 name|INOFND
 value|0x2
+comment|/* inode already exists */
 define|#
 directive|define
 name|NAMEFND
 value|0x4
+comment|/* name already exists */
 define|#
 directive|define
 name|MODECHG
 value|0x8
+comment|/* mode of inode changed */
 name|char
 name|keybuf
 index|[
@@ -613,6 +676,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 	 * If both a name and an inode are found, but they do 	 * not correspond to the same file, then both the inode 	 * which has been found and the inode corresponding to 	 * the name which has been found need to be renamed. 	 * The current pathname is the new name for the inode 	 * which has been found. Since all files to be 	 * deleted have already been removed, the file found by 	 * name must live under a new name in this dump level. 	 * For the time being it is given a temporary name in anticipation 	 * that it will be renamed when it is later found by inode number. 	 */
 if|if
 condition|(
 operator|(
@@ -638,20 +702,21 @@ operator|!=
 name|np
 condition|)
 block|{
-name|mktempname
-argument_list|(
-name|np
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"[%s] %s: mktempname\n"
+literal|"name/inode conflict, mktempname %s\n"
 argument_list|,
-name|keyval
-argument_list|,
-name|name
+name|myname
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|mktempname
+argument_list|(
+name|np
 argument_list|)
 expr_stmt|;
 name|np
@@ -731,11 +796,13 @@ literal|"|MODECHG"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Decide on the disposition of the file based on its flags. 	 * Note that we have already handled the case in which 	 * a name and inode are found that correspond to different files. 	 * Thus if both NAMEFND and INOFND are set then ip == np. 	 */
 switch|switch
 condition|(
 name|key
 condition|)
 block|{
+comment|/* 	 * A previously existing file has been found. 	 * Mark it as KEEP so that other links to the inode can be 	 * detected, and so that it will not be reclaimed by the search 	 * for unreferenced names. 	 */
 case|case
 name|INOFND
 operator||
@@ -759,6 +826,7 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	 * A previously non-existent file. 	 * Add it to the file system, and request its extraction. 	 * If it is a directory, create it immediately. 	 * (Since the name is unused there can be no conflict) 	 */
 case|case
 name|ONTAPE
 case|:
@@ -809,6 +877,7 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	 * A file with the same inode number, but a different 	 * name has been found. If the other name has not already 	 * been found (indicated by the KEEP flag, see above) then 	 * this must be a new name for the file, and it is renamed. 	 * If the other name has been found then this must be a 	 * link to the file. Hard links to directories are not 	 * permitted, and are either deleted or converted to 	 * symbolic links. Finally, if the file is on the tape, 	 * a request is made to extract it. 	 */
 case|case
 name|ONTAPE
 operator||
@@ -819,7 +888,18 @@ condition|(
 name|type
 operator|==
 name|LEAF
+operator|&&
+operator|(
+name|ip
+operator|->
+name|e_flags
+operator|&
+name|KEEP
+operator|)
+operator|==
+literal|0
 condition|)
+block|{
 name|ip
 operator|->
 name|e_flags
@@ -837,71 +917,24 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* fall through */
 case|case
 name|INOFND
 case|:
 if|if
 condition|(
+operator|(
 name|ip
 operator|->
 name|e_flags
 operator|&
 name|KEEP
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|ip
-operator|->
-name|e_type
-operator|==
-name|NODE
-condition|)
-name|panic
-argument_list|(
-literal|"%s linked to directory %s\n"
-argument_list|,
-name|name
-argument_list|,
-name|myname
-argument_list|(
-name|ip
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ep
-operator|=
-name|addentry
-argument_list|(
-name|name
-argument_list|,
-name|ino
-argument_list|,
-name|type
-operator||
-name|LINK
-argument_list|)
-expr_stmt|;
-name|ep
-operator|->
-name|e_flags
-operator||=
-name|NEW
-expr_stmt|;
-name|dprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"[%s] %s: LINK\n"
-argument_list|,
-name|keyval
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|renameit
 argument_list|(
 name|myname
@@ -937,6 +970,68 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|ip
+operator|->
+name|e_type
+operator|==
+name|NODE
+condition|)
+block|{
+name|descend
+operator|=
+name|FAIL
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"deleted hard link %s to directory %s\n"
+argument_list|,
+name|name
+argument_list|,
+name|myname
+argument_list|(
+name|ip
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|ep
+operator|=
+name|addentry
+argument_list|(
+name|name
+argument_list|,
+name|ino
+argument_list|,
+name|type
+operator||
+name|LINK
+argument_list|)
+expr_stmt|;
+name|ep
+operator|->
+name|e_flags
+operator||=
+name|NEW
+expr_stmt|;
+name|dprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"[%s] %s: LINK\n"
+argument_list|,
+name|keyval
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* 	 * A file on the tape has a name which is the same as a name 	 * corresponding to a different file in the previous dump. 	 * Since all files to be deleted have already been removed, 	 * this file must live under a new name in this dump level. 	 * For the time being it is given a temporary name in anticipation 	 * that it will be renamed when it is later found by inode number 	 * (see INOFND case above). 	 * This then falls into the simple case of a previously known 	 * file which is to be updated. 	 */
 case|case
 name|ONTAPE
 operator||
@@ -1014,6 +1109,7 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	 * An inode is being reused in a completely different way. 	 * Normally an extract can simply do an "unlink" followed 	 * by a "creat". Here we must do effectively the same 	 * thing. The complications arise because we cannot really 	 * delete a directory since it may still contain files 	 * that we need to rename, so we delete it from the symbol 	 * table, and put it on the list to be deleted eventually. 	 * Conversely if a directory is to be created, it must be 	 * done immediately, rather than waiting until the  	 * extraction phase. 	 */
 case|case
 name|ONTAPE
 operator||
@@ -1146,6 +1242,27 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	 * A hard link to a diirectory that has been removed. 	 * Ignore it. 	 */
+case|case
+name|NAMEFND
+case|:
+name|dprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"[%s] %s: Extraneous name\n"
+argument_list|,
+name|keyval
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|descend
+operator|=
+name|FAIL
+expr_stmt|;
+break|break;
+comment|/* 	 * If any of these arise, something is grievously wrong with 	 * the current state of the symbol table. 	 */
 case|case
 name|INOFND
 operator||
@@ -1162,9 +1279,6 @@ case|case
 name|INOFND
 operator||
 name|MODECHG
-case|:
-case|case
-name|NAMEFND
 case|:
 case|case
 name|NIL
@@ -1179,6 +1293,7 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	 * These states "cannot" arise for any state of the symbol table. 	 */
 case|case
 name|ONTAPE
 operator||
@@ -1199,11 +1314,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+return|return
+operator|(
+name|descend
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  *	Find unreferenced link names.  */
+comment|/*  * Find unreferenced link names.  */
 end_comment
 
 begin_macro
@@ -1332,7 +1452,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	Remove old nodes (directories).  */
+comment|/*  * Remove old nodes (directories).  * Note that this routine runs in O(N*D) where:  *	N is the number of directory entries to be removed.  *	D is the maximum depth of the tree.  * If N == D this can be quite slow. If the list were  * topologically sorted, the deletion could be done in  * time O(N).  */
 end_comment
 
 begin_macro
@@ -1461,7 +1581,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	Extract new leaves.  */
+comment|/*  * This is the routine used to extract files for the 'r' command.  * Extract new leaves.  */
 end_comment
 
 begin_macro
@@ -1551,6 +1671,7 @@ argument_list|(
 name|first
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the next available file is not the one which we 		 * expect then we have missed one or more files. Since 		 * we do not request files that were not on the tape, 		 * the lost files must have been due to a tape read error. 		 */
 while|while
 condition|(
 name|first
@@ -1673,6 +1794,7 @@ argument_list|,
 literal|"unexpected file on tape"
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the file is to be extracted, then the old file must 		 * be removed since its type may change from one leaf type 		 * to another (eg "file" to "character special"). 		 */
 if|if
 condition|(
 operator|(
@@ -1699,6 +1821,9 @@ operator|~
 name|REMOVED
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|extractfile
 argument_list|(
 name|myname
@@ -1718,6 +1843,7 @@ operator||
 name|EXTRACT
 operator|)
 expr_stmt|;
+comment|/* 		 * We checkpoint the restore after every tape reel, so 		 * as to simplify the amount of work re quired by the 		 * 'R' command. 		 */
 if|if
 condition|(
 name|curvol
@@ -1745,7 +1871,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	Efficiently extract a subset of the files on a tape  */
+comment|/*  * This is the routine used to extract files for the 'x' command.  * Efficiently extract a subset of the files on a tape  */
 end_comment
 
 begin_macro
@@ -2016,6 +2142,9 @@ argument_list|(
 literal|"corrupted symbol table\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|extractfile
 argument_list|(
 name|myname
@@ -2037,7 +2166,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	Add links.  */
+comment|/*  * Add links.  */
 end_comment
 
 begin_macro
@@ -2142,13 +2271,6 @@ operator|==
 name|NODE
 condition|)
 block|{
-name|vprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"changing hard link to directory to a symbolic link:"
-argument_list|)
-expr_stmt|;
 name|linkit
 argument_list|(
 name|name
@@ -2190,7 +2312,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	Check the symbol table.  */
+comment|/*  * Check the symbol table.  * We do this to insure that all the requested work was done, and  * that no temporary names remain.  */
 end_comment
 
 begin_macro
@@ -2279,11 +2401,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	Compare with the directory structure on the tape  */
+comment|/*  * Compare with the directory structure on the tape  * A paranoid check that things are as they should be.  */
 end_comment
 
 begin_function
-name|void
+name|long
 name|verifyfile
 parameter_list|(
 name|name
@@ -2311,6 +2433,11 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
+name|long
+name|descend
+init|=
+name|GOOD
+decl_stmt|;
 name|ep
 operator|=
 name|lookupname
@@ -2324,21 +2451,41 @@ name|ep
 operator|==
 name|NIL
 condition|)
-name|panic
+block|{
+name|fprintf
 argument_list|(
-literal|"missing name %s\n"
+name|stderr
+argument_list|,
+literal|"Warning: missing name %s\n"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-for|for
-control|(
+return|return
+operator|(
+name|FAIL
+operator|)
+return|;
+block|}
 name|np
 operator|=
 name|lookupino
 argument_list|(
 name|ino
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|!=
+name|ep
+condition|)
+name|descend
+operator|=
+name|FAIL
+expr_stmt|;
+for|for
+control|(
 init|;
 name|np
 operator|!=
@@ -2389,6 +2536,11 @@ argument_list|,
 literal|"type should be LEAF"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|descend
+operator|)
+return|;
 block|}
 end_function
 
