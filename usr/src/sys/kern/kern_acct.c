@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_acct.c	6.5	84/08/29	*/
+comment|/*	kern_acct.c	6.6	84/12/12	*/
 end_comment
 
 begin_include
@@ -799,9 +799,12 @@ operator|=
 literal|0
 expr_stmt|;
 name|t
-operator|<<=
-literal|6
+operator|=
+name|t
+operator|*
+name|AHZ
 expr_stmt|;
+comment|/* compiler will convert only this format to a shift */
 if|if
 condition|(
 name|ut
@@ -813,11 +816,7 @@ operator|/
 operator|(
 literal|1000000
 operator|/
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
+name|AHZ
 operator|)
 expr_stmt|;
 while|while
