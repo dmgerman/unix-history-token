@@ -342,6 +342,66 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Per-physical-drive data  */
+end_comment
+
+begin_struct
+struct|struct
+name|ciss_pdrive
+block|{
+name|union
+name|ciss_device_address
+name|cp_address
+decl_stmt|;
+name|int
+name|cp_online
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CISS_PHYSICAL_SHIFT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_PHYSICAL_BASE
+value|(1<< CISS_PHYSICAL_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_MAX_PHYSTGT
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_IS_PHYSICAL
+parameter_list|(
+name|bus
+parameter_list|)
+value|(bus>= CISS_PHYSICAL_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_CAM_TO_PBUS
+parameter_list|(
+name|bus
+parameter_list|)
+value|(bus - CISS_PHYSICAL_BASE)
+end_define
+
+begin_comment
 comment|/*  * Per-adapter data  */
 end_comment
 
@@ -517,6 +577,12 @@ modifier|*
 modifier|*
 name|ciss_logical
 decl_stmt|;
+name|struct
+name|ciss_pdrive
+modifier|*
+modifier|*
+name|ciss_physical
+decl_stmt|;
 name|union
 name|ciss_device_address
 modifier|*
@@ -527,6 +593,12 @@ name|int
 name|ciss_max_bus_number
 decl_stmt|;
 comment|/* maximum bus number */
+name|int
+name|ciss_max_logical_bus
+decl_stmt|;
+name|int
+name|ciss_max_physical_bus
+decl_stmt|;
 name|struct
 name|cam_devq
 modifier|*
