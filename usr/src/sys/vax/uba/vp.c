@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.17	82/08/22	*/
+comment|/*	vp.c	4.18	82/09/12	*/
 end_comment
 
 begin_include
@@ -1052,12 +1052,22 @@ begin_macro
 name|vpwrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -1072,13 +1082,13 @@ argument_list|)
 operator|>=
 name|NVP
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-else|else
+operator|)
+return|;
+return|return
+operator|(
 name|physio
 argument_list|(
 name|vpstrategy
@@ -1100,7 +1110,8 @@ name|minvpph
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.8	82/08/22	*/
+comment|/*	uda.c	4.9	82/09/12	*/
 end_comment
 
 begin_include
@@ -4274,13 +4274,13 @@ name|unit
 operator|>=
 name|NRA
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-else|else
+operator|)
+return|;
+return|return
+operator|(
 name|physio
 argument_list|(
 name|udstrategy
@@ -4299,7 +4299,8 @@ name|minphys
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -4345,13 +4346,13 @@ name|unit
 operator|>=
 name|NRA
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-else|else
+operator|)
+return|;
+return|return
+operator|(
 name|physio
 argument_list|(
 name|udstrategy
@@ -4370,7 +4371,8 @@ name|minphys
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

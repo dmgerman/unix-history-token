@@ -12,7 +12,7 @@ name|RKBDEBUG
 end_define
 
 begin_comment
-comment|/*	rk.c	4.44	82/08/22	*/
+comment|/*	rk.c	4.45	82/09/12	*/
 end_comment
 
 begin_include
@@ -3266,13 +3266,13 @@ name|unit
 operator|>=
 name|NRK
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-else|else
+operator|)
+return|;
+return|return
+operator|(
 name|physio
 argument_list|(
 name|rkstrategy
@@ -3291,7 +3291,8 @@ name|minphys
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

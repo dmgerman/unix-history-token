@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.17	82/08/22	*/
+comment|/*	ut.c	4.18	82/09/12	*/
 end_comment
 
 begin_include
@@ -3302,9 +3302,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|u
-operator|.
-name|u_error
+name|int
+name|errno
+decl_stmt|;
+name|errno
 operator|=
 name|utphys
 argument_list|(
@@ -3315,11 +3316,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|errno
 condition|)
-return|return;
+return|return
+operator|(
+name|errno
+operator|)
+return|;
+return|return
+operator|(
 name|physio
 argument_list|(
 name|utstrategy
@@ -3341,7 +3346,8 @@ name|minphys
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3374,9 +3380,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|u
-operator|.
-name|u_error
+name|int
+name|errno
+decl_stmt|;
+name|errno
 operator|=
 name|utphys
 argument_list|(
@@ -3387,11 +3394,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|errno
 condition|)
-return|return;
+return|return
+operator|(
+name|errno
+operator|)
+return|;
+return|return
+operator|(
 name|physio
 argument_list|(
 name|utstrategy
@@ -3413,7 +3424,8 @@ name|minphys
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
