@@ -2904,7 +2904,7 @@ literal|0x00
 block|,
 name|AMDNVIDIA
 block|,
-literal|0x00
+name|AMDCABLE
 block|,
 name|ATA_UDMA6
 block|,
@@ -6519,8 +6519,6 @@ block|,
 name|AMDNVIDIA
 block|,
 name|NVIDIA
-operator||
-name|AMDBUG
 block|,
 name|ATA_UDMA6
 block|,
@@ -14812,6 +14810,7 @@ operator|>
 name|ATA_UDMA2
 operator|&&
 operator|!
+operator|(
 name|pci_read_config
 argument_list|(
 name|parent
@@ -14825,6 +14824,7 @@ operator|(
 literal|1
 operator|<<
 name|devno
+operator|)
 operator|)
 condition|)
 block|{
