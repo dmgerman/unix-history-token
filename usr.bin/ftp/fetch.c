@@ -965,6 +965,11 @@ condition|(
 literal|1
 condition|)
 block|{
+name|ai_unmapped
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|socket
