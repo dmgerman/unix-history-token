@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rm.c	8.7 (Berkeley) %G%"
+literal|"@(#)rm.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -269,7 +269,8 @@ literal|"dfiPRrW"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -368,15 +369,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|*
 name|argv
 condition|)
-name|exit
-argument_list|(
-name|eval
-argument_list|)
-expr_stmt|;
+block|{
 name|stdin_ok
 operator|=
 name|isatty
@@ -399,6 +395,7 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|eval
@@ -629,7 +626,8 @@ case|:
 comment|/* Pre-order: give user chance to skip. */
 if|if
 condition|(
-name|iflag
+operator|!
+name|fflag
 operator|&&
 operator|!
 name|check
@@ -682,7 +680,7 @@ name|SKIPPED
 condition|)
 continue|continue;
 break|break;
-block|}
+default|default:
 if|if
 condition|(
 operator|!
@@ -705,6 +703,7 @@ name|fts_statp
 argument_list|)
 condition|)
 continue|continue;
+block|}
 comment|/* 		 * If we can't read or search the directory, may still be 		 * able to remove it.  Don't print out the un{read,search}able 		 * message unless the remove fails. 		 */
 switch|switch
 condition|(
@@ -728,39 +727,14 @@ name|p
 operator|->
 name|fts_accpath
 argument_list|)
-condition|)
-continue|continue;
-if|if
-condition|(
+operator|||
+name|fflag
+operator|&&
 name|errno
 operator|==
 name|ENOENT
 condition|)
-block|{
-if|if
-condition|(
-name|fflag
-condition|)
 continue|continue;
-block|}
-elseif|else
-if|if
-condition|(
-name|p
-operator|->
-name|fts_info
-operator|!=
-name|FTS_DP
-condition|)
-name|warnx
-argument_list|(
-literal|"%s: unable to read"
-argument_list|,
-name|p
-operator|->
-name|fts_path
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|FTS_W
@@ -860,18 +834,12 @@ name|stat
 name|sb
 decl_stmt|;
 name|int
-name|df
-decl_stmt|,
 name|rval
 decl_stmt|;
 name|char
 modifier|*
 name|f
 decl_stmt|;
-name|df
-operator|=
-name|dflag
-expr_stmt|;
 comment|/* 	 * Remove a file.  POSIX 1003.2 states that, by default, attempting 	 * to remove a directory is an error, so must always stat the file. 	 */
 while|while
 condition|(
@@ -975,7 +943,7 @@ name|st_mode
 argument_list|)
 operator|&&
 operator|!
-name|df
+name|dflag
 condition|)
 block|{
 name|warnx
@@ -1606,7 +1574,7 @@ condition|;
 operator|++
 name|t
 control|)
-empty_stmt|;
+continue|continue;
 name|t
 operator|=
 name|save
@@ -1632,7 +1600,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rm [-dfiRr] file ...\n"
+literal|"usage: rm [-dfiPRrW] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
