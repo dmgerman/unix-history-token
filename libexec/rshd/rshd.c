@@ -3919,6 +3919,13 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
+if|if
+condition|(
+operator|--
+name|cnt
+operator|==
+literal|0
+condition|)
 name|errx
 argument_list|(
 literal|1
