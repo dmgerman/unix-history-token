@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trapov_.c	5.4	%G%  *  *	Fortran/C floating-point overflow handler  *  *	The idea of these routines is to catch floating-point overflows  *	and print an eror message.  When we then get a reserved operand  *	exception, we then fix up the value to the highest possible  *	number.  Keen, no?  *	Messy, yes!  *  *	Synopsis:  *		call trapov(n)  *			causes overflows to be trapped, with the first 'n'  *			overflows getting an "Overflow!" message printed.  *		k = ovcnt(0)  *			causes 'k' to get the number of overflows since the  *			last call to trapov().  *  *	Gary Klimowicz, April 17, 1981  *	Integerated with libF77: David Wasley, UCB, July 1981.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trapov_.c	5.5	%G%  *  *	Fortran/C floating-point overflow handler  *  *	The idea of these routines is to catch floating-point overflows  *	and print an eror message.  When we then get a reserved operand  *	exception, we then fix up the value to the highest possible  *	number.  Keen, no?  *	Messy, yes!  *  *	Synopsis:  *		call trapov(n)  *			causes overflows to be trapped, with the first 'n'  *			overflows getting an "Overflow!" message printed.  *		k = ovcnt(0)  *			causes 'k' to get the number of overflows since the  *			last call to trapov().  *  *	Gary Klimowicz, April 17, 1981  *	Integerated with libF77: David Wasley, UCB, July 1981.  */
 end_comment
 
 begin_include
@@ -573,30 +573,28 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|got_overflow
-argument_list|(
-argument|signo
-argument_list|,
-argument|codeword
-argument_list|,
-argument|myaddr
-argument_list|,
-argument|pc
-argument_list|,
-argument|ps
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|signo
+parameter_list|,
+name|codeword
+parameter_list|,
+name|myaddr
+parameter_list|,
+name|pc
+parameter_list|,
+name|ps
+parameter_list|)
 name|char
 modifier|*
 name|myaddr
 decl_stmt|,
-modifier|*
+decl|*
 name|pc
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -774,30 +772,28 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|got_illegal_instruction
-argument_list|(
-argument|signo
-argument_list|,
-argument|codeword
-argument_list|,
-argument|myaddr
-argument_list|,
-argument|trap_pc
-argument_list|,
-argument|ps
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|signo
+parameter_list|,
+name|codeword
+parameter_list|,
+name|myaddr
+parameter_list|,
+name|trap_pc
+parameter_list|,
+name|ps
+parameter_list|)
 name|char
 modifier|*
 name|myaddr
 decl_stmt|,
-modifier|*
+decl|*
 name|trap_pc
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -875,8 +871,7 @@ name|SIG_VAL
 operator|)
 literal|7
 condition|)
-return|return
-operator|(
+block|{
 call|(
 modifier|*
 name|sigill_default
@@ -892,8 +887,9 @@ name|trap_pc
 argument_list|,
 name|ps
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+return|return;
+block|}
 else|else
 name|sigdie
 argument_list|(
