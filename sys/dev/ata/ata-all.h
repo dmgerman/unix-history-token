@@ -340,12 +340,100 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_C_READ48
+value|0x24
+end_define
+
+begin_comment
+comment|/* read command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_READ_DMA48
+value|0x25
+end_define
+
+begin_comment
+comment|/* read w/DMA command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_READ_DMA_QUEUED48
+value|0x26
+end_define
+
+begin_comment
+comment|/* read w/DMS QUEUED command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_READ_MUL48
+value|0x29
+end_define
+
+begin_comment
+comment|/* read multi command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_C_WRITE
 value|0x30
 end_define
 
 begin_comment
 comment|/* write command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_WRITE48
+value|0x34
+end_define
+
+begin_comment
+comment|/* write command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_WRITE_DMA48
+value|0x35
+end_define
+
+begin_comment
+comment|/* write w/DMA command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_WRITE_DMA_QUEUED48
+value|0x36
+end_define
+
+begin_comment
+comment|/* write w/DMA QUEUED command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_WRITE_MUL48
+value|0x39
+end_define
+
+begin_comment
+comment|/* write multi command */
 end_comment
 
 begin_define
@@ -461,8 +549,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_C_SLEEP
+value|0xe6
+end_define
+
+begin_comment
+comment|/* sleep command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_C_FLUSHCACHE
 value|0xe7
+end_define
+
+begin_comment
+comment|/* flush cache to disk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_FLUSHCACHE48
+value|0xea
 end_define
 
 begin_comment
