@@ -827,6 +827,25 @@ literal|0
 block|}
 block|,
 block|{
+comment|/* jreynold@primenet.com */
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Seagate"
+block|,
+literal|"STT8000N*"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_1FM
+block|,
+literal|0
+block|}
+block|,
+block|{
 block|{
 name|T_SEQUENTIAL
 block|,
@@ -2260,7 +2279,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"it is possible that this device "
+literal|"it is possible that this device"
 literal|" needs a SA_QUIRK_1FM quirk set for it\n"
 argument_list|)
 expr_stmt|;
