@@ -369,6 +369,20 @@ define|\
 value|((sblock.fs_magic == FS_UFS1_MAGIC) ? \ 	(uint32_t)(dp)->dp1.field : (dp)->dp2.field)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DIP_SET
+parameter_list|(
+name|dp
+parameter_list|,
+name|field
+parameter_list|,
+name|val
+parameter_list|)
+value|do { \ 	if (sblock.fs_magic == FS_UFS1_MAGIC) \ 		(dp)->dp1.field = (val); \ 	else \ 		(dp)->dp2.field = (val); \ 	} while (0)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|ufs2_daddr_t
@@ -10900,7 +10914,7 @@ name|Nflag
 argument_list|)
 condition|)
 block|{
-name|DIP
+name|DIP_SET
 argument_list|(
 name|ino
 argument_list|,
@@ -10908,9 +10922,9 @@ name|di_db
 index|[
 name|i
 index|]
-argument_list|)
-operator|=
+argument_list|,
 name|iptr
+argument_list|)
 expr_stmt|;
 name|inodeupdated
 operator|++
@@ -10990,7 +11004,7 @@ name|Nflag
 argument_list|)
 condition|)
 block|{
-name|DIP
+name|DIP_SET
 argument_list|(
 name|ino
 argument_list|,
@@ -10998,9 +11012,9 @@ name|di_ib
 index|[
 name|i
 index|]
-argument_list|)
-operator|=
+argument_list|,
 name|iptr
+argument_list|)
 expr_stmt|;
 name|inodeupdated
 operator|++
