@@ -1293,6 +1293,12 @@ name|flags
 operator|&
 name|SDEV_MEDIA_LOADED
 operator|)
+operator|&&
+name|sd
+operator|->
+name|dk_slices
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 		 * If somebody still has it open, then forbid re-entry. 		 */
@@ -1314,20 +1320,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|if
-condition|(
-name|sd
-operator|->
-name|dk_slices
-operator|==
-name|NULL
-condition|)
-name|Debugger
-argument_list|(
-literal|"sdopen: no slices"
-argument_list|)
-expr_stmt|;
-else|else
 name|dsgone
 argument_list|(
 operator|&
