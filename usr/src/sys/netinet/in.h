@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Constants and structures defined by the internet system,  * Per RFC 790, September 1981.  */
+comment|/*  * Constants and structures defined by the internet system,  * Per RFC 790, September 1981, and numerous additions.  */
 end_comment
 
 begin_comment
@@ -426,7 +426,7 @@ value|(u_long)0xe0000000
 end_define
 
 begin_comment
-comment|/* 224.0.0.0   */
+comment|/* 224.0.0.0 */
 end_comment
 
 begin_define
@@ -437,7 +437,7 @@ value|(u_long)0xe0000001
 end_define
 
 begin_comment
-comment|/* 224.0.0.1   */
+comment|/* 224.0.0.1 */
 end_comment
 
 begin_define
@@ -529,91 +529,36 @@ value|1
 end_define
 
 begin_comment
-comment|/* buf/ip_opts; set/get IP per-packet options */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_MULTICAST_IF
-value|2
-end_define
-
-begin_comment
-comment|/* in_addr; set/get IP multicast interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_MULTICAST_TTL
-value|3
-end_define
-
-begin_comment
-comment|/* u_char; set/get IP multicast timetolive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_MULTICAST_LOOP
-value|4
-end_define
-
-begin_comment
-comment|/* u_char; set/get IP multicast loopback */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_ADD_MEMBERSHIP
-value|5
-end_define
-
-begin_comment
-comment|/* ip_mreq; add an IP group membership */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_DROP_MEMBERSHIP
-value|6
-end_define
-
-begin_comment
-comment|/* ip_mreq; drop an IP group membership */
+comment|/* buf/ip_opts; set/get IP options */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_HDRINCL
-value|7
+value|2
 end_define
 
 begin_comment
-comment|/* int; header is included with data (raw) */
+comment|/* int; header is included with data */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_TOS
-value|8
+value|3
 end_define
 
 begin_comment
-comment|/* int; IP type of service and precedence */
+comment|/* int; IP type of service and preced. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_TTL
-value|9
+value|4
 end_define
 
 begin_comment
@@ -624,44 +569,103 @@ begin_define
 define|#
 directive|define
 name|IP_RECVOPTS
-value|10
+value|5
 end_define
 
 begin_comment
-comment|/* bool; receive all IP options w/datagram */
+comment|/* bool; receive all IP opts w/dgram */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_RECVRETOPTS
-value|11
+value|6
 end_define
 
 begin_comment
-comment|/* bool; receive IP options for response */
+comment|/* bool; receive IP opts for response */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_RECVDSTADDR
-value|12
+value|7
 end_define
 
 begin_comment
-comment|/* bool; receive IP dst addr w/datagram */
+comment|/* bool; receive IP dst addr w/dgram */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_RETOPTS
+value|8
+end_define
+
+begin_comment
+comment|/* ip_opts; set/get IP options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MULTICAST_IF
+value|9
+end_define
+
+begin_comment
+comment|/* u_char; set/get IP multicast i/f  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MULTICAST_TTL
+value|10
+end_define
+
+begin_comment
+comment|/* u_char; set/get IP multicast ttl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MULTICAST_LOOP
+value|11
+end_define
+
+begin_comment
+comment|/* u_char; set/get IP multicast loopback */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_ADD_MEMBERSHIP
+value|12
+end_define
+
+begin_comment
+comment|/* ip_mreq; add an IP group membership */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_DROP_MEMBERSHIP
 value|13
 end_define
 
 begin_comment
-comment|/* ip_opts; set/get IP per-packet options */
+comment|/* ip_mreq; drop an IP group membership */
+end_comment
+
+begin_comment
+comment|/*  * Defaults and limits for options  */
 end_comment
 
 begin_define
@@ -672,7 +676,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* normally limit m'casts to 1 hop */
+comment|/* normally limit m'casts to 1 hop  */
 end_comment
 
 begin_define
@@ -683,7 +687,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* normally hear sends if a member */
+comment|/* normally hear sends if a member  */
 end_comment
 
 begin_define
@@ -694,7 +698,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* per socket */
+comment|/* per socket; must fit in one mbuf */
 end_comment
 
 begin_comment
