@@ -938,7 +938,7 @@ comment|/*  * Register 0x30 on up are unused  */
 end_comment
 
 begin_comment
-comment|/*  * Part of PCI configuration registers but not defined in<pci/pcireg.h>  */
+comment|/*  * Part of PCI configuration registers but not defined in<dev/pci/pcireg.h>  */
 end_comment
 
 begin_define
