@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mount.c	4.10 (Berkeley) %G%"
+literal|"@(#)mount.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|<mtab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_define
@@ -704,6 +710,14 @@ operator|<
 literal|0
 condition|)
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -713,9 +727,44 @@ argument_list|,
 name|spec
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|errno
+condition|)
+block|{
+case|case
+name|EMFILE
+case|:
+name|cp
+operator|=
+literal|"Mount table full"
+expr_stmt|;
+break|break;
+case|case
+name|EINVAL
+case|:
+name|cp
+operator|=
+literal|"Bogus super block"
+expr_stmt|;
+break|break;
+default|default:
 name|perror
 argument_list|(
 name|name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: %s\n"
+argument_list|,
+name|name
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 return|return;
