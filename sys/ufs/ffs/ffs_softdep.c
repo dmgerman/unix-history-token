@@ -24829,13 +24829,21 @@ condition|(
 name|td
 operator|==
 name|filesys_syncer
+operator|||
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_SOFTDEP
+operator|)
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * First check to see if the work list has gotten backlogged. 	 * If it has, co-opt this process to help clean up two entries. 	 * Because this process may hold inodes locked, we cannot 	 * handle any remove requests that might block on a locked 	 * inode as that could lead to deadlock. 	 */
+comment|/* 	 * First check to see if the work list has gotten backlogged. 	 * If it has, co-opt this process to help clean up two entries. 	 * Because this process may hold inodes locked, we cannot 	 * handle any remove requests that might block on a locked 	 * inode as that could lead to deadlock.  We set TDP_SOFTDEP 	 * to avoid recursively processing the worklist. 	 */
 if|if
 condition|(
 name|num_on_worklist
@@ -24845,6 +24853,12 @@ operator|/
 literal|10
 condition|)
 block|{
+name|td
+operator|->
+name|td_pflags
+operator||=
+name|TDP_SOFTDEP
+expr_stmt|;
 name|process_worklist_item
 argument_list|(
 name|NULL
@@ -24858,6 +24872,13 @@ name|NULL
 argument_list|,
 name|LK_NOWAIT
 argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_SOFTDEP
 expr_stmt|;
 name|stat_worklist_push
 operator|+=
