@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.55 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.56 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/filedesc.h>
 end_include
 
 begin_include
@@ -46,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -70,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/map.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -88,26 +70,22 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/quota.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/inode.h>
-end_include
+begin_comment
+comment|/* XXX for nfsrv_fhtovp */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<ufs/ufs/ufsmount.h>
 end_include
+
+begin_comment
+comment|/* XXX for nfsrv_fhtovp */
+end_comment
 
 begin_include
 include|#
@@ -5660,7 +5638,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|nfs_netaddr_match
+name|netaddr_match
 argument_list|(
 name|np
 operator|->
@@ -5730,7 +5708,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|nfs_netaddr_match
+name|netaddr_match
 argument_list|(
 name|np
 operator|->
