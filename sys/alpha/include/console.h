@@ -187,6 +187,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|KDGETREPEAT
+value|_IOR('K', 103, keyboard_delay_t)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GETFKEY
 value|_IOWR('k', 0, fkeyarg_t)
 end_define
