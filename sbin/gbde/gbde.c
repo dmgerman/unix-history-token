@@ -199,81 +199,24 @@ name|void
 name|__dead2
 name|usage
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|reason
+name|void
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|p
-operator|=
-name|getprogname
-argument_list|()
-expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage error: %s"
-argument_list|,
-name|reason
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t%s attach dest [-l lockfile] [-p pass-phrase]\n"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t%s detach dest\n"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t%s init /dev/dest [-i] [-f filename] [-L lockfile] [-P pass-phrase]\n"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t%s setkey dest [-n key] [-l lockfile] [-p pass-phrase] [-L new-lockfile] [-P new-pass-phrase]\n"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t%s destroy dest [-n key] [-l lockfile] [-p pass-phrase] [-L lockfile]\n"
-argument_list|,
-name|p
+literal|"usage: gbde attach destination [-l lockfile] [-p pass-phrase]\n"
+literal|"       gbde detach destination\n"
+literal|"       gbde init destination [-i] [-f filename] [-L new-lockfile]\n"
+literal|"            [-P new-pass-phrase]\n"
+literal|"       gbde setkey destination [-n key] [-l lockfile] [-p pass-phrase]\n"
+literal|"            [-L new-lockfile] [-P new-pass-phrase]\n"
+literal|"       gbde nuke destination [-n key] [-l lockfile] [-p pass-phrase]\n"
+literal|"       gbde destroy destination [-l lockfile] [-p pass-phrase]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3682,9 +3625,7 @@ operator|<
 literal|3
 condition|)
 name|usage
-argument_list|(
-literal|"Too few arguments\n"
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3717,10 +3658,12 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|usage
+name|err
 argument_list|(
+literal|1
+argument_list|,
 name|GBDEMOD
-literal|": Kernel module not available\n"
+literal|": Kernel module not available"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3890,9 +3833,7 @@ block|}
 else|else
 block|{
 name|usage
-argument_list|(
-literal|"Unknown sub command\n"
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|argc
@@ -4024,9 +3965,11 @@ operator|||
 operator|*
 name|q
 condition|)
-name|usage
+name|errx
 argument_list|(
-literal|"-n argument not numeric\n"
+literal|1
+argument_list|,
+literal|"-n argument not numeric"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4040,9 +3983,11 @@ name|n_opt
 operator|>
 name|G_BDE_MAXKEYS
 condition|)
-name|usage
+name|errx
 argument_list|(
-literal|"-n argument out of range\n"
+literal|1
+argument_list|,
+literal|"-n argument out of range"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4064,9 +4009,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-literal|"Invalid option\n"
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -4496,9 +4439,11 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|usage
+name|errx
 argument_list|(
-literal|"Internal error\n"
+literal|1
+argument_list|,
+literal|"internal error"
 argument_list|)
 expr_stmt|;
 block|}
