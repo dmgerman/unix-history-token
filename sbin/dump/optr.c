@@ -471,7 +471,7 @@ expr_stmt|;
 else|else
 name|msgtail
 argument_list|(
-literal|"\7\7"
+literal|"\a\a"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1015,7 +1015,7 @@ name|fprintf
 argument_list|(
 name|f_tty
 argument_list|,
-literal|"\n\ \7\7\7Message from the dump program to all operators at %d:%02d ...\r\n\n\ DUMP: NEEDS ATTENTION: "
+literal|"\n\ \a\a\aMessage from the dump program to all operators at %d:%02d ...\r\n\n\ DUMP: NEEDS ATTENTION: "
 argument_list|,
 name|localclock
 operator|->
