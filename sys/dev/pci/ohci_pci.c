@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: ohci_pci.c,v 1.6 1998/12/14 21:14:11 julian Exp $ */
+comment|/*	FreeBSD $Id: ohci_pci.c,v 1.7 1999/01/06 12:31:28 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -209,6 +209,74 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_OHCI_VENDORID_ADS
+value|0x
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_OHCI_VENDORID_ALI
+value|0x10b9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_OHCI_VENDORID_SIS
+value|0x1039
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_OHCI_DEVICEID_ALADDIN_V
+value|0x523710b9
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ohci_device_aladdin_v
+init|=
+literal|"AcerLabs M5237 (Aladdin-V) USB Host Controller"
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PCI_OHCI_DEVICEID_ADS
+value|0x
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ohci_device_ads
+init|=
+literal|"ADS Technologies USB Host Controller"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ohci_device_generic
+init|=
+literal|"OHCI USB Host Controller (generic)"
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
 name|PCI_OHCI_BASE_REG
 value|0x10
 end_define
@@ -305,6 +373,22 @@ block|{
 name|u_int32_t
 name|class
 decl_stmt|;
+if|if
+condition|(
+name|device_id
+operator|==
+name|PCI_OHCI_DEVICEID_ALADDIN_V
+condition|)
+block|{
+return|return
+operator|(
+name|ohci_device_aladdin_v
+operator|)
+return|;
+comment|/* 	} else if (device_id == PCI_OHCI_DEVICEID_ADS) { 		return (ohci_device_ads); 	*/
+block|}
+else|else
+block|{
 name|class
 operator|=
 name|pci_conf_read
@@ -343,11 +427,14 @@ operator|==
 name|PCI_INTERFACE_OHCI
 operator|)
 condition|)
+block|{
 return|return
 operator|(
-literal|"OHCI USB Host Controller (generic)"
+name|ohci_device_generic
 operator|)
 return|;
+block|}
+block|}
 return|return
 name|NULL
 return|;
@@ -575,7 +662,7 @@ argument_list|(
 name|id
 argument_list|)
 operator|==
-literal|0x8086
+name|PCI_OHCI_VENDORID_ALI
 condition|)
 name|sprintf
 argument_list|(
@@ -583,7 +670,27 @@ name|sc
 operator|->
 name|sc_vendor
 argument_list|,
-literal|"Intel"
+literal|"AcerLabs"
+argument_list|)
+expr_stmt|;
+comment|/* 	else if (PCI_VENDOR(id) == PCI_OHCI_VENDORID_ADS) 		sprintf(sc->sc_vendor, "ADS"); 	*/
+elseif|else
+if|if
+condition|(
+name|PCI_VENDOR
+argument_list|(
+name|id
+argument_list|)
+operator|==
+name|PCI_OHCI_VENDORID_SIS
+condition|)
+name|sprintf
+argument_list|(
+name|sc
+operator|->
+name|sc_vendor
+argument_list|,
+literal|"SiS"
 argument_list|)
 expr_stmt|;
 else|else
@@ -593,7 +700,7 @@ name|sc
 operator|->
 name|sc_vendor
 argument_list|,
-literal|"Vendor 0x%04x"
+literal|"(0x%04x)"
 argument_list|,
 name|PCI_VENDOR
 argument_list|(
@@ -690,6 +797,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+switch|switch
+condition|(
+name|id
+condition|)
+block|{
+case|case
+name|PCI_OHCI_DEVICEID_ALADDIN_V
+case|:
 name|device_set_desc
 argument_list|(
 name|sc
@@ -698,9 +813,31 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
-literal|"OHCI USB Host Controller (generic)"
+name|ohci_device_aladdin_v
 argument_list|)
 expr_stmt|;
+break|break;
+comment|/* 	case PCI_OHCI_DEVICEID_ADS: 		device_set_desc(sc->sc_bus.bdev, ohci_device_ads); 		break; 	*/
+default|default:
+name|printf
+argument_list|(
+literal|"(New OHCI DeviceId=0x%08x)\n"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+name|device_set_desc
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|,
+name|ohci_device_generic
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 end_function

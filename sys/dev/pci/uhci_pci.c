@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.5 1998/12/14 09:40:14 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: uhci_pci.c,v 1.6 1999/01/06 12:31:28 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -205,9 +205,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_UHCI_VENDORID_INTEL
+value|0x8086
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_UHCI_VENDORID_VIA
+value|0x1106
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_UHCI_DEVICEID_PIIX3
 value|0x70208086ul
 end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|uhci_device_piix3
+init|=
+literal|"Intel 82371SB USB Host Controller"
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -227,12 +252,45 @@ begin_comment
 comment|/* no separate step */
 end_comment
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|uhci_device_piix4
+init|=
+literal|"Intel 82371AB/EB USB Host Controller"
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|PCI_UHCI_DEVICEID_VT83C572
 value|0x30381106ul
 end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|uhci_device_vt83c572
+init|=
+literal|"VIA 83C572 USB Host Controller"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|uhci_device_generic
+init|=
+literal|"UHCI USB Controller (generic)"
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -339,11 +397,13 @@ name|device_id
 operator|==
 name|PCI_UHCI_DEVICEID_PIIX3
 condition|)
+block|{
 return|return
 operator|(
-literal|"Intel 82371SB USB Host Controller"
+name|uhci_device_piix3
 operator|)
 return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -351,11 +411,13 @@ name|device_id
 operator|==
 name|PCI_UHCI_DEVICEID_PIIX4
 condition|)
+block|{
 return|return
 operator|(
-literal|"Intel 82371AB/EB USB Host Controller"
+name|uhci_device_piix4
 operator|)
 return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -363,11 +425,13 @@ name|device_id
 operator|==
 name|PCI_UHCI_DEVICEID_VT83C572
 condition|)
+block|{
 return|return
 operator|(
-literal|"Via Techn. 83C572 USB Host Controller"
+name|uhci_device_vt83c572
 operator|)
 return|;
+block|}
 else|else
 block|{
 name|class
@@ -405,7 +469,7 @@ condition|)
 block|{
 return|return
 operator|(
-literal|"UHCI USB Host Controller (generic)"
+name|uhci_device_generic
 operator|)
 return|;
 block|}
@@ -624,7 +688,7 @@ argument_list|(
 name|id
 argument_list|)
 operator|==
-literal|0x8086
+name|PCI_UHCI_VENDORID_INTEL
 condition|)
 name|sprintf
 argument_list|(
@@ -635,6 +699,25 @@ argument_list|,
 literal|"Intel"
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|PCI_VENDOR
+argument_list|(
+name|id
+argument_list|)
+operator|==
+name|PCI_UHCI_VENDORID_VIA
+condition|)
+name|sprintf
+argument_list|(
+name|sc
+operator|->
+name|sc_vendor
+argument_list|,
+literal|"VIA"
+argument_list|)
+expr_stmt|;
 else|else
 name|sprintf
 argument_list|(
@@ -642,7 +725,7 @@ name|sc
 operator|->
 name|sc_vendor
 argument_list|,
-literal|"Vendor 0x%04x"
+literal|"(0x%04x)"
 argument_list|,
 name|PCI_VENDOR
 argument_list|(
@@ -755,15 +838,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|id
-operator|=
-name|pci_conf_read
-argument_list|(
-name|config_id
-argument_list|,
-name|PCI_ID_REG
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|id
@@ -780,7 +854,7 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
-literal|"Intel 82371SB USB Host Controller"
+name|uhci_device_piix3
 argument_list|)
 expr_stmt|;
 break|break;
@@ -795,7 +869,7 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
-literal|"Intel 82371AB/EB USB Host Controller"
+name|uhci_device_piix4
 argument_list|)
 expr_stmt|;
 break|break;
@@ -810,11 +884,18 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
-literal|"Via Techn. 83C572 USB Host Controller"
+name|uhci_device_vt83c572
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|printf
+argument_list|(
+literal|"(New UHCI DeviceId=0x%08x)\n"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|sc
@@ -823,7 +904,7 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
-literal|"UHCI USB Host Controller (generic)"
+name|uhci_device_generic
 argument_list|)
 expr_stmt|;
 block|}
