@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.22 1997/11/21 07:43:50 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -702,6 +702,13 @@ define|#
 directive|define
 name|EOT
 value|tmode.c_cc[VEOF]
+end_define
+
+begin_define
+define|#
+directive|define
+name|puts
+value|Gputs
 end_define
 
 begin_decl_stmt
