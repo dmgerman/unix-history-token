@@ -56,6 +56,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1647,11 +1653,6 @@ case|:
 case|case
 name|P_NEW_FILE
 case|:
-operator|*
-name|store
-operator|=
-name|str
-expr_stmt|;
 if|if
 condition|(
 name|str
@@ -1669,6 +1670,14 @@ argument_list|,
 name|prefix
 argument_list|,
 name|string
+argument_list|)
+expr_stmt|;
+operator|*
+name|store
+operator|=
+name|copys
+argument_list|(
+name|str
 argument_list|)
 expr_stmt|;
 name|length
