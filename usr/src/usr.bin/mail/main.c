@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.13 (Berkeley) %G%"
+literal|"@(#)main.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,10 +74,6 @@ name|hdrjmp
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Find out who the user is, copy his mail file (if exists) into  * /tmp/Rxxxxx and set up the message pointers.  Then, print out the  * message headers and read user commands.  *  * Command line syntax:  *	Mail [ -i ] [ -r address ] [ -h number ] [ -f [ name ] ]  * or:  *	Mail [ -i ] [ -r address ] [ -h number ] people ...  */
-end_comment
-
 begin_function
 name|main
 parameter_list|(
@@ -95,8 +91,6 @@ specifier|register
 name|char
 modifier|*
 name|ef
-decl_stmt|,
-name|opt
 decl_stmt|;
 specifier|register
 name|int
@@ -127,8 +121,6 @@ operator|*
 name|prevint
 argument_list|)
 argument_list|()
-decl_stmt|,
-name|f
 decl_stmt|;
 specifier|extern
 name|int
@@ -169,7 +161,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * Now, determine how we are being used. 	 * We successively pick off instances of -r, -h, -f, and -i. 	 * If called as "rmail" we note this fact for letter sending. 	 * If there is anything left, it is the base of the list 	 * of users to mail to.  Argp will be set to point to the 	 * first of these users. 	 */
+comment|/* 	 * Now, determine how we are being used. 	 * We successively pick off - flags. 	 * If there is anything left, it is the base of the list 	 * of users to mail to.  Argp will be set to point to the 	 * first of these users. 	 */
 name|ef
 operator|=
 name|NOSTR
@@ -194,25 +186,10 @@ name|mustsend
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|0
-operator|&&
-operator|*
-operator|*
-name|argv
-operator|==
-literal|'r'
-condition|)
-name|rmail
-operator|++
-expr_stmt|;
 while|while
 condition|(
 operator|(
-name|opt
+name|i
 operator|=
 name|getopt
 argument_list|(
@@ -220,7 +197,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"INT:b:c:dfh:inr:s:u:v"
+literal|"INT:b:c:dfins:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -229,21 +206,9 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|opt
+name|i
 condition|)
 block|{
-case|case
-literal|'r'
-case|:
-comment|/* 			 * Next argument is address to be sent along 			 * to the mailer. 			 */
-name|mustsend
-operator|++
-expr_stmt|;
-name|rflag
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
 case|case
 literal|'T'
 case|:
@@ -255,7 +220,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|f
+name|i
 operator|=
 name|creat
 argument_list|(
@@ -281,7 +246,7 @@ expr_stmt|;
 block|}
 name|close
 argument_list|(
-name|f
+name|i
 argument_list|)
 expr_stmt|;
 break|break;
@@ -315,41 +280,6 @@ case|:
 name|debug
 operator|++
 expr_stmt|;
-break|break;
-case|case
-literal|'h'
-case|:
-comment|/* 			 * Specified sequence number for network. 			 * This is the number of "hops" made so 			 * far (count of times message has been 			 * forwarded) to help avoid infinite mail loops. 			 */
-name|mustsend
-operator|++
-expr_stmt|;
-name|hflag
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hflag
-operator|==
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-h needs non-zero number\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'s'
