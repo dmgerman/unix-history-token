@@ -54,6 +54,14 @@ name|FLT_ROUNDS
 value|__flt_rounds()
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+end_if
+
 begin_define
 define|#
 directive|define
@@ -75,6 +83,11 @@ end_define
 begin_comment
 comment|/* max precision in decimal digits */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -16,6 +16,12 @@ name|_MACHINE_FLOAT_H_
 value|1
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -38,6 +44,14 @@ begin_comment
 comment|/* FP addition rounds to nearest */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+end_if
+
 begin_define
 define|#
 directive|define
@@ -59,6 +73,11 @@ end_define
 begin_comment
 comment|/* max precision in decimal digits */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
