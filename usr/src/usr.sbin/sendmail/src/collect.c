@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.33 (Berkeley) %G%"
+literal|"@(#)collect.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1080,6 +1080,12 @@ name|obuf
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\0'
+condition|)
 operator|*
 name|bp
 operator|++
