@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.10	81/12/02	*/
+comment|/*	uipc_syscalls.c	4.11	81/12/09	*/
 end_comment
 
 begin_include
@@ -1610,6 +1610,14 @@ return|return;
 block|}
 name|u
 operator|.
+name|u_base
+operator|=
+name|uap
+operator|->
+name|cbuf
+expr_stmt|;
+name|u
+operator|.
 name|u_count
 operator|=
 name|uap
@@ -1692,6 +1700,20 @@ name|sa
 else|:
 literal|0
 argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_r
+operator|.
+name|r_val1
+operator|=
+name|uap
+operator|->
+name|count
+operator|-
+name|u
+operator|.
+name|u_count
 expr_stmt|;
 block|}
 end_block
@@ -1790,6 +1812,14 @@ name|ENOTSOCK
 expr_stmt|;
 return|return;
 block|}
+name|u
+operator|.
+name|u_base
+operator|=
+name|uap
+operator|->
+name|cbuf
+expr_stmt|;
 name|u
 operator|.
 name|u_count
@@ -1911,6 +1941,20 @@ argument_list|(
 name|sa
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_r
+operator|.
+name|r_val1
+operator|=
+name|uap
+operator|->
+name|count
+operator|-
+name|u
+operator|.
+name|u_count
 expr_stmt|;
 block|}
 end_block
