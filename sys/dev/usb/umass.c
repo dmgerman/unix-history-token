@@ -12355,6 +12355,9 @@ case|case
 name|REQUEST_SENSE
 case|:
 case|case
+name|FORMAT_UNIT
+case|:
+case|case
 name|INQUIRY
 case|:
 case|case
@@ -12380,6 +12383,12 @@ name|POSITION_TO_ELEMENT
 case|:
 comment|/* SEEK_10 */
 case|case
+name|WRITE_AND_VERIFY
+case|:
+case|case
+name|VERIFY
+case|:
+case|case
 name|MODE_SELECT_10
 case|:
 case|case
@@ -12390,6 +12399,9 @@ name|READ_12
 case|:
 case|case
 name|WRITE_12
+case|:
+case|case
+name|READ_FORMAT_CAPACITIES
 case|:
 name|memcpy
 argument_list|(
@@ -12404,7 +12416,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-comment|/* Other UFI commands: FORMAT_UNIT, READ_FORMAT_CAPACITY, 	 * VERIFY, WRITE_AND_VERIFY. 	 * These should be checked whether they somehow can be made to fit. 	 */
 default|default:
 name|printf
 argument_list|(
