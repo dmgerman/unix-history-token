@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_temp.h	7.2	%G%  */
+comment|/* sccs id:	@(#)ex_temp.h	7.3	%G%  */
 end_comment
 
 begin_comment
@@ -343,7 +343,7 @@ name|time_t
 name|Time
 decl_stmt|;
 comment|/* Time temp file last updated */
-name|short
+name|int
 name|Uid
 decl_stmt|;
 ifndef|#
