@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.65	82/03/29	*/
+comment|/*	tcp_input.c	1.66	82/04/01	*/
 end_comment
 
 begin_include
@@ -2252,6 +2252,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|so
 operator|->
 name|so_snd
@@ -2259,6 +2260,13 @@ operator|.
 name|sb_flags
 operator|&
 name|SB_WAIT
+operator|)
+operator|||
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_sel
 condition|)
 name|sowwakeup
 argument_list|(
