@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)htable.c	5.6 (Berkeley) %G%"
+literal|"@(#)htable.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * htable - convert NIC host table into a UNIX format.  * NIC format is described in RFC 810, 1 March 1982.  */
@@ -93,7 +99,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|<arpa/inet.h>
 end_include
 
 begin_define
@@ -418,8 +424,6 @@ expr_stmt|;
 block|}
 name|copygateways
 argument_list|(
-name|gf
-argument_list|,
 literal|"localgateways"
 argument_list|)
 expr_stmt|;
@@ -1657,18 +1661,9 @@ end_block
 begin_macro
 name|copygateways
 argument_list|(
-argument|f
-argument_list|,
 argument|filename
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1719,7 +1714,8 @@ index|[
 literal|500
 index|]
 decl_stmt|;
-name|u_long
+name|struct
+name|in_addr
 name|addr
 decl_stmt|;
 name|int
@@ -1879,6 +1875,8 @@ name|gname
 argument_list|,
 operator|&
 name|addr
+operator|.
+name|s_addr
 argument_list|)
 condition|)
 continue|continue;
@@ -1946,9 +1944,6 @@ name|getnetbyname
 argument_list|(
 name|name
 argument_list|)
-decl_stmt|;
-name|int
-name|n
 decl_stmt|;
 if|if
 condition|(
@@ -2117,23 +2112,19 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|count
+decl_stmt|;
 name|char
 name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
-name|int
-name|length
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|fgets
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|;
 for|for
 control|(
 name|count
@@ -2322,80 +2313,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|struct
+name|in_addr
 name|v
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|char
-modifier|*
-name|a
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|v
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|32
-index|]
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%d.%d.%d.%d"
-argument_list|,
-name|UC
-argument_list|(
-name|a
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|,
-name|UC
-argument_list|(
-name|a
-index|[
-literal|1
-index|]
-argument_list|)
-argument_list|,
-name|UC
-argument_list|(
-name|a
-index|[
-literal|2
-index|]
-argument_list|)
-argument_list|,
-name|UC
-argument_list|(
-name|a
-index|[
-literal|3
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
 literal|"%-16.16s"
 argument_list|,
-name|buf
+name|inet_ntoa
+argument_list|(
+name|v
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2626,7 +2561,8 @@ name|name
 modifier|*
 name|namelist
 decl_stmt|;
-name|u_long
+name|struct
+name|in_addr
 name|addr
 decl_stmt|;
 name|int
