@@ -54,7 +54,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<strings.h>
 end_include
 
 begin_comment
@@ -65,11 +65,9 @@ begin_function
 name|int
 name|ffs
 parameter_list|(
-name|mask
-parameter_list|)
 name|int
 name|mask
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|bit
