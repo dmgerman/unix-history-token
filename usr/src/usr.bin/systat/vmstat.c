@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.7 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3350,13 +3350,24 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|c
-operator|=
-literal|0
+name|mvprintw
+argument_list|(
+name|DISKROW
+argument_list|,
+name|DISKCOL
+operator|+
+literal|5
+argument_list|,
+literal|"                              "
+argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|i
+operator|=
+literal|0
+operator|,
+name|c
 operator|=
 literal|0
 init|;
@@ -3378,6 +3389,27 @@ index|[
 name|i
 index|]
 condition|)
+block|{
+name|mvprintw
+argument_list|(
+name|DISKROW
+argument_list|,
+name|DISKCOL
+operator|+
+literal|5
+operator|+
+literal|5
+operator|*
+name|c
+argument_list|,
+literal|"  %3.3s"
+argument_list|,
+name|dr_name
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|dinfo
 argument_list|(
 name|i
@@ -3386,6 +3418,7 @@ operator|++
 name|c
 argument_list|)
 expr_stmt|;
+block|}
 name|putint
 argument_list|(
 name|s
