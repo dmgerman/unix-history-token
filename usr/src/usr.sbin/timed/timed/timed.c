@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.1 (Berkeley) %G%"
+literal|"@(#)timed.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2079,7 +2079,7 @@ condition|(
 name|ntp
 operator|->
 name|status
-operator|=
+operator|==
 name|SLAVE
 condition|)
 break|break;
