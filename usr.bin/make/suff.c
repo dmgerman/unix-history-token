@@ -201,7 +201,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|_Suff
+name|Suff
 block|{
 name|char
 modifier|*
@@ -267,7 +267,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|_Src
+name|Src
 block|{
 name|char
 modifier|*
@@ -285,7 +285,7 @@ name|suff
 decl_stmt|;
 comment|/* The suffix on the file */
 name|struct
-name|_Src
+name|Src
 modifier|*
 name|parent
 decl_stmt|;

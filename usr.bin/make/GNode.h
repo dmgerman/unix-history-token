@@ -29,7 +29,7 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
-name|_Suff
+name|Suff
 struct_decl|;
 end_struct_decl
 
@@ -148,7 +148,7 @@ name|compat_command
 decl_stmt|;
 comment|/* 	 * Suffix for the node (determined by Suff_FindDeps and opaque to 	 * everyone but the Suff module) 	 */
 name|struct
-name|_Suff
+name|Suff
 modifier|*
 name|suffix
 decl_stmt|;
