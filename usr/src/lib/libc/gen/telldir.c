@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telldir.c 4.2 %G%"
+literal|"@(#)telldir.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndir.h>
+file|<dir.h>
 end_include
 
 begin_comment
