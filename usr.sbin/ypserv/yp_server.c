@@ -87,7 +87,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.2 1995/12/23 21:35:35 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.3 1996/01/10 16:07:39 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2999,6 +2999,8 @@ block|{
 name|yp_error
 argument_list|(
 literal|"opendir(%s) failed: %s"
+argument_list|,
+name|yp_mapdir
 argument_list|,
 name|strerror
 argument_list|(
