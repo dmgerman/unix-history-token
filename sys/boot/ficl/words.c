@@ -4592,7 +4592,7 @@ name|CELL
 modifier|*
 name|patchAddr
 decl_stmt|;
-name|int
+name|FICL_INT
 name|offset
 decl_stmt|;
 name|FICL_DICT
