@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rcp.c,v 1.21 1998/10/09 06:31:45 markm Exp $"
+literal|"$Id: rcp.c,v 1.22 1999/04/25 10:36:00 dt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -586,6 +586,8 @@ name|ch
 decl_stmt|,
 name|fflag
 decl_stmt|,
+name|i
+decl_stmt|,
 name|tflag
 decl_stmt|;
 name|char
@@ -594,9 +596,6 @@ name|targ
 decl_stmt|,
 modifier|*
 name|shell
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -4861,6 +4860,15 @@ argument_list|(
 name|_PATH_RCP
 argument_list|,
 name|argv_copy
+argument_list|)
+expr_stmt|;
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"execv: %s"
+argument_list|,
+name|_PATH_RCP
 argument_list|)
 expr_stmt|;
 block|}
