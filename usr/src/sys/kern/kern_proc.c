@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.30	82/08/10	*/
+comment|/*	kern_proc.c	4.31	82/08/11	*/
 end_comment
 
 begin_include
@@ -129,6 +129,12 @@ directive|include
 file|"../h/descrip.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
+end_include
+
 begin_comment
 comment|/*  * exec system call, with and without environments.  */
 end_comment
@@ -253,6 +259,14 @@ name|cfarg
 index|[
 name|SHSIZE
 index|]
+decl_stmt|;
+name|struct
+name|uio
+name|uio
+decl_stmt|;
+name|struct
+name|iovec
+name|iovec
 decl_stmt|;
 if|if
 condition|(
@@ -408,9 +422,22 @@ name|bad
 goto|;
 block|}
 comment|/* 	 * Read in first few bytes of file for segment sizes, ux_mag: 	 *	407 = plain executable 	 *	410 = RO text 	 *	413 = demand paged RO text 	 * Also an ASCII line beginning with #! is 	 * the file name of a ``shell'' and arguments may be prepended 	 * to the argument list if given here. 	 * 	 * SHELL NAMES ARE LIMITED IN LENGTH. 	 * 	 * ONLY ONE ARGUMENT MAY BE PASSED TO THE SHELL FROM 	 * THE ASCII LINE. 	 */
-name|u
+name|uio
 operator|.
-name|u_base
+name|uio_iov
+operator|=
+operator|&
+name|iovec
+expr_stmt|;
+name|uio
+operator|.
+name|uio_iovcnt
+operator|=
+literal|1
+expr_stmt|;
+name|iovec
+operator|.
+name|iov_base
 operator|=
 operator|(
 name|caddr_t
@@ -420,9 +447,9 @@ name|u
 operator|.
 name|u_exdata
 expr_stmt|;
-name|u
+name|iovec
 operator|.
-name|u_count
+name|iov_len
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -431,28 +458,29 @@ operator|.
 name|u_exdata
 argument_list|)
 expr_stmt|;
-name|u
+name|uio
 operator|.
-name|u_offset
+name|uio_offset
 operator|=
 literal|0
 expr_stmt|;
-name|u
+name|uio
 operator|.
-name|u_segflg
+name|uio_segflg
 operator|=
 literal|1
 expr_stmt|;
-name|readi
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 name|u
 operator|.
-name|u_segflg
+name|u_error
 operator|=
-literal|0
+name|readip
+argument_list|(
+name|ip
+argument_list|,
+operator|&
+name|uio
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -463,6 +491,14 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|u
+operator|.
+name|u_count
+operator|=
+name|uio
+operator|.
+name|uio_resid
+expr_stmt|;
 if|if
 condition|(
 name|u
