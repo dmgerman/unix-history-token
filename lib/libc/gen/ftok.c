@@ -48,7 +48,7 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
-name|char
+name|int
 name|id
 decl_stmt|;
 block|{
