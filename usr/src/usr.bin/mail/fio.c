@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	1.4 %G%"
+literal|"@(#)fio.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -305,6 +305,10 @@ operator|=
 name|MUSED
 operator||
 name|MNEW
+expr_stmt|;
+name|inhead
+operator|=
+literal|1
 expr_stmt|;
 name|this
 operator|.
