@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tlreg.h,v 1.6 1998/09/23 05:08:54 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tlreg.h,v 1.14 1999/03/30 16:57:26 wpaul Exp $  */
 end_comment
 
 begin_struct
@@ -255,21 +255,12 @@ name|ifmedia
 name|ifmedia
 decl_stmt|;
 comment|/* media info */
-ifdef|#
-directive|ifdef
-name|TL_USEIOSPACE
-name|u_int32_t
-name|iobase
+name|bus_space_handle_t
+name|tl_bhandle
 decl_stmt|;
-else|#
-directive|else
-specifier|volatile
-name|caddr_t
-name|csr
+name|bus_space_tag_t
+name|tl_btag
 decl_stmt|;
-comment|/* pointer to register map */
-endif|#
-directive|endif
 name|struct
 name|tl_type
 modifier|*
@@ -334,20 +325,12 @@ name|struct
 name|tl_chain_data
 name|tl_cdata
 decl_stmt|;
-name|int
+name|u_int8_t
 name|tl_txeoc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TL_DEBUG
 name|u_int8_t
-name|tl_event
-index|[
-literal|20
-index|]
+name|tl_bitrate
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|callout_handle
 name|tl_stat_ch
@@ -2077,15 +2060,57 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * ACOMMIT register bits. These are used only when a bitrate  * PHY is selected ('bitrate' bit in netconfig register is set).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TL_AC_MTXER
+value|0x01
+end_define
+
+begin_comment
+comment|/* reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TL_AC_MTXD1
+value|0x02
+end_define
+
+begin_comment
+comment|/* 0 == 10baseT 1 == AUI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TL_AC_MTXD2
+value|0x04
+end_define
+
+begin_comment
+comment|/* loopback disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TL_AC_MTXD3
+value|0x08
+end_define
+
+begin_comment
+comment|/* full duplex disable */
+end_comment
+
+begin_comment
 comment|/*  * register space access macros  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TL_USEIOSPACE
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -2098,7 +2123,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|outl(sc->iobase + (u_int32_t)(reg), val)
+value|bus_space_write_4(sc->tl_btag, sc->tl_bhandle, reg, val)
 end_define
 
 begin_define
@@ -2113,7 +2138,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|outw(sc->iobase + (u_int32_t)(reg), val)
+value|bus_space_write_2(sc->tl_btag, sc->tl_bhandle, reg, val)
 end_define
 
 begin_define
@@ -2128,7 +2153,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|outb(sc->iobase + (u_int32_t)(reg), val)
+value|bus_space_write_1(sc->tl_btag, sc->tl_bhandle, reg, val)
 end_define
 
 begin_define
@@ -2141,7 +2166,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|inl(sc->iobase + (u_int32_t)(reg))
+value|bus_space_read_4(sc->tl_btag, sc->tl_bhandle, reg)
 end_define
 
 begin_define
@@ -2154,7 +2179,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|inw(sc->iobase + (u_int32_t)(reg))
+value|bus_space_read_2(sc->tl_btag, sc->tl_bhandle, reg)
 end_define
 
 begin_define
@@ -2167,102 +2192,8 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|inb(sc->iobase + (u_int32_t)(reg))
+value|bus_space_read_1(sc->tl_btag, sc->tl_bhandle, reg)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|((*(u_int32_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int32_t)(val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|((*(u_int16_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int16_t)(val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|((*(u_int8_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int8_t)(val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|(*(u_int32_t *)((sc)->csr + (u_int32_t)(reg)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|(*(u_int16_t *)((sc)->csr + (u_int32_t)(reg)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|(*(u_int8_t *)((sc)->csr + (u_int32_t)(reg)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
