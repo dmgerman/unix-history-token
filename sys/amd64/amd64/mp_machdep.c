@@ -585,13 +585,6 @@ name|bootMP_size
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|mem_range_softc
-name|mem_range_softc
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
