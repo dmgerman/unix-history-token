@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.11 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  *	HP9000/300 series physical map management code.  *	For 68020/68030 machines with HP, 68551, or 68030 MMUs  *		(models 320,350,318,319,330,340,360,370,345,375)  *	Don't even pay lip service to multiprocessor support.  *  *	XXX will only work for PAGE_SIZE == NBPG (i.e. 4096 bytes).  *	Hence, there is no point in defining DYNPGSIZE.  */
+comment|/*  *	HP9000/300 series physical map management code.  *	Supports:  *		68020 with HP MMU	models 320, 350  *		68020 with 68551 MMU	models 318, 319, 330 (all untested)  *		68030 with on-chip MMU	models 340, 360, 370, 345, 375, 400  *		68040 with on-chip MMU	models 380, 425, 433  *	Don't even pay lip service to multiprocessor support.  *  *	XXX will only work for PAGE_SIZE == NBPG (i.e. 4096 bytes).  *	Hence, there is no point in defining DYNPGSIZE as it stands now.  */
 end_comment
 
 begin_comment
