@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.2 (Berkeley) %G%"
+literal|"@(#)move.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,13 +49,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dirent.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -203,6 +203,7 @@ argument_list|()
 expr_stmt|;
 comment|/* Files after key file. */
 comment|/* 	 * Break archive into three parts -- selected entries and entries 	 * before and after the key entry.  If positioning before the key, 	 * place the key at the beginning of the after key entries and if 	 * positioning after the key, place the key at the end of the before 	 * key entries.  Put it all back together at the end. 	 */
+comment|/* Read and write to an archive; pad on both. */
 name|SETCF
 argument_list|(
 name|afd
@@ -266,7 +267,7 @@ name|wfd
 operator|=
 name|tfd2
 expr_stmt|;
-name|put_header
+name|put_object
 argument_list|(
 operator|&
 name|cf
@@ -277,16 +278,6 @@ name|stat
 operator|*
 operator|)
 name|NULL
-argument_list|)
-expr_stmt|;
-name|copyfile
-argument_list|(
-operator|&
-name|cf
-argument_list|,
-name|chdr
-operator|.
-name|size
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -321,7 +312,7 @@ name|wfd
 operator|=
 name|curfd
 expr_stmt|;
-name|put_header
+name|put_object
 argument_list|(
 operator|&
 name|cf
@@ -332,16 +323,6 @@ name|stat
 operator|*
 operator|)
 name|NULL
-argument_list|)
-expr_stmt|;
-name|copyfile
-argument_list|(
-operator|&
-name|cf
-argument_list|,
-name|chdr
-operator|.
-name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -363,7 +344,7 @@ name|wfd
 operator|=
 name|curfd
 expr_stmt|;
-name|put_header
+name|put_object
 argument_list|(
 operator|&
 name|cf
@@ -374,16 +355,6 @@ name|stat
 operator|*
 operator|)
 name|NULL
-argument_list|)
-expr_stmt|;
-name|copyfile
-argument_list|(
-operator|&
-name|cf
-argument_list|,
-name|chdr
-operator|.
-name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -447,9 +418,7 @@ name|afd
 argument_list|,
 name|archive
 argument_list|,
-name|RPAD
-operator||
-name|WPAD
+name|NOPAD
 argument_list|)
 expr_stmt|;
 name|tsize
