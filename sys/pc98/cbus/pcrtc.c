@@ -410,6 +410,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|intsrc
+modifier|*
+name|i8254_intsrc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|u_int32_t
 name|i8254_lastcount
 decl_stmt|;
@@ -422,6 +431,21 @@ name|i8254_offset
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+function_decl|(
+modifier|*
+name|i8254_pending
+function_decl|)
+parameter_list|(
+name|struct
+name|intsrc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -433,15 +457,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|using_lapic_timer
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|intsrc
-modifier|*
-name|i8254_intsrc
 decl_stmt|;
 end_decl_stmt
 
@@ -2987,7 +3002,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Finish initializing 8254 timer 0. */
+comment|/* 	 * If we aren't using the local APIC timer to drive the kernel 	 * clocks, setup the interrupt handler for the 8254 timer 0 so 	 * that it can drive hardclock(). 	 */
+if|if
+condition|(
+operator|!
+name|using_lapic_timer
+condition|)
+block|{
 name|intr_add_handler
 argument_list|(
 literal|"clk"
@@ -3016,6 +3037,21 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i8254_intsrc
+operator|!=
+name|NULL
+condition|)
+name|i8254_pending
+operator|=
+name|i8254_intsrc
+operator|->
+name|is_pic
+operator|->
+name|pic_source_pending
+expr_stmt|;
+block|}
 name|init_TSC_tc
 argument_list|()
 expr_stmt|;
@@ -3246,15 +3282,11 @@ literal|2u
 operator|)
 operator|)
 operator|&&
-name|i8254_intsrc
+name|i8254_pending
 operator|!=
 name|NULL
 operator|&&
-name|i8254_intsrc
-operator|->
-name|is_pic
-operator|->
-name|pic_source_pending
+name|i8254_pending
 argument_list|(
 name|i8254_intsrc
 argument_list|)
