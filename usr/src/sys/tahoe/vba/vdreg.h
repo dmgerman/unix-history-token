@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vdreg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vdreg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -358,6 +358,39 @@ begin_comment
 comment|/* unit selected */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|STA_TYPE
+value|0x300
+end_define
+
+begin_comment
+comment|/* drive type: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STA_SMD
+value|0x000
+end_define
+
+begin_comment
+comment|/* SMD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STA_ESDI
+value|0x100
+end_define
+
+begin_comment
+comment|/* ESDI */
+end_comment
+
 begin_comment
 comment|/*  * Interupt Control Field definitions.  */
 end_comment
@@ -505,12 +538,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCF_DER
+name|CCF_RFE
 value|0x8
 end_define
 
 begin_comment
-comment|/* disable error recovery */
+comment|/* recovery flag enable */
 end_comment
 
 begin_define
@@ -555,6 +588,17 @@ end_define
 
 begin_comment
 comment|/*   do only 32 bit transfers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCF_DIU
+value|0x80
+end_define
+
+begin_comment
+comment|/* disable initial update of DCB @cmd start */
 end_comment
 
 begin_define
@@ -1105,7 +1149,7 @@ name|long
 name|name
 decl_stmt|;
 name|long
-name|id
+name|rev
 decl_stmt|;
 name|long
 name|date
@@ -1156,7 +1200,7 @@ name|long
 name|err_memadr
 decl_stmt|;
 comment|/* error memory address */
-name|char
+name|u_char
 name|err_code
 decl_stmt|;
 comment|/* error codes for SMD/E */
@@ -1261,7 +1305,7 @@ name|long
 name|err_memadr
 decl_stmt|;
 comment|/* error memory address */
-name|char
+name|u_char
 name|err_code
 decl_stmt|;
 comment|/* error codes for SMD/E */
