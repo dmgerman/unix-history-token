@@ -5690,6 +5690,16 @@ index|[
 name|FRAME_TRAPARG_A2
 index|]
 expr_stmt|;
+name|sf
+operator|.
+name|sf_uc
+operator|.
+name|uc_mcontext
+operator|.
+name|mc_format
+operator|=
+name|__UC_REV0_SIGFRAME
+expr_stmt|;
 comment|/* 	 * Allocate and validate space for the signal handler 	 * context. Note that if the stack is in P0 space, the 	 * call to grow() is a nop, and the useracc() check 	 * will fail if the process has not already allocated 	 * the space with a `brk'. 	 */
 if|if
 condition|(

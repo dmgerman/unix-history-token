@@ -50,10 +50,23 @@ decl_stmt|;
 name|long
 name|mc_ownedfp
 decl_stmt|;
+define|#
+directive|define
+name|__UC_REV0_SIGFRAME
+value|1
+comment|/* context is a signal frame */
+define|#
+directive|define
+name|__UC_REV0_TRAPFRAME
+value|2
+comment|/* context is a trap frame */
+name|long
+name|mc_format
+decl_stmt|;
 name|long
 name|__spare__
 index|[
-literal|7
+literal|6
 index|]
 decl_stmt|;
 block|}
