@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.9 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<db.h>
 end_include
 
 begin_include
@@ -70,19 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<db.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<stddef.h>
 end_include
 
 begin_include
@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stddef.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -157,6 +157,10 @@ decl_stmt|;
 comment|/* Open the user's file -- if this fails, we're done. */
 if|if
 condition|(
+name|fname
+operator|!=
+name|NULL
+operator|&&
 operator|(
 name|rfd
 operator|=
@@ -178,6 +182,10 @@ name|NULL
 operator|)
 return|;
 comment|/* Create a btree in memory (backed by disk). */
+name|dbp
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|openinfo
@@ -298,11 +306,12 @@ operator|&
 name|R_FIXEDLEN
 condition|)
 block|{
+name|SET
+argument_list|(
 name|t
-operator|->
-name|bt_flags
-operator||=
+argument_list|,
 name|BTF_FIXEDLEN
+argument_list|)
 expr_stmt|;
 name|t
 operator|->
@@ -340,12 +349,35 @@ name|bt_bval
 operator|=
 literal|'\n'
 expr_stmt|;
+name|SET
+argument_list|(
+name|t
+argument_list|,
+name|BTF_RECNO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fname
+operator|==
+name|NULL
+condition|)
+block|{
+name|SET
+argument_list|(
+name|t
+argument_list|,
+name|BTF_RINMEM
+argument_list|)
+expr_stmt|;
 name|t
 operator|->
-name|bt_flags
+name|bt_reof
 operator|=
-name|BTF_RECNO
+literal|1
 expr_stmt|;
+block|}
+else|else
 name|t
 operator|->
 name|bt_reof
@@ -353,6 +385,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * In 4.4BSD stat(2) returns true for ISSOCK on pipes.  Until 	 * then, this is fairly close.  Pipes are read-only. 	 */
+if|if
+condition|(
+name|fname
+operator|!=
+name|NULL
+condition|)
 if|if
 condition|(
 name|lseek
@@ -680,6 +718,14 @@ name|flags
 operator|&
 name|R_SNAPSHOT
 operator|&&
+operator|!
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|BTF_RINMEM
+argument_list|)
+operator|&&
 name|t
 operator|->
 name|bt_irec
@@ -710,12 +756,20 @@ label|:
 if|if
 condition|(
 name|dbp
+operator|!=
+name|NULL
 condition|)
 name|__bt_close
 argument_list|(
 name|dbp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fname
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
