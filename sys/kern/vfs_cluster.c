@@ -1670,9 +1670,7 @@ break|break;
 comment|/* 			 * Stop scanning if the buffer is fully valid 			 * (marked B_CACHE), or locked (may be doing a 			 * background write), or if the buffer is not 			 * VMIO backed.  The clustering code can only deal 			 * with VMIO-backed buffers. 			 */
 name|VI_LOCK
 argument_list|(
-name|bp
-operator|->
-name|b_vp
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1706,9 +1704,7 @@ condition|)
 block|{
 name|VI_UNLOCK
 argument_list|(
-name|bp
-operator|->
-name|b_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|bqrelse
@@ -1720,9 +1716,7 @@ break|break;
 block|}
 name|VI_UNLOCK
 argument_list|(
-name|bp
-operator|->
-name|b_vp
+name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 			 * The buffer must be completely invalid in order to 			 * take part in the cluster.  If it is partially valid 			 * then we stop. 			 */
@@ -4353,9 +4347,7 @@ name|b_lblkno
 condition|)
 name|VOP_BMAP
 argument_list|(
-name|bp
-operator|->
-name|b_vp
+name|vp
 argument_list|,
 name|bp
 operator|->
@@ -4397,9 +4389,7 @@ name|b_lblkno
 condition|)
 name|VOP_BMAP
 argument_list|(
-name|bp
-operator|->
-name|b_vp
+name|vp
 argument_list|,
 name|bp
 operator|->
