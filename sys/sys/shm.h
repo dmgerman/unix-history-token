@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: shm.h,v 1.1 1994/09/13 14:47:36 dfr Exp $ */
+comment|/* $Id: shm.h,v 1.2 1994/09/17 13:24:29 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -159,6 +159,52 @@ name|struct
 name|shmid_ds
 modifier|*
 name|shmsegs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|shminit
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|shmexit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|shmfork
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
