@@ -10,7 +10,7 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * Allocation dependencies are handled with undo/redo on the in-memory  * copy of the data. A particular data dependency is eliminated when  * it is ALLCOMPLETE: that is ATTACHED, DEPCOMPLETE, and COMPLETE.  *   * ATTACHED means that the data is not currently being written to  * disk. UNDONE means that the data has been rolled back to a safe  * state for writing to the disk. When the I/O completes, the data is  * restored to its current form and the state reverts to ATTACHED.  * The data must be locked throughout the rollback, I/O, and roll  * forward so that the rolled back information is never visible to  * user processes. The COMPLETE flag indicates that the item has been  * written. For example, a dependency that requires that an inode be  * written will be marked COMPLETE after the inode has been written  * to disk. The DEPCOMPLETE flag indicates the completion of any other  * dependencies such as the writing of a cylinder group map has been  * completed. A dependency structure may be freed only when both it  * and its dependencies have completed and any rollbacks that are in  * progress have finished as indicated by the set of ALLCOMPLETE flags  * all being set. The two MKDIR flags indicate additional dependencies  * that must be done when creating a new directory. MKDIR_BODY is  * cleared when the directory data block containing the "." and ".."  * entries has been written. MKDIR_PARENT is cleared when the parent  * inode with the increased link count for ".." has been written. When  * both MKDIR flags have been cleared, the DEPCOMPLETE flag is set to  * indicate that the directory dependencies have been completed. The  * writing of the directory inode itself sets the COMPLETE flag which  * then allows the directory entry for the new directory to be written  * to disk. The RMDIR flag marks a dirrem structure as representing  * the removal of a directory rather than a file. When the removal  * dependencies are completed, additional work needs to be done  * (truncation of the "." and ".." entries, an additional decrement  * of the associated inode, and a decrement of the parent inode). The  * DIRCHG flag marks a diradd structure as representing the changing  * of an existing entry rather than the addition of a new one. When  * the update is complete the dirrem associated with the inode for  * the old name must be added to the worklist to do the necessary  * reference count decrement. The GOINGAWAY flag indicates that the  * data structure is frozen from further change until its dependencies  * have been completed and its resources freed after which it will be  * discarded. The IOSTARTED flag prevents multiple calls to the I/O  * start routine from doing multiple rollbacks. The SPACECOUNTED flag  * says that the files space has been accounted to the pending free  * space count. The ONWORKLIST flag shows whether the structure is  * currently linked onto a worklist.  */
+comment|/*  * Allocation dependencies are handled with undo/redo on the in-memory  * copy of the data. A particular data dependency is eliminated when  * it is ALLCOMPLETE: that is ATTACHED, DEPCOMPLETE, and COMPLETE.  *   * ATTACHED means that the data is not currently being written to  * disk. UNDONE means that the data has been rolled back to a safe  * state for writing to the disk. When the I/O completes, the data is  * restored to its current form and the state reverts to ATTACHED.  * The data must be locked throughout the rollback, I/O, and roll  * forward so that the rolled back information is never visible to  * user processes. The COMPLETE flag indicates that the item has been  * written. For example, a dependency that requires that an inode be  * written will be marked COMPLETE after the inode has been written  * to disk. The DEPCOMPLETE flag indicates the completion of any other  * dependencies such as the writing of a cylinder group map has been  * completed. A dependency structure may be freed only when both it  * and its dependencies have completed and any rollbacks that are in  * progress have finished as indicated by the set of ALLCOMPLETE flags  * all being set. The two MKDIR flags indicate additional dependencies  * that must be done when creating a new directory. MKDIR_BODY is  * cleared when the directory data block containing the "." and ".."  * entries has been written. MKDIR_PARENT is cleared when the parent  * inode with the increased link count for ".." has been written. When  * both MKDIR flags have been cleared, the DEPCOMPLETE flag is set to  * indicate that the directory dependencies have been completed. The  * writing of the directory inode itself sets the COMPLETE flag which  * then allows the directory entry for the new directory to be written  * to disk. The RMDIR flag marks a dirrem structure as representing  * the removal of a directory rather than a file. When the removal  * dependencies are completed, additional work needs to be done  * (truncation of the "." and ".." entries, an additional decrement  * of the associated inode, and a decrement of the parent inode). The  * DIRCHG flag marks a diradd structure as representing the changing  * of an existing entry rather than the addition of a new one. When  * the update is complete the dirrem associated with the inode for  * the old name must be added to the worklist to do the necessary  * reference count decrement. The GOINGAWAY flag indicates that the  * data structure is frozen from further change until its dependencies  * have been completed and its resources freed after which it will be  * discarded. The IOSTARTED flag prevents multiple calls to the I/O  * start routine from doing multiple rollbacks. The SPACECOUNTED flag  * says that the files space has been accounted to the pending free  * space count. The NEWBLOCK flag marks pagedep structures that have  * just been allocated, so must be claimed by the inode before all  * dependencies are complete. The ONWORKLIST flag shows whether the  * structure is currently linked onto a worklist.  */
 end_comment
 
 begin_define
@@ -48,12 +48,20 @@ name|MKDIR_PARENT
 value|0x0010
 end_define
 
+begin_comment
+comment|/* diradd& mkdir only */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MKDIR_BODY
 value|0x0020
 end_define
+
+begin_comment
+comment|/* diradd& mkdir only */
+end_comment
 
 begin_define
 define|#
@@ -62,12 +70,20 @@ name|RMDIR
 value|0x0040
 end_define
 
+begin_comment
+comment|/* dirrem only */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DIRCHG
 value|0x0080
 end_define
+
+begin_comment
+comment|/* diradd& dirrem only */
+end_comment
 
 begin_define
 define|#
@@ -76,6 +92,10 @@ name|GOINGAWAY
 value|0x0100
 end_define
 
+begin_comment
+comment|/* indirdep only */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -83,12 +103,31 @@ name|IOSTARTED
 value|0x0200
 end_define
 
+begin_comment
+comment|/* inodedep& pagedep only */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SPACECOUNTED
 value|0x0400
 end_define
+
+begin_comment
+comment|/* inodedep only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEWBLOCK
+value|0x0800
+end_define
+
+begin_comment
+comment|/* pagedep only */
+end_comment
 
 begin_define
 define|#
@@ -279,6 +318,16 @@ parameter_list|(
 name|wk
 parameter_list|)
 value|((struct dirrem *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_NEWDIRBLK
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct newdirblk *)(wk))
 end_define
 
 begin_comment
@@ -614,7 +663,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * An "allocdirect" structure is attached to an "inodedep" when a new block  * or fragment is allocated and pointed to by the inode described by  * "inodedep". The worklist is linked to the buffer that holds the block.  * When the block is first allocated, it is linked to the bmsafemap  * structure associated with the buffer holding the cylinder group map  * from which it was allocated. When the cylinder group map is written  * to disk, ad_state has the DEPCOMPLETE flag set. When the block itself  * is written, the COMPLETE flag is set. Once both the cylinder group map  * and the data itself have been written, it is safe to write the inode  * that claims the block. If there was a previous fragment that had been  * allocated before the file was increased in size, the old fragment may  * be freed once the inode claiming the new block is written to disk.  * This ad_fragfree request is attached to the id_inowait list of the  * associated inodedep (pointed to by ad_inodedep) for processing after  * the inode is written.  */
+comment|/*  * An "allocdirect" structure is attached to an "inodedep" when a new block  * or fragment is allocated and pointed to by the inode described by  * "inodedep". The worklist is linked to the buffer that holds the block.  * When the block is first allocated, it is linked to the bmsafemap  * structure associated with the buffer holding the cylinder group map  * from which it was allocated. When the cylinder group map is written  * to disk, ad_state has the DEPCOMPLETE flag set. When the block itself  * is written, the COMPLETE flag is set. Once both the cylinder group map  * and the data itself have been written, it is safe to write the inode  * that claims the block. If there was a previous fragment that had been  * allocated before the file was increased in size, the old fragment may  * be freed once the inode claiming the new block is written to disk.  * This ad_fragfree request is attached to the id_inowait list of the  * associated inodedep (pointed to by ad_inodedep) for processing after  * the inode is written. When a block is allocated to a directory, an  * fsync of a file whose name is within that block must ensure not only  * that the block containing the file name has been written, but also  * that the on-disk inode references that block. When a new directory  * block is created, we allocate a newdirblk structure which is linked  * to the associated allocdirect (on its ad_newdirblk list). When the  * allocdirect has been satisfied, the newdirblk structure is moved to  * the inodedep id_bufwait list of its directory to await the inode  * being written. When the inode is written, the directory entries are  * fully committed and can be deleted from their pagedep->id_pendinghd  * and inodedep->id_pendinghd lists.  */
 end_comment
 
 begin_struct
@@ -683,6 +732,11 @@ modifier|*
 name|ad_freefrag
 decl_stmt|;
 comment|/* fragment to be freed (if any) */
+name|struct
+name|workhead
+name|ad_newdirblk
+decl_stmt|;
+comment|/* dir block to notify when written */
 block|}
 struct|;
 end_struct
@@ -1131,6 +1185,34 @@ directive|define
 name|dm_dirinum
 value|dm_un.dmu_dirinum
 end_define
+
+begin_comment
+comment|/*  * A "newdirblk" structure tracks the progress of a newly allocated  * directory block from its creation until it is claimed by its on-disk  * inode. When a block is allocated to a directory, an fsync of a file  * whose name is within that block must ensure not only that the block  * containing the file name has been written, but also that the on-disk  * inode references that block. When a new directory block is created,  * we allocate a newdirblk structure which is linked to the associated  * allocdirect (on its ad_newdirblk list). When the allocdirect has been  * satisfied, the newdirblk structure is moved to the inodedep id_bufwait  * list of its directory to await the inode being written. When the inode  * is written, the directory entries are fully committed and can be  * deleted from their pagedep->id_pendinghd and inodedep->id_pendinghd  * lists. Note that we could track directory blocks allocated to indirect  * blocks using a similar scheme with the allocindir structures. Rather  * than adding this level of complexity, we simply write those newly   * allocated indirect blocks synchronously as such allocations are rare.  */
+end_comment
+
+begin_struct
+struct|struct
+name|newdirblk
+block|{
+name|struct
+name|worklist
+name|db_list
+decl_stmt|;
+comment|/* id_inowait or pg_newdirblk */
+define|#
+directive|define
+name|db_state
+value|db_list.wk_state
+comment|/* unused */
+name|struct
+name|pagedep
+modifier|*
+name|db_pagedep
+decl_stmt|;
+comment|/* associated pagedep */
+block|}
+struct|;
+end_struct
 
 end_unit
 

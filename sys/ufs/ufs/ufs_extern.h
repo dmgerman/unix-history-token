@@ -663,7 +663,7 @@ comment|/*  * Soft update function prototypes.  */
 end_comment
 
 begin_decl_stmt
-name|void
+name|int
 name|softdep_setup_directory_add
 name|__P
 argument_list|(
@@ -683,6 +683,8 @@ operator|,
 expr|struct
 name|buf
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
