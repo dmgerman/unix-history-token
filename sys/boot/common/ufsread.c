@@ -26,15 +26,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VBLKSIZE
-value|4096
+name|VBLKSHIFT
+value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|VBLKSHIFT
-value|12
+name|VBLKSIZE
+value|(1<< VBLKSHIFT)
 end_define
 
 begin_define
@@ -58,7 +58,7 @@ name|INDIRPERVBLK
 parameter_list|(
 name|fs
 parameter_list|)
-value|(NINDIR(fs) / ((fs)->fs_bsize / VBLKSIZE))
+value|(NINDIR(fs) / ((fs)->fs_bsize>> VBLKSHIFT))
 end_define
 
 begin_define
@@ -68,7 +68,7 @@ name|IPERVBLK
 parameter_list|(
 name|fs
 parameter_list|)
-value|(INOPB(fs) / ((fs)->fs_bsize / VBLKSIZE))
+value|(INOPB(fs) / ((fs)->fs_bsize>> VBLKSHIFT))
 end_define
 
 begin_define
@@ -220,7 +220,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|fsfind
 parameter_list|(
@@ -887,9 +887,11 @@ operator|-
 name|NDADDR
 operator|)
 operator|/
+operator|(
 name|n
 operator|*
 name|DBPERVBLK
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1129,7 +1131,8 @@ name|char
 modifier|*
 name|blkbuf
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|indbuf
 decl_stmt|;
 name|struct
@@ -1165,6 +1168,9 @@ name|ufs2_daddr_t
 name|blkmap
 decl_stmt|,
 name|indmap
+decl_stmt|;
+name|u_int
+name|u
 decl_stmt|;
 name|blkbuf
 operator|=
@@ -1521,6 +1527,23 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|u
+operator|=
+call|(
+name|u_int
+call|)
+argument_list|(
+name|lbn
+operator|-
+name|NDADDR
+argument_list|)
+operator|/
+operator|(
+name|n
+operator|*
+name|DBPERVBLK
+operator|)
+expr_stmt|;
 name|vbaddr
 operator|=
 name|fsbtodb
@@ -1530,15 +1553,7 @@ argument_list|,
 name|addr
 argument_list|)
 operator|+
-operator|(
-name|lbn
-operator|-
-name|NDADDR
-operator|)
-operator|/
-name|n
-operator|*
-name|DBPERVBLK
+name|u
 expr_stmt|;
 if|if
 condition|(
@@ -1574,8 +1589,12 @@ name|lbn
 operator|-
 name|NDADDR
 operator|)
-operator|%
+operator|&
+operator|(
 name|n
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 if|if
 condition|(
