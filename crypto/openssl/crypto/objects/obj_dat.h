@@ -45,7 +45,7 @@ name|unsigned
 name|char
 name|lvalues
 index|[
-literal|2941
+literal|2951
 index|]
 init|=
 block|{
@@ -6136,16 +6136,36 @@ block|,
 literal|0x07
 block|,
 comment|/* [2859] OBJ_Mail */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
 literal|0x01
 block|,
 comment|/* [2863] OBJ_Enterprises */
-literal|0xBA
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x8B
+block|,
+literal|0x3A
 block|,
 literal|0x82
 block|,
 literal|0x58
 block|,
-comment|/* [2864] OBJ_dcObject */
+comment|/* [2868] OBJ_dcObject */
 literal|0x09
 block|,
 literal|0x92
@@ -6166,7 +6186,7 @@ literal|0x01
 block|,
 literal|0x19
 block|,
-comment|/* [2867] OBJ_domainComponent */
+comment|/* [2877] OBJ_domainComponent */
 literal|0x09
 block|,
 literal|0x92
@@ -6187,17 +6207,17 @@ literal|0x04
 block|,
 literal|0x0D
 block|,
-comment|/* [2877] OBJ_Domain */
+comment|/* [2887] OBJ_Domain */
 literal|0x50
 block|,
-comment|/* [2887] OBJ_joint_iso_ccitt */
+comment|/* [2897] OBJ_joint_iso_ccitt */
 literal|0x55
 block|,
 literal|0x01
 block|,
 literal|0x05
 block|,
-comment|/* [2888] OBJ_selected_attribute_types */
+comment|/* [2898] OBJ_selected_attribute_types */
 literal|0x55
 block|,
 literal|0x01
@@ -6206,7 +6226,7 @@ literal|0x05
 block|,
 literal|0x37
 block|,
-comment|/* [2891] OBJ_clearance */
+comment|/* [2901] OBJ_clearance */
 literal|0x2A
 block|,
 literal|0x86
@@ -6225,7 +6245,7 @@ literal|0x01
 block|,
 literal|0x03
 block|,
-comment|/* [2895] OBJ_md4WithRSAEncryption */
+comment|/* [2905] OBJ_md4WithRSAEncryption */
 literal|0x2B
 block|,
 literal|0x06
@@ -6242,7 +6262,7 @@ literal|0x01
 block|,
 literal|0x0A
 block|,
-comment|/* [2904] OBJ_ac_proxying */
+comment|/* [2914] OBJ_ac_proxying */
 literal|0x2B
 block|,
 literal|0x06
@@ -6259,7 +6279,7 @@ literal|0x01
 block|,
 literal|0x0B
 block|,
-comment|/* [2912] OBJ_sinfo_access */
+comment|/* [2922] OBJ_sinfo_access */
 literal|0x2B
 block|,
 literal|0x06
@@ -6276,35 +6296,35 @@ literal|0x0A
 block|,
 literal|0x06
 block|,
-comment|/* [2920] OBJ_id_aca_encAttrs */
+comment|/* [2930] OBJ_id_aca_encAttrs */
 literal|0x55
 block|,
 literal|0x04
 block|,
 literal|0x48
 block|,
-comment|/* [2928] OBJ_role */
+comment|/* [2938] OBJ_role */
 literal|0x55
 block|,
 literal|0x1D
 block|,
 literal|0x24
 block|,
-comment|/* [2931] OBJ_policy_constraints */
+comment|/* [2941] OBJ_policy_constraints */
 literal|0x55
 block|,
 literal|0x1D
 block|,
 literal|0x37
 block|,
-comment|/* [2934] OBJ_target_information */
+comment|/* [2944] OBJ_target_information */
 literal|0x55
 block|,
 literal|0x1D
 block|,
 literal|0x38
 block|,
-comment|/* [2937] OBJ_no_rev_avail */
+comment|/* [2947] OBJ_no_rev_avail */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -13881,7 +13901,7 @@ literal|"Enterprises"
 block|,
 name|NID_Enterprises
 block|,
-literal|1
+literal|5
 block|,
 operator|&
 operator|(
@@ -13901,13 +13921,13 @@ literal|"dcObject"
 block|,
 name|NID_dcObject
 block|,
-literal|3
+literal|9
 block|,
 operator|&
 operator|(
 name|lvalues
 index|[
-literal|2864
+literal|2868
 index|]
 operator|)
 block|,
@@ -13927,7 +13947,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2867
+literal|2877
 index|]
 operator|)
 block|,
@@ -13947,7 +13967,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2877
+literal|2887
 index|]
 operator|)
 block|,
@@ -13967,7 +13987,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2887
+literal|2897
 index|]
 operator|)
 block|,
@@ -13987,7 +14007,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2888
+literal|2898
 index|]
 operator|)
 block|,
@@ -14007,7 +14027,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2891
+literal|2901
 index|]
 operator|)
 block|,
@@ -14027,7 +14047,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2895
+literal|2905
 index|]
 operator|)
 block|,
@@ -14047,7 +14067,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2904
+literal|2914
 index|]
 operator|)
 block|,
@@ -14067,7 +14087,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2912
+literal|2922
 index|]
 operator|)
 block|,
@@ -14087,7 +14107,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2920
+literal|2930
 index|]
 operator|)
 block|,
@@ -14107,7 +14127,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2928
+literal|2938
 index|]
 operator|)
 block|,
@@ -14127,7 +14147,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2931
+literal|2941
 index|]
 operator|)
 block|,
@@ -14147,7 +14167,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2934
+literal|2944
 index|]
 operator|)
 block|,
@@ -14167,7 +14187,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2937
+literal|2947
 index|]
 operator|)
 block|,
@@ -21464,15 +21484,6 @@ operator|&
 operator|(
 name|nid_objs
 index|[
-literal|389
-index|]
-operator|)
-block|,
-comment|/* OBJ_Enterprises                   1 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|181
 index|]
 operator|)
@@ -21878,15 +21889,6 @@ operator|&
 operator|(
 name|nid_objs
 index|[
-literal|390
-index|]
-operator|)
-block|,
-comment|/* OBJ_dcObject                      1466 344 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|382
 index|]
 operator|)
@@ -22000,6 +22002,15 @@ index|]
 operator|)
 block|,
 comment|/* OBJ_X9_57                        1 2 840 10040 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|389
+index|]
+operator|)
+block|,
+comment|/* OBJ_Enterprises                  1 3 6 1 4 1 */
 operator|&
 operator|(
 name|nid_objs
@@ -23737,6 +23748,15 @@ index|]
 operator|)
 block|,
 comment|/* OBJ_localKeyID                   1 2 840 113549 1 9 21 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|390
+index|]
+operator|)
+block|,
+comment|/* OBJ_dcObject                     1 3 6 1 4 1 1466 344 */
 operator|&
 operator|(
 name|nid_objs

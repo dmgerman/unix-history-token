@@ -73,6 +73,12 @@ name|defined
 argument_list|(
 name|__DECC
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__DECCXX
+argument_list|)
 define|#
 directive|define
 name|OPENSSL_EXTERN

@@ -3120,14 +3120,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|assert
-argument_list|(
-operator|*
-name|sbuffer
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -3156,6 +3148,15 @@ name|currlen
 operator|>
 literal|0
 condition|)
+block|{
+name|assert
+argument_list|(
+operator|*
+name|sbuffer
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|*
@@ -3168,6 +3169,7 @@ operator|*
 name|currlen
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|sbuffer
 operator|=
@@ -3344,15 +3346,15 @@ decl_stmt|;
 name|size_t
 name|retlen
 decl_stmt|;
-name|MS_STATIC
 name|char
 name|hugebuf
 index|[
 literal|1024
 operator|*
-literal|10
+literal|2
 index|]
 decl_stmt|;
+comment|/* Was previously 10k, which is unreasonable 				   in small-stack environments, like threads 				   or DOS programs. */
 name|char
 modifier|*
 name|hugebufp

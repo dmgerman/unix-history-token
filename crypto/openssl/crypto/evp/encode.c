@@ -1358,6 +1358,23 @@ name|eof
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|v
+operator|==
+name|B64_CR
+condition|)
+block|{
+name|ln
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|exp_nl
+condition|)
+continue|continue;
+block|}
 comment|/* eoln */
 if|if
 condition|(

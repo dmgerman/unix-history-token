@@ -968,6 +968,15 @@ operator|=
 operator|~
 name|v
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|value
+condition|)
+name|v
+operator|=
+literal|0
+expr_stmt|;
 name|a
 operator|->
 name|flags

@@ -150,10 +150,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|VXWORKS
+argument_list|)
+end_elif
 
 begin_include
 include|#

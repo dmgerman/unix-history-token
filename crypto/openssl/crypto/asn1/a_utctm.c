@@ -999,6 +999,12 @@ name|defined
 argument_list|(
 name|__CYGWIN32__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_DARWIN
+argument_list|)
 name|gmtime_r
 argument_list|(
 operator|&
@@ -1469,6 +1475,12 @@ operator|!
 name|defined
 argument_list|(
 name|__CYGWIN32__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_DARWIN
 argument_list|)
 block|{
 name|struct

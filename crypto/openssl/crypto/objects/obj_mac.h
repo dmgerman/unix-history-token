@@ -9472,7 +9472,7 @@ begin_define
 define|#
 directive|define
 name|OBJ_Enterprises
-value|OBJ_private,1L
+value|OBJ_Private,1L
 end_define
 
 begin_define
@@ -9500,7 +9500,7 @@ begin_define
 define|#
 directive|define
 name|OBJ_dcObject
-value|OBJ_enterprises,1466L,344L
+value|OBJ_Enterprises,1466L,344L
 end_define
 
 begin_define

@@ -663,6 +663,10 @@ value|105
 comment|/* Reason codes. */
 define|#
 directive|define
+name|DH_R_BAD_GENERATOR
+value|101
+define|#
+directive|define
 name|DH_R_NO_PRIVATE_VALUE
 value|100
 ifdef|#

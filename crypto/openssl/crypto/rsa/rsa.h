@@ -287,6 +287,7 @@ name|app_data
 decl_stmt|;
 comment|/* may be needed! */
 comment|/* New sign and verify functions: some libraries don't allow arbitrary data  * to be signed/verified: this allows them to be used. Note: for this to work  * the RSA_public_decrypt() and RSA_private_encrypt() should *NOT* be used  * RSA_sign(), RSA_verify() should be used instead. Note: for backwards  * compatibility this functionality is only enabled if the RSA_FLAG_SIGN_VER  * option is set in 'flags'.  */
+comment|/* changed m_len to m_length to avoid a conflict with a #define in    vxworks for m_len for the mbuf code.  This only shows up in apps    that have USE_SOCKETS defined */
 name|int
 function_decl|(
 modifier|*
@@ -303,7 +304,7 @@ name|m
 parameter_list|,
 name|unsigned
 name|int
-name|m_len
+name|m_length
 parameter_list|,
 name|unsigned
 name|char
@@ -336,7 +337,7 @@ name|m
 parameter_list|,
 name|unsigned
 name|int
-name|m_len
+name|m_length
 parameter_list|,
 name|unsigned
 name|char
@@ -1024,7 +1025,7 @@ name|m
 parameter_list|,
 name|unsigned
 name|int
-name|m_len
+name|m_length
 parameter_list|,
 name|unsigned
 name|char
@@ -1054,7 +1055,7 @@ name|m
 parameter_list|,
 name|unsigned
 name|int
-name|m_len
+name|m_length
 parameter_list|,
 name|unsigned
 name|char
@@ -1084,7 +1085,7 @@ name|m
 parameter_list|,
 name|unsigned
 name|int
-name|m_len
+name|m_length
 parameter_list|,
 name|unsigned
 name|char
@@ -1114,7 +1115,7 @@ name|m
 parameter_list|,
 name|unsigned
 name|int
-name|m_len
+name|m_length
 parameter_list|,
 name|unsigned
 name|char
