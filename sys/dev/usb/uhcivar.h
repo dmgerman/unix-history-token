@@ -312,12 +312,22 @@ index|]
 decl_stmt|;
 name|uhci_soft_qh_t
 modifier|*
-name|sc_ctl_start
+name|sc_lctl_start
 decl_stmt|;
-comment|/* dummy QH for control */
+comment|/* dummy QH for low speed control */
 name|uhci_soft_qh_t
 modifier|*
-name|sc_ctl_end
+name|sc_lctl_end
+decl_stmt|;
+comment|/* last control QH */
+name|uhci_soft_qh_t
+modifier|*
+name|sc_hctl_start
+decl_stmt|;
+comment|/* dummy QH for high speed control */
+name|uhci_soft_qh_t
+modifier|*
+name|sc_hctl_end
 decl_stmt|;
 comment|/* last control QH */
 name|uhci_soft_qh_t
@@ -330,6 +340,15 @@ modifier|*
 name|sc_bulk_end
 decl_stmt|;
 comment|/* last bulk transfer */
+name|uhci_soft_qh_t
+modifier|*
+name|sc_last_qh
+decl_stmt|;
+comment|/* dummy QH at the end */
+name|u_int32_t
+name|sc_loops
+decl_stmt|;
+comment|/* number of QHs that wants looping */
 name|uhci_soft_td_t
 modifier|*
 name|sc_freetds
