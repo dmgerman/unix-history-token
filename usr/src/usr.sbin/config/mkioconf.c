@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.3 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1649,20 +1649,6 @@ operator|->
 name|d_next
 control|)
 block|{
-if|if
-condition|(
-name|dp
-operator|->
-name|d_vec
-operator|!=
-literal|0
-condition|)
-block|{
-name|struct
-name|idlst
-modifier|*
-name|ip
-decl_stmt|;
 name|mp
 operator|=
 name|dp
@@ -1690,6 +1676,20 @@ literal|"vba"
 argument_list|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_vec
+operator|!=
+literal|0
+condition|)
+block|{
+name|struct
+name|idlst
+modifier|*
+name|ip
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|fp
@@ -1838,6 +1838,27 @@ literal|", 0 } ;\n"
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|dp
+operator|->
+name|d_type
+operator|==
+name|DRIVER
+condition|)
+comment|/* devices w/o interrupts */
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"extern struct vba_driver %sdriver;\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
 block|}
 name|fprintf
 argument_list|(
