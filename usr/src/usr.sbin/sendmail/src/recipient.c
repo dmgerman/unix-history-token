@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	5.3 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1091,6 +1091,11 @@ operator|->
 name|q_next
 operator|=
 name|NULL
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_nrcpts
+operator|++
 expr_stmt|;
 comment|/* 	**  Alias the name and handle :include: specs. 	*/
 if|if
