@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 - 2004 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 - 2005 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -41,7 +41,7 @@ value|0x8003
 define|#
 directive|define
 name|ATA_PROTO_ATA
-value|0x0002
+value|0x0000
 define|#
 directive|define
 name|ATA_PROTO_ATAPI_12
@@ -228,10 +228,23 @@ value|0x0004
 comment|/* word 88 valid */
 comment|/*054*/
 name|u_int16_t
-name|obsolete54
-index|[
-literal|5
-index|]
+name|current_cylinders
+decl_stmt|;
+comment|/*055*/
+name|u_int16_t
+name|current_heads
+decl_stmt|;
+comment|/*056*/
+name|u_int16_t
+name|current_sectors
+decl_stmt|;
+comment|/*057*/
+name|u_int16_t
+name|current_size_1
+decl_stmt|;
+comment|/*058*/
+name|u_int16_t
+name|current_size_2
 decl_stmt|;
 comment|/*059*/
 name|u_int16_t
@@ -489,6 +502,7 @@ name|u_int16_t
 name|extension
 decl_stmt|;
 block|}
+name|__packed
 name|support
 struct|,
 name|enabled
@@ -596,7 +610,7 @@ decl_stmt|;
 name|u_int16_t
 name|reserved161
 index|[
-literal|14
+literal|15
 index|]
 decl_stmt|;
 comment|/*176*/
@@ -617,6 +631,7 @@ name|u_int16_t
 name|integrity
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -1985,16 +2000,36 @@ name|type
 decl_stmt|;
 define|#
 directive|define
-name|AR_RAID0
-value|1
-define|#
-directive|define
-name|AR_RAID1
-value|2
+name|AR_JBOD
+value|0x01
 define|#
 directive|define
 name|AR_SPAN
-value|4
+value|0x02
+define|#
+directive|define
+name|AR_RAID0
+value|0x04
+define|#
+directive|define
+name|AR_RAID1
+value|0x08
+define|#
+directive|define
+name|AR_RAID01
+value|0x10
+define|#
+directive|define
+name|AR_RAID3
+value|0x20
+define|#
+directive|define
+name|AR_RAID4
+value|0x40
+define|#
+directive|define
+name|AR_RAID5
+value|0x80
 name|int
 name|total_disks
 decl_stmt|;

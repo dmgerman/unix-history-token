@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2004 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998 - 2005 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -685,6 +685,17 @@ begin_comment
 comment|/* 4 head bits */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATA_A_HOB
+value|0x80
+end_define
+
+begin_comment
+comment|/* High Order Byte enable */
+end_comment
+
 begin_comment
 comment|/* ATAPI misc defines */
 end_comment
@@ -1126,21 +1137,70 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* structure used for composite atomic operations */
+end_comment
+
+begin_struct
+struct|struct
+name|ata_composite
+block|{
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
+comment|/* control lock */
+name|u_int32_t
+name|rd_needed
+decl_stmt|;
+comment|/* needed read subdisks */
+name|u_int32_t
+name|rd_done
+decl_stmt|;
+comment|/* done read subdisks */
+name|u_int32_t
+name|wr_needed
+decl_stmt|;
+comment|/* needed write subdisks */
+name|u_int32_t
+name|wr_depend
+decl_stmt|;
+comment|/* write depends on subdisks */
+name|u_int32_t
+name|wr_done
+decl_stmt|;
+comment|/* done write subdisks */
+name|struct
+name|ata_request
+modifier|*
+name|request
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* size must match maps above */
+name|caddr_t
+name|data_1
+decl_stmt|;
+name|caddr_t
+name|data_2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* structure used to queue an ATA/ATAPI request */
+end_comment
+
 begin_struct
 struct|struct
 name|ata_request
 block|{
-name|struct
-name|ata_device
-modifier|*
-name|device
+name|device_t
+name|dev
 decl_stmt|;
-comment|/* ptr to device softc */
-name|void
-modifier|*
-name|driver
-decl_stmt|;
-comment|/* driver specific */
+comment|/* device handle */
 union|union
 block|{
 struct|struct
@@ -1192,6 +1252,77 @@ struct|;
 block|}
 name|u
 union|;
+name|u_int32_t
+name|bytecount
+decl_stmt|;
+comment|/* bytes to transfer */
+name|u_int32_t
+name|transfersize
+decl_stmt|;
+comment|/* bytes pr transfer */
+name|caddr_t
+name|data
+decl_stmt|;
+comment|/* pointer to data buf */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ATA_R_CONTROL
+value|0x00000001
+define|#
+directive|define
+name|ATA_R_READ
+value|0x00000002
+define|#
+directive|define
+name|ATA_R_WRITE
+value|0x00000004
+define|#
+directive|define
+name|ATA_R_DMA
+value|0x00000008
+define|#
+directive|define
+name|ATA_R_ATAPI
+value|0x00000010
+define|#
+directive|define
+name|ATA_R_QUIET
+value|0x00000020
+define|#
+directive|define
+name|ATA_R_INTR_SEEN
+value|0x00000040
+define|#
+directive|define
+name|ATA_R_TIMEOUT
+value|0x00000080
+define|#
+directive|define
+name|ATA_R_ORDERED
+value|0x00000100
+define|#
+directive|define
+name|ATA_R_AT_HEAD
+value|0x00000200
+define|#
+directive|define
+name|ATA_R_REQUEUE
+value|0x00000400
+define|#
+directive|define
+name|ATA_R_THREAD
+value|0x00000800
+define|#
+directive|define
+name|ATA_R_DIRECT
+value|0x00001000
+define|#
+directive|define
+name|ATA_R_DEBUG
+value|0x10000000
 name|u_int8_t
 name|status
 decl_stmt|;
@@ -1205,72 +1336,13 @@ name|dmastat
 decl_stmt|;
 comment|/* DMA status */
 name|u_int32_t
-name|bytecount
-decl_stmt|;
-comment|/* bytes to transfer */
-name|u_int32_t
-name|transfersize
-decl_stmt|;
-comment|/* bytes pr transfer */
-name|u_int32_t
 name|donecount
 decl_stmt|;
 comment|/* bytes transferred */
-name|caddr_t
-name|data
-decl_stmt|;
-comment|/* pointer to data buf */
 name|int
-name|flags
+name|result
 decl_stmt|;
-define|#
-directive|define
-name|ATA_R_CONTROL
-value|0x0001
-define|#
-directive|define
-name|ATA_R_READ
-value|0x0002
-define|#
-directive|define
-name|ATA_R_WRITE
-value|0x0004
-define|#
-directive|define
-name|ATA_R_DMA
-value|0x0008
-define|#
-directive|define
-name|ATA_R_ATAPI
-value|0x0010
-define|#
-directive|define
-name|ATA_R_QUIET
-value|0x0020
-define|#
-directive|define
-name|ATA_R_INTR_SEEN
-value|0x0040
-define|#
-directive|define
-name|ATA_R_TIMEOUT
-value|0x0080
-define|#
-directive|define
-name|ATA_R_ORDERED
-value|0x0100
-define|#
-directive|define
-name|ATA_R_IMMEDIATE
-value|0x0200
-define|#
-directive|define
-name|ATA_R_REQUEUE
-value|0x0400
-define|#
-directive|define
-name|ATA_R_DEBUG
-value|0x1000
+comment|/* result error code */
 name|void
 function_decl|(
 modifier|*
@@ -1301,10 +1373,6 @@ name|callout
 name|callout
 decl_stmt|;
 comment|/* callout management */
-name|int
-name|result
-decl_stmt|;
-comment|/* result error code */
 name|struct
 name|task
 name|task
@@ -1316,13 +1384,21 @@ modifier|*
 name|bio
 decl_stmt|;
 comment|/* bio for this request */
-name|TAILQ_ENTRY
-argument_list|(
-argument|ata_request
-argument_list|)
-name|sequence
-expr_stmt|;
-comment|/* sequence management */
+name|int
+name|this
+decl_stmt|;
+comment|/* this request ID */
+name|struct
+name|ata_composite
+modifier|*
+name|composite
+decl_stmt|;
+comment|/* for composite atomic ops */
+name|void
+modifier|*
+name|driver
+decl_stmt|;
+comment|/* driver specific */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ata_request
@@ -1341,7 +1417,7 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|0
+literal|1
 end_if
 
 begin_define
@@ -1354,7 +1430,7 @@ parameter_list|,
 name|string
 parameter_list|)
 define|\
-value|{ \     if (request->flags& ATA_R_DEBUG) \         ata_prtdev(request->device, "req=%p %s " string "\n", \                    request, ata_cmd2str(request)); \     }
+value|{ \     if (request->flags& ATA_R_DEBUG) \ 	device_printf(request->dev, "req=%p %s " string "\n", \ 		      request, ata_cmd2str(request)); \     }
 end_define
 
 begin_else
@@ -1386,15 +1462,14 @@ begin_struct
 struct|struct
 name|ata_device
 block|{
-name|struct
-name|ata_channel
-modifier|*
-name|channel
+name|device_t
+name|dev
 decl_stmt|;
+comment|/* device handle */
 name|int
 name|unit
 decl_stmt|;
-comment|/* unit number */
+comment|/* physical unit */
 define|#
 directive|define
 name|ATA_MASTER
@@ -1403,70 +1478,23 @@ define|#
 directive|define
 name|ATA_SLAVE
 value|0x10
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* device name */
 name|struct
 name|ata_params
-modifier|*
 name|param
 decl_stmt|;
 comment|/* ata param structure */
-name|void
-modifier|*
-name|softc
+name|int
+name|mode
 decl_stmt|;
-comment|/* ptr to softc for device */
-name|void
-function_decl|(
-modifier|*
-name|attach
-function_decl|)
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|detach
-function_decl|)
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|config
-function_decl|)
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|start
-function_decl|)
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|)
-function_decl|;
+comment|/* current transfermode */
+name|u_int32_t
+name|max_iosize
+decl_stmt|;
+comment|/* max IO size */
+name|int
+name|cmd
+decl_stmt|;
+comment|/* last cmd executed */
 name|int
 name|flags
 decl_stmt|;
@@ -1476,39 +1504,12 @@ name|ATA_D_USE_CHS
 value|0x0001
 define|#
 directive|define
-name|ATA_D_DETACHING
+name|ATA_D_MEDIA_CHANGED
 value|0x0002
 define|#
 directive|define
-name|ATA_D_MEDIA_CHANGED
-value|0x0004
-define|#
-directive|define
 name|ATA_D_ENC_PRESENT
-value|0x0008
-name|int
-name|cmd
-decl_stmt|;
-comment|/* last cmd executed */
-name|int
-name|mode
-decl_stmt|;
-comment|/* transfermode */
-name|void
-function_decl|(
-modifier|*
-name|setmode
-function_decl|)
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|,
-name|int
-name|mode
-parameter_list|)
-function_decl|;
+value|0x0004
 block|}
 struct|;
 end_struct
@@ -1550,6 +1551,13 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ata_channel
+block|{}
+struct|;
+end_struct
+
 begin_comment
 comment|/* structure holding DMA related information */
 end_comment
@@ -1563,45 +1571,45 @@ name|dmatag
 decl_stmt|;
 comment|/* parent DMA tag */
 name|bus_dma_tag_t
-name|cdmatag
+name|sg_tag
 decl_stmt|;
-comment|/* control DMA tag */
+comment|/* SG list DMA tag */
 name|bus_dmamap_t
-name|cdmamap
+name|sg_map
 decl_stmt|;
-comment|/* control DMA map */
-name|bus_dma_tag_t
-name|ddmatag
-decl_stmt|;
-comment|/* data DMA tag */
-name|bus_dmamap_t
-name|ddmamap
-decl_stmt|;
-comment|/* data DMA map */
+comment|/* SG list DMA map */
 name|void
 modifier|*
-name|dmatab
+name|sg
 decl_stmt|;
 comment|/* DMA transfer table */
 name|bus_addr_t
-name|mdmatab
+name|sg_bus
 decl_stmt|;
 comment|/* bus address of dmatab */
 name|bus_dma_tag_t
-name|wdmatag
+name|data_tag
+decl_stmt|;
+comment|/* data DMA tag */
+name|bus_dmamap_t
+name|data_map
+decl_stmt|;
+comment|/* data DMA map */
+name|bus_dma_tag_t
+name|work_tag
 decl_stmt|;
 comment|/* workspace DMA tag */
 name|bus_dmamap_t
-name|wdmamap
+name|work_map
 decl_stmt|;
 comment|/* workspace DMA map */
 name|u_int8_t
 modifier|*
-name|workspace
+name|work
 decl_stmt|;
 comment|/* workspace */
 name|bus_addr_t
-name|wdmatab
+name|work_bus
 decl_stmt|;
 comment|/* bus address of dmatab */
 name|u_int32_t
@@ -1779,17 +1787,6 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|interrupt
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|channel
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
 name|reset
 function_decl|)
 parameter_list|(
@@ -1855,16 +1852,14 @@ begin_struct
 struct|struct
 name|ata_channel
 block|{
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 decl_stmt|;
 comment|/* device handle */
 name|int
 name|unit
 decl_stmt|;
-comment|/* channel number */
+comment|/* physical channel */
 name|struct
 name|ata_resource
 name|r_io
@@ -1914,31 +1909,7 @@ value|0x04
 define|#
 directive|define
 name|ATA_48BIT_ACTIVE
-value|0x10
-define|#
-directive|define
-name|ATA_IMMEDIATE_MODE
-value|0x20
-define|#
-directive|define
-name|ATA_HWGONE
-value|0x40
-name|struct
-name|ata_device
-name|device
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* devices on this channel */
-define|#
-directive|define
-name|MASTER
-value|0x00
-define|#
-directive|define
-name|SLAVE
-value|0x01
+value|0x08
 name|int
 name|devices
 decl_stmt|;
@@ -1978,47 +1949,11 @@ name|ATA_ACTIVE
 value|0x0001
 define|#
 directive|define
-name|ATA_INTERRUPT
+name|ATA_STALL_QUEUE
 value|0x0002
 define|#
 directive|define
 name|ATA_TIMEOUT
-value|0x0004
-name|void
-function_decl|(
-modifier|*
-name|reset
-function_decl|)
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|locking
-function_decl|)
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-define|#
-directive|define
-name|ATA_LF_LOCK
-value|0x0001
-define|#
-directive|define
-name|ATA_LF_UNLOCK
-value|0x0002
-define|#
-directive|define
-name|ATA_LF_WHICH
 value|0x0004
 name|struct
 name|mtx
@@ -2033,6 +1968,12 @@ argument_list|)
 name|ata_queue
 expr_stmt|;
 comment|/* head of ATA queue */
+name|struct
+name|ata_request
+modifier|*
+name|freezepoint
+decl_stmt|;
+comment|/* composite freezepoint */
 name|struct
 name|ata_request
 modifier|*
@@ -2085,6 +2026,22 @@ end_define
 begin_comment
 comment|/* externs */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|ata_ioctl_func
+function_decl|)
+parameter_list|(
+name|struct
+name|ata_cmd
+modifier|*
+name|iocmd
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -2140,6 +2097,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ata_reinit
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ata_suspend
 parameter_list|(
 name|device_t
@@ -2160,139 +2127,32 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ata_identify
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
+name|device_t
+name|parent
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ata_udelay
 parameter_list|(
 name|int
 name|interval
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ata_printf
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-parameter_list|,
-name|int
-name|device
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|3
-operator|,
-function_decl|4
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|int
-name|ata_prtdev
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|2
-operator|,
-function_decl|3
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|void
-name|ata_set_name
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|int
-name|lun
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ata_free_name
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ata_get_lun
-parameter_list|(
-name|u_int32_t
-modifier|*
-name|map
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ata_test_lun
-parameter_list|(
-name|u_int32_t
-modifier|*
-name|map
-parameter_list|,
-name|int
-name|lun
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ata_free_lun
-parameter_list|(
-name|u_int32_t
-modifier|*
-name|map
-parameter_list|,
-name|int
-name|lun
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2368,30 +2228,6 @@ end_comment
 
 begin_function_decl
 name|int
-name|ata_reinit
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ata_start
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ata_controlcmd
 parameter_list|(
 name|struct
@@ -2456,6 +2292,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ata_start
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ata_finish
 parameter_list|(
 name|struct
@@ -2487,10 +2333,8 @@ name|ata_channel
 modifier|*
 name|ch
 parameter_list|,
-name|struct
-name|ata_device
-modifier|*
-name|device
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2548,90 +2392,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* subdrivers */
-end_comment
-
 begin_function_decl
-name|void
-name|ad_attach
+name|int
+name|ata_getparam
 parameter_list|(
+name|device_t
+name|parent
+parameter_list|,
 name|struct
 name|ata_device
 modifier|*
 name|atadev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|acd_attach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|afd_attach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ast_attach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_cam_attach_bus
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_cam_detach_bus
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_cam_reinit_bus
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-name|ch
+parameter_list|,
+name|u_int8_t
+name|command
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2663,6 +2437,28 @@ parameter_list|(
 name|request
 parameter_list|)
 value|uma_zfree(ata_zone, request)
+end_define
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_ATA
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* misc newbus defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GRANDPARENT
+parameter_list|(
+name|dev
+parameter_list|)
+value|device_get_parent(device_get_parent(dev))
 end_define
 
 begin_comment
