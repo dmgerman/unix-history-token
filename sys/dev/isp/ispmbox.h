@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispmbox.h,v 1.10 1999/05/11 05:00:35 mjacob Exp $ */
+comment|/* $Id: ispmbox.h,v 1.11 1999/07/02 22:31:11 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_6_2_99 */
+comment|/* release_6_5_99 */
 end_comment
 
 begin_comment

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.c,v 1.20 1999/07/02 23:12:58 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.c,v 1.21 1999/07/03 01:44:05 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_6_2_99 */
+comment|/* release_6_5_99 */
 end_comment
 
 begin_comment
