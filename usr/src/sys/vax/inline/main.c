@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.6	(Berkeley)	%G%"
+literal|"@(#)main.c	1.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,6 +397,36 @@ operator|!=
 name|NULL
 condition|)
 block|{
+for|for
+control|(
+name|cp
+operator|=
+name|bufp
+init|;
+name|cp
+operator|<
+name|lp
+condition|;
+name|cp
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|isalnum
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+name|cp
+operator|==
+name|lp
+condition|)
+block|{
 name|bufp
 operator|=
 name|newline
@@ -437,6 +467,7 @@ expr_stmt|;
 name|emptyqueue
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 for|for
 control|(
