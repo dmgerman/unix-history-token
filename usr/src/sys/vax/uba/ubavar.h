@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.20	81/10/29	*/
+comment|/*	ubavar.h	4.21	81/11/07	*/
 end_comment
 
 begin_comment
@@ -78,6 +78,10 @@ name|int
 name|uh_errcnt
 decl_stmt|;
 comment|/* number of errors */
+name|int
+name|uh_lastiv
+decl_stmt|;
+comment|/* last free interrupt vector */
 name|short
 name|uh_users
 decl_stmt|;
@@ -345,7 +349,7 @@ begin_define
 define|#
 directive|define
 name|UBA_NEEDBDP
-value|0x1
+value|0x01
 end_define
 
 begin_comment
@@ -356,7 +360,7 @@ begin_define
 define|#
 directive|define
 name|UBA_CANTWAIT
-value|0x2
+value|0x02
 end_define
 
 begin_comment
@@ -367,11 +371,22 @@ begin_define
 define|#
 directive|define
 name|UBA_NEED16
-value|0x4
+value|0x04
 end_define
 
 begin_comment
 comment|/* need 16 bit addresses only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UBA_HAVEBDP
+value|0x08
+end_define
+
+begin_comment
+comment|/* use bdp specified in high bits */
 end_comment
 
 begin_ifndef
