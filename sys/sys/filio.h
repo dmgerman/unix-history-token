@@ -124,6 +124,32 @@ begin_comment
 comment|/* get start blk # */
 end_comment
 
+begin_struct
+struct|struct
+name|fiodgname_arg
+block|{
+name|int
+name|len
+decl_stmt|;
+name|void
+modifier|*
+name|buf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FIODGNAME
+value|_IOW('f', 120, struct fiodgname_arg)
+end_define
+
+begin_comment
+comment|/* get dev. name */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
