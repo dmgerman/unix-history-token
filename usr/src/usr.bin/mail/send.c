@@ -42,7 +42,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	2.4 %G%"
+literal|"@(#)send.c	2.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1440,6 +1440,26 @@ comment|/* 	 * Wait, to absorb a potential zombie, then 	 * fork, set up the tem
 ifdef|#
 directive|ifdef
 name|VMUNIX
+ifdef|#
+directive|ifdef
+name|pdp11
+while|while
+condition|(
+name|wait2
+argument_list|(
+operator|&
+name|s
+argument_list|,
+name|WNOHANG
+argument_list|)
+operator|>
+literal|0
+condition|)
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|vax
 while|while
 condition|(
 name|wait3
@@ -1454,6 +1474,8 @@ argument_list|)
 operator|>
 literal|0
 condition|)
+endif|#
+directive|endif
 empty_stmt|;
 else|#
 directive|else
