@@ -43,12 +43,6 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"busspace_if.h"
-end_include
-
 begin_function
 name|void
 name|busspace_generic_read_multi_1
