@@ -819,9 +819,12 @@ argument_list|(
 operator|&
 name|Context
 argument_list|,
-name|UserName
+name|Name
 argument_list|,
-name|UserNameLen
+name|strlen
+argument_list|(
+name|Name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|SHA1_Final
