@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.9 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.10 %G%"; */
 end_comment
 
 begin_define
@@ -770,9 +770,32 @@ block|}
 struct|;
 end_struct
 
+begin_escape
+end_escape
+
 begin_comment
 comment|/*  * NL FLAGS BITS  *  * Definitions of the usage of the bits in  * the nl_flags byte. Note that the low 5 bits of the  * byte are the "nl_block" and that some classes make use  * of this byte as a "width".  *  * The only non-obvious bit definition here is "NFILES"  * which records whether a structure contains any files.  * Such structures are not allowed to be dynamically allocated.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCKNO
+parameter_list|(
+name|flag
+parameter_list|)
+value|( flag& 037 )
+end_define
+
+begin_define
+define|#
+directive|define
+name|NLFLAGS
+parameter_list|(
+name|flag
+parameter_list|)
+value|( flag&~ 037 )
+end_define
 
 begin_define
 define|#
@@ -823,6 +846,31 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*      *	magic values for forvar -> value[ NL_FORV ]      *	value[ NL_FORV ] stores in its low byte      *	the nl_flags byte of the loop variable.      *	the top byte is another bunch of flags      *	FORBOUND 	means it is a loop variable      *	LOOPVAR		means it is a loop variable but it is not yet allocated      *	TEMPBOUND	means it is a loop variable and it is in a temporary.      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOPVAR
+value|00400
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEMPBOUND
+value|01000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FORBOUND
+value|( LOOPVAR | TEMPBOUND )
+end_define
 
 begin_escape
 end_escape
