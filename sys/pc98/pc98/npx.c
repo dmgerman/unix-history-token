@@ -625,19 +625,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MASK_FPU_SW
-parameter_list|(
-name|proc
-parameter_list|,
-name|mask
-parameter_list|)
-define|\
-value|(cpu_fxsr ? \ 		(proc)->p_addr->u_pcb.pcb_save.sv_xmm.sv_env.en_sw& (mask) : \ 		(proc)->p_addr->u_pcb.pcb_save.sv_87.sv_env.en_sw& (mask))
-end_define
-
-begin_define
-define|#
-directive|define
 name|GET_FPU_EXSW_PTR
 parameter_list|(
 name|pcb
@@ -675,19 +662,6 @@ name|proc
 parameter_list|)
 define|\
 value|(proc->p_addr->u_pcb.pcb_save.sv_87.sv_env.en_sw)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MASK_FPU_SW
-parameter_list|(
-name|proc
-parameter_list|,
-name|mask
-parameter_list|)
-define|\
-value|((proc)->p_addr->u_pcb.pcb_save.sv_87.sv_env.en_sw& (mask))
 end_define
 
 begin_define
@@ -2965,13 +2939,13 @@ argument_list|)
 operator|!=
 name|curproc
 condition|)
-name|MASK_FPU_SW
+name|GET_FPU_SW
 argument_list|(
 name|curproc
-argument_list|,
+argument_list|)
+operator|&=
 operator|~
 literal|0x80bf
-argument_list|)
 expr_stmt|;
 else|else
 name|fnclex
