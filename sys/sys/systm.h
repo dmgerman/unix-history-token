@@ -2702,10 +2702,10 @@ name|unrhdr
 modifier|*
 name|new_unrhdr
 parameter_list|(
-name|u_int
+name|int
 name|low
 parameter_list|,
-name|u_int
+name|int
 name|high
 parameter_list|,
 name|struct
@@ -2729,8 +2729,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|int
 name|alloc_unr
+parameter_list|(
+name|struct
+name|unrhdr
+modifier|*
+name|uh
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|alloc_unrl
 parameter_list|(
 name|struct
 name|unrhdr
