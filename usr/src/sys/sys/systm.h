@@ -1,20 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.32	82/11/15	*/
+comment|/*	systm.h	4.33	83/02/10	*/
 end_comment
 
 begin_comment
 comment|/*  * Random set of variables  * used by more than one  * routine.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* frequency of the clock */
 end_comment
 
 begin_decl_stmt
