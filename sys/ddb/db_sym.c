@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_sym.c,v 1.14 1995/12/10 19:08:15 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_sym.c,v 1.15 1996/01/15 22:39:37 phk Exp $  */
 end_comment
 
 begin_comment
@@ -949,7 +949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print a the closest symbol to value  *  * After matching the symbol according to the given strategy  * we print it in the name+offset format, provided the symbol's  * value is close enough (eg smaller than db_maxoff).  * We also attempt to print [filename:linenum] when applicable  * (eg for procedure names).  *  * If we could not find a reasonable name+offset representation,  * then we just print the value in hex.  Small values might get  * bogus symbol associations, e.g. 3 might get some absolute  * value like _INCLUDE_VERSION or something, therefore we do  * not accept symbols whose value is zero (and use plain hex).  */
+comment|/*  * Print a the closest symbol to value  *  * After matching the symbol according to the given strategy  * we print it in the name+offset format, provided the symbol's  * value is close enough (eg smaller than db_maxoff).  * We also attempt to print [filename:linenum] when applicable  * (eg for procedure names).  *  * If we could not find a reasonable name+offset representation,  * then we just print the value in hex.  Small values might get  * bogus symbol associations, e.g. 3 might get some absolute  * value like _INCLUDE_VERSION or something, therefore we do  * not accept symbols whose value is "small" (and use plain hex).  */
 end_comment
 
 begin_decl_stmt
@@ -1024,14 +1024,40 @@ condition|(
 name|name
 operator|==
 literal|0
+condition|)
+name|value
+operator|=
+name|off
+expr_stmt|;
+if|if
+condition|(
+name|value
+operator|>=
+name|DB_SMALL_VALUE_MIN
+operator|&&
+name|value
+operator|<=
+name|DB_SMALL_VALUE_MAX
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"%+#n"
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|name
+operator|==
+literal|0
 operator|||
 name|d
 operator|>=
 name|db_maxoff
-operator|||
-name|value
-operator|==
-literal|0
 condition|)
 block|{
 name|db_printf

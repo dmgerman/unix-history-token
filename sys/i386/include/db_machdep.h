@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	$Id: db_machdep.h,v 1.8 1995/05/30 08:00:34 rgrimes Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	$Id: db_machdep.h,v 1.9 1995/12/03 10:40:16 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -255,6 +255,24 @@ parameter_list|(
 name|ins
 parameter_list|)
 value|0
+end_define
+
+begin_comment
+comment|/*  * There no interesting addresses below _kstack = 0xefbfe000.  There  * are small absolute values for GUPROF, but we don't want to see them.  * Treat "negative" addresses below _kstack as non-small to allow for  * future reductions of _kstack and to avoid sign extension problems.  *  * There is one interesting symbol above -db_maxoff = 0xffff0000,  * namely _APTD = 0xfffff000.  Accepting this would mess up the  * printing of small negative offsets.  The next largest symbol is  * _APTmap = 0xffc00000.  Accepting this is OK (unless db_maxoff is  * set to>= 0x400000 - (max stack offset)).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_SMALL_VALUE_MAX
+value|0x7fffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|DB_SMALL_VALUE_MIN
+value|(-0x400001)
 end_define
 
 begin_endif
