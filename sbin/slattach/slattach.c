@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slattach.c,v 1.20.2.2 1997/09/14 19:50:36 jkh Exp $"
+literal|"$Id: slattach.c,v 1.20.2.3 1998/07/17 20:13:53 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,7 +292,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* get tty device as controling terminal */
+comment|/* get tty device as controlling terminal */
 end_comment
 
 begin_decl_stmt
@@ -510,7 +510,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* allready running exit_handler */
+comment|/* already running exit_handler */
 end_comment
 
 begin_decl_stmt
@@ -1012,7 +1012,7 @@ expr_stmt|;
 name|acquire_line
 argument_list|()
 expr_stmt|;
-comment|/* get tty device as controling terminal */
+comment|/* get tty device as controlling terminal */
 name|setup_line
 argument_list|(
 literal|0
@@ -1572,7 +1572,7 @@ name|fd
 operator|=
 name|STDIN_FILENO
 expr_stmt|;
-comment|/* acquire the serial line as a controling terminal. */
+comment|/* acquire the serial line as a controlling terminal. */
 if|if
 condition|(
 name|ioctl
@@ -2089,7 +2089,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* configure the interface, eg. by passing the unit number to a script. */
+comment|/* configure the interface, e.g. by passing the unit number to a script. */
 end_comment
 
 begin_function
@@ -2158,6 +2158,26 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|s
@@ -2868,6 +2888,26 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|s
