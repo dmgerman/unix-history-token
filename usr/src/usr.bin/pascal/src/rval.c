@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.2 %G%"
+literal|"@(#)rval.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,7 +373,7 @@ literal|0
 argument_list|,
 name|P2PTR
 operator||
-name|P2UNDEFINED
+name|P2UNDEF
 argument_list|,
 literal|0
 argument_list|)

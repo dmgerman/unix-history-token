@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.2 %G%"
+literal|"@(#)p2put.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1651,8 +1651,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	map a pascal type to a c type      *	this would be tail recursive, but i unfolded it into a for (;;).      *	this is sort of like isa and lwidth      *	a note on the types used by the portable c compiler:      *	    they are divided into a basic type (char, short, int, long, etc.)      *	    and qualifications on those basic types (pointer, function, array).      *	    the basic type is kept in the low 4 bits of the type descriptor,      *	    and the qualifications are arranged in two bit chunks, with the      *	    most significant on the right,      *	    and the least significant on the left      *		e.g. int *foo();      *			(a function returning a pointer to an integer)      *		is stored as      *<ptr><ftn><int>      *	so, we build types recursively      */
+comment|/*      *	map a pascal type to a c type      *	this would be tail recursive, but i unfolded it into a for (;;).      *	this is sort of like isa and lwidth      *	a note on the types used by the portable c compiler:      *	    they are divided into a basic type (char, short, int, long, etc.)      *	    and qualifications on those basic types (pointer, function, array).      *	    the basic type is kept in the low 4 bits of the type descriptor,      *	    and the qualifications are arranged in two bit chunks, with the      *	    most significant on the right,      *	    and the least significant on the left      *		e.g. int *foo();      *			(a function returning a pointer to an integer)      *		is stored as      *<ptr><ftn><int>      *	so, we build types recursively      *	also, we know that /lib/f1 can only deal with 6 qualifications      *	so we stop the recursion there.  this stops infinite type recursion      *	through mutually recursive pointer types.      */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXQUALS
+value|6
+end_define
 
 begin_function
 name|int
@@ -1660,21 +1667,58 @@ name|p2type
 parameter_list|(
 name|np
 parameter_list|)
+block|{
+return|return
+name|typerecur
+argument_list|(
+name|np
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_macro
+name|typerecur
+argument_list|(
+argument|np
+argument_list|,
+argument|quals
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|struct
 name|nl
 modifier|*
 name|np
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|quals
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 if|if
 condition|(
 name|np
 operator|==
 name|NIL
+operator|||
+name|quals
+operator|>
+name|MAXQUALS
 condition|)
+block|{
 return|return
-name|P2UNDEFINED
+name|P2UNDEF
 return|;
+block|}
 switch|switch
 condition|(
 name|np
@@ -1760,7 +1804,6 @@ operator||
 name|P2CHAR
 operator|)
 return|;
-comment|/* 		return P2STRTY; 		*/
 case|case
 name|RECORD
 case|:
@@ -1815,7 +1858,7 @@ return|return
 operator|(
 name|P2PTR
 operator||
-name|P2UNDEFINED
+name|P2UNDEF
 operator|)
 return|;
 case|case
@@ -1828,7 +1871,6 @@ operator||
 name|P2CHAR
 operator|)
 return|;
-comment|/* 			return P2STRTY; 			*/
 case|case
 name|TSET
 case|:
@@ -1859,11 +1901,15 @@ case|:
 return|return
 name|ADDTYPE
 argument_list|(
-name|p2type
+name|typerecur
 argument_list|(
 name|np
 operator|->
 name|type
+argument_list|,
+name|quals
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|P2PTR
@@ -1875,17 +1921,20 @@ case|:
 return|return
 name|ADDTYPE
 argument_list|(
-name|p2type
+name|typerecur
 argument_list|(
 name|np
 operator|->
 name|type
+argument_list|,
+name|quals
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|P2ARY
 argument_list|)
 return|;
-comment|/* 		return P2STRTY; 		*/
 case|case
 name|FUNC
 case|:
@@ -1895,11 +1944,15 @@ name|ADDTYPE
 argument_list|(
 name|ADDTYPE
 argument_list|(
-name|p2type
+name|typerecur
 argument_list|(
 name|np
 operator|->
 name|type
+argument_list|,
+name|quals
+operator|+
+literal|2
 argument_list|)
 argument_list|,
 name|P2FTN
@@ -1941,17 +1994,6 @@ name|P2STRTY
 argument_list|)
 return|;
 default|default :
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"[p2type] np -> class %d\n"
-argument_list|,
-name|np
-operator|->
-name|class
-argument_list|)
-expr_stmt|;
 name|panic
 argument_list|(
 literal|"p2type"
@@ -1959,7 +2001,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*      *	add a most significant type modifier to a type      */
