@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scandir.c	5.4 (Berkeley) %G%"
+literal|"@(#)scandir.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,27 @@ include|#
 directive|include
 file|<dirent.h>
 end_include
+
+begin_comment
+comment|/*  * The DIRSIZ macro gives the minimum record length which will hold  * the directory entry.  This requires the amount of space in struct dirent  * without the d_name field, plus enough space for the name with a terminating  * null byte (dp->d_namlen+1), rounded up to a 4 byte boundary.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DIRSIZ
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DIRSIZ
+parameter_list|(
+name|dp
+parameter_list|)
+define|\
+value|((sizeof (struct dirent) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3))
+end_define
 
 begin_macro
 name|scandir
