@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mrinfo.c,v 1.13 1997/09/30 06:15:08 charnier Exp $"
+literal|"$Id: mrinfo.c,v 1.14 1998/01/16 07:17:43 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -507,7 +507,7 @@ name|severity
 operator|==
 name|LOG_WARNING
 condition|)
-name|strcat
+name|strcpy
 argument_list|(
 name|fmt
 argument_list|,
@@ -520,8 +520,28 @@ name|fmt
 argument_list|,
 name|format
 argument_list|,
-literal|80
+sizeof|sizeof
+argument_list|(
+name|fmt
 argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|fmt
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fmt
+index|[
+sizeof|sizeof
+argument_list|(
+name|fmt
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|vfprintf
 argument_list|(

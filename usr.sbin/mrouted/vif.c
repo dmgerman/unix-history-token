@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: vif.c,v 1.12 1998/01/16 07:17:45 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,6 +226,9 @@ operator|(
 name|char
 operator|*
 name|p
+operator|,
+name|int
+name|plen
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3853,6 +3856,18 @@ operator|=
 name|info_version
 argument_list|(
 name|q
+argument_list|,
+name|RECV_BUF_SIZE
+operator|-
+operator|(
+name|q
+operator|-
+operator|(
+name|u_char
+operator|*
+operator|)
+name|send_buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3957,10 +3972,15 @@ name|int
 name|info_version
 parameter_list|(
 name|p
+parameter_list|,
+name|plen
 parameter_list|)
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|plen
 decl_stmt|;
 block|{
 name|int
@@ -3995,14 +4015,26 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reserved fields */
-name|strcpy
+name|strncpy
 argument_list|(
 name|p
 argument_list|,
 name|versionstring
+argument_list|,
+name|plen
+operator|-
+literal|4
 argument_list|)
 expr_stmt|;
-comment|/* XXX strncpy!!! */
+name|p
+index|[
+name|plen
+operator|-
+literal|5
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|len
 operator|=
 name|strlen

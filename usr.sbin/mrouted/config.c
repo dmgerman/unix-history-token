@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: config.c,v 1.11 1998/01/16 07:17:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -631,6 +631,17 @@ name|ifr_name
 argument_list|,
 name|IFNAMSIZ
 argument_list|)
+expr_stmt|;
+name|v
+operator|->
+name|uv_name
+index|[
+name|IFNAMSIZ
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|v
 operator|->

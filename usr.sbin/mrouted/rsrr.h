@@ -7,18 +7,22 @@ begin_define
 define|#
 directive|define
 name|RSRR_SERV_PATH
-value|"/tmp/.rsrr_svr"
+value|"/var/run/rsrr_svr"
 end_define
 
 begin_comment
 comment|/* Note this needs to be 14 chars for 4.3 BSD compatibility */
 end_comment
 
+begin_comment
+comment|/* Note This appears to be unused */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RSRR_CLI_PATH
-value|"/tmp/.rsrr_cli"
+value|"/var/run/rsrr_cli"
 end_define
 
 begin_define
