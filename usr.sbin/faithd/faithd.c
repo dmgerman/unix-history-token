@@ -1486,6 +1486,8 @@ name|again
 label|:
 name|setproctitle
 argument_list|(
+literal|"%s"
+argument_list|,
 name|procname
 argument_list|)
 expr_stmt|;
