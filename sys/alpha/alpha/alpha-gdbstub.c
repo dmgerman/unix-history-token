@@ -1810,6 +1810,7 @@ name|FRAME_SIZE
 index|]
 init|=
 block|{
+comment|/*0*/
 name|R_V0
 block|,
 name|R_T0
@@ -1826,6 +1827,7 @@ name|R_T5
 block|,
 name|R_T6
 block|,
+comment|/*8*/
 name|R_T7
 block|,
 name|R_S0
@@ -1842,6 +1844,7 @@ name|R_S5
 block|,
 name|R_S6
 block|,
+comment|/*16*/
 name|R_A3
 block|,
 name|R_A4
@@ -1858,6 +1861,7 @@ name|R_T11
 block|,
 name|R_RA
 block|,
+comment|/*24*/
 name|R_T12
 block|,
 name|R_AT
@@ -1870,6 +1874,16 @@ block|,
 operator|-
 literal|1
 block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+comment|/*32*/
 name|R_GP
 block|,
 name|R_A0

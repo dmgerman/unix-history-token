@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: interrupt.c,v 1.5 1998/08/10 07:53:58 dfr Exp $ */
+comment|/* $Id: interrupt.c,v 1.6 1998/11/15 18:25:15 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -214,6 +214,33 @@ literal|"possible stack overflow\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|framep
+operator|->
+name|tf_regs
+index|[
+name|FRAME_TRAPARG_A0
+index|]
+operator|=
+name|a0
+expr_stmt|;
+name|framep
+operator|->
+name|tf_regs
+index|[
+name|FRAME_TRAPARG_A1
+index|]
+operator|=
+name|a1
+expr_stmt|;
+name|framep
+operator|->
+name|tf_regs
+index|[
+name|FRAME_TRAPARG_A2
+index|]
+operator|=
+name|a2
+expr_stmt|;
 switch|switch
 condition|(
 name|a0
