@@ -421,7 +421,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ether_type
-operator|<
+operator|<=
 name|ETHERMTU
 condition|)
 block|{
