@@ -10160,6 +10160,27 @@ name|BCOM_DEVICEID_BCM5782
 value|0x1696
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5788
+value|0x169C
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5901
+value|0x170D
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5901A2
+value|0x170E
+end_define
+
 begin_comment
 comment|/*  * Alteon AceNIC PCI vendor/device ID.  */
 end_comment
@@ -10272,6 +10293,13 @@ define|#
 directive|define
 name|ALTIMA_DEVICE_AC1000
 value|0x03e8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALTIMA_DEVICE_AC1002
+value|0x03e9
 end_define
 
 begin_define

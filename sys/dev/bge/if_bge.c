@@ -406,6 +406,30 @@ literal|"Broadcom BCM5782 Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|BCOM_VENDORID
+block|,
+name|BCOM_DEVICEID_BCM5788
+block|,
+literal|"Broadcom BCM5788 Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
+name|BCOM_DEVICEID_BCM5901
+block|,
+literal|"Broadcom BCM5901 Fast Ethernet"
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
+name|BCOM_DEVICEID_BCM5901A2
+block|,
+literal|"Broadcom BCM5901A2 Fast Ethernet"
+block|}
+block|,
+block|{
 name|SK_VENDORID
 block|,
 name|SK_DEVICEID_ALTIMA
@@ -419,6 +443,14 @@ block|,
 name|ALTIMA_DEVICE_AC1000
 block|,
 literal|"Altima AC1000 Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|ALTIMA_VENDORID
+block|,
+name|ALTIMA_DEVICE_AC1002
+block|,
+literal|"Altima AC1002 Gigabit Ethernet"
 block|}
 block|,
 block|{
