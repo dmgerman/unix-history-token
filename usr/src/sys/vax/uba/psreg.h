@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	psreg.h	4.1	82/06/26	*/
+comment|/*	psreg.h	4.2	82/08/01	*/
 end_comment
 
 begin_comment
@@ -47,86 +47,134 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSAUTOREFRESH
-value|(0)
+name|PSIOAUTOREFRESH
+value|_IO(p, 0)
 end_define
+
+begin_comment
+comment|/* auto refresh */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSSINGLEREFRESH
-value|(1)
+name|PSIOSINGLEREFRESH
+value|_IO(p, 1)
 end_define
+
+begin_comment
+comment|/* single refresh */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSAUTOMAP
-value|(2)
+name|PSIOAUTOMAP
+value|_IO(p, 2)
 end_define
+
+begin_comment
+comment|/* auto map */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSSINGLEMAP
-value|(3)
+name|PSIOSINGLEMAP
+value|_IO(p, 3)
 end_define
+
+begin_comment
+comment|/* single map */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSDOUBLEBUFFER
-value|(4)
+name|PSIODOUBLEBUFFER
+value|_IO(p, 4)
 end_define
+
+begin_comment
+comment|/* double buffer */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSSINGLEBUFFER
-value|(5)
+name|PSIOSINGLEBUFFER
+value|_IO(p, 5)
 end_define
+
+begin_comment
+comment|/* single buffer */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSWAITREFRESH
-value|(6)
+name|PSIOWAITREFRESH
+value|_IO(p, 6)
 end_define
+
+begin_comment
+comment|/* await refresh */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSWAITMAP
-value|(7)
+name|PSIOWAITMAP
+value|_IO(p, 7)
 end_define
+
+begin_comment
+comment|/* await map */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSWAITHIT
-value|(8)
+name|PSIOWAITHIT
+value|_IO(p, 8)
 end_define
+
+begin_comment
+comment|/* await hit */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSSTOPREFRESH
-value|(9)
+name|PSIOSTOPREFRESH
+value|_IO(p, 9)
 end_define
+
+begin_comment
+comment|/* stop refresh */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSSTOPMAP
-value|(10)
+name|PSIOSTOPMAP
+value|_IO(p,10)
 end_define
+
+begin_comment
+comment|/* stop map */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PSGETADDR
-value|(11)
+name|PSIOGETADDR
+value|_IOR(p,11, int)
 end_define
+
+begin_comment
+comment|/* get Unibus address */
+end_comment
 
 begin_comment
 comment|/*  *	Picture system io status register bits  */

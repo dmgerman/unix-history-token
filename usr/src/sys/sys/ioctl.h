@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.20	82/06/26	*/
+comment|/*	ioctl.h	4.21	82/08/01	*/
 end_comment
 
 begin_comment
@@ -447,6 +447,123 @@ comment|/* data set ready */
 end_comment
 
 begin_comment
+comment|/*  * Ioctl's have the command encoded in the lower word,  * and the size of any in or out parameters in the upper  * word.  The high 2 bits of the upper word are used  * to encode the in/out status of the parameter; for now  * we restrict parameters to at most 128 bytes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOCPARM_MASK
+value|0x7f
+end_define
+
+begin_comment
+comment|/* parameters must be< 128 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOC_VOID
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* no parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOC_OUT
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* copy out parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOC_IN
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* copy in parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOC_INOUT
+value|(IOC_IN|IOC_OUT)
+end_define
+
+begin_comment
+comment|/* the 0x20000000 is so we can distinguish new ioctl's from old */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_IO
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(IOC_VOID|('x'<<8)|y)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IOR
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|t
+parameter_list|)
+value|(IOC_OUT|((sizeof(t)&IOCPARM_MASK)<<16)|('x'<<8)|y)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IOW
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|t
+parameter_list|)
+value|(IOC_IN|((sizeof(t)&IOCPARM_MASK)<<16)|('x'<<8)|y)
+end_define
+
+begin_comment
+comment|/* this should be _IORW, but stdio got there first */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_IOWR
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|t
+parameter_list|)
+value|(IOC_INOUT|((sizeof(t)&IOCPARM_MASK)<<16)|('x'<<8)|y)
+end_define
+
+begin_comment
 comment|/*  * tty ioctl commands  */
 end_comment
 
@@ -454,7 +571,7 @@ begin_define
 define|#
 directive|define
 name|TIOCGETD
-value|(('t'<<8)|0)
+value|_IOR(t, 0, int)
 end_define
 
 begin_comment
@@ -465,7 +582,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSETD
-value|(('t'<<8)|1)
+value|_IOW(t, 1, int)
 end_define
 
 begin_comment
@@ -476,73 +593,73 @@ begin_define
 define|#
 directive|define
 name|TIOCHPCL
-value|(('t'<<8)|2)
+value|_IO(t, 2)
 end_define
 
 begin_comment
-comment|/* set hangup line on close bit */
+comment|/* hang up on last close */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCMODG
-value|(('t'<<8)|3)
+value|_IOR(t, 3, int)
 end_define
 
 begin_comment
-comment|/* modem bits get (???) */
+comment|/* get modem control state */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCMODS
-value|(('t'<<8)|4)
+value|_IOW(t, 4, int)
 end_define
 
 begin_comment
-comment|/* modem bits set (???) */
+comment|/* set modem control state */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCGETP
-value|(('t'<<8)|8)
+value|_IOR(t, 8,struct sgttyb)
 end_define
 
 begin_comment
-comment|/* get parameters - like old gtty */
+comment|/* get parameters -- gtty */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCSETP
-value|(('t'<<8)|9)
+value|_IOW(t, 9,struct sgttyb)
 end_define
 
 begin_comment
-comment|/* set parameters - like old stty */
+comment|/* set parameters -- stty */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCSETN
-value|(('t'<<8)|10)
+value|_IOW(t,10,struct sgttyb)
 end_define
 
 begin_comment
-comment|/* set params w/o flushing buffers */
+comment|/* as above, but no flushtty */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCEXCL
-value|(('t'<<8)|13)
+value|_IO(t, 13)
 end_define
 
 begin_comment
@@ -553,7 +670,7 @@ begin_define
 define|#
 directive|define
 name|TIOCNXCL
-value|(('t'<<8)|14)
+value|_IO(t, 14)
 end_define
 
 begin_comment
@@ -564,7 +681,7 @@ begin_define
 define|#
 directive|define
 name|TIOCFLUSH
-value|(('t'<<8)|16)
+value|_IOW(t, 16, int)
 end_define
 
 begin_comment
@@ -575,7 +692,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSETC
-value|(('t'<<8)|17)
+value|_IOW(t,17,struct tchars)
 end_define
 
 begin_comment
@@ -586,33 +703,12 @@ begin_define
 define|#
 directive|define
 name|TIOCGETC
-value|(('t'<<8)|18)
+value|_IOR(t,18,struct tchars)
 end_define
 
 begin_comment
 comment|/* get special characters */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCIOANS
-value|(('t'<<8)|20)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCSIGNAL
-value|(('t'<<8)|21)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCUTTY
-value|(('t'<<8)|22)
-end_define
 
 begin_comment
 comment|/* locals, from 127 down */
@@ -622,7 +718,7 @@ begin_define
 define|#
 directive|define
 name|TIOCLBIS
-value|(('t'<<8)|127)
+value|_IOW(t, 127, int)
 end_define
 
 begin_comment
@@ -633,7 +729,7 @@ begin_define
 define|#
 directive|define
 name|TIOCLBIC
-value|(('t'<<8)|126)
+value|_IOW(t, 126, int)
 end_define
 
 begin_comment
@@ -644,7 +740,7 @@ begin_define
 define|#
 directive|define
 name|TIOCLSET
-value|(('t'<<8)|125)
+value|_IOW(t, 125, int)
 end_define
 
 begin_comment
@@ -655,7 +751,7 @@ begin_define
 define|#
 directive|define
 name|TIOCLGET
-value|(('t'<<8)|124)
+value|_IOR(t, 124, int)
 end_define
 
 begin_comment
@@ -666,7 +762,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSBRK
-value|(('t'<<8)|123)
+value|_IO(t, 123)
 end_define
 
 begin_comment
@@ -677,7 +773,7 @@ begin_define
 define|#
 directive|define
 name|TIOCCBRK
-value|(('t'<<8)|122)
+value|_IO(t, 122)
 end_define
 
 begin_comment
@@ -688,7 +784,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSDTR
-value|(('t'<<8)|121)
+value|_IO(t, 121)
 end_define
 
 begin_comment
@@ -699,7 +795,7 @@ begin_define
 define|#
 directive|define
 name|TIOCCDTR
-value|(('t'<<8)|120)
+value|_IO(t, 120)
 end_define
 
 begin_comment
@@ -710,7 +806,7 @@ begin_define
 define|#
 directive|define
 name|TIOCGPGRP
-value|(('t'<<8)|119)
+value|_IOR(t, 119, int)
 end_define
 
 begin_comment
@@ -721,7 +817,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSPGRP
-value|(('t'<<8)|118)
+value|_IOW(t, 118, int)
 end_define
 
 begin_comment
@@ -732,66 +828,44 @@ begin_define
 define|#
 directive|define
 name|TIOCSLTC
-value|(('t'<<8)|117)
+value|_IOW(t,117,struct ltchars)
 end_define
 
 begin_comment
-comment|/* set local special characters */
+comment|/* set local special chars */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCGLTC
-value|(('t'<<8)|116)
+value|_IOR(t,116,struct ltchars)
 end_define
 
 begin_comment
-comment|/* get local special characters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCOUTQ
-value|(('t'<<8)|115)
-end_define
-
-begin_comment
-comment|/* number of chars in output queue */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSTI
-value|(('t'<<8)|114)
-end_define
-
-begin_comment
-comment|/* simulate a terminal in character */
+comment|/* get local special chars */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCNOTTY
-value|(('t'<<8)|113)
+value|_IO(t, 113)
 end_define
 
 begin_comment
-comment|/* get rid of tty association */
+comment|/* void tty association */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCPKT
-value|(('t'<<8)|112)
+value|_IOW(t, 112, int)
 end_define
 
 begin_comment
-comment|/* on pty: set/clear packet mode */
+comment|/* pty: set/clear packet mode */
 end_comment
 
 begin_define
@@ -875,7 +949,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSTOP
-value|(('t'<<8)|111)
+value|_IO(t, 111)
 end_define
 
 begin_comment
@@ -886,7 +960,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSTART
-value|(('t'<<8)|110)
+value|_IO(t, 110)
 end_define
 
 begin_comment
@@ -897,7 +971,7 @@ begin_define
 define|#
 directive|define
 name|TIOCMSET
-value|(('t'<<8)|109)
+value|_IOW(t, 109, int)
 end_define
 
 begin_comment
@@ -908,7 +982,7 @@ begin_define
 define|#
 directive|define
 name|TIOCMBIS
-value|(('t'<<8)|108)
+value|_IOW(t, 108, int)
 end_define
 
 begin_comment
@@ -919,7 +993,7 @@ begin_define
 define|#
 directive|define
 name|TIOCMBIC
-value|(('t'<<8)|107)
+value|_IOW(t, 107, int)
 end_define
 
 begin_comment
@@ -930,7 +1004,7 @@ begin_define
 define|#
 directive|define
 name|TIOCMGET
-value|(('t'<<8)|106)
+value|_IOR(t, 106, int)
 end_define
 
 begin_comment
@@ -941,7 +1015,7 @@ begin_define
 define|#
 directive|define
 name|TIOCREMOTE
-value|(('t'<<8)|105)
+value|_IO(t, 105)
 end_define
 
 begin_comment
@@ -1007,15 +1081,23 @@ begin_define
 define|#
 directive|define
 name|FIOCLEX
-value|(('f'<<8)|1)
+value|_IO(f, 1)
 end_define
+
+begin_comment
+comment|/* set exclusive use on fd */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FIONCLEX
-value|(('f'<<8)|2)
+value|_IO(f, 2)
 end_define
+
+begin_comment
+comment|/* remove exclusive use */
+end_comment
 
 begin_comment
 comment|/* another local */
@@ -1025,7 +1107,7 @@ begin_define
 define|#
 directive|define
 name|FIONREAD
-value|(('f'<<8)|127)
+value|_IOR(f, 127, int)
 end_define
 
 begin_comment
@@ -1036,32 +1118,44 @@ begin_define
 define|#
 directive|define
 name|FIONBIO
-value|(('f'<<8)|126)
+value|_IOW(f, 126, int)
 end_define
+
+begin_comment
+comment|/* set/clear non-blocking i/o */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FIOASYNC
-value|(('f'<<8)|125)
+value|_IOW(f, 125, int)
 end_define
+
+begin_comment
+comment|/* set/clear async i/o */
+end_comment
+
+begin_comment
+comment|/* socket i/o controls */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCDONE
-value|(('s'<<8)|0)
+value|_IOW(s, 0, int)
 end_define
 
 begin_comment
-comment|/* shutdown read/write on socket */
+comment|/* shutdown read/write */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCSKEEP
-value|(('s'<<8)|1)
+value|_IOW(s, 1, int)
 end_define
 
 begin_comment
@@ -1072,7 +1166,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGKEEP
-value|(('s'<<8)|2)
+value|_IOR(s, 2, int)
 end_define
 
 begin_comment
@@ -1083,7 +1177,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSLINGER
-value|(('s'<<8)|3)
+value|_IOW(s, 3, int)
 end_define
 
 begin_comment
@@ -1094,18 +1188,22 @@ begin_define
 define|#
 directive|define
 name|SIOCGLINGER
-value|(('s'<<8)|4)
+value|_IOR(s, 4, int)
 end_define
 
 begin_comment
 comment|/* get linger time */
 end_comment
 
+begin_comment
+comment|/* these are really variable length */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SIOCSENDOOB
-value|(('s'<<8)|5)
+value|_IOW(s, 5, char)
 end_define
 
 begin_comment
@@ -1116,7 +1214,7 @@ begin_define
 define|#
 directive|define
 name|SIOCRCVOOB
-value|(('s'<<8)|6)
+value|_IOR(s, 6, char)
 end_define
 
 begin_comment
@@ -1127,7 +1225,7 @@ begin_define
 define|#
 directive|define
 name|SIOCATMARK
-value|(('s'<<8)|7)
+value|_IOR(s, 7, int)
 end_define
 
 begin_comment
@@ -1138,7 +1236,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSPGRP
-value|(('s'<<8)|8)
+value|_IOW(s, 8, int)
 end_define
 
 begin_comment
@@ -1149,7 +1247,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGPGRP
-value|(('s'<<8)|9)
+value|_IOR(s, 9, int)
 end_define
 
 begin_comment
@@ -1160,33 +1258,22 @@ begin_define
 define|#
 directive|define
 name|SIOCADDRT
-value|(('s'<<8)|10)
+value|_IOW(s,10, struct rtentry)
 end_define
 
 begin_comment
-comment|/* add a routing table entry */
+comment|/* add route */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCDELRT
-value|(('s'<<8)|11)
+value|_IOW(s,11, struct rtentry)
 end_define
 
 begin_comment
-comment|/* delete a routing table entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCCHGRT
-value|(('s'<<8)|12)
-end_define
-
-begin_comment
-comment|/* change a routing table entry */
+comment|/* delete route */
 end_comment
 
 begin_endif

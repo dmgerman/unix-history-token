@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	adreg.h	4.1	82/06/26	*/
+comment|/*	adreg.h	4.2	82/08/01	*/
 end_comment
 
 begin_struct
@@ -25,15 +25,37 @@ begin_define
 define|#
 directive|define
 name|AD_CHAN
-value|(('a'<<8)|0)
+value|ADIOSCHAN
 end_define
 
 begin_define
 define|#
 directive|define
 name|AD_READ
-value|(('a'<<8)|1)
+value|ADIOGETW
 end_define
+
+begin_define
+define|#
+directive|define
+name|ADIOSCHAN
+value|_IOW(a, 0, int)
+end_define
+
+begin_comment
+comment|/* set channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADIOGETW
+value|_IOR(a, 1, int)
+end_define
+
+begin_comment
+comment|/* read one word */
+end_comment
 
 begin_comment
 comment|/*  * Unibus CSR register bits  */

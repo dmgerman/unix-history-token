@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dkio.h	4.1	82/02/08	*/
+comment|/*	dkio.h	4.2	82/08/01	*/
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ begin_define
 define|#
 directive|define
 name|DKIOCHDR
-value|(('d'<<8)|1)
+value|_IO(d, 1)
 end_define
 
 begin_comment

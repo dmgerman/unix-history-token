@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ikreg.h	4.1	82/06/26	*/
+comment|/*	ikreg.h	4.2	82/08/01	*/
 end_comment
 
 begin_struct
@@ -61,15 +61,37 @@ begin_define
 define|#
 directive|define
 name|IK_GETADDR
-value|(('i'<<8)|0)
+value|IKIOGETADDR
 end_define
 
 begin_define
 define|#
 directive|define
 name|IK_WAITINT
-value|(('i'<<8)|1)
+value|IKIOWAITINT
 end_define
+
+begin_define
+define|#
+directive|define
+name|IKIOGETADDR
+value|_IOR(i, 0, caddr_t)
+end_define
+
+begin_comment
+comment|/* get Unibus device address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IKIOWAITINT
+value|_IO(i, 1)
+end_define
+
+begin_comment
+comment|/* await device interrupt */
+end_comment
 
 begin_comment
 comment|/*  * Unibus status/command register bits  */

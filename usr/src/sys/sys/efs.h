@@ -1,32 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	efs.h	4.2	82/06/26	*/
+comment|/*	efs.h	4.3	82/08/01	*/
 end_comment
 
 begin_comment
 comment|/*  *	Extended File System  *  * Protocol:  *  *	send:	EFS_ACCESS<name><mode><ruid><rgid>  *	reply:	EFS_OK  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_CHMOD<name><mode><uid><gid>  *	reply:	EFS_OK  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_CHOWN<name><owner><group><uid><gid>  *	reply:	EFS_OK  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_CLOSE  *	reply:	EFS_OK  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_CREAT<name><mode><umask><uid><gid>  *	reply:	EFS_OK  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_FSTAT	  *	reply:	EFS_OK<data>...  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_IOCTL  *	reply:	EFS_OK<data>...  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_LINK<name1><name2><uid><gid>  *	reply:	EFS_OK  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_LSTAT<name><uid><gid>  *	reply:	EFS_OK<data>...  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_OPEN<name><mode><uid><gid>  *	reply:	EFS_OK<size>  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_READ<offset><count>  *	reply:	EFS_OK<data>...  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_READLINK<name><uid><gid>  *	reply:	EFS_OK<data>...  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_STAT<name><uid><gid>  *	reply:	EFS_OK<data>...  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_SYMLINK<name1><name2><uid><gid>  *	reply:	EFS_OK  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_UNLINK<name><uid><gid>  *	reply:	EFS_OK  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_UTIME<name><uid><gid>  *	reply:	EFS_OK  *	reply:	EFS_ERROR<errno>  *  *	send:	EFS_WRITE<offset><count><data>...  *	reply:	EFS_OK  *	reply:	EFS_ERROR<errno>  *  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EFSIOSHTAB
-value|(('e'<<8)|0)
-end_define
-
-begin_comment
-comment|/* set hosttable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EFSIOGHTAB
-value|(('e'<<8)|1)
-end_define
-
-begin_comment
-comment|/* get hosttable */
 end_comment
 
 begin_define
@@ -390,6 +368,28 @@ name|EFS_NHT
 index|]
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|EFSIOSHTAB
+value|_IOW(e, 0, struct efs_hosttable)
+end_define
+
+begin_comment
+comment|/* set hosttable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFSIOGHTAB
+value|_IOR(e, 1, struct efs_hosttable)
+end_define
+
+begin_comment
+comment|/* get hosttable */
+end_comment
 
 begin_ifdef
 ifdef|#

@@ -1,36 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtio.h	4.6	81/11/07	*/
+comment|/*	mtio.h	4.7	82/08/01	*/
 end_comment
 
 begin_comment
 comment|/*  * Structures and definitions for mag tape io control commands  */
-end_comment
-
-begin_comment
-comment|/* mag tape io control commands */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTIOCTOP
-value|(('m'<<8)|1)
-end_define
-
-begin_comment
-comment|/* do a mag tape op */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTIOCGET
-value|(('m'<<8)|2)
-end_define
-
-begin_comment
-comment|/* get mag tape status */
 end_comment
 
 begin_comment
@@ -223,6 +197,32 @@ directive|define
 name|MT_ISUT
 value|05
 end_define
+
+begin_comment
+comment|/* mag tape io control commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIOCTOP
+value|_IOW(m, 1, struct mtop)
+end_define
+
+begin_comment
+comment|/* do a mag tape op */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIOCGET
+value|_IOR(m, 2, struct mtget)
+end_define
+
+begin_comment
+comment|/* get tape status */
+end_comment
 
 end_unit
 
