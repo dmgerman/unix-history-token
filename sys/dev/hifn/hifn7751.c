@@ -2473,6 +2473,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* NB: 1 means the callout runs w/o Giant locked */
 name|callout_init
 argument_list|(
 operator|&
@@ -2480,7 +2481,7 @@ name|sc
 operator|->
 name|sc_tickto
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
