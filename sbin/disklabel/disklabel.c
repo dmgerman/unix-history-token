@@ -289,11 +289,6 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
 end_if
 
 begin_define
@@ -309,11 +304,6 @@ directive|elif
 name|defined
 argument_list|(
 name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__powerpc__
 argument_list|)
 end_elif
 
@@ -2602,7 +2592,7 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* 	 * Strange rules: 	 * 1. One-piece bootstrap (hp300/hp800) 	 * 1. One-piece bootstrap (alpha) 	 *	up to d_bbsize bytes of ``xxboot'' go in bootarea, the rest 	 *	is remembered and written later following the bootarea. 	 * 2. Two-piece bootstraps (i386/ia64) 	 *	up to d_secsize bytes of ``xxboot'' go in first d_secsize 	 *	bytes of bootarea, remaining d_bbsize-d_secsize filled 	 *	from ``bootxx''. 	 */
+comment|/* 	 * Strange rules: 	 * 1. One-piece bootstrap (hp300/hp800) 	 * 1. One-piece bootstrap (alpha) 	 *	up to d_bbsize bytes of ``xxboot'' go in bootarea, the rest 	 *	is remembered and written later following the bootarea. 	 * 2. Two-piece bootstraps (i386) 	 *	up to d_secsize bytes of ``xxboot'' go in first d_secsize 	 *	bytes of bootarea, remaining d_bbsize-d_secsize filled 	 *	from ``bootxx''. 	 */
 name|b
 operator|=
 name|open
