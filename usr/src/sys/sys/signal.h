@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -556,6 +556,17 @@ begin_comment
 comment|/* restart system on signal return */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SA_DISABLE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* disable taking signals on alternate stack */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -587,7 +598,7 @@ begin_define
 define|#
 directive|define
 name|SA_NOCLDSTOP
-value|0x0004
+value|0x0008
 end_define
 
 begin_comment
@@ -674,6 +685,53 @@ comment|/* type of signal function */
 end_comment
 
 begin_comment
+comment|/*  * Structure used in sigaltstack call.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sigaltstack
+block|{
+name|char
+modifier|*
+name|ss_base
+decl_stmt|;
+comment|/* signal stack base */
+name|int
+name|ss_size
+decl_stmt|;
+comment|/* signal stack length */
+name|int
+name|ss_flags
+decl_stmt|;
+comment|/* SA_DISABLE and/or SA_ONSTACK */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MINSIGSTKSZ
+value|8192
+end_define
+
+begin_comment
+comment|/* minimum allowable stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGSTKSZ
+value|(MINSIGSTKSZ + 32768)
+end_define
+
+begin_comment
+comment|/* recommended stack size */
+end_comment
+
+begin_comment
 comment|/*  * 4.3 compatibility:  * Signal vector "template" used in sigvec call.  */
 end_comment
 
@@ -729,31 +787,6 @@ end_define
 begin_comment
 comment|/* isn't compatibility wonderful! */
 end_comment
-
-begin_comment
-comment|/*  * Structure used in sigaltstack call.  */
-end_comment
-
-begin_struct
-struct|struct
-name|sigaltstack
-block|{
-name|char
-modifier|*
-name|ss_base
-decl_stmt|;
-comment|/* signal stack base */
-name|int
-name|ss_len
-decl_stmt|;
-comment|/* signal stack length */
-name|int
-name|ss_onstack
-decl_stmt|;
-comment|/* current status */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Structure used in sigstack call.  */

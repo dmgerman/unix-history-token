@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -62,8 +62,8 @@ name|ps_flags
 decl_stmt|;
 comment|/* signal flags, below */
 name|struct
-name|sigstack
-name|ps_sigstack
+name|sigaltstack
+name|ps_sigstk
 decl_stmt|;
 comment|/* sp& on stack state variable */
 name|int
@@ -86,20 +86,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|ps_onstack
-value|ps_sigstack.ss_onstack
-end_define
-
-begin_define
-define|#
-directive|define
-name|ps_sigsp
-value|ps_sigstack.ss_sp
-end_define
-
 begin_comment
 comment|/* signal flags */
 end_comment
@@ -107,12 +93,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SA_OLDMASK
+name|SAS_OLDMASK
 value|0x01
 end_define
 
 begin_comment
 comment|/* need to restore mask before pause */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAS_ALTSTACK
+value|0x02
+end_define
+
+begin_comment
+comment|/* have alternate signal stack */
 end_comment
 
 begin_comment
