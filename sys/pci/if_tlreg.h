@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tlreg.h,v 1.3 1998/08/02 23:54:37 root Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tlreg.h,v 1.12 1998/09/17 21:16:31 wpaul Exp $  */
 end_comment
 
 begin_struct
@@ -241,12 +241,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct_decl
-struct_decl|struct
-name|tl_iflist
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|tl_softc
@@ -261,13 +255,21 @@ name|ifmedia
 name|ifmedia
 decl_stmt|;
 comment|/* media info */
+ifdef|#
+directive|ifdef
+name|TL_USEIOSPACE
+name|u_int32_t
+name|iobase
+decl_stmt|;
+else|#
+directive|else
 specifier|volatile
-name|struct
-name|tl_csr
-modifier|*
+name|caddr_t
 name|csr
 decl_stmt|;
 comment|/* pointer to register map */
+endif|#
+directive|endif
 name|struct
 name|tl_type
 modifier|*
@@ -288,6 +290,9 @@ name|u_int8_t
 name|tl_unit
 decl_stmt|;
 comment|/* interface number */
+name|u_int8_t
+name|tl_eeaddr
+decl_stmt|;
 name|u_int8_t
 name|tl_phy_addr
 decl_stmt|;
@@ -316,12 +321,6 @@ name|u_int16_t
 name|tl_phy_did
 decl_stmt|;
 comment|/* PHY device ID */
-name|struct
-name|tl_iflist
-modifier|*
-name|tl_iflist
-decl_stmt|;
-comment|/* Pointer to controller list */
 name|caddr_t
 name|tl_ldata_ptr
 decl_stmt|;
@@ -338,6 +337,17 @@ decl_stmt|;
 name|int
 name|tl_txeoc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TL_DEBUG
+name|u_int8_t
+name|tl_event
+index|[
+literal|20
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|callout_handle
 name|tl_stat_ch
@@ -402,54 +412,6 @@ directive|define
 name|PHY_UNKNOWN
 value|6
 end_define
-
-begin_struct
-struct|struct
-name|tl_iflist
-block|{
-specifier|volatile
-name|struct
-name|tl_csr
-modifier|*
-name|csr
-decl_stmt|;
-comment|/* Register map */
-name|struct
-name|tl_type
-modifier|*
-name|tl_dinfo
-decl_stmt|;
-name|int
-name|tl_active_phy
-decl_stmt|;
-comment|/* # of active PHY */
-name|int
-name|tlc_unit
-decl_stmt|;
-comment|/* TLAN chip # */
-name|struct
-name|tl_softc
-modifier|*
-name|tl_sc
-index|[
-name|TL_PHYADDR_MAX
-index|]
-decl_stmt|;
-comment|/* pointers to PHYs */
-name|pcici_t
-name|tl_config_id
-decl_stmt|;
-name|u_int8_t
-name|tl_eeaddr
-decl_stmt|;
-name|struct
-name|tl_iflist
-modifier|*
-name|tl_next
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
@@ -598,6 +560,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|COMPAQ_DEVICEID_NETEL_UNKNOWN
+value|0xAE33
+end_define
+
+begin_define
+define|#
+directive|define
 name|COMPAQ_DEVICEID_NETEL_10
 value|0xAE34
 end_define
@@ -658,6 +627,10 @@ name|COMPAQ_DEVICEID_NETFLEX_3P_BNC
 value|0xF150
 end_define
 
+begin_comment
+comment|/*  * These are the PCI vendor and device IDs for Olicom  * adapters based on the ThunderLAN controller.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -705,413 +678,15 @@ value|0x14
 end_define
 
 begin_comment
-comment|/*  * ThunderLAN host register layout  */
-end_comment
-
-begin_struct
-struct|struct
-name|tl_regbytes
-block|{
-specifier|volatile
-name|u_int8_t
-name|byte0
-decl_stmt|;
-specifier|volatile
-name|u_int8_t
-name|byte1
-decl_stmt|;
-specifier|volatile
-name|u_int8_t
-name|byte2
-decl_stmt|;
-specifier|volatile
-name|u_int8_t
-name|byte3
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|tl_regwords
-block|{
-specifier|volatile
-name|u_int16_t
-name|word0
-decl_stmt|;
-specifier|volatile
-name|u_int16_t
-name|word1
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|tl_csr
-block|{
-specifier|volatile
-name|u_int32_t
-name|tl_host_cmd
-decl_stmt|;
-specifier|volatile
-name|u_int32_t
-name|tl_ch_parm
-decl_stmt|;
-specifier|volatile
-name|u_int16_t
-name|tl_dio_addr
-decl_stmt|;
-specifier|volatile
-name|u_int16_t
-name|tl_host_int
-decl_stmt|;
-union|union
-block|{
-specifier|volatile
-name|u_int32_t
-name|tl_dio_data
-decl_stmt|;
-specifier|volatile
-name|struct
-name|tl_regwords
-name|tl_dio_words
-decl_stmt|;
-specifier|volatile
-name|struct
-name|tl_regbytes
-name|tl_dio_bytes
-decl_stmt|;
-block|}
-name|u
-union|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The DIO access macros allow us to read and write the ThunderLAN's  * internal registers. The ThunderLAN manual gives examples using PIO.  * This driver uses memory mapped I/O, which allows us to totally avoid  * the use of inb/outb& friends. Memory mapped registers are keen.  *  * Note that the set/clr macros go to the trouble of reading the registers  * back after they've been written. During initial development of this  * driver, I discovered that the EEPROM access routines wouldn't work  * properly unless I did this. I'm not sure why, though I suspect it  * may have something to do with defeating the cache on the processor.  */
-end_comment
-
-begin_comment
-comment|/* Select a register */
+comment|/*  * PCI latency timer (it's actually 0x0D, but we want a value  * that's longword aligned).  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DIO_SEL
-parameter_list|(
-name|x
-parameter_list|)
-value|csr->tl_dio_addr = (u_int16_t)x
+name|TL_PCI_LATENCY_TIMER
+value|0x0C
 end_define
-
-begin_comment
-comment|/*  * Set/clear/get a bit in the selected byte register  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE0_SET
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_bytes.byte0 |=	\ 							(u_int8_t)x;	\ 					f = csr->u.tl_dio_bytes.byte0;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE0_CLR
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_bytes.byte0&=	\ 							(u_int8_t)~x;	\ 					f = csr->u.tl_dio_bytes.byte0;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE0_GET
-parameter_list|(
-name|x
-parameter_list|)
-value|csr->u.tl_dio_bytes.byte0& (u_int8_t)x
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE1_SET
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_bytes.byte1 |=	\ 							(u_int8_t)x;	\ 					f = csr->u.tl_dio_bytes.byte1;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE1_CLR
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_bytes.byte1&=	\ 							(u_int8_t)~x;	\ 					f = csr->u.tl_dio_bytes.byte1;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE1_GET
-parameter_list|(
-name|x
-parameter_list|)
-value|csr->u.tl_dio_bytes.byte1& (u_int8_t)x
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE2_SET
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_bytes.byte2 |=	\ 							(u_int8_t)x;	\ 					f = csr->u.tl_dio_bytes.byte2;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE2_CLR
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_bytes.byte2&=	\ 							(u_int8_t)~x;	\ 					f = csr->u.tl_dio_bytes.byte2;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE2_GET
-parameter_list|(
-name|x
-parameter_list|)
-value|csr->u.tl_dio_bytes.byte2& (u_int8_t)x
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE3_SET
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_bytes.byte3 |=	\ 							(u_int8_t)x;	\ 					f = csr->u.tl_dio_bytes.byte3;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE3_CLR
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_bytes.byte3&=	\ 							(u_int8_t)~x;	\ 					f = csr->u.tl_dio_bytes.byte3;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_BYTE3_GET
-parameter_list|(
-name|x
-parameter_list|)
-value|csr->u.tl_dio_bytes.byte3& (u_int8_t)x
-end_define
-
-begin_comment
-comment|/*  * Read/write 16-bit word  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIO_WORD0_SET
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_words.word0 |=	\ 							(u_int16_t)x;	\ 					f = csr->u.tl_dio_words.word0;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_WORD0_CLR
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_words.word0&=	\ 							~(u_int16_t)x;	\ 					f = csr->u.tl_dio_words.word0;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_WORD0_GET
-parameter_list|(
-name|x
-parameter_list|)
-value|(csr->u.tl_dio_words.word0& x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_WORD1_SET
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_words.word1 |=	\ 							(u_int16_t)x;	\ 					f = csr->u.tl_dio_words.word1;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_WORD1_CLR
-parameter_list|(
-name|x
-parameter_list|)
-value|{					\ 					int			f;	\ 					csr->u.tl_dio_words.word1&=	\ 							~(u_int16_t)x;	\ 					f = csr->u.tl_dio_words.word1;	\ 				}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_WORD1_GET
-parameter_list|(
-name|x
-parameter_list|)
-value|(csr->u.tl_dio_words.word1& x)
-end_define
-
-begin_comment
-comment|/*  * Read/write 32-bit word  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIO_LONG_GET
-parameter_list|(
-name|x
-parameter_list|)
-value|x = csr->u.tl_dio_data
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIO_LONG_PUT
-parameter_list|(
-name|x
-parameter_list|)
-value|csr->u.tl_dio_data = (u_int32_t)x
-end_define
-
-begin_define
-define|#
-directive|define
-name|CMD_PUT
-parameter_list|(
-name|c
-parameter_list|,
-name|x
-parameter_list|)
-value|c->tl_host_cmd = (u_int32_t)x
-end_define
-
-begin_define
-define|#
-directive|define
-name|CMD_SET
-parameter_list|(
-name|c
-parameter_list|,
-name|x
-parameter_list|)
-value|c->tl_host_cmd |= (u_int32_t)x
-end_define
-
-begin_define
-define|#
-directive|define
-name|CMD_CLR
-parameter_list|(
-name|c
-parameter_list|,
-name|x
-parameter_list|)
-value|c->tl_host_cmd&= ~(u_int32_t)x
-end_define
-
-begin_comment
-comment|/*  * ThunderLAN adapters typically have a serial EEPROM containing  * configuration information. The main reason we're interested in  * it is because it also contains the adapters's station address.  *  * Access to the EEPROM is a bit goofy since it is a serial device:  * you have to do reads and writes one bit at a time. The state of  * the DATA bit can only change while the CLOCK line is held low.  * Transactions work basically like this:  *  * 1) Send the EEPROM_START sequence to prepare the EEPROM for  *    accepting commands. This pulls the clock high, sets  *    the data bit to 0, enables transmission to the EEPROM,  *    pulls the data bit up to 1, then pulls the clock low.  *    The idea is to do a 0 to 1 transition of the data bit  *    while the clock pin is held high.  *  * 2) To write a bit to the EEPROM, set the TXENABLE bit, then  *    set the EDATA bit to send a 1 or clear it to send a 0.  *    Finally, set and then clear ECLOK. Strobing the clock  *    transmits the bit. After 8 bits have been written, the  *    EEPROM should respond with an ACK, which should be read.  *  * 3) To read a bit from the EEPROM, clear the TXENABLE bit,  *    then set ECLOK. The bit can then be read by reading EDATA.  *    ECLOCK should then be cleared again. This can be repeated  *    8 times to read a whole byte, after which the   *  * 4) We need to send the address byte to the EEPROM. For this  *    we have to send the write control byte to the EEPROM to  *    tell it to accept data. The byte is 0xA0. The EEPROM should  *    ack this. The address byte can be send after that.  *  * 5) Now we have to tell the EEPROM to send us data. For that we  *    have to transmit the read control byte, which is 0xA1. This  *    byte should also be acked. We can then read the data bits  *    from the EEPROM.  *  * 6) When we're all finished, send the EEPROM_STOP sequence.  *  * Note that we use the ThunderLAN's NetSio register to access the  * EEPROM, however there is an alternate method. There is a PCI NVRAM  * register at PCI offset 0xB4 which can also be used with minor changes.  * The difference is that access to PCI registers via pci_conf_read()  * and pci_conf_write() is done using programmed I/O, which we want to  * avoid.  */
-end_comment
-
-begin_comment
-comment|/*  * Note that EEPROM_START leaves transmission enabled.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EEPROM_START
-define|\
-value|DIO_SEL(TL_NETSIO);						\ 	DIO_BYTE1_SET(TL_SIO_ECLOK);
-comment|/* Pull clock pin high */
-value|\ 	DIO_BYTE1_SET(TL_SIO_EDATA);
-comment|/* Set DATA bit to 1 */
-value|\ 	DIO_BYTE1_SET(TL_SIO_ETXEN);
-comment|/* Enable xmit to write bit */
-value|\ 	DIO_BYTE1_CLR(TL_SIO_EDATA);
-comment|/* Pull DATA bit to 0 again */
-value|\ 	DIO_BYTE1_CLR(TL_SIO_ECLOK);
-end_define
-
-begin_comment
-comment|/* Pull clock low again */
-end_comment
-
-begin_comment
-comment|/*  * EEPROM_STOP ends access to the EEPROM and clears the ETXEN bit so  * that no further data can be written to the EEPROM I/O pin.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EEPROM_STOP
-define|\
-value|DIO_SEL(TL_NETSIO);						\ 	DIO_BYTE1_CLR(TL_SIO_ETXEN);
-comment|/* Disable xmit */
-value|\ 	DIO_BYTE1_CLR(TL_SIO_EDATA);
-comment|/* Pull DATA to 0 */
-value|\ 	DIO_BYTE1_SET(TL_SIO_ECLOK);
-comment|/* Pull clock high */
-value|\ 	DIO_BYTE1_SET(TL_SIO_ETXEN);
-comment|/* Enable xmit */
-value|\ 	DIO_BYTE1_SET(TL_SIO_EDATA);
-comment|/* Toggle DATA to 1 */
-value|\ 	DIO_BYTE1_CLR(TL_SIO_ETXEN);
-comment|/* Disable xmit. */
-value|\ 	DIO_BYTE1_CLR(TL_SIO_ECLOK);
-end_define
-
-begin_comment
-comment|/* Pull clock low again */
-end_comment
 
 begin_define
 define|#
@@ -2502,6 +2077,288 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * register space access macros  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TL_USEIOSPACE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|outl(sc->iobase + (u_int32_t)(reg), val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|outw(sc->iobase + (u_int32_t)(reg), val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|outb(sc->iobase + (u_int32_t)(reg), val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|inl(sc->iobase + (u_int32_t)(reg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|inw(sc->iobase + (u_int32_t)(reg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|inb(sc->iobase + (u_int32_t)(reg))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|((*(u_int32_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int32_t)(val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|((*(u_int16_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int16_t)(val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|((*(u_int8_t*)((sc)->csr + (u_int32_t)(reg))) = (u_int8_t)(val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|(*(u_int32_t *)((sc)->csr + (u_int32_t)(reg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|(*(u_int16_t *)((sc)->csr + (u_int32_t)(reg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|(*(u_int8_t *)((sc)->csr + (u_int32_t)(reg)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|CMD_PUT
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+value|CSR_WRITE_4(sc, TL_HOSTCMD, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_SET
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|CSR_WRITE_4(sc, TL_HOSTCMD, CSR_READ_4(sc, TL_HOSTCMD) | (x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_CLR
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|CSR_WRITE_4(sc, TL_HOSTCMD, CSR_READ_4(sc, TL_HOSTCMD)& ~(x))
+end_define
+
+begin_comment
+comment|/*  * ThunderLAN adapters typically have a serial EEPROM containing  * configuration information. The main reason we're interested in  * it is because it also contains the adapters's station address.  *  * Access to the EEPROM is a bit goofy since it is a serial device:  * you have to do reads and writes one bit at a time. The state of  * the DATA bit can only change while the CLOCK line is held low.  * Transactions work basically like this:  *  * 1) Send the EEPROM_START sequence to prepare the EEPROM for  *    accepting commands. This pulls the clock high, sets  *    the data bit to 0, enables transmission to the EEPROM,  *    pulls the data bit up to 1, then pulls the clock low.  *    The idea is to do a 0 to 1 transition of the data bit  *    while the clock pin is held high.  *  * 2) To write a bit to the EEPROM, set the TXENABLE bit, then  *    set the EDATA bit to send a 1 or clear it to send a 0.  *    Finally, set and then clear ECLOK. Strobing the clock  *    transmits the bit. After 8 bits have been written, the  *    EEPROM should respond with an ACK, which should be read.  *  * 3) To read a bit from the EEPROM, clear the TXENABLE bit,  *    then set ECLOK. The bit can then be read by reading EDATA.  *    ECLOCK should then be cleared again. This can be repeated  *    8 times to read a whole byte, after which the   *  * 4) We need to send the address byte to the EEPROM. For this  *    we have to send the write control byte to the EEPROM to  *    tell it to accept data. The byte is 0xA0. The EEPROM should  *    ack this. The address byte can be send after that.  *  * 5) Now we have to tell the EEPROM to send us data. For that we  *    have to transmit the read control byte, which is 0xA1. This  *    byte should also be acked. We can then read the data bits  *    from the EEPROM.  *  * 6) When we're all finished, send the EEPROM_STOP sequence.  *  * Note that we use the ThunderLAN's NetSio register to access the  * EEPROM, however there is an alternate method. There is a PCI NVRAM  * register at PCI offset 0xB4 which can also be used with minor changes.  * The difference is that access to PCI registers via pci_conf_read()  * and pci_conf_write() is done using programmed I/O, which we want to  * avoid.  */
+end_comment
+
+begin_comment
+comment|/*  * Note that EEPROM_START leaves transmission enabled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_START
+define|\
+value|tl_dio_setbit(sc, TL_NETSIO, TL_SIO_ECLOK);
+comment|/* Pull clock pin high */
+value|\ 	tl_dio_setbit(sc, TL_NETSIO, TL_SIO_EDATA);
+comment|/* Set DATA bit to 1 */
+value|\ 	tl_dio_setbit(sc, TL_NETSIO, TL_SIO_ETXEN);
+comment|/* Enable xmit to write bit */
+value|\ 	tl_dio_clrbit(sc, TL_NETSIO, TL_SIO_EDATA);
+comment|/* Pull DATA bit to 0 again */
+value|\ 	tl_dio_clrbit(sc, TL_NETSIO, TL_SIO_ECLOK);
+end_define
+
+begin_comment
+comment|/* Pull clock low again */
+end_comment
+
+begin_comment
+comment|/*  * EEPROM_STOP ends access to the EEPROM and clears the ETXEN bit so  * that no further data can be written to the EEPROM I/O pin.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_STOP
+define|\
+value|tl_dio_clrbit(sc, TL_NETSIO, TL_SIO_ETXEN);
+comment|/* Disable xmit */
+value|\ 	tl_dio_clrbit(sc, TL_NETSIO, TL_SIO_EDATA);
+comment|/* Pull DATA to 0 */
+value|\ 	tl_dio_setbit(sc, TL_NETSIO, TL_SIO_ECLOK);
+comment|/* Pull clock high */
+value|\ 	tl_dio_setbit(sc, TL_NETSIO, TL_SIO_ETXEN);
+comment|/* Enable xmit */
+value|\ 	tl_dio_setbit(sc, TL_NETSIO, TL_SIO_EDATA);
+comment|/* Toggle DATA to 1 */
+value|\ 	tl_dio_clrbit(sc, TL_NETSIO, TL_SIO_ETXEN);
+comment|/* Disable xmit. */
+value|\ 	tl_dio_clrbit(sc, TL_NETSIO, TL_SIO_ECLOK);
+end_define
+
+begin_comment
+comment|/* Pull clock low again */
+end_comment
+
+begin_comment
 comment|/*  * These are the register definitions for the PHY (physical layer  * interface chip).  * The ThunderLAN chip has a built-in 10Mb/sec PHY which may be used  * in some configurations. The Compaq 10/100 cards based on the ThunderLAN  * use a National Semiconductor DP83840A PHY. The generic BMCR and BMSR  * layouts for both PHYs are identical, however some of the bits are not  * used by the ThunderLAN's internal PHY (most notably those dealing with  * switching between 10 and 100Mb/sec speeds). Since Both PHYs use the  * same bits, we #define them with generic names here.  */
 end_comment
 
@@ -2553,6 +2410,17 @@ end_define
 
 begin_comment
 comment|/* write as zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMCR_PWRDOWN
+value|0x0800
+end_define
+
+begin_comment
+comment|/* tlan internal PHY only */
 end_comment
 
 begin_define
