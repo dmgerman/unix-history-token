@@ -2106,6 +2106,20 @@ begin_comment
 comment|/* ms XXX?*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_UNCONFIG_NO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_UNCONFIG_INDEX
+value|(-1)
+end_define
+
 begin_comment
 comment|/*** ioctl() related stuff ***/
 end_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.63 2000/01/19 00:23:58 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.76 2000/04/27 15:26:50 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1072,6 +1072,10 @@ condition|(
 name|vendor
 operator|==
 name|NULL
+operator|||
+name|product
+operator|==
+name|NULL
 condition|)
 block|{
 for|for
@@ -1133,23 +1137,26 @@ condition|(
 name|kdp
 operator|->
 name|vendorname
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|vendor
-operator|=
-name|product
-operator|=
-name|NULL
-expr_stmt|;
-else|else
 block|{
+if|if
+condition|(
+operator|!
+name|vendor
+condition|)
 name|vendor
 operator|=
 name|kdp
 operator|->
 name|vendorname
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|product
+condition|)
 name|product
 operator|=
 operator|(
@@ -1705,18 +1712,11 @@ name|n
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"usbd_reset_port: timeout\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|USBD_IOERROR
+name|USBD_TIMEOUT
 operator|)
 return|;
-block|}
 name|err
 operator|=
 name|usbd_clear_port_feature
@@ -2723,6 +2723,24 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
+if|if
+condition|(
+name|no
+operator|==
+name|USB_UNCONFIG_NO
+condition|)
+return|return
+operator|(
+name|usbd_set_config_index
+argument_list|(
+name|dev
+argument_list|,
+name|USB_UNCONFIG_INDEX
+argument_list|,
+name|msg
+argument_list|)
+operator|)
+return|;
 name|DPRINTFN
 argument_list|(
 literal|5
@@ -2866,7 +2884,7 @@ name|dev
 operator|->
 name|config
 operator|!=
-literal|0
+name|USB_UNCONFIG_NO
 condition|)
 block|{
 name|DPRINTF
@@ -2939,10 +2957,57 @@ name|dev
 operator|->
 name|config
 operator|=
-literal|0
+name|USB_UNCONFIG_NO
 expr_stmt|;
 block|}
-comment|/* Figure out what config number to use. */
+if|if
+condition|(
+name|index
+operator|==
+name|USB_UNCONFIG_INDEX
+condition|)
+block|{
+comment|/* We are unconfiguring the device, so leave unallocated. */
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usbd_set_config_index: set config 0\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|usbd_set_config
+argument_list|(
+name|dev
+argument_list|,
+name|USB_UNCONFIG_NO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usbd_set_config_index: setting config=0 "
+literal|"failed, error=%s\n"
+operator|,
+name|usbd_errstr
+argument_list|(
+name|err
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
+comment|/* Get the short descriptor. */
 name|err
 operator|=
 name|usbd_get_config_desc
@@ -2995,6 +3060,7 @@ operator|(
 name|USBD_NOMEM
 operator|)
 return|;
+comment|/* Get the full descriptor. */
 name|err
 operator|=
 name|usbd_get_desc
@@ -3048,6 +3114,7 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* Figure out if the device is self or bus powered. */
 name|selfpowered
 operator|=
 literal|0
@@ -3065,11 +3132,13 @@ operator|&
 name|UQ_BUS_POWERED
 operator|)
 operator|&&
+operator|(
 name|cdp
 operator|->
 name|bmAttributes
 operator|&
 name|UC_SELF_POWERED
+operator|)
 condition|)
 block|{
 comment|/* May be self powered. */
@@ -3164,6 +3233,7 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Check if we have enough power. */
 ifdef|#
 directive|ifdef
 name|USB_DEBUG
@@ -3266,6 +3336,7 @@ name|self_powered
 operator|=
 name|selfpowered
 expr_stmt|;
+comment|/* Set the actual configuration value. */
 name|DPRINTF
 argument_list|(
 operator|(
@@ -3314,17 +3385,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"usbd_set_config_index: setting new config %d\n"
-operator|,
-name|cdp
-operator|->
-name|bConfigurationValue
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* Allocate and fill interface data. */
 name|nifc
 operator|=
 name|cdp
@@ -3921,13 +3982,13 @@ name|uaa
 operator|.
 name|iface
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|uaa
 operator|.
 name|ifaces
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|uaa
 operator|.
@@ -4549,7 +4610,7 @@ name|uaa
 operator|.
 name|iface
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|uaa
 operator|.
@@ -4756,9 +4817,11 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"usbd_new_device bus=%p depth=%d lowspeed=%d\n"
+literal|"usbd_new_device bus=%p port=%d depth=%d lowspeed=%d\n"
 operator|,
 name|bus
+operator|,
+name|port
 operator|,
 name|depth
 operator|,
@@ -4961,7 +5024,7 @@ operator|=
 operator|++
 name|usb_cookie_no
 expr_stmt|;
-comment|/* Establish the the default pipe. */
+comment|/* Establish the default pipe. */
 name|err
 operator|=
 name|usbd_setup_pipe
@@ -5773,8 +5836,74 @@ name|uaa
 init|=
 name|aux
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"usbd_submatch port=%d,%d configno=%d,%d "
+literal|"ifaceno=%d,%d vendor=%d,%d product=%d,%d release=%d,%d\n"
+operator|,
+name|uaa
+operator|->
+name|port
+operator|,
+name|cf
+operator|->
+name|uhubcf_port
+operator|,
+name|uaa
+operator|->
+name|configno
+operator|,
+name|cf
+operator|->
+name|uhubcf_configuration
+operator|,
+name|uaa
+operator|->
+name|ifaceno
+operator|,
+name|cf
+operator|->
+name|uhubcf_interface
+operator|,
+name|uaa
+operator|->
+name|vendor
+operator|,
+name|cf
+operator|->
+name|uhubcf_vendor
+operator|,
+name|uaa
+operator|->
+name|product
+operator|,
+name|cf
+operator|->
+name|uhubcf_product
+operator|,
+name|uaa
+operator|->
+name|release
+operator|,
+name|cf
+operator|->
+name|uhubcf_release
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+name|uaa
+operator|->
+name|port
+operator|!=
+literal|0
+operator|&&
+comment|/* root hub has port 0, it should match */
+operator|(
 operator|(
 name|uaa
 operator|->
@@ -5905,6 +6034,7 @@ operator|!=
 name|uaa
 operator|->
 name|release
+operator|)
 operator|)
 condition|)
 return|return
