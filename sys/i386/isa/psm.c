@@ -111,8 +111,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|DATA
-value|0
+name|PSM_DATA
+value|0x00
 end_define
 
 begin_comment
@@ -122,8 +122,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CNTRL
-value|4
+name|PSM_CNTRL
+value|0x04
 end_define
 
 begin_comment
@@ -133,8 +133,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STATUS
-value|4
+name|PSM_STATUS
+value|0x04
 end_define
 
 begin_comment
@@ -466,7 +466,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|OPEN
+name|PSM_OPEN
 value|1
 end_define
 
@@ -477,7 +477,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASLP
+name|PSM_ASLP
 value|2
 end_define
 
@@ -517,7 +517,7 @@ name|void
 name|psm_write_dev
 parameter_list|(
 name|int
-name|inport
+name|ioport
 parameter_list|,
 name|u_char
 name|value
@@ -528,9 +528,9 @@ argument_list|()
 expr_stmt|;
 name|outb
 argument_list|(
-name|inport
+name|ioport
 operator|+
-name|CNTRL
+name|PSM_CNTRL
 argument_list|,
 literal|0xd4
 argument_list|)
@@ -540,9 +540,9 @@ argument_list|()
 expr_stmt|;
 name|outb
 argument_list|(
-name|inport
+name|ioport
 operator|+
-name|DATA
+name|PSM_DATA
 argument_list|,
 name|value
 argument_list|)
@@ -570,7 +570,7 @@ name|outb
 argument_list|(
 name|ioport
 operator|+
-name|CNTRL
+name|PSM_CNTRL
 argument_list|,
 literal|0x60
 argument_list|)
@@ -582,7 +582,7 @@ name|outb
 argument_list|(
 name|ioport
 operator|+
-name|DATA
+name|PSM_DATA
 argument_list|,
 name|value
 argument_list|)
@@ -627,7 +627,7 @@ name|psm_write_dev
 argument_list|(
 name|ioport
 argument_list|,
-literal|0xff
+name|PSM_RESET
 argument_list|)
 expr_stmt|;
 comment|/* Reset aux device */
@@ -640,7 +640,7 @@ name|outb
 argument_list|(
 name|ioport
 operator|+
-name|CNTRL
+name|PSM_CNTRL
 argument_list|,
 literal|0xa9
 argument_list|)
@@ -652,7 +652,7 @@ name|outb
 argument_list|(
 name|ioport
 operator|+
-name|CNTRL
+name|PSM_CNTRL
 argument_list|,
 literal|0xaa
 argument_list|)
@@ -663,7 +663,7 @@ name|inb
 argument_list|(
 name|ioport
 operator|+
-name|DATA
+name|PSM_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -678,7 +678,7 @@ name|psm_command
 argument_list|(
 name|ioport
 argument_list|,
-literal|0x65
+name|PSM_INT_DISABLE
 argument_list|)
 expr_stmt|;
 name|psmaddr
@@ -755,7 +755,7 @@ name|outb
 argument_list|(
 name|ioport
 operator|+
-name|CNTRL
+name|PSM_CNTRL
 argument_list|,
 name|PSM_ENABLE
 argument_list|)
@@ -831,7 +831,7 @@ name|outb
 argument_list|(
 name|ioport
 operator|+
-name|CNTRL
+name|PSM_CNTRL
 argument_list|,
 name|PSM_DISABLE
 argument_list|)
@@ -878,14 +878,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|PSMUNIT
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|psm_softc
 modifier|*
@@ -893,6 +885,14 @@ name|sc
 decl_stmt|;
 name|int
 name|ioport
+decl_stmt|;
+name|int
+name|unit
+init|=
+name|PSMUNIT
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 comment|/* Validate unit number */
 if|if
@@ -941,7 +941,7 @@ name|sc
 operator|->
 name|state
 operator|&
-name|OPEN
+name|PSM_OPEN
 condition|)
 return|return
 operator|(
@@ -953,7 +953,7 @@ name|sc
 operator|->
 name|state
 operator||=
-name|OPEN
+name|PSM_OPEN
 expr_stmt|;
 name|sc
 operator|->
@@ -1031,7 +1031,7 @@ name|outb
 argument_list|(
 name|ioport
 operator|+
-name|CNTRL
+name|PSM_CNTRL
 argument_list|,
 name|PSM_ENABLE
 argument_list|)
@@ -1065,7 +1065,7 @@ name|inb
 argument_list|(
 name|AUX_PORT
 operator|+
-name|STATUS
+name|PSM_STATUS
 argument_list|)
 operator|&
 literal|0x03
@@ -1077,7 +1077,7 @@ name|inb
 argument_list|(
 name|AUX_PORT
 operator|+
-name|STATUS
+name|PSM_STATUS
 argument_list|)
 operator|&
 literal|0x2
@@ -1088,7 +1088,7 @@ name|inb
 argument_list|(
 name|AUX_PORT
 operator|+
-name|DATA
+name|PSM_DATA
 argument_list|)
 expr_stmt|;
 block|}
@@ -1163,7 +1163,7 @@ name|outb
 argument_list|(
 name|ioport
 operator|+
-name|CNTRL
+name|PSM_CNTRL
 argument_list|,
 name|PSM_DISABLE
 argument_list|)
@@ -1174,7 +1174,7 @@ operator|->
 name|state
 operator|&=
 operator|~
-name|OPEN
+name|PSM_OPEN
 expr_stmt|;
 comment|/* close is almost always successful */
 return|return
@@ -1279,7 +1279,7 @@ name|sc
 operator|->
 name|state
 operator||=
-name|ASLP
+name|PSM_ASLP
 expr_stmt|;
 name|error
 operator|=
@@ -1764,11 +1764,9 @@ begin_function
 name|void
 name|psmintr
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|psm_softc
@@ -1809,7 +1807,7 @@ name|inb
 argument_list|(
 name|ioport
 operator|+
-name|DATA
+name|PSM_DATA
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1825,7 +1823,7 @@ name|sc
 operator|->
 name|state
 operator|&
-name|ASLP
+name|PSM_ASLP
 condition|)
 block|{
 name|sc
@@ -1833,7 +1831,7 @@ operator|->
 name|state
 operator|&=
 operator|~
-name|ASLP
+name|PSM_ASLP
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -1954,6 +1952,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* NPSM> 0 */
+end_comment
 
 end_unit
 
