@@ -33,7 +33,7 @@ begin_function
 name|integer
 name|e_rsfe
 parameter_list|(
-name|Void
+name|void
 parameter_list|)
 block|{
 name|int
@@ -60,52 +60,15 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_macro
+begin_function
+name|int
 name|c_sfe
-argument_list|(
-argument|a
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|cilist
 modifier|*
 name|a
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+parameter_list|)
 comment|/* check */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_macro
-name|c_sfe
-argument_list|(
-argument|cilist *a
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* check */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 name|unit
 modifier|*
@@ -200,13 +163,13 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|integer
 name|e_wsfe
 parameter_list|(
-name|Void
+name|void
 parameter_list|)
 block|{
 name|int

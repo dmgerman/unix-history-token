@@ -38,10 +38,10 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|VOID
+name|void
 name|nl_donewrec
 parameter_list|(
-name|Void
+name|void
 parameter_list|)
 block|{
 call|(
@@ -58,31 +58,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_macro
-name|x_wsne
-argument_list|(
-argument|a
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|cilist
-modifier|*
-name|a
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -90,15 +65,13 @@ file|<string.h>
 end_include
 
 begin_function
-name|VOID
+name|void
 name|x_wsne
 parameter_list|(
 name|cilist
 modifier|*
 name|a
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|Namelist
 modifier|*

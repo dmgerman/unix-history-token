@@ -27,42 +27,6 @@ directive|undef
 name|abs
 end_undef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|F77_aloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|free
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|G77_exit_0
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_undef
 undef|#
 directive|undef
@@ -95,11 +59,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -115,75 +74,30 @@ begin_comment
 comment|/* NO_OVERWRITE */
 end_comment
 
-begin_decl_stmt
-name|VOID
-ifdef|#
-directive|ifdef
-name|KR_headers
+begin_function
+name|void
 name|s_cat
-argument_list|(
-name|lp
-argument_list|,
-name|rpp
-argument_list|,
-name|rnp
-argument_list|,
-name|np
-argument_list|,
-name|ll
-argument_list|)
+parameter_list|(
 name|char
 modifier|*
 name|lp
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 name|rpp
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|ftnint
 name|rnp
 index|[]
-decl_stmt|,
+parameter_list|,
+name|ftnint
 modifier|*
 name|np
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|ftnlen
 name|ll
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_macro
-name|s_cat
-argument_list|(
-argument|char *lp
-argument_list|,
-argument|char *rpp[]
-argument_list|,
-argument|ftnint rnp[]
-argument_list|,
-argument|ftnint *np
-argument_list|,
-argument|ftnlen ll
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 name|ftnlen
 name|i
@@ -415,7 +329,7 @@ block|}
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 end_unit
 

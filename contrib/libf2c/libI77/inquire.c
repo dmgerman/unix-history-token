@@ -23,29 +23,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_decl_stmt
-name|integer
-name|f_inqu
-argument_list|(
-name|a
-argument_list|)
-name|inlist
-modifier|*
-name|a
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_if
 if|#
 directive|if
@@ -98,8 +75,6 @@ name|inlist
 modifier|*
 name|a
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|flag
 name|byfile
@@ -359,21 +334,26 @@ name|inex
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
+operator|(
 name|byfile
 operator|&&
 name|x
 operator|!=
 operator|-
 literal|1
+operator|)
 operator|||
+operator|(
 operator|!
 name|byfile
 operator|&&
 name|p
 operator|!=
 name|NULL
+operator|)
 condition|)
 operator|*
 name|a
@@ -390,6 +370,7 @@ name|inex
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -398,6 +379,7 @@ name|inopen
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|byfile
@@ -431,6 +413,7 @@ operator|!=
 name|NULL
 operator|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -456,10 +439,12 @@ name|innamed
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|byfile
 operator|||
+operator|(
 name|p
 operator|!=
 name|NULL
@@ -469,6 +454,7 @@ operator|->
 name|ufnm
 operator|!=
 name|NULL
+operator|)
 condition|)
 operator|*
 name|a
@@ -485,6 +471,7 @@ name|innamed
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -493,6 +480,7 @@ name|inname
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|byfile
@@ -538,6 +526,7 @@ operator|->
 name|innamlen
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -556,6 +545,7 @@ name|ufd
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|p
@@ -589,6 +579,7 @@ operator|->
 name|inacclen
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -597,6 +588,7 @@ name|inseq
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|p
@@ -634,6 +626,7 @@ operator|->
 name|inseqlen
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -642,6 +635,7 @@ name|indir
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|p
@@ -679,6 +673,7 @@ operator|->
 name|indirlen
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -687,6 +682,7 @@ name|infmt
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|p
@@ -726,6 +722,7 @@ operator|->
 name|infmtlen
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -734,6 +731,7 @@ name|inform
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|p
@@ -773,12 +771,14 @@ operator|->
 name|informlen
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
 operator|->
 name|inunf
 condition|)
+block|{
 if|if
 condition|(
 name|p
@@ -838,6 +838,7 @@ operator|->
 name|inunflen
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -909,6 +910,7 @@ name|p
 operator|->
 name|ufmt
 condition|)
+block|{
 if|if
 condition|(
 name|p
@@ -942,6 +944,7 @@ operator|->
 name|inblanklen
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0

@@ -73,29 +73,6 @@ begin_comment
 comment|/* Note this is per SunOS -- other s may have no arg. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_decl_stmt
-name|double
-name|G77_rand_0
-argument_list|(
-name|flag
-argument_list|)
-name|integer
-modifier|*
-name|flag
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function
 name|double
 name|G77_rand_0
@@ -104,8 +81,6 @@ name|integer
 modifier|*
 name|flag
 parameter_list|)
-endif|#
-directive|endif
 block|{
 switch|switch
 condition|(

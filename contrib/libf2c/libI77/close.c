@@ -17,29 +17,6 @@ directive|include
 file|"fio.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_decl_stmt
-name|integer
-name|f_clos
-argument_list|(
-name|a
-argument_list|)
-name|cllist
-modifier|*
-name|a
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_undef
 undef|#
 directive|undef
@@ -119,30 +96,6 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_extern
-extern|extern
-literal|"C"
-name|int
-name|unlink
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_extern
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 specifier|extern
 name|int
@@ -165,11 +118,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|integer
 name|f_clos
@@ -178,8 +126,6 @@ name|cllist
 modifier|*
 name|a
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|unit
 modifier|*
@@ -379,19 +325,10 @@ end_function
 
 begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|KR_headers
 name|f_exit
-parameter_list|()
-else|#
-directive|else
-function|f_exit
 parameter_list|(
 name|void
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|int
 name|i
@@ -411,7 +348,7 @@ operator|)
 condition|)
 return|return;
 comment|/* Not initialized, so no open units. */
-comment|/* I/O no longer in progress.  If, during an I/O operation (such 	   as waiting for the user to enter a line), there is an 	   interrupt (such as ^C to stop the program on a UNIX system), 	   f_exit() is called, but there is no longer any I/O in 	   progress.  Without turning off this flag, f_clos() would 	   think that there is an I/O recursion in this circumstance. */
+comment|/* I/O no longer in progress.  If, during an I/O operation (such      as waiting for the user to enter a line), there is an      interrupt (such as ^C to stop the program on a UNIX system),      f_exit() is called, but there is no longer any I/O in      progress.  Without turning off this flag, f_clos() would      think that there is an I/O recursion in this circumstance. */
 name|f__init
 operator|&=
 operator|~
@@ -473,19 +410,10 @@ end_function
 
 begin_function
 name|int
-ifdef|#
-directive|ifdef
-name|KR_headers
 name|G77_flush_0
-parameter_list|()
-else|#
-directive|else
-function|G77_flush_0
 parameter_list|(
 name|void
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|int
 name|i

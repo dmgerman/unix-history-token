@@ -5,44 +5,6 @@ directive|include
 file|"f2c.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_decl_stmt
-name|VOID
-name|pow_ci
-argument_list|(
-name|p
-argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|)
-comment|/* p = a**b  */
-name|complex
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|a
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|integer
-modifier|*
-name|b
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 specifier|extern
 name|void
@@ -77,8 +39,6 @@ modifier|*
 name|b
 parameter_list|)
 comment|/* p = a**b  */
-endif|#
-directive|endif
 block|{
 name|doublecomplex
 name|p1

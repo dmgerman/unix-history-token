@@ -49,32 +49,19 @@ directive|include
 file|"f2c.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_expr_stmt
+begin_function
 name|integer
 name|G77_getpid_0
-argument_list|()
-else|#
-directive|else
-name|integer
-name|G77_getpid_0
-argument_list|(
-argument|void
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|getpid
 argument_list|()
 return|;
 block|}
-end_expr_stmt
+end_function
 
 end_unit
 

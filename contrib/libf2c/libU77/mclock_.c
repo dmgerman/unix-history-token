@@ -86,25 +86,12 @@ begin_comment
 comment|/* Reported by wd42ej@sgi83.wwb.noaa.gov (Russ Jones AUTO-Sun3) on AIX. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_expr_stmt
+begin_function
 name|longint
 name|G77_mclock_0
-argument_list|()
-else|#
-directive|else
-name|longint
-name|G77_mclock_0
-argument_list|(
-argument|void
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -113,25 +100,16 @@ return|return
 name|clock
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_return
 return|return
 operator|-
 literal|1
 return|;
-end_return
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
-unit|}
 end_unit
 

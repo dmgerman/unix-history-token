@@ -1,24 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
-specifier|static
+specifier|const
 name|char
-name|junk
+name|__LIBI77_VERSION__
 index|[]
 init|=
-literal|"\n@(#) LIBI77 VERSION pjw,dmg-mods 20001205\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_decl_stmt
-name|char
-name|__G77_LIBI77_VERSION__
-index|[]
-init|=
-literal|"3.2.2 20030205 (release)"
+literal|"@(#) LIBI77 VERSION pjw,dmg-mods 20001205\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,36 +476,6 @@ end_comment
 begin_comment
 comment|/* 17 June 1997: detect recursive I/O and call f__fatal explaining it. */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_function
-name|void
-name|g77__ivers__
-parameter_list|()
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"__G77_LIBI77_VERSION__: %s"
-argument_list|,
-name|__G77_LIBI77_VERSION__
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-name|junk
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 end_unit
 

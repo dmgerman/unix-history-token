@@ -222,7 +222,7 @@ name|FILE
 modifier|*
 name|ufd
 decl_stmt|;
-comment|/*0=unconnected*/
+comment|/*0=unconnected */
 name|char
 modifier|*
 name|ufnm
@@ -253,11 +253,11 @@ directive|endif
 name|int
 name|url
 decl_stmt|;
-comment|/*0=sequential*/
+comment|/*0=sequential */
 name|flag
 name|useek
 decl_stmt|;
-comment|/*true=can backspace, use dir, ...*/
+comment|/*true=can backspace, use dir, ... */
 name|flag
 name|ufmt
 decl_stmt|;
@@ -274,7 +274,7 @@ decl_stmt|;
 name|flag
 name|uwrt
 decl_stmt|;
-comment|/*last io was write*/
+comment|/*last io was write */
 name|flag
 name|uscrtch
 decl_stmt|;
@@ -299,7 +299,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*active external io list*/
+comment|/*active external io list */
 end_comment
 
 begin_decl_stmt
@@ -315,28 +315,6 @@ name|f__formatted
 decl_stmt|;
 end_decl_stmt
 
-begin_undef
-undef|#
-directive|undef
-name|Void
-end_undef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|Void
-end_define
-
-begin_comment
-comment|/*void*/
-end_comment
-
 begin_function_decl
 specifier|extern
 name|int
@@ -344,7 +322,9 @@ function_decl|(
 modifier|*
 name|f__getn
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -359,7 +339,9 @@ function_decl|(
 modifier|*
 name|f__putn
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -371,113 +353,13 @@ begin_function_decl
 specifier|extern
 name|void
 name|x_putc
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|long
-name|f__inode
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|VOID
-name|sig_die
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-argument_list|(
-operator|*
-name|f__donewrec
-argument_list|)
-argument_list|()
-decl_stmt|,
-name|t_putc
-argument_list|()
-decl_stmt|,
-name|x_wSL
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|c_sfe
-argument_list|()
-decl_stmt|,
-name|err__fl
-argument_list|()
-decl_stmt|,
-name|xrd_SL
-argument_list|()
-decl_stmt|,
-name|f__putbuf
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|Void
-value|void
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-endif|#
-directive|endif
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|f__getn
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/* for formatted input */
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|f__putn
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-comment|/* for formatted output */
-specifier|extern
-name|void
-name|x_putc
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
 specifier|extern
 name|long
 name|f__inode
@@ -489,6 +371,9 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|sig_die
@@ -499,6 +384,9 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|f__fatal
@@ -509,6 +397,9 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|t_runc
@@ -517,6 +408,9 @@ name|alist
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|f__nowreading
@@ -531,6 +425,9 @@ name|unit
 operator|*
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 specifier|extern
 name|int
 name|fk_open
@@ -542,6 +439,9 @@ parameter_list|,
 name|ftnint
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|en_fio
@@ -549,6 +449,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|f_init
@@ -556,6 +459,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_decl_stmt
 specifier|extern
 name|int
 argument_list|(
@@ -576,6 +482,9 @@ argument_list|(
 name|void
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|b_char
@@ -600,6 +509,9 @@ name|char
 operator|*
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|c_sfe
@@ -613,6 +525,9 @@ argument_list|(
 name|void
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 specifier|extern
 name|int
 name|isatty
@@ -620,6 +535,9 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|err__fl
@@ -632,6 +550,9 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|xrd_SL
@@ -639,6 +560,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|f__putbuf
@@ -646,21 +570,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -670,7 +580,7 @@ modifier|*
 name|f__doend
 function_decl|)
 parameter_list|(
-name|Void
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -684,7 +594,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*current file*/
+comment|/*current file */
 end_comment
 
 begin_decl_stmt
@@ -696,7 +606,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*current unit*/
+comment|/*current unit */
 end_comment
 
 begin_decl_stmt
@@ -754,7 +664,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*position in current record*/
+comment|/*position in current record */
 end_comment
 
 begin_decl_stmt

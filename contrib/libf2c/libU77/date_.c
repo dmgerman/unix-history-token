@@ -84,7 +84,7 @@ parameter_list|()
 function_decl|;
 specifier|extern
 comment|/* Character */
-name|VOID
+name|void
 name|G77_ctime_0
 parameter_list|()
 function_decl|;
@@ -237,17 +237,29 @@ literal|"Call to non Y2K compliant subroutine detected."
 decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_decl_stmt
 name|int
 name|G77_date_y2kbuggy_0
-parameter_list|(
+argument_list|(
 name|char
-modifier|*
+operator|*
 name|buf
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
 name|ftnlen
 name|buf_len
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 specifier|extern
 name|int
@@ -267,7 +279,7 @@ name|G77_abort_0
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_endif
 endif|#

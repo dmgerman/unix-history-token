@@ -42,41 +42,6 @@ begin_comment
 comment|/* This flushes a single unit, c.f. libI77 version. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|integer
-name|G77_fnum_0
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Subroutine */
-end_comment
-
-begin_decl_stmt
-name|int
-name|G77_flush1_0
-argument_list|(
-name|lunit
-argument_list|)
-name|integer
-modifier|*
-name|lunit
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 specifier|extern
 name|integer
@@ -101,8 +66,6 @@ name|integer
 modifier|*
 name|lunit
 parameter_list|)
-endif|#
-directive|endif
 block|{
 if|if
 condition|(

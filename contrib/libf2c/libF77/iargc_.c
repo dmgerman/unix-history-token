@@ -5,30 +5,17 @@ directive|include
 file|"f2c.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_expr_stmt
+begin_function
 name|ftnint
 name|G77_iargc_0
-argument_list|()
-else|#
-directive|else
-name|ftnint
-name|G77_iargc_0
-argument_list|(
-argument|void
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|extern
 name|int
 name|f__xargc
-block|;
+decl_stmt|;
 return|return
 operator|(
 name|f__xargc
@@ -37,7 +24,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 end_unit
 

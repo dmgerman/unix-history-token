@@ -102,35 +102,6 @@ begin_comment
 comment|/* libU77 one: */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_comment
-comment|/* Subroutine */
-end_comment
-
-begin_decl_stmt
-name|int
-name|G77_idate_0
-argument_list|(
-name|iarray
-argument_list|)
-name|int
-name|iarray
-index|[
-literal|3
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* Subroutine */
 end_comment
@@ -145,8 +116,6 @@ index|[
 literal|3
 index|]
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|struct
 name|tm

@@ -47,29 +47,6 @@ begin_comment
 comment|/* Subroutine */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|G77_sleep_0
-argument_list|(
-name|seconds
-argument_list|)
-name|integer
-modifier|*
-name|seconds
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function
 name|int
 name|G77_sleep_0
@@ -79,8 +56,6 @@ name|integer
 modifier|*
 name|seconds
 parameter_list|)
-endif|#
-directive|endif
 block|{
 operator|(
 name|void

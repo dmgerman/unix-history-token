@@ -66,41 +66,6 @@ directive|include
 file|"f2c.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_comment
-comment|/* Subroutine */
-end_comment
-
-begin_decl_stmt
-name|int
-name|G77_perror_0
-argument_list|(
-name|str
-argument_list|,
-name|Lstr
-argument_list|)
-name|char
-modifier|*
-name|str
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ftnlen
-name|Lstr
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* Subroutine */
 end_comment
@@ -118,8 +83,6 @@ specifier|const
 name|ftnlen
 name|Lstr
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|char
 name|buff

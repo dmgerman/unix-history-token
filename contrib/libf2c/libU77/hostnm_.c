@@ -117,7 +117,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Pad with blanks (assuming gethostname will make an error            return if it can't fit in the null). */
+comment|/* Pad with blanks (assuming gethostname will make an error          return if it can't fit in the null). */
 for|for
 control|(
 name|i
