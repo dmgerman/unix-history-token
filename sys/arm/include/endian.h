@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|BYTE_ORDER
-value|LITTLE_ENDIAN
+value|_LITTLE_ENDIAN
 end_define
 
 begin_endif

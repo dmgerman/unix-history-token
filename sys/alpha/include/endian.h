@@ -256,7 +256,7 @@ name|__uint32_t
 name|__bswap32
 parameter_list|(
 name|__uint32_t
-name|__x
+name|_x
 parameter_list|)
 block|{
 name|__uint32_t
@@ -280,7 +280,7 @@ operator|)
 operator|:
 literal|"r"
 operator|(
-name|__x
+name|_x
 operator|)
 operator|:
 literal|"$1"
@@ -309,7 +309,7 @@ name|__uint16_t
 name|__bswap16
 parameter_list|(
 name|__uint16_t
-name|__x
+name|_x
 parameter_list|)
 block|{
 name|__uint16_t
@@ -327,7 +327,7 @@ operator|)
 operator|:
 literal|"r"
 operator|(
-name|__x
+name|_x
 operator|)
 operator|:
 literal|"$1"
