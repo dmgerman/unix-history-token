@@ -3254,8 +3254,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|1
-comment|/*bootverbose*/
+name|bootverbose
 condition|)
 name|ciss_printf
 argument_list|(
@@ -3720,8 +3719,7 @@ expr_stmt|;
 comment|/* print information */
 if|if
 condition|(
-literal|1
-comment|/*bootverbose*/
+name|bootverbose
 condition|)
 block|{
 name|ciss_printf
@@ -4434,8 +4432,7 @@ block|}
 comment|/*      * Save logical drive information.      */
 if|if
 condition|(
-literal|1
-comment|/*bootverbose*/
+name|bootverbose
 condition|)
 name|ciss_printf
 argument_list|(
@@ -5212,8 +5209,7 @@ goto|;
 comment|/*      * Print the drive's basic characteristics.      */
 if|if
 condition|(
-literal|1
-comment|/*bootverbose*/
+name|bootverbose
 condition|)
 block|{
 name|ciss_printf
@@ -7982,6 +7978,8 @@ name|ce
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -8185,7 +8183,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Copy the results back to the user.      */
+comment|/*      * Check to see if the command succeeded.      */
 name|ce
 operator|=
 operator|(
@@ -8203,6 +8201,36 @@ literal|0
 index|]
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|ciss_report_request
+argument_list|(
+name|cr
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|bzero
+argument_list|(
+name|ce
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ce
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+comment|/*      * Copy the results back to the user.      */
 name|bcopy
 argument_list|(
 name|ce
