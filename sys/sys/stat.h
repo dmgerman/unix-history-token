@@ -329,8 +329,9 @@ name|st_birthtimespec
 decl_stmt|;
 comment|/* time of file creation */
 comment|/* 	 * Explicitly pad st_birthtimespec to 16 bytes so that the size of 	 * struct stat is backwards compatible.  We use bitfields instead 	 * of an array of chars so that this doesn't require a C99 compiler 	 * to compile if the size of the padding is 0.  We use 2 bitfields 	 * to cover up to 64 bits on 32-bit machines.  We assume that 	 * CHAR_BIT is 8... 	 */
-name|u_int
-label|:
+name|unsigned
+name|int
+range|:
 operator|(
 literal|8
 operator|/
@@ -349,9 +350,10 @@ expr|struct
 name|timespec
 argument_list|)
 operator|)
-expr_stmt|;
-name|u_int
-label|:
+decl_stmt|;
+name|unsigned
+name|int
+range|:
 operator|(
 literal|8
 operator|/
@@ -370,7 +372,7 @@ expr|struct
 name|timespec
 argument_list|)
 operator|)
-expr_stmt|;
+decl_stmt|;
 else|#
 directive|else
 name|time_t
@@ -510,8 +512,9 @@ name|st_birthtimespec
 decl_stmt|;
 comment|/* time of file creation */
 comment|/* 	 * See above about the following padding. 	 */
-name|u_int
-label|:
+name|unsigned
+name|int
+range|:
 operator|(
 literal|8
 operator|/
@@ -530,9 +533,10 @@ expr|struct
 name|timespec
 argument_list|)
 operator|)
-expr_stmt|;
-name|u_int
-label|:
+decl_stmt|;
+name|unsigned
+name|int
+range|:
 operator|(
 literal|8
 operator|/
@@ -551,7 +555,7 @@ expr|struct
 name|timespec
 argument_list|)
 operator|)
-expr_stmt|;
+decl_stmt|;
 block|}
 struct|;
 end_struct
