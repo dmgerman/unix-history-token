@@ -928,6 +928,9 @@ decl_stmt|,
 name|s
 decl_stmt|;
 comment|/*  			 * check for page-based copy on write 			 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -962,6 +965,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|unlock_things
 argument_list|(
 operator|&
@@ -973,9 +979,6 @@ name|RetryFault
 goto|;
 block|}
 comment|/* 			 * Wait/Retry if the page is busy.  We have to do this 			 * if the page is busy via either PG_BUSY or  			 * vm_page_t->busy because the vm_pager may be using 			 * vm_page_t->busy for pageouts ( and even pageins if 			 * it is the vnode pager ), and we could end up trying 			 * to pagein and pageout the same page simultaneously. 			 * 			 * We can theoretically allow the busy case on a read 			 * fault if the page is marked valid, but since such 			 * pages are typically already pmap'd, putting that 			 * special case in might be more effort then it is  			 * worth.  We cannot under any circumstances mess 			 * around with a vm_page_t->busy page except, perhaps, 			 * to pmap it. 			 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(

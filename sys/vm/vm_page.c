@@ -5514,6 +5514,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* 	 * An interrupt allocation is requested because the page 	 * queues lock is held.  	 */
 name|mnew
 operator|=
 name|vm_page_alloc
@@ -5522,7 +5523,7 @@ name|object
 argument_list|,
 name|pindex
 argument_list|,
-name|VM_ALLOC_NORMAL
+name|VM_ALLOC_INTERRUPT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5541,7 +5542,13 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|VM_WAIT
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 goto|goto
 name|retry_alloc
