@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c 1.5 %G%"
+literal|"@(#)symbols.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1785,6 +1785,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAXUCHAR
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
 name|MINSHORT
 value|-32768
 end_define
@@ -1794,6 +1801,13 @@ define|#
 directive|define
 name|MAXSHORT
 value|32767
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXUSHORT
+value|65535L
 end_define
 
 begin_function
@@ -1886,6 +1900,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|lower
 operator|>=
 name|MINCHAR
@@ -1893,6 +1908,13 @@ name|and
 name|upper
 operator|<=
 name|MAXCHAR
+operator|)
+name|or
+argument_list|(
+argument|lower>=
+literal|0
+argument|and upper<= MAXUCHAR
+argument_list|)
 condition|)
 block|{
 name|r
@@ -1906,6 +1928,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|lower
 operator|>=
 name|MINSHORT
@@ -1913,6 +1936,13 @@ name|and
 name|upper
 operator|<=
 name|MAXSHORT
+operator|)
+name|or
+argument_list|(
+argument|lower>=
+literal|0
+argument|and upper<= MAXUSHORT
+argument_list|)
 condition|)
 block|{
 name|r
@@ -2033,9 +2063,14 @@ if|if
 condition|(
 name|r
 operator|<
-sizeof|sizeof
-argument_list|(
+expr|sizeof
+operator|(
 name|Word
+operator|)
+name|and
+name|isparam
+argument_list|(
+name|t
 argument_list|)
 condition|)
 block|{
