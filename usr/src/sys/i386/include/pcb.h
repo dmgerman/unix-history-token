@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)pcb.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)pcb.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fpu.h"
+file|"npx.h"
 end_include
 
 begin_struct
@@ -65,9 +65,18 @@ directive|define
 name|FP_NEEDRESTORE
 value|0x2
 comment|/* need restore on next DNA fault */
+define|#
+directive|define
+name|FP_USESEMC
+value|0x4
+comment|/* process uses EMC memory-mapped mode */
 name|struct
 name|save87
 name|pcb_savefpu
+decl_stmt|;
+name|struct
+name|emcsts
+name|pcb_saveemc
 decl_stmt|;
 name|struct
 name|pte
@@ -99,10 +108,14 @@ decl_stmt|;
 name|long
 name|pcb_sigc
 index|[
-literal|5
+literal|8
 index|]
 decl_stmt|;
 comment|/* sigcode actually 19 bytes */
+name|int
+name|pcb_iml
+decl_stmt|;
+comment|/* interrupt mask level */
 block|}
 struct|;
 end_struct
