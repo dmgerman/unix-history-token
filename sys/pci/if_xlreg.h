@@ -3200,6 +3200,13 @@ name|TC_DEVICEID_HURRICANE_SOHO100TX
 value|0x7646
 end_define
 
+begin_define
+define|#
+directive|define
+name|TC_DEVICEID_TORNADO_HOMECONNECT
+value|0x4500
+end_define
+
 begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers. Note: some are only available on  * the 3c905B, in particular those that related to power management.  */
 end_comment
