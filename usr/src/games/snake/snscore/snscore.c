@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snscore.c	8.1 (Berkeley) %G%"
+literal|"@(#)snscore.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,17 +123,10 @@ struct|;
 end_struct
 
 begin_function
+name|int
 name|main
 parameter_list|()
 block|{
-name|char
-name|buf
-index|[
-literal|80
-index|]
-decl_stmt|,
-name|cp
-decl_stmt|;
 name|short
 name|uid
 decl_stmt|,
@@ -228,6 +221,10 @@ literal|1
 argument_list|,
 name|fd
 argument_list|)
+expr_stmt|;
+name|noplayers
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
