@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.20 (Berkeley) %G%"
+literal|"@(#)main.c	1.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8835,11 +8835,12 @@ name|sblock
 operator|.
 name|fs_size
 condition|)
+block|{
 for|for
 control|(
 init|;
 name|dmax
-operator|>
+operator|>=
 name|sblock
 operator|.
 name|fs_size
@@ -8858,6 +8859,10 @@ operator|-
 name|dbase
 argument_list|)
 expr_stmt|;
+name|dmax
+operator|++
+expr_stmt|;
+block|}
 name|dmin
 operator|=
 name|sblock
