@@ -1061,33 +1061,6 @@ name|eva
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|frame
-operator|.
-name|tf_trapno
-operator|==
-name|T_PAGEFLT
-condition|)
-block|{
-comment|/* 		 * For some Cyrix CPUs, %cr2 is clobbered by 		 * interrupts.  This problem is worked around by using 		 * an interrupt gate for the pagefault handler.  We 		 * are finally ready to read %cr2 and then must 		 * reenable interrupts. 		 */
-name|eva
-operator|=
-name|rcr2
-argument_list|()
-expr_stmt|;
-name|enable_intr
-argument_list|()
-expr_stmt|;
-block|}
-name|mtx_enter
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -1244,6 +1217,14 @@ operator|&
 name|PSL_VM
 condition|)
 block|{
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|vm86_emulate
@@ -1255,6 +1236,14 @@ operator|*
 operator|)
 operator|&
 name|frame
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -1297,6 +1286,23 @@ case|case
 name|T_PAGEFLT
 case|:
 comment|/* page fault */
+comment|/* 			 * For some Cyrix CPUs, %cr2 is clobbered by 			 * interrupts.  This problem is worked around by using 			 * an interrupt gate for the pagefault handler.  We 			 * are finally ready to read %cr2 and then must 			 * reenable interrupts. 			 */
+name|eva
+operator|=
+name|rcr2
+argument_list|()
+expr_stmt|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|trap_pfault
@@ -1307,6 +1313,14 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|eva
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|#
@@ -1399,6 +1413,14 @@ name|TIMER_FREQ
 value|1193182
 endif|#
 directive|endif
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|time_second
@@ -1429,6 +1451,14 @@ operator|=
 name|time_second
 expr_stmt|;
 block|}
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -1436,6 +1466,7 @@ else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
+comment|/* XXX Giant */
 if|if
 condition|(
 name|isa_nmi
@@ -1554,6 +1585,14 @@ name|FPE_FPU_NP_TRAP
 expr_stmt|;
 break|break;
 block|}
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 call|(
@@ -1563,6 +1602,14 @@ call|)
 argument_list|(
 operator|&
 name|frame
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -1627,6 +1674,23 @@ case|case
 name|T_PAGEFLT
 case|:
 comment|/* page fault */
+comment|/* 			 * For some Cyrix CPUs, %cr2 is clobbered by 			 * interrupts.  This problem is worked around by using 			 * an interrupt gate for the pagefault handler.  We 			 * are finally ready to read %cr2 and then must 			 * reenable interrupts. 			 */
+name|eva
+operator|=
+name|rcr2
+argument_list|()
+expr_stmt|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1638,6 +1702,14 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|eva
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1679,6 +1751,14 @@ operator|&
 name|PSL_VM
 condition|)
 block|{
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|vm86_emulate
@@ -1692,13 +1772,6 @@ operator|&
 name|frame
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|!=
-literal|0
-condition|)
-comment|/* 					 * returns to original process 					 */
 name|mtx_exit
 argument_list|(
 operator|&
@@ -1707,6 +1780,13 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+literal|0
+condition|)
+comment|/* 					 * returns to original process 					 */
 name|vm86_trap
 argument_list|(
 operator|(
@@ -1770,11 +1850,27 @@ name|pcb_gs
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|p
 argument_list|,
 name|SIGBUS
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1999,6 +2095,7 @@ name|out
 goto|;
 block|}
 comment|/* 			 * Ignore debug register trace traps due to 			 * accesses in the user's address space, which 			 * can happen under several conditions such as 			 * if a user sets a watchpoint on a buffer and 			 * then passes that buffer to a system call. 			 * We still want to get TRCTRAPS for addresses 			 * in kernel space because that is useful when 			 * debugging the kernel. 			 */
+comment|/* XXX Giant */
 if|if
 condition|(
 name|user_dbreg_trap
@@ -2029,6 +2126,7 @@ comment|/* 			 * If DDB is enabled, let it handle the debugger trap. 			 * Other
 ifdef|#
 directive|ifdef
 name|DDB
+comment|/* XXX Giant */
 if|if
 condition|(
 name|kdb_trap
@@ -2058,6 +2156,14 @@ case|:
 ifdef|#
 directive|ifdef
 name|POWERFAIL_NMI
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|time_second
@@ -2088,12 +2194,21 @@ operator|=
 name|time_second
 expr_stmt|;
 block|}
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
 else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
+comment|/* XXX Giant */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
 if|if
 condition|(
@@ -2155,6 +2270,14 @@ endif|#
 directive|endif
 comment|/* NISA> 0 */
 block|}
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|trap_fatal
 argument_list|(
 operator|&
@@ -2163,10 +2286,26 @@ argument_list|,
 name|eva
 argument_list|)
 expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* Translate fault for emulators (e.g. Linux) */
 if|if
 condition|(
@@ -2254,6 +2393,14 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|user
 label|:
 name|userret
@@ -2266,8 +2413,6 @@ argument_list|,
 name|sticks
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 if|if
 condition|(
 name|mtx_owned
@@ -2284,6 +2429,9 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|out
+label|:
+return|return;
 block|}
 end_function
 
