@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.18 (Berkeley) %G%"
+literal|"@(#)headers.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1613,7 +1613,7 @@ name|sprintf
 argument_list|(
 name|hbuf
 argument_list|,
-literal|"%.90s (%s)"
+literal|"%.80s (%s)"
 argument_list|,
 name|RealHostName
 argument_list|,
