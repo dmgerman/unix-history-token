@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	6.14	84/08/29	*/
+comment|/*	vfs_syscalls.c	6.15	85/01/21	*/
 end_comment
 
 begin_include
@@ -4440,19 +4440,26 @@ argument_list|(
 name|ndp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xp
+operator|!=
+name|NULL
+condition|)
 name|dp
 operator|=
 name|ndp
 operator|->
 name|ni_pdir
 expr_stmt|;
+else|else
+name|dp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Insure that the directory entry still exists and has not 	 * changed while the new name has been entered. If the source is 	 * a file then the entry may have been unlinked or renamed. In 	 * either case there is no further work to be done. If the source 	 * is a directory then it cannot have been rmdir'ed; its link 	 * count of three would cause a rmdir to fail with ENOTEMPTY. 	 * The IRENAME flag insures that it cannot be moved by another 	 * rename. 	 */
 if|if
 condition|(
-name|dp
-operator|==
-name|NULL
-operator|||
 name|xp
 operator|!=
 name|ip
@@ -4464,7 +4471,7 @@ name|doingdirectory
 condition|)
 name|panic
 argument_list|(
-literal|"rename: lost entry"
+literal|"rename: lost dir entry"
 argument_list|)
 expr_stmt|;
 block|}
