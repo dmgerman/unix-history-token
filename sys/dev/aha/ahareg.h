@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"aha.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 
@@ -1658,24 +1652,6 @@ name|value
 parameter_list|)
 define|\
 value|bus_space_write_1((aha)->tag, (aha)->bsh, port, value)
-end_define
-
-begin_comment
-comment|/* XXX BAD */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRA_AHA
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|NAHATOT
-value|(NAHA + EXTRA_AHA)
 end_define
 
 begin_define
