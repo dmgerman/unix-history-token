@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***************************************************  * file: userconfig/uc_scsi.c  *  * Copyright (c) 1996 Eric L. Hernes (erich@rrnet.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: uc_scsi.c,v 1.1 1996/10/03 06:01:44 jkh Exp $  */
+comment|/***************************************************  * file: userconfig/uc_scsi.c  *  * Copyright (c) 1996 Eric L. Hernes (erich@rrnet.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: uc_scsi.c,v 1.2 1996/10/04 13:33:46 jkh Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -31,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<scsi/scsiconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<tcl.h>
 end_include
 
 begin_include
@@ -502,6 +502,9 @@ name|bus_no
 operator|=
 name|nscsibus
 expr_stmt|;
+name|nscsibus
+operator|++
+expr_stmt|;
 name|sscanf
 argument_list|(
 name|spc
@@ -928,6 +931,7 @@ name|sdev
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* slap on the terminators */
 name|sp
 operator|=
 operator|(
@@ -968,6 +972,49 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|uc_scsi
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sbp
+operator|=
+operator|(
+expr|struct
+name|uc_scsibus
+operator|*
+operator|)
+name|realloc
+argument_list|(
+name|sbp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|uc_scsibus
+argument_list|)
+operator|*
+operator|(
+name|nscsibus
+operator|+
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+name|sbpc
+operator|=
+name|sbp
+operator|+
+name|nscsibus
+operator|+
+literal|1
+expr_stmt|;
+name|bzero
+argument_list|(
+name|sbpc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|uc_scsibus
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2889,14 +2936,6 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-define|#
-directive|define
-name|WANT_TO_COREDUMP
-value|1
-if|#
-directive|if
-name|WANT_TO_COREDUMP
-comment|/* ugly hack until scsi_getdev() gets -incore 			busses correctly */
 comment|/* now free the bus info */
 if|if
 condition|(
@@ -2921,6 +2960,7 @@ name|sbp
 operator|++
 control|)
 block|{
+comment|/*	fprintf(stderr, "sbp: 0x%x free(0x%x)\n", sbp, sbp->driver);*/
 name|free
 argument_list|(
 name|sbp
@@ -2930,8 +2970,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|kp
