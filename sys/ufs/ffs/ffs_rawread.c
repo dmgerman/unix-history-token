@@ -536,6 +536,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 name|vm_object_page_clean
 argument_list|(
 name|obj
@@ -547,6 +553,12 @@ argument_list|,
 name|OBJPC_SYNC
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
+block|}
 name|VI_LOCK
 argument_list|(
 name|vp
