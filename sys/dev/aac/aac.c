@@ -1402,7 +1402,6 @@ name|rsize
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
 name|mir
 argument_list|)
 argument_list|)
