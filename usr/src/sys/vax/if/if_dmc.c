@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.5	82/03/15	*/
+comment|/*	if_dmc.c	4.6	82/03/19	*/
 end_comment
 
 begin_include
@@ -1723,8 +1723,10 @@ name|INET
 case|case
 name|PF_INET
 case|:
-name|setipintr
-argument_list|()
+name|schednetisr
+argument_list|(
+name|NETISR_IP
+argument_list|)
 expr_stmt|;
 name|inq
 operator|=

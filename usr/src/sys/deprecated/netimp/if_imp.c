@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.17	82/03/19	*/
+comment|/*	if_imp.c	4.18	82/03/19	*/
 end_comment
 
 begin_include
@@ -1226,8 +1226,10 @@ expr|struct
 name|imp_leader
 argument_list|)
 expr_stmt|;
-name|setipintr
-argument_list|()
+name|schednetisr
+argument_list|(
+name|NETISR_IP
+argument_list|)
 expr_stmt|;
 name|inq
 operator|=

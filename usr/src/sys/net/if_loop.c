@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.6	82/03/15	*/
+comment|/*	if_loop.c	4.7	82/03/19	*/
 end_comment
 
 begin_comment
@@ -263,8 +263,10 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-name|setipintr
-argument_list|()
+name|schednetisr
+argument_list|(
+name|NETISR_IP
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
