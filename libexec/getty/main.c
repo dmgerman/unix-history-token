@@ -1550,7 +1550,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* blocking open */
+comment|/* maybe blocking open */
 if|if
 condition|(
 operator|!
@@ -1559,6 +1559,14 @@ argument_list|(
 name|ttyn
 argument_list|,
 name|O_RDWR
+operator||
+operator|(
+name|NC
+condition|?
+name|O_NONBLOCK
+else|:
+literal|0
+operator|)
 argument_list|)
 condition|)
 name|exit
@@ -1622,6 +1630,18 @@ operator|.
 name|c_cflag
 operator|=
 name|TTYDEF_CFLAG
+expr_stmt|;
+name|tmode
+operator|.
+name|c_cflag
+operator||=
+operator|(
+name|NC
+condition|?
+name|CLOCAL
+else|:
+literal|0
+operator|)
 expr_stmt|;
 name|omode
 operator|=

@@ -718,6 +718,13 @@ block|}
 block|,
 comment|/* do CTSRTS flow control */
 block|{
+literal|"nc"
+block|,
+literal|0
+block|}
+block|,
+comment|/* set clocal (no carrier) */
+block|{
 literal|0
 block|}
 block|}
