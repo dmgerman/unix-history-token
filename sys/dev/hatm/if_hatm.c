@@ -13673,13 +13673,6 @@ operator|.
 name|hdroff
 operator|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|ch
-operator|->
-name|mbuf
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 block|}

@@ -92,6 +92,9 @@ decl_stmt|;
 name|uint32_t
 name|cec
 decl_stmt|;
+name|uint32_t
+name|no_rcv_mbuf
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -710,18 +713,13 @@ value|(1<< 20)
 end_define
 
 begin_comment
-comment|/* chunks have the following structure at the end */
+comment|/* chunks have the following structure at the end (4 byte) */
 end_comment
 
 begin_struct
 struct|struct
 name|mbuf_chunk_hdr
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|mbuf
-decl_stmt|;
 name|uint16_t
 name|pageno
 decl_stmt|;

@@ -671,6 +671,8 @@ literal|"dcc:"
 block|,
 literal|"cec:"
 block|,
+literal|"no_rcv_mbuf:"
+block|,
 name|NULL
 block|}
 decl_stmt|;
