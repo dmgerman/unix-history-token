@@ -5895,19 +5895,6 @@ operator|->
 name|td_ksegrp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ke
-operator|->
-name|ke_runq
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"Thread not on runq."
-argument_list|)
-expr_stmt|;
 name|kseq_load_rem
 argument_list|(
 name|ksq
