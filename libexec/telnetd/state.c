@@ -4438,7 +4438,7 @@ name|ADD
 parameter_list|(
 name|c
 parameter_list|)
-value|*ncp++ = c;
+value|*ncp++ = c
 end_define
 
 begin_define
@@ -4633,8 +4633,9 @@ condition|)
 block|{
 name|ADD
 argument_list|(
-argument|SB
+name|SB
 argument_list|)
+expr_stmt|;
 name|ADD
 argument_list|(
 name|TELOPT_LFLOW
@@ -4661,8 +4662,9 @@ expr_stmt|;
 block|}
 name|ADD
 argument_list|(
-argument|SE
+name|SE
 argument_list|)
+expr_stmt|;
 name|ADD
 argument_list|(
 name|SB

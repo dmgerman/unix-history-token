@@ -1090,7 +1090,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s: %s\r\n"
+literal|"%s: %s"
 argument_list|,
 name|msg
 argument_list|,
