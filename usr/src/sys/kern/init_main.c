@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.54 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.55 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -749,32 +749,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the file systems. 	 * 	 * Get vnodes for swapdev and rootdev. 	 */
+comment|/* 	 * Initialize the file systems. 	 */
 name|vfsinit
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|bdevvp
-argument_list|(
-name|swapdev
-argument_list|,
-operator|&
-name|swapdev_vp
-argument_list|)
-operator|||
-name|bdevvp
-argument_list|(
-name|rootdev
-argument_list|,
-operator|&
-name|rootvp
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"can't setup bdevvp's"
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Start real time and statistics clocks. 	 */
 name|initclocks

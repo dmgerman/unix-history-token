@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.77 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.78 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -262,6 +262,30 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Get vnodes for swapdev and rootdev. 	 */
+if|if
+condition|(
+name|bdevvp
+argument_list|(
+name|swapdev
+argument_list|,
+operator|&
+name|swapdev_vp
+argument_list|)
+operator|||
+name|bdevvp
+argument_list|(
+name|rootdev
+argument_list|,
+operator|&
+name|rootvp
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"ffs_mountroot: can't setup bdevvp's"
+argument_list|)
+expr_stmt|;
 name|mp
 operator|=
 name|malloc

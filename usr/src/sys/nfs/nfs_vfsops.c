@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.46 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1038,6 +1038,22 @@ name|swap_nblks
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|bdevvp
+argument_list|(
+name|swapdev
+argument_list|,
+operator|&
+name|swapdev_vp
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"nfs_mountroot: can't setup swapdev_vp"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create the rootfs mount point. 	 */
 name|nd
 operator|->
