@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makekey.c	5.2 (Berkeley) %G%"
+literal|"@(#)makekey.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -70,17 +82,16 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
+begin_decl_stmt
+specifier|static
+name|void
+name|error
+argument_list|()
+decl_stmt|,
+name|get
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -102,10 +113,6 @@ name|salt
 index|[
 literal|3
 index|]
-decl_stmt|,
-modifier|*
-name|crypt
-argument_list|()
 decl_stmt|;
 name|get
 argument_list|(
@@ -169,28 +176,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|get
-argument_list|(
-argument|bp
-argument_list|,
-argument|len
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|len
+parameter_list|)
+name|char
+modifier|*
+name|bp
+decl_stmt|;
 specifier|register
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -235,12 +237,13 @@ name|error
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|error
-argument_list|()
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -256,13 +259,14 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

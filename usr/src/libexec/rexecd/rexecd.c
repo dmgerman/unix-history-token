@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	5.10 (Berkeley) %G%"
+literal|"@(#)rexecd.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -85,24 +85,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -115,40 +97,44 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<pwd.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|getpwnam
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|crypt
-argument_list|()
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strncat
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_comment
 comment|/*VARARGS1*/
@@ -205,6 +191,11 @@ name|getpeername
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|from
 argument_list|,
@@ -215,21 +206,19 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: "
+literal|"rexecd: getpeername: %s\n"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|perror
+name|strerror
 argument_list|(
-literal|"getpeername"
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -607,6 +596,11 @@ name|bind
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|asin
 argument_list|,
@@ -646,6 +640,11 @@ name|connect
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|fromp
 argument_list|,
 sizeof|sizeof
@@ -951,6 +950,10 @@ name|select
 argument_list|(
 literal|16
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 operator|&
 name|ready
 argument_list|,
@@ -958,20 +961,20 @@ operator|(
 name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
 name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
 expr|struct
 name|timeval
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
