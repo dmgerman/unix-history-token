@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  *  *	@(#)shell.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  *  *	@(#)shell.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * The follow should be set to reflect the type of system you have:  *	JOBS -> 1 if you have Berkeley job control, 0 otherwise.  *	SYMLINKS -> 1 if your system includes symbolic links, 0 otherwise.  *	DIRENT -> 1 if your system has the SVR3 directory(3X) routines.  *	UDIR -> 1 if you want the shell to simulate the /u directory.  *	SHORTNAMES -> 1 if your linker cannot handle long names.  *	define BSD if you are running 4.2 BSD or later.  *	define SYSV if you are running under System V.  *	define DEBUG to turn on debugging.  *  * When debugging is on, debugging info will be written to $HOME/trace and  * a quit signal will generate a core dump.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_define
 define|#
@@ -63,12 +69,6 @@ begin_comment
 comment|/* #define DEBUG */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|void
@@ -76,6 +76,12 @@ modifier|*
 name|pointer
 typedef|;
 end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
 begin_ifndef
 ifndef|#
@@ -103,14 +109,6 @@ end_else
 begin_comment
 comment|/* not __STDC__ */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|pointer
-typedef|;
-end_typedef
 
 begin_ifndef
 ifndef|#

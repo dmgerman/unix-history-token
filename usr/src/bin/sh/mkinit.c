@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkinit.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkinit.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,12 @@ end_comment
 begin_comment
 comment|/*  * Usage:  mkinit command sourcefile...  *  * This program scans all the source files for code to handle various  * special events and combines this code into one file.  This (allegedly)  * improves the structure of the program since there is no need for  * anyone outside of a module to know that that module performs special  * operations on particular events.  The command is executed iff init.c  * is actually changed.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
@@ -377,39 +383,18 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_function_decl
+begin_decl_stmt
 name|void
 modifier|*
 name|ckmalloc
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|char
-modifier|*
-name|ckmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -2152,21 +2137,9 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|void
 modifier|*
-else|#
-directive|else
-name|char
-modifier|*
-endif|#
-directive|endif
 name|ckmalloc
 parameter_list|(
 name|nbytes

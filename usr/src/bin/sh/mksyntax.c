@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mksyntax.c	5.1 (Berkeley) %G%"
+literal|"@(#)mksyntax.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -503,6 +503,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|fputs
+argument_list|(
+literal|"#include<sys/cdefs.h>\n"
+argument_list|,
+name|hfile
+argument_list|)
+expr_stmt|;
 comment|/* Generate the #define statements in the header file */
 name|fputs
 argument_list|(
