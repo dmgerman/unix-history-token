@@ -55,9 +55,6 @@ name|struct
 name|inode
 modifier|*
 name|ip
-parameter_list|,
-name|mode_t
-name|preserve_mask
 parameter_list|)
 function_decl|;
 end_function_decl

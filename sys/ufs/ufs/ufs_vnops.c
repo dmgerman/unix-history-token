@@ -7207,7 +7207,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 			 * Retrieved a default ACL, so merge mode and ACL if 			 * necessary. 			 */
+comment|/* 			 * Retrieved a default ACL, so merge mode and ACL if 			 * necessary.  If the ACL is empty, fall through to 			 * the "not defined or available" case. 			 */
 if|if
 condition|(
 name|acl
@@ -7217,7 +7217,15 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * Two possible ways for default ACL to not 				 * be present.  First, the EA can be 				 * undefined, or second, the default ACL can 				 * be blank.  If it's blank, fall through to 				 * the it's not defined case. 				 */
+name|dmode
+operator|=
+name|acl_posix1e_newfilemode
+argument_list|(
+name|dmode
+argument_list|,
+name|acl
+argument_list|)
+expr_stmt|;
 name|ip
 operator|->
 name|i_mode
@@ -11576,6 +11584,15 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * Two possible ways for default ACL to not 				 * be present.  First, the EA can be 				 * undefined, or second, the default ACL can 				 * be blank.  If it's blank, fall through to 				 * the it's not defined case. 				 */
+name|mode
+operator|=
+name|acl_posix1e_newfilemode
+argument_list|(
+name|mode
+argument_list|,
+name|acl
+argument_list|)
+expr_stmt|;
 name|ip
 operator|->
 name|i_mode
