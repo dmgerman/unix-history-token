@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.25 1994/01/31 19:07:59 ache Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.27 1994/02/06 11:59:35 ache Exp $  */
 end_comment
 
 begin_include
@@ -1024,12 +1024,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COM_MULTIPORT
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -1045,15 +1039,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COM_MULTIPORT */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -3833,24 +3818,22 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|COM_MULTIPORT
-name|u_char
-name|line_status
-decl_stmt|;
-name|u_char
-name|modem_status
-decl_stmt|;
-name|u_char
-modifier|*
-name|ioptr
-decl_stmt|;
-name|u_char
-name|recv_data
-decl_stmt|;
 name|com
 operator|=
 name|com_addr
 argument_list|(
 name|unit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|com
+operator|!=
+name|NULL
+condition|)
+name|comintr1
+argument_list|(
+name|com
 argument_list|)
 expr_stmt|;
 else|#
@@ -3859,18 +3842,6 @@ comment|/* COM_MULTIPORT */
 name|bool_t
 name|possibly_more_intrs
 decl_stmt|;
-name|com
-operator|=
-name|com_addr
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-name|comintr1
-argument_list|(
-name|com
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Loop until there is no activity on any port.  This is necessary 	 * to get an interrupt edge more than to avoid another interrupt. 	 * If the IRQ signal is just an OR of the IRQ signals from several 	 * devices, then the edge from one may be lost because another is 	 * on. 	 */
 do|do
 block|{
@@ -3936,7 +3907,9 @@ condition|(
 name|possibly_more_intrs
 condition|)
 do|;
-return|return;
+endif|#
+directive|endif
+comment|/* COM_MULTIPORT */
 block|}
 end_function
 
@@ -3966,9 +3939,6 @@ decl_stmt|;
 name|u_char
 name|recv_data
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* COM_MULTIPORT */
 while|while
 condition|(
 name|TRUE
@@ -6584,9 +6554,9 @@ operator||
 name|CS_TTGO
 operator|)
 condition|)
-name|siointr
+name|comintr1
 argument_list|(
-name|unit
+name|com
 argument_list|)
 expr_stmt|;
 name|enable_intr
@@ -6856,9 +6826,9 @@ block|{
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|siointr
+name|comintr1
 argument_list|(
-name|unit
+name|com
 argument_list|)
 expr_stmt|;
 name|enable_intr
@@ -6930,9 +6900,9 @@ name|state
 operator||=
 name|CS_BUSY
 expr_stmt|;
-name|siointr
+name|comintr1
 argument_list|(
-name|unit
+name|com
 argument_list|)
 expr_stmt|;
 comment|/* fake interrupt to start output */
@@ -7297,9 +7267,9 @@ block|{
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|siointr
+name|comintr1
 argument_list|(
-name|unit
+name|com
 argument_list|)
 expr_stmt|;
 name|enable_intr
