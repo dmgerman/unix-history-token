@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)param.c	7.20 (Berkeley) 6/27/91  *	$Id: param.c,v 1.3 1993/10/16 16:31:57 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)param.c	7.20 (Berkeley) 6/27/91  *	$Id: param.c,v 1.4 1993/11/07 17:38:29 wollman Exp $  */
 end_comment
 
 begin_include
@@ -85,6 +85,40 @@ begin_include
 include|#
 directive|include
 file|"sys/shm.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVSEM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"sys/sem.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVMSG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"sys/msg.h"
 end_include
 
 begin_endif
@@ -352,6 +386,103 @@ block|,
 name|SHMSEG
 block|,
 name|SHMALL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Values in support of System V compatible semaphores.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVSEM
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|seminfo
+name|seminfo
+init|=
+block|{
+name|SEMMAP
+block|,
+comment|/* # of entries in semaphore map */
+name|SEMMNI
+block|,
+comment|/* # of semaphore identifiers */
+name|SEMMNS
+block|,
+comment|/* # of semaphores in system */
+name|SEMMNU
+block|,
+comment|/* # of undo structures in system */
+name|SEMMSL
+block|,
+comment|/* max # of semaphores per id */
+name|SEMOPM
+block|,
+comment|/* max # of operations per semop call */
+name|SEMUME
+block|,
+comment|/* max # of undo entries per process */
+name|SEMUSZ
+block|,
+comment|/* size in bytes of undo structure */
+name|SEMVMX
+block|,
+comment|/* semaphore maximum value */
+name|SEMAEM
+comment|/* adjust on exit max value */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Values in support of System V compatible messages.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVMSG
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|msginfo
+name|msginfo
+init|=
+block|{
+name|MSGMAX
+block|,
+comment|/* max chars in a message */
+name|MSGMNI
+block|,
+comment|/* # of message queue identifiers */
+name|MSGMNB
+block|,
+comment|/* max chars in a queue */
+name|MSGTQL
+block|,
+comment|/* max messages in system */
+name|MSGSSZ
+block|,
+comment|/* size of a message segment */
+comment|/* (must be small power of 2 greater than 4) */
+name|MSGSEG
+comment|/* number of message segments */
 block|}
 decl_stmt|;
 end_decl_stmt
