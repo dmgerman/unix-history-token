@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	2.12 85/04/23"
+literal|"@(#)dr_1.c	2.13 85/04/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -2603,6 +2603,9 @@ operator|*
 name|p
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|bestship
