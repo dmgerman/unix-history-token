@@ -440,6 +440,12 @@ name|USB_PRODUCT_BELKIN_F5U109
 block|}
 block|,
 block|{
+name|USB_VENDOR_BELKIN
+block|,
+name|USB_PRODUCT_BELKIN_F5U409
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
