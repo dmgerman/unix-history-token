@@ -9555,11 +9555,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VOP_DESTROYVOBJECT
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Any other processes trying to obtain this lock must first 	 * wait for VXLOCK to clear, then call the new lock operation. 	 */
 name|VOP_UNLOCK
 argument_list|(
@@ -9705,6 +9700,25 @@ condition|)
 name|panic
 argument_list|(
 literal|"vclean: cannot reclaim"
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_object
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"vop_reclaim left v_object vp=%p, tag=%s"
+operator|,
+name|vp
+operator|,
+name|vp
+operator|->
+name|v_tag
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
