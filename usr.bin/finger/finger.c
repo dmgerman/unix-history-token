@@ -177,6 +177,8 @@ name|entries
 decl_stmt|,
 name|gflag
 decl_stmt|,
+name|kflag
+decl_stmt|,
 name|lflag
 decl_stmt|,
 name|mflag
@@ -298,7 +300,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46glmpshoT"
+literal|"46gklmpshoT"
 argument_list|)
 operator|)
 operator|!=
@@ -333,6 +335,15 @@ name|gflag
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|kflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* keep going without utmp */
 break|break;
 case|case
 literal|'l'
@@ -426,7 +437,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: finger [-46lmpshoT] [login ...]\n"
+literal|"usage: finger [-46klmpshoT] [login ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -747,6 +758,17 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|kflag
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"can't list logins without reading utmp"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1600,6 +1622,11 @@ condition|(
 name|entries
 operator|==
 literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|kflag
 condition|)
 return|return;
 comment|/* 	 * Scan thru the list of users currently logged in, saving 	 * appropriate data whenever a match occurs. 	 */
