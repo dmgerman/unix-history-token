@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.46 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -552,6 +552,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lookup_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -589,6 +590,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_open_args
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -801,6 +803,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_read_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1315,6 +1318,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_write_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1794,6 +1798,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_ioctl_args
+comment|/* { 		struct vnode *a_vp; 		int  a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1962,6 +1967,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_select_args
+comment|/* { 		struct vnode *a_vp; 		int  a_which; 		int  a_fflags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2030,6 +2036,235 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * Synch buffers associated with a block device  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|int
+name|spec_fsync
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_fsync_args
+comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int  a_waitfor; 		struct proc *a_p; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+name|struct
+name|buf
+modifier|*
+name|nbp
+decl_stmt|;
+name|int
+name|s
+decl_stmt|,
+name|error
+decl_stmt|,
+name|allerror
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* 	 * Flush all dirty buffers associated with a block device. 	 */
+name|loop
+label|:
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|bp
+operator|=
+name|vp
+operator|->
+name|v_dirtyblkhd
+init|;
+name|bp
+condition|;
+name|bp
+operator|=
+name|nbp
+control|)
+block|{
+name|nbp
+operator|=
+name|bp
+operator|->
+name|b_blockf
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_BUSY
+operator|)
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DELWRI
+operator|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"spec_fsync: not dirty"
+argument_list|)
+expr_stmt|;
+name|bremfree
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_BUSY
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
+name|bawrite
+argument_list|(
+name|bp
+argument_list|)
+condition|)
+name|allerror
+operator|=
+name|error
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
+if|if
+condition|(
+name|ap
+operator|->
+name|a_waitfor
+operator|==
+name|MNT_WAIT
+condition|)
+block|{
+while|while
+condition|(
+name|vp
+operator|->
+name|v_numoutput
+condition|)
+block|{
+name|vp
+operator|->
+name|v_flag
+operator||=
+name|VBWAIT
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|vp
+operator|->
+name|v_numoutput
+argument_list|,
+name|PRIBIO
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|vp
+operator|->
+name|v_dirtyblkhd
+condition|)
+block|{
+name|vprint
+argument_list|(
+literal|"spec_fsync: dirty"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
+endif|#
+directive|endif
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|allerror
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Just call the device strategy routine  */
 end_comment
 
@@ -2043,6 +2278,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_strategy_args
+comment|/* { 		struct buf *a_bp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2094,6 +2330,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_bmap_args
+comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2161,6 +2398,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_lock_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2190,6 +2428,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_unlock_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2223,6 +2462,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_close_args
+comment|/* { 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2268,6 +2508,8 @@ argument_list|)
 expr_stmt|;
 name|int
 name|mode
+decl_stmt|,
+name|error
 decl_stmt|;
 switch|switch
 condition|(
@@ -2325,25 +2567,28 @@ case|case
 name|VBLK
 case|:
 comment|/* 		 * On last close of a block device (that isn't mounted) 		 * we must invalidate any in core blocks, so that 		 * we can, for instance, change floppy disks. 		 */
-name|vflushbuf
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|error
+operator|=
 name|vinvalbuf
 argument_list|(
 name|vp
 argument_list|,
 literal|1
+argument_list|,
+name|ap
+operator|->
+name|a_cred
+argument_list|,
+name|ap
+operator|->
+name|a_p
 argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 comment|/* 		 * We do not want to really close the device if it 		 * is still in use unless we are trying to close it 		 * forcibly. Since every use (buffer, vnode, swap, cmap) 		 * holds a reference to the vnode, and because we mark 		 * any other vnodes that alias this device, when the 		 * sum of the reference counts on all the aliased 		 * vnodes descends to one, we are on last close. 		 */
@@ -2433,6 +2678,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2484,6 +2730,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_advlock_args
+comment|/* { 		struct vnode *a_vp; 		caddr_t  a_id; 		int  a_op; 		struct flock *a_fl; 		int  a_flags; 	} */
 modifier|*
 name|ap
 decl_stmt|;
