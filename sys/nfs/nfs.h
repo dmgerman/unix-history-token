@@ -3488,6 +3488,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|nfs_nmcancelreqs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsmount
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|nfs_timer
 name|__P
