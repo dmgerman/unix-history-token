@@ -352,6 +352,10 @@ name|uio
 modifier|*
 name|uio
 parameter_list|,
+name|size_t
+modifier|*
+name|size
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
@@ -3434,7 +3438,7 @@ name|vop_getextattr_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/* vop_getextattr { 	IN struct vnode *a_vp; 	IN int a_attrnamespace; 	IN const char *a_name; 	INOUT struct uio *a_uio; 	IN struct ucred *a_cred; 	IN struct thread *a_td; }; */
+comment|/* vop_getextattr { 	IN struct vnode *a_vp; 	IN int a_attrnamespace; 	IN const char *a_name; 	INOUT struct uio *a_uio; 	OUT struct size_t *a_size; 	IN struct ucred *a_cred; 	IN struct thread *a_td; }; */
 block|{
 name|struct
 name|mount
@@ -3491,6 +3495,10 @@ name|a_uio
 argument_list|,
 name|ap
 operator|->
+name|a_size
+argument_list|,
+name|ap
+operator|->
 name|a_cred
 argument_list|,
 name|ap
@@ -3541,6 +3549,10 @@ name|struct
 name|uio
 modifier|*
 name|uio
+parameter_list|,
+name|size_t
+modifier|*
+name|size
 parameter_list|,
 name|struct
 name|ucred
@@ -3603,9 +3615,9 @@ name|off_t
 name|base_offset
 decl_stmt|;
 name|size_t
-name|size
+name|len
 decl_stmt|,
-name|old_size
+name|old_len
 decl_stmt|;
 name|int
 name|error
@@ -3697,6 +3709,10 @@ return|;
 comment|/* 	 * Allow only offsets of zero to encourage the read/replace 	 * extended attribute semantic.  Otherwise we can't guarantee 	 * atomicity, as we don't provide locks for extended attributes. 	 */
 if|if
 condition|(
+name|uio
+operator|!=
+name|NULL
+operator|&&
 name|uio
 operator|->
 name|uio_offset
@@ -3960,6 +3976,28 @@ goto|goto
 name|vopunlock_exit
 goto|;
 block|}
+comment|/* Return full data size if caller requested it. */
+if|if
+condition|(
+name|size
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|size
+operator|=
+name|ueh
+operator|.
+name|ueh_len
+expr_stmt|;
+comment|/* Return data if the caller requested it. */
+if|if
+condition|(
+name|uio
+operator|!=
+name|NULL
+condition|)
+block|{
 comment|/* Allow for offset into the attribute data. */
 name|uio
 operator|->
@@ -3973,8 +4011,8 @@ expr|struct
 name|ufs_extattr_header
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Figure out maximum to transfer -- use buffer size and local data 	 * limit. 	 */
-name|size
+comment|/* 		 * Figure out maximum to transfer -- use buffer size and 		 * local data limit. 		 */
+name|len
 operator|=
 name|MIN
 argument_list|(
@@ -3987,7 +4025,7 @@ operator|.
 name|ueh_len
 argument_list|)
 expr_stmt|;
-name|old_size
+name|old_len
 operator|=
 name|uio
 operator|->
@@ -3997,7 +4035,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|=
-name|size
+name|len
 expr_stmt|;
 name|error
 operator|=
@@ -4029,18 +4067,25 @@ name|uio
 operator|->
 name|uio_resid
 operator|=
-name|old_size
+name|old_len
 operator|-
 operator|(
-name|size
+name|len
 operator|-
 name|uio
 operator|->
 name|uio_resid
 operator|)
 expr_stmt|;
+block|}
 name|vopunlock_exit
 label|:
+if|if
+condition|(
+name|uio
+operator|!=
+name|NULL
+condition|)
 name|uio
 operator|->
 name|uio_offset

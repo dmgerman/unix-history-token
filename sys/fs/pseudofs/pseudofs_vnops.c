@@ -1257,6 +1257,10 @@ name|a_uio
 argument_list|,
 name|va
 operator|->
+name|a_size
+argument_list|,
+name|va
+operator|->
 name|a_cred
 argument_list|)
 expr_stmt|;

@@ -439,7 +439,7 @@ define|#
 directive|define
 name|PFS_GETEXTATTR_ARGS
 define|\
-value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	int attrnamespace, const char *name, struct uio *uio,	\ 	struct ucred *cred
+value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	int attrnamespace, const char *name, struct uio *uio,	\ 	size_t *size, struct ucred *cred
 end_define
 
 begin_define

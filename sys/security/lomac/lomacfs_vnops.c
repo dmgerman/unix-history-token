@@ -4171,7 +4171,7 @@ name|lomacfs_getextattr
 parameter_list|(
 name|struct
 name|vop_getextattr_args
-comment|/* { 		struct vnode *a_vp; 		int a_attrnamespace; 		const char *a_name; 		struct uio *a_uio; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_attrnamespace; 		const char *a_name; 		struct uio *a_uio; 		size_t *a_size; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 parameter_list|)
@@ -4237,6 +4237,10 @@ argument_list|,
 name|ap
 operator|->
 name|a_uio
+argument_list|,
+name|ap
+operator|->
+name|a_size
 argument_list|,
 name|ap
 operator|->
