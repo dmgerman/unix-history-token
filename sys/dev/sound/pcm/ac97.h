@@ -209,6 +209,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|AC97_POWER_ADC
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_POWER_DAC
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_POWER_ANL
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_POWER_REF
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_POWER_STATUS
+value|(AC97_POWER_ADC | AC97_POWER_DAC | \ 					 AC97_POWER_REF | AC97_POWER_ANL )
+end_define
+
+begin_define
+define|#
+directive|define
 name|AC97_REGEXT_ID
 value|0x28
 end_define
