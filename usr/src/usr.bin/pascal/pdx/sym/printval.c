@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printval.c 1.5 %G%"
+literal|"@(#)printval.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,7 +209,7 @@ operator|==
 name|t_real
 condition|)
 block|{
-name|printreal
+name|prtreal
 argument_list|(
 name|pop
 argument_list|(
@@ -771,7 +771,7 @@ end_comment
 
 begin_function
 name|LOCAL
-name|printreal
+name|prtreal
 parameter_list|(
 name|r
 parameter_list|)
