@@ -1456,7 +1456,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Verify that first_arg_num points to the last argument, the ... */
+if|if
+condition|(
+name|first_arg_num
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Verify that first_arg_num points to the last arg, the ... */
 while|while
 condition|(
 name|argument
@@ -1486,6 +1493,7 @@ literal|"args to be formatted is not ..., for `%s'"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|record_format_info
 argument_list|(

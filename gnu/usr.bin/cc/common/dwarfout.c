@@ -2784,6 +2784,59 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|inline
+name|tree
+name|type_main_variant
+parameter_list|(
+name|type
+parameter_list|)
+specifier|register
+name|tree
+name|type
+decl_stmt|;
+block|{
+name|type
+operator|=
+name|TYPE_MAIN_VARIANT
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+comment|/* There really should be only one main variant among any group of variants      of a given type (and all of the MAIN_VARIANT values for all members of      the group should point to that one type) but sometimes the C front-end      messes this up for array types, so we work around that bug here.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|ARRAY_TYPE
+condition|)
+block|{
+while|while
+condition|(
+name|type
+operator|!=
+name|TYPE_MAIN_VARIANT
+argument_list|(
+name|type
+argument_list|)
+condition|)
+name|type
+operator|=
+name|TYPE_MAIN_VARIANT
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|type
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Return non-zero if the given type node represents a tagged type.  */
 end_comment
@@ -5004,7 +5057,7 @@ case|case
 name|REFERENCE_TYPE
 case|:
 return|return
-name|TYPE_MAIN_VARIANT
+name|type_main_variant
 argument_list|(
 name|root_type
 argument_list|(
@@ -5017,7 +5070,7 @@ argument_list|)
 return|;
 default|default:
 return|return
-name|TYPE_MAIN_VARIANT
+name|type_main_variant
 argument_list|(
 name|type
 argument_list|)
@@ -5359,7 +5412,7 @@ decl_stmt|;
 comment|/* We are generating a DIE to represent the main variant of this type      (i.e the type without any const or volatile qualifiers) so in order      to get the equate to come out right, we need to get the main variant      itself here.  */
 name|type
 operator|=
-name|TYPE_MAIN_VARIANT
+name|type_main_variant
 argument_list|(
 name|type
 argument_list|)
@@ -6929,7 +6982,7 @@ specifier|register
 name|tree
 name|declared_type
 init|=
-name|TYPE_MAIN_VARIANT
+name|type_main_variant
 argument_list|(
 name|TREE_TYPE
 argument_list|(
@@ -6941,7 +6994,7 @@ specifier|register
 name|tree
 name|passed_type
 init|=
-name|TYPE_MAIN_VARIANT
+name|type_main_variant
 argument_list|(
 name|DECL_ARG_TYPE
 argument_list|(
@@ -9212,10 +9265,10 @@ name|decl_volatile
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* We have to get the TYPE_MAIN_VARIANT here (and pass that to the 	   `user_def_type_attribute' routine) because the ..._TYPE node we 	   have might simply be a *copy* of some original type node (where 	   the copy was created to help us keep track of typedef names) 	   and that copy might have a different TYPE_UID from the original 	   ..._TYPE node.  (Note that when `equate_type_number_to_die_number' 	   is labeling a given type DIE for future reference, it always and 	   only creates labels for DIEs representing *main variants*, and it 	   never even knows about non-main-variants.)  */
+comment|/* We have to get the type_main_variant here (and pass that to the 	   `user_def_type_attribute' routine) because the ..._TYPE node we 	   have might simply be a *copy* of some original type node (where 	   the copy was created to help us keep track of typedef names) 	   and that copy might have a different TYPE_UID from the original 	   ..._TYPE node.  (Note that when `equate_type_number_to_die_number' 	   is labeling a given type DIE for future reference, it always and 	   only creates labels for DIEs representing *main variants*, and it 	   never even knows about non-main-variants.)  */
 name|user_def_type_attribute
 argument_list|(
-name|TYPE_MAIN_VARIANT
+name|type_main_variant
 argument_list|(
 name|type
 argument_list|)
@@ -12253,7 +12306,7 @@ return|return;
 comment|/* We are going to output a DIE to represent the unqualified version of      of this type (i.e. without any const or volatile qualifiers) so get      the main variant (i.e. the unqualified version) of this type now.  */
 name|type
 operator|=
-name|TYPE_MAIN_VARIANT
+name|type_main_variant
 argument_list|(
 name|type
 argument_list|)
@@ -12805,7 +12858,7 @@ name|assert
 argument_list|(
 name|type
 operator|==
-name|TYPE_MAIN_VARIANT
+name|type_main_variant
 argument_list|(
 name|type
 argument_list|)

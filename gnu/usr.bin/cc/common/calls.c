@@ -6729,6 +6729,7 @@ argument_list|)
 operator|==
 name|BLKmode
 condition|)
+block|{
 name|target
 operator|=
 name|assign_stack_temp
@@ -6743,9 +6744,16 @@ name|exp
 argument_list|)
 argument_list|)
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Save this temp slot around the pop below.  */
+name|preserve_temp_slots
+argument_list|(
+name|target
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|target
 operator|=
