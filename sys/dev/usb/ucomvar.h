@@ -317,32 +317,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* modem control register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMCR_RTS
-value|0x02
-end_define
-
-begin_comment
-comment|/* Request To Send */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMCR_DTR
-value|0x01
-end_define
-
-begin_comment
-comment|/* Data Terminal Ready */
-end_comment
-
-begin_comment
 comment|/* line status register */
 end_comment
 
@@ -439,102 +413,6 @@ end_define
 
 begin_comment
 comment|/* Mask for incoming data or error */
-end_comment
-
-begin_comment
-comment|/* modem status register */
-end_comment
-
-begin_comment
-comment|/* All deltas are from the last read of the MSR. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMSR_DCD
-value|0x80
-end_define
-
-begin_comment
-comment|/* Current Data Carrier Detect */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMSR_RI
-value|0x40
-end_define
-
-begin_comment
-comment|/* Current Ring Indicator */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMSR_DSR
-value|0x20
-end_define
-
-begin_comment
-comment|/* Current Data Set Ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMSR_CTS
-value|0x10
-end_define
-
-begin_comment
-comment|/* Current Clear to Send */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMSR_DDCD
-value|0x08
-end_define
-
-begin_comment
-comment|/* DCD has changed state */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMSR_TERI
-value|0x04
-end_define
-
-begin_comment
-comment|/* RI has toggled low to high */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMSR_DDSR
-value|0x02
-end_define
-
-begin_comment
-comment|/* DSR has changed state */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMSR_DCTS
-value|0x01
-end_define
-
-begin_comment
-comment|/* CTS has changed state */
 end_comment
 
 begin_comment
@@ -662,10 +540,6 @@ decl_stmt|;
 name|u_char
 name|sc_mcr
 decl_stmt|;
-name|u_char
-name|sc_opening
-decl_stmt|;
-comment|/* lock during open */
 name|int
 name|sc_refcnt
 decl_stmt|;

@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/serial.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -4301,7 +4307,7 @@ name|sc
 operator|->
 name|sc_msr
 argument_list|,
-name|UMSR_CTS
+name|SER_CTS
 argument_list|)
 expr_stmt|;
 if|if
@@ -4319,7 +4325,7 @@ name|sc
 operator|->
 name|sc_msr
 argument_list|,
-name|UMSR_DSR
+name|SER_DSR
 argument_list|)
 expr_stmt|;
 if|if
@@ -4337,7 +4343,7 @@ name|sc
 operator|->
 name|sc_msr
 argument_list|,
-name|UMSR_DCD
+name|SER_DCD
 argument_list|)
 expr_stmt|;
 name|ucom_status_change
