@@ -582,6 +582,8 @@ name|uepm_list
 argument_list|)
 init|;
 name|search_attribute
+operator|!=
+name|NULL
 condition|;
 name|search_attribute
 operator|=
