@@ -15,15 +15,15 @@ name|struct
 name|pci_devinfo
 name|pci
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mprefetchable
 decl_stmt|;
 comment|/* bit mask of prefetchable BARs */
-name|u_int8_t
+name|uint8_t
 name|mbelow1mb
 decl_stmt|;
 comment|/* bit mask of BARs which require below 1Mb */
-name|u_int8_t
+name|uint8_t
 name|ibelow1mb
 decl_stmt|;
 comment|/* bit mask of BARs which require below 1Mb */
@@ -34,11 +34,11 @@ parameter_list|(
 name|RID
 parameter_list|)
 value|(1<<(((RID)-CARDBUS_BASE0_REG)/4))
-name|u_int16_t
+name|uint16_t
 name|mfrid
 decl_stmt|;
 comment|/* manufacturer id */
-name|u_int16_t
+name|uint16_t
 name|prodid
 decl_stmt|;
 comment|/* product id */
@@ -59,29 +59,29 @@ name|sio
 struct|;
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|nid
 index|[
 literal|6
 index|]
 decl_stmt|;
 comment|/* MAC address */
-name|u_int8_t
+name|uint8_t
 name|tech
 decl_stmt|;
 comment|/* technology */
-name|u_int8_t
+name|uint8_t
 name|contype
 decl_stmt|;
 comment|/* connector type */
-name|u_int32_t
+name|uint32_t
 name|speed
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* available speeds */
-name|u_int8_t
+name|uint8_t
 name|media
 index|[
 literal|4
@@ -94,7 +94,7 @@ struct|;
 block|}
 name|funce
 union|;
-name|u_int32_t
+name|uint32_t
 name|fepresent
 decl_stmt|;
 comment|/* bit mask of funce values present */

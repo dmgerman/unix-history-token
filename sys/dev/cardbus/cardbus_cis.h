@@ -32,7 +32,7 @@ name|device_t
 parameter_list|,
 name|device_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|,
 name|struct
 name|cis_tupleinfo

@@ -129,7 +129,7 @@ define|#
 directive|define
 name|DECODE_PARAMS
 define|\
-value|(device_t cbdev, device_t child, int id, int len,	\ 		 u_int8_t *tupledata, u_int32_t start, u_int32_t *off,	\ 		 struct tuple_callbacks *info)
+value|(device_t cbdev, device_t child, int id, int len,	\ 		 uint8_t *tupledata, uint32_t start, uint32_t *off,	\ 		 struct tuple_callbacks *info)
 end_define
 
 begin_struct
@@ -262,10 +262,10 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|start
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|off
 parameter_list|,
@@ -277,7 +277,7 @@ name|int
 modifier|*
 name|len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tupledata
 parameter_list|)
@@ -297,10 +297,10 @@ name|resource
 modifier|*
 name|res
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|start
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|off
 parameter_list|,
@@ -312,7 +312,7 @@ name|int
 modifier|*
 name|len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tupledata
 parameter_list|)
@@ -335,10 +335,10 @@ name|resource
 modifier|*
 name|res
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|start
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|off
 parameter_list|,
@@ -350,7 +350,7 @@ name|int
 modifier|*
 name|len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tupledata
 parameter_list|)
@@ -392,7 +392,7 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|start
 parameter_list|,
@@ -420,14 +420,14 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tupledata
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|start
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|off
 parameter_list|,
@@ -568,7 +568,7 @@ begin_struct
 struct|struct
 name|cardbus_quirk
 block|{
-name|u_int32_t
+name|uint32_t
 name|devid
 decl_stmt|;
 comment|/* Vendor/device of the card */
@@ -1656,7 +1656,7 @@ decl_stmt|;
 name|int
 name|reg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|bar
 decl_stmt|;
 if|if
@@ -1683,7 +1683,7 @@ name|reg
 operator|=
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|tupledata
@@ -1692,7 +1692,7 @@ name|len
 operator|=
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -2019,10 +2019,10 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|start
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|off
 parameter_list|,
@@ -2034,7 +2034,7 @@ name|int
 modifier|*
 name|len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tupledata
 parameter_list|)
@@ -2044,10 +2044,10 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|e
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|loc
 decl_stmt|;
 name|loc
@@ -2211,10 +2211,10 @@ name|resource
 modifier|*
 name|res
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|start
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|off
 parameter_list|,
@@ -2226,7 +2226,7 @@ name|int
 modifier|*
 name|len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tupledata
 parameter_list|)
@@ -2341,10 +2341,10 @@ name|resource
 modifier|*
 name|res
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|start
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|off
 parameter_list|,
@@ -2356,7 +2356,7 @@ name|int
 modifier|*
 name|len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tupledata
 parameter_list|)
@@ -2502,7 +2502,7 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|start
 parameter_list|,
@@ -2511,10 +2511,10 @@ modifier|*
 name|rid
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|testval
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|size
 decl_stmt|;
 name|struct
@@ -2797,18 +2797,18 @@ decl_stmt|;
 name|bus_space_handle_t
 name|bh
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|imagesize
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|imagebase
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pcidata
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|romsig
 decl_stmt|;
 name|int
@@ -3086,14 +3086,14 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tupledata
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|start
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|off
 parameter_list|,
@@ -3236,7 +3236,7 @@ modifier|*
 name|callbacks
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|tupledata
 index|[
 name|MAXTUPLESIZE
@@ -3251,7 +3251,7 @@ decl_stmt|;
 name|int
 name|expect_linktarget
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|start
 decl_stmt|,
 name|off
@@ -3579,7 +3579,7 @@ decl_stmt|;
 name|int
 name|tmp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|mem_psize
 init|=
 literal|0
@@ -3597,7 +3597,7 @@ name|resource
 modifier|*
 name|res
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|start
 decl_stmt|,
 name|end
@@ -4987,10 +4987,10 @@ name|resource_list_entry
 modifier|*
 name|rle
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|size
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|testval
 decl_stmt|;
 name|int
@@ -5270,7 +5270,7 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|id
 parameter_list|,
 name|struct

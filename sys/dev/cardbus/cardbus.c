@@ -346,7 +346,7 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|bit
 parameter_list|)
 function_decl|;
@@ -739,7 +739,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|cardbus_read_config_method
 parameter_list|(
 name|device_t
@@ -831,7 +831,7 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|bit
 parameter_list|)
 function_decl|;
@@ -983,7 +983,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
 name|int
@@ -5362,7 +5362,7 @@ block|{
 operator|*
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|*
 operator|)
@@ -5380,7 +5380,7 @@ block|}
 operator|*
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|*
 operator|)
@@ -5729,7 +5729,7 @@ name|pci
 operator|.
 name|cfg
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
 name|int
@@ -5913,7 +5913,7 @@ name|pci
 operator|.
 name|cfg
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
 name|int
@@ -6008,7 +6008,7 @@ end_function
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|cardbus_read_config_method
 parameter_list|(
 name|device_t
@@ -6087,7 +6087,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
 name|int
@@ -6156,11 +6156,11 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|bit
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|command
 decl_stmt|;
 name|command
@@ -6208,11 +6208,11 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|bit
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|command
 decl_stmt|;
 name|command
