@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.38 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.39 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.38 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.39 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4775,7 +4775,7 @@ break|break;
 default|default:
 name|syserr
 argument_list|(
-literal|"readqf: %s: line %s: bad line \"%s\""
+literal|"readqf: %s: line %d: bad line \"%s\""
 argument_list|,
 name|qf
 argument_list|,
