@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Bus independent FreeBSD shim for the aic7xxx based adaptec SCSI controllers  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2001-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/aic7xxx/freebsd/dev/aic7xxx/aic79xx_osm.c#22 $  *  * $FreeBSD$  */
+comment|/*  * Bus independent FreeBSD shim for the aic7xxx based adaptec SCSI controllers  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2001-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/aic7xxx/freebsd/dev/aic7xxx/aic79xx_osm.c#25 $  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -2136,6 +2136,12 @@ name|control
 operator||=
 name|MK_MESSAGE
 expr_stmt|;
+name|hscb
+operator|->
+name|task_management
+operator|=
+name|SIU_TASKMGMT_LUN_RESET
+expr_stmt|;
 name|ahd_execute_scb
 argument_list|(
 name|scb
@@ -2268,6 +2274,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|hscb
+operator|->
+name|task_management
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ccb
@@ -5641,12 +5653,33 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|scb
 operator|->
 name|flags
 operator||=
 name|SCB_PACKETIZED
 expr_stmt|;
+if|if
+condition|(
+name|scb
+operator|->
+name|hscb
+operator|->
+name|task_management
+operator|!=
+literal|0
+condition|)
+name|scb
+operator|->
+name|hscb
+operator|->
+name|control
+operator|&=
+operator|~
+name|MK_MESSAGE
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -9148,8 +9181,11 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%04x (M)%x: \t"
+literal|"%04lx (M)%x: \t"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|addr
 argument_list|,
 name|ahd_inb
@@ -9385,8 +9421,11 @@ break|break;
 block|}
 name|db_printf
 argument_list|(
-literal|"%04x (M)%x: \t0x%x\t=\t0x%x"
+literal|"%04lx (M)%x: \t0x%lx\t=\t0x%lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|addr
 argument_list|,
 name|ahd_inb
@@ -9396,8 +9435,14 @@ argument_list|,
 name|MODE_PTR
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|old_value
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|new_value
 argument_list|)
 expr_stmt|;

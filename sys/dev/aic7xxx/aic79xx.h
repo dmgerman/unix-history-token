@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#61 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#78 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -317,6 +317,44 @@ parameter_list|)
 define|\
 value|(0x01<< (SCB_GET_TARGET_OFFSET(ahd, scb)))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AHD_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SCB_IS_SILENT
+parameter_list|(
+name|scb
+parameter_list|)
+define|\
+value|((ahd_debug& AHD_SHOW_MASKED_ERRORS) == 0		\&& (((scb)->flags& SCB_SILENT) != 0))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCB_IS_SILENT
+parameter_list|(
+name|scb
+parameter_list|)
+define|\
+value|(((scb)->flags& SCB_SILENT) != 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * TCLs have the following format: TTTTLLLLLLLL  */
@@ -668,7 +706,7 @@ name|AHD_MULTI_FUNC
 init|=
 literal|0x00100
 block|,
-comment|/* Multi-Function Twin Channel Device */
+comment|/* Multi-Function/Channel Device */
 name|AHD_TARGETMODE
 init|=
 literal|0x01000
@@ -679,6 +717,21 @@ init|=
 literal|0x02000
 block|,
 comment|/* Space for two roles at a time */
+name|AHD_RTI
+init|=
+literal|0x04000
+block|,
+comment|/* Retained Training Support */
+name|AHD_NEW_IOCELL_OPTS
+init|=
+literal|0x08000
+block|,
+comment|/* More Signal knobs in the IOCELL */
+name|AHD_NEW_DFCNTRL_OPTS
+init|=
+literal|0x10000
+block|,
+comment|/* SCSIENWRDIS bit */
 name|AHD_REMOVABLE
 init|=
 literal|0x00000
@@ -708,34 +761,42 @@ name|AHD_BUGNONE
 init|=
 literal|0x0000
 block|,
+comment|/* 	 * Rev A hardware fails to update LAST/CURR/NEXTSCB 	 * correctly in certain packetized selection cases. 	 */
 name|AHD_SENT_SCB_UPDATE_BUG
 init|=
 literal|0x0001
 block|,
+comment|/* The wrong SCB is accessed to check the abort pending bit. */
 name|AHD_ABORT_LQI_BUG
 init|=
 literal|0x0002
 block|,
+comment|/* Packetized bitbucket crosses packet boundaries. */
 name|AHD_PKT_BITBUCKET_BUG
 init|=
 literal|0x0004
 block|,
+comment|/* The selection timer runs twice as long as its setting. */
 name|AHD_LONG_SETIMO_BUG
 init|=
 literal|0x0008
 block|,
+comment|/* The Non-LQ CRC error status is delayed until phase change. */
 name|AHD_NLQICRC_DELAYED_BUG
 init|=
 literal|0x0010
 block|,
+comment|/* The chip must be reset for all outgoing bus resets.  */
 name|AHD_SCSIRST_BUG
 init|=
 literal|0x0020
 block|,
+comment|/* Some PCIX fields must be saved and restored across chip reset. */
 name|AHD_PCIX_CHIPRST_BUG
 init|=
 literal|0x0040
 block|,
+comment|/* MMAPIO is not functional in PCI-X mode.  */
 name|AHD_PCIX_MMAPIO_BUG
 init|=
 literal|0x0080
@@ -747,41 +808,70 @@ name|AHD_PCIX_CHIPRST_BUG
 operator||
 name|AHD_PCIX_MMAPIO_BUG
 block|,
+comment|/* 	 * LQOSTOP0 status set even for forced selections with ATN 	 * to perform non-packetized message delivery. 	 */
 name|AHD_LQO_ATNO_BUG
 init|=
 literal|0x0100
 block|,
+comment|/* FIFO auto-flush does not always trigger.  */
 name|AHD_AUTOFLUSH_BUG
 init|=
 literal|0x0200
 block|,
+comment|/* The CLRLQO registers are not self-clearing. */
 name|AHD_CLRLQO_AUTOCLR_BUG
 init|=
 literal|0x0400
 block|,
+comment|/* The PACKETIZED status bit refers to the previous connection. */
 name|AHD_PKTIZED_STATUS_BUG
 init|=
 literal|0x0800
 block|,
+comment|/* "Short Luns" are not placed into outgoing LQ packets correctly. */
 name|AHD_PKT_LUN_BUG
 init|=
 literal|0x1000
 block|,
-name|AHD_MDFF_WSCBPTR_BUG
+comment|/* 	 * Only the FIFO allocated to the non-packetized connection may 	 * be in use during a non-packetzied connection. 	 */
+name|AHD_NONPACKFIFO_BUG
 init|=
 literal|0x2000
 block|,
-name|AHD_REG_SLOW_SETTLE_BUG
+comment|/* 	 * Writing to a DFF SCBPTR register may fail if concurent with 	 * a hardware write to the other DFF SCBPTR register.  This is 	 * not currently a concern in our sequencer since all chips with 	 * this bug have the AHD_NONPACKFIFO_BUG and all writes of concern 	 * occur in non-packetized connections. 	 */
+name|AHD_MDFF_WSCBPTR_BUG
 init|=
 literal|0x4000
 block|,
-name|AHD_SET_MODE_BUG
+comment|/* SGHADDR updates are slow. */
+name|AHD_REG_SLOW_SETTLE_BUG
 init|=
 literal|0x8000
 block|,
-name|AHD_BUSFREEREV_BUG
+comment|/* 	 * Changing the MODE_PTR coincident with an interrupt that 	 * switches to a different mode will cause the interrupt to 	 * be in the mode written outside of interrupt context. 	 */
+name|AHD_SET_MODE_BUG
 init|=
 literal|0x10000
+block|,
+comment|/* Non-packetized busfree revision does not work. */
+name|AHD_BUSFREEREV_BUG
+init|=
+literal|0x20000
+block|,
+comment|/* 	 * Paced transfers are indicated with a non-standard PPR 	 * option bit in the neg table, 160MHz is indicated by 	 * sync factor 0x7, and the offset if off by a factor of 2. 	 */
+name|AHD_PACED_NEGTABLE_BUG
+init|=
+literal|0x40000
+block|,
+comment|/* LQOOVERRUN false positives. */
+name|AHD_LQOOVERRUN_BUG
+init|=
+literal|0x80000
+block|,
+comment|/* 	 * Controller write to INTSTAT will lose to a host 	 * write to CLRINT. 	 */
+name|AHD_INTCOLLISION_BUG
+init|=
+literal|0x100000
 block|}
 name|ahd_bug
 typedef|;
@@ -884,13 +974,21 @@ init|=
 literal|0x80000
 block|,
 comment|/* No SEEPROM but SCB had info. */
-name|AHD_CPQ_BOARD
+name|AHD_HP_BOARD
 init|=
 literal|0x100000
 block|,
 name|AHD_RESET_POLL_ACTIVE
 init|=
 literal|0x200000
+block|,
+name|AHD_UPDATE_PEND_CMDS
+init|=
+literal|0x400000
+block|,
+name|AHD_RUNNING_QOUTFIFO
+init|=
+literal|0x800000
 block|}
 name|ahd_flag
 typedef|;
@@ -1285,31 +1383,36 @@ literal|0x00100
 block|,
 name|SCB_ACTIVE
 init|=
-literal|0x00400
+literal|0x00200
 block|,
 name|SCB_TARGET_IMMEDIATE
 init|=
-literal|0x00800
+literal|0x00400
 block|,
 name|SCB_PACKETIZED
 init|=
-literal|0x01000
+literal|0x00800
 block|,
 name|SCB_EXPECT_PPR_BUSFREE
 init|=
-literal|0x02000
+literal|0x01000
 block|,
 name|SCB_PKT_SENSE
 init|=
-literal|0x04000
+literal|0x02000
 block|,
 name|SCB_CMDPHASE_ABORT
 init|=
-literal|0x08000
+literal|0x04000
 block|,
 name|SCB_ON_COL_LIST
 init|=
+literal|0x08000
+block|,
+name|SCB_SILENT
+init|=
 literal|0x10000
+comment|/* 					   * Be quiet about transmission type 					   * errors.  They are expected and we 					   * don't want to upset the user.  This 					   * flag is typically used during DV. 					   */
 block|}
 name|scb_flag
 typedef|;
@@ -1440,6 +1543,13 @@ name|u_int
 name|sg_count
 decl_stmt|;
 comment|/* How full ahd_dma_seg is */
+define|#
+directive|define
+name|AHD_MAX_LQ_CRC_ERRORS
+value|5
+name|u_int
+name|crc_retry_count
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1743,15 +1853,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AHD_PERIOD_ASYNC
+name|AHD_PERIOD_10MHz
+value|0x19
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_WIDTH_UNKNOWN
 value|0xFF
 end_define
 
 begin_define
 define|#
 directive|define
-name|AHD_PERIOD_10MHz
-value|0x19
+name|AHD_PERIOD_UNKNOWN
+value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_OFFSET_UNKNOWN
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_PPR_OPTS_UNKNOWN
+value|0xFF
 end_define
 
 begin_comment
@@ -1861,13 +1992,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AHD_SYNCRATE_MAX
-value|0x8
-end_define
-
-begin_define
-define|#
-directive|define
 name|AHD_SYNCRATE_160
 value|0x8
 end_define
@@ -1933,6 +2057,24 @@ define|#
 directive|define
 name|AHD_SYNCRATE_ASYNC
 value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_SYNCRATE_MAX
+value|AHD_SYNCRATE_160
+end_define
+
+begin_comment
+comment|/* Safe and valid period for async negotiations. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHD_ASYNC_XFER_PERIOD
+value|0x44
 end_define
 
 begin_comment
@@ -2562,9 +2704,13 @@ name|MSG_FLAG_EXPECT_IDE_BUSFREE
 init|=
 literal|0x04
 block|,
-name|MSG_FLAG_PACKETIZED
+name|MSG_FLAG_EXPECT_QASREJ_BUSFREE
 init|=
 literal|0x08
+block|,
+name|MSG_FLAG_PACKETIZED
+init|=
+literal|0x10
 block|}
 name|ahd_msg_flags
 typedef|;
@@ -2895,6 +3041,31 @@ comment|/* 	 * Timer handles for timer driven callbacks. 	 */
 name|ahd_timer_t
 name|reset_timer
 decl_stmt|;
+name|ahd_timer_t
+name|stat_timer
+decl_stmt|;
+comment|/* 	 * Statistics. 	 */
+define|#
+directive|define
+name|AHD_STAT_UPDATE_US
+value|250000
+comment|/* 250ms */
+define|#
+directive|define
+name|AHD_STAT_BUCKETS
+value|4
+name|u_int
+name|cmdcmplt_bucket
+decl_stmt|;
+name|uint32_t
+name|cmdcmplt_counts
+index|[
+name|AHD_STAT_BUCKETS
+index|]
+decl_stmt|;
+name|uint32_t
+name|cmdcmplt_total
+decl_stmt|;
 comment|/* 	 * Card characteristics 	 */
 name|ahd_chip
 name|chip
@@ -2969,10 +3140,6 @@ comment|/* Initiator Bus ID */
 name|uint8_t
 name|our_id
 decl_stmt|;
-comment|/* 	 * PCI error detection. 	 */
-name|int
-name|unsolicited_ints
-decl_stmt|;
 comment|/* 	 * Target incoming command FIFO. 	 */
 name|struct
 name|target_cmd
@@ -2981,6 +3148,10 @@ name|targetcmds
 decl_stmt|;
 name|uint8_t
 name|tqinfifonext
+decl_stmt|;
+comment|/* 	 * Cached verson of the hs_mailbox so we can avoid 	 * pausing the sequencer during mailbox updates. 	 */
+name|uint8_t
+name|hs_mailbox
 decl_stmt|;
 comment|/* 	 * Incoming and outgoing message handling. 	 */
 name|uint8_t
@@ -3048,6 +3219,20 @@ comment|/* PCI cacheline size. */
 name|u_int
 name|pci_cachesize
 decl_stmt|;
+comment|/* IO Cell Parameters */
+name|uint8_t
+name|iocell_opts
+index|[
+name|AHD_NUM_PER_DEV_ANNEXCOLS
+index|]
+decl_stmt|;
+name|u_int
+name|stack_size
+decl_stmt|;
+name|uint16_t
+modifier|*
+name|saved_stack
+decl_stmt|;
 comment|/* Per-Unit descriptive information */
 specifier|const
 name|char
@@ -3069,6 +3254,51 @@ decl_stmt|;
 comment|/* Selection Timer settings */
 name|int
 name|seltime
+decl_stmt|;
+comment|/* 	 * Interrupt coalessing settings. 	 */
+define|#
+directive|define
+name|AHD_INT_COALESSING_TIMER_DEFAULT
+value|250
+comment|/*us*/
+define|#
+directive|define
+name|AHD_INT_COALESSING_MAXCMDS_DEFAULT
+value|10
+define|#
+directive|define
+name|AHD_INT_COALESSING_MAXCMDS_MAX
+value|127
+define|#
+directive|define
+name|AHD_INT_COALESSING_MINCMDS_DEFAULT
+value|5
+define|#
+directive|define
+name|AHD_INT_COALESSING_MINCMDS_MAX
+value|127
+define|#
+directive|define
+name|AHD_INT_COALESSING_THRESHOLD_DEFAULT
+value|2000
+define|#
+directive|define
+name|AHD_INT_COALESSING_STOP_THRESHOLD_DEFAULT
+value|1000
+name|u_int
+name|int_coalessing_timer
+decl_stmt|;
+name|u_int
+name|int_coalessing_maxcmds
+decl_stmt|;
+name|u_int
+name|int_coalessing_mincmds
+decl_stmt|;
+name|u_int
+name|int_coalessing_threshold
+decl_stmt|;
+name|u_int
+name|int_coalessing_stop_threshold
 decl_stmt|;
 name|uint16_t
 name|user_discenable
@@ -3099,6 +3329,65 @@ name|ahd_softc_tailq
 name|ahd_tailq
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*************************** IO Cell Configuration ****************************/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHD_PRECOMP_SLEW_INDEX
+define|\
+value|(AHD_ANNEXCOL_PRECOMP_SLEW - AHD_ANNEXCOL_PER_DEV0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_AMPLITUDE_INDEX
+define|\
+value|(AHD_ANNEXCOL_AMPLITUDE - AHD_ANNEXCOL_PER_DEV0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_SET_SLEWRATE
+parameter_list|(
+name|ahd
+parameter_list|,
+name|new_slew
+parameter_list|)
+define|\
+value|do {									\     (ahd)->iocell_opts[AHD_PRECOMP_SLEW_INDEX]&= ~AHD_SLEWRATE_MASK;	\     (ahd)->iocell_opts[AHD_PRECOMP_SLEW_INDEX] |=			\ 	(((new_slew)<< AHD_SLEWRATE_SHIFT)& AHD_SLEWRATE_MASK);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_SET_PRECOMP
+parameter_list|(
+name|ahd
+parameter_list|,
+name|new_pcomp
+parameter_list|)
+define|\
+value|do {									\     (ahd)->iocell_opts[AHD_PRECOMP_SLEW_INDEX]&= ~AHD_PRECOMP_MASK;	\     (ahd)->iocell_opts[AHD_PRECOMP_SLEW_INDEX] |=			\ 	(((new_pcomp)<< AHD_PRECOMP_SHIFT)& AHD_PRECOMP_MASK);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_SET_AMPLITUDE
+parameter_list|(
+name|ahd
+parameter_list|,
+name|new_amp
+parameter_list|)
+define|\
+value|do {									\     (ahd)->iocell_opts[AHD_AMPLITUDE_INDEX]&= ~AHD_AMPLITUDE_MASK;	\     (ahd)->iocell_opts[AHD_AMPLITUDE_INDEX] |=				\ 	(((new_amp)<< AHD_AMPLITUDE_SHIFT)& AHD_AMPLITUDE_MASK);	\ } while (0)
+end_define
 
 begin_comment
 comment|/************************ Active Device Information ***************************/
@@ -3304,6 +3593,18 @@ comment|/***********************************************************************
 end_comment
 
 begin_function_decl
+name|void
+name|ahd_reset_cmds_pending
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|ahd_find_busy_tcl
 parameter_list|(
@@ -3410,32 +3711,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*************************** EISA/VL Front End ********************************/
-end_comment
-
-begin_function_decl
-name|struct
-name|aic7770_identity
-modifier|*
-name|aic7770_find_device
-parameter_list|(
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|int
-name|aic7770_config
+name|ahd_pci_test_register_access
 parameter_list|(
 name|struct
 name|ahd_softc
-modifier|*
-name|ahd
-parameter_list|,
-name|struct
-name|aic7770_identity
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3597,6 +3878,42 @@ end_function_decl
 begin_function_decl
 name|void
 name|ahd_intr_enable
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahd_update_coalessing_values
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|,
+name|u_int
+name|timer
+parameter_list|,
+name|u_int
+name|maxcmds
+parameter_list|,
+name|u_int
+name|mincmds
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahd_enable_coalessing
 parameter_list|(
 name|struct
 name|ahd_softc
@@ -3846,6 +4163,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|ahd_clear_intstat
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahd_flush_qoutfifo
 parameter_list|(
 name|struct
 name|ahd_softc
@@ -4300,6 +4629,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Negotiation types.  These are used to qualify if we should renegotiate  * even if our goal and current transport parameters are identical.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AHD_NEG_TO_GOAL
+block|,
+comment|/* Renegotiate only if goal and curr differ. */
+name|AHD_NEG_IF_NON_ASYNC
+block|,
+comment|/* Renegotiate so long as goal is non-async. */
+name|AHD_NEG_ALWAYS
+comment|/* Renegotiat even if goal is async. */
+block|}
+name|ahd_neg_type
+typedef|;
+end_typedef
+
 begin_function_decl
 name|int
 name|ahd_update_neg_request
@@ -4320,8 +4670,7 @@ name|struct
 name|ahd_initiator_tinfo
 modifier|*
 parameter_list|,
-name|int
-comment|/*force*/
+name|ahd_neg_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4546,98 +4895,126 @@ begin_define
 define|#
 directive|define
 name|AHD_SHOW_MISC
-value|0x0001
+value|0x00001
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_SENSE
-value|0x0002
+value|0x00002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_SHOW_RECOVERY
+value|0x00004
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_DUMP_SEEPROM
-value|0x0004
+value|0x00008
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_TERMCTL
-value|0x0008
+value|0x00010
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_MEMORY
-value|0x0010
+value|0x00020
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_MESSAGES
-value|0x0020
+value|0x00040
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_MODEPTR
-value|0x0040
+value|0x00080
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_SELTO
-value|0x0080
+value|0x00100
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_FIFOS
-value|0x0100
+value|0x00200
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_QFULL
-value|0x0200
+value|0x00400
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_SHOW_DV
+value|0x00800
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_SHOW_MASKED_ERRORS
+value|0x01000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_QUEUE
-value|0x0400
+value|0x02000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_TQIN
-value|0x0800
+value|0x04000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_SHOW_SG
-value|0x1000
+value|0x08000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_SHOW_INT_COALESSING
+value|0x10000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_DEBUG_SEQUENCER
-value|0x2000
+value|0x20000
 end_define
 
 begin_endif
@@ -4653,6 +5030,23 @@ name|struct
 name|scb
 modifier|*
 name|scb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahd_print_devinfo
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|,
+name|struct
+name|ahd_devinfo
+modifier|*
+name|devinfo
 parameter_list|)
 function_decl|;
 end_function_decl
