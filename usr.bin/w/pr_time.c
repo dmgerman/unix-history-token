@@ -72,7 +72,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * pr_attime --  *	Print the time since the user logged in.  *  *	Note: SCCS forces the bizarre string manipulation, things like  *	8.2 get replaced in the source code.  */
+comment|/*  * pr_attime --  *	Print the time since the user logged in.  */
 end_comment
 
 begin_function
@@ -197,12 +197,11 @@ name|strcpy
 argument_list|(
 name|fmt
 argument_list|,
-name|__CONCAT
-argument_list|(
-literal|"%a%"
-argument_list|,
-literal|"I%p"
-argument_list|)
+name|use_ampm
+condition|?
+literal|"%a%I%p"
+else|:
+literal|"%a%H"
 argument_list|)
 expr_stmt|;
 block|}
@@ -216,12 +215,11 @@ name|strcpy
 argument_list|(
 name|fmt
 argument_list|,
-name|__CONCAT
-argument_list|(
-literal|"%l:%"
-argument_list|,
-literal|"M%p"
-argument_list|)
+name|use_ampm
+condition|?
+literal|"%l:%M%p"
+else|:
+literal|"%k:%M"
 argument_list|)
 expr_stmt|;
 block|}
@@ -236,8 +234,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 name|fmt
 argument_list|,
@@ -245,24 +241,12 @@ operator|&
 name|tp
 argument_list|)
 expr_stmt|;
-name|buf
-index|[
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%-7.7s"
 argument_list|,
 name|buf
 argument_list|)
