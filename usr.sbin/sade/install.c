@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.219 1998/11/24 00:18:55 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.220 1998/12/06 10:13:57 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1929,6 +1929,9 @@ argument_list|,
 literal|"express"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__alpha__
 if|if
 condition|(
 name|DITEM_STATUS
@@ -1948,6 +1951,8 @@ condition|)
 return|return
 name|i
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|DITEM_STATUS
@@ -2036,6 +2041,9 @@ argument_list|,
 literal|"novice"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__alpha__
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -2094,12 +2102,29 @@ goto|goto
 name|nodisks
 goto|;
 block|}
+endif|#
+directive|endif
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__alpha__
 name|msgConfirm
 argument_list|(
-literal|"Next, you need to create BSD partitions inside of the fdisk partition(s)\n"
+literal|"First, you need to create BSD partitions on the disk which you are\n"
+literal|"installing to.  If you have a reasonable amount of disk space (200MB or more)\n"
+literal|"and don't have any special requirements, simply use the (A)uto command to\n"
+literal|"allocate space automatically.  If you have more specific needs or just don't\n"
+literal|"care for the layout chosen by (A)uto, press F1 for more information on\n"
+literal|"manual layout."
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|msgConfirm
+argument_list|(
+literal|"First, you need to create BSD partitions inside of the fdisk partition(s)\n"
 literal|"just created.  If you have a reasonable amount of disk space (200MB or more)\n"
 literal|"and don't have any special requirements, simply use the (A)uto command to\n"
 literal|"allocate space automatically.  If you have more specific needs or just don't\n"
@@ -2107,6 +2132,8 @@ literal|"care for the layout chosen by (A)uto, press F1 for more information on\
 literal|"manual layout."
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|DITEM_STATUS
