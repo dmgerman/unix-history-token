@@ -3145,11 +3145,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|RT_UNLOCK
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3275,6 +3270,11 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|RT_LOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -3311,6 +3311,11 @@ name|NULL
 operator|)
 return|;
 block|}
+name|RT_LOCK_ASSERT
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 name|rt
 operator|->
 name|rt_refcnt
@@ -3392,12 +3397,23 @@ argument_list|)
 expr_stmt|;
 comment|/* xxx more logs... kazu */
 block|}
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+comment|/* XXX not ready to return rt locked */
 return|return
 operator|(
 name|rt
