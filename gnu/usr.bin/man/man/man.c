@@ -6558,6 +6558,8 @@ name|is_directory
 argument_list|(
 name|buf
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|l_found
 operator|=
@@ -6601,6 +6603,8 @@ name|is_directory
 argument_list|(
 name|buf
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|l_found
 operator|=
@@ -6662,6 +6666,8 @@ name|is_directory
 argument_list|(
 name|buf
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|l_found
 operator|=
@@ -6820,6 +6826,8 @@ name|is_directory
 argument_list|(
 name|buf
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|l_found
 operator|=
@@ -6864,6 +6872,8 @@ name|is_directory
 argument_list|(
 name|buf
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|l_found
 operator|=
@@ -6926,6 +6936,8 @@ name|is_directory
 argument_list|(
 name|buf
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|l_found
 operator|=
