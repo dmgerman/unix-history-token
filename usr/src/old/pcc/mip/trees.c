@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.16 (Berkeley) %G%"
+literal|"@(#)trees.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2270,13 +2270,18 @@ argument|); 					} 				} 			} 		} 	return(
 literal|0
 argument|); 	}  conval( p, o, q ) register NODE *p, *q; {
 comment|/* apply the op o to the lval part of p; if binary, rhs is val */
-argument|int i, u; 	CONSZ val;  	val = q->tn.lval; 	u = ISUNSIGNED(p->in.type) || ISUNSIGNED(q->in.type); 	if( u&& (o==LE||o==LT||o==GE||o==GT)) o += (UGE-GE);  	if( p->tn.rval != NONAME&& q->tn.rval != NONAME ) return(
+comment|/* works only on integer constants */
+argument|NODE *r; 	int i, u; 	CONSZ val;  	val = q->tn.lval; 	u = ISUNSIGNED(p->in.type) || ISUNSIGNED(q->in.type); 	if( u&& (o==LE||o==LT||o==GE||o==GT)) o += (UGE-GE);  	if( p->tn.rval != NONAME&& q->tn.rval != NONAME ) return(
 literal|0
 argument|); 	if( q->tn.rval != NONAME&& o!=PLUS ) return(
 literal|0
 argument|); 	if( p->tn.rval != NONAME&& o!=PLUS&& o!=MINUS ) return(
 literal|0
-argument|);  	switch( o ){  	case PLUS: 		p->tn.lval += val; 		if( p->tn.rval == NONAME ){ 			p->tn.rval = q->tn.rval; 			p->in.type = q->in.type; 			} 		break; 	case MINUS: 		p->tn.lval -= val; 		break; 	case MUL: 		p->tn.lval *= val; 		break; 	case DIV: 		if( val ==
+argument|);  	if( p->in.type != INT || q->in.type != INT ){
+comment|/* will this always work if p == q and o is UTYPE? */
+argument|r = block( o, p, q, INT,
+literal|0
+argument|, INT ); 		r = tymatch( r ); 		p->in.type = r->in.type; 		p->fn.cdim = r->fn.cdim; 		p->fn.csiz = r->fn.csiz; 		r->in.op = FREE; 		}  	switch( o ){  	case PLUS: 		p->tn.lval += val; 		if( p->tn.rval == NONAME ){ 			p->tn.rval = q->tn.rval; 			p->in.type = q->in.type; 			} 		break; 	case MINUS: 		p->tn.lval -= val; 		break; 	case MUL: 		p->tn.lval *= val; 		break; 	case DIV: 		if( val ==
 literal|0
 argument|) uerror(
 literal|"division by 0"
