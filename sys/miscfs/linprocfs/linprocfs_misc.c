@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/blist.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -73,6 +79,18 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/swap_pager.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
 end_include
 
 begin_include
@@ -152,21 +170,45 @@ comment|/* XXX - conservative */
 name|unsigned
 name|long
 name|memtotal
-decl_stmt|,
+decl_stmt|;
+comment|/* total memory in bytes */
+name|unsigned
+name|long
+name|memused
+decl_stmt|;
+comment|/* used memory in bytes */
+name|unsigned
+name|long
 name|memfree
-decl_stmt|,
+decl_stmt|;
+comment|/* free memory in bytes */
+name|unsigned
+name|long
 name|memshared
 decl_stmt|;
+comment|/* shared memory ??? */
 name|unsigned
 name|long
 name|buffers
 decl_stmt|,
 name|cached
-decl_stmt|,
+decl_stmt|;
+comment|/* buffer / cache memory ??? */
+name|unsigned
+name|long
 name|swaptotal
-decl_stmt|,
+decl_stmt|;
+comment|/* total swap space in bytes */
+name|unsigned
+name|long
+name|swapused
+decl_stmt|;
+comment|/* used swap space in bytes */
+name|unsigned
+name|long
 name|swapfree
 decl_stmt|;
+comment|/* free swap space in bytes */
 if|if
 condition|(
 name|uio
@@ -182,31 +224,69 @@ operator|)
 return|;
 name|memtotal
 operator|=
-literal|32768
+name|physmem
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
+comment|/* 	 * The correct thing here would be: 	 * 	memfree = cnt.v_free_count * PAGE_SIZE; 	memused = memtotal - memfree; 	 * 	 * but it might mislead linux binaries into thinking there 	 * is very little memory left, so we cheat and tell them that 	 * all memory that isn't wired down is free. 	 */
+name|memused
+operator|=
+name|cnt
+operator|.
+name|v_wire_count
+operator|*
+name|PAGE_SIZE
 expr_stmt|;
 name|memfree
 operator|=
-literal|32768
-expr_stmt|;
-name|buffers
-operator|=
-literal|16384
-expr_stmt|;
-name|cached
-operator|=
-literal|8192
+name|memtotal
+operator|-
+name|memused
 expr_stmt|;
 name|swaptotal
 operator|=
-literal|32768
+name|swapblist
+operator|->
+name|bl_blocks
+operator|*
+literal|1024
 expr_stmt|;
+comment|/* XXX why 1024? */
 name|swapfree
 operator|=
-literal|16384
+name|swapblist
+operator|->
+name|bl_root
+operator|->
+name|u
+operator|.
+name|bmu_avail
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
+name|swapused
+operator|=
+name|swaptotal
+operator|-
+name|swapfree
 expr_stmt|;
 name|memshared
 operator|=
 literal|0
+expr_stmt|;
+comment|/* XXX what's this supposed to be? */
+comment|/* 	 * We'd love to be able to write: 	 * 	buffers = bufspace; 	 * 	 * but bufspace is internal to vfs_bio.c and we don't feel 	 * like unstaticizing it just for linprocfs's sake. 	 */
+name|buffers
+operator|=
+literal|0
+expr_stmt|;
+name|cached
+operator|=
+name|cnt
+operator|.
+name|v_cache_count
+operator|*
+name|PAGE_SIZE
 expr_stmt|;
 name|ps
 operator|=
@@ -219,60 +299,19 @@ argument_list|(
 name|ps
 argument_list|,
 literal|"        total:    used:    free:  shared: buffers:  cached:\n"
-literal|"Mem:  %ld %ld %ld %ld %ld %ld\nSwap: %ld %ld %ld\n"
-literal|"MemTotal: %9ld kB\n"
-literal|"MemFree:  %9ld kB\n"
-literal|"MemShared:%9ld kB\n"
-literal|"Buffers:  %9ld kB\n"
-literal|"Cached:   %9ld kB\n"
-literal|"SwapTotal:%9ld kB\n"
-literal|"SwapFree: %9ld kB\n"
+literal|"Mem:  %lu %lu %lu %lu %lu %lu\n"
+literal|"Swap: %lu %lu %lu\n"
+literal|"MemTotal: %9lu kB\n"
+literal|"MemFree:  %9lu kB\n"
+literal|"MemShared:%9lu kB\n"
+literal|"Buffers:  %9lu kB\n"
+literal|"Cached:   %9lu kB\n"
+literal|"SwapTotal:%9lu kB\n"
+literal|"SwapFree: %9lu kB\n"
 argument_list|,
 name|memtotal
-operator|*
-literal|1024
 argument_list|,
-operator|(
-name|memtotal
-operator|-
-name|memfree
-operator|)
-operator|*
-literal|1024
-argument_list|,
-name|memfree
-operator|*
-literal|1024
-argument_list|,
-name|memshared
-operator|*
-literal|1024
-argument_list|,
-name|buffers
-operator|*
-literal|1024
-argument_list|,
-name|cached
-operator|*
-literal|1024
-argument_list|,
-name|swaptotal
-operator|*
-literal|1024
-argument_list|,
-operator|(
-name|swaptotal
-operator|-
-name|swapfree
-operator|)
-operator|*
-literal|1024
-argument_list|,
-name|swapfree
-operator|*
-literal|1024
-argument_list|,
-name|memtotal
+name|memused
 argument_list|,
 name|memfree
 argument_list|,
@@ -284,7 +323,37 @@ name|cached
 argument_list|,
 name|swaptotal
 argument_list|,
+name|swapused
+argument_list|,
 name|swapfree
+argument_list|,
+name|memtotal
+operator|>>
+literal|10
+argument_list|,
+name|memfree
+operator|>>
+literal|10
+argument_list|,
+name|memshared
+operator|>>
+literal|10
+argument_list|,
+name|buffers
+operator|>>
+literal|10
+argument_list|,
+name|cached
+operator|>>
+literal|10
+argument_list|,
+name|swaptotal
+operator|>>
+literal|10
+argument_list|,
+name|swapfree
+operator|>>
+literal|10
 argument_list|)
 expr_stmt|;
 name|xlen
