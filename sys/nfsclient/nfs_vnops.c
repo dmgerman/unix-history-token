@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.16 (Berkeley) 5/27/95  * $Id: nfs_vnops.c,v 1.101 1998/05/31 19:28:15 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.16 (Berkeley) 5/27/95  * $Id: nfs_vnops.c,v 1.102 1998/05/31 19:29:28 peter Exp $  */
 end_comment
 
 begin_comment
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lockf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -1793,7 +1799,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|u_int32_t
 name|nfs_true
 decl_stmt|,
 name|nfs_false
@@ -1802,7 +1808,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|u_int32_t
 name|nfs_xdrneg1
 decl_stmt|;
 end_decl_stmt
@@ -1891,7 +1897,7 @@ operator|->
 name|a_vp
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -1900,7 +1906,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|int
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -1936,7 +1942,7 @@ decl_stmt|,
 modifier|*
 name|mb2
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|mode
 decl_stmt|,
 name|rmode
@@ -2035,7 +2041,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -2169,7 +2175,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -2179,7 +2185,7 @@ name|rmode
 operator|=
 name|fxdr_unsigned
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|,
 operator|*
 name|tl
@@ -3114,12 +3120,12 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
 specifier|register
-name|int
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -3476,7 +3482,7 @@ operator|->
 name|va_mode
 operator|==
 operator|(
-name|u_short
+name|mode_t
 operator|)
 name|VNOVAL
 operator|&&
@@ -3803,7 +3809,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -3815,7 +3821,7 @@ name|dpos
 decl_stmt|,
 name|cp2
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -3897,7 +3903,7 @@ operator|->
 name|va_mode
 operator|!=
 operator|(
-name|u_short
+name|mode_t
 operator|)
 name|VNOVAL
 condition|)
@@ -3906,7 +3912,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -3937,7 +3943,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -3965,7 +3971,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -3996,7 +4002,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -4024,7 +4030,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -4055,7 +4061,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -4080,7 +4086,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|3
@@ -4111,7 +4117,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -4149,7 +4155,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|3
@@ -4183,7 +4189,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -4205,7 +4211,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -4246,7 +4252,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|3
@@ -4280,7 +4286,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -4302,7 +4308,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -4321,7 +4327,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -4353,7 +4359,7 @@ operator|->
 name|va_mode
 operator|==
 operator|(
-name|u_short
+name|mode_t
 operator|)
 name|VNOVAL
 condition|)
@@ -4580,14 +4586,14 @@ name|vnode
 modifier|*
 name|newvp
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
 name|caddr_t
 name|cp
 decl_stmt|;
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -5887,7 +5893,7 @@ name|cred
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -5896,7 +5902,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -6056,7 +6062,7 @@ name|cred
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -6065,7 +6071,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -6221,7 +6227,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -6328,7 +6334,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -6476,7 +6482,7 @@ end_function
 begin_block
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -6485,7 +6491,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|int
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -6671,7 +6677,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|5
@@ -6724,14 +6730,14 @@ block|}
 else|else
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 name|x
 decl_stmt|;
 name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|4
@@ -6745,7 +6751,7 @@ operator|=
 name|txdr_unsigned
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 name|uiop
 operator|->
@@ -6833,7 +6839,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -7184,7 +7190,7 @@ modifier|*
 name|sp3
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -7193,7 +7199,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -7265,7 +7271,7 @@ decl_stmt|,
 modifier|*
 name|mb2
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|rdev
 decl_stmt|;
 name|int
@@ -7433,7 +7439,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -7487,7 +7493,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -7924,7 +7930,7 @@ modifier|*
 name|sp3
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -7933,7 +7939,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -8153,7 +8159,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -8178,7 +8184,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_V3CREATEVERF
@@ -8241,7 +8247,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_V3SRVSATTR
@@ -8946,7 +8952,7 @@ name|proc
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -8955,7 +8961,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -9550,7 +9556,7 @@ name|proc
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -9559,7 +9565,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -9813,7 +9819,7 @@ operator|->
 name|a_cnp
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -9822,7 +9828,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -10133,7 +10139,7 @@ modifier|*
 name|sp3
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -10142,7 +10148,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -10551,7 +10557,7 @@ modifier|*
 name|sp3
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -10560,7 +10566,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -11071,7 +11077,7 @@ operator|->
 name|a_cnp
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -11080,7 +11086,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -11546,7 +11552,7 @@ modifier|*
 name|dp
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -11555,7 +11561,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -11781,7 +11787,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|5
@@ -11844,7 +11850,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -11909,7 +11915,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -11959,7 +11965,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -11992,7 +11998,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|3
@@ -12029,7 +12035,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -12336,7 +12342,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|3
@@ -12351,7 +12357,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -12427,7 +12433,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -12604,7 +12610,7 @@ modifier|*
 name|dp
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -12613,7 +12619,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -12884,7 +12890,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|6
@@ -12999,7 +13005,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|3
@@ -13055,7 +13061,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|3
@@ -13372,7 +13378,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|3
@@ -13446,7 +13452,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -13664,7 +13670,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -13710,7 +13716,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -13738,7 +13744,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -14253,7 +14259,7 @@ name|npp
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -14262,7 +14268,7 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -14747,12 +14753,12 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
 specifier|register
-name|int
+name|int32_t
 name|t1
 decl_stmt|,
 name|t2
@@ -14851,7 +14857,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|3
@@ -14907,7 +14913,7 @@ name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_V3WRITEVERF

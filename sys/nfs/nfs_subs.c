@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_subs.c  8.8 (Berkeley) 5/22/95  * $Id: nfs_subs.c,v 1.59 1998/05/31 18:11:03 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_subs.c  8.8 (Berkeley) 5/22/95  * $Id: nfs_subs.c,v 1.60 1998/05/31 19:16:08 peter Exp $  */
 end_comment
 
 begin_comment
@@ -203,13 +203,13 @@ comment|/*  * Data items converted to xdr at startup, since they are constant  *
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|u_int32_t
 name|nfs_xdrneg1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_int32_t
 name|rpc_call
 decl_stmt|,
 name|rpc_vers
@@ -231,7 +231,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_int32_t
 name|nfs_prog
 decl_stmt|,
 name|nqnfs_prog
@@ -248,7 +248,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|nfs_xid
 init|=
 literal|0
@@ -1721,7 +1721,7 @@ modifier|*
 name|mb
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -1821,7 +1821,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -1855,7 +1855,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -1960,7 +1960,7 @@ modifier|*
 modifier|*
 name|mbp
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|xidp
 decl_stmt|;
@@ -1972,7 +1972,7 @@ modifier|*
 name|mb
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -2000,7 +2000,7 @@ decl_stmt|,
 name|authsiz
 decl_stmt|;
 specifier|static
-name|u_long
+name|u_int32_t
 name|base
 decl_stmt|;
 name|authsiz
@@ -2102,7 +2102,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|8
@@ -2277,7 +2277,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|auth_len
@@ -2533,7 +2533,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|2
@@ -4185,7 +4185,7 @@ name|len
 decl_stmt|,
 name|tlen
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -4219,7 +4219,7 @@ name|tl
 operator|=
 operator|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|(
@@ -4345,7 +4345,7 @@ name|mtod
 argument_list|(
 name|m1
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|)
 expr_stmt|;
@@ -4982,7 +4982,7 @@ modifier|*
 name|np
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 name|t1
 decl_stmt|;
 name|caddr_t
@@ -5200,7 +5200,7 @@ name|rdev
 operator|=
 name|fxdr_unsigned
 argument_list|(
-name|long
+name|int32_t
 argument_list|,
 name|fp
 operator|->
@@ -5522,7 +5522,7 @@ name|va_fileid
 operator|=
 name|fxdr_unsigned
 argument_list|(
-name|int
+name|int32_t
 argument_list|,
 name|fp
 operator|->
@@ -5620,7 +5620,7 @@ name|va_size
 operator|=
 name|fxdr_unsigned
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|,
 name|fp
 operator|->
@@ -5633,7 +5633,7 @@ name|va_blocksize
 operator|=
 name|fxdr_unsigned
 argument_list|(
-name|long
+name|int32_t
 argument_list|,
 name|fp
 operator|->
@@ -5646,7 +5646,7 @@ name|va_bytes
 operator|=
 name|fxdr_unsigned
 argument_list|(
-name|long
+name|int32_t
 argument_list|,
 name|fp
 operator|->
@@ -5661,7 +5661,7 @@ name|va_fileid
 operator|=
 name|fxdr_unsigned
 argument_list|(
-name|long
+name|int32_t
 argument_list|,
 name|fp
 operator|->
@@ -5695,7 +5695,7 @@ name|tv_sec
 operator|=
 name|fxdr_unsigned
 argument_list|(
-name|long
+name|u_int32_t
 argument_list|,
 name|fp
 operator|->
@@ -5718,7 +5718,7 @@ name|va_gen
 operator|=
 name|fxdr_unsigned
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|,
 name|fp
 operator|->
@@ -7848,7 +7848,7 @@ operator|*
 name|bposp
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -7861,7 +7861,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -7879,7 +7879,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 literal|7
@@ -8024,7 +8024,7 @@ operator|*
 name|bposp
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
@@ -8043,7 +8043,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED
@@ -8061,7 +8061,7 @@ name|nfsm_build
 argument_list|(
 name|tl
 argument_list|,
-name|u_long
+name|u_int32_t
 operator|*
 argument_list|,
 name|NFSX_UNSIGNED

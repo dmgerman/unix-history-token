@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfsproto.h  8.2 (Berkeley) 3/30/95  * $Id: nfsproto.h,v 1.4 1998/05/31 17:27:58 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfsproto.h  8.2 (Berkeley) 3/30/95  * $Id: nfsproto.h,v 1.5 1998/05/31 19:00:19 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -1201,7 +1201,7 @@ name|vtonfsv3_mode
 parameter_list|(
 name|m
 parameter_list|)
-value|txdr_unsigned((m)& 07777)
+value|txdr_unsigned((m)& ALLPERMS)
 end_define
 
 begin_define
@@ -1211,7 +1211,7 @@ name|nfstov_mode
 parameter_list|(
 name|a
 parameter_list|)
-value|(fxdr_unsigned(u_short, (a))&07777)
+value|(fxdr_unsigned(u_int32_t, (a))& ALLPERMS)
 end_define
 
 begin_define
@@ -1221,7 +1221,7 @@ name|vtonfsv2_type
 parameter_list|(
 name|a
 parameter_list|)
-value|txdr_unsigned(nfsv2_type[((long)(a))])
+value|txdr_unsigned(nfsv2_type[((int32_t)(a))])
 end_define
 
 begin_define
@@ -1231,7 +1231,7 @@ name|vtonfsv3_type
 parameter_list|(
 name|a
 parameter_list|)
-value|txdr_unsigned(nfsv3_type[((long)(a))])
+value|txdr_unsigned(nfsv3_type[((int32_t)(a))])
 end_define
 
 begin_define
@@ -1241,7 +1241,7 @@ name|nfsv2tov_type
 parameter_list|(
 name|a
 parameter_list|)
-value|nv2tov_type[fxdr_unsigned(u_long,(a))&0x7]
+value|nv2tov_type[fxdr_unsigned(u_int32_t,(a))&0x7]
 end_define
 
 begin_define
@@ -1251,7 +1251,7 @@ name|nfsv3tov_type
 parameter_list|(
 name|a
 parameter_list|)
-value|nv3tov_type[fxdr_unsigned(u_long,(a))&0x7]
+value|nv3tov_type[fxdr_unsigned(u_int32_t,(a))&0x7]
 end_define
 
 begin_comment
@@ -1353,10 +1353,10 @@ begin_struct
 struct|struct
 name|nfsv2_time
 block|{
-name|u_long
+name|u_int32_t
 name|nfsv2_sec
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv2_usec
 decl_stmt|;
 block|}
@@ -1375,10 +1375,10 @@ begin_struct
 struct|struct
 name|nfsv3_time
 block|{
-name|u_long
+name|u_int32_t
 name|nfsv3_sec
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv3_nsec
 decl_stmt|;
 block|}
@@ -1401,7 +1401,7 @@ begin_struct
 struct|struct
 name|nfs_uquad
 block|{
-name|u_long
+name|u_int32_t
 name|nfsuquad
 index|[
 literal|2
@@ -1427,7 +1427,7 @@ begin_union
 union|union
 name|nfs_quadconvert
 block|{
-name|u_long
+name|u_int32_t
 name|lval
 index|[
 literal|2
@@ -1456,10 +1456,10 @@ begin_struct
 struct|struct
 name|nfsv3_spec
 block|{
-name|u_long
+name|u_int32_t
 name|specdata1
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|specdata2
 decl_stmt|;
 block|}
@@ -1482,41 +1482,41 @@ begin_struct
 struct|struct
 name|nfs_fattr
 block|{
-name|u_long
+name|u_int32_t
 name|fa_type
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fa_mode
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fa_nlink
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fa_uid
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fa_gid
 decl_stmt|;
 union|union
 block|{
 struct|struct
 block|{
-name|u_long
+name|u_int32_t
 name|nfsv2fa_size
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv2fa_blocksize
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv2fa_rdev
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv2fa_blocks
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv2fa_fsid
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv2fa_fileid
 decl_stmt|;
 name|nfstime2
@@ -1694,16 +1694,16 @@ begin_struct
 struct|struct
 name|nfsv2_sattr
 block|{
-name|u_long
+name|u_int32_t
 name|sa_mode
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|sa_uid
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|sa_gid
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|sa_size
 decl_stmt|;
 name|nfstime2
@@ -1724,28 +1724,28 @@ begin_struct
 struct|struct
 name|nfsv3_sattr
 block|{
-name|u_long
+name|u_int32_t
 name|sa_modetrue
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|sa_mode
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|sa_uidfalse
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|sa_gidfalse
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|sa_sizefalse
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|sa_atimetype
 decl_stmt|;
 name|nfstime3
 name|sa_atime
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|sa_mtimetype
 decl_stmt|;
 name|nfstime3
@@ -1763,19 +1763,19 @@ union|union
 block|{
 struct|struct
 block|{
-name|u_long
+name|u_int32_t
 name|nfsv2sf_tsize
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv2sf_bsize
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv2sf_blocks
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv2sf_bfree
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv2sf_bavail
 decl_stmt|;
 block|}
@@ -1801,7 +1801,7 @@ decl_stmt|;
 name|nfsuint64
 name|nfsv3sf_afiles
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nfsv3sf_invarsec
 decl_stmt|;
 block|}
@@ -1902,25 +1902,25 @@ begin_struct
 struct|struct
 name|nfsv3_fsinfo
 block|{
-name|u_long
+name|u_int32_t
 name|fs_rtmax
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fs_rtpref
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fs_rtmult
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fs_wtmax
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fs_wtpref
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fs_wtmult
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fs_dtpref
 decl_stmt|;
 name|nfsuint64
@@ -1929,7 +1929,7 @@ decl_stmt|;
 name|nfstime3
 name|fs_timedelta
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|fs_properties
 decl_stmt|;
 block|}
@@ -1940,22 +1940,22 @@ begin_struct
 struct|struct
 name|nfsv3_pathconf
 block|{
-name|u_long
+name|u_int32_t
 name|pc_linkmax
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|pc_namemax
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|pc_notrunc
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|pc_chownrestricted
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|pc_caseinsensitive
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|pc_casepreserving
 decl_stmt|;
 block|}

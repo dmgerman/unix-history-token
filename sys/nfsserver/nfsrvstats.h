@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.4 (Berkeley) 5/1/95  * $Id: nfs.h,v 1.38 1998/05/31 17:48:03 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.4 (Berkeley) 5/1/95  * $Id: nfs.h,v 1.39 1998/05/31 19:49:28 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -997,7 +997,7 @@ name|uid_t
 name|nsd_uid
 decl_stmt|;
 comment|/* Effective uid mapped to cred */
-name|u_long
+name|u_int32_t
 name|nsd_haddr
 decl_stmt|;
 comment|/* Ip address of client */
@@ -1028,7 +1028,7 @@ name|timeval
 name|nsd_timestamp
 decl_stmt|;
 comment|/* timestamp from verifier */
-name|u_long
+name|u_int32_t
 name|nsd_ttl
 decl_stmt|;
 comment|/* credential ttl (sec) */
@@ -1497,7 +1497,7 @@ name|vnode
 modifier|*
 name|r_vp
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|r_xid
 decl_stmt|;
 name|int
@@ -1713,7 +1713,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|(&(sock)->ns_wdelayhashtbl[(*((u_long *)(f))) % NFS_WDELAYHASHSIZ])
+value|(&(sock)->ns_wdelayhashtbl[(*((u_int32_t *)(f))) % NFS_WDELAYHASHSIZ])
 end_define
 
 begin_ifndef
@@ -1770,7 +1770,7 @@ begin_union
 union|union
 name|nethostaddr
 block|{
-name|u_long
+name|u_int32_t
 name|had_inetaddr
 decl_stmt|;
 name|struct
@@ -1823,7 +1823,7 @@ name|timeval
 name|nu_timestamp
 decl_stmt|;
 comment|/* Kerb. timestamp */
-name|u_long
+name|u_int32_t
 name|nu_nickname
 decl_stmt|;
 comment|/* Nickname on server */
@@ -1971,7 +1971,7 @@ decl_stmt|;
 name|int
 name|ns_numuids
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|ns_sref
 decl_stmt|;
 name|LIST_HEAD
@@ -2283,11 +2283,11 @@ name|int
 name|nd_repstat
 decl_stmt|;
 comment|/* Reply status */
-name|u_long
+name|u_int32_t
 name|nd_retxid
 decl_stmt|;
 comment|/* Reply xid */
-name|u_long
+name|u_int32_t
 name|nd_duration
 decl_stmt|;
 comment|/* Lease duration */
