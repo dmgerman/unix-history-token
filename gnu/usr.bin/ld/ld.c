@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.23 1994/12/23 22:30:37 nate Exp $  */
+comment|/*  *	$Id: ld.c,v 1.24 1995/03/04 17:46:05 nate Exp $  */
 end_comment
 
 begin_comment
@@ -2388,6 +2388,19 @@ name|flags
 operator||=
 name|E_SEARCH_DIRS
 expr_stmt|;
+comment|/*  			 * XXX:  We don't want to link libgcc dynamic, 			 * it was a big mistake, and now we have to get 			 * people to stop doing it gracefully 			 * When all libgcc.so's in the world have been 			 * killed, this can go away. 			 */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|string
+argument_list|,
+literal|"gcc"
+argument_list|)
+condition|)
+empty_stmt|;
+elseif|else
 if|if
 condition|(
 name|link_mode
