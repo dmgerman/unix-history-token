@@ -1401,6 +1401,10 @@ operator|)
 name|use_bwx
 argument_list|)
 expr_stmt|;
+name|chipset_bwx
+operator|=
+name|use_bwx
+expr_stmt|;
 return|return
 literal|0
 return|;
