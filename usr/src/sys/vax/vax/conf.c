@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	3.2	%H%	*/
+comment|/*	conf.c	3.3	%H%	*/
 end_comment
 
 begin_include
@@ -711,35 +711,55 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BERKNET
-end_ifdef
-
 begin_decl_stmt
 name|int
-name|netopen
+name|bkopen
 argument_list|()
 decl_stmt|,
-name|netclose
+name|bkclose
 argument_list|()
 decl_stmt|,
-name|netread
+name|bkread
 argument_list|()
 decl_stmt|,
-name|netinput
+name|bkinput
 argument_list|()
 decl_stmt|,
-name|netioctl
+name|bkioctl
 argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|int
+name|ntyopen
+argument_list|()
+decl_stmt|,
+name|ntyclose
+argument_list|()
+decl_stmt|,
+name|ntread
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|ntwrite
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|int
+name|ntyinput
+argument_list|()
+decl_stmt|,
+name|ntyrend
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -769,20 +789,17 @@ block|,
 name|nulldev
 block|,
 comment|/* 0 */
-ifdef|#
-directive|ifdef
-name|BERKNET
-name|netopen
+name|bkopen
 block|,
-name|netclose
+name|bkclose
 block|,
-name|netread
+name|bkread
 block|,
 name|ttwrite
 block|,
-name|netioctl
+name|bkioctl
 block|,
-name|netinput
+name|bkinput
 block|,
 name|nodev
 block|,
@@ -793,8 +810,27 @@ block|,
 name|nulldev
 block|,
 comment|/* 1 */
-endif|#
-directive|endif
+name|ntyopen
+block|,
+name|ntyclose
+block|,
+name|ntread
+block|,
+name|ntwrite
+block|,
+name|nullioctl
+block|,
+name|ntyinput
+block|,
+name|ntyrend
+block|,
+name|nulldev
+block|,
+name|ttstart
+block|,
+name|nulldev
+block|,
+comment|/* 2 */
 name|mxopen
 block|,
 name|mxclose
@@ -815,43 +851,19 @@ name|nulldev
 block|,
 name|nulldev
 block|,
-comment|/* 1 or 2 */
+comment|/* 3 */
 literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BERKNET
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|nldisp
 init|=
-literal|2
+literal|3
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|nldisp
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|dev_t
