@@ -3732,6 +3732,12 @@ if|if
 condition|(
 name|dontroute
 condition|)
+block|{
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_options
@@ -3739,6 +3745,12 @@ operator|&=
 operator|~
 name|SO_DONTROUTE
 expr_stmt|;
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+block|}
 name|clen
 operator|=
 literal|0
