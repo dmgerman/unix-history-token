@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)ffs_alloc.c 1.9 %G%"
+literal|"@(#)ffs_alloc.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ end_include
 
 begin_function_decl
 specifier|extern
-name|long
+name|u_long
 name|hashalloc
 parameter_list|()
 function_decl|;
@@ -81,7 +81,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|long
+name|ino_t
 name|ialloccg
 parameter_list|()
 function_decl|;
@@ -313,6 +313,9 @@ argument_list|)
 expr_stmt|;
 name|bno
 operator|=
+operator|(
+name|daddr_t
+operator|)
 name|hashalloc
 argument_list|(
 name|dev
@@ -401,8 +404,6 @@ name|realloccg
 parameter_list|(
 name|dev
 parameter_list|,
-name|ip
-parameter_list|,
 name|bprev
 parameter_list|,
 name|bpref
@@ -413,12 +414,6 @@ name|nsize
 parameter_list|)
 name|dev_t
 name|dev
-decl_stmt|;
-specifier|register
-name|struct
-name|inode
-modifier|*
-name|ip
 decl_stmt|;
 name|daddr_t
 name|bprev
@@ -628,6 +623,9 @@ literal|0
 expr_stmt|;
 name|bno
 operator|=
+operator|(
+name|daddr_t
+operator|)
 name|hashalloc
 argument_list|(
 name|dev
@@ -721,6 +719,9 @@ name|dev
 argument_list|,
 name|bprev
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|osize
 argument_list|)
 expr_stmt|;
@@ -800,7 +801,7 @@ name|int
 name|mode
 decl_stmt|;
 block|{
-name|daddr_t
+name|ino_t
 name|ino
 decl_stmt|;
 specifier|register
@@ -865,6 +866,9 @@ argument_list|)
 expr_stmt|;
 name|ino
 operator|=
+operator|(
+name|ino_t
+operator|)
 name|hashalloc
 argument_list|(
 name|dev
@@ -913,6 +917,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|ino
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1104,20 +1110,15 @@ begin_comment
 comment|/*  * select a cylinder to place a large block of data  */
 end_comment
 
-begin_macro
+begin_function
+name|daddr_t
 name|blkpref
-argument_list|(
-argument|dev
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1253,10 +1254,14 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
+
+begin_comment
+comment|/*VARARGS5*/
+end_comment
 
 begin_decl_stmt
-name|long
+name|u_long
 name|hashalloc
 argument_list|(
 name|dev
@@ -1308,7 +1313,7 @@ comment|/* size for data blocks, mode for inodes */
 end_comment
 
 begin_function_decl
-name|long
+name|u_long
 function_decl|(
 modifier|*
 name|allocator
@@ -1936,8 +1941,6 @@ name|bno
 operator|=
 name|alloccgblk
 argument_list|(
-name|dev
-argument_list|,
 name|fs
 argument_list|,
 name|cgp
@@ -2022,8 +2025,6 @@ name|bno
 operator|=
 name|alloccgblk
 argument_list|(
-name|dev
-argument_list|,
 name|fs
 argument_list|,
 name|cgp
@@ -2237,17 +2238,12 @@ begin_function
 name|daddr_t
 name|alloccgblk
 parameter_list|(
-name|dev
-parameter_list|,
 name|fs
 parameter_list|,
 name|cgp
 parameter_list|,
 name|bpref
 parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
 name|struct
 name|fs
 modifier|*
@@ -2658,7 +2654,7 @@ block|}
 end_function
 
 begin_function
-name|long
+name|ino_t
 name|ialloccg
 parameter_list|(
 name|dev
@@ -2976,7 +2972,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|off_t
 name|size
 decl_stmt|;
 end_decl_stmt
@@ -3525,9 +3521,6 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|int
 name|cg
