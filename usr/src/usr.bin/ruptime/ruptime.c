@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.16 (Berkeley) 83/11/17"
+literal|"@(#)ruptime.c	4.17 (Berkeley) 85/02/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,7 +202,11 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|whod
+argument_list|)
 index|]
 decl_stmt|;
 name|int
@@ -464,7 +468,11 @@ name|f
 argument_list|,
 name|buf
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|whod
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
