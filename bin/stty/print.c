@@ -304,7 +304,7 @@ name|on
 parameter_list|(
 name|f
 parameter_list|)
-value|((tmp&f) != 0)
+value|((tmp& (f)) != 0)
 define|#
 directive|define
 name|put
@@ -316,7 +316,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|if (fmt>= BSD || on(f) != d) \ 		bput(n + on(f));
+value|if (fmt>= BSD || on(f) != (d)) \ 		bput((n) + on(f));
 comment|/* "local" flags */
 name|tmp
 operator|=
@@ -770,11 +770,63 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|tmp
+operator|&
+operator|(
+name|CCTS_OFLOW
+operator||
+name|CRTS_IFLOW
+operator|)
+condition|)
+block|{
+case|case
+name|CCTS_OFLOW
+case|:
+name|bput
+argument_list|(
+literal|"ctsflow"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CRTS_IFLOW
+case|:
+name|bput
+argument_list|(
+literal|"rtsflow"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
 name|put
 argument_list|(
 literal|"-crtscts"
 argument_list|,
-name|CRTSCTS
+name|CCTS_OFLOW
+operator||
+name|CRTS_IFLOW
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|put
+argument_list|(
+literal|"-dsrflow"
+argument_list|,
+name|CDSR_OFLOW
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|put
+argument_list|(
+literal|"-dtrflow"
+argument_list|,
+name|CDTR_IFLOW
 argument_list|,
 literal|0
 argument_list|)
