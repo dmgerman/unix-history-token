@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.19 1994/01/19 15:00:27 davidg Exp $  */
+comment|/*  *	$Id: ld.c,v 1.20 1994/02/13 20:41:28 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -3128,6 +3128,15 @@ name|oldmagic
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|netzmagic
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 case|case
 literal|'Z'
@@ -3138,6 +3147,15 @@ name|oldmagic
 operator|=
 name|ZMAGIC
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|netzmagic
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 default|default:
 name|fatal
