@@ -3082,6 +3082,9 @@ if|if
 condition|(
 name|notify
 condition|)
+block|{
+if|if
+condition|(
 call|(
 modifier|*
 name|notify
@@ -3091,7 +3094,14 @@ name|inp
 argument_list|,
 name|errno
 argument_list|)
+condition|)
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
 expr_stmt|;
+block|}
+else|else
 name|INP_UNLOCK
 argument_list|(
 name|inp
