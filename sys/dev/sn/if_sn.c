@@ -15,12 +15,6 @@ begin_comment
 comment|/*  * Multicast support by Kei TANAKA<kei@pal.xerox.com>  * Special thanks to itojun@itojun.org  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SN_DEBUG
-end_define
-
 begin_include
 include|#
 directive|include
