@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpfs.c	2.2 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +317,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"frag\t%d\tminfree\t%d%%\n"
+literal|"frag\t%d\tminfree\t%d%%\tmaxbpg\t%d\n"
 argument_list|,
 name|afs
 operator|.
@@ -326,11 +326,19 @@ argument_list|,
 name|afs
 operator|.
 name|fs_minfree
+argument_list|,
+name|afs
+operator|.
+name|fs_maxbpg
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rotdelay %dms\trps\t%d\n"
+literal|"maxcontig %d\trotdelay %dms\trps\t%d\n"
+argument_list|,
+name|afs
+operator|.
+name|fs_maxcontig
 argument_list|,
 name|afs
 operator|.
