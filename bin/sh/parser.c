@@ -4512,21 +4512,6 @@ name|out
 argument_list|)
 expr_stmt|;
 comment|/* permit 3 calls to USTPUTC */
-if|if
-condition|(
-name|c
-operator|<
-literal|0
-operator|&&
-name|c
-operator|!=
-name|PEOF
-condition|)
-name|synentry
-operator|=
-name|CWORD
-expr_stmt|;
-else|else
 name|synentry
 operator|=
 name|syntax
