@@ -368,7 +368,7 @@ name|LIST_ENTRY
 argument_list|(
 argument|ip_fw_chain
 argument_list|)
-name|chain
+name|next
 expr_stmt|;
 name|struct
 name|ip_fw

@@ -3112,23 +3112,12 @@ argument_list|)
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|BRIDGE
+comment|/* the following is not an error when doing bridging */
 if|if
 condition|(
 operator|!
-name|do_bridge
-condition|)
-block|{
-comment|/* the following is not an error when doing bridging */
-else|#
-directive|else
-block|{
-endif|#
-directive|endif
-if|if
-condition|(
+name|BRIDGE_TEST
+operator|&&
 name|rt
 operator|->
 name|rt_ifp
@@ -3188,7 +3177,6 @@ expr_stmt|;
 goto|goto
 name|reply
 goto|;
-block|}
 block|}
 if|if
 condition|(
@@ -4311,9 +4299,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Free an arp entry.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|arptfree
@@ -4434,7 +4431,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Lookup or enter a new address in arptab.  */
+end_comment
+
+begin_function
 specifier|static
 name|struct
 name|llinfo_arp
@@ -4628,6 +4631,9 @@ name|rt_llinfo
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|arp_ifinit
 parameter_list|(
@@ -4700,6 +4706,9 @@ operator||=
 name|RTF_CLONING
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|arp_init
@@ -4726,6 +4735,9 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
 name|arp
@@ -4739,7 +4751,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_function
+end_expr_stmt
 
 end_unit
 

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -403,32 +409,12 @@ operator||
 name|IFF_MUTE
 operator|)
 expr_stmt|;
-name|printf
+name|DEB
 argument_list|(
+argument|printf(
 literal|">> now %s%d promisc OFF if_flags 0x%x bdg_flags 0x%x\n"
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
-argument_list|,
-name|ifp
-operator|->
-name|if_flags
-argument_list|,
-name|ifp2sc
-index|[
-name|ifp
-operator|->
-name|if_index
-index|]
-operator|.
-name|flags
+argument|, 		    ifp->if_name, ifp->if_unit, 		    ifp->if_flags, ifp2sc[ifp->if_index].flags);
 argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -833,7 +819,7 @@ comment|/* length of name string */
 name|p
 operator|++
 expr_stmt|;
-name|DDB
+name|DEB
 argument_list|(
 argument|printf(
 literal|"-- match beg(%d)<%s> p<%s>\n"
@@ -988,7 +974,7 @@ argument_list|,
 name|cluster
 argument_list|)
 expr_stmt|;
-name|DDB
+name|DEB
 argument_list|(
 argument|printf(
 literal|"--++  found %s\n"
@@ -2413,7 +2399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Forward to dst, excluding src port and muted interfaces.  * The packet is freed if possible (i.e. surely not of interest for  * the upper layer), otherwise a copy is left for use by the caller  * (pointer in m0).  *  * It would be more efficient to make bdg_forward() always consume  * the packet, leaving to the caller the task to check if it needs a copy  * and get one in case. As it is now, bdg_forward() can sometimes make  * a copy whereas it is not necessary.  *  * XXX be careful about eh, it can be a pointer into *m  */
+comment|/*  * Forward to dst, excluding src port and muted interfaces.  * If src == NULL, the pkt comes from ether_output, and dst is the real  * interface the packet is originally sent to. In this case we must forward  * it to the whole cluster. We never call bdg_forward ether_output on  * interfaces which are not part of a cluster.  *  * The packet is freed if possible (i.e. surely not of interest for  * the upper layer), otherwise a copy is left for use by the caller  * (pointer in m0).  *  * It would be more efficient to make bdg_forward() always consume  * the packet, leaving to the caller the task to check if it needs a copy  * and get one in case. As it is now, bdg_forward() can sometimes make  * a copy whereas it is not necessary.  *  * XXX be careful about eh, it can be a pointer into *m  */
 end_comment
 
 begin_function
@@ -2476,6 +2462,27 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* loop only once */
+name|struct
+name|ifnet
+modifier|*
+name|real_dst
+init|=
+name|dst
+decl_stmt|;
+comment|/* real dst from ether_output */
+ifdef|#
+directive|ifdef
+name|IPFIREWALL
+name|struct
+name|ip_fw_chain
+modifier|*
+name|rule
+init|=
+name|NULL
+decl_stmt|;
+comment|/* did we match a firewall rule ? */
+endif|#
+directive|endif
 comment|/*      * XXX eh is usually a pointer within the mbuf (some ethernet drivers      * do that), so we better copy it before doing anything with the mbuf,      * or we might corrupt the header.      */
 name|struct
 name|ether_header
@@ -2488,8 +2495,80 @@ name|DEB
 argument_list|(
 argument|quad_t ticks; ticks = rdtsc();
 argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPFIREWALL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|DUMMYNET
+argument_list|)
+if|if
+condition|(
+name|m0
+operator|->
+name|m_type
+operator|==
+name|MT_DUMMYNET
+condition|)
+block|{
+comment|/* extract info from dummynet header */
+name|rule
+operator|=
+operator|(
+expr|struct
+name|ip_fw_chain
+operator|*
+operator|)
+operator|(
+name|m0
+operator|->
+name|m_data
+operator|)
+expr_stmt|;
+name|m0
+operator|=
+name|m0
+operator|->
+name|m_next
+expr_stmt|;
+name|src
+operator|=
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+expr_stmt|;
+name|shared
+operator|=
+literal|0
+expr_stmt|;
+comment|/* For sure this is our own mbuf. */
+block|}
+else|else
+endif|#
+directive|endif
 name|bdg_thru
 operator|++
+expr_stmt|;
+comment|/* only count once */
+if|if
+condition|(
+name|src
+operator|==
+name|NULL
+condition|)
+comment|/* packet from ether_output */
+name|dst
+operator|=
+name|bridge_dst_lookup
+argument_list|(
+name|eh
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2504,28 +2583,6 @@ argument_list|(
 literal|"xx bdg_forward for BDG_DROP\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
-if|if
-condition|(
-name|m0
-operator|->
-name|m_type
-operator|==
-name|MT_DUMMYNET
-condition|)
-comment|/* XXX: Shouldn't have to be doing this. */
-name|m_freem
-argument_list|(
-name|m0
-operator|->
-name|m_next
-argument_list|)
-expr_stmt|;
-else|else
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m0
@@ -2625,19 +2682,20 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPFIREWALL
-comment|/*      * do filtering in a very similar way to what is done      * in ip_output. Only for IP packets, and only pass/fail/dummynet      * is supported. The tricky thing is to make sure that enough of      * the packet (basically, Eth+IP+TCP/UDP headers) is contiguous      * so that calls to m_pullup in ip_fw_chk will not kill the      * ethernet header.      */
+comment|/*      * Do filtering in a very similar way to what is done in ip_output.      * Only if firewall is loaded, enabled, and the packet is not      * from ether_output() (src==NULL, or we would filter it twice).      * Additional restrictions may apply e.g. non-IP, short packets,      * and pkts already gone through a pipe.      */
 if|if
 condition|(
 name|ip_fw_chk_ptr
+operator|&&
+name|bdg_ipfw
+operator|!=
+literal|0
+operator|&&
+name|src
+operator|!=
+name|NULL
 condition|)
 block|{
-name|struct
-name|ip_fw_chain
-modifier|*
-name|rule
-init|=
-name|NULL
-decl_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -2646,83 +2704,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 if|if
 condition|(
-name|m0
-operator|->
-name|m_type
-operator|==
-name|MT_DUMMYNET
-condition|)
-block|{
-comment|/* 	     * the packet was already tagged, so part of the 	     * processing was already done, and we need to go down. 	     */
 name|rule
-operator|=
-operator|(
-expr|struct
-name|ip_fw_chain
-operator|*
-operator|)
-operator|(
-name|m0
-operator|->
-name|m_data
-operator|)
-expr_stmt|;
-name|m0
-operator|=
-name|m0
-operator|->
-name|m_next
-expr_stmt|;
-name|src
-operator|=
-name|m0
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-expr_stmt|;
-comment|/* could be NULL in output */
-name|shared
-operator|=
-literal|0
-expr_stmt|;
-comment|/* for sure, a copy is not needed later. */
-name|bdg_thru
-operator|--
-expr_stmt|;
-comment|/* already accounted for once */
+operator|!=
+name|NULL
+condition|)
+comment|/* dummynet packet, already partially processed */
 goto|goto
 name|forward
 goto|;
 comment|/* HACK! I should obey the fw_one_pass */
-block|}
-endif|#
-directive|endif
-if|if
-condition|(
-name|bdg_ipfw
-operator|==
-literal|0
-condition|)
-comment|/* this test must be here. */
-goto|goto
-name|forward
-goto|;
-if|if
-condition|(
-name|src
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|forward
-goto|;
-comment|/* do not apply to packets from ether_output */
 if|if
 condition|(
 name|ntohs
@@ -2862,58 +2854,32 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|i
 operator|&
 name|IP_FW_PORT_DENY_FLAG
-condition|)
-block|{
-comment|/* XXX new interface - discard */
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-name|m0
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
+operator|)
+operator|||
 name|m0
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"firewall using old interface\n"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|m0
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* pkt discarded by firewall */
-if|if
-condition|(
-name|verbose
-condition|)
-name|printf
-argument_list|(
-literal|"pkt discarded by firewall\n"
-argument_list|)
-expr_stmt|;
+comment|/* drop */
 return|return
-name|NULL
+name|m0
 return|;
-block|}
-comment|/* 	 * If we get here, the firewall has passed the pkt, but the 	 * mbuf pointer might have changed. Restore the fields NTOHS()'d. 	 */
+comment|/* 	 * If we get here, the firewall has passed the pkt, but the mbuf 	 * pointer might have changed. Restore ip and the fields NTOHS()'d. 	 */
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m0
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
 name|HTONS
 argument_list|(
 name|ip
@@ -2945,10 +2911,10 @@ if|if
 condition|(
 name|i
 operator|&
-literal|0x10000
+name|IP_FW_PORT_DYNT_FLAG
 condition|)
 block|{
-comment|/* 	     * pass the pkt to dummynet, which consumes it. 	     * If shared, make a copy and keep the origina. 	     * Need to prepend the ethernet header, optimize the common 	     * case of eh pointing already into the original mbuf. 	     */
+comment|/* 	     * Pass the pkt to dummynet, which consumes it. 	     * If shared, make a copy and keep the original. 	     * Need to prepend the ethernet header, optimize the common 	     * case of eh pointing already into the original mbuf. 	     */
 name|struct
 name|mbuf
 modifier|*
@@ -3106,7 +3072,7 @@ name|DN_TO_BDG_FWD
 argument_list|,
 name|m
 argument_list|,
-name|dst
+name|real_dst
 argument_list|,
 name|NULL
 argument_list|,
@@ -3188,6 +3154,18 @@ name|NULL
 return|;
 block|}
 block|}
+comment|/* now real_dst is used to determine the cluster where to forward */
+if|if
+condition|(
+name|src
+operator|!=
+name|NULL
+condition|)
+comment|/* pkt comes from ether_input */
+name|real_dst
+operator|=
+name|src
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3199,7 +3177,7 @@ condition|(
 name|last
 condition|)
 block|{
-comment|/* need to forward packet */
+comment|/* need to forward packet leftover from previous loop */
 name|struct
 name|mbuf
 modifier|*
@@ -3254,7 +3232,7 @@ return|;
 comment|/* the original is still there... */
 block|}
 block|}
-comment|/* 	     * Last part of ether_output: add header, queue pkt and start 	     * output if interface not yet active. Optimized for the 	     * common case of eh pointing already into the mbuf 	     */
+comment|/* 	     * Add header (optimized for the common case of eh pointing 	     * already into the mbuf) and execute last part of ether_output: 	     * queue pkt and start output if interface not yet active. 	     */
 if|if
 condition|(
 operator|(
@@ -3398,19 +3376,20 @@ operator|==
 name|NULL
 condition|)
 break|break ;
+comment|/* 	 * If the interface is used for bridging, not muted, not full, 	 * up and running, is not the source interface, and belongs to 	 * the same cluster as the 'real_dst', then send here. 	 */
 if|if
 condition|(
-name|ifp
-operator|!=
-name|src
-operator|&&
-comment|/* do not send to self */
 name|BDG_USED
 argument_list|(
 name|ifp
 argument_list|)
 operator|&&
-comment|/* if used for bridging */
+operator|!
+name|BDG_MUTED
+argument_list|(
+name|ifp
+argument_list|)
+operator|&&
 operator|!
 name|_IF_QFULL
 argument_list|(
@@ -3438,17 +3417,15 @@ operator||
 name|IFF_RUNNING
 operator|)
 operator|&&
+name|ifp
+operator|!=
+name|src
+operator|&&
 name|BDG_SAMECLUSTER
 argument_list|(
 name|ifp
 argument_list|,
-name|src
-argument_list|)
-operator|&&
-operator|!
-name|BDG_MUTED
-argument_list|(
-name|ifp
+name|real_dst
 argument_list|)
 condition|)
 name|last

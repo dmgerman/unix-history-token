@@ -772,7 +772,7 @@ end_extern
 
 begin_expr_stmt
 unit|)
-name|ip_fw_chain
+name|ip_fw_chain_head
 expr_stmt|;
 end_expr_stmt
 
@@ -1851,7 +1851,6 @@ name|m
 operator|=
 name|bdg_forward
 argument_list|(
-operator|&
 name|m
 argument_list|,
 name|eh
@@ -5805,27 +5804,14 @@ name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* remove all references to pipes ...*/
-for|for
-control|(
-name|chain
-operator|=
-name|LIST_FIRST
+name|LIST_FOREACH
 argument_list|(
-operator|&
-name|ip_fw_chain
-argument_list|)
-init|;
-name|chain
-condition|;
-name|chain
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|chain
+argument|chain
 argument_list|,
-name|chain
+argument|&ip_fw_chain_head
+argument_list|,
+argument|next
 argument_list|)
-control|)
 name|chain
 operator|->
 name|rule
@@ -7910,27 +7896,14 @@ operator|->
 name|next
 expr_stmt|;
 comment|/* remove references to this pipe from the ip_fw rules. */
-for|for
-control|(
-name|chain
-operator|=
-name|LIST_FIRST
+name|LIST_FOREACH
 argument_list|(
-operator|&
-name|ip_fw_chain
-argument_list|)
-init|;
-name|chain
-condition|;
-name|chain
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|chain
+argument|chain
 argument_list|,
-name|chain
+argument|&ip_fw_chain_head
+argument_list|,
+argument|next
 argument_list|)
-control|)
 if|if
 condition|(
 name|chain
@@ -8152,9 +8125,9 @@ name|LIST_FOREACH
 argument_list|(
 argument|chain
 argument_list|,
-argument|&ip_fw_chain
+argument|&ip_fw_chain_head
 argument_list|,
-argument|chain
+argument|next
 argument_list|)
 if|if
 condition|(

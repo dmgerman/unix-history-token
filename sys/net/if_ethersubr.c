@@ -1951,13 +1951,6 @@ modifier|*
 name|eh
 decl_stmt|;
 comment|/* a ptr suffices */
-name|struct
-name|ifnet
-modifier|*
-name|oifp
-init|=
-name|ifp
-decl_stmt|;
 name|m
 operator|->
 name|m_pkthdr
@@ -1984,34 +1977,6 @@ argument_list|,
 name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
-name|ifp
-operator|=
-name|bridge_dst_lookup
-argument_list|(
-name|eh
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|>
-name|BDG_FORWARD
-operator|&&
-operator|!
-name|BDG_SAMECLUSTER
-argument_list|(
-name|ifp
-argument_list|,
-name|oifp
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ether_out_frame: bad output if\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|m
 operator|=
 name|bdg_forward
@@ -2257,7 +2222,6 @@ name|m
 operator|=
 name|bdg_forward
 argument_list|(
-operator|&
 name|m
 argument_list|,
 name|eh
