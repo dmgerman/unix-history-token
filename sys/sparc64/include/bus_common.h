@@ -192,6 +192,26 @@ parameter_list|)
 value|((x)& INTMAP_INO)
 end_define
 
+begin_comment
+comment|/* counter-timer support. */
+end_comment
+
+begin_function_decl
+name|void
+name|sparc64_counter_init
+parameter_list|(
+name|bus_space_tag_t
+name|tag
+parameter_list|,
+name|bus_space_handle_t
+name|handle
+parameter_list|,
+name|bus_addr_t
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
