@@ -16023,7 +16023,7 @@ name|SetVariable
 block|,
 name|LOCAL_AUTH
 operator||
-name|LOCAL_CX_OPT
+name|LOCAL_CX
 block|,
 literal|"MRU value"
 block|,
