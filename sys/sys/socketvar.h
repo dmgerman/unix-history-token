@@ -183,6 +183,10 @@ name|mtx
 name|sb_mtx
 decl_stmt|;
 comment|/* sockbuf lock */
+name|short
+name|sb_state
+decl_stmt|;
+comment|/* (c/d) socket state on sockbuf */
 define|#
 directive|define
 name|sb_startzero
@@ -237,10 +241,6 @@ name|short
 name|sb_flags
 decl_stmt|;
 comment|/* (c/d) flags, see below */
-name|short
-name|sb_state
-decl_stmt|;
-comment|/* (c/d) socket state on sockbuf */
 block|}
 name|so_rcv
 struct|,
