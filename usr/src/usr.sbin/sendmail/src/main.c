@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.112 (Berkeley) %G%"
+literal|"@(#)main.c	8.113 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7536,7 +7536,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d MX records:\n"
+literal|"getmxrr(%s) returns %d value(s):\n"
+argument_list|,
+name|p
 argument_list|,
 name|nmx
 argument_list|)
