@@ -38,32 +38,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_decl_stmt
-specifier|static
-name|int
-name|bootverbose
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
@@ -82,11 +56,6 @@ include|#
 directive|include
 file|<pci/pcivar.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -125,6 +94,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -134,7 +108,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<dev/ic/ioctl_meteor.h>
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ic/bt8xx.h>
 end_include
 
 begin_comment
@@ -144,7 +124,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/ic/ioctl_bt848.h>
+file|<dev/pci/bktr/bktr_reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_core.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_tuner.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_card.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_audio.h>
 end_include
 
 begin_else
@@ -171,11 +175,6 @@ end_include
 begin_comment
 comment|/* extensions to ioctl_meteor.h */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -206,6 +205,11 @@ include|#
 directive|include
 file|<dev/bktr/bktr_audio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Prototypes for the GV_BCTV specific functions.  */
@@ -469,7 +473,12 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"bktr: audio cmd error %02x\n"
+literal|"%s: audio cmd error %02x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|cmd
 argument_list|)
@@ -590,7 +599,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cmd: %d audio mux %x temp %x \n"
+literal|"%s: cmd: %d audio mux %x temp %x \n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|cmd
 argument_list|,
@@ -1613,15 +1627,6 @@ literal|0
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"inside fast MSP autodetect code\n"
-argument_list|)
-expr_stmt|;
 name|msp_dpl_write
 argument_list|(
 name|bktr
@@ -1699,15 +1704,6 @@ literal|1
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"inside slow MSP autodetect code\n"
-argument_list|)
-expr_stmt|;
 name|msp_dpl_write
 argument_list|(
 name|bktr
@@ -1788,7 +1784,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Result of autodetect after %dms: %d\n"
+literal|"%s: Result of autodetect after %dms: %d\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|loops
 operator|*
@@ -1844,7 +1845,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Stereo reg 0x18 a: %d\n"
+literal|"%s: Stereo reg 0x18 a: %d\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|stereo
 argument_list|)
@@ -1875,7 +1881,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Stereo reg 0x18 b: %d\n"
+literal|"%s: Stereo reg 0x18 b: %d\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|stereo
 argument_list|)
@@ -1906,7 +1917,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Stereo reg 0x18 c: %d\n"
+literal|"%s: Stereo reg 0x18 c: %d\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|stereo
 argument_list|)
@@ -1971,7 +1987,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Bilingual mode detected\n"
+literal|"%s: Bilingual mode detected\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|msp_dpl_write
@@ -2101,7 +2122,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Unkown autodetection result value: %d\n"
+literal|"%s: Unknown autodetection result value: %d\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|auto_detect
 argument_list|)

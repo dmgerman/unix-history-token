@@ -61,11 +61,6 @@ directive|include
 file|<pci/pcivar.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -103,6 +98,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -112,7 +112,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<dev/ic/ioctl_meteor.h>
+file|<dev/ic/bt8xx.h>
 end_include
 
 begin_comment
@@ -122,7 +122,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/ic/ioctl_bt848.h>
+file|<dev/pci/bktr/bktr_reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_core.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_tuner.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_card.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_audio.h>
 end_include
 
 begin_else
@@ -149,11 +173,6 @@ end_include
 begin_comment
 comment|/* extensions to ioctl_meteor.h */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -184,21 +203,6 @@ include|#
 directive|include
 file|<dev/bktr/bktr_audio.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|bootverbose
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -334,7 +338,7 @@ end_define
 begin_if
 if|#
 directive|if
-name|BROOKTREE_SYSTEM_DEFAULT
+name|BKTR_SYSTEM_DEFAULT
 operator|==
 name|BROOKTREE_PAL
 end_if
@@ -1749,7 +1753,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * determine the card brand/model  * OVERRIDE_CARD, OVERRIDE_TUNER, OVERRIDE_DBX and OVERRIDE_MSP  * can be used to select a specific device, regardless of the  * autodetection and i2c device checks.  *  * The scheme used for probing cards faces these problems:  *  It is impossible to work out which type of tuner is actually fitted,  *  (the driver cannot tell if the Tuner is PAL or NTSC, Temic or Philips)  *  It is impossible to determine what audio-mux hardware is connected.  *  It is impossible to determine if there is extra hardware connected to the  *  GPIO pins  (eg radio chips or MSP34xx reset logic)  *  * However some makes of card (eg Hauppauge) come with a configuration eeprom  * which tells us the make of the card. Most eeproms also tell us the  * tuner type and other features of the the cards.  *  * The current probe code works as follows  * A) If the card uses a Bt878/879:  *   1) Read the sub-system vendor id from the configuration EEPROM.  *      Select the required tuner, audio mux arrangement and any other  *      onboard features. If this fails, move to step B.  * B) If it card uses a Bt848, 848A, 849A or an unknown Bt878/879:  *   1) Look for I2C devices. If there are none fitted, it is an Intel or  *      VideoLogic cards.  *   2) Look for a configuration EEPROM.  *   2a) If there is one at I2C address 0xa0 it may be  *       a Hauppauge or an Osprey. Check the EEPROM contents to determine which  *       one it is. For Hauppauge, select the tuner type and audio hardware.  *   2b) If there is an EEPROM at I2C address 0xa8 it will be an STB card.  *       We still have to guess on the tuner type.  *                * C) If we do not know the card type from (A) or (B), guess at the tuner  *    type based on the I2C address of the tuner.  *  * D) After determining the Tuner Type, we probe the i2c bus for other  *    devices at known locations, eg IR-Remote Control, MSP34xx and TDA  *    stereo chips.  */
+comment|/*  * determine the card brand/model  * BKTR_OVERRIDE_CARD, BKTR_OVERRIDE_TUNER, BKTR_OVERRIDE_DBX and  * BKTR_OVERRIDE_MSP can be used to select a specific device,  * regardless of the autodetection and i2c device checks.  *  * The scheme used for probing cards faces these problems:  *  It is impossible to work out which type of tuner is actually fitted,  *  (the driver cannot tell if the Tuner is PAL or NTSC, Temic or Philips)  *  It is impossible to determine what audio-mux hardware is connected.  *  It is impossible to determine if there is extra hardware connected to the  *  GPIO pins  (eg radio chips or MSP34xx reset logic)  *  * However some makes of card (eg Hauppauge) come with a configuration eeprom  * which tells us the make of the card. Most eeproms also tell us the  * tuner type and other features of the the cards.  *  * The current probe code works as follows  * A) If the card uses a Bt878/879:  *   1) Read the sub-system vendor id from the configuration EEPROM.  *      Select the required tuner, audio mux arrangement and any other  *      onboard features. If this fails, move to step B.  * B) If it card uses a Bt848, 848A, 849A or an unknown Bt878/879:  *   1) Look for I2C devices. If there are none fitted, it is an Intel or  *      VideoLogic cards.  *   2) Look for a configuration EEPROM.  *   2a) If there is one at I2C address 0xa0 it may be  *       a Hauppauge or an Osprey. Check the EEPROM contents to determine which  *       one it is. For Hauppauge, select the tuner type and audio hardware.  *   2b) If there is an EEPROM at I2C address 0xa8 it will be an STB card.  *       We still have to guess on the tuner type.  *                * C) If we do not know the card type from (A) or (B), guess at the tuner  *    type based on the I2C address of the tuner.  *  * D) After determining the Tuner Type, we probe the i2c bus for other  *    devices at known locations, eg IR-Remote Control, MSP34xx and TDA  *    stereo chips.  */
 end_comment
 
 begin_comment
@@ -1875,7 +1879,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"bktr: GPIO is 0x%08x\n"
+literal|"%s: GPIO is 0x%08x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|INL
 argument_list|(
@@ -2006,7 +2015,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|OVERRIDE_CARD
+name|BKTR_OVERRIDE_CARD
 argument_list|)
 name|bktr
 operator|->
@@ -2017,7 +2026,7 @@ index|[
 operator|(
 name|card
 operator|=
-name|OVERRIDE_CARD
+name|BKTR_OVERRIDE_CARD
 operator|)
 index|]
 expr_stmt|;
@@ -2240,7 +2249,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"subsystem 0x%04x 0x%04x\n"
+literal|"%s: subsystem 0x%04x 0x%04x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|subsystem_vendor_id
 argument_list|,
@@ -2533,7 +2547,12 @@ comment|/* Vendor is unknown. We will use the standard probe code */
 comment|/* which may not give best results */
 name|printf
 argument_list|(
-literal|"Warning - card vendor 0x%04x (model 0x%04x) unknown.\n"
+literal|"%s: Warning - card vendor 0x%04x (model 0x%04x) unknown.\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|subsystem_vendor_id
 argument_list|,
@@ -2545,7 +2564,12 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Card has no configuration EEPROM. Cannot determine card make.\n"
+literal|"%s: Card has no configuration EEPROM. Cannot determine card make.\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2828,12 +2852,22 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"Warning: Unknown card type. EEPROM data not recognised\n"
+literal|"%s: Warning: Unknown card type. EEPROM data not recognised\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%x %x %x %x\n"
+literal|"%s: %x %x %x %x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|eeprom
 index|[
@@ -2938,7 +2972,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"card signature \n"
+literal|"%s: card signature: "
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -3266,13 +3305,13 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|OVERRIDE_TUNER
+name|BKTR_OVERRIDE_TUNER
 argument_list|)
 name|select_tuner
 argument_list|(
 name|bktr
 argument_list|,
-name|OVERRIDE_TUNER
+name|BKTR_OVERRIDE_TUNER
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3531,9 +3570,12 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"bktr%d: Hauppauge Model %d %c%c%c%c\n"
+literal|"%s: Hauppauge Model %d %c%c%c%c\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|model
 argument_list|,
@@ -3743,7 +3785,12 @@ goto|;
 default|default :
 name|printf
 argument_list|(
-literal|"Warning - Unknown Hauppauge Tuner 0x%x\n"
+literal|"%s: Warning - Unknown Hauppauge Tuner 0x%x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|tuner_code
 argument_list|)
@@ -4043,7 +4090,12 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"Warning - Unknown AVerMedia Tuner Make %d Format %d\n"
+literal|"%s: Warning - Unknown AVerMedia Tuner Make %d Format %d\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|tuner_make
 argument_list|,
@@ -4057,7 +4109,7 @@ name|CARD_LEADTEK
 case|:
 if|#
 directive|if
-name|BROOKTREE_SYSTEM_DEFAULT
+name|BKTR_SYSTEM_DEFAULT
 operator|==
 name|BROOKTREE_PAL
 name|select_tuner
@@ -4152,7 +4204,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|OVERRIDE_DBX
+name|BKTR_OVERRIDE_DBX
 argument_list|)
 name|bktr
 operator|->
@@ -4160,7 +4212,7 @@ name|card
 operator|.
 name|dbx
 operator|=
-name|OVERRIDE_DBX
+name|BKTR_OVERRIDE_DBX
 expr_stmt|;
 goto|goto
 name|checkMSP
@@ -4321,7 +4373,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|OVERRIDE_MSP
+name|BKTR_OVERRIDE_MSP
 argument_list|)
 name|bktr
 operator|->
@@ -4329,7 +4381,7 @@ name|card
 operator|.
 name|msp3400c
 operator|=
-name|OVERRIDE_MSP
+name|BKTR_OVERRIDE_MSP
 expr_stmt|;
 goto|goto
 name|checkMSPEnd
@@ -4392,9 +4444,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bktr%d: Detected a MSP%s at 0x%x\n"
+literal|"%s: Detected a MSP%s at 0x%x\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|bktr
 operator|->
@@ -4450,9 +4505,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bktr%d: Detected a DPL%s at 0x%x\n"
+literal|"%s: Detected a DPL%s at 0x%x\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|bktr
 operator|->
@@ -4666,7 +4724,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|bktr
 operator|->

@@ -122,6 +122,22 @@ value|((caddr_t)bktr + 1)
 end_define
 
 begin_comment
+comment|/* device name for printf */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|bktr_name
+parameter_list|(
+name|bktr_ptr_t
+name|bktr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Prototypes for attatch and interrupt functions */
 end_comment
 

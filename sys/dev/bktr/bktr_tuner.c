@@ -74,11 +74,6 @@ directive|include
 file|<pci/pcivar.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -116,6 +111,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -125,7 +125,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<dev/ic/ioctl_meteor.h>
+file|<dev/ic/bt8xx.h>
 end_include
 
 begin_comment
@@ -135,7 +135,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/ic/ioctl_bt848.h>
+file|<dev/pci/bktr/bktr_reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_tuner.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_card.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_core.h>
 end_include
 
 begin_else
@@ -163,11 +181,6 @@ begin_comment
 comment|/* extensions to ioctl_meteor.h */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -191,6 +204,11 @@ include|#
 directive|include
 file|<dev/bktr/bktr_core.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -3247,7 +3265,12 @@ name|TEST_TUNER_AFC
 argument_list|)
 name|printf
 argument_list|(
-literal|"do_afc: failed to lock\n"
+literal|"%s: do_afc: failed to lock\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3287,7 +3310,12 @@ name|TEST_TUNER_AFC
 argument_list|)
 name|printf
 argument_list|(
-literal|"do_afc: returned freq %d (%d %% %d)\n"
+literal|"%s: do_afc: returned freq %d (%d %% %d)\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|frequency
 argument_list|,
@@ -3308,7 +3336,12 @@ name|oldFrequency
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"changed by: %d clicks (%d mod %d)\n"
+literal|"%s: changed by: %d clicks (%d mod %d)\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|afcDelta
 argument_list|,
@@ -3549,7 +3582,12 @@ name|TEST_TUNER_AFC
 argument_list|)
 name|printf
 argument_list|(
-literal|"\nOriginal freq: %d, status: 0x%02x\n"
+literal|"%s: Original freq: %d, status: 0x%02x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|frequency
 argument_list|,
@@ -3610,7 +3648,12 @@ name|TEST_TUNER_AFC
 argument_list|)
 name|printf
 argument_list|(
-literal|"no lock!\n"
+literal|"%s: no lock!\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3637,7 +3680,12 @@ name|TEST_TUNER_AFC
 argument_list|)
 name|printf
 argument_list|(
-literal|"Centered, freq: %d, status: 0x%02x\n"
+literal|"%s: Centered, freq: %d, status: 0x%02x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|frequency
 argument_list|,
@@ -3665,7 +3713,12 @@ name|TEST_TUNER_AFC
 argument_list|)
 name|printf
 argument_list|(
-literal|"Low, freq: %d, status: 0x%02x\n"
+literal|"%s: Low, freq: %d, status: 0x%02x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|frequency
 argument_list|,
@@ -3692,7 +3745,12 @@ name|TEST_TUNER_AFC
 argument_list|)
 name|printf
 argument_list|(
-literal|"Hi, freq: %d, status: 0x%02x\n"
+literal|"%s: Hi, freq: %d, status: 0x%02x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|frequency
 argument_list|,

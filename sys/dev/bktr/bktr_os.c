@@ -343,7 +343,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<dev/ic/ioctl_meteor.h>
+file|<dev/ic/bt8xx.h>
 end_include
 
 begin_comment
@@ -353,7 +353,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/ic/ioctl_bt848.h>
+file|<dev/pci/bktr/bktr_reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_tuner.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_card.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_audio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_core.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/bktr/bktr_os.h>
 end_include
 
 begin_else
@@ -380,11 +410,6 @@ end_include
 begin_comment
 comment|/* extensions to ioctl_meteor.h */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -421,6 +446,11 @@ include|#
 directive|include
 file|<dev/bktr/bktr_os.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -734,15 +764,6 @@ include|#
 directive|include
 file|<dev/pci/pcidevs.h>
 end_include
-
-begin_decl_stmt
-specifier|static
-name|int
-name|bootverbose
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -1257,6 +1278,25 @@ operator|=
 name|device_get_unit
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+comment|/* build the device name for bktr_name() */
+name|snprintf
+argument_list|(
+name|bktr
+operator|->
+name|bktr_xname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bktr
+operator|->
+name|bktr_xname
+argument_list|)
+argument_list|,
+literal|"bktr%d"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enable bus mastering and Memory Mapped device 	 */
@@ -3635,6 +3675,25 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* build the device name for bktr_name() */
+name|snprintf
+argument_list|(
+name|bktr
+operator|->
+name|bktr_xname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bktr
+operator|->
+name|bktr_xname
+argument_list|)
+argument_list|,
+literal|"bktr%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 comment|/* Enable Memory Mapping */
 name|fun
 operator|=
@@ -5451,7 +5510,7 @@ argument_list|(
 operator|(
 name|dev_t
 operator|,
-name|vm_offset_t
+name|int
 operator|,
 name|int
 operator|)
@@ -5477,11 +5536,6 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__BROKEN_INDIRECT_CONFIG
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|__OpenBSD__
@@ -5643,11 +5697,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__BROKEN_INDIRECT_CONFIG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__OpenBSD__
 argument_list|)
 name|void
@@ -5737,28 +5786,25 @@ begin_comment
 comment|/*  * the attach routine.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|bktr_attach
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|device
-operator|*
+modifier|*
 name|parent
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|device
-operator|*
+modifier|*
 name|self
-operator|,
+parameter_list|,
 name|void
-operator|*
+modifier|*
 name|aux
-operator|)
-argument_list|)
+parameter_list|)
 block|{
 name|bktr_ptr_t
 name|bktr
@@ -6120,10 +6166,7 @@ name|bktr
 operator|->
 name|memh
 argument_list|,
-operator|&
-name|bktr
-operator|->
-name|phys_base
+name|NULL
 argument_list|,
 operator|&
 name|bktr
@@ -6134,7 +6177,7 @@ expr_stmt|;
 name|DPR
 argument_list|(
 operator|(
-literal|"pci_mapreg_map: memt %x, memh %x, base %x, size %x\n"
+literal|"pci_mapreg_map: memt %x, memh %x, size %x\n"
 operator|,
 name|bktr
 operator|->
@@ -6146,13 +6189,6 @@ operator|)
 name|bktr
 operator|->
 name|memh
-operator|,
-operator|(
-name|u_int
-operator|)
-name|bktr
-operator|->
-name|phys_base
 operator|,
 operator|(
 name|u_int
@@ -6172,11 +6208,10 @@ name|printf
 argument_list|(
 literal|"%s: couldn't map memory\n"
 argument_list|,
+name|bktr_name
+argument_list|(
 name|bktr
-operator|->
-name|bktr_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6230,11 +6265,10 @@ name|printf
 argument_list|(
 literal|"%s: couldn't map interrupt\n"
 argument_list|,
+name|bktr_name
+argument_list|(
 name|bktr
-operator|->
-name|bktr_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6282,11 +6316,10 @@ name|printf
 argument_list|(
 literal|"%s: couldn't establish interrupt"
 argument_list|,
+name|bktr_name
+argument_list|(
 name|bktr
-operator|->
-name|bktr_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6319,11 +6352,10 @@ name|printf
 argument_list|(
 literal|"%s: interrupting at %s\n"
 argument_list|,
+name|bktr_name
+argument_list|(
 name|bktr
-operator|->
-name|bktr_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|intrstr
 argument_list|)
@@ -6381,11 +6413,10 @@ name|printf
 argument_list|(
 literal|"%s: PCI bus latency was 0 changing to %d"
 argument_list|,
+name|bktr_name
+argument_list|(
 name|bktr
-operator|->
-name|bktr_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|BROOKTREE_DEF_LATENCY_VALUE
 argument_list|)
@@ -6413,7 +6444,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Enabled Bus Master and Memory Mapping */
+comment|/* Enabled Bus Master 	   XXX: check if all old DMA is stopped first (e.g. after warm 	   boot) */
 name|fun
 operator|=
 name|pci_conf_read
@@ -6443,39 +6474,7 @@ name|PCI_COMMAND_STATUS_REG
 argument_list|,
 name|fun
 operator||
-literal|2
-argument_list|)
-expr_stmt|;
-name|fun
-operator|=
-name|pci_conf_read
-argument_list|(
-name|pa
-operator|->
-name|pa_pc
-argument_list|,
-name|pa
-operator|->
-name|pa_tag
-argument_list|,
-name|PCI_COMMAND_STATUS_REG
-argument_list|)
-expr_stmt|;
-name|pci_conf_write
-argument_list|(
-name|pa
-operator|->
-name|pa_pc
-argument_list|,
-name|pa
-operator|->
-name|pa_tag
-argument_list|,
-name|PCI_COMMAND_STATUS_REG
-argument_list|,
-name|fun
-operator||
-literal|4
+name|PCI_COMMAND_MASTER_ENABLE
 argument_list|)
 expr_stmt|;
 comment|/* read the pci id and determine the card type */
@@ -6523,7 +6522,7 @@ name|rev
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Special Memory Allocation  */
@@ -6631,13 +6630,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: Unable to dmamem_alloc of %d bytes\n"
+literal|"%s: Unable to dmamem_alloc of %d bytes\n"
 argument_list|,
+name|bktr_name
+argument_list|(
 name|bktr
-operator|->
-name|bktr_dev
-operator|.
-name|dv_unit
+argument_list|)
 argument_list|,
 name|size
 argument_list|)
@@ -6671,13 +6669,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: Unable to dmamem_map of %d bytes\n"
+literal|"%s: Unable to dmamem_map of %d bytes\n"
 argument_list|,
+name|bktr_name
+argument_list|(
 name|bktr
-operator|->
-name|bktr_dev
-operator|.
-name|dv_unit
+argument_list|)
 argument_list|,
 name|size
 argument_list|)
@@ -6730,13 +6727,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: Unable to dmamap_create of %d bytes\n"
+literal|"%s: Unable to dmamap_create of %d bytes\n"
 argument_list|,
+name|bktr_name
+argument_list|(
 name|bktr
-operator|->
-name|bktr_dev
-operator|.
-name|dv_unit
+argument_list|)
 argument_list|,
 name|size
 argument_list|)
@@ -6785,13 +6781,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: Unable to dmamap_load of %d bytes\n"
+literal|"%s: Unable to dmamap_load of %d bytes\n"
 argument_list|,
+name|bktr_name
+argument_list|(
 name|bktr
-operator|->
-name|bktr_dev
-operator|.
-name|dv_unit
+argument_list|)
 argument_list|,
 name|size
 argument_list|)
@@ -6951,7 +6946,7 @@ name|UNIT
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0x0f)
+value|(minor((x)& 0x0f))
 end_define
 
 begin_define
@@ -6961,7 +6956,7 @@ name|FUNCTION
 parameter_list|(
 name|x
 parameter_list|)
-value|((x>> 4)& 0x0f)
+value|(minor((x>> 4)& 0x0f))
 end_define
 
 begin_comment
@@ -6997,10 +6992,7 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* unit out of range */
@@ -7060,10 +7052,7 @@ switch|switch
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -7142,39 +7131,9 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
-argument_list|(
 name|dev
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* unit out of range */
-if|if
-condition|(
-operator|(
-name|unit
-operator|>
-name|bktr_cd
-operator|.
-name|cd_ndevs
-operator|)
-operator|||
-operator|(
-name|bktr_cd
-operator|.
-name|cd_devs
-index|[
-name|unit
-index|]
-operator|==
-name|NULL
-operator|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 name|bktr
 operator|=
 name|bktr_cd
@@ -7188,10 +7147,7 @@ switch|switch
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -7267,39 +7223,9 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
-argument_list|(
 name|dev
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* unit out of range */
-if|if
-condition|(
-operator|(
-name|unit
-operator|>
-name|bktr_cd
-operator|.
-name|cd_ndevs
-operator|)
-operator|||
-operator|(
-name|bktr_cd
-operator|.
-name|cd_devs
-index|[
-name|unit
-index|]
-operator|==
-name|NULL
-operator|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 name|bktr
 operator|=
 name|bktr_cd
@@ -7313,10 +7239,7 @@ switch|switch
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -7426,39 +7349,9 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
-argument_list|(
 name|dev
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* unit out of range */
-if|if
-condition|(
-operator|(
-name|unit
-operator|>
-name|bktr_cd
-operator|.
-name|cd_ndevs
-operator|)
-operator|||
-operator|(
-name|bktr_cd
-operator|.
-name|cd_devs
-index|[
-name|unit
-index|]
-operator|==
-name|NULL
-operator|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 name|bktr
 operator|=
 name|bktr_cd
@@ -7486,10 +7379,7 @@ switch|switch
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -7551,7 +7441,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|vm_offset_t
+name|int
 name|offset
 parameter_list|,
 name|int
@@ -7568,52 +7458,19 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
-argument_list|(
 name|dev
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* unit out of range */
-if|if
-condition|(
-operator|(
-name|unit
-operator|>
-name|bktr_cd
-operator|.
-name|cd_ndevs
-operator|)
-operator|||
-operator|(
-name|bktr_cd
-operator|.
-name|cd_devs
-index|[
-name|unit
-index|]
-operator|==
-name|NULL
-operator|)
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 if|if
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 operator|>
 literal|0
 condition|)
+comment|/* only allow mmap on /dev/bktr[n] */
 return|return
 operator|(
 operator|-
@@ -7631,6 +7488,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|vaddr_t
+operator|)
 name|offset
 operator|<
 literal|0
@@ -7643,6 +7503,9 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+name|vaddr_t
+operator|)
 name|offset
 operator|>=
 name|bktr
@@ -7676,6 +7539,9 @@ name|dm_segs
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|vaddr_t
+operator|)
 name|offset
 argument_list|,
 name|nprot
