@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.13 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -5768,7 +5768,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|struct
@@ -5917,6 +5917,11 @@ name|op
 operator|->
 name|connect
 expr_stmt|;
+if|if
+condition|(
+name|hostname
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -5928,14 +5933,19 @@ name|name
 argument_list|,
 name|hostname
 argument_list|,
-literal|31
-argument_list|)
-expr_stmt|;
-operator|(
+sizeof|sizeof
+argument_list|(
 name|ip
 operator|->
 name|name
-operator|)
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|name
 index|[
 name|strlen
 argument_list|(
@@ -5946,6 +5956,17 @@ argument_list|)
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+block|}
+else|else
+name|ip
+operator|->
+name|name
+index|[
+literal|0
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|hostname
 operator|=
