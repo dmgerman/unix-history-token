@@ -1,16 +1,38 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Minimally compliant SunOS compatible audio driver front-end  * for use with VAT.  *  * This is a front end for the voxware based drivers that form the standard  * audio driver system for FreeBSD.  It will not operate without the voxware  * package.  *  * This is not a full implementation of the SunOS audio driver, don't  * expect anything other than vat to operate with it.  *  * ---WARNING  * ---WARNING this work is not complete, it still doesn't work  * ---WARNING  *  * Copyright (C) 1993-1994 Amancio Hasty.  *  * Permission to use, copy, modify, distribute, and sell this software  * and its documentation for any purpose is hereby granted without  * fee, provided that the above copyright notice appear in all copies  * and that both that copyright notice and this permission notice  * appear in supporting documentation.  *  * This software is provided `as-is'.  The author disclaims all  * warranties with regard to this software, including without  * limitation all implied warranties of merchantability, fitness for  * a particular purpose, or noninfringement.  In no event shall the  * author be liable for any damages whatsoever, including  * special, incidental or consequential damages, including loss of  * use, data, or profits, even if advised of the possibility thereof,  * and regardless of whether in an action in contract, tort or  * negligence, arising out of or in connection with the use or  * performance of this software.  *  */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"vat_audio.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"snd.h"
+end_include
+
+begin_comment
+comment|/* Generic Sound Driver (voxware) */
+end_comment
+
 begin_if
 if|#
 directive|if
+operator|(
 name|NVAT_AUDIO
 operator|>
 literal|0
+operator|)
+operator|&&
+operator|(
+name|NSND
+operator|>
+literal|0
+operator|)
 end_if
 
 begin_include
@@ -34,23 +56,90 @@ end_include
 begin_define
 define|#
 directive|define
-name|PAS_AUDIO
-value|(SND_DEV_AUDIO | 0x10)
+name|splaudio
+value|splclock
 end_define
 
-begin_define
-define|#
-directive|define
-name|SB_AUDIO
-value|(SND_DEV_AUDIO )
-end_define
+begin_function_decl
+specifier|extern
+name|int
+name|sndopen
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
-name|MIXER
-value|(SND_DEV_CTL)
-end_define
+begin_function_decl
+specifier|extern
+name|int
+name|sndclose
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|sndioctl
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|sndread
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|sndwrite
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct
 struct|struct
@@ -89,32 +178,6 @@ name|open
 decl_stmt|;
 block|}
 name|va_softc
-init|=
-block|{
-name|PAS_AUDIO
-block|,
-name|SB_AUDIO
-block|,
-name|MIXER
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
 struct|;
 end_struct
 
@@ -165,12 +228,73 @@ literal|1024
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|splaudio
-value|splclock
-end_define
+begin_decl_stmt
+specifier|static
+name|u_int
+name|record_devices
+init|=
+operator|(
+name|SOUND_MASK_MIC
+operator||
+name|SOUND_MASK_LINE
+operator||
+name|SOUND_MASK_CD
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|default_level
+index|[
+name|SOUND_MIXER_NRDEVICES
+index|]
+init|=
+block|{
+comment|/* max = 0x64 */
+literal|0x3232
+block|,
+comment|/* Master Volume */
+literal|0x3232
+block|,
+comment|/* Bass */
+literal|0x3232
+block|,
+comment|/* Treble */
+literal|0x0000
+block|,
+comment|/* FM */
+literal|0x6464
+block|,
+comment|/* PCM */
+literal|0x0000
+block|,
+comment|/* PC Speaker */
+literal|0x6464
+block|,
+comment|/* Ext Line */
+literal|0x6464
+block|,
+comment|/* Mic */
+literal|0x4b4b
+block|,
+comment|/* CD */
+literal|0x0000
+block|,
+comment|/* Recording monitor (input mixer)  -- avoid feedback */
+literal|0x4b4b
+block|,
+comment|/* SB PCM */
+literal|0x6464
+block|,
+comment|/* Record Level -- to ADC */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
 
 begin_function
 specifier|static
@@ -233,6 +357,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|arg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -263,8 +389,7 @@ name|va_softc
 decl_stmt|;
 name|int
 name|arg
-decl_stmt|;
-name|int
+decl_stmt|,
 name|arg1
 decl_stmt|;
 name|level
@@ -299,6 +424,8 @@ name|SOUND_MIXER_WRITE_LINE
 argument_list|,
 operator|&
 name|arg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sndioctl
@@ -311,6 +438,8 @@ name|SOUND_MIXER_WRITE_MIC
 argument_list|,
 operator|&
 name|arg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sndioctl
@@ -323,6 +452,8 @@ name|SOUND_MIXER_WRITE_CD
 argument_list|,
 operator|&
 name|arg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -441,71 +572,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|int
-name|default_level
-index|[
-name|SOUND_MIXER_NRDEVICES
-index|]
-init|=
-block|{
-comment|/* max = 0x64 */
-literal|0x3232
-block|,
-comment|/* Master Volume */
-literal|0x3232
-block|,
-comment|/* Bass */
-literal|0x3232
-block|,
-comment|/* Treble */
-literal|0x0
-block|,
-comment|/* FM */
-literal|0x6464
-block|,
-comment|/* PCM */
-literal|0x0
-block|,
-comment|/* PC Speaker */
-literal|0x6464
-block|,
-comment|/* Ext Line */
-literal|0x6464
-block|,
-comment|/* Mic */
-literal|0x4b4b
-block|,
-comment|/* CD */
-literal|0x0
-block|,
-comment|/* Recording monitor (input mixer)  -- avoid feedback */
-literal|0x4b4b
-block|,
-comment|/* SB PCM */
-literal|0x6464
-block|,
-comment|/* Record Level -- to ADC */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|record_devices
-init|=
-operator|(
-name|SOUND_MASK_MIC
-operator||
-name|SOUND_MASK_LINE
-operator||
-name|SOUND_MASK_CD
-operator|)
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
@@ -553,6 +619,40 @@ name|open
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SND_BIDIR
+name|va
+operator|->
+name|rdev
+operator|=
+name|SND_DEV_AUDIO
+operator||
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+expr_stmt|;
+comment|/* first and second device */
+name|va
+operator|->
+name|pdev
+operator|=
+name|SND_DEV_AUDIO
+operator||
+operator|(
+literal|0
+operator|<<
+literal|4
+operator|)
+expr_stmt|;
+name|va
+operator|->
+name|mixer
+operator|=
+name|SND_DEV_CTL
+expr_stmt|;
 name|s
 operator|=
 name|sndopen
@@ -618,6 +718,69 @@ name|s
 operator|)
 return|;
 block|}
+else|#
+directive|else
+name|va
+operator|->
+name|rdev
+operator|=
+name|SND_DEV_AUDIO
+operator||
+operator|(
+literal|0
+operator|<<
+literal|4
+operator|)
+expr_stmt|;
+comment|/* first attached device */
+name|va
+operator|->
+name|pdev
+operator|=
+name|SND_DEV_AUDIO
+operator||
+operator|(
+literal|0
+operator|<<
+literal|4
+operator|)
+expr_stmt|;
+name|va
+operator|->
+name|mixer
+operator|=
+name|SND_DEV_CTL
+expr_stmt|;
+name|s
+operator|=
+name|sndopen
+argument_list|(
+name|va
+operator|->
+name|rdev
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+condition|)
+block|{
+name|va
+operator|->
+name|open
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|s
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 comment|/* set sample rates */
 name|setprate
 argument_list|(
@@ -640,6 +803,8 @@ name|SNDCTL_DSP_GETBLKSIZE
 argument_list|,
 operator|&
 name|iblocksize
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sndioctl
@@ -652,6 +817,8 @@ name|SNDCTL_DSP_GETBLKSIZE
 argument_list|,
 operator|&
 name|oblocksize
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* initialize mixer controls the way we want them */
@@ -665,6 +832,8 @@ name|SOUND_MIXER_WRITE_RECSRC
 argument_list|,
 operator|&
 name|record_devices
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -696,6 +865,8 @@ name|default_level
 index|[
 name|s
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|va
@@ -734,15 +905,10 @@ literal|100
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|flags
 operator|&
 name|FREAD
-operator|)
-operator|!=
-literal|0
 condition|)
-block|{
 comment|/* start the read process */
 name|DMAbuf_start_input
 argument_list|(
@@ -753,7 +919,6 @@ operator|>>
 literal|4
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -801,9 +966,14 @@ name|mixer
 argument_list|,
 name|SNDCTL_DSP_RESET
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SND_BIDIR
 name|sndclose
 argument_list|(
 name|va
@@ -822,6 +992,19 @@ argument_list|,
 name|FREAD
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|sndclose
+argument_list|(
+name|va
+operator|->
+name|rdev
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -841,9 +1024,6 @@ name|struct
 name|uio
 modifier|*
 name|buf
-parameter_list|,
-name|int
-name|ioflag
 parameter_list|)
 block|{
 specifier|register
@@ -861,7 +1041,6 @@ operator|&
 name|va_softc
 decl_stmt|;
 return|return
-operator|(
 name|sndread
 argument_list|(
 name|va
@@ -869,10 +1048,7 @@ operator|->
 name|rdev
 argument_list|,
 name|buf
-argument_list|,
-name|ioflag
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -888,9 +1064,6 @@ name|struct
 name|uio
 modifier|*
 name|buf
-parameter_list|,
-name|int
-name|ioflag
 parameter_list|)
 block|{
 specifier|register
@@ -908,7 +1081,6 @@ operator|&
 name|va_softc
 decl_stmt|;
 return|return
-operator|(
 name|sndwrite
 argument_list|(
 name|va
@@ -916,10 +1088,7 @@ operator|->
 name|pdev
 argument_list|,
 name|buf
-argument_list|,
-name|ioflag
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -1155,7 +1324,6 @@ name|va
 operator|->
 name|open
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1510,18 +1678,17 @@ name|va_softc
 decl_stmt|;
 name|int
 name|s
-decl_stmt|;
-name|int
+decl_stmt|,
 name|r
 decl_stmt|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
 name|s
 operator|=
 name|splaudio
 argument_list|()
-expr_stmt|;
-name|r
-operator|=
-literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -1605,7 +1772,9 @@ end_function
 begin_function
 name|void
 name|audio_rint
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -1620,15 +1789,6 @@ operator|*
 operator|)
 operator|&
 name|va_softc
-decl_stmt|;
-specifier|register
-name|u_char
-modifier|*
-name|tp
-decl_stmt|;
-specifier|register
-name|int
-name|cc
 decl_stmt|;
 if|if
 condition|(
@@ -1652,7 +1812,9 @@ end_function
 begin_function
 name|void
 name|audio_pint
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -1667,15 +1829,6 @@ operator|*
 operator|)
 operator|&
 name|va_softc
-decl_stmt|;
-specifier|register
-name|u_char
-modifier|*
-name|tp
-decl_stmt|;
-specifier|register
-name|int
-name|cc
 decl_stmt|;
 if|if
 condition|(
@@ -1704,15 +1857,19 @@ end_else
 begin_function
 name|void
 name|audio_rint
-parameter_list|()
-block|{ }
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
 end_function
 
 begin_function
 name|void
 name|audio_pint
-parameter_list|()
-block|{ }
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
 end_function
 
 begin_endif
@@ -1721,7 +1878,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NVAT_AUDIO */
+comment|/* NVAT_AUDIO&& NSND */
 end_comment
 
 end_unit

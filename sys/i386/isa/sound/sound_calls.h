@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	DMA buffer calls  *  * $Id: sound_calls.h,v 1.10 1995/03/12 23:34:06 swallace Exp $  */
+comment|/*  *	DMA buffer calls  *  * $Id: sound_calls.h,v 1.11 1995/03/28 07:56:13 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -111,6 +111,16 @@ name|buff_no
 parameter_list|,
 name|int
 name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|DMAbuf_start_input
+parameter_list|(
+name|int
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
