@@ -1976,7 +1976,7 @@ decl_stmt|;
 name|char
 name|tulip_boardid
 index|[
-literal|17
+literal|24
 index|]
 decl_stmt|;
 comment|/* buffer for board ID */
@@ -1986,6 +1986,7 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+comment|/* must be aligned */
 name|u_int8_t
 name|tulip_pci_busno
 decl_stmt|;
