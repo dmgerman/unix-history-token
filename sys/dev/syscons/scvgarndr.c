@@ -603,6 +603,21 @@ directive|ifndef
 name|SC_NO_CUTPASTE
 end_ifndef
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SC_ALT_MOUSE_IMAGE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SC_PIXEL_MODE
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|u_short
@@ -690,6 +705,11 @@ literal|0x0000
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
