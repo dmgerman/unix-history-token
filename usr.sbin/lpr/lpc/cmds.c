@@ -2652,7 +2652,7 @@ end_comment
 
 begin_function
 name|void
-name|init_clean
+name|clean_gi
 parameter_list|(
 name|int
 name|argc
@@ -2771,7 +2771,7 @@ end_function
 
 begin_function
 name|void
-name|init_tclean
+name|tclean_gi
 parameter_list|(
 name|int
 name|argc
@@ -2784,7 +2784,7 @@ parameter_list|)
 block|{
 comment|/* only difference between 'clean' and 'tclean' is one value */
 comment|/* (...and the fact that 'clean' is priv and 'tclean' is not) */
-name|init_clean
+name|clean_gi
 argument_list|(
 name|argc
 argument_list|,

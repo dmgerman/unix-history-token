@@ -235,7 +235,7 @@ name|cleanhelp
 block|,
 name|PR
 block|,
-name|init_clean
+name|clean_gi
 block|,
 name|clean_q
 block|}
@@ -383,7 +383,7 @@ name|tcleanhelp
 block|,
 literal|0
 block|,
-name|init_tclean
+name|tclean_gi
 block|,
 name|clean_q
 block|}
