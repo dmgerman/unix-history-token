@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)kbd.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)kbd.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1321,44 +1321,6 @@ operator|->
 name|sio_cmd
 operator|=
 name|WR0_RSTPEND
-expr_stmt|;
-name|tp
-operator|->
-name|t_state
-operator|&=
-operator|~
-operator|(
-name|TS_BUSY
-operator||
-name|TS_FLUSH
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_line
-condition|)
-operator|(
-operator|*
-name|linesw
-index|[
-name|tp
-operator|->
-name|t_line
-index|]
-operator|.
-name|l_start
-operator|)
-operator|(
-name|tp
-operator|)
-expr_stmt|;
-else|else
-name|kbdstart
-argument_list|(
-name|tp
-argument_list|)
 expr_stmt|;
 block|}
 block|}
