@@ -341,6 +341,12 @@ directive|include
 file|"iface.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ip.h"
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -1513,6 +1519,20 @@ argument_list|(
 name|ipcp
 operator|->
 name|my_compproto
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|" Queued packets:  %d\n"
+argument_list|,
+name|ip_QueueLen
+argument_list|(
+name|ipcp
 argument_list|)
 argument_list|)
 expr_stmt|;
