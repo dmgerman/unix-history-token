@@ -15,6 +15,12 @@ directive|define
 name|_NETSMB_DEV_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<netsmb/smb.h>
+end_include
+
 begin_define
 define|#
 directive|define
