@@ -8300,10 +8300,24 @@ block|}
 block|}
 else|else
 block|{
-name|prod
-operator|=
-literal|"unsupported controller"
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|amr_dev
+argument_list|,
+literal|"<unsupported controller>\n"
+argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_io_lock
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 comment|/*      * HP NetRaid controllers have a special encoding of the firmware and      * BIOS versions. The AMI version seems to have it as strings whereas      * the HP version does it with a leading uppercase character and two      * binary numbers.      */
 if|if
