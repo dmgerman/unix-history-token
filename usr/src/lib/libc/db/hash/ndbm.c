@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.1 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,12 @@ block|{
 name|HASHINFO
 name|info
 decl_stmt|;
+name|char
+name|path
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 name|info
 operator|.
 name|bsize
@@ -131,11 +137,25 @@ name|lorder
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|path
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|file
+argument_list|,
+name|DBM_SUFFIX
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|hash_open
 argument_list|(
-name|file
+name|path
 argument_list|,
 name|flags
 argument_list|,
