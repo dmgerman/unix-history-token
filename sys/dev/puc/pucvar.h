@@ -364,6 +364,9 @@ name|sc_desc
 decl_stmt|;
 comment|/* card-global dynamic data */
 name|int
+name|fastintr
+decl_stmt|;
+name|int
 name|barmuxed
 decl_stmt|;
 name|int
