@@ -6319,7 +6319,7 @@ operator|*
 name|scp
 argument_list|)
 argument_list|,
-name|VM_PROT_WRITE
+name|VM_PROT_READ
 argument_list|)
 operator|==
 literal|0
@@ -6660,7 +6660,7 @@ argument_list|(
 name|ucontext_t
 argument_list|)
 argument_list|,
-name|VM_PROT_WRITE
+name|VM_PROT_READ
 argument_list|)
 operator|==
 literal|0
