@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * HID spec: http://www.usb.org/developers/data/devclass/hid1_1.pdf  */
+comment|/*  * HID spec: http://www.usb.org/developers/devclass_docs/HID1_11.pdf  */
 end_comment
 
 begin_include
@@ -3947,7 +3947,7 @@ name|key
 operator|==
 literal|0
 condition|)
-break|break;
+continue|continue;
 for|for
 control|(
 name|j
@@ -3973,7 +3973,7 @@ index|]
 operator|==
 literal|0
 condition|)
-break|break;
+continue|continue;
 if|if
 condition|(
 name|key
@@ -4030,7 +4030,7 @@ name|key
 operator|==
 literal|0
 condition|)
-break|break;
+continue|continue;
 name|state
 operator|->
 name|ks_ntime
@@ -4071,7 +4071,7 @@ index|]
 operator|==
 literal|0
 condition|)
-break|break;
+continue|continue;
 if|if
 condition|(
 name|key
