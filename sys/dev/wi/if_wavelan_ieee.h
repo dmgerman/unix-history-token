@@ -2191,21 +2191,21 @@ begin_define
 define|#
 directive|define
 name|WI_DATA_HDRLEN
-value|WI_802_11_OFFSET
+value|0x44
 end_define
 
 begin_define
 define|#
 directive|define
 name|WI_MGMT_HDRLEN
-value|WI_802_11_OFFSET_RAW
+value|0x3C
 end_define
 
 begin_define
 define|#
 directive|define
 name|WI_CTL_HDRLEN
-value|WI_802_11_OFFSET_RAW
+value|0x3C
 end_define
 
 begin_comment
