@@ -1664,7 +1664,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s = %s\n"
+literal|"%s = %s"
 argument_list|,
 name|string
 argument_list|,
