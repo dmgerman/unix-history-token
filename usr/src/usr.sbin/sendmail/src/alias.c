@@ -75,7 +75,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.34 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.35 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -90,7 +90,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.34 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.35 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,7 +116,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.34 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.35 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +131,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.34 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.35 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3766,7 +3766,7 @@ literal|"%s: %s: message queued"
 argument_list|,
 name|buf
 argument_list|,
-name|strerror
+name|errstring
 argument_list|(
 name|err
 argument_list|)
