@@ -2032,14 +2032,6 @@ name|flag
 condition|)
 block|{
 case|case
-literal|'0'
-case|:
-name|partition
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
 literal|'1'
 case|:
 name|partition
@@ -2061,6 +2053,14 @@ case|:
 name|partition
 operator|=
 literal|3
+expr_stmt|;
+break|break;
+case|case
+literal|'4'
+case|:
+name|partition
+operator|=
+literal|4
 expr_stmt|;
 break|break;
 case|case
@@ -2435,10 +2435,10 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
-operator|<
+operator|<=
 name|NDOSPART
 condition|;
 name|i
@@ -2532,7 +2532,7 @@ name|usage
 label|:
 name|printf
 argument_list|(
-literal|"fdisk {-a|-i|-u} [-f<config file> [-t] [-v]] [-{0,1,2,3}] [disk]\n"
+literal|"fdisk {-a|-i|-u} [-f<config file> [-t] [-v]] [-{1,2,3,4}] [disk]\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2574,10 +2574,10 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
-operator|<
+operator|<=
 name|NDOSPART
 condition|;
 name|i
@@ -2648,6 +2648,8 @@ name|parts
 operator|)
 operator|+
 name|i
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2964,6 +2966,8 @@ name|parts
 operator|)
 operator|+
 name|i
+operator|-
+literal|1
 decl_stmt|;
 name|printf
 argument_list|(
@@ -3014,7 +3018,7 @@ if|if
 condition|(
 name|i
 operator|==
-literal|3
+literal|4
 condition|)
 block|{
 name|init_sector0
@@ -3024,7 +3028,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nThe static data for the DOS partition 3 has been reinitialized to:\n"
+literal|"\nThe static data for the DOS partition 4 has been reinitialized to:\n"
 argument_list|)
 expr_stmt|;
 name|print_part
@@ -3412,7 +3416,7 @@ decl_stmt|;
 name|int
 name|active
 init|=
-literal|3
+literal|4
 decl_stmt|,
 name|tmp
 decl_stmt|;
@@ -3499,16 +3503,18 @@ expr_stmt|;
 if|if
 condition|(
 name|active
-operator|>=
+operator|>
 literal|0
 operator|&&
 name|active
-operator|<
+operator|<=
 name|NDOSPART
 condition|)
 name|partp
 index|[
 name|active
+operator|-
+literal|1
 index|]
 operator|.
 name|dp_flag
@@ -5350,11 +5356,11 @@ if|if
 condition|(
 name|partition
 operator|<
-literal|0
+literal|1
 operator|||
 name|partition
 operator|>
-literal|3
+literal|4
 condition|)
 block|{
 name|fprintf
@@ -5387,6 +5393,8 @@ name|parts
 operator|)
 operator|+
 name|partition
+operator|-
+literal|1
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -5806,11 +5814,11 @@ if|if
 condition|(
 name|partition
 operator|<
-literal|0
+literal|1
 operator|||
 name|partition
 operator|>
-literal|3
+literal|4
 condition|)
 block|{
 name|fprintf
@@ -5868,6 +5876,8 @@ expr_stmt|;
 name|partp
 index|[
 name|partition
+operator|-
+literal|1
 index|]
 operator|.
 name|dp_flag
