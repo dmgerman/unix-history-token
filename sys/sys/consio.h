@@ -381,6 +381,17 @@ value|_IOW('c', 9, int)
 end_define
 
 begin_comment
+comment|/* clear the history (scroll back) buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONS_CLRHIST
+value|_IO('c', 10)
+end_define
+
+begin_comment
 comment|/* mouse cursor ioctl */
 end_comment
 
