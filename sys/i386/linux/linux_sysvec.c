@@ -843,7 +843,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * If FreeBSD& Linux have a difference of opinion about what a trap  * means, deal with it here.  */
+comment|/*  * If FreeBSD& Linux have a difference of opinion about what a trap  * means, deal with it here.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -3727,6 +3727,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 specifier|static

@@ -1969,12 +1969,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* Translate fault for emulators (e.g. Linux) */
 if|if
 condition|(
@@ -2062,12 +2056,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|user
 label|:
 name|userret
@@ -2088,6 +2076,7 @@ operator|&
 name|Giant
 argument_list|)
 condition|)
+comment|/* XXX why would Giant be owned here? */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -3674,12 +3663,19 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+comment|/* try to stabilize the system XXX */
 name|panic
 argument_list|(
 literal|"syscall"
 argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -3725,13 +3721,7 @@ operator|->
 name|sv_prepsyscall
 condition|)
 block|{
-comment|/* 		 * The prep code is not MP aware. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
+comment|/* 		 * The prep code is MP aware. 		 */
 call|(
 modifier|*
 name|p
@@ -3751,12 +3741,6 @@ name|code
 argument_list|,
 operator|&
 name|params
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
@@ -3870,7 +3854,7 @@ name|sy_narg
 operator|&
 name|SYF_ARGMASK
 expr_stmt|;
-comment|/* 	 * copyin is MP aware, but the tracing code is not 	 */
+comment|/* 	 * copyin and the ktrsyscall()/ktrsysret() code is MP-aware 	 */
 if|if
 condition|(
 name|params
@@ -3906,12 +3890,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -3978,21 +3956,6 @@ name|KTR_SYSCALL
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|ktrsyscall
 argument_list|(
 name|p
@@ -4183,21 +4146,6 @@ name|PSL_VM
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|frame
 operator|.
 name|tf_eflags
@@ -4239,21 +4187,6 @@ name|KTR_SYSRET
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|ktrsysret
 argument_list|(
 name|p
@@ -4275,21 +4208,27 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Release Giant if we had to get it 	 */
+comment|/* 	 * Release Giant if we previously set it.  Do not 	 * release based on mtx_owned() - we want to catch 	 * broken syscalls. 	 */
 if|if
 condition|(
-name|mtx_owned
-argument_list|(
+operator|(
+name|callp
+operator|->
+name|sy_narg
 operator|&
-name|Giant
-argument_list|)
+name|SYF_MPSAFE
+operator|)
+operator|==
+literal|0
 condition|)
+block|{
 name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * This works because errno is findable through the 	 * register set.  If we ever support an emulation where this 	 * is not the case, this code will need to be revisited. 	 */
 name|STOPEVENT
 argument_list|(

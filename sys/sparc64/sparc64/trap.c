@@ -783,12 +783,6 @@ argument_list|)
 expr_stmt|;
 name|trapsig
 label|:
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* Translate fault for emulators. */
 if|if
 condition|(
@@ -822,12 +816,6 @@ argument_list|,
 name|sig
 argument_list|,
 name|ucode
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|user
@@ -1394,11 +1382,11 @@ operator|->
 name|sv_prepsyscall
 condition|)
 block|{
-comment|/* 		 * The prep code is not MP aware. 		 */
+comment|/* 		 * The prep code is MP aware. 		 */
 if|#
 directive|if
 literal|0
-block|mtx_lock(&Giant); 		(*p->p_sysent->sv_prepsyscall)(tf, args,&code,&params); 		mtx_unlock(&Giant);
+block|(*p->p_sysent->sv_prepsyscall)(tf, args,&code,&params);
 endif|#
 directive|endif
 block|}
@@ -1650,21 +1638,6 @@ name|KTR_SYSCALL
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|ktrsyscall
 argument_list|(
 name|p
@@ -1875,21 +1848,6 @@ name|KTR_SYSRET
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|ktrsysret
 argument_list|(
 name|p
@@ -1911,14 +1869,18 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Release Giant if we had to get it 	 */
+comment|/* 	 * Release Giant if we had to get it.  Don't use mtx_owned(), 	 * we want to catch broken syscalls. 	 */
 if|if
 condition|(
-name|mtx_owned
-argument_list|(
+operator|(
+name|callp
+operator|->
+name|sy_narg
 operator|&
-name|Giant
-argument_list|)
+name|SYF_MPSAFE
+operator|)
+operator|==
+literal|0
 condition|)
 name|mtx_unlock
 argument_list|(

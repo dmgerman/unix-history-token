@@ -321,6 +321,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|void
 name|ktrsyscall
@@ -394,6 +398,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_traceflag
@@ -511,8 +521,18 @@ operator|&=
 operator|~
 name|KTRFAC_ACTIVE
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_decl_stmt
 name|void
@@ -566,6 +586,12 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_traceflag
@@ -640,6 +666,12 @@ name|p_traceflag
 operator|&=
 operator|~
 name|KTRFAC_ACTIVE
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 block|}
 end_block

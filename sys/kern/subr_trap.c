@@ -93,7 +93,7 @@ file|<machine/pcb.h>
 end_include
 
 begin_comment
-comment|/*  * Define the code needed before returning to user mode, for  * trap and syscall.  */
+comment|/*  * Define the code needed before returning to user mode, for  * trap and syscall.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -152,15 +152,15 @@ argument_list|(
 name|sig
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
@@ -594,12 +594,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|trapsignal
 argument_list|(
 name|p
@@ -645,20 +639,6 @@ argument_list|,
 name|framep
 argument_list|,
 name|sticks
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|s

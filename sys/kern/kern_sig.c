@@ -5252,7 +5252,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a signal caused by a trap to the current process.  * If it will be caught immediately, deliver it with correct code.  * Otherwise, post it normally.  */
+comment|/*  * Send a signal caused by a trap to the current process.  * If it will be caught immediately, deliver it with correct code.  * Otherwise, post it normally.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -5288,6 +5288,12 @@ name|p
 operator|->
 name|p_sigacts
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -5537,6 +5543,12 @@ block|}
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}
