@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.4 (Berkeley) %G%"
+literal|"@(#)login.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -985,6 +985,9 @@ name|lseek
 argument_list|(
 name|f
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -1074,6 +1077,9 @@ name|lseek
 argument_list|(
 name|f
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pwd
 operator|->
 name|pw_uid
