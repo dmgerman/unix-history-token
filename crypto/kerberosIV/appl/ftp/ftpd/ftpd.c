@@ -1357,14 +1357,6 @@ name|optind
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KRB4
