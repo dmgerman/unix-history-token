@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	1.9 (Berkeley) %G%"
+literal|"@(#)utilities.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|"general.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fdset.h"
 end_include
 
 begin_include
