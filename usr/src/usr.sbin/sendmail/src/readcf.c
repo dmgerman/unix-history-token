@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.10 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,28 +1361,6 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-block|{
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|37
-argument_list|,
-literal|2
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"setclass(%c, %s)\n"
-argument_list|,
-name|bp
-index|[
-literal|1
-index|]
-argument_list|,
-name|wd
-argument_list|)
-expr_stmt|;
 name|setclass
 argument_list|(
 name|bp
@@ -1393,7 +1371,6 @@ argument_list|,
 name|wd
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|p
 operator|=
@@ -5465,11 +5442,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%s added to class %c\n"
-argument_list|,
-name|word
+literal|"setclass(%c, %s)\n"
 argument_list|,
 name|class
+argument_list|,
+name|word
 argument_list|)
 expr_stmt|;
 name|s
