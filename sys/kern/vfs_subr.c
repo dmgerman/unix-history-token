@@ -4033,13 +4033,13 @@ operator|->
 name|v_pollinfo
 argument_list|)
 expr_stmt|;
-block|}
 name|vp
 operator|->
 name|v_pollinfo
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|MAC
