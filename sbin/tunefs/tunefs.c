@@ -2234,6 +2234,40 @@ parameter_list|()
 block|{
 name|warnx
 argument_list|(
+literal|"ACLs: (-a)                                         %s"
+argument_list|,
+operator|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_ACLS
+operator|)
+condition|?
+literal|"enabled"
+else|:
+literal|"disabled"
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"MAC multilabel: (-l)                               %s"
+argument_list|,
+operator|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_MULTILABEL
+operator|)
+condition|?
+literal|"enabled"
+else|:
+literal|"disabled"
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
 literal|"soft updates:  (-n)                                %s"
 argument_list|,
 operator|(
