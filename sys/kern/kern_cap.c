@@ -109,5 +109,89 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Syscalls to allow a process to retrieve capabilities associated with  * files, if permitted.  */
+end_comment
+
+begin_macro
+name|__cap_get_fd
+argument_list|(
+argument|struct proc *p
+argument_list|,
+argument|struct __cap_get_fd_args *uap
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|__cap_get_file
+argument_list|(
+argument|struct proc *p
+argument_list|,
+argument|struct __cap_get_file_args *uap
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Syscalls to allow a process to set capabilities associated with files,  * if permitted.  */
+end_comment
+
+begin_macro
+name|__cap_set_fd
+argument_list|(
+argument|struct proc *p
+argument_list|,
+argument|struct __cap_set_fd_args *uap
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|__cap_set_file
+argument_list|(
+argument|struct proc *p
+argument_list|,
+argument|struct __cap_set_file_args *uap
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+block|}
+end_block
+
 end_unit
 
