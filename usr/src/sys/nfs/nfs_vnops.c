@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.95 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.96 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1376,21 +1376,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|buf
-modifier|*
-name|nfs_bqueuehead
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|buf
-modifier|*
-modifier|*
-name|nfs_bqueuetail
-init|=
-operator|&
-name|nfs_bqueuehead
+name|queue_entry
+name|nfs_bufq
 decl_stmt|;
 end_decl_stmt
 
@@ -11174,29 +11161,19 @@ name|i
 index|]
 condition|)
 block|{
-name|bp
-operator|->
-name|b_actf
-operator|=
-name|NULL
-expr_stmt|;
-name|bp
-operator|->
-name|b_actb
-operator|=
-name|nfs_bqueuetail
-expr_stmt|;
-operator|*
-name|nfs_bqueuetail
-operator|=
-name|bp
-expr_stmt|;
-name|nfs_bqueuetail
-operator|=
+name|queue_enter_tail
+argument_list|(
 operator|&
+name|nfs_bufq
+argument_list|,
 name|bp
-operator|->
-name|b_actf
+argument_list|,
+expr|struct
+name|buf
+operator|*
+argument_list|,
+name|b_freelist
+argument_list|)
 expr_stmt|;
 name|fnd
 operator|++
@@ -11905,6 +11882,8 @@ operator|=
 name|vp
 operator|->
 name|v_dirtyblkhd
+operator|.
+name|le_next
 init|;
 name|bp
 condition|;
@@ -11917,7 +11896,9 @@ name|nbp
 operator|=
 name|bp
 operator|->
-name|b_blockf
+name|b_vnbufs
+operator|.
+name|qe_next
 expr_stmt|;
 if|if
 condition|(
@@ -12020,6 +12001,8 @@ condition|(
 name|vp
 operator|->
 name|v_dirtyblkhd
+operator|.
+name|le_next
 condition|)
 block|{
 name|vprint
