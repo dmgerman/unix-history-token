@@ -967,7 +967,7 @@ name|cpi
 operator|->
 name|hba_misc
 operator|=
-literal|0
+name|PIM_NOBUSRESET
 expr_stmt|;
 name|cpi
 operator|->
