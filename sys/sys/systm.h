@@ -278,6 +278,20 @@ parameter_list|)
 value|__CONCAT(__CONCAT(spl,level),assert)(msg)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CONDSPLASSERT
+parameter_list|(
+name|cond
+parameter_list|,
+name|level
+parameter_list|,
+name|msg
+parameter_list|)
+value|do {				\ 	if (cond)							\ 		SPLASSERT(level, msg);					\ } while (0)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -299,6 +313,19 @@ define|#
 directive|define
 name|SPLASSERT
 parameter_list|(
+name|level
+parameter_list|,
+name|msg
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONDSPLASSERT
+parameter_list|(
+name|cond
+parameter_list|,
 name|level
 parameter_list|,
 name|msg
