@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.29 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2133,6 +2133,13 @@ index|]
 condition|)
 if|if
 condition|(
+name|iscntrl
+argument_list|(
+name|c
+argument_list|)
+condition|)
+if|if
+condition|(
 name|c
 operator|==
 literal|'\n'
@@ -2146,11 +2153,17 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|iscntrl
-argument_list|(
 name|c
-argument_list|)
+operator|==
+literal|'\t'
 condition|)
+operator|*
+name|q
+operator|++
+operator|=
+literal|'\t'
+expr_stmt|;
+else|else
 block|{
 operator|*
 name|q
