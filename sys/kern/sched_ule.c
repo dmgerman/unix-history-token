@@ -611,7 +611,7 @@ value|((score) * SCHED_PRI_RANGE / SCHED_INTERACT_MAX)
 end_define
 
 begin_comment
-comment|/*  * These determine the interactivity of a process.  *  * SLP_RUN_MAX:	Maximum amount of sleep time + run time we'll accumulate  *		before throttling back.  * SLP_RUN_THROTTLE:	Divisor for reducing slp/run time.  * INTERACT_MAX:	Maximum interactivity value.  Smaller is better.  * INTERACT_THRESH:	Threshhold for placement on the current runq.  */
+comment|/*  * These determine the interactivity of a process.  *  * SLP_RUN_MAX:	Maximum amount of sleep time + run time we'll accumulate  *		before throttling back.  * SLP_RUN_THROTTLE:	Divisor for reducing slp/run time at fork time.  * INTERACT_MAX:	Maximum interactivity value.  Smaller is better.  * INTERACT_THRESH:	Threshhold for placement on the current runq.  */
 end_comment
 
 begin_define
@@ -625,7 +625,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_SLP_RUN_THROTTLE
-value|(2)
+value|(100)
 end_define
 
 begin_define
@@ -3765,6 +3765,8 @@ operator|=
 name|kg
 operator|->
 name|kg_slptime
+operator|/
+name|SCHED_SLP_RUN_THROTTLE
 expr_stmt|;
 name|child
 operator|->
@@ -3773,6 +3775,8 @@ operator|=
 name|kg
 operator|->
 name|kg_runtime
+operator|/
+name|SCHED_SLP_RUN_THROTTLE
 expr_stmt|;
 name|kg
 operator|->
