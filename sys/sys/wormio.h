@@ -271,6 +271,37 @@ name|WORMIOCWRITESESSION
 value|_IOW('W', 32, struct wormio_write_session)
 end_define
 
+begin_struct
+struct|struct
+name|wormio_first_writable_addr
+block|{
+name|int
+name|track
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|int
+name|raw
+decl_stmt|;
+name|int
+name|audio
+decl_stmt|;
+name|int
+modifier|*
+name|addr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|WORMIOCFIRSTWRITABLEADDR
+value|_IOWR('W', 33, struct wormio_first_writable_addr)
+end_define
+
 begin_comment
 comment|/* Errors/warnings */
 end_comment
