@@ -7207,10 +7207,9 @@ argument_list|)
 operator||
 name|EHCI_QH_SET_CMASK
 argument_list|(
-literal|0xf0
+literal|0x1c
 argument_list|)
 operator||
-comment|/* XXX */
 name|EHCI_QH_SET_SMASK
 argument_list|(
 name|xfertype
