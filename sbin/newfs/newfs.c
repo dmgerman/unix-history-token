@@ -742,16 +742,6 @@ begin_comment
 comment|/* user has specified -t or -u */
 end_comment
 
-begin_decl_stmt
-name|u_long
-name|memleft
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* virtual memory available */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
