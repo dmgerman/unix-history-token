@@ -15061,7 +15061,7 @@ name|dp
 argument_list|,
 name|LVALUEtoCELL
 argument_list|(
-name|pStringLit
+name|fload
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -15395,7 +15395,7 @@ name|dp
 argument_list|,
 name|LVALUEtoCELL
 argument_list|(
-name|pStringLit
+name|fexists
 argument_list|)
 argument_list|)
 expr_stmt|;
