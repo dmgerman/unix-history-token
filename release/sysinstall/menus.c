@@ -2923,6 +2923,36 @@ literal|"=ftp://ftp6.fr.freebsd.org"
 block|}
 block|,
 block|{
+literal|" France #7"
+block|,
+literal|"ftp7.fr.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp7.fr.freebsd.org"
+block|}
+block|,
+block|{
+literal|" France #8"
+block|,
+literal|"ftp8.fr.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp8.fr.freebsd.org"
+block|}
+block|,
+block|{
 literal|"Germany"
 block|,
 literal|"ftp.de.freebsd.org"
