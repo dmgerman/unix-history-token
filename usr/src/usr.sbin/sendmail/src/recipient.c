@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.36 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1085,6 +1085,15 @@ name|q
 operator|->
 name|q_flags
 argument_list|)
+operator|||
+name|bitset
+argument_list|(
+name|QSELFREF
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1095,6 +1104,16 @@ argument_list|(
 name|QDONTSEND
 argument_list|,
 name|a
+operator|->
+name|q_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|QSELFREF
+argument_list|,
+name|q
 operator|->
 name|q_flags
 argument_list|)
