@@ -173,6 +173,17 @@ begin_comment
 comment|/* XaQti Corp. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MII_OUI_MARVELL
+value|0x005043
+end_define
+
+begin_comment
+comment|/* Marvell Semiconductor */
+end_comment
+
 begin_comment
 comment|/* in the 79c873, AMD uses another OUI (which matches Davicom!) */
 end_comment
@@ -680,6 +691,24 @@ define|#
 directive|define
 name|MII_STR_XAQTI_XMACII
 value|"XaQti Corp. XMAC II gigabit interface"
+end_define
+
+begin_comment
+comment|/* Marvell Semiconductor PHYs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_MARVELL_E1000
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_MARVELL_E1000
+value|"Marvell Semiconductor 88E1000* gigabit PHY"
 end_define
 
 end_unit
