@@ -25,7 +25,7 @@ end_ifdef
 
 begin_decl_stmt
 name|void
-name|trace
+name|sh_trace
 name|__P
 argument_list|(
 operator|(

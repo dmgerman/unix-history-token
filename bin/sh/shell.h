@@ -162,7 +162,7 @@ name|TRACE
 parameter_list|(
 name|param
 parameter_list|)
-value|trace param
+value|sh_trace param
 end_define
 
 begin_else

@@ -97,6 +97,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"shell.h"
 end_include
 
@@ -1315,7 +1321,7 @@ name|void
 ifdef|#
 directive|ifdef
 name|__STDC__
-name|trace
+name|sh_trace
 parameter_list|(
 specifier|const
 name|char
@@ -1326,7 +1332,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|trace
+function|sh_trace
 parameter_list|(
 name|va_alist
 parameter_list|)
