@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.13 1995/05/30 08:02:55 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.13.4.1 1995/09/14 07:09:21 davidg Exp $  */
 end_comment
 
 begin_include
@@ -660,6 +660,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|x
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
+name|int
+name|rv
+init|=
+literal|0
+decl_stmt|;
 comment|/* use the first buffer */
 name|pca_status
 operator|.
@@ -713,12 +724,12 @@ operator||
 name|TIMER_ONESHOT
 argument_list|)
 condition|)
-block|{
-return|return
+name|rv
+operator|=
 operator|-
 literal|1
-return|;
-block|}
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|acquire_timer0
@@ -732,19 +743,26 @@ block|{
 name|release_timer2
 argument_list|()
 expr_stmt|;
-return|return
+name|rv
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
 block|}
+else|else
 name|pca_status
 operator|.
 name|timer_on
 operator|=
 literal|1
 expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+name|rv
 return|;
 block|}
 end_function
@@ -757,6 +775,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|x
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
 comment|/* release the timers */
 name|release_timer0
 argument_list|()
@@ -818,6 +842,11 @@ name|timer_on
 operator|=
 literal|0
 expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -827,6 +856,12 @@ name|void
 name|pca_pause
 parameter_list|()
 block|{
+name|int
+name|x
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
 name|release_timer0
 argument_list|()
 expr_stmt|;
@@ -839,6 +874,11 @@ name|timer_on
 operator|=
 literal|0
 expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -848,6 +888,12 @@ name|void
 name|pca_continue
 parameter_list|()
 block|{
+name|int
+name|x
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
 name|pca_status
 operator|.
 name|oldval
@@ -879,6 +925,11 @@ name|timer_on
 operator|=
 literal|1
 expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -892,7 +943,19 @@ parameter_list|)
 block|{
 name|int
 name|error
+decl_stmt|,
+name|x
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|pca_status
+operator|.
+name|timer_on
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 name|pca_status
@@ -910,6 +973,11 @@ literal|1
 index|]
 condition|)
 block|{
+name|x
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|pca_sleep
 operator|=
 literal|1
@@ -933,6 +1001,11 @@ expr_stmt|;
 name|pca_sleep
 operator|=
 literal|0
+expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1345,6 +1418,8 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|which
+decl_stmt|,
+name|x
 decl_stmt|;
 comment|/* only audio device can be written */
 if|if
@@ -1394,6 +1469,11 @@ literal|1
 index|]
 condition|)
 block|{
+name|x
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|pca_sleep
 operator|=
 literal|1
@@ -1417,6 +1497,11 @@ expr_stmt|;
 name|pca_sleep
 operator|=
 literal|0
+expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2001,18 +2086,12 @@ if|if
 condition|(
 name|pca_sleep
 condition|)
-block|{
 name|wakeup
 argument_list|(
 operator|&
 name|pca_sleep
 argument_list|)
 expr_stmt|;
-name|pca_sleep
-operator|=
-literal|0
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|pca_status
