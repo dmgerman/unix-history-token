@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)indent.c	5.1 (Berkeley) %G%"
+literal|"@(#)indent.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,8 +47,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  			  Copyright (C) 1976 				by the 			  Board of Trustees 				of the 			University of Illinois  			 All rights reserved   NAME: 	indent main program  FUNCTION: 	This is the main program of the indent program.  Indent will take a C 	program source and reformat it into a semi-reasonable form.  ALGORITHM: 	The routine lexi scans tokens and passes them back one at a time to the 	main routine.  The subroutine parse takes care of much of the work of 	figuring indentation level.    	1) Call lexi 	2) Enter a monster switch statement on the code returned by lexi.  If  	   the indentation level for the line yet to be printed should be  	   changed, set the variable ind_level.  If the indentation level for 	   the following line should be changed, set the variable i_l_follow.  PARAMETERS: 	None  RETURNS: 	Nothing  GLOBALS: 	be_save = 	break_comma 	bp_save = 	btype_2 = 	code_lines 	com_ind = 	com_lines 	dec_nest = 	decl_com_ind = 	decl_on_line = 	i_l_follow = 	in_decl = 	ind_level = 	ind_size = 	ind_stmt = 	last_u_d = 	leave_comma = 	line_no = 	ljust_decl = 	max_col = 	out_coms 	out_lines 	p_l_follow = 	paren_level = 	pcase = 	sc_end = 	unindent_displace = 	use_ff = 	verbose =  CALLS: 	atoi (lib) 	cmp 	creat (lib) 	dump_line 	eqin 	fill_buffer 	lexi 	open (lib) 	parse 	pr_comment 	printf (lib) 	seek (lib) 	time (lib)  CALLED BY: 	No one (main routine)  HISTORY: 	November 1976	D A Willcox of CAC	Initial coding 	12/9/76		D A Willcox of CAC	Fixed defaults for decl_com_ind 						to be 8 less than com_ind if  						left justifying declarations 	12/9/76		D A Willcox of CAC	Fixed processing of nested<c>?<s>:<s> constructs 	1/7/77		D A Willcox of CAC	Added check for overwrite of 						input file 						Added code to handle -br and -bl 						parameters
-comment|*/
+comment|/*-    	Copyright (C) 1976 		by the 	Board of Trustees 		of the 	University of Illinois    	All rights reserved       NAME: indent main program    FUNCTION: This is the main program of the indent program.  Indent will take a C program source and reformat it into a semi-reasonable form.    ALGORITHM: The routine lexi scans tokens and passes them back one at a time to the main routine.  The subroutine parse takes care of much of the work of figuring indentation level.      1) Call lexi 2) Enter a monster switch statement on the code returned by lexi.  If  the indentation level for the line yet to be printed should be  changed, set the variable ps.ind_level.  If the indentation level for the following line should be changed, set the variable ps.i_l_follow.  */
 end_comment
 
 begin_include
@@ -65,105 +64,6 @@ file|"indent_codes.h"
 include|;
 end_include
 
-begin_comment
-comment|/* #define dolog 1	/* if this define is removed, then the code to 			   produce a log file will be removed */
-end_comment
-
-begin_struct
-struct|struct
-name|templ
-block|{
-comment|/* this is a template for the list of 			          command line args */
-name|char
-modifier|*
-name|str
-decl_stmt|;
-comment|/* pointer to string which is a valid 			          command line arg */
-name|int
-name|code
-decl_stmt|;
-comment|/* code to be used in switch for processing 			          this arg */
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|struct
-name|templ
-name|options
-index|[]
-init|=
-block|{
-comment|/* warning - because of the way that this 			          table is scanned, if one entry is an 			          initial substring of another, then the 			          longer entry should occur first */
-literal|"-cd"
-block|,
-literal|4
-block|,
-literal|"-c"
-block|,
-literal|2
-block|,
-literal|"-l"
-block|,
-literal|1
-block|,
-literal|"-i"
-block|,
-literal|3
-block|,
-literal|"-v"
-block|,
-literal|5
-block|,
-literal|"-nv"
-block|,
-literal|6
-block|,
-literal|"-dj"
-block|,
-literal|7
-block|,
-literal|"-d"
-block|,
-literal|13
-block|,
-comment|/* unindented comment placement */
-literal|"-ndj"
-block|,
-literal|8
-block|,
-literal|"-bc"
-block|,
-literal|10
-block|,
-comment|/* break after command in decl */
-literal|"-nbc"
-block|,
-literal|9
-block|,
-comment|/* don't break after comma */
-literal|"-br"
-block|,
-literal|14
-block|,
-comment|/* put brace on right of stmt */
-literal|"-bl"
-block|,
-literal|15
-block|,
-comment|/* put brace on left by itself */
-literal|"-st"
-block|,
-literal|16
-block|,
-comment|/* use the standard input and output 				  files */
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -174,7 +74,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* will always point to name of input file  			       */
+comment|/* will always point to name of 					 * input file */
 end_comment
 
 begin_decl_stmt
@@ -187,7 +87,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* will always point to name of output file 			          */
+comment|/* will always point to 						 * name of output file */
 end_comment
 
 begin_decl_stmt
@@ -200,9 +100,6 @@ init|=
 literal|""
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_function
 name|main
@@ -230,11 +127,11 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* a stack of structure indentation levels  			       */
+comment|/* a stack of structure indentation levels */
 name|int
 name|flushed_nl
 decl_stmt|;
-comment|/* used when buffering up comments to 			          remember that a newline was passed over  			       */
+comment|/* used when buffering up comments to 				 * remember that a newline was passed over */
 name|int
 name|force_nl
 decl_stmt|;
@@ -242,16 +139,12 @@ comment|/* when true, code must be broken */
 name|int
 name|hd_type
 decl_stmt|;
-comment|/* used to store type of stmt for if (...), 			          for (...), etc */
+comment|/* used to store type of stmt for if 				 * (...), for (...), etc */
 specifier|register
 name|int
 name|i
 decl_stmt|;
 comment|/* local loop counter */
-name|int
-name|in_or_st
-decl_stmt|;
-comment|/* Will be true iff there has been a 			          declarator (e.g. int or char) and no 			          left paren since the last semicolon. 			          When true, a { is starting a structure 			          definition or an initialization list */
 specifier|register
 name|int
 name|j
@@ -260,15 +153,15 @@ comment|/* local loop counter */
 name|int
 name|scase
 decl_stmt|;
-comment|/* set to true when we see a case, so we 			          will know what to do with the following 			          colon */
+comment|/* set to true when we see a case, so we 				 * will know what to do with the following 				 * colon */
 name|int
 name|sp_sw
 decl_stmt|;
-comment|/* when true, we are in the expressin of 			          if(...), while(...), etc. */
+comment|/* when true, we are in the expressin of 				 * if(...), while(...), etc. */
 name|int
 name|squest
 decl_stmt|;
-comment|/* when this is positive, we have seen a ? 			          without the matching : in a<c>?<s>:<s> 			          construct */
+comment|/* when this is positive, we have seen a ? 				 * without the matching : in a<c>?<s>:<s> 				 * construct */
 specifier|register
 name|char
 modifier|*
@@ -280,107 +173,35 @@ name|type_code
 decl_stmt|;
 comment|/* the type of token, returned by lexi */
 name|int
-name|want_blank
+name|last_else
+init|=
+literal|0
 decl_stmt|;
-comment|/* set to true when the following token 			          should be prefixed by a blank. (Said 			          prefixing is ignored in some cases.) */
-ifdef|#
-directive|ifdef
-name|dolog
-comment|/* include declarations needed for log */
-name|int
-name|log_fid
-decl_stmt|;
-comment|/* fid of log file */
-struct|struct
-name|logtmpl
-block|{
-comment|/* structure of a log entry */
-name|int
-name|tvec
+comment|/* true iff last keyword was an else */
+comment|/*-----------------------------------------------*\ |		      INITIALIZATION		      | \*-----------------------------------------------*/
+name|ps
+operator|.
+name|p_stack
 index|[
-literal|2
+literal|0
 index|]
-decl_stmt|;
-comment|/* time of execution */
-name|char
-name|inp
-decl_stmt|;
-comment|/* input fid */
-name|char
-name|outp
-decl_stmt|;
-comment|/* output fid */
-name|int
-name|nout
-decl_stmt|;
-comment|/* # output lines */
-name|int
-name|ncom
-decl_stmt|;
-comment|/* # comments */
-name|int
-name|wcom
-decl_stmt|;
-comment|/* # lines w/ comments */
-name|int
-name|wcode
-decl_stmt|;
-comment|/* # lines w/code */
-name|char
-name|mc
-decl_stmt|;
-comment|/* max line size */
-name|char
-name|ci
-decl_stmt|;
-comment|/* comment indentation */
-name|char
-name|inds
-decl_stmt|;
-comment|/* indent size */
-name|char
-name|dci
-decl_stmt|;
-comment|/* decl comment indentation */
-name|char
-name|verb
-decl_stmt|;
-comment|/* verbose */
-name|char
-name|ljus
-decl_stmt|;
-comment|/* left just */
-name|char
-name|lvcom
-decl_stmt|;
-comment|/* leave commas */
-name|char
-name|unin
-decl_stmt|;
-comment|/* unindented comment indentation */
-name|char
-name|uid
-decl_stmt|;
-comment|/* the user id */
-name|char
-name|bropt
-decl_stmt|;
-comment|/* btype_2 */
-name|int
-name|reserved
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-struct|;
-name|struct
-name|logtmpl
-name|logent
-decl_stmt|;
-endif|#
-directive|endif
-comment|/*-----------------------------------------------*\ |    INITIALIZATION \*-----------------------------------------------*/
+operator|=
+name|stmt
+expr_stmt|;
+comment|/* this is the parser's stack */
+name|ps
+operator|.
+name|last_nl
+operator|=
+name|true
+expr_stmt|;
+comment|/* this is true if the last thing scanned 				 * was a newline */
+name|ps
+operator|.
+name|last_token
+operator|=
+name|semicolon
+expr_stmt|;
 name|combuf
 index|[
 literal|0
@@ -398,7 +219,7 @@ index|]
 operator|=
 literal|' '
 expr_stmt|;
-comment|/* set up code, label, and comment buffers */
+comment|/* set up code, label, and 						 * comment buffers */
 name|combuf
 index|[
 literal|1
@@ -416,6 +237,13 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|ps
+operator|.
+name|else_if
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Default else-if special processing to 				 * on */
 name|s_lab
 operator|=
 name|e_lab
@@ -452,8 +280,12 @@ literal|1
 expr_stmt|;
 name|had_eof
 operator|=
+name|ps
+operator|.
 name|in_decl
 operator|=
+name|ps
+operator|.
 name|decl_on_line
 operator|=
 name|break_comma
@@ -466,10 +298,14 @@ name|force_nl
 operator|=
 name|false
 expr_stmt|;
+name|ps
+operator|.
 name|in_or_st
 operator|=
 name|false
 expr_stmt|;
+name|ps
+operator|.
 name|bl_line
 operator|=
 name|true
@@ -480,6 +316,8 @@ literal|0
 expr_stmt|;
 name|di_stack
 index|[
+name|ps
+operator|.
 name|dec_nest
 operator|=
 literal|0
@@ -487,16 +325,24 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
+name|ps
+operator|.
 name|in_stmt
 operator|=
+name|ps
+operator|.
 name|ind_stmt
 operator|=
 name|false
 expr_stmt|;
 name|scase
 operator|=
+name|ps
+operator|.
 name|pcase
 operator|=
 name|false
@@ -517,55 +363,157 @@ name|be_save
 operator|=
 literal|0
 expr_stmt|;
-name|input
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|output
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
-name|ljust_decl
-operator|=
-name|d_ljust
-expr_stmt|;
-comment|/*--------------------------------------------------*\ |   COMMAND LINE SCAN \*--------------------------------------------------*/
+comment|/*--------------------------------------------------*\ |   COMMAND LINE SCAN \*-------------------------------------------------- */
 name|max_col
 operator|=
-name|d_max_col
+literal|78
 expr_stmt|;
-comment|/* set up some default values */
+comment|/* -l78 */
+name|lineup_to_parens
+operator|=
+literal|1
+expr_stmt|;
+comment|/* -lp */
+name|ps
+operator|.
+name|ljust_decl
+operator|=
+literal|0
+expr_stmt|;
+comment|/* -ndj */
+name|ps
+operator|.
 name|com_ind
 operator|=
-name|d_com_ind
+literal|33
 expr_stmt|;
+comment|/* -c33 */
+name|star_comment_cont
+operator|=
+literal|1
+expr_stmt|;
+comment|/* -sc */
+name|ps
+operator|.
 name|ind_size
 operator|=
-name|d_ind_size
+literal|8
 expr_stmt|;
+comment|/* -i8 */
 name|verbose
 operator|=
-name|d_verbose
+literal|0
 expr_stmt|;
+name|ps
+operator|.
+name|decl_indent
+operator|=
+literal|16
+expr_stmt|;
+comment|/* -di16 */
+name|ps
+operator|.
+name|indent_parameters
+operator|=
+literal|1
+expr_stmt|;
+comment|/* -ip */
+name|ps
+operator|.
 name|decl_com_ind
 operator|=
 literal|0
 expr_stmt|;
-comment|/* if this is not set to some positive 			          value by an arg, we will set this equal 			          to com_ind */
+comment|/* if this is not set to some positive 				 * value by an arg, we will set this equal 				 * to ps.com_ind */
 name|btype_2
 operator|=
-name|d_btype_2
+literal|1
 expr_stmt|;
+comment|/* -br */
+name|cuddle_else
+operator|=
+literal|1
+expr_stmt|;
+comment|/* -ce */
+name|ps
+operator|.
 name|unindent_displace
 operator|=
-name|d_unindent
+literal|0
 expr_stmt|;
+comment|/* -d0 */
+name|ps
+operator|.
+name|case_indent
+operator|=
+literal|0
+expr_stmt|;
+comment|/* -cli0 */
+name|format_col1_comments
+operator|=
+literal|1
+expr_stmt|;
+comment|/* -fc1 */
+name|procnames_start_line
+operator|=
+literal|1
+expr_stmt|;
+comment|/* -psl */
+name|proc_calls_space
+operator|=
+literal|0
+expr_stmt|;
+comment|/* -npcs */
+name|comment_delimiter_on_blankline
+operator|=
+literal|1
+expr_stmt|;
+comment|/* -cdb */
+name|ps
+operator|.
 name|leave_comma
 operator|=
-name|d_leave_comma
+literal|1
 expr_stmt|;
+comment|/* -nbc */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-npro"
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|>=
+name|argc
+condition|)
 name|set_profile
 argument_list|()
 expr_stmt|;
@@ -583,7 +531,7 @@ operator|++
 name|i
 control|)
 block|{
-comment|/* look thru args (if any) for changes to defaults */
+comment|/* 	 * look thru args (if any) for changes to defaults  	 */
 if|if
 condition|(
 name|argv
@@ -601,7 +549,7 @@ comment|/* no flag on parameter */
 if|if
 condition|(
 name|input
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -613,20 +561,20 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* remember name of input 					   file */
+comment|/* remember name of input file */
 name|input
 operator|=
-name|open
+name|fopen
 argument_list|(
 name|in_name
 argument_list|,
-literal|0
+literal|"r"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|input
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -651,7 +599,7 @@ elseif|else
 if|if
 condition|(
 name|output
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -666,7 +614,7 @@ expr_stmt|;
 comment|/* remember name of output file */
 if|if
 condition|(
-name|cmp
+name|strcmp
 argument_list|(
 name|in_name
 argument_list|,
@@ -676,7 +624,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* attempt to 					   overwright the file */
+comment|/* attempt to overwrite 							 * the file */
 name|printf
 argument_list|(
 literal|"Input and output files must be different\n"
@@ -688,17 +636,17 @@ expr_stmt|;
 block|}
 name|output
 operator|=
-name|creat
+name|fopen
 argument_list|(
 name|out_name
 argument_list|,
-literal|0644
+literal|"w"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|output
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -747,7 +695,7 @@ comment|/* end of for */
 if|if
 condition|(
 name|input
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -763,9 +711,18 @@ block|}
 if|if
 condition|(
 name|output
-operator|<
+operator|==
 literal|0
 condition|)
+if|if
+condition|(
+name|troff
+condition|)
+name|output
+operator|=
+name|stdout
+expr_stmt|;
+else|else
 block|{
 name|out_name
 operator|=
@@ -777,74 +734,250 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ps
+operator|.
 name|com_ind
 operator|<=
 literal|1
 condition|)
+name|ps
+operator|.
 name|com_ind
 operator|=
 literal|2
 expr_stmt|;
-comment|/* don't put normal comments before column 			          2 */
+comment|/* dont put normal comments before column 				 * 2 */
 if|if
 condition|(
+name|block_comment_max_col
+operator|<=
+literal|0
+condition|)
+name|block_comment_max_col
+operator|=
+name|max_col
+expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
 name|decl_com_ind
 operator|<=
 literal|0
 condition|)
 comment|/* if not specified by user, set this */
+name|ps
+operator|.
 name|decl_com_ind
 operator|=
+name|ps
+operator|.
 name|ljust_decl
 condition|?
 operator|(
+name|ps
+operator|.
 name|com_ind
 operator|<=
 literal|10
 condition|?
 literal|2
 else|:
+name|ps
+operator|.
 name|com_ind
 operator|-
 literal|8
 operator|)
 else|:
+name|ps
+operator|.
 name|com_ind
+expr_stmt|;
+if|if
+condition|(
+name|continuation_indent
+operator|==
+literal|0
+condition|)
+name|continuation_indent
+operator|=
+name|ps
+operator|.
+name|ind_size
 expr_stmt|;
 name|fill_buffer
 argument_list|()
 expr_stmt|;
-comment|/* get first batch of stuff into input 			          buffer */
+comment|/* get first batch of stuff into input 				 * buffer */
 name|parse
 argument_list|(
 name|semicolon
 argument_list|)
 expr_stmt|;
-comment|/*----------------------------------------------------- |   START OF MAIN LOOP \*----------------------------------------------------*/
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+init|=
+name|buf_ptr
+decl_stmt|;
+specifier|register
+name|col
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 literal|1
 condition|)
 block|{
-comment|/* this is the main loop.  it will go until 			          we reach eof */
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|' '
+condition|)
+name|col
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\t'
+condition|)
+name|col
+operator|=
+operator|(
+operator|(
+name|col
+operator|-
+literal|1
+operator|)
+operator|&
+operator|~
+literal|7
+operator|)
+operator|+
+literal|9
+expr_stmt|;
+else|else
+break|break;
+name|p
+operator|++
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|col
+operator|>
+name|ps
+operator|.
+name|ind_size
+condition|)
+name|ps
+operator|.
+name|ind_level
+operator|=
+name|ps
+operator|.
+name|i_l_follow
+operator|=
+name|col
+operator|/
+name|ps
+operator|.
+name|ind_size
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|troff
+condition|)
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+init|=
+name|in_name
+decl_stmt|,
+modifier|*
+name|beg
+init|=
+name|in_name
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+condition|)
+if|if
+condition|(
+operator|*
+name|p
+operator|++
+operator|==
+literal|'/'
+condition|)
+name|beg
+operator|=
+name|p
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|output
+argument_list|,
+literal|".Fn \"%s\"\n"
+argument_list|,
+name|beg
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * START OF MAIN LOOP       */
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+comment|/* this is the main loop.  it will go 				 * until we reach eof */
+name|int
+name|is_procname
+decl_stmt|;
 name|type_code
 operator|=
 name|lexi
 argument_list|()
 expr_stmt|;
-comment|/* lexi reads one token.  The actual 			          characters read are stored in "token". 			          lexi returns a code indicating the type 			          of token */
-comment|/*       * The following code moves everything following an if (), while (),      * else, etc. up to the start of the following stmt to a buffer.  This      * allows proper handling of both kinds of brace placement.      */
+comment|/* lexi reads one token.  The actual 				 * characters read are stored in "token". 				 * lexi returns a code indicating the type 				 * of token */
+name|is_procname
+operator|=
+name|ps
+operator|.
+name|procname
+index|[
+literal|0
+index|]
+expr_stmt|;
+comment|/* 	 * The following code moves everything following an if (), while 	 * (), else, etc. up to the start of the following stmt to a 	 * buffer.  This allows proper handling of both kinds of brace 	 * placement.  	 */
 name|flushed_nl
 operator|=
 name|false
 expr_stmt|;
 while|while
 condition|(
+name|ps
+operator|.
 name|search_brace
 condition|)
 block|{
-comment|/* if we scanned an if(), while(), etc., we 			          might need to copy stuff into a buffer  	*/
-comment|/* we must loop, copying stuff into save_com, until we find the 	   start of the stmt which follows the if, or whatever */
+comment|/* if we scanned an if(), while(), 					 * etc., we might need to copy 					 * stuff into a buffer we must 					 * loop, copying stuff into 					 * save_com, until we find the 					 * start of the stmt which follows 					 * the if, or whatever */
 switch|switch
 condition|(
 name|type_code
@@ -864,11 +997,11 @@ case|case
 name|form_feed
 case|:
 break|break;
-comment|/* form feeds and newlines found here will 			          be ignored */
+comment|/* form feeds and newlines found here will 				 * be ignored */
 case|case
 name|lbrace
 case|:
-comment|/* this is a brace that starts the compound 			          stmt */
+comment|/* this is a brace that starts the 				 * compound stmt */
 if|if
 condition|(
 name|sc_end
@@ -876,7 +1009,9 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* ignore buffering if a comment wasn't stored up */
+comment|/* ignore buffering if a comment 					 * wasnt stored up */
+name|ps
+operator|.
 name|search_brace
 operator|=
 name|false
@@ -897,146 +1032,22 @@ index|]
 operator|=
 literal|'{'
 expr_stmt|;
-comment|/* we either want to put the brace right after the if  		    */
+comment|/* we either want to put 						 * the brace right after 						 * the if */
 goto|goto
 name|sw_buffer
 goto|;
-comment|/* go to common code to get out of this loop */
+comment|/* go to common code to get out of 					 * this loop */
 block|}
-default|default:
-comment|/* it is the start of a normal statment */
-if|if
-condition|(
-name|flushed_nl
-condition|)
-comment|/* if we flushed a newline, make sure it is 			          put back */
-name|force_nl
-operator|=
-name|true
-expr_stmt|;
-if|if
-condition|(
-name|sc_end
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* ignore buffering if comment wasn't saved up */
-name|search_brace
-operator|=
-name|false
-expr_stmt|;
-goto|goto
-name|check_type
-goto|;
-block|}
-if|if
-condition|(
-name|force_nl
-condition|)
-block|{
-comment|/* if we should insert a nl here, put it into the 		       buffer */
-name|force_nl
-operator|=
-name|false
-expr_stmt|;
-operator|--
-name|line_no
-expr_stmt|;
-comment|/* this will be re-increased when the nl is read from 		       the buffer */
-operator|*
-name|sc_end
-operator|++
-operator|=
-literal|'\n'
-expr_stmt|;
-operator|*
-name|sc_end
-operator|++
-operator|=
-literal|' '
-expr_stmt|;
-if|if
-condition|(
-name|verbose
-operator|&&
-operator|!
-name|flushed_nl
-condition|)
-comment|/* print error msg if the line was not 			          already broken */
-name|printf
-argument_list|(
-literal|"%d: Line broken\n"
-argument_list|,
-name|line_no
-argument_list|)
-expr_stmt|;
-name|flushed_nl
-operator|=
-name|false
-expr_stmt|;
-block|}
-for|for
-control|(
-name|t_ptr
-operator|=
-name|token
-init|;
-operator|*
-name|t_ptr
-condition|;
-operator|++
-name|t_ptr
-control|)
-operator|*
-name|sc_end
-operator|++
-operator|=
-operator|*
-name|t_ptr
-expr_stmt|;
-comment|/* copy token into temp buffer */
-name|sw_buffer
-label|:
-name|search_brace
-operator|=
-name|false
-expr_stmt|;
-comment|/* stop looking for start of stmt */
-name|bp_save
-operator|=
-name|buf_ptr
-expr_stmt|;
-comment|/* save current input buffer */
-name|be_save
-operator|=
-name|buf_end
-expr_stmt|;
-name|buf_ptr
-operator|=
-name|save_com
-expr_stmt|;
-comment|/* fix so that subsequent calls to lexi will take tokens 		   out of save_com */
-operator|*
-name|sc_end
-operator|++
-operator|=
-literal|' '
-expr_stmt|;
-comment|/* add trailing blank, just in case */
-name|buf_end
-operator|=
-name|sc_end
-expr_stmt|;
-name|sc_end
-operator|=
-literal|0
-expr_stmt|;
-break|break;
 case|case
 name|comment
 case|:
-comment|/* we have a comment, so we must copy it 			          into the buffer */
+comment|/* we have a comment, so we must copy it 				 * into the buffer */
+if|if
+condition|(
+operator|!
+name|flushed_nl
+condition|)
+block|{
 if|if
 condition|(
 name|sc_end
@@ -1044,7 +1055,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* if this is the first comment, we must set up the 		       buffer */
+comment|/* if this is the first 						 * comment, we must set up 						 * the buffer */
 name|save_com
 index|[
 literal|0
@@ -1076,7 +1087,7 @@ operator|++
 operator|=
 literal|'\n'
 expr_stmt|;
-comment|/* add newline between comments */
+comment|/* add newline between 						 * comments */
 operator|*
 name|sc_end
 operator|++
@@ -1093,7 +1104,7 @@ operator|++
 operator|=
 literal|'/'
 expr_stmt|;
-comment|/* copy in start of comment */
+comment|/* copy in start of 						 * comment */
 operator|*
 name|sc_end
 operator|++
@@ -1106,7 +1117,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* loop until we get to the end of the 			          comment */
+comment|/* loop until we get to the end of 					 * the comment */
 operator|*
 name|sc_end
 operator|=
@@ -1151,17 +1162,17 @@ index|]
 operator|)
 condition|)
 block|{
-comment|/* check for temp buffer overflow */
-name|printf
+comment|/* check for temp buffer 									 * overflow */
+name|diag
 argument_list|(
-literal|"%d: Internal buffer overflow.\n"
+literal|1
 argument_list|,
-name|line_no
+literal|"Internal buffer overflow - Move big comment from right after if, while, or whatever."
 argument_list|)
 expr_stmt|;
-name|printf
+name|fflush
 argument_list|(
-literal|"Move big comment from right after if,\  while, or whatever.\n"
+name|output
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1189,6 +1200,183 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
+default|default:
+comment|/* it is the start of a normal statment */
+if|if
+condition|(
+name|flushed_nl
+condition|)
+comment|/* if we flushed a newline, make 					 * sure it is put back */
+name|force_nl
+operator|=
+name|true
+expr_stmt|;
+if|if
+condition|(
+name|type_code
+operator|==
+name|sp_paren
+operator|&&
+operator|*
+name|token
+operator|==
+literal|'i'
+operator|&&
+name|last_else
+operator|&&
+name|ps
+operator|.
+name|else_if
+operator|||
+name|type_code
+operator|==
+name|sp_nparen
+operator|&&
+operator|*
+name|token
+operator|==
+literal|'e'
+operator|&&
+name|e_code
+operator|!=
+name|s_code
+operator|&&
+name|e_code
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|'}'
+condition|)
+name|force_nl
+operator|=
+name|false
+expr_stmt|;
+if|if
+condition|(
+name|sc_end
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* ignore buffering if comment 					 * wasnt saved up */
+name|ps
+operator|.
+name|search_brace
+operator|=
+name|false
+expr_stmt|;
+goto|goto
+name|check_type
+goto|;
+block|}
+if|if
+condition|(
+name|force_nl
+condition|)
+block|{
+comment|/* if we should insert a nl here, 					 * put it into the buffer */
+name|force_nl
+operator|=
+name|false
+expr_stmt|;
+operator|--
+name|line_no
+expr_stmt|;
+comment|/* this will be re-increased when 					 * the nl is read from the buffer */
+operator|*
+name|sc_end
+operator|++
+operator|=
+literal|'\n'
+expr_stmt|;
+operator|*
+name|sc_end
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+operator|&&
+operator|!
+name|flushed_nl
+condition|)
+comment|/* print error msg if 							 * the line was not 							 * already broken */
+name|diag
+argument_list|(
+literal|0
+argument_list|,
+literal|"Line broken"
+argument_list|)
+expr_stmt|;
+name|flushed_nl
+operator|=
+name|false
+expr_stmt|;
+block|}
+for|for
+control|(
+name|t_ptr
+operator|=
+name|token
+init|;
+operator|*
+name|t_ptr
+condition|;
+operator|++
+name|t_ptr
+control|)
+operator|*
+name|sc_end
+operator|++
+operator|=
+operator|*
+name|t_ptr
+expr_stmt|;
+comment|/* copy token into temp 						 * buffer */
+name|sw_buffer
+label|:
+name|ps
+operator|.
+name|search_brace
+operator|=
+name|false
+expr_stmt|;
+comment|/* stop looking for start 						 * of stmt */
+name|bp_save
+operator|=
+name|buf_ptr
+expr_stmt|;
+comment|/* save current input buffer */
+name|be_save
+operator|=
+name|buf_end
+expr_stmt|;
+name|buf_ptr
+operator|=
+name|save_com
+expr_stmt|;
+comment|/* fix so that subsequent calls to 					 * lexi will take tokens out of 					 * save_com */
+operator|*
+name|sc_end
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+comment|/* add trailing blank, just in 					 * case */
+name|buf_end
+operator|=
+name|sc_end
+expr_stmt|;
+name|sc_end
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 comment|/* end of switch */
 if|if
 condition|(
@@ -1196,15 +1384,28 @@ name|type_code
 operator|!=
 literal|0
 condition|)
-comment|/* we must make this check, just in case 			          there was an unexpected EOF */
+comment|/* we must make this check, just in case 				 * there was an unexpected EOF */
 name|type_code
 operator|=
 name|lexi
 argument_list|()
 expr_stmt|;
 comment|/* read another token */
+name|is_procname
+operator|=
+name|ps
+operator|.
+name|procname
+index|[
+literal|0
+index|]
+expr_stmt|;
 block|}
 comment|/* end of while (serach_brace) */
+name|last_else
+operator|=
+literal|0
+expr_stmt|;
 name|check_type
 label|:
 if|if
@@ -1235,169 +1436,20 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|i_l_follow
-operator|!=
-literal|0
+name|ps
+operator|.
+name|tos
+operator|>
+literal|1
 condition|)
 comment|/* check for balanced braces */
-name|printf
+name|diag
 argument_list|(
-literal|"%d too few }'s\n"
-argument_list|,
-name|i_l_follow
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|dolog
-comment|/* only include this stuff if we want to 			          keep a log */
-name|log_fid
-operator|=
-name|open
-argument_list|(
-literal|"/mnt/net/willcox/indent/indent_log"
-argument_list|,
 literal|1
+argument_list|,
+literal|"Stuff missing from end of file."
 argument_list|)
 expr_stmt|;
-comment|/* open the log file */
-if|if
-condition|(
-name|log_fid
-operator|>=
-literal|0
-condition|)
-block|{
-name|seek
-argument_list|(
-name|log_fid
-argument_list|,
-literal|0
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* point to end of log */
-name|time
-argument_list|(
-name|logent
-operator|.
-name|tvec
-argument_list|)
-expr_stmt|;
-comment|/* get current time */
-name|logent
-operator|.
-name|inp
-operator|=
-name|input
-expr_stmt|;
-comment|/* set up the log entry */
-name|logent
-operator|.
-name|outp
-operator|=
-name|output
-expr_stmt|;
-name|logent
-operator|.
-name|nout
-operator|=
-name|out_lines
-expr_stmt|;
-name|logent
-operator|.
-name|ncom
-operator|=
-name|out_coms
-expr_stmt|;
-name|logent
-operator|.
-name|wcom
-operator|=
-name|com_lines
-expr_stmt|;
-name|logent
-operator|.
-name|wcode
-operator|=
-name|code_lines
-expr_stmt|;
-name|logent
-operator|.
-name|mc
-operator|=
-name|max_col
-expr_stmt|;
-name|logent
-operator|.
-name|ci
-operator|=
-name|com_ind
-expr_stmt|;
-name|logent
-operator|.
-name|inds
-operator|=
-name|ind_size
-expr_stmt|;
-name|logent
-operator|.
-name|dci
-operator|=
-name|decl_com_ind
-expr_stmt|;
-name|logent
-operator|.
-name|verb
-operator|=
-name|verbose
-expr_stmt|;
-name|logent
-operator|.
-name|ljus
-operator|=
-name|ljust_decl
-expr_stmt|;
-name|logent
-operator|.
-name|lvcom
-operator|=
-name|leave_comma
-expr_stmt|;
-name|logent
-operator|.
-name|unin
-operator|=
-name|unindent_displace
-expr_stmt|;
-name|logent
-operator|.
-name|uid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
-name|logent
-operator|.
-name|bropt
-operator|=
-name|btype_2
-expr_stmt|;
-name|write
-argument_list|(
-name|log_fid
-argument_list|,
-operator|&
-name|logent
-argument_list|,
-sizeof|sizeof
-name|logent
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|verbose
@@ -1407,8 +1459,12 @@ name|printf
 argument_list|(
 literal|"There were %d output lines and %d comments\n"
 argument_list|,
+name|ps
+operator|.
 name|out_lines
 argument_list|,
+name|ps
+operator|.
 name|out_coms
 argument_list|)
 expr_stmt|;
@@ -1419,6 +1475,8 @@ argument_list|,
 operator|(
 literal|1.0
 operator|*
+name|ps
+operator|.
 name|com_lines
 operator|)
 operator|/
@@ -1426,6 +1484,11 @@ name|code_lines
 argument_list|)
 expr_stmt|;
 block|}
+name|fflush
+argument_list|(
+name|output
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|()
 expr_stmt|;
@@ -1485,11 +1548,11 @@ operator|&&
 operator|!
 name|flushed_nl
 condition|)
-name|printf
+name|diag
 argument_list|(
-literal|"%d: Line broken\n"
+literal|0
 argument_list|,
-name|line_no
+literal|"Line broken"
 argument_list|)
 expr_stmt|;
 name|flushed_nl
@@ -1499,21 +1562,25 @@ expr_stmt|;
 name|dump_line
 argument_list|()
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
 expr_stmt|;
-comment|/* don't insert blank at line start */
+comment|/* dont insert blank at line start */
 name|force_nl
 operator|=
 name|false
 expr_stmt|;
 block|}
+name|ps
+operator|.
 name|in_stmt
 operator|=
 name|true
 expr_stmt|;
-comment|/* turn on flag which causes an extra level 			          of indentation. this is turned off by a 			          ; or } */
+comment|/* turn on flag which causes an extra 				 * level of indentation. this is turned 				 * off by a ; or '}' */
 if|if
 condition|(
 name|s_com
@@ -1521,7 +1588,7 @@ operator|!=
 name|e_com
 condition|)
 block|{
-comment|/* the turkey has embedded a comment in a line. fix it */
+comment|/* the turkey has embedded a 					 * comment in a line. fix it */
 operator|*
 name|e_code
 operator|++
@@ -1559,6 +1626,8 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* null terminate code sect */
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
@@ -1576,13 +1645,13 @@ name|type_code
 operator|!=
 name|comment
 condition|)
-comment|/* preserve force_nl thru a comment */
+comment|/* preserve force_nl thru 						 * a comment */
 name|force_nl
 operator|=
 name|false
 expr_stmt|;
-comment|/* cancel forced newline after newline, form feed, etc */
-comment|/*----------------------------------------------------*\     |   do switch on type of token scanned     \*----------------------------------------------------*/
+comment|/* 	 * cancel forced newline after newline, form feed, etc  	 */
+comment|/*----------------------------------------------------*\ |   do switch on type of token scanned \*----------------------------------------------------*/
 switch|switch
 condition|(
 name|type_code
@@ -1593,14 +1662,18 @@ case|case
 name|form_feed
 case|:
 comment|/* found a form feed in line */
+name|ps
+operator|.
 name|use_ff
 operator|=
 name|true
 expr_stmt|;
-comment|/* a form feed is treated much like a 			          newline */
+comment|/* a form feed is treated much 					 * like a newline */
 name|dump_line
 argument_list|()
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
@@ -1609,36 +1682,90 @@ break|break;
 case|case
 name|newline
 case|:
+if|if
+condition|(
+name|ps
+operator|.
+name|last_token
+operator|!=
+name|comma
+operator|||
+name|ps
+operator|.
+name|p_l_follow
+operator|>
+literal|0
+operator|||
+operator|!
+name|ps
+operator|.
+name|leave_comma
+operator|||
+operator|!
+name|break_comma
+operator|||
+name|s_com
+operator|!=
+name|e_com
+condition|)
+block|{
 name|dump_line
 argument_list|()
 expr_stmt|;
-operator|++
-name|line_no
-expr_stmt|;
-comment|/* keep track of input line number */
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
 expr_stmt|;
+block|}
+operator|++
+name|line_no
+expr_stmt|;
+comment|/* keep track of input line number */
 break|break;
 case|case
 name|lparen
 case|:
-comment|/* got a ( or [ */
+comment|/* got a '(' or '[' */
 operator|++
+name|ps
+operator|.
 name|p_l_follow
 expr_stmt|;
 comment|/* count parens to make Healy happy */
 if|if
 condition|(
+name|ps
+operator|.
 name|want_blank
 operator|&&
 operator|*
 name|token
 operator|!=
 literal|'['
+operator|&&
+operator|(
+name|ps
+operator|.
+name|last_token
+operator|!=
+name|ident
+operator|||
+name|proc_calls_space
+operator|||
+operator|(
+name|ps
+operator|.
+name|its_a_keyword
+operator|&&
+operator|!
+name|ps
+operator|.
+name|sizeof_keyword
+operator|)
+operator|)
 condition|)
-comment|/* don't put space in front of square 			          bracket */
 operator|*
 name|e_code
 operator|++
@@ -1647,8 +1774,54 @@ literal|' '
 expr_stmt|;
 if|if
 condition|(
+name|ps
+operator|.
 name|in_decl
+operator|&&
+operator|!
+name|ps
+operator|.
+name|block_init
 condition|)
+if|if
+condition|(
+name|troff
+operator|&&
+operator|!
+name|ps
+operator|.
+name|dumped_decl_indent
+condition|)
+block|{
+name|ps
+operator|.
+name|dumped_decl_indent
+operator|=
+literal|1
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|e_code
+argument_list|,
+literal|"\\c\n.Du %dp+\200p \"%s\"\n"
+argument_list|,
+name|dec_ind
+operator|*
+literal|7
+argument_list|,
+name|token
+argument_list|)
+expr_stmt|;
+name|e_code
+operator|+=
+name|strlen
+argument_list|(
+name|e_code
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 while|while
 condition|(
 operator|(
@@ -1674,12 +1847,42 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+block|}
+else|else
+operator|*
+name|e_code
+operator|++
+operator|=
+name|token
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|ps
+operator|.
+name|paren_indents
+index|[
+name|ps
+operator|.
+name|p_l_follow
+operator|-
+literal|1
+index|]
+operator|=
+name|e_code
+operator|-
+name|s_code
+expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
 expr_stmt|;
 if|if
 condition|(
+name|ps
+operator|.
 name|in_or_st
 operator|&&
 operator|*
@@ -1688,41 +1891,118 @@ operator|==
 literal|'('
 condition|)
 block|{
-comment|/* this is a kluge to make sure that declarations will be 		   aaigned right if proc decl has an explicit type on it, 		   i.e. "int a(x) {..." */
+comment|/* 		     * this is a kluge to make sure that declarations will 		     * be aligned right if proc decl has an explicit type 		     * on it, i.e. "int a(x) {..."  		     */
 name|parse
 argument_list|(
 name|semicolon
 argument_list|)
 expr_stmt|;
 comment|/* I said this was a kluge... */
+name|ps
+operator|.
 name|in_or_st
 operator|=
 name|false
 expr_stmt|;
-comment|/* turn off flag for structure decl or initialization */
+comment|/* turn off flag for 						 * structure decl or 						 * initialization */
 block|}
+if|if
+condition|(
+name|ps
+operator|.
+name|sizeof_keyword
+condition|)
+name|ps
+operator|.
+name|sizeof_mask
+operator||=
+literal|1
+operator|<<
+name|ps
+operator|.
+name|p_l_follow
+expr_stmt|;
 break|break;
 case|case
 name|rparen
 case|:
-comment|/* got a ) or ] */
+comment|/* got a ')' or ']' */
+if|if
+condition|(
+name|ps
+operator|.
+name|cast_mask
+operator|&
+operator|(
+literal|1
+operator|<<
+name|ps
+operator|.
+name|p_l_follow
+operator|)
+operator|&
+operator|~
+name|ps
+operator|.
+name|sizeof_mask
+condition|)
+block|{
+name|ps
+operator|.
+name|last_u_d
+operator|=
+name|true
+expr_stmt|;
+name|ps
+operator|.
+name|cast_mask
+operator|&=
+operator|(
+literal|1
+operator|<<
+name|ps
+operator|.
+name|p_l_follow
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
+name|ps
+operator|.
+name|sizeof_mask
+operator|&=
+operator|(
+literal|1
+operator|<<
+name|ps
+operator|.
+name|p_l_follow
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|--
+name|ps
+operator|.
 name|p_l_follow
 operator|<
 literal|0
 condition|)
 block|{
+name|ps
+operator|.
 name|p_l_follow
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|diag
 argument_list|(
-literal|"%d: Extra %c\n"
+literal|0
 argument_list|,
-name|line_no
+literal|"Extra %c"
 argument_list|,
 operator|*
 name|token
@@ -1736,11 +2016,15 @@ operator|==
 name|s_code
 condition|)
 comment|/* if the paren starts the line */
+name|ps
+operator|.
 name|paren_level
 operator|=
+name|ps
+operator|.
 name|p_l_follow
 expr_stmt|;
-comment|/*    then indent it */
+comment|/* then indent it */
 operator|*
 name|e_code
 operator|++
@@ -1750,6 +2034,8 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|true
@@ -1759,13 +2045,15 @@ condition|(
 name|sp_sw
 operator|&&
 operator|(
+name|ps
+operator|.
 name|p_l_follow
 operator|==
 literal|0
 operator|)
 condition|)
 block|{
-comment|/* check for end of if (...), or some such */
+comment|/* check for end of if 							 * (...), or some such */
 name|sp_sw
 operator|=
 name|false
@@ -1775,28 +2063,34 @@ operator|=
 name|true
 expr_stmt|;
 comment|/* must force newline after if */
+name|ps
+operator|.
 name|last_u_d
 operator|=
 name|true
 expr_stmt|;
-comment|/* inform lexi that a following operator is unary */
+comment|/* inform lexi that a following 					 * operator is unary */
+name|ps
+operator|.
 name|in_stmt
 operator|=
 name|false
 expr_stmt|;
-comment|/* don't use stmt continuation indentation */
+comment|/* dont use stmt continuation 					 * indentation */
 name|parse
 argument_list|(
 name|hd_type
 argument_list|)
 expr_stmt|;
-comment|/* let parser worry about if, or whatever */
+comment|/* let parser worry about if, or 					 * whatever */
 block|}
+name|ps
+operator|.
 name|search_brace
 operator|=
 name|btype_2
 expr_stmt|;
-comment|/* this should insure that constructs such as main(){... and 	       int[]{... have their braces put in the right place */
+comment|/* this should insure that 						 * constructs such as 						 * main(){...} and 						 * int[]{...} have their 						 * braces put in the right 						 * place */
 break|break;
 case|case
 name|unary_op
@@ -1804,6 +2098,8 @@ case|:
 comment|/* this could be any unary operation */
 if|if
 condition|(
+name|ps
+operator|.
 name|want_blank
 condition|)
 operator|*
@@ -1814,11 +2110,66 @@ literal|' '
 expr_stmt|;
 if|if
 condition|(
+name|troff
+operator|&&
+operator|!
+name|ps
+operator|.
+name|dumped_decl_indent
+operator|&&
+name|ps
+operator|.
 name|in_decl
 condition|)
 block|{
-comment|/* if this is a unary op in a */
-comment|/* 			          declaration, we should indent this token 			          */
+name|sprintf
+argument_list|(
+name|e_code
+argument_list|,
+literal|"\\c\n.Du %dp+\200p \"%s\"\n"
+argument_list|,
+name|dec_ind
+operator|*
+literal|7
+argument_list|,
+name|token
+argument_list|)
+expr_stmt|;
+name|ps
+operator|.
+name|dumped_decl_indent
+operator|=
+literal|1
+expr_stmt|;
+name|e_code
+operator|+=
+name|strlen
+argument_list|(
+name|e_code
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|char
+modifier|*
+name|res
+init|=
+name|token
+decl_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|in_decl
+operator|&&
+operator|!
+name|ps
+operator|.
+name|block_init
+condition|)
+block|{
+comment|/* if this is a unary op 							 * in a declaration, we 							 * should indent this 							 * token */
 for|for
 control|(
 name|i
@@ -1857,11 +2208,33 @@ literal|' '
 expr_stmt|;
 comment|/* pad it */
 block|}
+if|if
+condition|(
+name|troff
+operator|&&
+name|token
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|token
+index|[
+literal|1
+index|]
+operator|==
+literal|'>'
+condition|)
+name|res
+operator|=
+literal|"\\(->"
+expr_stmt|;
 for|for
 control|(
 name|t_ptr
 operator|=
-name|token
+name|res
 init|;
 operator|*
 name|t_ptr
@@ -1876,7 +2249,9 @@ operator|=
 operator|*
 name|t_ptr
 expr_stmt|;
-comment|/* move the token to buffer */
+block|}
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
@@ -1890,6 +2265,8 @@ name|do_binary
 label|:
 if|if
 condition|(
+name|ps
+operator|.
 name|want_blank
 condition|)
 operator|*
@@ -1898,11 +2275,113 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
+block|{
+name|char
+modifier|*
+name|res
+init|=
+name|token
+decl_stmt|;
+if|if
+condition|(
+name|troff
+condition|)
+switch|switch
+condition|(
+name|token
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'<'
+case|:
+if|if
+condition|(
+name|token
+index|[
+literal|1
+index|]
+operator|==
+literal|'='
+condition|)
+name|res
+operator|=
+literal|"\\(<="
+expr_stmt|;
+break|break;
+case|case
+literal|'>'
+case|:
+if|if
+condition|(
+name|token
+index|[
+literal|1
+index|]
+operator|==
+literal|'='
+condition|)
+name|res
+operator|=
+literal|"\\(>="
+expr_stmt|;
+break|break;
+case|case
+literal|'!'
+case|:
+if|if
+condition|(
+name|token
+index|[
+literal|1
+index|]
+operator|==
+literal|'='
+condition|)
+name|res
+operator|=
+literal|"\\(!="
+expr_stmt|;
+break|break;
+case|case
+literal|'|'
+case|:
+if|if
+condition|(
+name|token
+index|[
+literal|1
+index|]
+operator|==
+literal|'|'
+condition|)
+name|res
+operator|=
+literal|"\\(br\\(br"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|token
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+condition|)
+name|res
+operator|=
+literal|"\\(br"
+expr_stmt|;
+break|break;
+block|}
 for|for
 control|(
 name|t_ptr
 operator|=
-name|token
+name|res
 init|;
 operator|*
 name|t_ptr
@@ -1918,6 +2397,9 @@ operator|*
 name|t_ptr
 expr_stmt|;
 comment|/* move the operator */
+block|}
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|true
@@ -1945,6 +2427,8 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|true
@@ -1957,9 +2441,11 @@ comment|/* got a ? */
 name|squest
 operator|++
 expr_stmt|;
-comment|/* this will be used when a later colon 			          appears so we can distinguish the<c>?<n>:<n> construct */
+comment|/* this will be used when a later colon 				 * appears so we can distinguish the 				 *<c>?<n>:<n> construct */
 if|if
 condition|(
+name|ps
+operator|.
 name|want_blank
 condition|)
 operator|*
@@ -1974,6 +2460,8 @@ operator|++
 operator|=
 literal|'?'
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|true
@@ -1987,41 +2475,10 @@ name|scase
 operator|=
 name|true
 expr_stmt|;
-comment|/* so we can process the later colon 			          properly */
-if|if
-condition|(
-name|want_blank
-condition|)
-operator|*
-name|e_code
-operator|++
-operator|=
-literal|' '
-expr_stmt|;
-for|for
-control|(
-name|t_ptr
-operator|=
-name|token
-init|;
-operator|*
-name|t_ptr
-condition|;
-operator|++
-name|t_ptr
-control|)
-operator|*
-name|e_code
-operator|++
-operator|=
-operator|*
-name|t_ptr
-expr_stmt|;
-name|want_blank
-operator|=
-name|true
-expr_stmt|;
-break|break;
+comment|/* so we can process the later colon 				 * properly */
+goto|goto
+name|copy_id
+goto|;
 case|case
 name|colon
 case|:
@@ -2033,12 +2490,14 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* it is part of the<c>?<n>:<n> construct */
+comment|/* it is part of the<c>?<n>:<n> 					 * construct */
 operator|--
 name|squest
 expr_stmt|;
 if|if
 condition|(
+name|ps
+operator|.
 name|want_blank
 condition|)
 operator|*
@@ -2053,17 +2512,42 @@ operator|++
 operator|=
 literal|':'
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|true
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|ps
+operator|.
+name|in_decl
+condition|)
+block|{
+operator|*
+name|e_code
+operator|++
+operator|=
+literal|':'
+expr_stmt|;
+name|ps
+operator|.
+name|want_blank
+operator|=
+name|false
+expr_stmt|;
+break|break;
+block|}
+name|ps
+operator|.
 name|in_stmt
 operator|=
 name|false
 expr_stmt|;
-comment|/* seeing a label does not imply we are in a stmt */
+comment|/* seeing a label does not imply 					 * we are in a stmt */
 for|for
 control|(
 name|t_ptr
@@ -2083,7 +2567,7 @@ operator|=
 operator|*
 name|t_ptr
 expr_stmt|;
-comment|/* turn everything so far into a label */
+comment|/* turn everything so far into a 					 * label */
 name|e_code
 operator|=
 name|s_code
@@ -2107,15 +2591,19 @@ literal|'\0'
 expr_stmt|;
 name|force_nl
 operator|=
+name|ps
+operator|.
 name|pcase
 operator|=
 name|scase
 expr_stmt|;
-comment|/* pcase will be used by dump_line to decide how to indent the 	       label. force_nl will force a case n: to be on a line by 	       itself */
+comment|/* ps.pcase will be used 						 * by dump_line to decide 						 * how to indent the 						 * label. force_nl will 						 * force a case n: to be 						 * on a line by itself */
 name|scase
 operator|=
 name|false
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
@@ -2125,29 +2613,74 @@ case|case
 name|semicolon
 case|:
 comment|/* got a ';' */
+name|ps
+operator|.
 name|in_or_st
 operator|=
 name|false
 expr_stmt|;
-comment|/* we are not in an initialization or structure declaration */
+comment|/* we are not in an initialization 					 * or structure declaration */
 name|scase
 operator|=
 name|false
 expr_stmt|;
-comment|/* these will only need resetting in a 			          error */
+comment|/* these will only need resetting in a 				 * error */
 name|squest
 operator|=
 literal|0
 expr_stmt|;
 if|if
 condition|(
+name|ps
+operator|.
+name|last_token
+operator|==
+name|rparen
+condition|)
+name|ps
+operator|.
+name|in_parameter_declaration
+operator|=
+literal|0
+expr_stmt|;
+name|ps
+operator|.
+name|cast_mask
+operator|=
+literal|0
+expr_stmt|;
+name|ps
+operator|.
+name|sizeof_mask
+operator|=
+literal|0
+expr_stmt|;
+name|ps
+operator|.
+name|block_init
+operator|=
+literal|0
+expr_stmt|;
+name|ps
+operator|.
+name|just_saw_decl
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
 name|in_decl
 operator|&&
 name|s_code
 operator|==
 name|e_code
+operator|&&
+operator|!
+name|ps
+operator|.
+name|block_init
 condition|)
-comment|/* align this in a declaration */
 while|while
 condition|(
 operator|(
@@ -2168,15 +2701,19 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
+name|ps
+operator|.
 name|in_decl
 operator|=
 operator|(
+name|ps
+operator|.
 name|dec_nest
 operator|>
 literal|0
 operator|)
 expr_stmt|;
-comment|/* if we were in a first level structure declaration, we 	       aren't any more */
+comment|/* if we were in a first 						 * level structure 						 * declaration, we arent 						 * any more */
 if|if
 condition|(
 operator|(
@@ -2188,19 +2725,23 @@ operator|!=
 name|forstmt
 operator|)
 operator|&&
+name|ps
+operator|.
 name|p_l_follow
 operator|>
 literal|0
 condition|)
 block|{
-comment|/* This should be true iff there were unbalanced parens in 		   the stmt.  It is a bit complicated, because the 		   semicolon might be in a for stmt */
-name|printf
+comment|/* 		     * This should be true iff there were unbalanced 		     * parens in the stmt.  It is a bit complicated, 		     * because the semicolon might be in a for stmt  		     */
+name|diag
 argument_list|(
-literal|"%d: Unbalanced parens\n"
+literal|1
 argument_list|,
-name|line_no
+literal|"Unbalanced parens"
 argument_list|)
 expr_stmt|;
+name|ps
+operator|.
 name|p_l_follow
 operator|=
 literal|0
@@ -2210,7 +2751,7 @@ condition|(
 name|sp_sw
 condition|)
 block|{
-comment|/* this is a check for a if, while, etc. with 		       unbalanced parens */
+comment|/* this is a check for a if, while, etc. 				 * with unbalanced parens */
 name|sp_sw
 operator|=
 name|false
@@ -2220,7 +2761,7 @@ argument_list|(
 name|hd_type
 argument_list|)
 expr_stmt|;
-comment|/* don't lose the if, or whatever */
+comment|/* dont lose the if, or whatever */
 block|}
 block|}
 operator|*
@@ -2229,19 +2770,25 @@ operator|++
 operator|=
 literal|';'
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|true
 expr_stmt|;
+name|ps
+operator|.
 name|in_stmt
 operator|=
 operator|(
+name|ps
+operator|.
 name|p_l_follow
 operator|>
 literal|0
 operator|)
 expr_stmt|;
-comment|/* we are no longer in the middle of a stmt */
+comment|/* we are no longer in 							 * the middle of a stmt */
 if|if
 condition|(
 operator|!
@@ -2254,28 +2801,37 @@ argument_list|(
 name|semicolon
 argument_list|)
 expr_stmt|;
-comment|/* let parser know about end of stmt */
+comment|/* let parser know about end of 					 * stmt */
 name|force_nl
 operator|=
 name|true
 expr_stmt|;
-comment|/* force newline after a end of stmt */
+comment|/* force newline after a end of 					 * stmt */
 block|}
 break|break;
 case|case
 name|lbrace
 case|:
-comment|/* got a { */
+comment|/* got a '{' */
+name|ps
+operator|.
 name|in_stmt
 operator|=
 name|false
 expr_stmt|;
-comment|/* don't indent the { */
+comment|/* dont indent the {} */
+if|if
+condition|(
+operator|!
+name|ps
+operator|.
+name|block_init
+condition|)
 name|force_nl
 operator|=
 name|true
 expr_stmt|;
-comment|/* force other stuff on same line as { onto new line */
+comment|/* force other stuff on same line 					 * as '{' onto new line */
 if|if
 condition|(
 name|s_code
@@ -2283,44 +2839,86 @@ operator|!=
 name|e_code
 operator|&&
 operator|!
+name|ps
+operator|.
+name|block_init
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|btype_2
 condition|)
 block|{
-comment|/* bracket is not alone on line */
-if|if
-condition|(
-name|verbose
-condition|)
-name|printf
-argument_list|(
-literal|"%d: Line broken\n"
-argument_list|,
-name|line_no
-argument_list|)
-expr_stmt|;
 name|dump_line
 argument_list|()
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
+name|ps
+operator|.
+name|in_parameter_declaration
+operator|&&
+operator|!
+name|ps
+operator|.
+name|in_or_st
+condition|)
+block|{
+name|ps
+operator|.
+name|i_l_follow
+operator|=
+literal|0
+expr_stmt|;
+name|dump_line
+argument_list|()
+expr_stmt|;
+name|ps
+operator|.
+name|want_blank
+operator|=
+name|false
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|ps
+operator|.
+name|in_parameter_declaration
+condition|)
+name|prefix_blankline_requested
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
 name|p_l_follow
 operator|>
 literal|0
 condition|)
 block|{
-comment|/* check for preceeding unbalanced parens */
-name|printf
+comment|/* check for preceeding 						 * unbalanced parens */
+name|diag
 argument_list|(
-literal|"%d: Unbalanced parens\n"
+literal|1
 argument_list|,
-name|line_no
+literal|"Unbalanced parens"
 argument_list|)
 expr_stmt|;
+name|ps
+operator|.
 name|p_l_follow
 operator|=
 literal|0
@@ -2340,8 +2938,12 @@ argument_list|(
 name|hd_type
 argument_list|)
 expr_stmt|;
+name|ps
+operator|.
 name|ind_level
 operator|=
+name|ps
+operator|.
 name|i_l_follow
 expr_stmt|;
 block|}
@@ -2352,21 +2954,29 @@ name|s_code
 operator|==
 name|e_code
 condition|)
+name|ps
+operator|.
 name|ind_stmt
 operator|=
 name|false
 expr_stmt|;
-comment|/* don't put extra indentation on line with '{' */
+comment|/* dont put extra 						 * indentation on line 						 * with '{' */
 if|if
 condition|(
+name|ps
+operator|.
 name|in_decl
 operator|&&
+name|ps
+operator|.
 name|in_or_st
 condition|)
 block|{
-comment|/* this is either a structure declaration or an init */
+comment|/* this is either a 							 * structure declaration 							 * or an init */
 name|di_stack
 index|[
+name|ps
+operator|.
 name|dec_nest
 operator|++
 index|]
@@ -2379,11 +2989,21 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
+name|ps
+operator|.
 name|decl_on_line
 operator|=
 name|false
 expr_stmt|;
-comment|/* we can't be in the middle of a declaration, so don't do 	       special indentation of comments */
+comment|/* we cant be in the 						 * middle of a 						 * declaration, so dont do 						 * special indentation of 						 * comments */
+name|ps
+operator|.
+name|in_parameter_declaration
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|parse
 argument_list|(
 name|lbrace
@@ -2392,15 +3012,19 @@ expr_stmt|;
 comment|/* let parser know about this */
 if|if
 condition|(
+name|ps
+operator|.
 name|want_blank
 condition|)
-comment|/* put a blank before { if { is not at 			          start of line */
+comment|/* put a blank before '{' if '{' 					 * is not at start of line */
 operator|*
 name|e_code
 operator|++
 operator|=
 literal|' '
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
@@ -2411,24 +3035,34 @@ operator|++
 operator|=
 literal|'{'
 expr_stmt|;
+name|ps
+operator|.
+name|just_saw_decl
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|rbrace
 case|:
-comment|/* got a } */
+comment|/* got a '}' */
 if|if
 condition|(
+name|ps
+operator|.
 name|p_l_follow
 condition|)
 block|{
-comment|/* check for unclosed if, for, else. */
-name|printf
+comment|/* check for unclosed if, for, 					 * else. */
+name|diag
 argument_list|(
-literal|"%d: Unbalanced parens\n"
+literal|1
 argument_list|,
-name|line_no
+literal|"Unbalanced parens"
 argument_list|)
 expr_stmt|;
+name|ps
+operator|.
 name|p_l_follow
 operator|=
 literal|0
@@ -2438,23 +3072,34 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+name|ps
+operator|.
+name|just_saw_decl
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|s_code
 operator|!=
 name|e_code
+operator|&&
+operator|!
+name|ps
+operator|.
+name|block_init
 condition|)
 block|{
-comment|/* } must be first on line */
+comment|/* '}' must be first on 								 * line */
 if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|diag
 argument_list|(
-literal|"%d: Line broken\n"
+literal|0
 argument_list|,
-name|line_no
+literal|"Line broken"
 argument_list|)
 expr_stmt|;
 name|dump_line
@@ -2467,43 +3112,128 @@ operator|++
 operator|=
 literal|'}'
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|true
 expr_stmt|;
+name|ps
+operator|.
 name|in_stmt
 operator|=
+name|ps
+operator|.
 name|ind_stmt
 operator|=
 name|false
 expr_stmt|;
 if|if
 condition|(
+name|ps
+operator|.
 name|dec_nest
 operator|>
 literal|0
 condition|)
 block|{
-comment|/* we are in multi-level structure declaration */
+comment|/* we are in multi-level structure 					 * declaration */
 name|dec_ind
 operator|=
 name|di_stack
 index|[
 operator|--
+name|ps
+operator|.
 name|dec_nest
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|dec_nest
+operator|==
+literal|0
+operator|&&
+operator|!
+name|ps
+operator|.
+name|in_parameter_declaration
+condition|)
+name|ps
+operator|.
+name|just_saw_decl
+operator|=
+literal|2
+expr_stmt|;
+name|ps
+operator|.
 name|in_decl
 operator|=
 name|true
 expr_stmt|;
 block|}
+name|prefix_blankline_requested
+operator|=
+literal|0
+expr_stmt|;
 name|parse
 argument_list|(
 name|rbrace
 argument_list|)
 expr_stmt|;
-comment|/*   let parser know about this */
+comment|/* let parser know about this */
+name|ps
+operator|.
+name|search_brace
+operator|=
+name|cuddle_else
+operator|&&
+name|ps
+operator|.
+name|p_stack
+index|[
+name|ps
+operator|.
+name|tos
+index|]
+operator|==
+name|ifhead
+operator|&&
+name|ps
+operator|.
+name|il
+index|[
+name|ps
+operator|.
+name|tos
+index|]
+operator|>=
+name|ps
+operator|.
+name|ind_level
+expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|tos
+operator|<=
+literal|1
+operator|&&
+name|blanklines_after_procs
+operator|&&
+name|ps
+operator|.
+name|dec_nest
+operator|<=
+literal|0
+condition|)
+name|postfix_blankline_requested
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|swstmt
@@ -2517,7 +3247,7 @@ name|hd_type
 operator|=
 name|swstmt
 expr_stmt|;
-comment|/* keep this for when we have seen the expression */
+comment|/* keep this for when we have seen 					 * the expression */
 goto|goto
 name|copy_id
 goto|;
@@ -2530,7 +3260,7 @@ name|sp_sw
 operator|=
 name|true
 expr_stmt|;
-comment|/* the interesting stuff is done after the 			          expression is scanned */
+comment|/* the interesting stuff is done after the 				 * expression is scanned */
 name|hd_type
 operator|=
 operator|(
@@ -2553,7 +3283,7 @@ name|forstmt
 operator|)
 operator|)
 expr_stmt|;
-comment|/* remember the type of header for later use by parser */
+comment|/* 		 * remember the type of header for later use by parser  		 */
 goto|goto
 name|copy_id
 goto|;
@@ -2562,32 +3292,57 @@ case|case
 name|sp_nparen
 case|:
 comment|/* got else, do */
+name|ps
+operator|.
 name|in_stmt
 operator|=
 name|false
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|token
+operator|==
+literal|'e'
+condition|)
+block|{
+if|if
+condition|(
 name|e_code
 operator|!=
 name|s_code
+operator|&&
+operator|(
+operator|!
+name|cuddle_else
+operator|||
+name|e_code
+index|[
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'}'
+operator|)
 condition|)
 block|{
-comment|/* make sure this starts a line */
 if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|diag
 argument_list|(
-literal|"%d: Line broken\n"
+literal|0
 argument_list|,
-name|line_no
+literal|"Line broken"
 argument_list|)
 expr_stmt|;
 name|dump_line
 argument_list|()
 expr_stmt|;
+comment|/* make sure this starts a line */
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
@@ -2597,20 +3352,63 @@ name|force_nl
 operator|=
 name|true
 expr_stmt|;
-comment|/* also, following stuff must go onto new line */
+comment|/* also, following stuff must go 					 * onto new line */
+name|last_else
+operator|=
+literal|1
+expr_stmt|;
 name|parse
 argument_list|(
-operator|*
-name|token
-operator|==
-literal|'e'
-condition|?
 name|elselit
-else|:
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|e_code
+operator|!=
+name|s_code
+condition|)
+block|{
+comment|/* make sure this starts a 						 * line */
+if|if
+condition|(
+name|verbose
+condition|)
+name|diag
+argument_list|(
+literal|0
+argument_list|,
+literal|"Line broken"
+argument_list|)
+expr_stmt|;
+name|dump_line
+argument_list|()
+expr_stmt|;
+name|ps
+operator|.
+name|want_blank
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|force_nl
+operator|=
+name|true
+expr_stmt|;
+comment|/* also, following stuff must go 					 * onto new line */
+name|last_else
+operator|=
+literal|0
+expr_stmt|;
+name|parse
+argument_list|(
 name|dolit
 argument_list|)
 expr_stmt|;
-comment|/* pass token on to parser */
+block|}
 goto|goto
 name|copy_id
 goto|;
@@ -2618,23 +3416,102 @@ comment|/* move the token into line */
 case|case
 name|decl
 case|:
-comment|/* we have a declaration type (int, 			          register, etc.) */
+comment|/* we have a declaration type (int, 				 * register, etc.) */
 name|parse
 argument_list|(
 name|decl
 argument_list|)
 expr_stmt|;
 comment|/* let parser worry about indentation */
+if|if
+condition|(
+name|ps
+operator|.
+name|last_token
+operator|==
+name|rparen
+operator|&&
+name|ps
+operator|.
+name|tos
+operator|<=
+literal|1
+condition|)
+name|ps
+operator|.
+name|in_parameter_declaration
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|in_parameter_declaration
+operator|&&
+name|ps
+operator|.
+name|indent_parameters
+operator|&&
+name|ps
+operator|.
+name|dec_nest
+operator|==
+literal|0
+condition|)
+block|{
+name|ps
+operator|.
+name|ind_level
+operator|=
+name|ps
+operator|.
+name|i_l_follow
+operator|=
+literal|1
+expr_stmt|;
+name|ps
+operator|.
+name|ind_stmt
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|ps
+operator|.
 name|in_or_st
 operator|=
 name|true
 expr_stmt|;
-comment|/* this might be a structure or initialization declaration */
+comment|/* this might be a structure or 					 * initialization declaration */
+name|ps
+operator|.
 name|in_decl
 operator|=
+name|ps
+operator|.
 name|decl_on_line
 operator|=
 name|true
+expr_stmt|;
+if|if
+condition|(
+comment|/* !ps.in_or_st&& */
+name|ps
+operator|.
+name|dec_nest
+operator|<=
+literal|0
+condition|)
+name|ps
+operator|.
+name|just_saw_decl
+operator|=
+literal|2
+expr_stmt|;
+name|prefix_blankline_requested
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2651,35 +3528,21 @@ condition|;
 control|)
 empty_stmt|;
 comment|/* get length of token */
-if|if
-condition|(
-name|i
-operator|<=
-literal|3
-condition|)
-name|i
-operator|=
-literal|4
-expr_stmt|;
+comment|/* 		 * dec_ind = e_code - s_code + (ps.decl_indent>i ? 		 * ps.decl_indent : i);  		 */
 name|dec_ind
 operator|=
-operator|(
-operator|(
-name|e_code
-operator|-
-name|s_code
-operator|+
+name|ps
+operator|.
+name|decl_indent
+operator|>
+literal|0
+condition|?
+name|ps
+operator|.
+name|decl_indent
+else|:
 name|i
-operator|)
-operator|/
-name|ind_size
-operator|+
-literal|1
-operator|)
-operator|*
-name|ind_size
 expr_stmt|;
-comment|/* this will tell us how far to indent subsequent identifiers  	    */
 goto|goto
 name|copy_id
 goto|;
@@ -2689,12 +3552,16 @@ case|:
 comment|/* got an identifier or constant */
 if|if
 condition|(
+name|ps
+operator|.
 name|in_decl
 condition|)
 block|{
-comment|/* if we are in a declaration, we must 			          indent identifier */
+comment|/* if we are in a declaration, we 					 * must indent identifier */
 if|if
 condition|(
+name|ps
+operator|.
 name|want_blank
 condition|)
 operator|*
@@ -2703,10 +3570,65 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
 expr_stmt|;
+if|if
+condition|(
+name|is_procname
+operator|==
+literal|0
+operator|||
+operator|!
+name|procnames_start_line
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ps
+operator|.
+name|block_init
+condition|)
+if|if
+condition|(
+name|troff
+operator|&&
+operator|!
+name|ps
+operator|.
+name|dumped_decl_indent
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|e_code
+argument_list|,
+literal|"\\c\n.De %dp+\200p\n"
+argument_list|,
+name|dec_ind
+operator|*
+literal|7
+argument_list|)
+expr_stmt|;
+name|ps
+operator|.
+name|dumped_decl_indent
+operator|=
+literal|1
+expr_stmt|;
+name|e_code
+operator|+=
+name|strlen
+argument_list|(
+name|e_code
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 while|while
 condition|(
 operator|(
@@ -2724,18 +3646,43 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|dec_ind
+operator|&&
+name|s_code
+operator|!=
+name|e_code
+condition|)
+name|dump_line
+argument_list|()
+expr_stmt|;
+name|dec_ind
+operator|=
+literal|0
+expr_stmt|;
+name|ps
+operator|.
+name|want_blank
+operator|=
+name|false
+expr_stmt|;
+block|}
+block|}
 elseif|else
 if|if
 condition|(
 name|sp_sw
 operator|&&
+name|ps
+operator|.
 name|p_l_follow
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* check for if expr w/o parens */
-comment|/* this will make 		       JRM's obsurd "for ever" statements work */
 name|sp_sw
 operator|=
 name|false
@@ -2744,10 +3691,14 @@ name|force_nl
 operator|=
 name|true
 expr_stmt|;
+name|ps
+operator|.
 name|last_u_d
 operator|=
 name|true
 expr_stmt|;
+name|ps
+operator|.
 name|in_stmt
 operator|=
 name|false
@@ -2762,6 +3713,8 @@ name|copy_id
 label|:
 if|if
 condition|(
+name|ps
+operator|.
 name|want_blank
 condition|)
 operator|*
@@ -2770,6 +3723,34 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
+if|if
+condition|(
+name|troff
+operator|&&
+name|ps
+operator|.
+name|its_a_keyword
+condition|)
+block|{
+operator|*
+name|e_code
+operator|++
+operator|=
+name|BACKSLASH
+expr_stmt|;
+operator|*
+name|e_code
+operator|++
+operator|=
+literal|'f'
+expr_stmt|;
+operator|*
+name|e_code
+operator|++
+operator|=
+literal|'B'
+expr_stmt|;
+block|}
 for|for
 control|(
 name|t_ptr
@@ -2789,6 +3770,36 @@ operator|=
 operator|*
 name|t_ptr
 expr_stmt|;
+if|if
+condition|(
+name|troff
+operator|&&
+name|ps
+operator|.
+name|its_a_keyword
+condition|)
+block|{
+operator|*
+name|e_code
+operator|++
+operator|=
+name|BACKSLASH
+expr_stmt|;
+operator|*
+name|e_code
+operator|++
+operator|=
+literal|'f'
+expr_stmt|;
+operator|*
+name|e_code
+operator|++
+operator|=
+literal|'R'
+expr_stmt|;
+block|}
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|true
@@ -2797,7 +3808,7 @@ break|break;
 case|case
 name|period
 case|:
-comment|/* treat a period kind of like a binary 			          operation */
+comment|/* treat a period kind of like a binary 				 * operation */
 operator|*
 name|e_code
 operator|++
@@ -2805,15 +3816,19 @@ operator|=
 literal|'.'
 expr_stmt|;
 comment|/* move the period into line */
+name|ps
+operator|.
 name|want_blank
 operator|=
 name|false
 expr_stmt|;
-comment|/* don't put a blank after a period */
+comment|/* dont put a blank after a period */
 break|break;
 case|case
 name|comma
 case|:
+name|ps
+operator|.
 name|want_blank
 operator|=
 operator|(
@@ -2822,12 +3837,22 @@ operator|!=
 name|e_code
 operator|)
 expr_stmt|;
-comment|/* only put blank after comma if comma does not start the line 	       */
+comment|/* only put blank after 							 * comma if comma does 							 * not start the line */
 if|if
 condition|(
+name|ps
+operator|.
 name|in_decl
+operator|&&
+name|is_procname
+operator|==
+literal|0
+operator|&&
+operator|!
+name|ps
+operator|.
+name|block_init
 condition|)
-comment|/* align these in a declaration */
 while|while
 condition|(
 operator|(
@@ -2856,19 +3881,33 @@ literal|','
 expr_stmt|;
 if|if
 condition|(
-name|break_comma
-operator|&&
+name|ps
+operator|.
 name|p_l_follow
 operator|==
 literal|0
+condition|)
+block|{
+name|ps
+operator|.
+name|block_init
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|break_comma
 operator|&&
 operator|!
+name|ps
+operator|.
 name|leave_comma
 condition|)
 name|force_nl
 operator|=
 name|true
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|preesc
@@ -2894,20 +3933,9 @@ operator|!=
 name|e_code
 operator|)
 condition|)
-block|{
-comment|/* true iff the '#' was not at start of the line */
-name|printf
-argument_list|(
-literal|"%d: What is this # doing here?\n"
-argument_list|,
-name|line_no
-argument_list|)
+name|dump_line
+argument_list|()
 expr_stmt|;
-goto|goto
-name|do_binary
-goto|;
-comment|/* treat it as a binary operator */
-block|}
 operator|*
 name|e_lab
 operator|++
@@ -2915,12 +3943,37 @@ operator|=
 literal|'#'
 expr_stmt|;
 comment|/* move whole line to 'label' buffer */
+block|{
+name|int
+name|in_comment
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|com_start
+init|=
+literal|0
+decl_stmt|;
+name|char
+name|quote
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|com_end
+init|=
+literal|0
+decl_stmt|;
 while|while
 condition|(
 operator|*
 name|buf_ptr
 operator|!=
 literal|'\n'
+operator|||
+name|in_comment
 condition|)
 block|{
 operator|*
@@ -2939,78 +3992,301 @@ condition|)
 name|fill_buffer
 argument_list|()
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 operator|*
 name|e_lab
 operator|++
-operator|==
+condition|)
+block|{
+case|case
+name|BACKSLASH
+case|:
+if|if
+condition|(
+name|troff
+condition|)
+operator|*
+name|e_lab
+operator|++
+operator|=
+name|BACKSLASH
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|in_comment
+condition|)
+block|{
+operator|*
+name|e_lab
+operator|++
+operator|=
+operator|*
+name|buf_ptr
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|buf_ptr
+operator|>=
+name|buf_end
+condition|)
+name|fill_buffer
+argument_list|()
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|'/'
-operator|&&
+case|:
+if|if
+condition|(
 operator|*
 name|buf_ptr
 operator|==
 literal|'*'
+operator|&&
+operator|!
+name|in_comment
+operator|&&
+operator|!
+name|quote
 condition|)
 block|{
-comment|/* check for comment on preprocessor line */
+name|in_comment
+operator|=
+literal|1
+expr_stmt|;
+operator|*
+name|e_lab
+operator|++
+operator|=
+operator|*
+name|buf_ptr
+operator|++
+expr_stmt|;
+name|com_start
+operator|=
 name|e_lab
 operator|-
-operator|=
 literal|2
 expr_stmt|;
-comment|/* skip back over slash */
-while|while
-condition|(
-operator|*
-name|e_lab
-operator|==
-literal|'\t'
-operator|||
-operator|*
-name|e_lab
-operator|==
-literal|' '
-condition|)
-operator|--
-name|e_lab
-expr_stmt|;
-comment|/* strip off trailing blanks and tabs */
-operator|*
-operator|(
-operator|++
-name|e_lab
-operator|)
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* null terminate the line */
+block|}
+break|break;
+case|case
+literal|'"'
+case|:
 if|if
 condition|(
-operator|++
-name|buf_ptr
-operator|>=
-name|buf_end
+name|quote
+operator|==
+literal|'"'
 condition|)
-comment|/* space past start of comment */
-name|fill_buffer
-argument_list|()
-expr_stmt|;
-name|col_1
+name|quote
 operator|=
-name|false
+literal|0
 expr_stmt|;
-comment|/* don't let pr_comment think that this comment starts 		       in column 1 */
-name|decl_on_line
+break|break;
+case|case
+literal|'\''
+case|:
+if|if
+condition|(
+name|quote
+operator|==
+literal|'\''
+condition|)
+name|quote
 operator|=
-name|true
+literal|0
 expr_stmt|;
-comment|/* treat this as a declaration for comment placement 		       purposes */
-goto|goto
-name|proc_comment
-goto|;
-comment|/* go process the comment */
+break|break;
+case|case
+literal|'*'
+case|:
+if|if
+condition|(
+operator|*
+name|buf_ptr
+operator|==
+literal|'/'
+operator|&&
+name|in_comment
+condition|)
+block|{
+name|in_comment
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|e_lab
+operator|++
+operator|=
+operator|*
+name|buf_ptr
+operator|++
+expr_stmt|;
+name|com_end
+operator|=
+name|e_lab
+expr_stmt|;
 block|}
+break|break;
+block|}
+block|}
+while|while
+condition|(
+name|e_lab
+operator|>
+name|s_lab
+operator|&&
+operator|(
+name|e_lab
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|' '
+operator|||
+name|e_lab
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\t'
+operator|)
+condition|)
+name|e_lab
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|e_lab
+operator|==
+name|com_end
+operator|&&
+name|bp_save
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* comment on 								 * preprocessor line */
+if|if
+condition|(
+name|sc_end
+operator|==
+literal|0
+condition|)
+comment|/* if this is the first 						 * comment, we must set up 						 * the buffer */
+name|sc_end
+operator|=
+operator|&
+operator|(
+name|save_com
+index|[
+literal|0
+index|]
+operator|)
+expr_stmt|;
+else|else
+block|{
+operator|*
+name|sc_end
+operator|++
+operator|=
+literal|'\n'
+expr_stmt|;
+comment|/* add newline between 						 * comments */
+operator|*
+name|sc_end
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+operator|--
+name|line_no
+expr_stmt|;
+block|}
+name|bcopy
+argument_list|(
+name|com_start
+argument_list|,
+name|sc_end
+argument_list|,
+name|com_end
+operator|-
+name|com_start
+argument_list|)
+expr_stmt|;
+name|sc_end
+operator|+=
+name|com_end
+operator|-
+name|com_start
+expr_stmt|;
+name|e_lab
+operator|=
+name|com_start
+expr_stmt|;
+while|while
+condition|(
+name|e_lab
+operator|>
+name|s_lab
+operator|&&
+operator|(
+name|e_lab
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|' '
+operator|||
+name|e_lab
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\t'
+operator|)
+condition|)
+name|e_lab
+operator|--
+expr_stmt|;
+name|bp_save
+operator|=
+name|buf_ptr
+expr_stmt|;
+comment|/* save current input 						 * buffer */
+name|be_save
+operator|=
+name|buf_end
+expr_stmt|;
+name|buf_ptr
+operator|=
+name|save_com
+expr_stmt|;
+comment|/* fix so that subsequent 						 * calls to lexi will take 						 * tokens out of save_com */
+operator|*
+name|sc_end
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+comment|/* add trailing blank, 						 * just in case */
+name|buf_end
+operator|=
+name|sc_end
+expr_stmt|;
+name|sc_end
+operator|=
+literal|0
+expr_stmt|;
 block|}
 operator|*
 name|e_lab
@@ -3018,18 +4294,220 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* null terminate line */
+name|ps
+operator|.
 name|pcase
 operator|=
 name|false
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|s_lab
+argument_list|,
+literal|"#if"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+if|if
+condition|(
+name|ifdef_level
+operator|<
+sizeof|sizeof
+name|state_stack
+operator|/
+sizeof|sizeof
+name|state_stack
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|match_state
+index|[
+name|ifdef_level
+index|]
+operator|.
+name|tos
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|state_stack
+index|[
+name|ifdef_level
+operator|++
+index|]
+operator|=
+name|ps
+expr_stmt|;
+block|}
+else|else
+name|diag
+argument_list|(
+literal|1
+argument_list|,
+literal|"#if stack overflow"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|s_lab
+argument_list|,
+literal|"#else"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+if|if
+condition|(
+name|ifdef_level
+operator|<=
+literal|0
+condition|)
+name|diag
+argument_list|(
+literal|1
+argument_list|,
+literal|"Unmatched #else"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|match_state
+index|[
+name|ifdef_level
+operator|-
+literal|1
+index|]
+operator|=
+name|ps
+expr_stmt|;
+name|ps
+operator|=
+name|state_stack
+index|[
+name|ifdef_level
+operator|-
+literal|1
+index|]
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|s_lab
+argument_list|,
+literal|"#endif"
+argument_list|,
+literal|6
+argument_list|)
+operator|==
+literal|0
+condition|)
+if|if
+condition|(
+name|ifdef_level
+operator|<=
+literal|0
+condition|)
+name|diag
+argument_list|(
+literal|1
+argument_list|,
+literal|"Unmatched #endif"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|ifdef_level
+operator|--
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|undef
+comment|/* 			 * This match needs to be more intelligent before 			 * the message is useful  			 */
+if|if
+condition|(
+name|match_state
+index|[
+name|ifdef_level
+index|]
+operator|.
+name|tos
+operator|>=
+literal|0
+operator|&&
+name|bcmp
+argument_list|(
+operator|&
+name|ps
+argument_list|,
+operator|&
+name|match_state
+index|[
+name|ifdef_level
+index|]
+argument_list|,
+sizeof|sizeof
+name|ps
+argument_list|)
+condition|)
+name|diag
+argument_list|(
+literal|0
+argument_list|,
+literal|"Syntactically inconsistant #ifdef alternatives."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 break|break;
-comment|/* subsequent processing of the newline 			          character will cause the line to be 			          printed */
+comment|/* subsequent processing of the newline 				 * character will cause the line to be 				 * printed */
 case|case
 name|comment
 case|:
 comment|/* we have gotten a /*  this is a biggie */
 name|proc_comment
 label|:
+if|if
+condition|(
+name|flushed_nl
+condition|)
+block|{
+comment|/* we should force a broken line 					 * here */
+name|flushed_nl
+operator|=
+name|false
+expr_stmt|;
+name|dump_line
+argument_list|()
+expr_stmt|;
+name|ps
+operator|.
+name|want_blank
+operator|=
+name|false
+expr_stmt|;
+comment|/* dont insert blank at 						 * line start */
+name|force_nl
+operator|=
+name|false
+expr_stmt|;
+block|}
 name|pr_comment
 argument_list|()
 expr_stmt|;
@@ -3041,7 +4519,27 @@ name|e_code
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* make sure code section is null 			          terminated */
+comment|/* make sure code section is null 				 * terminated */
+if|if
+condition|(
+name|type_code
+operator|!=
+name|comment
+operator|&&
+name|type_code
+operator|!=
+name|newline
+operator|&&
+name|type_code
+operator|!=
+name|preesc
+condition|)
+name|ps
+operator|.
+name|last_token
+operator|=
+name|type_code
+expr_stmt|;
 block|}
 comment|/* end of main while (1) loop */
 block|}
@@ -3052,7 +4550,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * copy input file to backup file  * if in_name is /blah/blah/blah/file, then backup file  * will be ".Bfile"  * then make the backup file the input and original  * input file the output  */
+comment|/*  * copy input file to backup file if in_name is /blah/blah/blah/file, then  * backup file will be ".Bfile" then make the backup file the input and  * original input file the output   */
 end_comment
 
 begin_macro
@@ -3122,7 +4620,7 @@ name|sprintf
 argument_list|(
 name|bakfile
 argument_list|,
-literal|".B%s"
+literal|"%s.BAK"
 argument_list|,
 name|p
 argument_list|)
@@ -3161,7 +4659,10 @@ name|n
 operator|=
 name|read
 argument_list|(
+name|fileno
+argument_list|(
 name|input
+argument_list|)
 argument_list|,
 name|buff
 argument_list|,
@@ -3182,7 +4683,7 @@ argument_list|(
 name|bakchn
 argument_list|)
 expr_stmt|;
-name|close
+name|fclose
 argument_list|(
 name|input
 argument_list|)
@@ -3190,11 +4691,11 @@ expr_stmt|;
 comment|/* re-open backup file as the input file */
 name|input
 operator|=
-name|open
+name|fopen
 argument_list|(
 name|bakfile
 argument_list|,
-literal|0
+literal|"r"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3216,17 +4717,17 @@ block|}
 comment|/* now the original input file will be the output */
 name|output
 operator|=
-name|creat
+name|fopen
 argument_list|(
 name|in_name
 argument_list|,
-literal|0644
+literal|"w"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|output
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -3249,6 +4750,71 @@ block|}
 block|}
 end_block
 
+begin_decl_stmt
+name|char
+modifier|*
+name|param_start
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|eqin
+argument_list|(
+name|s1
+argument_list|,
+name|s2
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|s1
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|char
+modifier|*
+name|s2
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+while|while
+condition|(
+operator|*
+name|s1
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|s1
+operator|++
+operator|!=
+operator|*
+name|s2
+operator|++
+condition|)
+return|return
+operator|(
+name|false
+operator|)
+return|;
+block|}
+name|param_start
+operator|=
+name|s2
+expr_stmt|;
+return|return
+operator|(
+name|true
+operator|)
+return|;
+block|}
+end_block
+
 begin_macro
 name|set_option
 argument_list|(
@@ -3265,66 +4831,785 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|j
-expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|options
-index|[
-name|j
-index|]
-operator|.
-name|str
-operator|!=
-literal|0
-condition|;
-operator|++
-name|j
-control|)
-block|{
-comment|/* look thru list of possible options */
+if|if
+condition|(
+operator|!
+name|eqin
+argument_list|(
+literal|"-npro"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
 if|if
 condition|(
 name|eqin
 argument_list|(
-name|options
-index|[
-name|j
-index|]
+literal|"-lc"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* comment line length */
+name|block_comment_max_col
+operator|=
+name|atoi
+argument_list|(
+name|param_start
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-lp"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|lineup_to_parens
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nlp"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|lineup_to_parens
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-l"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* line length */
+name|max_col
+operator|=
+name|atoi
+argument_list|(
+name|param_start
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-psl"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* if true, the names of 					 * procedures being defined get 					 * placed in column 1 (ie. a 					 * newline is placed between the 					 * type of the procedure and its 					 * name) */
+name|procnames_start_line
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-npsl"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|procnames_start_line
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-fc1"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|format_col1_comments
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nfc1"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|format_col1_comments
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-pcs"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* If true, procedure calls look 					 * like: foo(bar) rather than foo 					 * (bar) */
+name|proc_calls_space
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-npcs"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|proc_calls_space
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-ip"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* indent parameters */
+name|ps
 operator|.
-name|str
+name|indent_parameters
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nip"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* no indent parameters */
+name|ps
+operator|.
+name|indent_parameters
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-cli"
 argument_list|,
 name|arg
 argument_list|)
 condition|)
 block|{
-name|set_var
+comment|/* case label indent */
+specifier|extern
+name|float
+name|atof
+parameter_list|()
+function_decl|;
+name|ps
+operator|.
+name|case_indent
+operator|=
+name|atof
 argument_list|(
-name|j
+name|param_start
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-ci"
 argument_list|,
 name|arg
 argument_list|)
+condition|)
+name|continuation_indent
+operator|=
+name|atoi
+argument_list|(
+name|param_start
+argument_list|)
 expr_stmt|;
-break|break;
-comment|/* get out of for loop */
-block|}
-block|}
+elseif|else
 if|if
 condition|(
-name|options
-index|[
-name|j
-index|]
+name|eqin
+argument_list|(
+literal|"-cdb"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* comment delimiters should be on 					 * lines by themselves */
+name|comment_delimiter_on_blankline
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-ncdb"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* comment delimiters shouldnt be 					 * on lines by themselves */
+name|comment_delimiter_on_blankline
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-i"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* indent width */
+name|ps
 operator|.
-name|str
+name|ind_size
+operator|=
+name|atoi
+argument_list|(
+name|param_start
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-cd"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* indent for comments on 					 * declarations */
+name|ps
+operator|.
+name|decl_com_ind
+operator|=
+name|atoi
+argument_list|(
+name|param_start
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-ce"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* true iff 'else' should cuddle 					 * up to '}' */
+name|cuddle_else
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-c"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* comment indent */
+name|ps
+operator|.
+name|com_ind
+operator|=
+name|atoi
+argument_list|(
+name|param_start
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-v"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* spew out rubbish */
+name|verbose
+operator|=
+name|true
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nv"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* keep quiet */
+name|verbose
+operator|=
+name|false
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-dj"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|ps
+operator|.
+name|ljust_decl
+operator|=
+name|true
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-ndj"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|ps
+operator|.
+name|ljust_decl
+operator|=
+name|false
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nbc"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* dont break after commas in 					 * declarations */
+name|ps
+operator|.
+name|leave_comma
+operator|=
+name|true
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-bc"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* break after commas in 					 * declarations */
+name|ps
+operator|.
+name|leave_comma
+operator|=
+name|false
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-di"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* indent from type to varname in 					 * a declaration */
+name|ps
+operator|.
+name|decl_indent
+operator|=
+name|atoi
+argument_list|(
+name|param_start
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-d"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|ps
+operator|.
+name|unindent_displace
+operator|=
+name|atoi
+argument_list|(
+name|param_start
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-br"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|btype_2
+operator|=
+name|true
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-bl"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|btype_2
+operator|=
+name|false
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-st"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+block|{
+comment|/* input and output on standard IO */
+if|if
+condition|(
+name|input
 operator|==
 literal|0
 condition|)
+name|input
+operator|=
+name|stdin
+expr_stmt|;
+if|if
+condition|(
+name|output
+operator|==
+literal|0
+condition|)
+name|output
+operator|=
+name|stdout
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-ei"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* else-ifs should be stuck 					 * together */
+name|ps
+operator|.
+name|else_if
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nei"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* else-ifs should be broken apart */
+name|ps
+operator|.
+name|else_if
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nce"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* else should always start a line */
+name|cuddle_else
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-sc"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* comment continuations should 					 * start with a * */
+name|star_comment_cont
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nsc"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|star_comment_cont
+operator|=
+literal|0
+expr_stmt|;
+comment|/* comments shouldnt start with a 					 * star */
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-bap"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* blanklines after procedures */
+name|blanklines_after_procs
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nbap"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* blanklines after procedures */
+name|blanklines_after_procs
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-sob"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* swallow optional blanklines */
+name|swallow_optional_blanklines
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nsob"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* swallow optional blanklines */
+name|swallow_optional_blanklines
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-bad"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* blanklines after declarations */
+name|blanklines_after_declarations
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nbad"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* blanklines after declarations */
+name|blanklines_after_declarations
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-bbb"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* blanklines before blockcomments */
+name|blanklines_before_blockcomments
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-nbbb"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+comment|/* blanklines before blockcomments */
+name|blanklines_before_blockcomments
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eqin
+argument_list|(
+literal|"-troff"
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|troff
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|arg
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|arg
+index|[
+literal|1
+index|]
+operator|==
+literal|'T'
+condition|)
+comment|/* -Ttypename */
+name|addkey
+argument_list|(
+name|arg
+operator|+
+literal|2
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+else|else
 block|{
 comment|/* illegal arg given */
 name|printf
@@ -3341,216 +5626,8 @@ block|}
 block|}
 end_block
 
-begin_macro
-name|set_var
-argument_list|(
-argument|j
-argument_list|,
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|arg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-switch|switch
-condition|(
-name|options
-index|[
-name|j
-index|]
-operator|.
-name|code
-condition|)
-block|{
-case|case
-literal|1
-case|:
-comment|/* have -lnnn */
-name|max_col
-operator|=
-name|atoi
-argument_list|(
-operator|&
-name|arg
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-comment|/* have -cnnn */
-name|com_ind
-operator|=
-name|atoi
-argument_list|(
-operator|&
-name|arg
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|3
-case|:
-comment|/* have -innn */
-name|ind_size
-operator|=
-name|atoi
-argument_list|(
-operator|&
-name|arg
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|4
-case|:
-comment|/* have -cdnnn */
-name|decl_com_ind
-operator|=
-name|atoi
-argument_list|(
-operator|&
-name|arg
-index|[
-literal|3
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|5
-case|:
-comment|/* have -v */
-name|verbose
-operator|=
-name|true
-expr_stmt|;
-break|break;
-case|case
-literal|6
-case|:
-comment|/* have -nv */
-name|verbose
-operator|=
-name|false
-expr_stmt|;
-break|break;
-case|case
-literal|7
-case|:
-comment|/* have -dj */
-name|ljust_decl
-operator|=
-name|true
-expr_stmt|;
-break|break;
-case|case
-literal|8
-case|:
-comment|/* have -ndj */
-name|ljust_decl
-operator|=
-name|false
-expr_stmt|;
-break|break;
-case|case
-literal|9
-case|:
-comment|/* -nbc */
-name|leave_comma
-operator|=
-name|true
-expr_stmt|;
-break|break;
-case|case
-literal|10
-case|:
-comment|/* -bc */
-name|leave_comma
-operator|=
-name|false
-expr_stmt|;
-break|break;
-case|case
-literal|13
-case|:
-comment|/* -dnnn */
-name|unindent_displace
-operator|=
-name|atoi
-argument_list|(
-operator|&
-name|arg
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|14
-case|:
-comment|/* -br */
-name|btype_2
-operator|=
-name|true
-expr_stmt|;
-break|break;
-case|case
-literal|15
-case|:
-comment|/* -bl */
-name|btype_2
-operator|=
-name|false
-expr_stmt|;
-break|break;
-case|case
-literal|16
-case|:
-if|if
-condition|(
-name|input
-operator|<
-literal|0
-condition|)
-name|input
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|output
-operator|<
-literal|0
-condition|)
-name|output
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
-block|}
-end_block
-
 begin_comment
-comment|/*  * GETPRO - get profile file  * profile file is max 127 characters  */
+comment|/*  * GETPRO - get profile file profile file is max 127 characters   */
 end_comment
 
 begin_macro
@@ -3559,6 +5636,8 @@ argument_list|(
 argument|name
 argument_list|,
 argument|buf
+argument_list|,
+argument|len
 argument_list|)
 end_macro
 
@@ -3567,7 +5646,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|,
-comment|/* profile file name, as in '.indent.pro'  			       */
+comment|/* profile file name, as in '.indent.pro' */
 modifier|*
 name|buf
 decl_stmt|;
@@ -3587,7 +5666,7 @@ expr_stmt|;
 name|char
 name|file
 index|[
-literal|32
+literal|100
 index|]
 decl_stmt|;
 name|file
@@ -3621,6 +5700,21 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|chn
+operator|=
+name|open
+argument_list|(
+name|name
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
 name|chn
 operator|=
 name|open
@@ -3650,7 +5744,7 @@ name|chn
 argument_list|,
 name|buf
 argument_list|,
-literal|127
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -3704,7 +5798,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * strip off arguments in a string:  * p is address of a character pointer  * nextchr returns pointer to front of first arg  * arg is null terminated.  * p is reset to after arg for subsequent calls  */
+comment|/*  * strip off arguments in a string: p is address of a character pointer  * nextchr returns pointer to front of first arg arg is null terminated. p  * is reset to after arg for subsequent calls   */
 end_comment
 
 begin_function
@@ -3730,8 +5824,6 @@ name|b
 decl_stmt|;
 name|f
 operator|=
-name|b
-operator|=
 operator|*
 name|p
 expr_stmt|;
@@ -3740,37 +5832,24 @@ condition|(
 operator|*
 name|f
 operator|&&
-operator|(
 operator|*
 name|f
-operator|==
+operator|<=
 literal|' '
-operator|||
-operator|*
-name|f
-operator|==
-literal|'\t'
-operator|)
 condition|)
 name|f
 operator|++
+expr_stmt|;
+name|b
+operator|=
+name|f
 expr_stmt|;
 while|while
 condition|(
 operator|*
 name|b
-operator|&&
-operator|(
-operator|*
-name|b
-operator|!=
+operator|>
 literal|' '
-operator|&&
-operator|*
-name|b
-operator|!=
-literal|'\t'
-operator|)
 condition|)
 name|b
 operator|++
@@ -3811,7 +5890,7 @@ block|{
 name|char
 name|line
 index|[
-literal|128
+literal|1000
 index|]
 decl_stmt|,
 modifier|*
@@ -3834,6 +5913,9 @@ name|getpro
 argument_list|(
 literal|".indent.pro"
 argument_list|,
+name|line
+argument_list|,
+sizeof|sizeof
 name|line
 argument_list|)
 operator|<

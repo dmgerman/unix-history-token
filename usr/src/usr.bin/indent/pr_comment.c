@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr_comment.c	5.1 (Berkeley) %G%"
+literal|"@(#)pr_comment.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,14 +26,14 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  			  Copyright (C) 1976 				by the 			  Board of Trustees 				of the 			University of Illinois  			 All rights reserved   NAME: 	pr_comment  FUNCTION: 	This routine takes care of scanning and printing comments.  ALGORITHM: 	1) Decide where the comment should be aligned, and if lines should 	   be broken. 	2) If lines should not be broken and filled, just copy up to end of 	   comment. 	3) If lines should be filled, then scan thru input_buffer copying 	   characters to com_buf.  Remember where the last blank, tab, or 	   newline was.  When line is filled, print up to last blank and  	   continue copying.  PARAMETERS: 	None  RETURNS: 	Nothing  GLOBALS: 	combuf = 	s_com 	e_com =  	buf_ptr = 	buf_end  	bl_line 	col_1 	com_col = 	com_ind 	decl_com_ind 	decl_on_line 	had_eof 	ind_level 	ind_size 	line_no = 	max_col 	out_com =	Count number of comments 	unindent_displace 	use_ff =  CALLS: 	count_spaces 	dump_line 	fill_buffer 	printf		(lib)  CALLED BY: 	main  HISTORY: 	November 1976	D A Willcox of CAC	Initial coding 	12/6/76		D A Willcox of CAC	Modification to handle  						UNIX-style comments  */
+comment|/*-  *  *			  Copyright (C) 1976  *				by the  *			  Board of Trustees  *				of the  *			University of Illinois  *  *			 All rights reserved  *  *  * NAME:  *	pr_comment  *  * FUNCTION:  *	This routine takes care of scanning and printing comments.  *  * ALGORITHM:  *	1) Decide where the comment should be aligned, and if lines should  *	   be broken.  *	2) If lines should not be broken and filled, just copy up to end of  *	   comment.  *	3) If lines should be filled, then scan thru input_buffer copying  *	   characters to com_buf.  Remember where the last blank, tab, or  *	   newline was.  When line is filled, print up to last blank and   *	   continue copying.  *  * HISTORY:  *	November 1976	D A Willcox of CAC	Initial coding  *	12/6/76		D A Willcox of CAC	Modification to handle   *						UNIX-style comments  *  */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* this routine processes comments.  It makes an attempt to keep comments from    going over the max line length.  If a line is too long, it moves everything    from the last blank to the next comment line.  Blanks and tabs from the    beginning of the input line are removed */
+comment|/*  * this routine processes comments.  It makes an attempt to keep comments  * from going over the max line length.  If a line is too long, it moves  * everything from the last blank to the next comment line.  Blanks and  * tabs from the beginning of the input line are removed   */
 end_comment
 
 begin_include
@@ -55,9 +55,9 @@ name|now_col
 decl_stmt|;
 comment|/* column we are in now */
 name|int
-name|box_com
+name|adj_max_col
 decl_stmt|;
-comment|/* set to true when we are in a "boxed" comment. In that case, the first     non-blank char should be lined up with the / in /* */
+comment|/* Adjusted max_col for when we decide to 				 * spill comments over the right margin */
 name|int
 name|col_1_com
 decl_stmt|;
@@ -66,7 +66,7 @@ name|char
 modifier|*
 name|last_bl
 decl_stmt|;
-comment|/* points to the last blank in the output buffer */
+comment|/* points to the last blank in the output 				 * buffer */
 name|char
 name|achar
 decl_stmt|;
@@ -74,45 +74,87 @@ name|char
 modifier|*
 name|t_ptr
 decl_stmt|;
-comment|/* used for movinf string */
+comment|/* used for moving string */
 name|int
 name|unix_comment
 decl_stmt|;
-comment|/* tri-state variable used to decide if it is a unix-style comment. 0 means     only blanks since /*, 1 means regular style comment, 2 means unix style     comment */
+comment|/* tri-state variable used to decide if it 				 * is a unix-style comment. 0 means only 				 * blanks since /*, 1 means regular style 				 * comment, 2 means unix style comment */
+name|int
+name|break_delim
+init|=
+name|comment_delimiter_on_blankline
+decl_stmt|;
+name|int
+name|l_just_saw_decl
+init|=
+name|ps
+operator|.
+name|just_saw_decl
+decl_stmt|;
+comment|/*      * int         ps.last_nl = 0;	/* true iff the last significant      * thing weve seen is a newline       */
+name|int
+name|one_liner
+init|=
+literal|1
+decl_stmt|;
+comment|/* true iff this comment is a one-liner */
+name|adj_max_col
+operator|=
+name|max_col
+expr_stmt|;
+name|ps
+operator|.
+name|just_saw_decl
+operator|=
+literal|0
+expr_stmt|;
 name|last_bl
 operator|=
 literal|0
 expr_stmt|;
 comment|/* no blanks found so far */
+name|ps
+operator|.
 name|box_com
 operator|=
 name|col_1_com
 operator|=
 name|false
 expr_stmt|;
-comment|/* at first, assume that we are not in a boxed comment or some other comment     that should not be touched */
+comment|/* at first, assume that we are 					 * not in a boxed comment or some 					 * other comment that should not 					 * be touched */
 operator|++
+name|ps
+operator|.
 name|out_coms
 expr_stmt|;
 comment|/* keep track of number of comments */
 name|unix_comment
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-comment|/* set flag to let us figure out if there is a 			          unix-style comment */
-comment|/*----------------------------------------------------------*\  |   Figure where to align and how to treat the comment \*----------------------------------------------------------*/
+comment|/* set flag to let us figure out if there 				 * is a unix-style comment ** DISABLED: 				 * use 0 to reenable this hack! */
+comment|/* Figure where to align and how to treat the comment */
 if|if
 condition|(
+name|ps
+operator|.
 name|col_1
+operator|&&
+operator|!
+name|format_col1_comments
 condition|)
 block|{
-comment|/* if comment starts in column 1 it should not 			          be touched */
+comment|/* if comment starts in 						 * column 1 it should not 						 * be touched */
 name|col_1_com
 operator|=
+name|ps
+operator|.
 name|box_com
 operator|=
 name|true
 expr_stmt|;
+name|ps
+operator|.
 name|com_col
 operator|=
 literal|1
@@ -126,15 +168,32 @@ operator|*
 name|buf_ptr
 operator|==
 literal|'-'
+operator|||
+operator|*
+name|buf_ptr
+operator|==
+literal|'*'
 condition|)
+block|{
+name|ps
+operator|.
 name|box_com
 operator|=
 name|true
 expr_stmt|;
-comment|/* a comment with a '-' immediately after the /* 			          is assumed to be a boxed comment */
+comment|/* a comment with a '-' or '*' immediately 				 * after the /* is assumed to be a boxed 				 * comment */
+name|col_1_com
+operator|=
+name|true
+expr_stmt|;
+name|break_delim
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
-comment|/* bl_line&& */
+comment|/* ps.bl_line&& */
 operator|(
 name|s_lab
 operator|==
@@ -149,48 +208,243 @@ operator|)
 condition|)
 block|{
 comment|/* klg: check only if this line is blank */
-comment|/*  	 * If this (*and previous lines are*) blank, 	 * don't put comment way out at left 	 */
+comment|/* 	     * If this (*and previous lines are*) blank, dont put comment 	     * way out at left  	     */
+name|ps
+operator|.
 name|com_col
 operator|=
 operator|(
+name|ps
+operator|.
 name|ind_level
 operator|-
+name|ps
+operator|.
 name|unindent_displace
 operator|)
 operator|*
+name|ps
+operator|.
 name|ind_size
+operator|+
+literal|1
+expr_stmt|;
+name|adj_max_col
+operator|=
+name|block_comment_max_col
+expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|com_col
+operator|<=
+literal|1
+condition|)
+name|ps
+operator|.
+name|com_col
+operator|=
+literal|1
+operator|+
+operator|!
+name|format_col1_comments
+expr_stmt|;
+block|}
+else|else
+block|{
+specifier|register
+name|target_col
+expr_stmt|;
+name|break_delim
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|s_code
+operator|!=
+name|e_code
+condition|)
+name|target_col
+operator|=
+name|count_spaces
+argument_list|(
+name|compute_code_target
+argument_list|()
+argument_list|,
+name|s_code
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|target_col
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|s_lab
+operator|!=
+name|e_lab
+condition|)
+name|target_col
+operator|=
+name|count_spaces
+argument_list|(
+name|compute_label_target
+argument_list|()
+argument_list|,
+name|s_lab
+argument_list|)
+expr_stmt|;
+block|}
+name|ps
+operator|.
+name|com_col
+operator|=
+name|ps
+operator|.
+name|decl_on_line
+operator|||
+name|ps
+operator|.
+name|ind_level
+operator|==
+literal|0
+condition|?
+name|ps
+operator|.
+name|decl_com_ind
+else|:
+name|ps
+operator|.
+name|com_ind
+expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|com_col
+operator|<
+name|target_col
+condition|)
+name|ps
+operator|.
+name|com_col
+operator|=
+operator|(
+operator|(
+name|target_col
+operator|+
+literal|7
+operator|)
+operator|&
+operator|~
+literal|7
+operator|)
 operator|+
 literal|1
 expr_stmt|;
 if|if
 condition|(
+name|ps
+operator|.
 name|com_col
-operator|<=
-literal|1
+operator|+
+literal|24
+operator|>
+name|adj_max_col
 condition|)
-name|com_col
+name|adj_max_col
 operator|=
+name|ps
+operator|.
+name|com_col
+operator|+
+literal|24
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|ps
+operator|.
+name|box_com
+condition|)
+block|{
+name|buf_ptr
+index|[
+operator|-
 literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|ps
+operator|.
+name|n_comment_delta
+operator|=
+literal|1
+operator|-
+name|count_spaces
+argument_list|(
+literal|1
+argument_list|,
+name|in_buffer
+argument_list|)
+expr_stmt|;
+name|ps
+operator|.
+name|comment_delta
+operator|=
+literal|0
+expr_stmt|;
+name|buf_ptr
+index|[
+operator|-
+literal|2
+index|]
+operator|=
+literal|'/'
 expr_stmt|;
 block|}
 else|else
 block|{
-name|com_col
+name|ps
+operator|.
+name|n_comment_delta
 operator|=
-operator|(
-name|decl_on_line
-operator|||
-name|ind_level
-operator|==
 literal|0
-condition|?
-name|decl_com_ind
-else|:
-name|com_ind
-operator|)
+expr_stmt|;
+name|ps
+operator|.
+name|comment_delta
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|buf_ptr
+operator|==
+literal|' '
+operator|||
+operator|*
+name|buf_ptr
+operator|==
+literal|'\t'
+condition|)
+name|buf_ptr
+operator|++
 expr_stmt|;
 block|}
-block|}
+name|ps
+operator|.
+name|comment_delta
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|e_com
 operator|++
@@ -212,6 +466,8 @@ operator|!=
 literal|' '
 operator|&&
 operator|!
+name|ps
+operator|.
 name|box_com
 condition|)
 operator|*
@@ -229,19 +485,39 @@ name|now_col
 operator|=
 name|count_spaces
 argument_list|(
+name|ps
+operator|.
 name|com_col
 argument_list|,
 name|s_com
 argument_list|)
 expr_stmt|;
-comment|/* figure where what column we would be in if we printed the comment now */
-comment|/*----------------------------------------------------------*\  |    Start to copy the comment \*----------------------------------------------------------*/
+comment|/* figure what column we 						 * would be in if we 						 * printed the comment now */
+comment|/* Start to copy the comment */
 while|while
 condition|(
 literal|1
 condition|)
 block|{
-comment|/* this loop will go until the comment is copied  			       */
+comment|/* this loop will go until the comment is 				 * copied */
+if|if
+condition|(
+operator|*
+name|buf_ptr
+operator|>
+literal|040
+operator|&&
+operator|*
+name|buf_ptr
+operator|!=
+literal|'*'
+condition|)
+name|ps
+operator|.
+name|last_nl
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -256,10 +532,14 @@ comment|/* check for a form feed */
 if|if
 condition|(
 operator|!
+name|ps
+operator|.
 name|box_com
 condition|)
 block|{
-comment|/* in a text comment, break the line here */
+comment|/* in a text comment, break the 					 * line here */
+name|ps
+operator|.
 name|use_ff
 operator|=
 name|true
@@ -282,7 +562,7 @@ operator|*
 name|e_com
 operator|++
 operator|=
-literal|' '
+literal|'*'
 expr_stmt|;
 operator|*
 name|e_com
@@ -290,23 +570,10 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-do|do
-block|{
-comment|/* get rid of leading blanks */
-if|if
-condition|(
-operator|++
-name|buf_ptr
-operator|>=
-name|buf_end
-condition|)
-name|fill_buffer
-argument_list|()
-expr_stmt|;
-block|}
-do|while
+while|while
 condition|(
 operator|*
+operator|++
 name|buf_ptr
 operator|==
 literal|' '
@@ -316,7 +583,7 @@ name|buf_ptr
 operator|==
 literal|'\t'
 condition|)
-do|;
+empty_stmt|;
 block|}
 else|else
 block|{
@@ -362,78 +629,177 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+name|one_liner
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
+name|ps
+operator|.
 name|box_com
+operator|||
+name|ps
+operator|.
+name|last_nl
 condition|)
 block|{
-comment|/* if this is a boxed comment, we don't ignore 			          the newline */
+comment|/* if this is a boxed 						 * comment, we dont ignore 						 * the newline */
+if|if
+condition|(
+name|s_com
+operator|==
+name|e_com
+condition|)
+block|{
+operator|*
+name|e_com
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+operator|*
+name|e_com
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+block|}
 operator|*
 name|e_com
 operator|=
 literal|'\0'
 expr_stmt|;
-name|dump_line
-argument_list|()
-expr_stmt|;
-operator|++
-name|line_no
-expr_stmt|;
-name|now_col
-operator|=
-name|com_col
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|col_1_com
+name|ps
+operator|.
+name|box_com
+operator|&&
+name|e_com
+operator|-
+name|s_com
+operator|>
+literal|3
 condition|)
 block|{
-comment|/* if merely a boxed comment, we should line up first 		       non-blank character */
-do|do
-block|{
-comment|/* flush leading non-blanks */
 if|if
 condition|(
-operator|++
-name|buf_ptr
-operator|>=
-name|buf_end
-condition|)
-name|fill_buffer
-argument_list|()
-expr_stmt|;
-block|}
-do|while
-condition|(
-operator|*
-name|buf_ptr
+name|break_delim
+operator|==
+literal|1
+operator|&&
+name|s_com
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+operator|&&
+name|s_com
+index|[
+literal|1
+index|]
+operator|==
+literal|'*'
+operator|&&
+name|s_com
+index|[
+literal|2
+index|]
 operator|==
 literal|' '
-operator|||
-operator|*
-name|buf_ptr
-operator|==
-literal|'\t'
 condition|)
-do|;
+block|{
+name|char
+modifier|*
+name|t
+init|=
+name|e_com
+decl_stmt|;
+name|break_delim
+operator|=
+literal|2
+expr_stmt|;
+name|e_com
+operator|=
+name|s_com
+operator|+
+literal|2
+expr_stmt|;
+operator|*
+name|e_com
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|blanklines_before_blockcomments
+condition|)
+name|prefix_blankline_requested
+operator|=
+literal|1
+expr_stmt|;
+name|dump_line
+argument_list|()
+expr_stmt|;
+name|e_com
+operator|=
+name|t
+expr_stmt|;
+name|s_com
+index|[
+literal|0
+index|]
+operator|=
+name|s_com
+index|[
+literal|1
+index|]
+operator|=
+name|s_com
+index|[
+literal|2
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+block|}
+name|dump_line
+argument_list|()
+expr_stmt|;
+operator|*
+name|e_com
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+operator|*
+name|e_com
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+block|}
+name|dump_line
+argument_list|()
+expr_stmt|;
+name|now_col
+operator|=
+name|ps
+operator|.
+name|com_col
+expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* make sure we at least flush the blank */
-if|if
-condition|(
-operator|++
-name|buf_ptr
-operator|>=
-name|buf_end
-condition|)
-name|fill_buffer
-argument_list|()
+name|ps
+operator|.
+name|last_nl
+operator|=
+literal|1
 expr_stmt|;
-block|}
-break|break;
-block|}
 if|if
 condition|(
 name|unix_comment
@@ -441,7 +807,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-comment|/* we are in unix_style comment */
+comment|/* we not are in 						 * unix_style comment */
 if|if
 condition|(
 name|unix_comment
@@ -453,25 +819,37 @@ operator|==
 name|e_code
 condition|)
 block|{
-comment|/* if it is a UNIX-style comment, ignore the requirement 		       that pervious line be blank for unindention */
+comment|/* 			 * if it is a UNIX-style comment, ignore the 			 * requirement that previous line be blank for 			 * unindention  			 */
+name|ps
+operator|.
 name|com_col
 operator|=
 operator|(
+name|ps
+operator|.
 name|ind_level
 operator|-
+name|ps
+operator|.
 name|unindent_displace
 operator|)
 operator|*
+name|ps
+operator|.
 name|ind_size
 operator|+
 literal|1
 expr_stmt|;
 if|if
 condition|(
+name|ps
+operator|.
 name|com_col
 operator|<=
 literal|1
 condition|)
+name|ps
+operator|.
 name|com_col
 operator|=
 literal|2
@@ -481,7 +859,7 @@ name|unix_comment
 operator|=
 literal|2
 expr_stmt|;
-comment|/* permanently remember that we are in this type of comment */
+comment|/* permanently remember that we 					 * are in this type of comment */
 name|dump_line
 argument_list|()
 expr_stmt|;
@@ -490,6 +868,8 @@ name|line_no
 expr_stmt|;
 name|now_col
 operator|=
+name|ps
+operator|.
 name|com_col
 expr_stmt|;
 operator|*
@@ -498,7 +878,7 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-comment|/* fix so that the star at the start of the line will line up  		*/
+comment|/* 		     * fix so that the star at the start of the line will 		     * line up  		     */
 do|do
 comment|/* flush leading white space */
 if|if
@@ -552,7 +932,7 @@ name|e_com
 operator|-
 literal|1
 expr_stmt|;
-comment|/* if there was a space at the end of the last line, remember where 	       it was */
+comment|/* 		 * if there was a space at the end of the last line, 		 * remember where it was  		 */
 else|else
 block|{
 comment|/* otherwise, insert one */
@@ -570,13 +950,27 @@ operator|++
 name|now_col
 expr_stmt|;
 block|}
+block|}
 operator|++
 name|line_no
 expr_stmt|;
 comment|/* keep track of input line number */
+if|if
+condition|(
+operator|!
+name|ps
+operator|.
+name|box_com
+condition|)
+block|{
+name|int
+name|nstar
+init|=
+literal|1
+decl_stmt|;
 do|do
 block|{
-comment|/* copy any blanks and/or tabs at start of next 			          line */
+comment|/* flush any blanks and/or tabs at start 				 * of next line */
 if|if
 condition|(
 operator|++
@@ -587,6 +981,40 @@ condition|)
 name|fill_buffer
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|buf_ptr
+operator|==
+literal|'*'
+operator|&&
+operator|--
+name|nstar
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|++
+name|buf_ptr
+operator|>=
+name|buf_end
+condition|)
+name|fill_buffer
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|buf_ptr
+operator|==
+literal|'/'
+condition|)
+goto|goto
+name|end_of_comment
+goto|;
+block|}
 block|}
 do|while
 condition|(
@@ -601,12 +1029,24 @@ operator|==
 literal|'\t'
 condition|)
 do|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|++
+name|buf_ptr
+operator|>=
+name|buf_end
+condition|)
+name|fill_buffer
+argument_list|()
+expr_stmt|;
 break|break;
 comment|/* end of case for newline */
 case|case
 literal|'*'
 case|:
-comment|/* must check for possibility of being at end of 			          comment */
+comment|/* must check for possibility of being at 				 * end of comment */
 if|if
 condition|(
 operator|++
@@ -624,7 +1064,7 @@ name|unix_comment
 operator|==
 literal|0
 condition|)
-comment|/* set flag to show we are not in unix-style 			          comment */
+comment|/* set flag to show we are not in 					 * unix-style comment */
 name|unix_comment
 operator|=
 literal|1
@@ -638,6 +1078,8 @@ literal|'/'
 condition|)
 block|{
 comment|/* it is the end!!! */
+name|end_of_comment
+label|:
 if|if
 condition|(
 operator|++
@@ -660,10 +1102,12 @@ operator|!=
 literal|' '
 operator|&&
 operator|!
+name|ps
+operator|.
 name|box_com
 condition|)
 block|{
-comment|/* insure blank before end */
+comment|/* insure blank before 								 * end */
 operator|*
 name|e_com
 operator|++
@@ -676,28 +1120,115 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|now_col
-operator|>
-name|max_col
-operator|-
-literal|2
+name|break_delim
+operator|==
+literal|1
 operator|&&
 operator|!
-name|box_com
+name|one_liner
+operator|&&
+name|s_com
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+operator|&&
+name|s_com
+index|[
+literal|1
+index|]
+operator|==
+literal|'*'
+operator|&&
+name|s_com
+index|[
+literal|2
+index|]
+operator|==
+literal|' '
 condition|)
 block|{
-comment|/* check if star-slash will go over line */
+name|char
+modifier|*
+name|t
+init|=
+name|e_com
+decl_stmt|;
+name|break_delim
+operator|=
+literal|2
+expr_stmt|;
+name|e_com
+operator|=
+name|s_com
+operator|+
+literal|2
+expr_stmt|;
+operator|*
+name|e_com
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|blanklines_before_blockcomments
+condition|)
+name|prefix_blankline_requested
+operator|=
+literal|1
+expr_stmt|;
+name|dump_line
+argument_list|()
+expr_stmt|;
+name|e_com
+operator|=
+name|t
+expr_stmt|;
+name|s_com
+index|[
+literal|0
+index|]
+operator|=
+name|s_com
+index|[
+literal|1
+index|]
+operator|=
+name|s_com
+index|[
+literal|2
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|break_delim
+operator|==
+literal|2
+operator|&&
+name|e_com
+operator|>
+name|s_com
+operator|+
+literal|3
+comment|/* now_col> adj_max_col - 2&& !ps.box_com */
+condition|)
+block|{
 operator|*
 name|e_com
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* it will */
 name|dump_line
 argument_list|()
 expr_stmt|;
 name|now_col
 operator|=
+name|ps
+operator|.
 name|com_col
 expr_stmt|;
 block|}
@@ -707,7 +1238,6 @@ operator|++
 operator|=
 literal|'*'
 expr_stmt|;
-comment|/* move end of comment */
 operator|*
 name|e_com
 operator|++
@@ -719,10 +1249,14 @@ name|e_com
 operator|=
 literal|'\0'
 expr_stmt|;
+name|ps
+operator|.
+name|just_saw_decl
+operator|=
+name|l_just_saw_decl
+expr_stmt|;
 return|return;
-comment|/* we is done */
 block|}
-comment|/* end of end of comment */
 else|else
 block|{
 comment|/* handle isolated '*' */
@@ -735,9 +1269,8 @@ expr_stmt|;
 operator|++
 name|now_col
 expr_stmt|;
-break|break;
 block|}
-comment|/* end of processing of * */
+break|break;
 default|default:
 comment|/* we have a random char */
 if|if
@@ -760,7 +1293,7 @@ name|unix_comment
 operator|=
 literal|1
 expr_stmt|;
-comment|/* we are not in unix-style comment */
+comment|/* we are not in unix-style 					 * comment */
 operator|*
 name|e_com
 operator|=
@@ -807,8 +1340,7 @@ condition|(
 operator|*
 name|e_com
 operator|==
-literal|'
-literal|'
+literal|'\b'
 condition|)
 comment|/* this is a backspace */
 operator|--
@@ -842,17 +1374,109 @@ if|if
 condition|(
 name|now_col
 operator|>
-name|max_col
+name|adj_max_col
 operator|&&
 operator|!
+name|ps
+operator|.
 name|box_com
 operator|&&
 name|unix_comment
 operator|==
 literal|1
+operator|&&
+name|e_com
+index|[
+operator|-
+literal|1
+index|]
+operator|>
+literal|' '
 condition|)
 block|{
 comment|/* the comment is too long, it must be broken up */
+if|if
+condition|(
+name|break_delim
+operator|==
+literal|1
+operator|&&
+name|s_com
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+operator|&&
+name|s_com
+index|[
+literal|1
+index|]
+operator|==
+literal|'*'
+operator|&&
+name|s_com
+index|[
+literal|2
+index|]
+operator|==
+literal|' '
+condition|)
+block|{
+name|char
+modifier|*
+name|t
+init|=
+name|e_com
+decl_stmt|;
+name|break_delim
+operator|=
+literal|2
+expr_stmt|;
+name|e_com
+operator|=
+name|s_com
+operator|+
+literal|2
+expr_stmt|;
+operator|*
+name|e_com
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|blanklines_before_blockcomments
+condition|)
+name|prefix_blankline_requested
+operator|=
+literal|1
+expr_stmt|;
+name|dump_line
+argument_list|()
+expr_stmt|;
+name|e_com
+operator|=
+name|t
+expr_stmt|;
+name|s_com
+index|[
+literal|0
+index|]
+operator|=
+name|s_com
+index|[
+literal|1
+index|]
+operator|=
+name|s_com
+index|[
+literal|2
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|last_bl
@@ -861,13 +1485,6 @@ literal|0
 condition|)
 block|{
 comment|/* we have seen no blanks */
-name|printf
-argument_list|(
-literal|"%d: Comment too long\n"
-argument_list|,
-name|line_no
-argument_list|)
-expr_stmt|;
 name|last_bl
 operator|=
 name|e_com
@@ -890,6 +1507,26 @@ operator|*
 name|last_bl
 operator|=
 literal|'\0'
+expr_stmt|;
+while|while
+condition|(
+name|last_bl
+operator|>
+name|s_com
+operator|&&
+name|last_bl
+index|[
+operator|-
+literal|1
+index|]
+operator|<
+literal|040
+condition|)
+operator|*
+operator|--
+name|last_bl
+operator|=
+literal|0
 expr_stmt|;
 name|e_com
 operator|=
@@ -927,6 +1564,28 @@ name|last_bl
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|t_ptr
+operator|>=
+name|e_com
+condition|)
+block|{
+while|while
+condition|(
+operator|*
+name|t_ptr
+operator|==
+literal|' '
+operator|||
+operator|*
+name|t_ptr
+operator|==
+literal|'\t'
+condition|)
+name|t_ptr
+operator|++
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -935,7 +1594,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* move unprinted pare of comment down in buffer */
+comment|/* move unprinted part 							 * of comment down in 							 * buffer */
 if|if
 condition|(
 operator|*
@@ -961,6 +1620,7 @@ name|t_ptr
 operator|++
 expr_stmt|;
 block|}
+block|}
 operator|*
 name|e_com
 operator|=
@@ -970,26 +1630,20 @@ name|now_col
 operator|=
 name|count_spaces
 argument_list|(
+name|ps
+operator|.
 name|com_col
 argument_list|,
 name|s_com
 argument_list|)
 expr_stmt|;
-comment|/* recompute current position */
+comment|/* recompute current 								 * position */
 block|}
-comment|/* end of code for splitting a comment */
 break|break;
-comment|/* end of default case */
 block|}
-comment|/* end of switch */
 block|}
-comment|/* end of while (1) */
 block|}
 end_block
-
-begin_comment
-comment|/* end of pr_comment */
-end_comment
 
 end_unit
 
