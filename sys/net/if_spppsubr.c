@@ -12684,6 +12684,11 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|sp
+operator|->
+name|pp_loopcnt
+operator|&&
 operator|++
 name|sp
 operator|->
