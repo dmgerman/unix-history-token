@@ -162,11 +162,6 @@ operator||=
 name|P_SYSTEM
 expr_stmt|;
 comment|/* we're a system process */
-name|PROC_UNLOCK
-argument_list|(
-name|curproc
-argument_list|)
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -183,6 +178,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|curproc
 argument_list|)
 expr_stmt|;
 name|daemon_save_config
