@@ -2694,7 +2694,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no valid keywords"
+literal|"no valid keywords (type ps -L for a list)"
 argument_list|)
 expr_stmt|;
 block|}
