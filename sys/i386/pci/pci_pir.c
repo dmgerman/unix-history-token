@@ -1956,6 +1956,8 @@ operator|->
 name|pe_device
 argument_list|,
 name|j
+operator|+
+literal|1
 argument_list|,
 name|pin
 argument_list|)
