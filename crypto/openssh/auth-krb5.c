@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-krb5.c,v 1.12 2003/08/28 12:54:34 markus Exp $"
+literal|"$OpenBSD: auth-krb5.c,v 1.15 2003/11/21 11:57:02 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -111,12 +111,6 @@ decl_stmt|;
 name|krb5_error_code
 name|problem
 decl_stmt|;
-specifier|static
-name|int
-name|cleanup_registered
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|authctxt
@@ -151,24 +145,6 @@ name|authctxt
 operator|->
 name|krb5_ctx
 argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|cleanup_registered
-condition|)
-block|{
-name|fatal_add_cleanup
-argument_list|(
-name|krb5_cleanup_proc
-argument_list|,
-name|authctxt
-argument_list|)
-expr_stmt|;
-name|cleanup_registered
-operator|=
-literal|1
 expr_stmt|;
 block|}
 return|return
@@ -223,11 +199,10 @@ name|NULL
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|authctxt
 operator|->
-name|pw
-operator|==
-name|NULL
+name|valid
 condition|)
 return|return
 operator|(
@@ -849,21 +824,11 @@ begin_function
 name|void
 name|krb5_cleanup_proc
 parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|)
-block|{
 name|Authctxt
 modifier|*
 name|authctxt
-init|=
-operator|(
-name|Authctxt
-operator|*
-operator|)
-name|context
-decl_stmt|;
+parameter_list|)
+block|{
 name|debug
 argument_list|(
 literal|"krb5_cleanup_proc called"

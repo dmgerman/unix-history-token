@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kex.c,v 1.55 2003/04/01 10:31:26 markus Exp $"
+literal|"$OpenBSD: kex.c,v 1.56 2003/11/21 11:57:03 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.1 2003/07/28 09:49:56 djm Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.5 2003/12/22 09:16:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -40,22 +40,6 @@ include|#
 directive|include
 file|<openssl/bn.h>
 end_include
-
-begin_comment
-comment|/*  * Debugging defines   */
-end_comment
-
-begin_comment
-comment|/* define DEBUG_LARGE 1 */
-end_comment
-
-begin_comment
-comment|/* define DEBUG_SMALL 1 */
-end_comment
-
-begin_comment
-comment|/* define DEBUG_TEST  1 */
-end_comment
 
 begin_comment
 comment|/*  * File output defines  */
@@ -165,7 +149,7 @@ value|(0x10)
 end_define
 
 begin_comment
-comment|/* Size: decimal.  * Specifies the number of the most significant bit (0 to M).  ** WARNING: internally, usually 1 to N.  */
+comment|/*  * Size: decimal.  * Specifies the number of the most significant bit (0 to M).  * WARNING: internally, usually 1 to N.  */
 end_comment
 
 begin_define
@@ -571,7 +555,7 @@ name|r
 decl_stmt|,
 name|u
 decl_stmt|;
-name|debug2
+name|debug3
 argument_list|(
 literal|"sieve_large %u"
 argument_list|,
@@ -809,7 +793,7 @@ name|largememory
 operator|=
 name|memory
 expr_stmt|;
-comment|/*          * Set power to the length in bits of the prime to be generated.          * This is changed to 1 less than the desired safe prime moduli p.          */
+comment|/* 	 * Set power to the length in bits of the prime to be generated. 	 * This is changed to 1 less than the desired safe prime moduli p. 	 */
 if|if
 condition|(
 name|power
@@ -861,7 +845,7 @@ name|power
 operator|--
 expr_stmt|;
 comment|/* decrement before squaring */
-comment|/*          * The density of ordinary primes is on the order of 1/bits, so the          * density of safe primes should be about (1/bits)**2. Set test range          * to something well above bits**2 to be reasonably sure (but not          * guaranteed) of catching at least one safe prime. 	 */
+comment|/* 	 * The density of ordinary primes is on the order of 1/bits, so the 	 * density of safe primes should be about (1/bits)**2. Set test range 	 * to something well above bits**2 to be reasonably sure (but not 	 * guaranteed) of catching at least one safe prime. 	 */
 name|largewords
 operator|=
 operator|(
@@ -878,7 +862,7 @@ name|TEST_POWER
 operator|)
 operator|)
 expr_stmt|;
-comment|/*          * Need idea of how much memory is available. We don't have to use all          * of it. 	 */
+comment|/* 	 * Need idea of how much memory is available. We don't have to use all 	 * of it. 	 */
 if|if
 condition|(
 name|largememory
@@ -1103,7 +1087,7 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
-comment|/*          * Generate random starting point for subprime search, or use          * specified parameter. 	 */
+comment|/* 	 * Generate random starting point for subprime search, or use 	 * specified parameter. 	 */
 name|largebase
 operator|=
 name|BN_new
@@ -1173,7 +1157,7 @@ name|largebase
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*          * TinySieve          */
+comment|/* 	 * TinySieve 	 */
 for|for
 control|(
 name|i
@@ -1238,7 +1222,7 @@ name|t
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Start the small block search at the next possible prime. To avoid          * fencepost errors, the last pass is skipped.          */
+comment|/* 	 * Start the small block search at the next possible prime. To avoid 	 * fencepost errors, the last pass is skipped. 	 */
 for|for
 control|(
 name|smallbase
@@ -1358,7 +1342,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*                  * SmallSieve                  */
+comment|/* 		 * SmallSieve 		 */
 for|for
 control|(
 name|i
@@ -1909,7 +1893,21 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-default|default:
+case|case
+name|QTYPE_UNSTRUCTURED
+case|:
+case|case
+name|QTYPE_SAFE
+case|:
+case|case
+name|QTYPE_SCHNOOR
+case|:
+case|case
+name|QTYPE_STRONG
+case|:
+case|case
+name|QTYPE_UNKNOWN
+case|:
 name|debug2
 argument_list|(
 literal|"%10u: (%u)"
@@ -1939,6 +1937,13 @@ argument_list|,
 name|p
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|debug2
+argument_list|(
+literal|"Unknown prime type"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2063,12 +2068,10 @@ name|r
 operator|==
 literal|7
 condition|)
-block|{
 name|generator_known
 operator|=
 literal|5
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* 		 * skip tests when desired generator doesn't match 		 */
@@ -2096,10 +2099,27 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * Primes with no known generator are useless for DH, so 		 * skip those. 		 */
+if|if
+condition|(
+name|generator_known
+operator|==
+literal|0
+condition|)
+block|{
+name|debug2
+argument_list|(
+literal|"%10u: no known generator"
+argument_list|,
+name|count_in
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|count_possible
 operator|++
 expr_stmt|;
-comment|/* 		 * The (1/4)^N performance bound on Miller-Rabin is  		 * extremely pessimistic, so don't spend a lot of time  		 * really verifying that q is prime until after we know  		 * that p is also prime. A single pass will weed out the  		 * vast majority of composite q's. 		 */
+comment|/* 		 * The (1/4)^N performance bound on Miller-Rabin is 		 * extremely pessimistic, so don't spend a lot of time 		 * really verifying that q is prime until after we know 		 * that p is also prime. A single pass will weed out the 		 * vast majority of composite q's. 		 */
 if|if
 condition|(
 name|BN_is_prime
@@ -2118,7 +2138,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|debug2
+name|debug
 argument_list|(
 literal|"%10u: q failed first possible prime test"
 argument_list|,
@@ -2127,7 +2147,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * q is possibly prime, so go ahead and really make sure  		 * that p is prime. If it is, then we can go back and do  		 * the same for q. If p is composite, chances are that  		 * will show up on the first Rabin-Miller iteration so it 		 * doesn't hurt to specify a high iteration count. 		 */
+comment|/* 		 * q is possibly prime, so go ahead and really make sure 		 * that p is prime. If it is, then we can go back and do 		 * the same for q. If p is composite, chances are that 		 * will show up on the first Rabin-Miller iteration so it 		 * doesn't hurt to specify a high iteration count. 		 */
 if|if
 condition|(
 operator|!
@@ -2145,7 +2165,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|debug2
+name|debug
 argument_list|(
 literal|"%10u: p is not prime"
 argument_list|,

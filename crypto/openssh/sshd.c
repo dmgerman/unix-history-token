@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.276 2003/08/28 12:54:34 markus Exp $"
+literal|"$OpenBSD: sshd.c,v 1.286 2004/02/23 12:02:33 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -341,6 +341,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Server configuration options. */
@@ -678,6 +687,8 @@ name|struct
 name|monitor
 modifier|*
 name|pmonitor
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -688,6 +699,19 @@ end_comment
 begin_decl_stmt
 name|Buffer
 name|loginmsg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* global authentication context */
+end_comment
+
+begin_decl_stmt
+name|Authctxt
+modifier|*
+name|the_authctxt
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1022,6 +1046,29 @@ name|sig
 parameter_list|)
 block|{
 comment|/* XXX no idea how fix this signal handler */
+if|if
+condition|(
+name|use_privsep
+operator|&&
+name|pmonitor
+operator|!=
+name|NULL
+operator|&&
+name|pmonitor
+operator|->
+name|m_pid
+operator|>
+literal|0
+condition|)
+name|kill
+argument_list|(
+name|pmonitor
+operator|->
+name|m_pid
+argument_list|,
+name|SIGALRM
+argument_list|)
+expr_stmt|;
 comment|/* Log error and exit. */
 name|fatal
 argument_list|(
@@ -1342,8 +1389,10 @@ name|get_remote_ipaddr
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Read other sides version identification. */
@@ -1406,8 +1455,10 @@ name|get_remote_ipaddr
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1549,8 +1600,10 @@ name|get_remote_ipaddr
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 block|}
 name|debug
@@ -1586,8 +1639,10 @@ argument_list|,
 name|client_version_string
 argument_list|)
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1607,8 +1662,10 @@ argument_list|,
 name|client_version_string
 argument_list|)
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 block|}
 name|mismatch
@@ -1779,8 +1836,10 @@ argument_list|,
 name|client_version_string
 argument_list|)
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2231,19 +2290,14 @@ end_function
 
 begin_function
 specifier|static
-name|Authctxt
-modifier|*
+name|int
 name|privsep_preauth
 parameter_list|(
-name|void
-parameter_list|)
-block|{
 name|Authctxt
 modifier|*
 name|authctxt
-init|=
-name|NULL
-decl_stmt|;
+parameter_list|)
+block|{
 name|int
 name|status
 decl_stmt|;
@@ -2291,23 +2345,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fatal_remove_cleanup
-argument_list|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-name|packet_close
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|debug2
 argument_list|(
 literal|"Network child is on pid %ld"
@@ -2325,10 +2362,16 @@ operator|->
 name|m_recvfd
 argument_list|)
 expr_stmt|;
-name|authctxt
+name|pmonitor
+operator|->
+name|m_pid
 operator|=
+name|pid
+expr_stmt|;
 name|monitor_child_preauth
 argument_list|(
+name|authctxt
+argument_list|,
 name|pmonitor
 argument_list|)
 expr_stmt|;
@@ -2367,27 +2410,9 @@ operator|!=
 name|EINTR
 condition|)
 break|break;
-comment|/* Reinstall, since the child has finished */
-name|fatal_add_cleanup
-argument_list|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-name|packet_close
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|authctxt
+literal|1
 operator|)
 return|;
 block|}
@@ -2427,7 +2452,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
@@ -2443,16 +2468,6 @@ modifier|*
 name|authctxt
 parameter_list|)
 block|{
-specifier|extern
-name|Authctxt
-modifier|*
-name|x_authctxt
-decl_stmt|;
-comment|/* XXX - Remote port forwarding */
-name|x_authctxt
-operator|=
-name|authctxt
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DISABLE_FD_PASSING
@@ -2554,23 +2569,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fatal_remove_cleanup
-argument_list|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-name|packet_close
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|debug2
 argument_list|(
 literal|"User child is on pid %ld"
@@ -2639,9 +2637,14 @@ block|{
 name|Buffer
 name|b
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|char
+modifier|*
+name|ret
 decl_stmt|;
 name|int
 name|i
@@ -2752,7 +2755,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|p
+name|ret
 operator|=
 name|xstrdup
 argument_list|(
@@ -2773,11 +2776,11 @@ name|debug
 argument_list|(
 literal|"list_hostkey_types: %s"
 argument_list|,
-name|p
+name|ret
 argument_list|)
 expr_stmt|;
 return|return
-name|p
+name|ret
 return|;
 block|}
 name|Key
@@ -3055,9 +3058,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sshd version %s\n"
+literal|"sshd version %s, %s\n"
 argument_list|,
 name|SSH_VERSION
+argument_list|,
+name|SSLeay_version
+argument_list|(
+name|SSLEAY_VERSION
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3278,6 +3286,10 @@ index|[
 name|NI_MAXSERV
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|line
+decl_stmt|;
 name|int
 name|listen_sock
 decl_stmt|,
@@ -3294,13 +3306,13 @@ name|startups
 init|=
 literal|0
 decl_stmt|;
-name|Authctxt
-modifier|*
-name|authctxt
-decl_stmt|;
 name|Key
 modifier|*
 name|key
+decl_stmt|;
+name|Authctxt
+modifier|*
+name|authctxt
 decl_stmt|;
 name|int
 name|ret
@@ -3777,6 +3789,13 @@ break|break;
 case|case
 literal|'o'
 case|:
+name|line
+operator|=
+name|xstrdup
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|process_server_config_line
@@ -3784,7 +3803,7 @@ argument_list|(
 operator|&
 name|options
 argument_list|,
-name|optarg
+name|line
 argument_list|,
 literal|"command-line"
 argument_list|,
@@ -3796,6 +3815,11 @@ condition|)
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|line
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4438,7 +4462,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clear out any supplemental groups we may have inherited.  This 	 * prevents inadvertent creation of files with bad modes (in the 	 * portable version at least, it's certainly possible for PAM  	 * to create a file, and we can't control the code in every  	 * module which might be used). 	 */
+comment|/* 	 * Clear out any supplemental groups we may have inherited.  This 	 * prevents inadvertent creation of files with bad modes (in the 	 * portable version at least, it's certainly possible for PAM 	 * to create a file, and we can't control the code in every 	 * module which might be used). 	 */
 if|if
 condition|(
 name|setgroups
@@ -4600,6 +4624,19 @@ argument_list|(
 literal|"/"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_CYGWIN
+comment|/* Clear environment */
+name|environ
+index|[
+literal|0
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* ignore SIGPIPE */
 name|signal
 argument_list|(
@@ -4942,7 +4979,7 @@ name|listen
 argument_list|(
 name|listen_sock
 argument_list|,
-literal|5
+name|SSH_LISTEN_BACKLOG
 argument_list|)
 operator|<
 literal|0
@@ -5906,12 +5943,12 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-comment|/* Set keepalives if requested. */
+comment|/* Set SO_KEEPALIVE if requested. */
 if|if
 condition|(
 name|options
 operator|.
-name|keepalives
+name|tcp_keep_alive
 operator|&&
 name|setsockopt
 argument_list|(
@@ -6070,20 +6107,48 @@ operator|&
 name|loginmsg
 argument_list|)
 expr_stmt|;
+comment|/* allocate authentication context */
+name|authctxt
+operator|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|authctxt
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|authctxt
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|authctxt
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX global for cleanup, access from other modules */
+name|the_authctxt
+operator|=
+name|authctxt
+expr_stmt|;
 if|if
 condition|(
 name|use_privsep
 condition|)
 if|if
 condition|(
-operator|(
-name|authctxt
-operator|=
 name|privsep_preauth
-argument_list|()
-operator|)
-operator|!=
-name|NULL
+argument_list|(
+name|authctxt
+argument_list|)
+operator|==
+literal|1
 condition|)
 goto|goto
 name|authenticated
@@ -6098,10 +6163,10 @@ block|{
 name|do_ssh2_kex
 argument_list|()
 expr_stmt|;
-name|authctxt
-operator|=
 name|do_authentication2
-argument_list|()
+argument_list|(
+name|authctxt
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -6109,10 +6174,10 @@ block|{
 name|do_ssh1_kex
 argument_list|()
 expr_stmt|;
-name|authctxt
-operator|=
 name|do_authentication
-argument_list|()
+argument_list|(
+name|authctxt
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * If we use privilege separation, the unprivileged child transfers 	 * the current keystate and exits 	 */
@@ -6155,7 +6220,7 @@ name|destroy_sensitive_data
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Perform session preparation. */
+comment|/* Start session. */
 name|do_authenticated
 argument_list|(
 name|authctxt
@@ -7458,6 +7523,29 @@ directive|endif
 name|debug
 argument_list|(
 literal|"KEX done"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* server specific fatal cleanup */
+name|void
+name|cleanup_exit
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+if|if
+condition|(
+name|the_authctxt
+condition|)
+name|do_cleanup
+argument_list|(
+name|the_authctxt
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+name|i
 argument_list|)
 expr_stmt|;
 block|}

@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshtty.c,v 1.4 2003/07/16 10:36:28 markus Exp $"
+literal|"$OpenBSD: sshtty.c,v 1.5 2003/09/19 17:43:35 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,19 +49,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-name|int
-name|in_raw_mode
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|_in_raw_mode
-return|;
-block|}
-end_function
 
 begin_function
 name|struct
@@ -117,23 +104,6 @@ else|else
 name|_in_raw_mode
 operator|=
 literal|0
-expr_stmt|;
-name|fatal_remove_cleanup
-argument_list|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-name|leave_raw_mode
-argument_list|,
-name|NULL
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -299,23 +269,6 @@ else|else
 name|_in_raw_mode
 operator|=
 literal|1
-expr_stmt|;
-name|fatal_add_cleanup
-argument_list|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-name|leave_raw_mode
-argument_list|,
-name|NULL
-argument_list|)
 expr_stmt|;
 block|}
 end_function

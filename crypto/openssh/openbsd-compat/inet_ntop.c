@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* OPENBSD ORIGINAL: lib/libc/net/inet_ntop.c */
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: inet_ntop.c,v 1.5 2002/08/23 16:27:31 itojun Exp $	*/
 end_comment
 

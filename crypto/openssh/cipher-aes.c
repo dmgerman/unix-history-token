@@ -20,7 +20,7 @@ end_if
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: cipher-aes.c,v 1.1 2003/05/15 03:08:29 markus Exp $"
+literal|"$OpenBSD: cipher-aes.c,v 1.2 2003/11/26 21:44:29 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: bsd-cray.c,v 1.12 2003/06/03 02:45:27 dtucker Exp $  *  * bsd-cray.c  *  * Copyright (c) 2002, Cray Inc.  (Wendy Palm<wendyp@cray.com>)  * Significant portions provided by   *          Wayne Schroeder, SDSC<schroeder@sdsc.edu>  *          William Jones, UTexas<jones@tacc.utexas.edu>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Created: Apr 22 16.34:00 2002 wp  *  * This file contains functions required for proper execution  * on UNICOS systems.  *  */
+comment|/*   * $Id: bsd-cray.c,v 1.13 2004/01/30 03:34:22 dtucker Exp $  *  * bsd-cray.c  *  * Copyright (c) 2002, Cray Inc.  (Wendy Palm<wendyp@cray.com>)  * Significant portions provided by   *          Wayne Schroeder, SDSC<schroeder@sdsc.edu>  *          William Jones, UTexas<jones@tacc.utexas.edu>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Created: Apr 22 16.34:00 2002 wp  *  * This file contains functions required for proper execution  * on UNICOS systems.  *  */
 end_comment
 
 begin_ifdef
@@ -146,6 +146,106 @@ include|#
 directive|include
 file|"ssh.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"includes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/types.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRUCT_SOCKADDR_STORAGE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SS_MAXSIZE
+value|128
+end_define
+
+begin_comment
+comment|/* Implementation specific max size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SS_PADSIZE
+value|(_SS_MAXSIZE - sizeof (struct sockaddr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ss_family
+value|ss_sa.sa_family
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_STRUCT_SOCKADDR_STORAGE */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN6_IS_ADDR_LOOPBACK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IN6_IS_ADDR_LOOPBACK
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|(((u_int32_t *) (a))[0] == 0&& ((u_int32_t *) (a))[1] == 0&& \ 	 ((u_int32_t *) (a))[2] == 0&& ((u_int32_t *) (a))[3] == htonl (1))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !IN6_IS_ADDR_LOOPBACK */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AF_INET6
+end_ifndef
+
+begin_comment
+comment|/* Define it to something that should never appear */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_INET6
+value|AF_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -767,6 +867,7 @@ decl_stmt|;
 comment|/* stuff returned from ia_user */
 name|ia_user_t
 name|usent
+decl_stmt|;
 comment|/* ia_user main structure */
 name|int
 name|ia_rcode
@@ -2262,7 +2363,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"Account id not found for"
@@ -2273,7 +2373,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 					 * If an account was given, search the user's 					 * acids array to verify they can use this account. 					 */
+comment|/* 				 * If an account was given, search the user's 				 * acids array to verify they can use this account. 				 */
 if|if
 condition|(
 operator|(
@@ -2373,7 +2473,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 				 * The client isn't connected to a terminal and can't 				 * respond to an acid prompt.  Use default acid. 				 */
+comment|/* 			 * The client isn't connected to a terminal and can't 			 * respond to an acid prompt.  Use default acid. 			 */
 name|debug
 argument_list|(
 literal|"cray_setup: ttyname false case, %.100s"
@@ -2394,7 +2494,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * The user doesn't have the askacid permbit set or 			 * only has one valid account to use. 			 */
+comment|/* 		 * The user doesn't have the askacid permbit set or 		 * only has one valid account to use. 		 */
 name|valid_acct
 operator|=
 name|ue
@@ -2630,7 +2730,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * The rc.* and /etc/sdaemon methods of starting a program on unicos/unicosmk  * can have pal privileges that sshd can inherit which  * could allow a user to su to root with out a password.  * This subroutine clears all privileges.  */
+end_comment
+
+begin_function
 name|void
 name|drop_cray_privs
 parameter_list|()
@@ -2863,7 +2969,13 @@ error|Cray systems must be run with _SC_CRAY_PRIV_SU on!
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_comment
 comment|/*  *  Retain utmp/wtmp information - used by cray accounting.  */
+end_comment
+
+begin_function
 name|void
 name|cray_retain_utmp
 parameter_list|(
@@ -3013,8 +3125,17 @@ literal|"Unable to open utmp file"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * tmpdir support.  */
+end_comment
+
+begin_comment
 comment|/*  * find and delete jobs tmpdir.  */
+end_comment
+
+begin_function
 name|void
 name|cray_delete_tmpdir
 parameter_list|(
@@ -3159,7 +3280,13 @@ name|EINTR
 condition|)
 empty_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Remove tmpdir on job termination.  */
+end_comment
+
+begin_function
 name|void
 name|cray_job_termination_handler
 parameter_list|(
@@ -3228,7 +3355,13 @@ name|j_uid
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Set job id and create tmpdir directory.  */
+end_comment
+
+begin_function
 name|void
 name|cray_init_job
 parameter_list|(
@@ -3348,6 +3481,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|cray_set_tmpdir
 parameter_list|(
@@ -3404,6 +3540,56 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* UNICOS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_UNICOSMP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_comment
+comment|/*  * Set job id and create tmpdir directory.  */
+end_comment
+
+begin_function
+name|void
+name|cray_init_job
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+name|pw
+parameter_list|)
+block|{
+name|initrm_silent
+argument_list|(
+name|pw
+operator|->
+name|pw_uid
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _UNICOSMP */
+end_comment
 
 end_unit
 

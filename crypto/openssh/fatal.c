@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: fatal.c,v 1.1 2002/02/22 12:20:34 markus Exp $"
+literal|"$OpenBSD: fatal.c,v 1.2 2003/09/23 20:17:11 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -63,8 +63,10 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readconf.h,v 1.55 2003/09/01 18:15:50 markus Exp $	*/
+comment|/*	$OpenBSD: readconf.h,v 1.59 2003/12/16 15:49:51 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -67,6 +67,10 @@ name|int
 name|forward_x11
 decl_stmt|;
 comment|/* Forward X11 display. */
+name|int
+name|forward_x11_trusted
+decl_stmt|;
+comment|/* Trust Forward X11 display. */
 name|char
 modifier|*
 name|xauth_location
@@ -142,7 +146,7 @@ name|compression_level
 decl_stmt|;
 comment|/* Compression level 1 (fast) to 9 					 * (best). */
 name|int
-name|keepalives
+name|tcp_keep_alive
 decl_stmt|;
 comment|/* Set SO_KEEPALIVE. */
 name|LogLevel
@@ -163,7 +167,7 @@ comment|/* Max attempts (seconds) before 					 * giving up */
 name|int
 name|connection_timeout
 decl_stmt|;
-comment|/* Max time (seconds) before 				 	 * aborting connection attempt */
+comment|/* Max time (seconds) before 					 * aborting connection attempt */
 name|int
 name|number_of_password_prompts
 decl_stmt|;
@@ -300,6 +304,12 @@ name|rekey_limit
 decl_stmt|;
 name|int
 name|no_host_authentication_for_localhost
+decl_stmt|;
+name|int
+name|server_alive_interval
+decl_stmt|;
+name|int
+name|server_alive_count_max
 decl_stmt|;
 block|}
 name|Options

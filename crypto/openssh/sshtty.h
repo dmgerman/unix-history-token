@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshtty.h,v 1.2 2001/06/26 17:27:25 markus Exp $ */
+comment|/* $OpenBSD: sshtty.h,v 1.3 2003/09/19 17:43:35 markus Exp $ */
 end_comment
 
 begin_comment
@@ -28,15 +28,6 @@ include|#
 directive|include
 file|<termios.h>
 end_include
-
-begin_function_decl
-name|int
-name|in_raw_mode
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|struct

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* OPENBSD ORIGINAL: lib/libc/string/strlcat.c */
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: strlcat.c,v 1.11 2003/06/17 21:56:24 millert Exp $	*/
 end_comment
 

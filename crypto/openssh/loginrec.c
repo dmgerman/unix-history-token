@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: loginrec.c,v 1.52 2003/07/06 05:20:46 dtucker Exp $"
+literal|"$Id: loginrec.c,v 1.54 2004/02/10 05:49:35 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4222,6 +4222,9 @@ modifier|*
 name|utx
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|HAVE_UPDWTMPX
 name|struct
 name|stat
 name|buf
@@ -4342,6 +4345,20 @@ expr_stmt|;
 return|return
 name|ret
 return|;
+else|#
+directive|else
+name|updwtmpx
+argument_list|(
+name|WTMPX_FILE
+argument_list|,
+name|utx
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

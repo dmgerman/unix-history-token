@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.103 2003/09/16 01:52:19 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.110 2004/02/10 02:01:14 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -615,6 +615,23 @@ define|#
 directive|define
 name|INADDR_LOOPBACK
 value|((u_long)0x7f000001)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__unused
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__unused
 end_define
 
 begin_endif
@@ -1290,6 +1307,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_SIZE_T
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZE_T_MAX
+value|UINT_MAX
 end_define
 
 begin_endif
@@ -2858,6 +2882,40 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Maximum number of file descriptors available */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYSCONF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SSH_SYSFDMAX
+value|sysconf(_SC_OPEN_MAX)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SSH_SYSFDMAX
+value|10000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Define this to use pipes instead of socketpairs for communicating with the  * client program.  Socketpairs do not seem to work on all systems.  *  * configure.ac sets this for a few OS's which are known to have problems  * but you may need to set it yourself  */
 end_comment
 
@@ -3027,6 +3085,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SHADOW_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|DISABLE_SHADOW
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_SHADOW
+end_define
 
 begin_endif
 endif|#

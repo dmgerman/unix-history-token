@@ -61,7 +61,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* cover argv with title information */
+comment|/* use pstat(PSTAT_SETCMD, ...) */
 end_comment
 
 begin_define
@@ -72,7 +72,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* use pstat(PSTAT_SETCMD, ...) */
+comment|/* cover argv with title information */
 end_comment
 
 begin_ifndef

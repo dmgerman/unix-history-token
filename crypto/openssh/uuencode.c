@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: uuencode.c,v 1.16 2002/09/09 14:54:15 markus Exp $"
+literal|"$OpenBSD: uuencode.c,v 1.17 2003/11/10 16:23:41 jakob Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -33,6 +33,7 @@ begin_function
 name|int
 name|uuencode
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 name|src

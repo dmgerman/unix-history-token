@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: monitor.h,v 1.11 2003/08/28 12:54:34 markus Exp $	*/
+comment|/*	$OpenBSD: monitor.h,v 1.13 2003/11/17 11:06:07 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -109,6 +109,10 @@ name|MONITOR_REQ_GSSUSEROK
 block|,
 name|MONITOR_ANS_GSSUSEROK
 block|,
+name|MONITOR_REQ_GSSCHECKMIC
+block|,
+name|MONITOR_ANS_GSSCHECKMIC
+block|,
 name|MONITOR_REQ_PAM_START
 block|,
 name|MONITOR_REQ_PAM_ACCOUNT
@@ -215,11 +219,13 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
+name|void
+name|monitor_child_preauth
+parameter_list|(
 name|struct
 name|Authctxt
 modifier|*
-name|monitor_child_preauth
-parameter_list|(
+parameter_list|,
 name|struct
 name|monitor
 modifier|*

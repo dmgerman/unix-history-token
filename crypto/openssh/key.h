@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: key.h,v 1.22 2003/06/24 08:23:46 markus Exp $	*/
+comment|/*	$OpenBSD: key.h,v 1.23 2003/11/10 16:23:41 jakob Exp $	*/
 end_comment
 
 begin_comment
@@ -144,6 +144,7 @@ name|Key
 modifier|*
 name|key_demote
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|)
@@ -154,9 +155,11 @@ begin_function_decl
 name|int
 name|key_equal
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 parameter_list|)
@@ -168,6 +171,7 @@ name|char
 modifier|*
 name|key_fingerprint
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
@@ -185,6 +189,7 @@ name|u_char
 modifier|*
 name|key_fingerprint_raw
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
@@ -198,10 +203,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|key_type
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|)
@@ -212,6 +219,7 @@ begin_function_decl
 name|int
 name|key_write
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
@@ -239,6 +247,7 @@ begin_function_decl
 name|u_int
 name|key_size
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|)
@@ -262,6 +271,7 @@ name|Key
 modifier|*
 name|key_from_private
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|)
@@ -283,6 +293,7 @@ name|Key
 modifier|*
 name|key_from_blob
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -295,6 +306,7 @@ begin_function_decl
 name|int
 name|key_to_blob
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
@@ -309,10 +321,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|key_ssh_name
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|)
@@ -334,6 +348,7 @@ begin_function_decl
 name|int
 name|key_sign
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
@@ -344,6 +359,7 @@ parameter_list|,
 name|u_int
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -356,14 +372,17 @@ begin_function_decl
 name|int
 name|key_verify
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -376,6 +395,7 @@ begin_function_decl
 name|int
 name|ssh_dss_sign
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
@@ -386,6 +406,7 @@ parameter_list|,
 name|u_int
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -398,14 +419,17 @@ begin_function_decl
 name|int
 name|ssh_dss_verify
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -418,6 +442,7 @@ begin_function_decl
 name|int
 name|ssh_rsa_sign
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
@@ -428,6 +453,7 @@ parameter_list|,
 name|u_int
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -440,14 +466,17 @@ begin_function_decl
 name|int
 name|ssh_rsa_verify
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: compat.h,v 1.36 2003/08/29 10:03:15 markus Exp $	*/
+comment|/*	$OpenBSD: compat.h,v 1.37 2003/11/02 11:01:03 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -206,13 +206,6 @@ define|#
 directive|define
 name|SSH_BUG_FIRSTKEX
 value|0x00800000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSH_BUG_GSSAPI_BER
-value|0x01000000
 end_define
 
 begin_function_decl

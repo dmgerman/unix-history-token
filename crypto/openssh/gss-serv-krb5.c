@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: gss-serv-krb5.c,v 1.1 2003/08/22 10:56:09 markus Exp $	*/
+comment|/*	$OpenBSD: gss-serv-krb5.c,v 1.2 2003/11/21 11:57:03 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -79,11 +79,34 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GSSAPI_KRB5
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<gssapi_krb5.h>
 end_include
+
+begin_elif
+elif|#
+directive|elif
+name|HAVE_GSSAPI_GSSAPI_KRB5
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<gssapi/gssapi_krb5.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -304,6 +327,9 @@ name|OM_uint32
 name|maj_status
 decl_stmt|,
 name|min_status
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 if|if
 condition|(
@@ -653,14 +679,42 @@ name|envvar
 operator|=
 literal|"KRB5CCNAME"
 expr_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|client
+operator|->
+name|store
+operator|.
+name|filename
+argument_list|)
+operator|+
+literal|6
+expr_stmt|;
 name|client
 operator|->
 name|store
 operator|.
 name|envval
 operator|=
-name|xstrdup
+name|xmalloc
 argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|client
+operator|->
+name|store
+operator|.
+name|envval
+argument_list|,
+name|len
+argument_list|,
+literal|"FILE:%s"
+argument_list|,
 name|client
 operator|->
 name|store

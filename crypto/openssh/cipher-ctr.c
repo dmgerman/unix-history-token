@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: cipher-ctr.c,v 1.2 2003/06/17 18:14:23 markus Exp $"
+literal|"$OpenBSD: cipher-ctr.c,v 1.4 2004/02/06 23:41:13 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -434,9 +434,10 @@ name|AES_set_encrypt_key
 argument_list|(
 name|key
 argument_list|,
+name|EVP_CIPHER_CTX_key_length
+argument_list|(
 name|ctx
-operator|->
-name|key_len
+argument_list|)
 operator|*
 literal|8
 argument_list|,

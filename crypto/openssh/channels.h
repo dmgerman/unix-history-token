@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: channels.h,v 1.70 2002/06/24 14:33:27 markus Exp $	*/
+comment|/*	$OpenBSD: channels.h,v 1.71 2003/09/23 20:41:11 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -1177,20 +1177,6 @@ name|void
 name|auth_request_forwarding
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|auth_input_open_request
-parameter_list|(
-name|int
-parameter_list|,
-name|u_int32_t
-parameter_list|,
-name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

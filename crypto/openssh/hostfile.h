@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: hostfile.h,v 1.13 2002/11/21 23:03:51 deraadt Exp $	*/
+comment|/*	$OpenBSD: hostfile.h,v 1.14 2003/11/10 16:23:41 jakob Exp $	*/
 end_comment
 
 begin_comment
@@ -64,6 +64,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
@@ -88,6 +89,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 parameter_list|)

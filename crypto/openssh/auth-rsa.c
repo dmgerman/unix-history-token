@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rsa.c,v 1.57 2003/04/08 20:21:28 itojun Exp $"
+literal|"$OpenBSD: auth-rsa.c,v 1.58 2003/11/04 08:54:09 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1076,10 +1076,9 @@ begin_function
 name|int
 name|auth_rsa
 parameter_list|(
-name|struct
-name|passwd
+name|Authctxt
 modifier|*
-name|pw
+name|authctxt
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -1094,12 +1093,22 @@ name|char
 modifier|*
 name|fp
 decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+init|=
+name|authctxt
+operator|->
+name|pw
+decl_stmt|;
 comment|/* no user given */
 if|if
 condition|(
-name|pw
-operator|==
-name|NULL
+operator|!
+name|authctxt
+operator|->
+name|valid
 condition|)
 return|return
 literal|0

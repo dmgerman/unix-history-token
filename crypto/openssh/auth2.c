@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2.c,v 1.102 2003/08/26 09:58:43 markus Exp $"
+literal|"$OpenBSD: auth2.c,v 1.104 2003/11/04 08:54:09 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -117,15 +117,6 @@ begin_decl_stmt
 specifier|extern
 name|u_int
 name|session_id2_len
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Authctxt
-modifier|*
-name|x_authctxt
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -297,51 +288,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|hostbased_key_allowed
-parameter_list|(
-name|struct
-name|passwd
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|Key
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * loop until authctxt->success == TRUE  */
 end_comment
 
 begin_function
-name|Authctxt
-modifier|*
+name|void
 name|do_authentication2
 parameter_list|(
-name|void
-parameter_list|)
-block|{
 name|Authctxt
 modifier|*
 name|authctxt
-init|=
-name|authctxt_new
-argument_list|()
-decl_stmt|;
-name|x_authctxt
-operator|=
-name|authctxt
-expr_stmt|;
-comment|/*XXX*/
+parameter_list|)
+block|{
 comment|/* challenge-response is implemented via keyboard interactive */
 if|if
 condition|(
@@ -381,11 +340,6 @@ argument_list|,
 name|authctxt
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|authctxt
-operator|)
-return|;
 block|}
 end_function
 
@@ -1185,39 +1139,6 @@ name|methods
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/* get current user */
-end_comment
-
-begin_function
-name|struct
-name|passwd
-modifier|*
-name|auth_get_user
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|x_authctxt
-operator|!=
-name|NULL
-operator|&&
-name|x_authctxt
-operator|->
-name|valid
-operator|)
-condition|?
-name|x_authctxt
-operator|->
-name|pw
-else|:
-name|NULL
-return|;
 block|}
 end_function
 

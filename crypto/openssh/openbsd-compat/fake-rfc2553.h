@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: fake-rfc2553.h,v 1.6.2.1 2003/09/22 02:09:18 dtucker Exp $ */
+comment|/* $Id: fake-rfc2553.h,v 1.8 2004/02/10 02:05:41 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -465,6 +465,22 @@ directive|ifndef
 name|HAVE_GETADDRINFO
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|getaddrinfo
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|(ssh_getaddrinfo(a,b,c,d))
+end_define
+
 begin_function_decl
 name|int
 name|getaddrinfo
@@ -515,6 +531,16 @@ name|HAVE_CONST_GAI_STRERROR_PROTO
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|gai_strerror
+parameter_list|(
+name|a
+parameter_list|)
+value|(ssh_gai_strerror(a))
+end_define
+
 begin_function_decl
 name|char
 modifier|*
@@ -539,6 +565,16 @@ ifndef|#
 directive|ifndef
 name|HAVE_FREEADDRINFO
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|freeaddrinfo
+parameter_list|(
+name|a
+parameter_list|)
+value|(ssh_freeaddrinfo(a))
+end_define
 
 begin_function_decl
 name|void
@@ -565,6 +601,28 @@ ifndef|#
 directive|ifndef
 name|HAVE_GETNAMEINFO
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|getnameinfo
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|,
+name|f
+parameter_list|,
+name|g
+parameter_list|)
+value|(ssh_getnameinfo(a,b,c,d,e,f,g))
+end_define
 
 begin_function_decl
 name|int

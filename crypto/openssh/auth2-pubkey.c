@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-pubkey.c,v 1.4 2003/06/24 08:23:46 markus Exp $"
+literal|"$OpenBSD: auth2-pubkey.c,v 1.6 2004/01/19 21:25:15 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -556,7 +556,7 @@ name|authenticated
 operator|=
 literal|1
 expr_stmt|;
-name|buffer_clear
+name|buffer_free
 argument_list|(
 operator|&
 name|b
@@ -753,15 +753,6 @@ name|char
 modifier|*
 name|fp
 decl_stmt|;
-if|if
-condition|(
-name|pw
-operator|==
-name|NULL
-condition|)
-return|return
-literal|0
-return|;
 comment|/* Temporarily use the user's uid. */
 name|temporarily_use_uid
 argument_list|(

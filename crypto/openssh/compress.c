@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: compress.c,v 1.19 2002/03/18 17:31:54 provos Exp $"
+literal|"$OpenBSD: compress.c,v 1.21 2004/01/13 19:45:15 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -197,12 +197,22 @@ parameter_list|)
 block|{
 name|debug
 argument_list|(
-literal|"compress outgoing: raw data %lu, compressed %lu, factor %.2f"
+literal|"compress outgoing: raw data %llu, compressed %llu, factor %.2f"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|outgoing_stream
 operator|.
 name|total_in
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|outgoing_stream
 operator|.
 name|total_out
@@ -229,12 +239,22 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"compress incoming: raw data %lu, compressed %lu, factor %.2f"
+literal|"compress incoming: raw data %llu, compressed %llu, factor %.2f"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|incoming_stream
 operator|.
 name|total_out
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|incoming_stream
 operator|.
 name|total_in

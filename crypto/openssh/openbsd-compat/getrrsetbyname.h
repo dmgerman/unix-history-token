@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* OPENBSD BASED ON : include/netdb.h */
+end_comment
+
+begin_comment
 comment|/* $OpenBSD: getrrsetbyname.c,v 1.4 2001/08/16 18:16:43 ho Exp $ */
 end_comment
 
@@ -29,20 +33,11 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DNS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_GETRRSETBYNAME
-argument_list|)
-end_if
+end_ifndef
 
 begin_include
 include|#
@@ -73,6 +68,42 @@ include|#
 directive|include
 file|<resolv.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HFIXEDSZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HFIXEDSZ
+value|12
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|T_SIG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|T_SIG
+value|24
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Flags for getrrsetbyname()  */
@@ -269,7 +300,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(DNS)&& !defined(HAVE_GETRRSETBYNAME) */
+comment|/* !defined(HAVE_GETRRSETBYNAME) */
 end_comment
 
 begin_endif

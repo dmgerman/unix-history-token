@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: fake-rfc2553.c,v 1.4.2.1 2003/09/22 02:09:18 dtucker Exp $"
+literal|"$Id: fake-rfc2553.c,v 1.5 2003/09/22 02:08:23 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

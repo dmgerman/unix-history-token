@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: progressmeter.c,v 1.15 2003/08/31 12:14:22 markus Exp $"
+literal|"$OpenBSD: progressmeter.c,v 1.19 2004/02/05 15:33:33 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -380,10 +380,14 @@ name|size
 argument_list|,
 literal|"%3lld.%1lld%c%s"
 argument_list|,
-operator|(
+call|(
 name|int64_t
-operator|)
+call|)
+argument_list|(
 name|bytes
+operator|+
+literal|5
+argument_list|)
 operator|/
 literal|100
 argument_list|,
@@ -519,7 +523,7 @@ decl_stmt|;
 name|int
 name|percent
 decl_stmt|;
-name|int
+name|off_t
 name|bytes_left
 decl_stmt|;
 name|int
@@ -578,12 +582,23 @@ operator|-
 name|last_update
 expr_stmt|;
 else|else
+block|{
 name|elapsed
 operator|=
 name|now
 operator|-
 name|start
 expr_stmt|;
+comment|/* Calculate true total speed when done */
+name|transferred
+operator|=
+name|end_pos
+expr_stmt|;
+name|bytes_per_second
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* calculate speed */
 if|if
 condition|(
@@ -602,7 +617,7 @@ expr_stmt|;
 else|else
 name|cur_speed
 operator|=
-literal|0
+name|transferred
 expr_stmt|;
 define|#
 directive|define

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* OPENBSD ORIGINAL: lib/libc/net/inet_addr.c */
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: inet_addr.c,v 1.7 2003/06/02 20:18:35 millert Exp $	*/
 end_comment
 

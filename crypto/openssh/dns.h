@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: dns.h,v 1.3 2003/05/14 22:56:51 jakob Exp $	*/
+comment|/*	$OpenBSD: dns.h,v 1.5 2003/11/12 16:39:58 jakob Exp $	*/
 end_comment
 
 begin_comment
@@ -12,12 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DNS
-end_ifdef
 
 begin_ifndef
 ifndef|#
@@ -72,22 +66,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|DNS_VERIFY_FAILED
-value|-1
+name|DNS_VERIFY_FOUND
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|DNS_VERIFY_OK
-value|0
+name|DNS_VERIFY_MATCH
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|DNS_VERIFY_ERROR
-value|1
+name|DNS_VERIFY_SECURE
+value|0x00000004
 end_define
 
 begin_function_decl
@@ -102,7 +96,11 @@ name|struct
 name|sockaddr
 modifier|*
 parameter_list|,
+specifier|const
 name|Key
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -116,6 +114,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 parameter_list|,
@@ -134,15 +133,6 @@ end_endif
 
 begin_comment
 comment|/* DNS_H */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DNS */
 end_comment
 
 end_unit

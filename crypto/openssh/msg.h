@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: msg.h,v 1.2 2002/12/19 00:07:02 djm Exp $	*/
+comment|/*	$OpenBSD: msg.h,v 1.3 2003/11/17 09:45:39 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ name|SSH_MSG_H
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|ssh_msg_send
 parameter_list|(
 name|int

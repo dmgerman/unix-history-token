@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: cipher-3des1.c,v 1.1 2003/05/15 03:08:29 markus Exp $"
+literal|"$OpenBSD: cipher-3des1.c,v 1.2 2003/12/22 20:29:55 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -622,6 +622,30 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|EVP_CIPHER_CTX_cleanup
+argument_list|(
+operator|&
+name|c
+operator|->
+name|k1
+argument_list|)
+expr_stmt|;
+name|EVP_CIPHER_CTX_cleanup
+argument_list|(
+operator|&
+name|c
+operator|->
+name|k2
+argument_list|)
+expr_stmt|;
+name|EVP_CIPHER_CTX_cleanup
+argument_list|(
+operator|&
+name|c
+operator|->
+name|k3
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|c

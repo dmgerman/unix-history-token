@@ -85,7 +85,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh-rand-helper.c,v 1.13 2003/08/21 23:34:41 djm Exp $"
+literal|"$Id: ssh-rand-helper.c,v 1.16 2003/11/21 12:56:47 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -470,7 +470,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Collect 'len' bytes of entropy into 'buf' from PRNGD/EGD daemon  * listening either on 'tcp_port', or via Unix domain socket at *  * 'socket_path'.  * Either a non-zero tcp_port or a non-null socket_path must be   * supplied.  * Returns 0 on success, -1 on error  */
+comment|/*  * Collect 'len' bytes of entropy into 'buf' from PRNGD/EGD daemon  * listening either on 'tcp_port', or via Unix domain socket at *  * 'socket_path'.  * Either a non-zero tcp_port or a non-null socket_path must be  * supplied.  * Returns 0 on success, -1 on error  */
 end_comment
 
 begin_function
@@ -1848,7 +1848,7 @@ condition|(
 name|error_abort
 condition|)
 block|{
-comment|/* 		 * Closing p[0] on timeout causes the entropy command to 		 * SIGPIPE. Take whatever output we got, and mark this  		 * command as slow  		 */
+comment|/* 		 * Closing p[0] on timeout causes the entropy command to 		 * SIGPIPE. Take whatever output we got, and mark this 		 * command as slow 		 */
 name|debug2
 argument_list|(
 literal|"Command '%s' timed out"
@@ -2318,7 +2318,7 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-comment|/* 	 * XXX raceable: eg replace seed between this stat and subsequent  	 * open. Not such a problem because we don't really trust the  	 * seed file anyway. 	 * XXX: use secure path checking as elsewhere in OpenSSH 	 */
+comment|/* 	 * XXX raceable: eg replace seed between this stat and subsequent 	 * open. Not such a problem because we don't really trust the 	 * seed file anyway. 	 * XXX: use secure path checking as elsewhere in OpenSSH 	 */
 if|if
 condition|(
 name|lstat
@@ -2553,7 +2553,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"PRNG seed extration failed"
+literal|"PRNG seed extraction failed"
 argument_list|)
 expr_stmt|;
 comment|/* Don't care if the seed doesn't exist */
@@ -3005,7 +3005,7 @@ operator|)
 condition|)
 continue|continue;
 comment|/* done with this line */
-comment|/* 		 * The first non-whitespace char should be a double quote  		 * delimiting the commandline 		 */
+comment|/* 		 * The first non-whitespace char should be a double quote 		 * delimiting the commandline 		 */
 if|if
 condition|(
 operator|*
@@ -3311,7 +3311,7 @@ expr_stmt|;
 name|cur_cmd
 operator|++
 expr_stmt|;
-comment|/* 		 * If we've filled the array, reallocate it twice the size 		 * Do this now because even if this we're on the last  		 * command we need another slot to mark the last entry 		 */
+comment|/* 		 * If we've filled the array, reallocate it twice the size 		 * Do this now because even if this we're on the last 		 * command we need another slot to mark the last entry 		 */
 if|if
 condition|(
 name|cur_cmd

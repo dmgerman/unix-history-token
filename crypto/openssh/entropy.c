@@ -58,13 +58,13 @@ file|"log.h"
 end_include
 
 begin_comment
-comment|/*  * Portable OpenSSH PRNG seeding:  * If OpenSSL has not "internally seeded" itself (e.g. pulled data from   * /dev/random), then we execute a "ssh-rand-helper" program which   * collects entropy and writes it to stdout. The child program must   * write at least RANDOM_SEED_SIZE bytes. The child is run with stderr  * attached, so error/debugging output should be visible.  *  * XXX: we should tell the child how many bytes we need.  */
+comment|/*  * Portable OpenSSH PRNG seeding:  * If OpenSSL has not "internally seeded" itself (e.g. pulled data from  * /dev/random), then we execute a "ssh-rand-helper" program which  * collects entropy and writes it to stdout. The child program must  * write at least RANDOM_SEED_SIZE bytes. The child is run with stderr  * attached, so error/debugging output should be visible.  *  * XXX: we should tell the child how many bytes we need.  */
 end_comment
 
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: entropy.c,v 1.46 2003/08/25 01:16:21 mouring Exp $"
+literal|"$Id: entropy.c,v 1.48 2003/11/21 12:56:47 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

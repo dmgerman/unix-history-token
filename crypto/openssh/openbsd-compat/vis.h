@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* OPENBSD ORIGINAL: include/vis.h */
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: vis.h,v 1.6 2003/06/02 19:34:12 millert Exp $	*/
 end_comment
 

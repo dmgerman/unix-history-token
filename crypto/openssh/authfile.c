@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfile.c,v 1.54 2003/05/24 09:30:39 djm Exp $"
+literal|"$OpenBSD: authfile.c,v 1.55 2003/09/18 07:56:05 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -561,6 +561,12 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|encrypted
 argument_list|)
 expr_stmt|;
 return|return
