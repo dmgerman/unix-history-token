@@ -360,148 +360,148 @@ name|ppc_exception_names
 index|[]
 init|=
 block|{
-literal|"Reserved 0"
+literal|"reserved 0"
 block|,
 comment|/* 0 */
-literal|"Reset"
+literal|"reset"
 block|,
 comment|/* 1 */
-literal|"Machine Check"
+literal|"machine check"
 block|,
 comment|/* 2 */
-literal|"Data Storage Interrupt"
+literal|"data storage interrupt"
 block|,
 comment|/* 3 */
-literal|"Instruction Storage Interrupt"
+literal|"instruction storage interrupt"
 block|,
 comment|/* 4 */
-literal|"External Interrupt"
+literal|"external interrupt"
 block|,
 comment|/* 5 */
-literal|"Alignment Interrupt"
+literal|"alignment interrupt"
 block|,
 comment|/* 6 */
-literal|"Program Interrupt"
+literal|"program interrupt"
 block|,
 comment|/* 7 */
-literal|"Floating Point Unavailable"
+literal|"floating point unavailable"
 block|,
 comment|/* 8 */
-literal|"Decrementer Interrupt"
+literal|"decrementer interrupt"
 block|,
 comment|/* 9 */
-literal|"Reserved"
+literal|"reserved"
 block|,
 comment|/* 10 */
-literal|"Reserved"
+literal|"reserved"
 block|,
 comment|/* 11 */
-literal|"System Call"
+literal|"system call"
 block|,
 comment|/* 12 */
-literal|"Trace"
+literal|"trace"
 block|,
 comment|/* 13 */
-literal|"Floating Point Assist"
+literal|"floating point assist"
 block|,
 comment|/* 14 */
-literal|"Performance Monitoring"
+literal|"performance monitoring"
 block|,
 comment|/* 15 */
-literal|"Instruction TLB Miss"
+literal|"instruction tlb miss"
 block|,
 comment|/* 16 */
-literal|"Data Load TLB Miss"
+literal|"data load tlb miss"
 block|,
 comment|/* 17 */
-literal|"Data Store TLB Miss"
+literal|"data store tlb miss"
 block|,
 comment|/* 18 */
-literal|"Instruction Breakpoint"
+literal|"instruction breakpoint"
 block|,
 comment|/* 19 */
-literal|"System Management Interrupt"
+literal|"system management interrupt"
 block|,
 comment|/* 20 */
-literal|"Reserved 21"
+literal|"reserved 21"
 block|,
 comment|/* 21 */
-literal|"Reserved 22"
+literal|"reserved 22"
 block|,
 comment|/* 22 */
-literal|"Reserved 23"
+literal|"reserved 23"
 block|,
 comment|/* 23 */
-literal|"Reserved 24"
+literal|"reserved 24"
 block|,
 comment|/* 24 */
-literal|"Reserved 25"
+literal|"reserved 25"
 block|,
 comment|/* 25 */
-literal|"Reserved 26"
+literal|"reserved 26"
 block|,
 comment|/* 26 */
-literal|"Reserved 27"
+literal|"reserved 27"
 block|,
 comment|/* 27 */
-literal|"Reserved 28"
+literal|"reserved 28"
 block|,
 comment|/* 28 */
-literal|"Reserved 29"
+literal|"reserved 29"
 block|,
 comment|/* 29 */
-literal|"Reserved 30"
+literal|"reserved 30"
 block|,
 comment|/* 30 */
-literal|"Reserved 31"
+literal|"reserved 31"
 block|,
 comment|/* 31 */
-literal|"Reserved 32"
+literal|"reserved 32"
 block|,
 comment|/* 32 */
-literal|"Reserved 33"
+literal|"reserved 33"
 block|,
 comment|/* 33 */
-literal|"Reserved 34"
+literal|"reserved 34"
 block|,
 comment|/* 34 */
-literal|"Reserved 35"
+literal|"reserved 35"
 block|,
 comment|/* 35 */
-literal|"Reserved 36"
+literal|"reserved 36"
 block|,
 comment|/* 36 */
-literal|"Reserved 37"
+literal|"reserved 37"
 block|,
 comment|/* 37 */
-literal|"Reserved 38"
+literal|"reserved 38"
 block|,
 comment|/* 38 */
-literal|"Reserved 39"
+literal|"reserved 39"
 block|,
 comment|/* 39 */
-literal|"Reserved 40"
+literal|"reserved 40"
 block|,
 comment|/* 40 */
-literal|"Reserved 41"
+literal|"reserved 41"
 block|,
 comment|/* 41 */
-literal|"Reserved 42"
+literal|"reserved 42"
 block|,
 comment|/* 42 */
-literal|"Reserved 43"
+literal|"reserved 43"
 block|,
 comment|/* 43 */
-literal|"Reserved 44"
+literal|"reserved 44"
 block|,
 comment|/* 44 */
-literal|"Reserved 45"
+literal|"reserved 45"
 block|,
 comment|/* 45 */
-literal|"Reserved 46"
+literal|"reserved 46"
 block|,
 comment|/* 46 */
-literal|"Reserved 47"
+literal|"reserved 47"
 block|,
 comment|/* 47 */
 block|}
