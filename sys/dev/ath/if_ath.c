@@ -9262,13 +9262,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|MS_TO_TU
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x) * 1000) / 1024)
 name|struct
 name|ath_hal
 modifier|*
@@ -9334,12 +9327,9 @@ operator|)
 expr_stmt|;
 name|intval
 operator|=
-name|MS_TO_TU
-argument_list|(
 name|ni
 operator|->
 name|ni_intval
-argument_list|)
 operator|&
 name|HAL_BEACON_PERIOD
 expr_stmt|;
@@ -9400,9 +9390,6 @@ block|{
 name|HAL_BEACON_STATE
 name|bs
 decl_stmt|;
-name|u_int32_t
-name|bmisstime
-decl_stmt|;
 comment|/* NB: no PCF support right now */
 name|memset
 argument_list|(
@@ -9453,22 +9440,15 @@ operator|->
 name|ni_timoff
 expr_stmt|;
 comment|/* 		 * Calculate the number of consecutive beacons to miss 		 * before taking a BMISS interrupt.  The configuration 		 * is specified in ms, so we need to convert that to 		 * TU's and then calculate based on the beacon interval. 		 * Note that we clamp the result to at most 10 beacons. 		 */
-name|bmisstime
-operator|=
-name|MS_TO_TU
-argument_list|(
-name|ic
-operator|->
-name|ic_bmisstimeout
-argument_list|)
-expr_stmt|;
 name|bs
 operator|.
 name|bs_bmissthreshold
 operator|=
 name|howmany
 argument_list|(
-name|bmisstime
+name|ic
+operator|->
+name|ic_bmisstimeout
 argument_list|,
 name|intval
 argument_list|)
@@ -9509,7 +9489,7 @@ name|bs_sleepduration
 operator|=
 name|roundup
 argument_list|(
-name|MS_TO_TU
+name|IEEE80211_MS_TO_TU
 argument_list|(
 literal|100
 argument_list|)
@@ -9741,9 +9721,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-undef|#
-directive|undef
-name|MS_TO_TU
 block|}
 end_function
 
