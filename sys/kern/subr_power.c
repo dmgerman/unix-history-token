@@ -241,6 +241,11 @@ name|changed
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"system power profile changed to '%s'\n"
@@ -256,6 +261,7 @@ else|:
 literal|"economy"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
