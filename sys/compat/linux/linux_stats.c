@@ -539,16 +539,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|newstat
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): newstat(%s, *)\n"
+name|ARGS
+argument_list|(
+name|newstat
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%s, *"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -712,16 +717,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|newlstat
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): newlstat(%s, *)\n"
+name|ARGS
+argument_list|(
+name|newlstat
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%s, *"
+argument_list|)
 argument_list|,
 name|uap
 operator|->
@@ -866,16 +876,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|newfstat
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): newfstat(%d, *)\n"
+name|ARGS
+argument_list|(
+name|newfstat
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%d, *"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -1262,13 +1277,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|statfs
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): statfs(%s, *)\n"
+name|ARGS
+argument_list|(
+name|statfs
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, *"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -1537,13 +1560,21 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|fstatfs
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): fstatfs(%d, *)\n"
+name|ARGS
+argument_list|(
+name|fstatfs
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%d, *"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -1794,16 +1825,21 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|ustat
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): ustat(%d, *)\n"
+name|ARGS
+argument_list|(
+name|ustat
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%d, *"
+argument_list|)
 argument_list|,
 name|uap
 operator|->

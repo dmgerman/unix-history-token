@@ -178,13 +178,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|creat
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): creat(%s, %d)\n"
+name|ARGS
+argument_list|(
+name|creat
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, %d"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -311,13 +319,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|open
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): open(%s, 0x%x, 0x%x)\n"
+name|ARGS
+argument_list|(
+name|open
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, 0x%x, 0x%x"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -631,13 +647,19 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|open
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): open returns error %d\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
+name|LMSG
+argument_list|(
+literal|"open returns error %d"
+argument_list|)
 argument_list|,
 name|error
 argument_list|)
@@ -952,16 +974,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|fcntl
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): fcntl(%d, %08x, *)\n"
+name|ARGS
+argument_list|(
+name|fcntl
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%d, %08x, *"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -1647,16 +1674,21 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|lseek
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): lseek(%d, %ld, %d)\n"
+name|ARGS
+argument_list|(
+name|lseek
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%d, %ld, %d"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -1750,13 +1782,21 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|llseek
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): llseek(%d, %d:%d, %d)\n"
+name|ARGS
+argument_list|(
+name|llseek
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%d, %d:%d, %d"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -2096,13 +2136,21 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|getdents
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): getdents(%d, *, %d)\n"
+name|ARGS
+argument_list|(
+name|getdents
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%d, *, %d"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -2888,13 +2936,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|access
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): access(%s, %d)\n"
+name|ARGS
+argument_list|(
+name|access
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, %d"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -2977,13 +3033,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|unlink
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): unlink(%s)\n"
+name|ARGS
+argument_list|(
+name|unlink
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -3054,13 +3118,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|chdir
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): chdir(%s)\n"
+name|ARGS
+argument_list|(
+name|chdir
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -3131,13 +3203,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|chmod
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): chmod(%s, %d)\n"
+name|ARGS
+argument_list|(
+name|chmod
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, %d"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -3220,13 +3300,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|chown
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): chown(%s, %d, %d)\n"
+name|ARGS
+argument_list|(
+name|chown
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, %d, %d"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -3322,13 +3410,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|lchown
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): lchown(%s, %d, %d)\n"
+name|ARGS
+argument_list|(
+name|lchown
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, %d, %d"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -3424,13 +3520,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|mkdir
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): mkdir(%s, %d)\n"
+name|ARGS
+argument_list|(
+name|mkdir
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, %d"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -3513,13 +3617,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|rmdir
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): rmdir(%s)\n"
+name|ARGS
+argument_list|(
+name|rmdir
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -3602,13 +3714,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|rename
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): rename(%s, %s)\n"
+name|ARGS
+argument_list|(
+name|rename
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, %s"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -3703,13 +3823,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|symlink
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): symlink(%s, %s)\n"
+name|ARGS
+argument_list|(
+name|symlink
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, %s"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -3792,16 +3920,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|readlink
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): readlink(%s, %p, %d)\n"
+name|ARGS
+argument_list|(
+name|readlink
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%s, %p, %d"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -3900,13 +4033,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|truncate
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): truncate(%s, %ld)\n"
+name|ARGS
+argument_list|(
+name|truncate
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, %ld"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -4001,13 +4142,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|link
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): link(%s, %s)\n"
+name|ARGS
+argument_list|(
+name|link
 argument_list|,
-name|p
-operator|->
-name|p_pid
+literal|"%s, %s"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -4078,16 +4227,21 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|getcwd
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): getcwd(%p, %ld)\n"
+name|ARGS
+argument_list|(
+name|getcwd
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%p, %ld"
+argument_list|)
 argument_list|,
 name|args
 operator|->

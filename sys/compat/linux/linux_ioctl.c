@@ -509,6 +509,7 @@ name|error
 operator|)
 return|;
 return|return
+operator|(
 name|copyout
 argument_list|(
 operator|&
@@ -532,6 +533,7 @@ operator|.
 name|d_secperunit
 argument_list|)
 argument_list|)
+operator|)
 return|;
 break|break;
 block|}
@@ -969,6 +971,14 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|ioctl
+argument_list|)
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"LINUX: BSD termios structure (input):\n"
@@ -1038,6 +1048,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|lios
@@ -1893,6 +1904,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|ioctl
+argument_list|)
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"LINUX: LINUX termios structure (output):\n"
@@ -1961,6 +1980,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -1988,6 +2008,14 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|ioctl
+argument_list|)
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"LINUX: LINUX termios structure (input):\n"
@@ -2056,6 +2084,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|bios
@@ -2911,6 +2940,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|ioctl
+argument_list|)
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"LINUX: BSD termios structure (output):\n"
@@ -2980,6 +3017,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -8127,16 +8165,21 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|ioctl
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): ioctl(%d, %04lx, *)\n"
+name|ARGS
+argument_list|(
+name|ioctl
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%d, %04lx, *"
+argument_list|)
 argument_list|,
 name|args
 operator|->
@@ -8265,7 +8308,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"linux: 'ioctl' fd=%d, cmd=%x ('%c',%d) not implemented\n"
+literal|"linux: 'ioctl' fd=%d, cmd=0x%x ('%c',%d) not implemented\n"
 argument_list|,
 name|args
 operator|->

@@ -21,6 +21,50 @@ directive|include
 file|<alpha/linux/linux_syscall.h>
 end_include
 
+begin_comment
+comment|/*  * debugging support  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|linux_debug_map
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ldebug
+parameter_list|(
+name|name
+parameter_list|)
+value|isclr(linux_debug_map, LINUX_SYS_linux_ ## name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGS
+parameter_list|(
+name|nm
+parameter_list|,
+name|fmt
+parameter_list|)
+value|"Linux-emul(%ld): "#nm"("fmt")\n", (long)p->p_pid
+end_define
+
+begin_define
+define|#
+directive|define
+name|LMSG
+parameter_list|(
+name|fmt
+parameter_list|)
+value|"Linux-emul(%ld): "fmt"\n", (long)p->p_pid
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

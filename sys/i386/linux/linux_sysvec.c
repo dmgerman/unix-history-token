@@ -1339,16 +1339,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|sigreturn
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): linux_rt_sendsig(%p, %d, %p, %lu)\n"
+name|ARGS
+argument_list|(
+name|rt_sendsig
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%p, %d, %p, %lu"
+argument_list|)
 argument_list|,
 name|catcher
 argument_list|,
@@ -1528,17 +1533,19 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|sigreturn
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): linux_rt_sendsig -- bad stack %p, "
-literal|"oonstack=%x\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+name|LMSG
+argument_list|(
+literal|"rt_sendsig: bad stack %p, oonstack=%x"
+argument_list|)
 argument_list|,
 name|fp
 argument_list|,
@@ -1983,17 +1990,19 @@ comment|/* XXX ???? */
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|sigreturn
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): rt_sendsig flags: 0x%x, sp: %p, ss: 0x%x, "
-literal|"mask: 0x%x\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+name|LMSG
+argument_list|(
+literal|"rt_sendsig flags: 0x%x, sp: %p, ss: 0x%x, mask: 0x%x"
+argument_list|)
 argument_list|,
 name|frame
 operator|.
@@ -2226,16 +2235,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|sigreturn
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): linux_sendsig(%p, %d, %p, %lu)\n"
+name|ARGS
+argument_list|(
+name|sendsig
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%p, %d, %p, %lu"
+argument_list|)
 argument_list|,
 name|catcher
 argument_list|,
@@ -2863,16 +2877,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|sigreturn
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): linux_sigreturn(%p)\n"
+name|ARGS
+argument_list|(
+name|sigreturn
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%p"
+argument_list|)
 argument_list|,
 operator|(
 name|void
@@ -3293,16 +3312,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|rt_sigreturn
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): linux_rt_sigreturn(%p)\n"
+name|ARGS
+argument_list|(
+name|rt_sigreturn
 argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+literal|"%p"
+argument_list|)
 argument_list|,
 operator|(
 name|void
@@ -3627,16 +3651,19 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|rt_sigreturn
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): rt_sigret  flags: 0x%x, sp: %p, ss: 0x%x, mask: 0x%x\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|p
-operator|->
-name|p_pid
+name|LMSG
+argument_list|(
+literal|"rt_sigret flags: 0x%x, sp: %p, ss: 0x%x, mask: 0x%x"
+argument_list|)
 argument_list|,
 name|ss
 operator|->
