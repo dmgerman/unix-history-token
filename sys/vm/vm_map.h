@@ -1023,19 +1023,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct_decl
-struct_decl|struct
-name|pmap
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|vm_map_t
 name|vm_map_create
 parameter_list|(
-name|struct
-name|pmap
-modifier|*
+name|pmap_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
