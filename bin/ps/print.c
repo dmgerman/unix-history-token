@@ -2999,10 +2999,16 @@ argument_list|)
 argument_list|,
 literal|"%3ld:%02ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|secs
 operator|/
 literal|60
 argument_list|,
+operator|(
+name|long
+operator|)
 name|secs
 operator|%
 literal|60
