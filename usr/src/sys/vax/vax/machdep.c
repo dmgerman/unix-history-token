@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.21	81/03/03	*/
+comment|/*	machdep.c	4.22	81/03/06	*/
 end_comment
 
 begin_include
@@ -180,7 +180,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.21) 81/03/03 11:04:57 \n"
+literal|"VAX/UNIX (Berkeley Version 4.22) 81/03/06 11:38:06 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -851,7 +851,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: todr too small (battery backup failed?)"
+literal|"WARNING: todr too small"
 argument_list|)
 expr_stmt|;
 name|time
@@ -1799,7 +1799,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"memerr mcr%d addr %x syn %x\n"
+literal|"mcr%d: soft ecc addr %x syn %x\n"
 argument_list|,
 name|m
 argument_list|,
@@ -1839,7 +1839,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"memerr mcr%d addr %x syn %x\n"
+literal|"mcr%d: soft ecc addr %x syn %x\n"
 argument_list|,
 name|m
 argument_list|,
