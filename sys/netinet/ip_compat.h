@@ -1566,17 +1566,6 @@ directive|define
 name|ACTUALLY_LKM_NOT_KERNEL
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/osreldate.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
