@@ -51,6 +51,13 @@ directive|include
 file|<pci/pcivar.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|ACPI_BUS_SPACE_IO
+value|I386_BUS_SPACE_IO
+end_define
+
 begin_comment
 comment|/*  * ACPICA compatibility  */
 end_comment
@@ -109,7 +116,7 @@ name|retval
 decl_stmt|;
 name|bst
 operator|=
-name|I386_BUS_SPACE_IO
+name|ACPI_BUS_SPACE_IO
 expr_stmt|;
 name|bsh
 operator|=
@@ -305,7 +312,7 @@ name|bsh
 decl_stmt|;
 name|bst
 operator|=
-name|I386_BUS_SPACE_IO
+name|ACPI_BUS_SPACE_IO
 expr_stmt|;
 name|bsh
 operator|=
