@@ -200,6 +200,13 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|UAREA_PAGES
+value|1
+end_define
+
 begin_function_decl
 specifier|static
 name|void
