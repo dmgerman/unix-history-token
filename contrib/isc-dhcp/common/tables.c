@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: tables.c,v 1.13.2.3 1998/12/22 22:45:44 mellon Exp $ Copyright (c) 1995, 1996 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: tables.c,v 1.13.2.4 1999/04/24 16:46:44 mellon Exp $ Copyright (c) 1995, 1996 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -763,9 +763,9 @@ literal|63
 block|}
 block|,
 block|{
-literal|"option-64"
+literal|"nisplus-domain"
 block|,
-literal|"X"
+literal|"t"
 block|,
 operator|&
 name|dhcp_universe
@@ -774,9 +774,9 @@ literal|64
 block|}
 block|,
 block|{
-literal|"option-65"
+literal|"nisplus-servers"
 block|,
-literal|"X"
+literal|"IA"
 block|,
 operator|&
 name|dhcp_universe
@@ -785,9 +785,9 @@ literal|65
 block|}
 block|,
 block|{
-literal|"option-66"
+literal|"tftp-server-name"
 block|,
-literal|"X"
+literal|"t"
 block|,
 operator|&
 name|dhcp_universe
@@ -796,9 +796,9 @@ literal|66
 block|}
 block|,
 block|{
-literal|"option-67"
+literal|"bootfile-name"
 block|,
-literal|"X"
+literal|"t"
 block|,
 operator|&
 name|dhcp_universe
@@ -807,9 +807,9 @@ literal|67
 block|}
 block|,
 block|{
-literal|"option-68"
+literal|"mobile-ip-home-agent"
 block|,
-literal|"X"
+literal|"IA"
 block|,
 operator|&
 name|dhcp_universe
@@ -818,9 +818,9 @@ literal|68
 block|}
 block|,
 block|{
-literal|"option-69"
+literal|"smtp-server"
 block|,
-literal|"X"
+literal|"IA"
 block|,
 operator|&
 name|dhcp_universe
@@ -829,9 +829,9 @@ literal|69
 block|}
 block|,
 block|{
-literal|"option-70"
+literal|"pop-server"
 block|,
-literal|"X"
+literal|"IA"
 block|,
 operator|&
 name|dhcp_universe
@@ -840,9 +840,9 @@ literal|70
 block|}
 block|,
 block|{
-literal|"option-71"
+literal|"nntp-server"
 block|,
-literal|"X"
+literal|"IA"
 block|,
 operator|&
 name|dhcp_universe
@@ -851,9 +851,9 @@ literal|71
 block|}
 block|,
 block|{
-literal|"option-72"
+literal|"www-server"
 block|,
-literal|"X"
+literal|"IA"
 block|,
 operator|&
 name|dhcp_universe
@@ -862,9 +862,9 @@ literal|72
 block|}
 block|,
 block|{
-literal|"option-73"
+literal|"finger-server"
 block|,
-literal|"X"
+literal|"IA"
 block|,
 operator|&
 name|dhcp_universe
@@ -873,9 +873,9 @@ literal|73
 block|}
 block|,
 block|{
-literal|"option-74"
+literal|"irc-server"
 block|,
-literal|"X"
+literal|"IA"
 block|,
 operator|&
 name|dhcp_universe
@@ -884,9 +884,9 @@ literal|74
 block|}
 block|,
 block|{
-literal|"option-75"
+literal|"streettalk-server"
 block|,
-literal|"X"
+literal|"IA"
 block|,
 operator|&
 name|dhcp_universe
@@ -895,9 +895,9 @@ literal|75
 block|}
 block|,
 block|{
-literal|"option-76"
+literal|"streettalk-directory-assistance-server"
 block|,
-literal|"X"
+literal|"IA"
 block|,
 operator|&
 name|dhcp_universe
@@ -906,7 +906,7 @@ literal|76
 block|}
 block|,
 block|{
-literal|"dhcp-user-class-identifier"
+literal|"user-class"
 block|,
 literal|"t"
 block|,

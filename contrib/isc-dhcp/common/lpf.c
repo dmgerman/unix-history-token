@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: lpf.c,v 1.1.2.6 1999/02/23 22:09:55 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: lpf.c,v 1.1.2.8 1999/03/29 22:07:13 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,16 +235,27 @@ operator|||
 name|errno
 operator|==
 name|EAFNOSUPPORT
+operator|||
+name|errno
+operator|==
+name|EINVAL
 condition|)
+block|{
+name|warn
+argument_list|(
+literal|"socket: %m"
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
-literal|"socket: %m - make sure %s %s!"
+literal|"Make sure to set %s %s!"
 argument_list|,
-literal|"CONFIG_PACKET and CONFIG_FILTER are defined"
+literal|"CONFIG_PACKET=y and CONFIG_FILTER=y"
 argument_list|,
 literal|"in your kernel configuration"
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 argument_list|(
 literal|"Open a socket for LPF: %m"
@@ -325,16 +336,27 @@ operator|||
 name|errno
 operator|==
 name|EAFNOSUPPORT
+operator|||
+name|errno
+operator|==
+name|EINVAL
 condition|)
+block|{
+name|warn
+argument_list|(
+literal|"bind: %m"
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
-literal|"socket: %m - make sure %s %s!"
+literal|"Set %s %s!"
 argument_list|,
-literal|"CONFIG_PACKET and CONFIG_FILTER are defined"
+literal|"CONFIG_PACKET=y and CONFIG_FILTER=y"
 argument_list|,
 literal|"in your kernel configuration"
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 argument_list|(
 literal|"Bind socket to interface: %m"
@@ -1126,6 +1148,24 @@ begin_function
 name|int
 name|can_unicast_without_arp
 parameter_list|()
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|can_receive_unicast_unconfigured
+parameter_list|(
+name|ip
+parameter_list|)
+name|struct
+name|interface_info
+modifier|*
+name|ip
+decl_stmt|;
 block|{
 return|return
 literal|1

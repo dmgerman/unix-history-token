@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: conflex.c,v 1.29.2.3 1999/02/09 04:49:04 mellon Exp $ Copyright (c) 1995, 1996, 1997 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: conflex.c,v 1.29.2.4 1999/04/06 14:58:55 mellon Exp $ Copyright (c) 1995, 1996, 1997 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1584,6 +1584,21 @@ block|{
 case|case
 literal|'a'
 case|:
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|atom
+operator|+
+literal|1
+argument_list|,
+literal|"lways-reply-rfc1048"
+argument_list|)
+condition|)
+return|return
+name|ALWAYS_REPLY_RFC1048
+return|;
 if|if
 condition|(
 operator|!
