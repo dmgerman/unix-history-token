@@ -818,7 +818,7 @@ name|h
 operator|=
 name|acpi_get_handle
 argument_list|(
-name|dev
+name|child
 argument_list|)
 expr_stmt|;
 name|status
