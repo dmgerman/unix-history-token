@@ -2889,8 +2889,8 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/* 		 * Module ipdivert can only be unloaded if no sockets are 		 * connected.  Maybe this can be changed later to forcefully 		 * disconnect any open sockets. 		 * 		 * XXXRW: Note that there is a slight race here, as a socket 		 * could be opened between when we test and when we 		 * unregister. 		 */
-name|INP_INFO_RLOCK
+comment|/* 		 * Module ipdivert can only be unloaded if no sockets are 		 * connected.  Maybe this can be changed later to forcefully 		 * disconnect any open sockets. 		 * 		 * XXXRW: Note that there is a slight race here, as a new 		 * socket open request could be spinning on the lock and then 		 * we destroy the lock. 		 */
+name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|divcbinfo
@@ -2902,12 +2902,6 @@ name|divcbinfo
 operator|.
 name|ipi_count
 expr_stmt|;
-name|INP_INFO_RUNLOCK
-argument_list|(
-operator|&
-name|divcbinfo
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|n
@@ -2918,6 +2912,12 @@ block|{
 name|err
 operator|=
 name|EBUSY
+expr_stmt|;
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|divcbinfo
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -2934,6 +2934,12 @@ argument_list|,
 name|IPPROTO_DIVERT
 argument_list|,
 name|SOCK_RAW
+argument_list|)
+expr_stmt|;
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|divcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_INFO_LOCK_DESTROY
