@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *   * $Id$  *   */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *   * $Id: jail.c,v 1.2 1999/05/04 18:20:53 phk Exp $  *   */
 end_comment
 
 begin_include
@@ -67,7 +67,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Usage: %s path hostname ip command ...\n"
+literal|"Usage: %s path hostname ip-number command ...\n"
 argument_list|,
 name|argv
 index|[
@@ -141,7 +141,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Couldn't make sense if ip number\n"
+literal|"Couldn't make sense of ip-number\n"
 argument_list|)
 expr_stmt|;
 name|j
