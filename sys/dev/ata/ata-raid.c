@@ -4171,6 +4171,12 @@ name|rdp
 operator|->
 name|lun
 argument_list|,
+call|(
+name|unsigned
+name|long
+name|long
+call|)
+argument_list|(
 literal|100
 operator|*
 name|rdp
@@ -4186,6 +4192,7 @@ name|rdp
 operator|->
 name|width
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
