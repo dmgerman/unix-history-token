@@ -388,6 +388,10 @@ operator|&
 name|br
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -527,6 +531,10 @@ name|caddr_t
 operator|)
 operator|&
 name|sc
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)

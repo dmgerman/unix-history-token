@@ -7530,6 +7530,33 @@ operator|->
 name|arg
 decl_stmt|;
 comment|/*      * Pass the ioctl off to our standard handler.      */
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500000
+operator|)
+return|return
+operator|(
+name|fo_ioctl
+argument_list|(
+name|fp
+argument_list|,
+name|cmd
+argument_list|,
+name|data
+argument_list|,
+name|p
+operator|->
+name|td_ucred
+argument_list|,
+name|p
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|fo_ioctl
@@ -7544,6 +7571,8 @@ name|p
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

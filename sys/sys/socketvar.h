@@ -1133,6 +1133,11 @@ modifier|*
 name|data
 parameter_list|,
 name|struct
+name|ucred
+modifier|*
+name|active_cred
+parameter_list|,
+name|struct
 name|thread
 modifier|*
 name|td

@@ -2334,6 +2334,10 @@ operator|&
 name|bts
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2528,6 +2532,10 @@ operator|&
 name|bts
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2604,6 +2612,10 @@ name|caddr_t
 operator|)
 operator|&
 name|bts
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -2691,6 +2703,10 @@ operator|&
 name|bts
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2776,6 +2792,10 @@ operator|&
 name|bts
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2855,6 +2875,10 @@ operator|)
 literal|0
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2873,6 +2897,10 @@ operator|(
 name|caddr_t
 operator|)
 literal|1
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -2958,6 +2986,10 @@ name|caddr_t
 operator|)
 operator|&
 name|arg
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)

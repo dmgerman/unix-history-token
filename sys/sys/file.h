@@ -285,6 +285,11 @@ modifier|*
 name|data
 parameter_list|,
 name|struct
+name|ucred
+modifier|*
+name|active_cred
+parameter_list|,
+name|struct
 name|thread
 modifier|*
 name|td
@@ -933,6 +938,11 @@ modifier|*
 name|data
 parameter_list|,
 name|struct
+name|ucred
+modifier|*
+name|active_cred
+parameter_list|,
+name|struct
 name|thread
 modifier|*
 name|td
@@ -1184,6 +1194,8 @@ name|com
 parameter_list|,
 name|data
 parameter_list|,
+name|active_cred
+parameter_list|,
 name|td
 parameter_list|)
 name|struct
@@ -1197,6 +1209,11 @@ decl_stmt|;
 name|void
 modifier|*
 name|data
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|active_cred
 decl_stmt|;
 name|struct
 name|thread
@@ -1220,6 +1237,8 @@ argument_list|,
 name|com
 argument_list|,
 name|data
+argument_list|,
+name|active_cred
 argument_list|,
 name|td
 argument_list|)

@@ -3001,6 +3001,10 @@ operator|&
 name|bt
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -3139,6 +3143,10 @@ name|caddr_t
 operator|)
 operator|&
 name|bt
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -3347,6 +3355,10 @@ operator|&
 name|bt
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 return|;
 case|case
@@ -3377,6 +3389,10 @@ name|caddr_t
 operator|)
 operator|&
 name|ws
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -3454,6 +3470,10 @@ name|caddr_t
 operator|)
 operator|&
 name|ws
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
