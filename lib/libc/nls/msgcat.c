@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.12 1998/01/15 09:58:08 jb Exp $ */
+comment|/*	$Id: msgcat.c,v 1.13 1998/04/30 10:14:55 ache Exp $ */
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -294,6 +300,23 @@ else|else
 block|{
 if|if
 condition|(
+name|type
+operator|==
+name|NL_CAT_LOCALE
+condition|)
+name|lang
+operator|=
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 operator|(
 name|lang
 operator|=
@@ -313,6 +336,7 @@ name|lang
 operator|=
 literal|"C"
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
