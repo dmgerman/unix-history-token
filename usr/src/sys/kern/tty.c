@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2862,6 +2862,49 @@ operator|->
 name|t_winsize
 expr_stmt|;
 break|break;
+case|case
+name|TIOCCONS
+case|:
+block|{
+specifier|extern
+name|struct
+name|tty
+modifier|*
+name|constty
+decl_stmt|;
+if|if
+condition|(
+name|constty
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+ifndef|#
+directive|ifndef
+name|UCONSOLE
+if|if
+condition|(
+operator|!
+name|suser
+argument_list|()
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+endif|#
+directive|endif
+name|constty
+operator|=
+name|tp
+expr_stmt|;
+break|break;
+block|}
 default|default:
 return|return
 operator|(
