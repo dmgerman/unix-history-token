@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.8		%G% */
+comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.9		%G% */
 end_comment
 
 begin_ifndef
@@ -12,7 +12,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_endif
