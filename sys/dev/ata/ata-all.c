@@ -1306,11 +1306,25 @@ name|dev
 argument_list|,
 literal|0x05861106
 argument_list|,
-literal|0
+literal|0x02
 argument_list|)
 condition|)
 return|return
 literal|"VIA 82C586 ATA33 controller"
+return|;
+if|if
+condition|(
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x05861106
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return
+literal|"VIA 82C586 ATA controller"
 return|;
 if|if
 condition|(
