@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parser1.c	3.5 83/12/09"
+literal|"@(#)parser1.c	3.6 83/12/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|p_synerred
+parameter_list|()
+value|(cx.x_synerred)
+end_define
+
+begin_define
+define|#
+directive|define
 name|p_clearerr
 parameter_list|()
 value|(cx.x_erred = cx.x_synerred = 0)
@@ -89,7 +97,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|p_varfree
+name|p_valfree
 parameter_list|(
 name|v
 parameter_list|)
@@ -668,7 +676,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|p_varfree
+name|p_valfree
 argument_list|(
 name|t
 argument_list|)
@@ -833,7 +841,7 @@ argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
-name|p_varfree
+name|p_valfree
 argument_list|(
 name|t
 argument_list|)
@@ -1019,6 +1027,52 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+if|if
+condition|(
+operator|!
+name|p_synerred
+argument_list|()
+operator|&&
+name|token
+operator|==
+name|T_MUL
+condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|->
+name|lc_arg
+index|[
+name|i
+index|]
+operator|.
+name|arg_name
+operator|==
+literal|0
+condition|)
+name|p_error
+argument_list|(
+literal|"%s: Too many arguments."
+argument_list|,
+name|c
+operator|->
+name|lc_name
+argument_list|)
+expr_stmt|;
+else|else
+name|i
+operator|++
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|s_gettok
+argument_list|()
+expr_stmt|;
+continue|continue;
+block|}
+else|else
 break|break;
 if|if
 condition|(
@@ -1074,7 +1128,7 @@ operator|->
 name|lc_name
 argument_list|)
 expr_stmt|;
-name|p_varfree
+name|p_valfree
 argument_list|(
 name|t
 argument_list|)
@@ -1258,7 +1312,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|p_varfree
+name|p_valfree
 argument_list|(
 name|t
 argument_list|)
@@ -1318,7 +1372,7 @@ operator|->
 name|arg_name
 argument_list|)
 expr_stmt|;
-name|p_varfree
+name|p_valfree
 argument_list|(
 name|t
 argument_list|)
@@ -1389,7 +1443,7 @@ operator|->
 name|arg_name
 argument_list|)
 expr_stmt|;
-name|p_varfree
+name|p_valfree
 argument_list|(
 name|t
 argument_list|)
@@ -1485,7 +1539,7 @@ condition|;
 name|ap
 operator|++
 control|)
-name|p_varfree
+name|p_valfree
 argument_list|(
 name|ap
 operator|->
@@ -1520,7 +1574,7 @@ condition|;
 name|ap
 operator|++
 control|)
-name|p_varfree
+name|p_valfree
 argument_list|(
 name|ap
 operator|->
@@ -1624,7 +1678,7 @@ block|{
 name|p_memerror
 argument_list|()
 expr_stmt|;
-name|p_varfree
+name|p_valfree
 argument_list|(
 operator|*
 name|v
@@ -1915,6 +1969,12 @@ operator|)
 name|s_gettok
 argument_list|()
 expr_stmt|;
+name|v
+operator|->
+name|v_type
+operator|=
+name|V_ERR
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1951,6 +2011,12 @@ operator|!=
 name|T_COLON
 condition|)
 block|{
+name|p_valfree
+argument_list|(
+operator|*
+name|v
+argument_list|)
+expr_stmt|;
 name|p_synerror
 argument_list|()
 expr_stmt|;
@@ -2661,10 +2727,21 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|p_synerror
+argument_list|()
+expr_stmt|;
+name|p_valfree
+argument_list|(
+operator|*
+name|v
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 else|else
 block|{
@@ -2684,10 +2761,21 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|p_synerror
+argument_list|()
+expr_stmt|;
+name|p_valfree
+argument_list|(
+operator|*
+name|v
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -2835,13 +2923,13 @@ operator|!
 name|flag
 condition|)
 block|{
-name|p_varfree
+name|p_valfree
 argument_list|(
 operator|*
 name|v
 argument_list|)
 expr_stmt|;
-name|p_varfree
+name|p_valfree
 argument_list|(
 name|t
 argument_list|)
@@ -3442,7 +3530,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * string, number, ( expr )  * Plus function calls.  * Also we map * and % into strings.  *  * Always return v_type == V_ERR when flag == 0.  */
+comment|/*  * string, number, ( expr )  * Plus function calls.  * Also we map % into string.  *  * Always return v_type == V_ERR when flag == 0.  */
 end_comment
 
 begin_expr_stmt
@@ -3491,47 +3579,6 @@ condition|(
 name|token
 condition|)
 block|{
-case|case
-name|T_MUL
-case|:
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|error
-argument_list|(
-literal|"expr12: *."
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|flag
-condition|)
-block|{
-name|v
-operator|->
-name|v_type
-operator|=
-name|V_STR
-expr_stmt|;
-name|v
-operator|->
-name|v_str
-operator|=
-name|str_cpy
-argument_list|(
-literal|"*"
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|s_gettok
-argument_list|()
-expr_stmt|;
-break|break;
 case|case
 name|T_MOD
 case|:
@@ -3692,7 +3739,7 @@ block|{
 name|p_synerror
 argument_list|()
 expr_stmt|;
-name|p_varfree
+name|p_valfree
 argument_list|(
 operator|*
 name|v
@@ -3854,7 +3901,7 @@ block|{
 name|p_synerror
 argument_list|()
 expr_stmt|;
-name|p_varfree
+name|p_valfree
 argument_list|(
 operator|*
 name|v
