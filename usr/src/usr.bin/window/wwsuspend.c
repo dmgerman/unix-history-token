@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwsuspend.c	3.14 (Berkeley) %G%"
+literal|"@(#)wwsuspend.c	3.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,12 +46,10 @@ directive|include
 file|<sys/signal.h>
 end_include
 
-begin_macro
+begin_function
+name|void
 name|wwsuspend
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|sig_t
 name|oldsig
@@ -127,7 +125,7 @@ name|oldsig
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

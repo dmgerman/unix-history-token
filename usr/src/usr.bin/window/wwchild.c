@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwchild.c	3.12 (Berkeley) %G%"
+literal|"@(#)wwchild.c	3.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,12 +40,10 @@ directive|include
 file|<sys/wait.h>
 end_include
 
-begin_macro
+begin_function
+name|void
 name|wwchild
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 extern|extern errno;
 name|int
@@ -172,7 +170,7 @@ name|wwsetintr
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
