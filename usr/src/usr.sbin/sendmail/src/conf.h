@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.178 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.179 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5202,7 +5202,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  UnixWare 1.1.2. ** **	From Evan Champion<evanc@spatial.synapse.org>. */
+comment|/* **  UnixWare 1.1.2. ** **	Updated by Petr Lampa<lampa@fee.vutbr.cz>. **	From Evan Champion<evanc@spatial.synapse.org>. */
 end_comment
 
 begin_ifdef
@@ -5228,13 +5228,6 @@ end_define
 begin_comment
 comment|/* does not have getusershell(3) call */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|HASGETDTABLESIZE
-value|1
-end_define
 
 begin_define
 define|#
