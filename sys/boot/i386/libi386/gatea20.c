@@ -1,11 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $FreeBSD$  * From: $NetBSD: gatea20.c,v 1.2 1997/10/29 00:32:49 fvdl Exp $  */
+comment|/*  * $NetBSD: gatea20.c,v 1.2 1997/10/29 00:32:49 fvdl Exp $  */
 end_comment
 
 begin_comment
 comment|/* extracted from freebsd:sys/i386/boot/biosboot/io.c */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
