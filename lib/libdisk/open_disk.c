@@ -663,7 +663,7 @@ name|b
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Calculate the number of cylinders this disk must have. If we have 	 * an obvious insanity, we set the number of cyclinders to zero. 	 */
+comment|/* 	 * Calculate the number of cylinders this disk must have. If we have 	 * an obvious insanity, we set the number of cylinders to zero. 	 */
 name|o
 operator|=
 name|d
