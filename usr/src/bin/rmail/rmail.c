@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmail.c	4.7 (Berkeley) %G%"
+literal|"@(#)rmail.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,6 +171,8 @@ specifier|register
 name|char
 modifier|*
 name|uf
+init|=
+name|ufrom
 decl_stmt|;
 comment|/* ptr into ufrom */
 name|int
@@ -313,10 +315,6 @@ expr_stmt|;
 name|cp
 operator|=
 name|lbuf
-expr_stmt|;
-name|uf
-operator|=
-name|ufrom
 expr_stmt|;
 for|for
 control|(
