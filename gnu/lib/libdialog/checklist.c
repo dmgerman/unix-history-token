@@ -3190,8 +3190,7 @@ literal|'\r'
 case|:
 if|if
 condition|(
-operator|!
-name|button
+name|ditems
 operator|&&
 name|result
 condition|)
@@ -3279,7 +3278,12 @@ name|DITEM_FAILURE
 condition|)
 continue|continue;
 block|}
-else|else
+block|}
+elseif|else
+if|if
+condition|(
+name|result
+condition|)
 block|{
 operator|*
 name|result
@@ -3327,7 +3331,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
