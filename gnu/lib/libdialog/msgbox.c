@@ -566,7 +566,7 @@ name|width
 operator|/
 literal|2
 operator|-
-literal|4
+literal|6
 argument_list|,
 name|TRUE
 argument_list|)
@@ -1061,7 +1061,7 @@ name|print_button
 argument_list|(
 name|dialog
 argument_list|,
-literal|" OK "
+literal|"  OK  "
 argument_list|,
 name|height
 operator|-
@@ -1071,7 +1071,7 @@ name|width
 operator|/
 literal|2
 operator|-
-literal|2
+literal|6
 argument_list|,
 name|TRUE
 argument_list|)
