@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)at.c	4.8	(Berkeley)	%G%"
+literal|"@(#)at.c	4.9	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -631,6 +637,12 @@ init|=
 literal|"stdin"
 decl_stmt|;
 comment|/* file containing job to be run */
+name|char
+modifier|*
+name|getname
+parameter_list|()
+function_decl|;
+comment|/* get the login name of a user */
 name|FILE
 modifier|*
 name|pwfil
@@ -1104,6 +1116,19 @@ name|fprintf
 argument_list|(
 name|spoolfile
 argument_list|,
+literal|"# owner: %s\n"
+argument_list|,
+name|getname
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|spoolfile
+argument_list|,
 literal|"# jobname: %s\n"
 argument_list|,
 name|jobfile
@@ -1276,7 +1301,7 @@ name|spoolfile
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Close all files and change the mode and the owner of the spoolfile. 	 */
+comment|/* 	 * Close all files and change the mode of the spoolfile. 	 */
 name|fclose
 argument_list|(
 name|inputfile
@@ -1291,18 +1316,7 @@ name|chmod
 argument_list|(
 name|atfile
 argument_list|,
-literal|0644
-argument_list|)
-expr_stmt|;
-name|chown
-argument_list|(
-name|atfile
-argument_list|,
-name|getuid
-argument_list|()
-argument_list|,
-name|getgid
-argument_list|()
+literal|0444
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3092,6 +3106,66 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Get the full login name of a person using his/her user id.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|getname
+parameter_list|(
+name|uid
+parameter_list|)
+name|int
+name|uid
+decl_stmt|;
+block|{
+name|struct
+name|passwd
+modifier|*
+name|pwdinfo
+decl_stmt|;
+comment|/* password info structure */
+if|if
+condition|(
+operator|(
+name|pwdinfo
+operator|=
+name|getpwuid
+argument_list|(
+name|uid
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|pwdinfo
+operator|->
+name|pw_name
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Do general cleanup.  */
+end_comment
+
 begin_macro
 name|cleanup
 argument_list|()
@@ -3131,6 +3205,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Print usage info and exit.  */
+end_comment
 
 begin_macro
 name|usage
