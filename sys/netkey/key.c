@@ -3417,6 +3417,9 @@ return|return
 operator|&
 name|ip4_def_policy
 return|;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|PF_INET6
 case|:
@@ -3440,6 +3443,8 @@ return|return
 operator|&
 name|ip6_def_policy
 return|;
+endif|#
+directive|endif
 default|default:
 name|printf
 argument_list|(
