@@ -798,12 +798,6 @@ operator|->
 name|sa_family
 index|]
 decl_stmt|;
-specifier|register
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
 if|if
 condition|(
 name|rt
@@ -922,17 +916,15 @@ directive|endif
 comment|/* 		 * release references on items we hold them on.. 		 * e.g other routes and ifaddrs. 		 */
 if|if
 condition|(
-operator|(
-name|ifa
-operator|=
 name|rt
 operator|->
 name|rt_ifa
-operator|)
 condition|)
 name|IFAFREE
 argument_list|(
-name|ifa
+name|rt
+operator|->
+name|rt_ifa
 argument_list|)
 expr_stmt|;
 if|if
@@ -941,7 +933,6 @@ name|rt
 operator|->
 name|rt_parent
 condition|)
-block|{
 name|RTFREE
 argument_list|(
 name|rt
@@ -949,7 +940,6 @@ operator|->
 name|rt_parent
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * The key is separatly alloc'd so free it (see rt_setgate()). 		 * This also frees the gateway, as they are always malloc'd 		 * together. 		 */
 name|Free
 argument_list|(
@@ -969,53 +959,17 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
-name|ifafree
+begin_define
+define|#
+directive|define
+name|equal
 parameter_list|(
-name|ifa
+name|a1
+parameter_list|,
+name|a2
 parameter_list|)
-specifier|register
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|ifa
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"ifafree"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_refcnt
-operator|==
-literal|0
-condition|)
-name|free
-argument_list|(
-name|ifa
-argument_list|,
-name|M_IFADDR
-argument_list|)
-expr_stmt|;
-else|else
-name|ifa
-operator|->
-name|ifa_refcnt
-operator|--
-expr_stmt|;
-block|}
-end_function
+value|(bcmp((caddr_t)(a1), (caddr_t)(a2), (a1)->sa_len) == 0)
+end_define
 
 begin_comment
 comment|/*  * Force a routing table entry to the specified  * destination to go through the given gateway.  * Normally called as a result of a routing redirect  * message from the network layer.  *  * N.B.: must be called at splnet  *  */
@@ -1130,15 +1084,6 @@ literal|0UL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the redirect isn't from our current router for this dst, 	 * it's either old or wrong.  If it redirects us to ourselves, 	 * we have a routing loop, perhaps as a result of an interface 	 * going down recently. 	 */
-define|#
-directive|define
-name|equal
-parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
-value|(bcmp((caddr_t)(a1), (caddr_t)(a2), (a1)->sa_len) == 0)
 if|if
 condition|(
 operator|!
@@ -1514,7 +1459,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* * Routing table ioctl interface. */
+comment|/*  * Routing table ioctl interface.  */
 end_comment
 
 begin_function
@@ -1694,10 +1639,10 @@ operator|(
 literal|0
 operator|)
 return|;
+operator|--
 name|rt
 operator|->
 name|rt_refcnt
-operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -2754,10 +2699,10 @@ name|sa_len
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Note that we now have a reference to the ifa. 		 * This moved from below so that rnh->rnh_addaddr() can 		 * examine the ifa and  ifa->ifa_ifp if it so desires. 		 */
+name|IFAREF
+argument_list|(
 name|ifa
-operator|->
-name|ifa_refcnt
-operator|++
+argument_list|)
 expr_stmt|;
 name|rt
 operator|->

@@ -687,8 +687,6 @@ operator|=
 name|aa0
 expr_stmt|;
 block|}
-comment|/*  	     * Don't Add a reference for the aa itself! 	     * I fell into this trap. IFAFREE tests for<=0 	     * not<= 1 like RTFREE 	     */
-comment|/* aa->aa_ifa.ifa_refcnt++; DON'T DO THIS!! */
 name|aa
 operator|=
 name|aa0
@@ -703,6 +701,17 @@ operator|*
 operator|)
 name|aa
 expr_stmt|;
+name|IFA_LOCK_INIT
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
+name|ifa
+operator|->
+name|ifa_refcnt
+operator|=
+literal|1
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -714,12 +723,6 @@ name|ifa
 argument_list|,
 name|ifa_link
 argument_list|)
-expr_stmt|;
-comment|/* 	     * Add a reference for the linking into the ifp_if_addrlist. 	     */
-name|ifa
-operator|->
-name|ifa_refcnt
-operator|++
 expr_stmt|;
 comment|/* 	     * As the at_ifaddr contains the actual sockaddrs, 	     * and the ifaddr itself, link them al together correctly. 	     */
 name|ifa

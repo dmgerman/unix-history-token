@@ -1207,6 +1207,10 @@ name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
+name|struct
+name|mtx
+name|ifa_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1231,6 +1235,47 @@ define|#
 directive|define
 name|ifa_list
 value|ifa_link
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFA_LOCK_INIT
+parameter_list|(
+name|ifa
+parameter_list|)
+define|\
+value|mtx_init(&(ifa)->ifa_mtx, "ifaddr", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFA_LOCK
+parameter_list|(
+name|ifa
+parameter_list|)
+value|mtx_lock(&(ifa)->ifa_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFA_UNLOCK
+parameter_list|(
+name|ifa
+parameter_list|)
+value|mtx_unlock(&(ifa)->ifa_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFA_DESTROY
+parameter_list|(
+name|ifa
+parameter_list|)
+value|mtx_destroy(&(ifa)->ifa_mtx)
 end_define
 
 begin_comment
@@ -1332,7 +1377,18 @@ parameter_list|(
 name|ifa
 parameter_list|)
 define|\
-value|do { \ 		if ((ifa)->ifa_refcnt<= 0) \ 			ifafree(ifa); \ 		else \ 			(ifa)->ifa_refcnt--; \ 	} while (0)
+value|do {					\ 		IFA_LOCK(ifa);			\ 		if ((ifa)->ifa_refcnt == 0) {	\ 			IFA_DESTROY(ifa);	\ 			free(ifa, M_IFADDR);	\ 		} else {			\ 			--(ifa)->ifa_refcnt;	\ 			IFA_UNLOCK(ifa);	\ 		}				\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFAREF
+parameter_list|(
+name|ifa
+parameter_list|)
+define|\
+value|do {					\ 		IFA_LOCK(ifa);			\ 		++(ifa)->ifa_refcnt;		\ 		IFA_UNLOCK(ifa);		\ 	} while (0)
 end_define
 
 begin_struct
@@ -1804,17 +1860,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ifafree
-parameter_list|(
-name|struct
-name|ifaddr
 modifier|*
 parameter_list|)
 function_decl|;

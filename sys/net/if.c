@@ -2095,6 +2095,11 @@ condition|(
 name|ifa
 condition|)
 block|{
+name|IFA_LOCK_INIT
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 name|sdl
 operator|=
 operator|(
@@ -2233,6 +2238,12 @@ name|namelen
 index|]
 operator|=
 literal|0xff
+expr_stmt|;
+name|ifa
+operator|->
+name|ifa_refcnt
+operator|=
+literal|1
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -3889,6 +3900,19 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|equal
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|(bcmp((caddr_t)(a1), (caddr_t)(a2), ((struct sockaddr *)(a1))->sa_len) == 0)
+end_define
+
 begin_comment
 comment|/*  * Locate an interface based on a complete address.  */
 end_comment
@@ -3921,16 +3945,6 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-define|#
-directive|define
-name|equal
-parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
-define|\
-value|(bcmp((caddr_t)(a1), (caddr_t)(a2), ((struct sockaddr *)(a1))->sa_len) == 0)
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -4838,16 +4852,17 @@ operator|->
 name|rt_ifa
 argument_list|)
 expr_stmt|;
+name|IFAREF
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 name|rt
 operator|->
 name|rt_ifa
 operator|=
 name|ifa
-expr_stmt|;
-name|ifa
-operator|->
-name|ifa_refcnt
-operator|++
 expr_stmt|;
 if|if
 condition|(

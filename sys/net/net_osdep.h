@@ -84,20 +84,6 @@ name|if_list
 value|if_link
 end_define
 
-begin_comment
-comment|/* sys/net/if.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFAREF
-parameter_list|(
-name|ifa
-parameter_list|)
-value|do { ++(ifa)->ifa_refcnt; } while (0)
-end_define
-
 begin_define
 define|#
 directive|define

@@ -3500,6 +3500,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the address and masks */
+name|IFA_LOCK_INIT
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|ia
 operator|->
 name|ia_ifa
@@ -3641,6 +3649,14 @@ else|else
 name|in6_ifaddr
 operator|=
 name|ia
+expr_stmt|;
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_refcnt
+operator|=
+literal|1
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
