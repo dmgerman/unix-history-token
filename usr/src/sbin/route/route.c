@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	8.2 (Berkeley) %G%"
+literal|"@(#)route.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2816,6 +2816,14 @@ case|:
 name|flags
 operator||=
 name|RTF_REJECT
+expr_stmt|;
+break|break;
+case|case
+name|K_BLACKHOLE
+case|:
+name|flags
+operator||=
+name|RTF_BLACKHOLE
 expr_stmt|;
 break|break;
 case|case
