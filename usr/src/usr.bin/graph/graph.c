@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)graph.c	4.5 (Berkeley) %G%"
+literal|"@(#)graph.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,7 +94,7 @@ name|xqf
 decl_stmt|;
 comment|/*flag:explicit quantum*/
 name|double
-specifier|const
+name|__pure
 function_decl|(
 modifier|*
 name|xf
@@ -165,7 +165,7 @@ end_struct
 begin_decl_stmt
 name|char
 modifier|*
-name|labs
+name|labels
 decl_stmt|;
 end_decl_stmt
 
@@ -348,6 +348,7 @@ end_function_decl
 
 begin_function
 name|double
+name|__pure
 name|ident
 parameter_list|(
 name|x
@@ -429,14 +430,14 @@ name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|labs
+name|labels
 operator|=
 name|malloc
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|labs
+name|labels
 index|[
 name|labsiz
 operator|++
@@ -1632,7 +1633,7 @@ name|temp
 operator|=
 name|realloc
 argument_list|(
-name|labs
+name|labels
 argument_list|,
 call|(
 name|unsigned
@@ -1657,7 +1658,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|labs
+name|labels
 operator|=
 name|temp
 expr_stmt|;
@@ -1678,7 +1679,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|labs
+name|labels
 index|[
 name|labsiz
 operator|++
@@ -4042,7 +4043,7 @@ name|k
 operator|>=
 literal|0
 condition|?
-name|labs
+name|labels
 operator|+
 name|k
 else|:
