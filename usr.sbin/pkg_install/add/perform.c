@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*/F  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the main body of the add module.  *  */
+comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the main body of the add module.  *  */
 end_comment
 
 begin_include
@@ -373,7 +373,7 @@ block|}
 comment|/* Nope - do it now */
 else|else
 block|{
-comment|/* Is it an ftp://foo.bar.baz/file.tgz specification? */
+comment|/* Is it an ftp://foo.bar.baz/file.t[bg]z specification? */
 if|if
 condition|(
 name|isURL
@@ -1175,13 +1175,14 @@ literal|"PKG_ADD_BASE"
 argument_list|)
 condition|)
 block|{
+comment|/* XXX: need to handle .tgz also */
 name|snprintf
 argument_list|(
 name|path
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"%s/%s.tgz"
+literal|"%s/%s.tbz"
 argument_list|,
 name|getenv
 argument_list|(
