@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	8.1 (Berkeley) %G%"
+literal|"@(#)inet.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1322,14 +1322,14 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
-name|ips_tooshort
+name|ips_toosmall
 argument_list|,
 literal|"\t%u with size smaller than minimum\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
-name|ips_toosmall
+name|ips_tooshort
 argument_list|,
 literal|"\t%u with data size< data length\n"
 argument_list|)
