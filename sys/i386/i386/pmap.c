@@ -2862,13 +2862,11 @@ name|pte
 operator|=
 name|npte
 expr_stmt|;
-comment|/*if (opte)*/
 name|invltlb_1pg
 argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* XXX what about SMP? */
 block|}
 end_function
 
@@ -2913,7 +2911,6 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* XXX what about SMP? */
 block|}
 end_function
 
