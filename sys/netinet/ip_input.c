@@ -1955,6 +1955,8 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|fw_enable
+operator|&&
 name|ip_fw_chk_ptr
 condition|)
 block|{

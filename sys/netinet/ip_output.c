@@ -682,7 +682,7 @@ operator|==
 name|MT_DUMMYNET
 condition|)
 block|{
-comment|/*              * the packet was already tagged, so part of the              * processing was already done, and we need to go down.              * * Get parameters from the header.              */
+comment|/*              * the packet was already tagged, so part of the              * processing was already done, and we need to go down.              * Get parameters from the header.              */
 name|rule
 operator|=
 operator|(
@@ -1899,6 +1899,8 @@ directive|endif
 comment|/* 	 * Check with the firewall... 	 */
 if|if
 condition|(
+name|fw_enable
+operator|&&
 name|ip_fw_chk_ptr
 condition|)
 block|{
