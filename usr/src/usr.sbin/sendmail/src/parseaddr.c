@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.26 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -651,6 +651,24 @@ name|a
 operator|->
 name|q_mailer
 decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|24
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"allocaddr(copyf=%d, paddr=%s)\n"
+argument_list|,
+name|copyf
+argument_list|,
+name|paddr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|copyf
@@ -5645,14 +5663,6 @@ operator||=
 name|QNOTREMOTE
 expr_stmt|;
 block|}
-comment|/* rewrite according recipient mailer rewriting rules */
-name|rewrite
-argument_list|(
-name|tv
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m
