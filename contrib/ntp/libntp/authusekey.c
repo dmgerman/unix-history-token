@@ -76,12 +76,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MD5
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -89,16 +83,11 @@ name|KEY_TYPE_MD5
 value|4
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|authusekey
 parameter_list|(
-name|u_long
+name|keyid_t
 name|keyno
 parameter_list|,
 name|int
@@ -533,9 +522,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MD5
 case|case
 name|KEY_TYPE_MD5
 case|:
@@ -560,8 +546,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 comment|/* Oh, well */
 return|return

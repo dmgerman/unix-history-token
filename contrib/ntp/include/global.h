@@ -97,6 +97,22 @@ begin_comment
 comment|/* local modification */
 end_comment
 
+begin_comment
+comment|/* BYTE defines a unsigned character */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|BYTE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* local modification for RSAEuro */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef

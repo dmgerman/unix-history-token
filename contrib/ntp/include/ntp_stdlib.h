@@ -210,58 +210,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* HMS: These seem to be unused now */
-end_comment
-
-begin_endif
-unit|extern	void	auth_des	P((u_long *, u_char *)); extern	void	auth_delkeys	P((void)); extern	int	auth_parity	P((u_long *)); extern	void	auth_setkey	P((u_long, u_long *)); extern	void	auth_subkeys	P((u_long *, u_char *, u_char *));
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|auth1crypt
-name|P
-argument_list|(
-operator|(
-name|u_long
-operator|,
-name|u_int32
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|auth2crypt
-name|P
-argument_list|(
-operator|(
-name|u_long
-operator|,
-name|u_int32
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -282,7 +230,7 @@ name|auth_havekey
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|keyid_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -295,7 +243,7 @@ name|authdecrypt
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|keyid_t
 operator|,
 name|u_int32
 operator|*
@@ -315,7 +263,7 @@ name|authencrypt
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|keyid_t
 operator|,
 name|u_int32
 operator|*
@@ -333,7 +281,7 @@ name|authhavekey
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|keyid_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -346,7 +294,7 @@ name|authistrusted
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|keyid_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -374,9 +322,9 @@ name|authtrust
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|keyid_t
 operator|,
-name|int
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -389,7 +337,7 @@ name|authusekey
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|keyid_t
 operator|,
 name|int
 operator|,
@@ -603,7 +551,7 @@ name|auth_findkey
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|keyid_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -692,7 +640,7 @@ name|DESauth_setkey
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|keyid_t
 operator|,
 specifier|const
 name|u_int32
@@ -763,12 +711,6 @@ begin_comment
 comment|/* DES */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MD5
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -816,7 +758,7 @@ name|MD5auth_setkey
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|keyid_t
 operator|,
 specifier|const
 name|u_char
@@ -828,34 +770,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|session_key
-name|P
-argument_list|(
-operator|(
-name|u_int32
-operator|,
-name|u_int32
-operator|,
-name|u_long
-operator|,
-name|u_long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MD5 */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1421,7 +1335,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|keyid_t
 name|cache_keyid
 decl_stmt|;
 end_decl_stmt
@@ -1551,17 +1465,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* adj sysclock in 10ms increments */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|sys_maxfreq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* max frequency correction */
 end_comment
 
 begin_comment

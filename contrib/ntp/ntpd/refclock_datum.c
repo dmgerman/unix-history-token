@@ -41,24 +41,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -84,6 +66,18 @@ begin_include
 include|#
 directive|include
 file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_if
@@ -202,30 +196,6 @@ begin_comment
 comment|/* STREAM */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|WWVBPPS
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ppsclock.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* WWVBPPS */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -251,7 +221,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PTSPRECISION
+name|PRECISION
 value|(-10)
 end_define
 
@@ -262,7 +232,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DATMREFID
+name|REFID
 value|"DATM"
 end_define
 
@@ -909,6 +879,34 @@ operator|->
 name|PTS_fd
 argument_list|)
 expr_stmt|;
+name|peer
+operator|->
+name|precision
+operator|=
+name|PRECISION
+expr_stmt|;
+name|pp
+operator|->
+name|clockdesc
+operator|=
+name|DESCRIPTION
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|pp
+operator|->
+name|refid
+argument_list|,
+name|REFID
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1007,34 +1005,6 @@ return|return
 literal|0
 return|;
 block|}
-name|peer
-operator|->
-name|precision
-operator|=
-name|PTSPRECISION
-expr_stmt|;
-name|peer
-operator|->
-name|stratum
-operator|=
-literal|0
-expr_stmt|;
-name|memcpy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|peer
-operator|->
-name|refid
-argument_list|,
-name|DATMREFID
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
 comment|/* 	** Now add one to the number of units and return a successful code 	*/
 name|nunits
 operator|++
@@ -1338,7 +1308,7 @@ name|int
 name|i
 decl_stmt|;
 name|int
-name|index
+name|unit_index
 decl_stmt|;
 name|int
 name|error_code
@@ -1363,7 +1333,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	** Find the right unit and send out a time request once it is found. 	*/
-name|index
+name|unit_index
 operator|=
 operator|-
 literal|1
@@ -1394,7 +1364,7 @@ operator|==
 name|unit
 condition|)
 block|{
-name|index
+name|unit_index
 operator|=
 name|i
 expr_stmt|;
@@ -1441,7 +1411,7 @@ block|}
 comment|/* 	** Print out an error message if we could not find the right unit. 	*/
 if|if
 condition|(
-name|index
+name|unit_index
 operator|==
 operator|-
 literal|1

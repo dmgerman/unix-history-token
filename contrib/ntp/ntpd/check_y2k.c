@@ -31,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"ntpd.h"
 end_include
 
 begin_ifdef
@@ -141,12 +141,6 @@ end_endif
 begin_comment
 comment|/* HAVE_SYS_IOCTL_H */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
 
 begin_if
 if|#
@@ -413,12 +407,6 @@ begin_comment
 comment|/* SYS_DOMAINOS */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"ntpd.h"
-end_include
-
 begin_comment
 comment|/* } end definitions lifted from ntpd.c */
 end_comment
@@ -446,6 +434,7 @@ value|(((Year)%4 || (!((Year)%100)&& (Year)%400)) ? 0 : 13 )
 end_define
 
 begin_decl_stmt
+specifier|volatile
 name|int
 name|debug
 init|=

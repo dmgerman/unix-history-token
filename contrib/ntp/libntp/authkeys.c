@@ -99,9 +99,6 @@ decl_stmt|;
 comment|/* DES key */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MD5
 name|u_char
 name|MD5_key
 index|[
@@ -109,12 +106,10 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* MD5 key */
-endif|#
-directive|endif
 block|}
 name|k
 union|;
-name|u_long
+name|keyid_t
 name|keyid
 decl_stmt|;
 comment|/* key identifier */
@@ -126,15 +121,10 @@ name|u_long
 name|lifetime
 decl_stmt|;
 comment|/* remaining lifetime */
-ifdef|#
-directive|ifdef
-name|MD5
 name|int
 name|keylen
 decl_stmt|;
 comment|/* key length */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -325,7 +315,7 @@ comment|/*  * The key cache. We cache the last key we looked at here.  */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|keyid_t
 name|cache_keyid
 decl_stmt|;
 end_decl_stmt
@@ -404,7 +394,7 @@ name|savekey
 modifier|*
 name|auth_findkey
 parameter_list|(
-name|u_long
+name|keyid_t
 name|keyno
 parameter_list|)
 block|{
@@ -466,7 +456,7 @@ begin_function
 name|int
 name|auth_havekey
 parameter_list|(
-name|u_long
+name|keyid_t
 name|keyno
 parameter_list|)
 block|{
@@ -545,7 +535,7 @@ begin_function
 name|int
 name|authhavekey
 parameter_list|(
-name|u_long
+name|keyid_t
 name|keyno
 parameter_list|)
 block|{
@@ -658,9 +648,6 @@ name|sk
 operator|->
 name|flags
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MD5
 if|if
 condition|(
 name|sk
@@ -690,8 +677,6 @@ literal|1
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DES
@@ -826,10 +811,10 @@ begin_function
 name|void
 name|authtrust
 parameter_list|(
-name|u_long
+name|keyid_t
 name|keyno
 parameter_list|,
-name|int
+name|u_long
 name|trust
 parameter_list|)
 block|{
@@ -845,15 +830,12 @@ if|if
 condition|(
 name|debug
 operator|>
-literal|1
+literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"authtrust: keyid %08lx life %d\n"
+literal|"authtrust: keyid %08x life %lu\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|keyno
 argument_list|,
 name|trust
@@ -1126,7 +1108,7 @@ begin_function
 name|int
 name|authistrusted
 parameter_list|(
-name|u_long
+name|keyid_t
 name|keyno
 parameter_list|)
 block|{
@@ -1248,7 +1230,7 @@ begin_function
 name|void
 name|DESauth_setkey
 parameter_list|(
-name|u_long
+name|keyid_t
 name|keyno
 parameter_list|,
 specifier|const
@@ -1456,17 +1438,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MD5
-end_ifdef
-
 begin_function
 name|void
 name|MD5auth_setkey
 parameter_list|(
-name|u_long
+name|keyid_t
 name|keyno
 parameter_list|,
 specifier|const
@@ -1741,11 +1717,6 @@ return|return;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * auth_delkeys - delete all known keys, in preparation for rereading  *		  the keys file (presumably)  */
 end_comment
@@ -1849,17 +1820,12 @@ name|lifetime
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MD5
 name|sk
 operator|->
 name|keylen
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|sk
 operator|=
 name|sk
@@ -2028,7 +1994,7 @@ begin_function
 name|int
 name|authencrypt
 parameter_list|(
-name|u_long
+name|keyid_t
 name|keyno
 parameter_list|,
 name|u_int32
@@ -2050,9 +2016,6 @@ operator|/
 literal|4
 index|]
 operator|=
-operator|(
-name|u_long
-operator|)
 name|htonl
 argument_list|(
 name|keyno
@@ -2107,9 +2070,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MD5
 if|if
 condition|(
 name|cache_flags
@@ -2128,8 +2088,6 @@ name|length
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2146,7 +2104,7 @@ begin_function
 name|int
 name|authdecrypt
 parameter_list|(
-name|u_long
+name|keyid_t
 name|keyno
 parameter_list|,
 name|u_int32
@@ -2172,7 +2130,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 if|if
@@ -2217,9 +2175,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MD5
 if|if
 condition|(
 name|cache_flags
@@ -2240,8 +2195,6 @@ name|size
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0

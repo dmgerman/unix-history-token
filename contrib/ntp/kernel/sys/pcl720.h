@@ -260,7 +260,7 @@ parameter_list|,
 name|Cntr
 parameter_list|)
 define|\
-value|({	register unsigned int	b = Base, c = Cntr, v; \ 		i8253_ctrl ctrl; \ 		\ 		ctrl.s.rl = i8253_latch; \ 		ctrl.s.cntr = i8253_cntr_0; \ 		pcl720_outb(pcl720_ctrl(b), ctrl.i); \ 		v = pcl720_inb(pcl720_cntr_0(b)); \ 		v |= (pcl720_inb(pcl720_cntr_0(b))<< 8); \ 		v; \ 	})
+value|({	register unsigned int	b = Base, v; \ 		i8253_ctrl ctrl; \ 		\ 		ctrl.s.rl = i8253_latch; \ 		ctrl.s.cntr = i8253_cntr_0; \ 		pcl720_outb(pcl720_ctrl(b), ctrl.i); \ 		v = pcl720_inb(pcl720_cntr_0(b)); \ 		v |= (pcl720_inb(pcl720_cntr_0(b))<< 8); \ 		v; \ 	})
 end_define
 
 begin_define

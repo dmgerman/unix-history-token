@@ -23,13 +23,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"ntp_types.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"l_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_ifdef
@@ -52,18 +58,6 @@ end_endif
 begin_comment
 comment|/* HAVE_UNISTD_H */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"ntp_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"l_stdlib.h"
-end_include
 
 begin_ifdef
 ifdef|#
@@ -418,12 +412,6 @@ end_comment
 begin_comment
 comment|/* was defined(SYS_AUX3) || defined(SYS_AUX2) */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
 
 begin_include
 include|#

@@ -2315,6 +2315,7 @@ block|}
 return|return
 operator|(
 name|unsigned
+name|long
 operator|)
 operator|~
 literal|0

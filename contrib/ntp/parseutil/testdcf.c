@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -25,24 +31,6 @@ begin_include
 include|#
 directive|include
 file|<termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_stdlib.h"
 end_include
 
 begin_comment

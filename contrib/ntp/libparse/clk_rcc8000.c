@@ -42,18 +42,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_fp.h"
 end_include
 
@@ -585,16 +573,13 @@ argument_list|(
 name|DD_PARSE
 argument_list|,
 operator|(
-literal|"inp_rcc8000(0x%x, 0x%x, ...)\n"
+literal|"inp_rcc8000(0x%lx, 0x%x, ...)\n"
 operator|,
 operator|(
-name|int
+name|long
 operator|)
 name|parseio
 operator|,
-operator|(
-name|int
-operator|)
 name|ch
 operator|)
 argument_list|)

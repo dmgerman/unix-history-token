@@ -23,36 +23,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -79,6 +49,57 @@ include|#
 directive|include
 file|"ntp_stdlib.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PUBKEY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ntp_crypto.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PUBKEY */
+end_comment
 
 begin_comment
 comment|/*  * Structure to hold request procedure information  */
@@ -132,7 +153,7 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* routine to handle request */
+comment|/* handle request */
 block|}
 struct|;
 end_struct
@@ -722,7 +743,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * System variable values.	The array can be indexed by  * the variable index to find the textual name.  */
+comment|/*  * System variable values. The array can be indexed by the variable  * index to find the textual name.  */
 end_comment
 
 begin_decl_stmt
@@ -837,7 +858,7 @@ name|CS_OFFSET
 block|,
 name|RO
 block|,
-literal|"phase"
+literal|"offset"
 block|}
 block|,
 comment|/* 11 */
@@ -851,7 +872,7 @@ block|}
 block|,
 comment|/* 12 */
 block|{
-name|CS_COMPLIANCE
+name|CS_JITTER
 block|,
 name|RO
 block|,
@@ -887,6 +908,15 @@ block|}
 block|,
 comment|/* 16 */
 block|{
+name|CS_VERSION
+block|,
+name|RO
+block|,
+literal|"version"
+block|}
+block|,
+comment|/* 17 */
+block|{
 name|CS_STABIL
 block|,
 name|RO
@@ -894,7 +924,7 @@ block|,
 literal|"stability"
 block|}
 block|,
-comment|/* 17 */
+comment|/* 18 */
 block|{
 name|CS_VARLIST
 block|,
@@ -903,7 +933,85 @@ block|,
 literal|"sys_var_list"
 block|}
 block|,
-comment|/* 18 */
+comment|/* 19 */
+ifdef|#
+directive|ifdef
+name|PUBKEY
+block|{
+name|CS_FLAGS
+block|,
+name|RO
+block|,
+literal|"flags"
+block|}
+block|,
+comment|/* 20 */
+block|{
+name|CS_HOST
+block|,
+name|RO
+block|,
+literal|"hostname"
+block|}
+block|,
+comment|/* 21 */
+block|{
+name|CS_PUBLIC
+block|,
+name|RO
+block|,
+literal|"publickey"
+block|}
+block|,
+comment|/* 22 */
+block|{
+name|CS_CERTIF
+block|,
+name|RO
+block|,
+literal|"certificate"
+block|}
+block|,
+comment|/* 23 */
+block|{
+name|CS_DHPARAMS
+block|,
+name|RO
+block|,
+literal|"params"
+block|}
+block|,
+comment|/* 24 */
+block|{
+name|CS_REVTIME
+block|,
+name|RO
+block|,
+literal|"refresh"
+block|}
+block|,
+comment|/* 25 */
+block|{
+name|CS_LEAPTAB
+block|,
+name|RO
+block|,
+literal|"leapseconds"
+block|}
+block|,
+comment|/* 26 */
+block|{
+name|CS_TAI
+block|,
+name|RO
+block|,
+literal|"tai"
+block|}
+block|,
+comment|/* 27 */
+endif|#
+directive|endif
+comment|/* PUBKEY */
 block|{
 literal|0
 block|,
@@ -911,6 +1019,7 @@ name|EOV
 block|,
 literal|""
 block|}
+comment|/* 28 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -932,7 +1041,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * System variables we print by default (in fuzzball order, more-or-less)  */
+comment|/*  * System variables we print by default (in fuzzball order,  * more-or-less)  */
 end_comment
 
 begin_decl_stmt
@@ -942,6 +1051,8 @@ name|def_sys_var
 index|[]
 init|=
 block|{
+name|CS_VERSION
+block|,
 name|CS_PROCESSOR
 block|,
 name|CS_SYSTEM
@@ -972,10 +1083,28 @@ name|CS_OFFSET
 block|,
 name|CS_DRIFT
 block|,
-name|CS_COMPLIANCE
+name|CS_JITTER
 block|,
 name|CS_STABIL
 block|,
+ifdef|#
+directive|ifdef
+name|PUBKEY
+name|CS_FLAGS
+block|,
+name|CS_HOST
+block|,
+name|CS_CERTIF
+block|,
+name|CS_DHPARAMS
+block|,
+name|CS_REVTIME
+block|,
+name|CS_LEAPTAB
+block|,
+endif|#
+directive|endif
+comment|/* PUBKEY */
 literal|0
 block|}
 decl_stmt|;
@@ -1196,7 +1325,7 @@ name|CP_VALID
 block|,
 name|RO
 block|,
-literal|"valid"
+literal|"unreach"
 block|}
 block|,
 comment|/* 22 */
@@ -1318,14 +1447,23 @@ block|}
 block|,
 comment|/* 35 */
 block|{
-name|CP_DISP
+name|CP_TTL
 block|,
-name|PADDING
+name|RO
 block|,
-literal|""
+literal|"ttl"
 block|}
 block|,
 comment|/* 36 */
+block|{
+name|CP_TTLMAX
+block|,
+name|RO
+block|,
+literal|"ttlmax"
+block|}
+block|,
+comment|/* 37 */
 block|{
 name|CP_VARLIST
 block|,
@@ -1334,7 +1472,94 @@ block|,
 literal|"peer_var_list"
 block|}
 block|,
-comment|/* 37 */
+comment|/* 38 */
+ifdef|#
+directive|ifdef
+name|PUBKEY
+block|{
+name|CP_FLAGS
+block|,
+name|RO
+block|,
+literal|"flags"
+block|}
+block|,
+comment|/* 38 */
+block|{
+name|CP_HOST
+block|,
+name|RO
+block|,
+literal|"hostname"
+block|}
+block|,
+comment|/* 39 */
+block|{
+name|CP_PUBLIC
+block|,
+name|RO
+block|,
+literal|"publickey"
+block|}
+block|,
+comment|/* 40 */
+block|{
+name|CP_CERTIF
+block|,
+name|RO
+block|,
+literal|"certificate"
+block|}
+block|,
+comment|/* 41 */
+block|{
+name|CP_SESKEY
+block|,
+name|RO
+block|,
+literal|"pcookie"
+block|}
+block|,
+comment|/* 42 */
+block|{
+name|CP_SASKEY
+block|,
+name|RO
+block|,
+literal|"hcookie"
+block|}
+block|,
+comment|/* 43 */
+block|{
+name|CP_INITSEQ
+block|,
+name|RO
+block|,
+literal|"initsequence"
+block|}
+block|,
+comment|/* 44 */
+block|{
+name|CP_INITKEY
+block|,
+name|RO
+block|,
+literal|"initkey"
+block|}
+block|,
+comment|/* 45 */
+block|{
+name|CP_INITTSP
+block|,
+name|RO
+block|,
+literal|"timestamp"
+block|}
+block|,
+comment|/* 46 */
+endif|#
+directive|endif
+comment|/* PUBKEY */
 block|{
 literal|0
 block|,
@@ -1342,6 +1567,7 @@ name|EOV
 block|,
 literal|""
 block|}
+comment|/* 47 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1365,7 +1591,7 @@ name|CP_DSTADR
 block|,
 name|CP_DSTPORT
 block|,
-name|CP_KEYID
+name|CP_LEAP
 block|,
 name|CP_STRATUM
 block|,
@@ -1376,16 +1602,6 @@ block|,
 name|CP_ROOTDISPERSION
 block|,
 name|CP_REFID
-block|,
-name|CP_REFTIME
-block|,
-name|CP_DELAY
-block|,
-name|CP_OFFSET
-block|,
-name|CP_JITTER
-block|,
-name|CP_DISPERSION
 block|,
 name|CP_REACH
 block|,
@@ -1399,9 +1615,23 @@ name|CP_HPOLL
 block|,
 name|CP_PPOLL
 block|,
-name|CP_LEAP
-block|,
 name|CP_FLASH
+block|,
+name|CP_KEYID
+block|,
+name|CP_TTL
+block|,
+name|CP_TTLMAX
+block|,
+name|CP_OFFSET
+block|,
+name|CP_DELAY
+block|,
+name|CP_DISPERSION
+block|,
+name|CP_JITTER
+block|,
+name|CP_REFTIME
 block|,
 name|CP_ORG
 block|,
@@ -1415,6 +1645,22 @@ name|CP_FILTOFFSET
 block|,
 name|CP_FILTERROR
 block|,
+ifdef|#
+directive|ifdef
+name|PUBKEY
+name|CP_FLAGS
+block|,
+name|CP_HOST
+block|,
+name|CP_CERTIF
+block|,
+name|CP_SESKEY
+block|,
+name|CP_INITSEQ
+block|,
+endif|#
+directive|endif
+comment|/* PUBKEY */
 literal|0
 block|}
 decl_stmt|;
@@ -1571,6 +1817,7 @@ name|EOV
 block|,
 literal|""
 block|}
+comment|/* 14 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1590,7 +1837,7 @@ name|CC_DEVICE
 block|,
 name|CC_TYPE
 block|,
-comment|/* won't be output if device= known */
+comment|/* won't be output if device = known */
 name|CC_TIMECODE
 block|,
 name|CC_POLL
@@ -1622,7 +1869,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * System and processor definitions.  These will change for the gizmo board.  */
+comment|/*  * System and processor definitions.  */
 end_comment
 
 begin_ifndef
@@ -1716,7 +1963,7 @@ comment|/* HAVE_UNAME */
 end_comment
 
 begin_comment
-comment|/*  * Trap structures.  We only allow a few of these, and send  * a copy of each async message to each live one.  Traps time  * out after an hour, it is up to the trap receipient to  * keep resetting it to avoid being timed out.  */
+comment|/*  * Trap structures. We only allow a few of these, and send a copy of  * each async message to each live one. Traps time out after an hour, it  * is up to the trap receipient to keep resetting it to avoid being  * timed out.  */
 end_comment
 
 begin_comment
@@ -1777,7 +2024,7 @@ comment|/* nonpriority trap */
 end_comment
 
 begin_comment
-comment|/*  * List relating reference clock types to control message time sources.  * Index by the reference clock type.  * This list will only be used iff the reference clock driver doesn't  * set peer->sstclktype to something different than CTL_SST_TS_UNSPEC.  */
+comment|/*  * List relating reference clock types to control message time sources.  * Index by the reference clock type. This list will only be used iff  * the reference clock driver doesn't set peer->sstclktype to something  * different than CTL_SST_TS_UNSPEC.  */
 end_comment
 
 begin_decl_stmt
@@ -1897,10 +2144,16 @@ block|,
 comment|/* REFCLK_PCF (35) */
 name|CTL_SST_TS_LF
 block|,
-comment|/* REFCLK_WWW (36) */
+comment|/* REFCLK_WWV (36) */
 name|CTL_SST_TS_LF
 block|,
 comment|/* REFCLK_FG (37) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_HOPF_SERIAL (38) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_HOPF_PCI (39) */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1910,7 +2163,7 @@ comment|/*  * Keyid used for authenticating write requests.  */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|keyid_t
 name|ctl_auth_keyid
 decl_stmt|;
 end_decl_stmt
@@ -2088,7 +2341,7 @@ comment|/* number of async messages we've sent */
 end_comment
 
 begin_comment
-comment|/*  * Response packet used by these routines.	Also some state information  * so that we can handle packet formatting within a common set of  * subroutines.  Note we try to enter data in place whenever possible,  * but the need to set the more bit correctly means we occasionally  * use the extra buffer and copy.  */
+comment|/*  * Response packet used by these routines. Also some state information  * so that we can handle packet formatting within a common set of  * subroutines.  Note we try to enter data in place whenever possible,  * but the need to set the more bit correctly means we occasionally  * use the extra buffer and copy.  */
 end_comment
 
 begin_decl_stmt
@@ -2115,7 +2368,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_short
+name|associd_t
 name|res_associd
 decl_stmt|;
 end_decl_stmt
@@ -2191,7 +2444,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|keyid_t
 name|res_keyid
 decl_stmt|;
 end_decl_stmt
@@ -2335,7 +2588,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * fill in the fields.	We assume rpkt.sequence and rpkt.associd 	 * have already been filled in. 	 */
+comment|/* 	 * Fill in the fields. We assume rpkt.sequence and rpkt.associd 	 * have already been filled in. 	 */
 name|rpkt
 operator|.
 name|r_m_e_op
@@ -2531,7 +2784,7 @@ if|if
 condition|(
 name|debug
 operator|>
-literal|1
+literal|2
 condition|)
 name|printf
 argument_list|(
@@ -2709,7 +2962,7 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Pull enough data from the packet to make intelligent responses 	 */
+comment|/* 	 * Pull enough data from the packet to make intelligent 	 * responses 	 */
 name|rpkt
 operator|.
 name|li_vn_mode
@@ -2818,7 +3071,7 @@ name|CTL_MAX_DATA_LEN
 index|]
 operator|)
 expr_stmt|;
-comment|/* 	 * We're set up now.  Make sure we've got at least 	 * enough incoming data space to match the count. 	 */
+comment|/* 	 * We're set up now. Make sure we've got at least enough 	 * incoming data space to match the count. 	 */
 name|req_data
 operator|=
 name|rbufp
@@ -2862,7 +3115,7 @@ name|DEBUG
 if|if
 condition|(
 name|debug
-operator|>=
+operator|>
 literal|2
 operator|&&
 operator|(
@@ -2966,12 +3219,12 @@ name|DEBUG
 if|if
 condition|(
 name|debug
-operator|>=
-literal|3
+operator|>
+literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"recv_len %d, properlen %d, wants auth with keyid %ld, MAC length=%d\n"
+literal|"recv_len %d, properlen %d, wants auth with keyid %08x, MAC length=%d\n"
 argument_list|,
 name|rbufp
 operator|->
@@ -3001,12 +3254,12 @@ name|DEBUG
 if|if
 condition|(
 name|debug
-operator|>=
+operator|>
 literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"invalid keyid %lu\n"
+literal|"invalid keyid %08x\n"
 argument_list|,
 name|res_keyid
 argument_list|)
@@ -3043,8 +3296,8 @@ name|DEBUG
 if|if
 condition|(
 name|debug
-operator|>=
-literal|3
+operator|>
+literal|2
 condition|)
 name|printf
 argument_list|(
@@ -3066,8 +3319,8 @@ name|DEBUG
 if|if
 condition|(
 name|debug
-operator|>=
-literal|3
+operator|>
+literal|2
 condition|)
 name|printf
 argument_list|(
@@ -3131,7 +3384,7 @@ name|DEBUG
 if|if
 condition|(
 name|debug
-operator|>=
+operator|>
 literal|2
 condition|)
 name|printf
@@ -3684,7 +3937,7 @@ name|totlen
 init|=
 name|sendlen
 decl_stmt|;
-name|u_long
+name|keyid_t
 name|keyid
 init|=
 name|htonl
@@ -3692,7 +3945,7 @@ argument_list|(
 name|res_keyid
 argument_list|)
 decl_stmt|;
-comment|/* 			 *	If we are going to authenticate, then there is 			 *	an additional requirement that the MAC begin on 			 *	a 64 bit boundary. 			 */
+comment|/* 			 * If we are going to authenticate, then there 			 * is an additional requirement that the MAC 			 * begin on a 64 bit boundary. 			 */
 while|while
 condition|(
 name|totlen
@@ -3814,7 +4067,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ctl_putdata - write data into the packet, fragmenting and  *		 starting another if this one is full.  */
+comment|/*  * ctl_putdata - write data into the packet, fragmenting and starting  * another if this one is full.  */
 end_comment
 
 begin_function
@@ -5039,7 +5292,7 @@ name|HAVE_UNAME
 name|char
 name|str
 index|[
-literal|50
+literal|256
 index|]
 decl_stmt|;
 endif|#
@@ -5299,18 +5552,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CS_COMPLIANCE
+name|CS_JITTER
 case|:
 name|ctl_putdbl
 argument_list|(
 name|sys_var
 index|[
-name|CS_COMPLIANCE
+name|CS_JITTER
 index|]
 operator|.
 name|text
 argument_list|,
-name|sys_error
+name|sys_jitter
 operator|*
 literal|1e3
 argument_list|)
@@ -5464,6 +5717,27 @@ directive|endif
 comment|/* HAVE_UNAME */
 break|break;
 case|case
+name|CS_VERSION
+case|:
+name|ctl_putstr
+argument_list|(
+name|sys_var
+index|[
+name|CS_VERSION
+index|]
+operator|.
+name|text
+argument_list|,
+name|Version
+argument_list|,
+name|strlen
+argument_list|(
+name|Version
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CS_STABIL
 case|:
 name|ctl_putdbl
@@ -5550,7 +5824,7 @@ operator|>
 name|be
 condition|)
 break|break;
-comment|/* really long var name 8-( - Killer */
+comment|/* really long var name */
 name|strcpy
 argument_list|(
 name|s
@@ -5798,6 +6072,212 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|PUBKEY
+case|case
+name|CS_FLAGS
+case|:
+if|if
+condition|(
+name|crypto_flags
+condition|)
+name|ctl_puthex
+argument_list|(
+name|sys_var
+index|[
+name|CS_FLAGS
+index|]
+operator|.
+name|text
+argument_list|,
+name|crypto_flags
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CS_HOST
+case|:
+name|ctl_putstr
+argument_list|(
+name|sys_var
+index|[
+name|CS_HOST
+index|]
+operator|.
+name|text
+argument_list|,
+name|sys_hostname
+argument_list|,
+name|strlen
+argument_list|(
+name|sys_hostname
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|host
+operator|.
+name|fstamp
+operator|!=
+literal|0
+condition|)
+name|ctl_putuint
+argument_list|(
+name|sys_var
+index|[
+name|CS_PUBLIC
+index|]
+operator|.
+name|text
+argument_list|,
+name|ntohl
+argument_list|(
+name|host
+operator|.
+name|fstamp
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CS_CERTIF
+case|:
+if|if
+condition|(
+name|certif
+operator|.
+name|fstamp
+operator|!=
+literal|0
+condition|)
+name|ctl_putuint
+argument_list|(
+name|sys_var
+index|[
+name|CS_CERTIF
+index|]
+operator|.
+name|text
+argument_list|,
+name|ntohl
+argument_list|(
+name|certif
+operator|.
+name|fstamp
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CS_DHPARAMS
+case|:
+if|if
+condition|(
+name|dhparam
+operator|.
+name|fstamp
+operator|!=
+literal|0
+condition|)
+name|ctl_putuint
+argument_list|(
+name|sys_var
+index|[
+name|CS_DHPARAMS
+index|]
+operator|.
+name|text
+argument_list|,
+name|ntohl
+argument_list|(
+name|dhparam
+operator|.
+name|fstamp
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CS_REVTIME
+case|:
+if|if
+condition|(
+name|host
+operator|.
+name|tstamp
+operator|!=
+literal|0
+condition|)
+name|ctl_putuint
+argument_list|(
+name|sys_var
+index|[
+name|CS_REVTIME
+index|]
+operator|.
+name|text
+argument_list|,
+name|ntohl
+argument_list|(
+name|host
+operator|.
+name|tstamp
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CS_LEAPTAB
+case|:
+if|if
+condition|(
+name|tai_leap
+operator|.
+name|fstamp
+operator|!=
+literal|0
+condition|)
+name|ctl_putuint
+argument_list|(
+name|sys_var
+index|[
+name|CS_LEAPTAB
+index|]
+operator|.
+name|text
+argument_list|,
+name|ntohl
+argument_list|(
+name|tai_leap
+operator|.
+name|fstamp
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sys_tai
+operator|!=
+literal|0
+condition|)
+name|ctl_putuint
+argument_list|(
+name|sys_var
+index|[
+name|CS_TAI
+index|]
+operator|.
+name|text
+argument_list|,
+name|sys_tai
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* PUBKEY */
 block|}
 block|}
 end_function
@@ -5971,30 +6451,6 @@ name|text
 argument_list|,
 name|peer
 operator|->
-name|processed
-condition|?
-name|peer
-operator|->
-name|cast_flags
-operator|&
-name|MDF_BCAST
-condition|?
-name|peer
-operator|->
-name|dstadr
-operator|->
-name|bcast
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-else|:
-name|peer
-operator|->
-name|cast_flags
-condition|?
-name|peer
-operator|->
 name|dstadr
 operator|->
 name|sin
@@ -6002,30 +6458,6 @@ operator|.
 name|sin_addr
 operator|.
 name|s_addr
-condition|?
-name|peer
-operator|->
-name|dstadr
-operator|->
-name|sin
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-else|:
-name|peer
-operator|->
-name|dstadr
-operator|->
-name|bcast
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-else|:
-literal|8
-else|:
-literal|12
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6268,6 +6700,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ctl_putid
 argument_list|(
 name|peer_var
@@ -6287,6 +6720,7 @@ operator|->
 name|refid
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|CP_REFTIME
@@ -6401,6 +6835,70 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CP_TTL
+case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_ACAST
+operator|)
+condition|)
+break|break;
+name|ctl_putint
+argument_list|(
+name|peer_var
+index|[
+name|CP_TTL
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|ttl
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CP_TTLMAX
+case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+operator|(
+name|MDF_MCAST
+operator||
+name|MDF_ACAST
+operator|)
+operator|)
+condition|)
+break|break;
+name|ctl_putint
+argument_list|(
+name|peer_var
+index|[
+name|CP_TTLMAX
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|ttlmax
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CP_VALID
 case|:
 name|ctl_putuint
@@ -6414,7 +6912,7 @@ name|text
 argument_list|,
 name|peer
 operator|->
-name|valid
+name|unreach
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6494,7 +6992,7 @@ name|SQRT
 argument_list|(
 name|peer
 operator|->
-name|variance
+name|jitter
 argument_list|)
 operator|*
 literal|1e3
@@ -6731,7 +7229,7 @@ operator|>
 name|be
 condition|)
 break|break;
-comment|/* really long var name 8-( - Killer */
+comment|/* really long var name */
 name|strcpy
 argument_list|(
 name|s
@@ -6874,6 +7372,240 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|PUBKEY
+case|case
+name|CP_FLAGS
+case|:
+if|if
+condition|(
+name|peer
+operator|->
+name|crypto
+condition|)
+name|ctl_puthex
+argument_list|(
+name|peer_var
+index|[
+name|CP_FLAGS
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|crypto
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CP_HOST
+case|:
+if|if
+condition|(
+name|peer
+operator|->
+name|keystr
+operator|!=
+name|NULL
+condition|)
+name|ctl_putstr
+argument_list|(
+name|peer_var
+index|[
+name|CP_HOST
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|keystr
+argument_list|,
+name|strlen
+argument_list|(
+name|peer
+operator|->
+name|keystr
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|pubkey
+operator|.
+name|fstamp
+operator|!=
+literal|0
+condition|)
+name|ctl_putuint
+argument_list|(
+name|peer_var
+index|[
+name|CP_PUBLIC
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|pubkey
+operator|.
+name|fstamp
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CP_CERTIF
+case|:
+if|if
+condition|(
+name|peer
+operator|->
+name|certif
+operator|.
+name|fstamp
+operator|!=
+literal|0
+condition|)
+name|ctl_putuint
+argument_list|(
+name|peer_var
+index|[
+name|CP_CERTIF
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|certif
+operator|.
+name|fstamp
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CP_SESKEY
+case|:
+if|if
+condition|(
+name|peer
+operator|->
+name|pcookie
+operator|.
+name|key
+operator|!=
+literal|0
+condition|)
+name|ctl_puthex
+argument_list|(
+name|peer_var
+index|[
+name|CP_SESKEY
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|pcookie
+operator|.
+name|key
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|hcookie
+operator|!=
+literal|0
+condition|)
+name|ctl_puthex
+argument_list|(
+name|peer_var
+index|[
+name|CP_SASKEY
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|hcookie
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CP_INITSEQ
+case|:
+if|if
+condition|(
+name|peer
+operator|->
+name|recauto
+operator|.
+name|key
+operator|==
+literal|0
+condition|)
+break|break;
+name|ctl_putint
+argument_list|(
+name|peer_var
+index|[
+name|CP_INITSEQ
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|recauto
+operator|.
+name|seq
+argument_list|)
+expr_stmt|;
+name|ctl_puthex
+argument_list|(
+name|peer_var
+index|[
+name|CP_INITKEY
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|recauto
+operator|.
+name|key
+argument_list|)
+expr_stmt|;
+name|ctl_putuint
+argument_list|(
+name|peer_var
+index|[
+name|CP_INITTSP
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|recauto
+operator|.
+name|tstamp
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* PUBKEY */
 block|}
 block|}
 end_function
@@ -7061,7 +7793,6 @@ operator|&
 name|CLK_HAVETIME1
 operator|)
 condition|)
-block|{
 name|ctl_putdbl
 argument_list|(
 name|clock_var
@@ -7078,7 +7809,6 @@ operator|*
 literal|1e3
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|CC_FUDGETIME2
@@ -7095,7 +7825,6 @@ operator|&
 name|CLK_HAVETIME2
 operator|)
 condition|)
-block|{
 name|ctl_putdbl
 argument_list|(
 name|clock_var
@@ -7112,7 +7841,6 @@ operator|*
 literal|1e3
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|CC_FUDGEVAL1
@@ -7379,7 +8107,7 @@ operator|>
 name|be
 condition|)
 break|break;
-comment|/* really long var name 8-( - Killer */
+comment|/* really long var name */
 name|strcpy
 argument_list|(
 name|s
@@ -7722,11 +8450,9 @@ name|reqpt
 argument_list|)
 operator|)
 condition|)
-block|{
 name|reqpt
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|reqpt
@@ -7734,7 +8460,9 @@ operator|>=
 name|reqend
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -7748,8 +8476,10 @@ operator|)
 literal|0
 condition|)
 return|return
+operator|(
 operator|&
 name|eol
+operator|)
 return|;
 comment|/* 	 * Look for a first character match on the tag.  If we find 	 * one, see if it is a full match. 	 */
 name|v
@@ -7950,6 +8680,7 @@ name|cp
 operator|!=
 literal|','
 condition|)
+block|{
 operator|*
 name|tp
 operator|++
@@ -7958,6 +8689,54 @@ operator|*
 name|cp
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|>=
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+block|{
+name|ctl_error
+argument_list|(
+name|CERR_BADFMT
+argument_list|)
+expr_stmt|;
+name|numctlbadpkts
+operator|++
+expr_stmt|;
+name|msyslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Possible 'ntpdx' exploit from %s:%d (possibly spoofed)\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|rmt_addr
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|,
+name|ntohs
+argument_list|(
+name|rmt_addr
+operator|->
+name|sin_port
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
 if|if
 condition|(
 name|cp
@@ -7969,11 +8748,26 @@ operator|++
 expr_stmt|;
 operator|*
 name|tp
+operator|--
 operator|=
 literal|'\0'
 expr_stmt|;
 while|while
 condition|(
+name|tp
+operator|>
+name|buf
+condition|)
+block|{
+operator|*
+name|tp
+operator|--
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|!
 name|isspace
 argument_list|(
 call|(
@@ -7981,22 +8775,12 @@ name|int
 call|)
 argument_list|(
 operator|*
-operator|(
 name|tp
-operator|-
-literal|1
-operator|)
 argument_list|)
 argument_list|)
 condition|)
-operator|*
-operator|(
-operator|--
-name|tp
-operator|)
-operator|=
-literal|'\0'
-expr_stmt|;
+break|break;
+block|}
 name|reqpt
 operator|=
 name|cp
@@ -8007,7 +8791,9 @@ operator|=
 name|buf
 expr_stmt|;
 return|return
+operator|(
 name|v
+operator|)
 return|;
 block|}
 block|}
@@ -8068,9 +8854,6 @@ name|peer
 operator|=
 name|findpeerbyassoc
 argument_list|(
-operator|(
-name|int
-operator|)
 name|res_associd
 argument_list|)
 operator|)
@@ -8120,7 +8903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * read_status - return either a list of associd's, or a particular  *		 peer's status.  */
+comment|/*  * read_status - return either a list of associd's, or a particular  * peer's status.  */
 end_comment
 
 begin_comment
@@ -8168,7 +8951,7 @@ name|DEBUG
 if|if
 condition|(
 name|debug
-operator|>=
+operator|>
 literal|2
 condition|)
 name|printf
@@ -8180,7 +8963,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Two choices here.  If the specified association ID is 	 * zero we return all known assocation ID's.  Otherwise 	 * we return a bunch of stuff about the particular peer. 	 */
+comment|/* 	 * Two choices here. If the specified association ID is 	 * zero we return all known assocation ID's.  Otherwise 	 * we return a bunch of stuff about the particular peer. 	 */
 if|if
 condition|(
 name|res_associd
@@ -8340,9 +9123,6 @@ name|peer
 operator|=
 name|findpeerbyassoc
 argument_list|(
-operator|(
-name|int
-operator|)
 name|res_associd
 argument_list|)
 expr_stmt|;
@@ -8388,7 +9168,7 @@ name|num_events
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * For now, output everything we know about the peer. 			 * May be more selective later. 			 */
+comment|/* 			 * For now, output everything we know about the 			 * peer. May be more selective later. 			 */
 for|for
 control|(
 name|cp
@@ -8493,7 +9273,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Wants system variables.	Figure out which he wants 		 * and give them to him. 		 */
+comment|/* 		 * Wants system variables. Figure out which he wants 		 * and give them to him. 		 */
 name|rpkt
 operator|.
 name|status
@@ -8840,14 +9620,11 @@ name|peer
 modifier|*
 name|peer
 decl_stmt|;
-comment|/* 		 * Wants info for a particular peer.  See if we know 		 * the guy. 		 */
+comment|/* 		 * Wants info for a particular peer. See if we know 		 * the guy. 		 */
 name|peer
 operator|=
 name|findpeerbyassoc
 argument_list|(
-operator|(
-name|int
-operator|)
 name|res_associd
 argument_list|)
 expr_stmt|;
@@ -9056,7 +9833,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * write_variables - write into variables.	We only allow leap bit writing  *			 this way.  */
+comment|/*  * write_variables - write into variables. We only allow leap bit  * writing this way.  */
 end_comment
 
 begin_comment
@@ -9094,7 +9871,6 @@ decl_stmt|;
 name|long
 name|val
 decl_stmt|;
-comment|/*int leapind, leapwarn;*/
 comment|/* 	 * If he's trying to write into a peer tell him no way 	 */
 if|if
 condition|(
@@ -9121,9 +9897,7 @@ name|ctlsysstatus
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set flags to not-in-sync so we can tell when we get something. 	 */
-comment|/* 	leapind = ~0; 	leapwarn = ~0; 	*/
-comment|/* 	 * Look through the variables.	Dump out at the first sign of trouble. 	 */
+comment|/* 	 * Look through the variables. Dump out at the first sign of 	 * trouble. 	 */
 while|while
 condition|(
 operator|(
@@ -9369,7 +10143,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * This one seems sane.  Save it. 			 */
+comment|/* 			 * This one seems sane. Save it. 			 */
 switch|switch
 condition|(
 name|v
@@ -9386,12 +10160,12 @@ argument_list|(
 name|CERR_UNSPEC
 argument_list|)
 expr_stmt|;
-comment|/* our fault, really */
+comment|/* really */
 return|return;
 block|}
 block|}
 block|}
-comment|/* 	 * If we got anything, do it. 	 */
+comment|/* 	 * If we got anything, do it. xxx nothing to do *** 	 */
 comment|/* 	  if (leapind != ~0 || leapwarn != ~0) { 	  	if (!leap_setleap((int)leapind, (int)leapwarn)) { 	  		ctl_error(CERR_PERMISSION); 	  		return; 	  	} 	  } 	*/
 name|ctl_flushpkt
 argument_list|(
@@ -9571,9 +10345,6 @@ name|peer
 operator|=
 name|findpeerbyassoc
 argument_list|(
-operator|(
-name|int
-operator|)
 name|res_associd
 argument_list|)
 expr_stmt|;
@@ -9601,7 +10372,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * If we got here we have a peer which is a clock.	Get his status. 	 */
+comment|/* 	 * If we got here we have a peer which is a clock. Get his 	 * status. 	 */
 name|clock_stat
 operator|.
 name|kv_list
@@ -10047,7 +10818,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Trap support from here on down.	We send async trap messages when the  * upper levels report trouble.  Traps can by set either by control  * messages or by configuration.  */
+comment|/*  * Trap support from here on down. We send async trap messages when the  * upper levels report trouble. Traps can by set either by control  * messages or by configuration.  */
 end_comment
 
 begin_comment
@@ -10158,7 +10929,7 @@ block|{
 name|int
 name|traptype
 decl_stmt|;
-comment|/* 	 * We don't prevent anyone from removing his own 	 * trap unless the trap is configured.	Note we also 	 * must be aware of the possibility that restriction 	 * flags were changed since this guy last set his trap. 	 * Set the trap type based on this. 	 */
+comment|/* 	 * We don't prevent anyone from removing his own trap unless the 	 * trap is configured. Note we also must be aware of the 	 * possibility that restriction flags were changed since this 	 * guy last set his trap. Set the trap type based on this. 	 */
 name|traptype
 operator|=
 name|TRAP_TYPE_PRIO
@@ -10287,7 +11058,9 @@ operator|&
 name|TRAP_CONFIGURED
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* don't change anything */
 name|tp
@@ -10309,7 +11082,9 @@ operator|&
 name|TRAP_CONFIGURED
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* don't change anything */
 name|tp
@@ -10334,10 +11109,12 @@ name|tr_resets
 operator|++
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
-comment|/* 	 * First we heard of this guy.	Try to find a trap structure 	 * for him to use, clearing out lesser priority guys if we 	 * have to.  Clear out anyone who's expired while we're at it. 	 */
+comment|/* 	 * First we heard of this guy.	Try to find a trap structure 	 * for him to use, clearing out lesser priority guys if we 	 * have to. Clear out anyone who's expired while we're at it. 	 */
 name|tptouse
 operator|=
 name|NULL
@@ -10565,7 +11342,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* 	 * Set up this structure for him. 	 */
 name|tptouse
@@ -10648,13 +11427,15 @@ name|num_ctl_traps
 operator|++
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * ctlclrtrap - called to clr a trap  */
+comment|/*  * ctlclrtrap - called to clear a trap  */
 end_comment
 
 begin_function
@@ -10697,7 +11478,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -10712,7 +11495,9 @@ operator|!=
 name|TRAP_TYPE_CONFIG
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|tp
 operator|->
@@ -10724,7 +11509,9 @@ name|num_ctl_traps
 operator|--
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -10816,7 +11603,9 @@ operator|->
 name|tr_localaddr
 condition|)
 return|return
+operator|(
 name|tp
+operator|)
 return|;
 block|}
 return|return
@@ -11199,7 +11988,7 @@ name|ctlsysstatus
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* 		 * For now, put everything we know about system 		 * variables.  Maybe more selective later 		 */
+comment|/* 		 * For now, put everything we know about system 		 * variables. Don't send crypto strings. 		 */
 for|for
 control|(
 name|i
@@ -11213,15 +12002,30 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+ifdef|#
+directive|ifdef
+name|PUBKEY
+if|if
+condition|(
+name|i
+operator|>
+name|CS_VARLIST
+condition|)
+continue|continue;
+endif|#
+directive|endif
+comment|/* PUBKEY */
 name|ctl_putsys
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|REFCLOCK
-comment|/* 		 * for clock exception events: 		 *	  add clock variables to reflect info on exception 		 */
+comment|/* 		 * for clock exception events: add clock variables to 		 * reflect info on exception 		 */
 if|if
 condition|(
 name|err
@@ -11384,7 +12188,7 @@ name|peer
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Dump it all.  Later, maybe less. 		 */
+comment|/* 		 * Dump it all. Later, maybe less. 		 */
 for|for
 control|(
 name|i
@@ -11398,6 +12202,19 @@ condition|;
 name|i
 operator|++
 control|)
+ifdef|#
+directive|ifdef
+name|PUBKEY
+if|if
+condition|(
+name|i
+operator|>
+name|CP_VARLIST
+condition|)
+continue|continue;
+endif|#
+directive|endif
+comment|/* PUBKEY */
 name|ctl_putpeer
 argument_list|(
 name|i
@@ -11408,7 +12225,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|REFCLOCK
-comment|/* 		 * for clock exception events: 		 *	  add clock variables to reflect info on exception 		 */
+comment|/* 		 * for clock exception events: add clock variables to 		 * reflect info on exception 		 */
 if|if
 condition|(
 name|err
@@ -11654,7 +12471,9 @@ operator|!
 name|k
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|c
 operator|=
@@ -11676,7 +12495,9 @@ name|c
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|c
+operator|)
 return|;
 block|}
 end_function

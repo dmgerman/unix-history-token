@@ -33,24 +33,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -64,6 +46,18 @@ begin_include
 include|#
 directive|include
 file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_ifdef
@@ -84,7 +78,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This is a hack to allow a machine to use its own system clock as a  * reference clock, i.e., to free-run using no outside clock discipline  * source. This is useful if you want to use NTP in an isolated  * environment with no radio clock or NIST modem available. Pick a  * machine that you figure has a good clock oscillator and configure it  * with this driver. Set the clock using the best means available, like  * eyeball-and-wristwatch. Then, point all the other machines at this  * one or use broadcast (not multicast) mode to distribute time.  *  * Another application for this driver is if you want to use a  * particular server's clock as the clock of last resort when all other  * normal synchronization sources have gone away. This is especially  * useful if that server has an ovenized oscillator. For this you would  * configure this driver at a higher stratum (say 3 or 4) to prevent the  * server's stratum from falling below that.  *  * A third application for this driver is when an external discipline  * source is available, such as the NIST "lockclock" program, which  * synchronizes the local clock via a telephone modem and the NIST  * Automated Computer Time Service (ACTS), or the Digital Time  * Synchronization Service (DTSS), which runs on DCE machines. In this  * case the stratum should be set at zero, indicating a bona fide  * stratum-1 source. Exercise some caution with this, since there is no  * easy way to telegraph via NTP that something might be wrong in the  * discipline source itself. In the case of DTSS, the local clock can  * have a rather large jitter, depending on the interval between  * corrections and the intrinsic frequency error of the clock  * oscillator. In extreme cases, this can cause clients to exceed the  * 128-ms slew window and drop off the NTP subnet.  *  * THis driver includes provisions to telegraph synchronization state  * and related variables by means of kernel variables with specially  * modified kernels. This is done using the ntp_adjtime() syscall.  * In the cases where another protocol or device synchronizes the local  * host, the data given to the kernel can be slurped up by this driver  * and distributed to clients by ordinary NTP messaging.  *  * In the default mode the behavior of the clock selection algorithm is  * modified when this driver is in use. The algorithm is designed so  * that this driver will never be selected unless no other discipline  * source is available. This can be overriden with the prefer keyword of  * the server configuration command, in which case only this driver will  * be selected for synchronization and all other discipline sources will  * be ignored. This behavior is intended for use when an external  * discipline source controls the system clock.  *  * Fudge Factors  *  * The stratum for this driver set at 3 by default, but it can be changed  * by the fudge command and/or the ntpdc utility. The reference ID is  * "LCL" by default, but can be changed using the same mechanism. *NEVER*  * configure this driver to operate at a stratum which might possibly  * disrupt a client with access to a bona fide primary server, unless the  * local clock oscillator is reliably disciplined by another source.  * *NEVER NEVER* configure a server which might devolve to an undisciplined  * local clock to use multicast mode. Always remember that an improperly  * configured local clock driver let loose in the Internet can cause  * very serious disruption. This is why most of us who care about good  * time use cryptographic authentication.  *  * This driver provides a mechanism to trim the local clock in both time  * and frequency, as well as a way to manipulate the leap bits. The  * fudge time1 parameter adjusts the time, in seconds, and the fudge  * time2 parameter adjusts the frequency, in ppm. The fudge time1 parameter  * is additive; that is, it adds an increment to the current time. The  * fudge time2 parameter directly sets the frequency.  */
+comment|/*  * This is a hack to allow a machine to use its own system clock as a  * reference clock, i.e., to free-run using no outside clock discipline  * source. This is useful if you want to use NTP in an isolated  * environment with no radio clock or NIST modem available. Pick a  * machine that you figure has a good clock oscillator and configure it  * with this driver. Set the clock using the best means available, like  * eyeball-and-wristwatch. Then, point all the other machines at this  * one or use broadcast (not multicast) mode to distribute time.  *  * Another application for this driver is if you want to use a  * particular server's clock as the clock of last resort when all other  * normal synchronization sources have gone away. This is especially  * useful if that server has an ovenized oscillator. For this you would  * configure this driver at a higher stratum (say 5) to prevent the  * server's stratum from falling below that.  *  * A third application for this driver is when an external discipline  * source is available, such as the NIST "lockclock" program, which  * synchronizes the local clock via a telephone modem and the NIST  * Automated Computer Time Service (ACTS), or the Digital Time  * Synchronization Service (DTSS), which runs on DCE machines. In this  * case the stratum should be set at zero, indicating a bona fide  * stratum-1 source. Exercise some caution with this, since there is no  * easy way to telegraph via NTP that something might be wrong in the  * discipline source itself. In the case of DTSS, the local clock can  * have a rather large jitter, depending on the interval between  * corrections and the intrinsic frequency error of the clock  * oscillator. In extreme cases, this can cause clients to exceed the  * 128-ms slew window and drop off the NTP subnet.  *  * THis driver includes provisions to telegraph synchronization state  * and related variables by means of kernel variables with specially  * modified kernels. This is done using the ntp_adjtime() syscall.  * In the cases where another protocol or device synchronizes the local  * host, the data given to the kernel can be slurped up by this driver  * and distributed to clients by ordinary NTP messaging.  *  * In the default mode the behavior of the clock selection algorithm is  * modified when this driver is in use. The algorithm is designed so  * that this driver will never be selected unless no other discipline  * source is available. This can be overriden with the prefer keyword of  * the server configuration command, in which case only this driver will  * be selected for synchronization and all other discipline sources will  * be ignored. This behavior is intended for use when an external  * discipline source controls the system clock.  *  * Fudge Factors  *  * The stratum for this driver set at 5 by default, but it can be changed  * by the fudge command and/or the ntpdc utility. The reference ID is  * "LCL" by default, but can be changed using the same mechanism. *NEVER*  * configure this driver to operate at a stratum which might possibly  * disrupt a client with access to a bona fide primary server, unless the  * local clock oscillator is reliably disciplined by another source.  * *NEVER NEVER* configure a server which might devolve to an undisciplined  * local clock to use multicast mode. Always remember that an improperly  * configured local clock driver let loose in the Internet can cause  * very serious disruption. This is why most of us who care about good  * time use cryptographic authentication.  *  * This driver provides a mechanism to trim the local clock in both time  * and frequency, as well as a way to manipulate the leap bits. The  * fudge time1 parameter adjusts the time, in seconds, and the fudge  * time2 parameter adjusts the frequency, in ppm. The fudge time1 parameter  * is additive; that is, it adds an increment to the current time. The  * fudge time2 parameter directly sets the frequency.  */
 end_comment
 
 begin_comment
@@ -128,7 +122,7 @@ begin_define
 define|#
 directive|define
 name|STRATUM
-value|3
+value|5
 end_define
 
 begin_comment
@@ -572,7 +566,7 @@ name|DISPERSION
 expr_stmt|;
 name|pp
 operator|->
-name|variance
+name|jitter
 operator|=
 literal|0
 expr_stmt|;
@@ -696,7 +690,7 @@ literal|1e6
 expr_stmt|;
 name|pp
 operator|->
-name|variance
+name|jitter
 operator|=
 name|SQUARE
 argument_list|(

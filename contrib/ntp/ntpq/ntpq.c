@@ -12,6 +12,42 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ntpq.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_unixtime.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_calendar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_io.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_select.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -25,18 +61,6 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -77,42 +101,6 @@ end_endif
 begin_comment
 comment|/* SYS_WINNT */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"ntpq.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_unixtime.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_calendar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_io.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_select.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_stdlib.h"
-end_include
 
 begin_ifdef
 ifdef|#
@@ -584,7 +572,7 @@ name|CS_OFFSET
 block|,
 name|FL
 block|,
-literal|"phase"
+literal|"offset"
 block|}
 block|,
 comment|/* 11 */
@@ -598,7 +586,7 @@ block|}
 block|,
 comment|/* 12 */
 block|{
-name|CS_COMPLIANCE
+name|CS_JITTER
 block|,
 name|FU
 block|,
@@ -634,6 +622,15 @@ block|}
 block|,
 comment|/* 16 */
 block|{
+name|CS_VERSION
+block|,
+name|ST
+block|,
+literal|"version"
+block|}
+block|,
+comment|/* 17 */
+block|{
 name|CS_STABIL
 block|,
 name|FS
@@ -641,7 +638,16 @@ block|,
 literal|"stability"
 block|}
 block|,
-comment|/* 17 */
+comment|/* 18 */
+block|{
+name|CS_VARLIST
+block|,
+name|ST
+block|,
+literal|"sys_var_list"
+block|}
+block|,
+comment|/* 19 */
 block|{
 literal|0
 block|,
@@ -989,14 +995,23 @@ block|}
 block|,
 comment|/* 35 */
 block|{
-name|CP_DISP
+name|CP_TTL
 block|,
-name|FU
+name|UI
 block|,
-literal|"disp"
+literal|"ttl"
 block|}
 block|,
 comment|/* 36 */
+block|{
+name|CP_TTLMAX
+block|,
+name|UI
+block|,
+literal|"ttlmax"
+block|}
+block|,
+comment|/* 37 */
 comment|/* 	 * These are duplicate entries so that we can 	 * process deviant version of the ntp protocol. 	 */
 block|{
 name|CP_SRCADR
@@ -1212,16 +1227,16 @@ comment|/* TEST1 */
 literal|"bogus_pkt"
 block|,
 comment|/* TEST2 */
-literal|"proto_sync"
+literal|"proto_unsync"
 block|,
 comment|/* TEST3 */
-literal|"peer_bounds"
+literal|"no_access"
 block|,
 comment|/* TEST4 */
-literal|"auth"
+literal|"bad_auth"
 block|,
 comment|/* TEST5 */
-literal|"peer_sync"
+literal|"peer_unsync"
 block|,
 comment|/* TEST6 */
 literal|"peer_stratum"
@@ -1230,11 +1245,14 @@ comment|/* TEST7 */
 literal|"root_bounds"
 block|,
 comment|/* TEST8 */
-literal|"peer_auth"
+literal|"peer_bounds"
 block|,
 comment|/* TEST9 */
-literal|"access"
+literal|"bad_autokey"
+block|,
 comment|/* TEST10 */
+literal|"not_proventic"
+comment|/* TEST11*/
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4258,6 +4276,9 @@ name|sockfd
 argument_list|,
 name|xdata
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|xdatalen
 argument_list|,
 literal|0
@@ -9556,7 +9577,7 @@ argument_list|(
 name|cmdsort
 argument_list|,
 operator|(
-name|unsigned
+name|size_t
 operator|)
 name|n
 argument_list|,
@@ -9579,6 +9600,9 @@ operator|*
 operator|)
 name|cmdsort
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|n
 argument_list|,
 sizeof|sizeof
@@ -13409,7 +13433,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|10
+literal|11
 condition|;
 name|i
 operator|++
@@ -14343,7 +14367,7 @@ directive|endif
 name|assoc_cache
 argument_list|,
 operator|(
-name|unsigned
+name|size_t
 operator|)
 name|numassoc
 argument_list|,

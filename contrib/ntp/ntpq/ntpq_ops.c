@@ -12,30 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpq.h"
 end_include
 
@@ -43,6 +19,18 @@ begin_include
 include|#
 directive|include
 file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_decl_stmt
@@ -5029,6 +5017,8 @@ condition|(
 name|statval
 operator|&
 name|CTL_PST_REACH
+operator|||
+literal|1
 condition|)
 block|{
 name|reach
@@ -7615,9 +7605,6 @@ literal|"host"
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|fp
@@ -7835,6 +7822,16 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"     remote           local      st t when poll reach   delay   offset    disp\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"                                      (s)  (s)          (ms)     (ms)     (ms)\n"
 argument_list|)
 expr_stmt|;
 operator|(

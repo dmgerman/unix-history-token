@@ -30,13 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_stdlib.h"
+file|"ntp_syslog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ntp_syslog.h"
+file|"ntp_stdlib.h"
 end_include
 
 begin_ifdef
@@ -75,12 +75,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MD5
-end_ifdef
-
 begin_comment
 comment|/*  *  Arbitrary long string of ASCII characters.  */
 end_comment
@@ -91,11 +85,6 @@ directive|define
 name|KEY_TYPE_MD5
 value|4
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Forwards */
@@ -468,9 +457,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MD5
 case|case
 literal|'M'
 case|:
@@ -482,8 +468,6 @@ operator|=
 name|KEY_TYPE_MD5
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|msyslog
 argument_list|(
@@ -569,9 +553,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MD5
 case|case
 name|KEY_TYPE_MD5
 case|:
@@ -601,8 +582,6 @@ name|keyno
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 block|}
 block|}
 block|}

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * refclock_ulink - clock driver for Ultralink Model 320 WWVB receivers  * By Dave Strout<dstrout@linuxfoundary.com>  *  * Latest version is always on www.linuxfoundary.com  *  * Based on the Spectracom driver  */
+comment|/*  * refclock_ulink - clock driver for Ultralink  WWVB receiver  *   */
+end_comment
+
+begin_comment
+comment|/***********************************************************************  *                                                                     *  * Copyright (c) David L. Mills 1992-1998                              *  *                                                                     *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby         *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name        *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,        *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any         *  * purpose. It is provided "as is" without express or implied          *  * warranty.                                                           *  **********************************************************************/
 end_comment
 
 begin_ifdef
@@ -49,18 +53,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -89,7 +81,7 @@ file|"ntp_stdlib.h"
 end_include
 
 begin_comment
-comment|/*  * This driver supports the Ultralink Model 320 WWVB receiver.  The Model 320 is  * an RS-232 powered unit which consists of two parts:  a DB-25 shell that contains  * a microprocessor, and an approx 2"x4" plastic box that contains the antenna.  * The two are connected by a 6-wire RJ-25 cable of length up to 1000'.  The   * microprocessor steals power from the RS-232 port, which means that the port must   * be kept open all of the time.  The unit also has an internal clock for loss of signal  * periods.  Claimed accuracy is 0.1 sec.  *   * The timecode format is:  *  *<cr><lf>SQRYYYYDDD+HH:MM:SS.mmLT<cr>  *  * where:  *  * S = 'S' -- sync'd in last hour, '0'-'9' - hours x 10 since last update, else '?'  * Q = Number of correlating time-frames, from 0 to 5  * R = 'R' -- reception in progress, 'N' -- Noisy reception, ' ' -- standby mode  * YYYY = year from 1990 to 2089  * DDD = current day from 1 to 366  * + = '+' if current year is a leap year, else ' '  * HH = UTC hour 0 to 23  * MM = Minutes of current hour from 0 to 59  * SS = Seconds of current minute from 0 to 59  * mm = 10's milliseconds of the current second from 00 to 99  * L  = Leap second pending at end of month -- 'I' = inset, 'D'=delete  * T  = DST<-> STD transition indicators  *  * Note that this driver does not do anything with the L or T flags.  *  * The M320 also has a 'U' command which returns UT1 correction information.  It  * is not used in this driver.  *  */
+comment|/*  * This driver supports ultralink Model 320,330,331,332 WWVB radios  *  * this driver was based on the refclock_wwvb.c driver  * in the ntp distribution.  *  * Fudge Factors  *  * fudge flag1 0 don't poll clock  *             1 send poll character  *  * revision history:  *		99/9/09 j.c.lang	original edit's  *		99/9/11 j.c.lang	changed timecode parse to   *                                      match what the radio actually  *                                      sends.   *              99/10/11 j.c.lang       added support for continous  *                                      time code mode (dipsw2)  *		99/11/26 j.c.lang	added support for 320 decoder  *                                      (taken from Dave Strout's  *                                      Model 320 driver)  *		99/11/29 j.c.lang	added fudge flag 1 to control  *					clock polling  *		99/12/15 j.c.lang	fixed 320 quality flag  *		01/02/21 s.l.smith	fixed 33x quality flag  *					added more debugging stuff  *					updated 33x time code explanation  *  * Questions, bugs, ideas send to:  *	Joseph C. Lang  *	tcnojl1@earthlink.net  *  *	Dave Strout  *	dstrout@linuxfoundry.com  *  *  * on the Ultralink model 33X decoder Dip switch 2 controls  * polled or continous timecode   * set fudge flag1 if using polled (needed for model 320)  * dont set fudge flag1 if dip switch 2 is set on model 33x decoder */
 end_comment
 
 begin_comment
@@ -100,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|DEVICE
-value|"/dev/ulink%d"
+value|"/dev/wwvb%d"
 end_define
 
 begin_comment
@@ -122,18 +114,18 @@ begin_define
 define|#
 directive|define
 name|PRECISION
-value|(-13)
+value|(-10)
 end_define
 
 begin_comment
-comment|/* precision assumed (about 100 us) */
+comment|/* precision assumed (about 10 ms) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|REFID
-value|"M320"
+value|"WWVB"
 end_define
 
 begin_comment
@@ -154,49 +146,27 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LENWWVB0
-value|28
+name|LEN33X
+value|32
 end_define
 
 begin_comment
-comment|/* format 0 timecode length */
+comment|/* timecode length Model 325& 33X */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LENWWVB2
+name|LEN320
 value|24
 end_define
 
 begin_comment
-comment|/* format 2 timecode length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LENWWVB3
-value|29
-end_define
-
-begin_comment
-comment|/* format 3 timecode length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MONLIN
-value|15
-end_define
-
-begin_comment
-comment|/* number of monitoring lines */
+comment|/* timecode length Model 320 */
 end_comment
 
 begin_comment
-comment|/*  * ULINK unit control structure  */
+comment|/*  *  unit control structure  */
 end_comment
 
 begin_struct
@@ -211,14 +181,6 @@ name|l_fp
 name|laststamp
 decl_stmt|;
 comment|/* last receive timestamp */
-name|u_char
-name|lasthour
-decl_stmt|;
-comment|/* last hour (for monitor) */
-name|u_char
-name|linect
-decl_stmt|;
-comment|/* count ignored lines (for monitor */
 block|}
 struct|;
 end_struct
@@ -293,17 +255,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|fd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* We need to keep the serial port open to power the ULM320 */
-end_comment
-
 begin_comment
 comment|/*  * Transfer vector  */
 end_comment
@@ -325,15 +276,14 @@ block|,
 comment|/* transmit poll message */
 name|noentry
 block|,
-comment|/* not used (old wwvb_control) */
+comment|/* not used  */
 name|noentry
 block|,
-comment|/* initialize driver (not used) */
+comment|/* not used  */
 name|noentry
 block|,
-comment|/* not used (old wwvb_buginfo) */
+comment|/* not used  */
 name|NOFLAGS
-comment|/* not used */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -367,19 +317,15 @@ name|refclockproc
 modifier|*
 name|pp
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
 name|char
 name|device
 index|[
 literal|20
 index|]
 decl_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Starting Ulink driver\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Open serial port. Use CLK line discipline, if available. 	 */
 operator|(
 name|void
@@ -558,12 +504,6 @@ name|PRECISION
 expr_stmt|;
 name|peer
 operator|->
-name|flags
-operator||=
-name|FLAG_BURST
-expr_stmt|;
-name|peer
-operator|->
 name|burst
 operator|=
 name|NSTAGE
@@ -657,11 +597,6 @@ argument_list|(
 name|up
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -699,26 +634,33 @@ name|l_fp
 name|trtmp
 decl_stmt|;
 comment|/* arrival timestamp */
+name|int
+name|quality
+decl_stmt|;
+comment|/* quality indicator */
+name|int
+name|temp
+decl_stmt|;
+comment|/* int temp */
 name|char
 name|syncchar
 decl_stmt|;
 comment|/* synchronization indicator */
 name|char
-name|qualchar
-decl_stmt|;
-comment|/* quality indicator */
-name|char
-name|modechar
-decl_stmt|;
-comment|/* Modes: 'R'=rx, 'N'=noise, ' '=standby */
-name|char
 name|leapchar
 decl_stmt|;
 comment|/* leap indicator */
-name|int
-name|temp
+name|char
+name|modechar
 decl_stmt|;
-comment|/* int temp */
+comment|/* model 320 mode flag */
+name|char
+name|char_quality
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* temp quality flag */
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
@@ -764,7 +706,7 @@ operator|&
 name|trtmp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note we get a buffer and timestamp for both a<cr> and<lf>, 	 * but only the<cr> timestamp is retained. Note: in format 0 on 	 * a Netclock/2 or upgraded 8170 the start bit is delayed 100 	 * +-50 us relative to the pps; however, on an unmodified 8170 	 * the start bit can be delayed up to 10 ms. In format 2 the 	 * reading precision is only to the millisecond. Thus, unless 	 * you have a pps gadget and don't have to have the year, format 	 * 0 provides the lowest jitter. 	 */
+comment|/* 	 * Note we get a buffer and timestamp for both a<cr> and<lf>, 	 * but only the<cr> timestamp is retained.  	 */
 if|if
 condition|(
 name|temp
@@ -851,12 +793,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. This code uses the timecode length to determine 	 * whether format 0 or format 2. If the timecode has invalid 	 * length or is not in proper format, we declare bad format and 	 * exit. 	 */
+comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. If the timecode has invalid length or is not in 	 * proper format, we declare bad format and exit. 	 */
 name|syncchar
 operator|=
-name|qualchar
-operator|=
 name|leapchar
+operator|=
+name|modechar
 operator|=
 literal|' '
 expr_stmt|;
@@ -866,20 +808,131 @@ name|msec
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Timecode format SQRYYYYDDD+HH:MM:SS.mmLT 	 */
+switch|switch
+condition|(
+name|pp
+operator|->
+name|lencode
+condition|)
+block|{
+case|case
+name|LEN33X
+case|:
+comment|/* 		 * Model 33X decoder: 		 * Timecode format from January 29, 2001 datasheet is: 		 *<CR><LF>S9+D 00 YYYY+DDDUTCS HH:MM:SSL+5 		 *   S      WWVB decoder sync indicator. S for in-sync(?) 		 *          or N for noisy signal. 		 *   9+     RF signal level in S-units, 0-9 followed by 		 *          a space (0x20). The space turns to '+' if the 		 *          level is over 9. 		 *   D      Data bit 0, 1, 2 (position mark), or 		 *          3 (unknown). 		 *   space  Space character (0x20) 		 *   00     Hours since last good WWVB frame sync. Will  		 *          be 00-23 hrs, or '1d' to '7d'. Will be 'Lk'                  *          if currently in sync.  		 *   space  Space character (0x20) 		 *   YYYY   Current year, 1990-2089 		 *   +      Leap year indicator. '+' if a leap year, 		 *          a space (0x20) if not. 		 *   DDD    Day of year, 001 - 366. 		 *   UTC    Timezone (always 'UTC'). 		 *   S      Daylight savings indicator 		 *             S - standard time (STD) in effect 		 *             O - during STD to DST day 0000-2400 		 *             D - daylight savings time (DST) in effect 		 *             I - during DST to STD day 0000-2400 		 *   space  Space character (0x20) 		 *   HH     Hours 00-23 		 *   :      This is the REAL in sync indicator (: = insync)	 		 *   MM     Minutes 00-59 		 *   :      : = in sync ? = NOT in sync 		 *   SS     Seconds 00-59 		 *   L      Leap second flag. Changes from space (0x20) 		 *          to '+' or '-' during month preceding leap 		 *          second adjustment. 		 *   +5     UT1 correction (sign + digit )) 		 */
+if|if
+condition|(
 name|sscanf
 argument_list|(
 name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-literal|"%c%c%c%4d%3d%c%2d:%2d:%2d.%2d"
+literal|"%*4c %2c %4d%*c%3d%*4c %2d%c%2d:%2d%c%*2c"
+argument_list|,
+name|char_quality
+argument_list|,
+operator|&
+name|pp
+operator|->
+name|year
+argument_list|,
+operator|&
+name|pp
+operator|->
+name|day
+argument_list|,
+operator|&
+name|pp
+operator|->
+name|hour
 argument_list|,
 operator|&
 name|syncchar
 argument_list|,
 operator|&
-name|qualchar
+name|pp
+operator|->
+name|minute
+argument_list|,
+operator|&
+name|pp
+operator|->
+name|second
+argument_list|,
+operator|&
+name|leapchar
+argument_list|)
+operator|==
+literal|8
+condition|)
+block|{
+if|if
+condition|(
+name|char_quality
+index|[
+literal|0
+index|]
+operator|==
+literal|'L'
+condition|)
+block|{
+name|quality
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|char_quality
+index|[
+literal|0
+index|]
+operator|==
+literal|'0'
+condition|)
+block|{
+name|quality
+operator|=
+operator|(
+name|char_quality
+index|[
+literal|1
+index|]
+operator|&
+literal|0x0f
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|quality
+operator|=
+literal|99
+expr_stmt|;
+block|}
+comment|/* #ifdef DEBUG 		if (debug) { 			printf("ulink: char_quality %c %c\n",                                 char_quality[0], char_quality[1]); 			printf("ulink: quality %d\n", quality); 			printf("ulink: syncchar %x\n", syncchar); 			printf("ulink: leapchar %x\n", leapchar);                 } #endif */
+break|break;
+block|}
+case|case
+name|LEN320
+case|:
+comment|/* 		 * Model 320 Decoder 		 * The timecode format is: 		 * 		 *<cr><lf>SQRYYYYDDD+HH:MM:SS.mmLT<cr> 		 * 		 * where: 		 * 		 * S = 'S' -- sync'd in last hour, 		 *     '0'-'9' - hours x 10 since last update, 		 *     '?' -- not in sync 		 * Q = Number of correlating time-frames, from 0 to 5 		 * R = 'R' -- reception in progress, 		 *     'N' -- Noisy reception, 		 *     ' ' -- standby mode 		 * YYYY = year from 1990 to 2089 		 * DDD = current day from 1 to 366 		 * + = '+' if current year is a leap year, else ' ' 		 * HH = UTC hour 0 to 23 		 * MM = Minutes of current hour from 0 to 59 		 * SS = Seconds of current minute from 0 to 59 		 * mm = 10's milliseconds of the current second from 00 to 99 		 * L  = Leap second pending at end of month 		 *     'I' = insert, 'D'= delete 		 * T  = DST<-> STD transition indicators 		 *         	 */
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|,
+literal|"%c%1d%c%4d%3d%*c%2d:%2d:%2d.%2d%c"
+argument_list|,
+operator|&
+name|syncchar
+argument_list|,
+operator|&
+name|quality
 argument_list|,
 operator|&
 name|modechar
@@ -893,9 +946,6 @@ operator|&
 name|pp
 operator|->
 name|day
-argument_list|,
-operator|&
-name|leapchar
 argument_list|,
 operator|&
 name|pp
@@ -916,8 +966,14 @@ operator|&
 name|pp
 operator|->
 name|msec
+argument_list|,
+operator|&
+name|leapchar
 argument_list|)
-expr_stmt|;
+operator|==
+literal|10
+condition|)
+block|{
 name|pp
 operator|->
 name|msec
@@ -925,17 +981,221 @@ operator|*=
 literal|10
 expr_stmt|;
 comment|/* M320 returns 10's of msecs */
-name|qualchar
+if|if
+condition|(
+name|leapchar
+operator|==
+literal|'I'
+condition|)
+name|leapchar
 operator|=
-literal|' '
+literal|'+'
 expr_stmt|;
-comment|/* 	 * Decode synchronization, quality and leap characters. If 	 * unsynchronized, set the leap bits accordingly and exit. 	 * Otherwise, set the leap bits according to the leap character. 	 * Once synchronized, the dispersion depends only on the 	 * quality character. 	 */
+if|if
+condition|(
+name|leapchar
+operator|==
+literal|'D'
+condition|)
+name|leapchar
+operator|=
+literal|'-'
+expr_stmt|;
+if|if
+condition|(
+name|syncchar
+operator|!=
+literal|'?'
+condition|)
+name|syncchar
+operator|=
+literal|':'
+expr_stmt|;
+break|break;
+block|}
+default|default:
+name|refclock_report
+argument_list|(
+name|peer
+argument_list|,
+name|CEVNT_BADREPLY
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Decode quality indicator 	 * For the 325& 33x series, the lower the number the "better"  	 * the time is. I used the dispersion as the measure of time  	 * quality. The quality indicator in the 320 is the number of  	 * correlating time frames (the more the better) 	 */
+comment|/*  	 * The spec sheet for the 325& 33x series states the clock will 	 * maintain +/-0.002 seconds accuracy when locked to WWVB. This  	 * is indicated by 'Lk' in the quality portion of the incoming  	 * string. When not in lock, a drift of +/-0.015 seconds should  	 * be allowed for. 	 * With the quality indicator decoding scheme above, the 'Lk'  	 * condition will produce a quality value of 0. If the quality  	 * indicator starts with '0' then the second character is the  	 * number of hours since we were last locked. If the first  	 * character is anything other than 'L' or '0' then we have been  	 * out of lock for more than 9 hours so we assume the worst and  	 * force a quality value that selects the 'default' maximum  	 * dispersion. The dispersion values below are what came with the 	 * driver. They're not unreasonable so they've not been changed. 	 */
+if|if
+condition|(
+name|pp
+operator|->
+name|lencode
+operator|==
+name|LEN33X
+condition|)
+block|{
+switch|switch
+condition|(
+name|quality
+condition|)
+block|{
+case|case
+literal|0
+case|:
 name|pp
 operator|->
 name|disp
 operator|=
-literal|.001
+literal|.002
 expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|pp
+operator|->
+name|disp
+operator|=
+literal|.02
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|pp
+operator|->
+name|disp
+operator|=
+literal|.04
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|pp
+operator|->
+name|disp
+operator|=
+literal|.08
+expr_stmt|;
+break|break;
+default|default:
+name|pp
+operator|->
+name|disp
+operator|=
+name|MAXDISPERSE
+expr_stmt|;
+break|break;
+block|}
+block|}
+else|else
+block|{
+switch|switch
+condition|(
+name|quality
+condition|)
+block|{
+case|case
+literal|5
+case|:
+name|pp
+operator|->
+name|disp
+operator|=
+literal|.002
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|pp
+operator|->
+name|disp
+operator|=
+literal|.02
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|pp
+operator|->
+name|disp
+operator|=
+literal|.04
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|pp
+operator|->
+name|disp
+operator|=
+literal|.08
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|pp
+operator|->
+name|disp
+operator|=
+literal|.16
+expr_stmt|;
+break|break;
+default|default:
+name|pp
+operator|->
+name|disp
+operator|=
+name|MAXDISPERSE
+expr_stmt|;
+break|break;
+block|}
+block|}
+comment|/* 	 * Decode synchronization, and leap characters. If 	 * unsynchronized, set the leap bits accordingly and exit. 	 * Otherwise, set the leap bits according to the leap character. 	 */
+if|if
+condition|(
+name|syncchar
+operator|!=
+literal|':'
+condition|)
+name|pp
+operator|->
+name|leap
+operator|=
+name|LEAP_NOTINSYNC
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|leapchar
+operator|==
+literal|'+'
+condition|)
+name|pp
+operator|->
+name|leap
+operator|=
+name|LEAP_ADDSECOND
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|leapchar
+operator|==
+literal|'-'
+condition|)
+name|pp
+operator|->
+name|leap
+operator|=
+name|LEAP_DELSECOND
+expr_stmt|;
+else|else
 name|pp
 operator|->
 name|leap
@@ -951,6 +1211,7 @@ argument_list|(
 name|pp
 argument_list|)
 condition|)
+block|{
 name|refclock_report
 argument_list|(
 name|peer
@@ -958,6 +1219,7 @@ argument_list|,
 name|CEVNT_BADTIME
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -979,12 +1241,6 @@ modifier|*
 name|peer
 parameter_list|)
 block|{
-specifier|register
-name|struct
-name|ulinkunit
-modifier|*
-name|up
-decl_stmt|;
 name|struct
 name|refclockproc
 modifier|*
@@ -999,21 +1255,19 @@ name|peer
 operator|->
 name|procptr
 expr_stmt|;
-name|up
-operator|=
-operator|(
-expr|struct
-name|ulinkunit
-operator|*
-operator|)
-name|pp
-operator|->
-name|unitptr
-expr_stmt|;
 name|pollchar
 operator|=
 literal|'T'
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|sloppyclockflag
+operator|&
+name|CLK_FLAG1
+condition|)
+block|{
 if|if
 condition|(
 name|write
@@ -1039,6 +1293,13 @@ argument_list|,
 name|CEVNT_FAULT
 argument_list|)
 expr_stmt|;
+else|else
+name|pp
+operator|->
+name|polls
+operator|++
+expr_stmt|;
+block|}
 else|else
 name|pp
 operator|->
@@ -1096,40 +1357,6 @@ operator|->
 name|burst
 operator|=
 name|NSTAGE
-expr_stmt|;
-comment|/* 	 * If the monitor flag is set (flag4), we dump the internal 	 * quality table at the first timecode beginning the day. 	 */
-if|if
-condition|(
-name|pp
-operator|->
-name|sloppyclockflag
-operator|&
-name|CLK_FLAG4
-operator|&&
-name|pp
-operator|->
-name|hour
-operator|<
-operator|(
-name|int
-operator|)
-name|up
-operator|->
-name|lasthour
-condition|)
-name|up
-operator|->
-name|linect
-operator|=
-name|MONLIN
-expr_stmt|;
-name|up
-operator|->
-name|lasthour
-operator|=
-name|pp
-operator|->
-name|hour
 expr_stmt|;
 block|}
 end_function

@@ -287,6 +287,40 @@ begin_comment
 comment|/* not sizeof(int) == 4 */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|associd_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* association ID */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_int32
+name|keyid_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* cryptographic key ID */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_int32
+name|tstamp_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* NTP seconds timestamp */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

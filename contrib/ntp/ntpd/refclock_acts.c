@@ -44,45 +44,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_IOCTL_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_IOCTL_H */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -115,6 +76,39 @@ include|#
 directive|include
 file|"ntp_control.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_IOCTL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_IOCTL_H */
+end_comment
 
 begin_comment
 comment|/* MUST BE AFTER LAST #include<config.h> !!! */
@@ -1802,7 +1796,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Yes, I know this code incorrectly thinks that 2000 is a leap 	 * year. The ACTS timecode format croaks then anyway. Life is 	 * short. Would only the timecode mavens resist the urge to 	 * express months of the year and days of the month in favor of 	 * days of the year. 	 *	NOTE: year 2000 IS a leap year!!!  ghealton	Y2KFixes 	 */
+comment|/* 	 * The ACTS timecode format croaks in 2000. Life is short. 	 * Would only the timecode mavens resist the urge to express months 	 * of the year and days of the month in favor of days of the year. 	 */
 if|if
 condition|(
 name|month
@@ -1827,12 +1821,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Depending on the driver, at this point we have a two-digit year 	 * or a four-digit year.  Make sure we have a four-digit year. 	 */
 if|if
 condition|(
 name|pp
 operator|->
 name|year
-operator|<=
+operator|<
 name|YEAR_PIVOT
 condition|)
 name|pp
@@ -1844,8 +1839,23 @@ expr_stmt|;
 comment|/* Y2KFixes */
 if|if
 condition|(
+name|pp
+operator|->
+name|year
+operator|<
+name|YEAR_BREAK
+condition|)
+name|pp
+operator|->
+name|year
+operator|+=
+literal|1900
+expr_stmt|;
+comment|/* Y2KFixes */
+if|if
+condition|(
 operator|!
-name|isleap_tm
+name|isleap_4
 argument_list|(
 name|pp
 operator|->
@@ -2304,7 +2314,7 @@ switch|switch
 condition|(
 name|peer
 operator|->
-name|ttl
+name|ttlmax
 condition|)
 block|{
 comment|/* 		 * In manual mode the ACTS calling program is activated 		 * by the ntpdc program using the enable flag (fudge 		 * flag1), either manually or by a cron job. 		 */

@@ -351,6 +351,22 @@ literal|"GPS_FG"
 block|}
 block|,
 block|{
+name|REFCLK_HOPF_SERIAL
+block|,
+literal|"hopf Elektronic serial line receiver (38)"
+block|,
+literal|"HOPF_S"
+block|}
+block|,
+block|{
+name|REFCLK_HOPF_PCI
+block|,
+literal|"hopf Elektronic PCI receiver (39)"
+block|,
+literal|"HOPF_P"
+block|}
+block|,
+block|{
 operator|-
 literal|1
 block|,
