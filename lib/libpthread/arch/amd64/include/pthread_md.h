@@ -139,15 +139,29 @@ struct|struct
 name|tcb
 block|{
 name|struct
-name|tdv
+name|tcb
 modifier|*
-name|tcb_tdv
+name|tcb_self
 decl_stmt|;
+comment|/* required by rtld */
+name|void
+modifier|*
+name|tcb_dtv
+decl_stmt|;
+comment|/* required by rtld */
 name|struct
 name|pthread
 modifier|*
 name|tcb_thread
 decl_stmt|;
+name|void
+modifier|*
+name|tcb_spare
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* align tcb_tmbx to 16 bytes */
 name|struct
 name|kse_thr_mailbox
 name|tcb_tmbx
@@ -330,6 +344,8 @@ parameter_list|(
 name|struct
 name|pthread
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -109,12 +109,6 @@ name|pthread
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|tdv
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * %gs points to a struct kcb.  */
 end_comment
@@ -155,20 +149,21 @@ struct|struct
 name|tcb
 block|{
 name|struct
-name|tdv
+name|tcb
 modifier|*
-name|tcb_tdv
+name|tcb_self
 decl_stmt|;
+comment|/* required by rtld */
+name|void
+modifier|*
+name|tcb_dtv
+decl_stmt|;
+comment|/* required by rtld */
 name|struct
 name|pthread
 modifier|*
 name|tcb_thread
 decl_stmt|;
-name|void
-modifier|*
-name|tcb_addr
-decl_stmt|;
-comment|/* allocated tcb address */
 name|void
 modifier|*
 name|tcb_spare
@@ -356,6 +351,8 @@ parameter_list|(
 name|struct
 name|pthread
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -35,6 +35,9 @@ name|struct
 name|pthread
 modifier|*
 name|thread
+parameter_list|,
+name|int
+name|initial
 parameter_list|)
 block|{
 name|struct

@@ -10203,6 +10203,10 @@ operator|=
 name|_tcb_ctor
 argument_list|(
 name|thread
+argument_list|,
+name|curthread
+operator|==
+name|NULL
 argument_list|)
 operator|)
 operator|==
