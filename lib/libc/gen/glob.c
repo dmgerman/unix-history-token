@@ -652,6 +652,8 @@ operator|,
 name|Char
 operator|*
 operator|,
+name|size_t
+operator|,
 name|glob_t
 operator|*
 operator|)
@@ -1568,6 +1570,8 @@ name|pattern
 parameter_list|,
 name|patbuf
 parameter_list|,
+name|patbuf_len
+parameter_list|,
 name|pglob
 parameter_list|)
 specifier|const
@@ -1578,6 +1582,9 @@ decl_stmt|;
 name|Char
 modifier|*
 name|patbuf
+decl_stmt|;
+name|size_t
+name|patbuf_len
 decl_stmt|;
 name|glob_t
 modifier|*
@@ -1601,6 +1608,9 @@ decl_stmt|;
 name|Char
 modifier|*
 name|b
+decl_stmt|,
+modifier|*
+name|eb
 decl_stmt|;
 if|if
 condition|(
@@ -1621,7 +1631,17 @@ condition|)
 return|return
 name|pattern
 return|;
-comment|/* Copy up to the end of the string or / */
+comment|/*  	 * Copy up to the end of the string or /  	 */
+name|eb
+operator|=
+operator|&
+name|patbuf
+index|[
+name|patbuf_len
+operator|-
+literal|1
+index|]
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -1638,6 +1658,14 @@ operator|*
 operator|)
 name|patbuf
 init|;
+name|h
+operator|<
+operator|(
+name|char
+operator|*
+operator|)
+name|eb
+operator|&&
 operator|*
 name|p
 operator|&&
@@ -1755,6 +1783,10 @@ name|b
 operator|=
 name|patbuf
 init|;
+name|b
+operator|<
+name|eb
+operator|&&
 operator|*
 name|h
 condition|;
@@ -1770,6 +1802,10 @@ continue|continue;
 comment|/* Append the rest of the pattern */
 while|while
 condition|(
+name|b
+operator|<
+name|eb
+operator|&&
 operator|(
 operator|*
 name|b
@@ -1783,6 +1819,11 @@ operator|!=
 name|EOS
 condition|)
 continue|continue;
+operator|*
+name|b
+operator|=
+name|EOS
+expr_stmt|;
 return|return
 name|patbuf
 return|;
@@ -1842,6 +1883,16 @@ argument_list|(
 name|pattern
 argument_list|,
 name|patbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|patbuf
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|Char
+argument_list|)
 argument_list|,
 name|pglob
 argument_list|)
