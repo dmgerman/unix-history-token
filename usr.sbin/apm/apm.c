@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|APMDEV
-value|"/dev/apm0"
+value|"/dev/apm"
 end_define
 
 begin_decl_stmt
