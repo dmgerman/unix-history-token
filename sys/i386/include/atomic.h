@@ -43,6 +43,8 @@ name|TYPE
 parameter_list|,
 name|OP
 parameter_list|,
+name|CONS
+parameter_list|,
 name|V
 parameter_list|)
 define|\
@@ -105,10 +107,12 @@ name|TYPE
 parameter_list|,
 name|OP
 parameter_list|,
+name|CONS
+parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "=m" (*p)			\ 			 : "ir" (V));		 	\ }
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "=m" (*p)			\ 			 : CONS (V));			\ }
 end_define
 
 begin_endif
@@ -127,7 +131,9 @@ argument|set
 argument_list|,
 argument|char
 argument_list|,
-literal|"orb %1,%0"
+literal|"orb %b1,%0"
+argument_list|,
+literal|"iq"
 argument_list|,
 argument|v
 argument_list|)
@@ -140,7 +146,9 @@ argument|clear
 argument_list|,
 argument|char
 argument_list|,
-literal|"andb %1,%0"
+literal|"andb %b1,%0"
+argument_list|,
+literal|"iq"
 argument_list|,
 argument|~v
 argument_list|)
@@ -153,7 +161,9 @@ argument|add
 argument_list|,
 argument|char
 argument_list|,
-literal|"addb %1,%0"
+literal|"addb %b1,%0"
+argument_list|,
+literal|"iq"
 argument_list|,
 argument|v
 argument_list|)
@@ -166,7 +176,9 @@ argument|subtract
 argument_list|,
 argument|char
 argument_list|,
-literal|"subb %1,%0"
+literal|"subb %b1,%0"
+argument_list|,
+literal|"iq"
 argument_list|,
 argument|v
 argument_list|)
@@ -179,7 +191,9 @@ argument|set
 argument_list|,
 argument|short
 argument_list|,
-literal|"orw %1,%0"
+literal|"orw %w1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|v
 argument_list|)
@@ -192,7 +206,9 @@ argument|clear
 argument_list|,
 argument|short
 argument_list|,
-literal|"andw %1,%0"
+literal|"andw %w1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|~v
 argument_list|)
@@ -205,7 +221,9 @@ argument|add
 argument_list|,
 argument|short
 argument_list|,
-literal|"addw %1,%0"
+literal|"addw %w1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|v
 argument_list|)
@@ -218,7 +236,9 @@ argument|subtract
 argument_list|,
 argument|short
 argument_list|,
-literal|"subw %1,%0"
+literal|"subw %w1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|v
 argument_list|)
@@ -233,6 +253,8 @@ argument|int
 argument_list|,
 literal|"orl %1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|v
 argument_list|)
 end_macro
@@ -245,6 +267,8 @@ argument_list|,
 argument|int
 argument_list|,
 literal|"andl %1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|~v
 argument_list|)
@@ -259,6 +283,8 @@ argument|int
 argument_list|,
 literal|"addl %1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|v
 argument_list|)
 end_macro
@@ -271,6 +297,8 @@ argument_list|,
 argument|int
 argument_list|,
 literal|"subl %1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|v
 argument_list|)
@@ -285,6 +313,8 @@ argument|long
 argument_list|,
 literal|"orl %1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|v
 argument_list|)
 end_macro
@@ -297,6 +327,8 @@ argument_list|,
 argument|long
 argument_list|,
 literal|"andl %1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|~v
 argument_list|)
@@ -311,6 +343,8 @@ argument|long
 argument_list|,
 literal|"addl %1,%0"
 argument_list|,
+literal|"ir"
+argument_list|,
 argument|v
 argument_list|)
 end_macro
@@ -323,6 +357,8 @@ argument_list|,
 argument|long
 argument_list|,
 literal|"subl %1,%0"
+argument_list|,
+literal|"ir"
 argument_list|,
 argument|v
 argument_list|)
