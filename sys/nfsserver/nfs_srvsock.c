@@ -1836,10 +1836,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 	 * Define this to test for nfsds handling this under heavy load. 	 */
+comment|/* 	 * We can't do this in the context of a socket callback 	 * because we're called with locks held. 	 * XXX: SMP 	 */
 if|if
 condition|(
 name|waitflag
@@ -1860,8 +1857,6 @@ goto|goto
 name|dorecs
 goto|;
 block|}
-endif|#
-directive|endif
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
