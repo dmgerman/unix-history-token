@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chpass.c,v 1.5 1996/02/23 14:33:05 wpaul Exp $"
+literal|"$Id: chpass.c,v 1.7 1996/02/23 16:08:56 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,7 +401,7 @@ literal|'h'
 case|:
 ifdef|#
 directive|ifdef
-name|PARAMOID
+name|PARANOID
 if|if
 condition|(
 name|getuid
@@ -410,7 +410,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Only the superuser can use the -d flag"
+literal|"Only the superuser can use the -h flag"
 argument_list|)
 expr_stmt|;
 block|}
@@ -475,25 +475,14 @@ break|break;
 case|case
 literal|'l'
 case|:
-if|if
-condition|(
-name|getuid
-argument_list|()
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"Only the superuser can use the -h flag"
-argument_list|)
+name|_use_yp
+operator|=
+literal|0
 expr_stmt|;
-block|}
-else|else
-block|{
 name|force_local
 operator|=
 literal|1
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'y'
