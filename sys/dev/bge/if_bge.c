@@ -2235,11 +2235,6 @@ name|bge_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
 name|u_int32_t
 name|val
 decl_stmt|,
@@ -2254,15 +2249,6 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
 expr_stmt|;
 if|if
 condition|(
