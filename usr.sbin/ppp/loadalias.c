@@ -266,7 +266,7 @@ name|dlopen
 argument_list|(
 name|path
 argument_list|,
-name|RTLD_LAZY
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
