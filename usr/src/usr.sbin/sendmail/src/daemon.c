@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.98 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.99 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.98 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.99 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1083,17 +1083,9 @@ comment|/* 	**  Determine the port number. 	*/
 if|if
 condition|(
 name|port
-operator|!=
+operator|==
 literal|0
 condition|)
-name|port
-operator|=
-name|htons
-argument_list|(
-name|port
-argument_list|)
-expr_stmt|;
-else|else
 block|{
 specifier|register
 name|struct

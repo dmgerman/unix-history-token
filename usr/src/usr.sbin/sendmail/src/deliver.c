@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.155 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.156 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4087,8 +4087,11 @@ index|]
 operator|!=
 name|NULL
 condition|)
+block|{
 name|port
 operator|=
+name|htons
+argument_list|(
 name|atoi
 argument_list|(
 name|pv
@@ -4096,7 +4099,55 @@ index|[
 literal|2
 index|]
 argument_list|)
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|port
+operator|==
+literal|0
+condition|)
+block|{
+name|struct
+name|servent
+modifier|*
+name|sp
+init|=
+name|getservbyname
+argument_list|(
+name|pv
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"tcp"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"Service %s unknown"
+argument_list|,
+name|pv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|port
+operator|=
+name|sp
+operator|->
+name|s_port
+expr_stmt|;
+block|}
+block|}
 name|tryhost
 label|:
 while|while
