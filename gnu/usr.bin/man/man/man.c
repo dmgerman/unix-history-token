@@ -4311,9 +4311,34 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+comment|/* FS might be sticky */
+name|sprintf
 argument_list|(
-literal|"rename"
+name|command
+argument_list|,
+literal|"cp %s %s"
+argument_list|,
+name|temp
+argument_list|,
+name|cat_file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|system
+argument_list|(
+name|command
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nHmm!  Can't seem to rename %s to %s, check permissions on man dir!\n"
+argument_list|,
+name|temp
+argument_list|,
+name|cat_file
 argument_list|)
 expr_stmt|;
 name|unlink
