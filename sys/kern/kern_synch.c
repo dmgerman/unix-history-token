@@ -1532,6 +1532,8 @@ condition|(
 name|p
 operator|->
 name|p_wchan
+operator|!=
+name|NULL
 condition|)
 name|unsleep
 argument_list|(
@@ -1859,6 +1861,8 @@ condition|(
 name|p
 operator|->
 name|p_wchan
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1924,6 +1928,8 @@ condition|(
 name|p
 operator|->
 name|p_wchan
+operator|!=
+name|NULL
 condition|)
 block|{
 name|TAILQ_REMOVE
