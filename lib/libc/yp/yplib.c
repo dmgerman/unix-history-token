@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.10.4.2 1995/10/05 20:22:00 davidg Exp $"
+literal|"$Id: yplib.c,v 1.10.4.5 1996/06/05 02:52:10 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1435,6 +1435,31 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 			 * These conditions indicate ypbind just isn't 			 * alive -- we probably don't want to shoot our 			 * mouth off in this case; instead generate error 			 * messages only for really exotic problems. 			 */
+if|if
+condition|(
+name|rpc_createerr
+operator|.
+name|cf_stat
+operator|!=
+name|RPC_PROGNOTREGISTERED
+operator|&&
+operator|(
+name|rpc_createerr
+operator|.
+name|cf_stat
+operator|!=
+name|RPC_SYSTEMERROR
+operator|&&
+name|rpc_createerr
+operator|.
+name|cf_error
+operator|.
+name|re_errno
+operator|==
+name|ECONNREFUSED
+operator|)
+condition|)
 name|clnt_pcreateerror
 argument_list|(
 literal|"clnttcp_create"
