@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ip_fil.c,v 2.0.1.5 1997/01/29 13:41:45 darrenr Exp $"
+literal|"$Id: ip_fil.c,v 2.0.1.7 1997/02/19 12:45:02 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,6 +440,8 @@ modifier|*
 name|fr_savep
 function_decl|)
 parameter_list|()
+init|=
+name|NULL
 function_decl|;
 end_function_decl
 
@@ -4232,6 +4234,21 @@ name|ip
 operator|->
 name|ip_dst
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__bsdi__
+name|dst
+operator|->
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|dst
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 operator|(

@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fil.c,v 2.0.1.4 1997/02/04 13:59:41 darrenr Exp $"
+literal|"$Id: fil.c,v 2.0.1.7 1997/02/18 10:53:47 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -661,6 +661,54 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPF_LOGGING
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPF_LOGGING
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPF_DEFAULT_PASS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IPF_NOMATCH
+value|(IPF_DEFAULT_PASS|FR_NOMATCH)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IPF_NOMATCH
+value|(FR_NOMATCH)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|filterstats
@@ -752,7 +800,7 @@ begin_decl_stmt
 name|int
 name|fr_flags
 init|=
-literal|0
+name|IPF_LOGGING
 decl_stmt|,
 name|fr_active
 init|=
@@ -3636,7 +3684,7 @@ else|else
 block|{
 name|pass
 operator|=
-name|FR_NOMATCH
+name|IPF_NOMATCH
 expr_stmt|;
 if|if
 condition|(
@@ -3658,7 +3706,7 @@ name|pass
 operator|=
 name|FR_SCANLIST
 argument_list|(
-name|FR_NOMATCH
+name|IPF_NOMATCH
 argument_list|,
 name|ip
 argument_list|,
@@ -3690,7 +3738,6 @@ name|pass
 operator|&
 name|FR_NOMATCH
 condition|)
-block|{
 name|frstats
 index|[
 name|out
@@ -3699,16 +3746,6 @@ operator|.
 name|fr_nom
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NOMATCH
-name|pass
-operator||=
-name|NOMATCH
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 block|}
 name|fr
 operator|=
@@ -4154,7 +4191,13 @@ operator|.
 name|fr_block
 operator|++
 expr_stmt|;
-comment|/* 		 * Should we return an ICMP packet to indicate error 		 * status passing through the packet filter ? 		 */
+comment|/* 		 * Should we return an ICMP packet to indicate error 		 * status passing through the packet filter ? 		 * WARNING: ICMP error packets AND TCP RST packets should 		 * ONLY be sent in repsonse to incoming packets.  Sending them 		 * in response to outbound packets can result in a panic on 		 * some operating systems. 		 */
+if|if
+condition|(
+operator|!
+name|out
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -4209,6 +4252,9 @@ name|ip_src
 argument_list|)
 expr_stmt|;
 name|m
+operator|=
+operator|*
+name|mp
 operator|=
 name|NULL
 expr_stmt|;
@@ -4328,6 +4374,7 @@ block|}
 endif|#
 directive|endif
 block|}
+block|}
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -4408,10 +4455,6 @@ operator|*
 name|mp
 operator|=
 name|NULL
-expr_stmt|;
-name|pass
-operator|=
-literal|0
 expr_stmt|;
 block|}
 if|if
