@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_examine.c,v 1.5 1994/08/13 03:49:17 wollman Exp $  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_examine.c,v 1.6 1994/08/18 22:34:22 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -339,42 +339,17 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* If we hit a new symbol, print it */
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|db_expr_t
-name|off
-decl_stmt|;
-name|db_find_sym_and_offset
+comment|/* Print the address. */
+name|db_printsym
 argument_list|(
 name|addr
 argument_list|,
-operator|&
-name|name
-argument_list|,
-operator|&
-name|off
+name|DB_STGY_ANY
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|off
-operator|==
-literal|0
-condition|)
 name|db_printf
 argument_list|(
-literal|"%s:\t"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-else|else
-name|db_printf
-argument_list|(
-literal|"\t\t"
+literal|":\t"
 argument_list|)
 expr_stmt|;
 name|db_prev
