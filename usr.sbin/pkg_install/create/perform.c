@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.15 1995/04/09 15:05:00 jkh Exp $"
+literal|"$Id: perform.c,v 1.16 1995/04/10 08:01:52 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,9 @@ expr_stmt|;
 if|if
 condition|(
 name|Verbose
+operator|&&
+operator|!
+name|PlistOnly
 condition|)
 name|printf
 argument_list|(
@@ -355,6 +358,26 @@ name|pkg
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/*      * We're just here for to dump out a revised plist for the FreeBSD ports      * hack.  It's not a real create in progress.      */
+if|if
+condition|(
+name|PlistOnly
+condition|)
+block|{
+name|write_plist
+argument_list|(
+operator|&
+name|plist
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Make a directory to stomp around in */
 name|home
 operator|=

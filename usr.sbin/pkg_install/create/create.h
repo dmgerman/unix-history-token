@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: create.h,v 1.6 1994/12/06 00:51:35 jkh Exp $ */
+comment|/* $Id: create.h,v 1.7 1995/04/09 15:04:57 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -119,6 +119,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|Dereference
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|PlistOnly
 decl_stmt|;
 end_decl_stmt
 

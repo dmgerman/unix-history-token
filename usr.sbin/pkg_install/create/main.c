@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.8 1994/12/06 00:51:36 jkh Exp $"
+literal|"$Id: main.c,v 1.9 1995/04/09 15:04:58 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNhvf:p:P:c:d:i:k:r:t:X:D:m:"
+literal|"YNOhvf:p:P:c:d:i:k:r:t:X:D:m:"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +163,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|PlistOnly
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -245,6 +253,14 @@ case|case
 literal|'Y'
 case|:
 name|AutoAnswer
+operator|=
+name|YES
+expr_stmt|;
+break|break;
+case|case
+literal|'O'
+case|:
+name|PlistOnly
 operator|=
 name|YES
 expr_stmt|;
@@ -646,6 +662,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-N         assume `no' answer to all questions\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-O         print a revised packing list and exit\n"
 argument_list|)
 expr_stmt|;
 name|exit
