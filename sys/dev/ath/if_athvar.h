@@ -497,11 +497,6 @@ decl_stmt|;
 comment|/* allocated buffer ptr */
 name|struct
 name|task
-name|sc_swbatask
-decl_stmt|;
-comment|/* swba int processing */
-name|struct
-name|task
 name|sc_bmisstask
 decl_stmt|;
 comment|/* bmiss int processing */
