@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c 1.9 %G%"
+literal|"@(#)symbols.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,9 +312,15 @@ comment|/* offset for of function value */
 name|Boolean
 name|src
 range|:
-literal|16
+literal|8
 decl_stmt|;
 comment|/* true if there is source line info */
+name|Boolean
+specifier|inline
+operator|:
+literal|8
+expr_stmt|;
+comment|/* true if no separate act. rec. */
 name|Address
 name|beginaddr
 decl_stmt|;
@@ -436,6 +442,16 @@ parameter_list|(
 name|f
 parameter_list|)
 value|(not (f)->symvalue.funcv.src)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isinline
+parameter_list|(
+name|f
+parameter_list|)
+value|((f)->symvalue.funcv.inline)
 end_define
 
 begin_include
