@@ -62,31 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
+file|<sys/user.h>
 end_include
 
 begin_include
