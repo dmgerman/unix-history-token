@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkheaders.c	5.8 (Berkeley) %G%"
+literal|"@(#)mkheaders.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -921,12 +921,22 @@ operator|*
 name|cp
 operator|++
 operator|=
+name|islower
+argument_list|(
+operator|*
+name|dev
+argument_list|)
+condition|?
 name|toupper
 argument_list|(
 operator|*
 name|dev
 operator|++
 argument_list|)
+else|:
+operator|*
+name|dev
+operator|++
 expr_stmt|;
 operator|*
 name|cp
