@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	6.21	85/02/22	*/
+comment|/*	vfs_lookup.c	6.21	85/02/24	*/
 end_comment
 
 begin_include
@@ -378,6 +378,11 @@ decl_stmt|;
 name|int
 name|docache
 decl_stmt|;
+comment|/* == 0 do not cache last component */
+name|int
+name|makeentry
+decl_stmt|;
+comment|/* != 0 if name to be added to cache */
 name|unsigned
 name|hash
 decl_stmt|;
@@ -440,6 +445,8 @@ condition|(
 name|flag
 operator|==
 name|DELETE
+operator|||
+name|lockparent
 condition|)
 name|docache
 operator|=
@@ -819,6 +826,25 @@ operator|==
 literal|'.'
 operator|)
 expr_stmt|;
+name|makeentry
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\0'
+operator|&&
+name|docache
+operator|==
+literal|0
+condition|)
+name|makeentry
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Check for degenerate name (e.g. / or "") 	 * which is a way of talking about a directory, 	 * e.g. like "/." or ".". 	 */
 if|if
 condition|(
@@ -886,7 +912,7 @@ operator|.
 name|ncs_long
 operator|++
 expr_stmt|;
-name|docache
+name|makeentry
 operator|=
 literal|0
 expr_stmt|;
@@ -1030,13 +1056,8 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|*
-name|cp
-operator|==
-literal|'\0'
-operator|&&
 operator|!
-name|docache
+name|makeentry
 condition|)
 block|{
 name|nchstats
@@ -1106,6 +1127,17 @@ name|pdp
 operator|=
 name|dp
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isdotdot
+operator|||
+name|dp
+operator|!=
+name|u
+operator|.
+name|u_rdir
+condition|)
 name|dp
 operator|=
 name|ncp
@@ -1129,13 +1161,14 @@ name|pdp
 operator|==
 name|dp
 condition|)
+block|{
 name|dp
 operator|->
 name|i_count
 operator|++
 expr_stmt|;
-else|else
-block|{
+block|}
+elseif|else
 if|if
 condition|(
 name|isdotdot
@@ -1164,7 +1197,6 @@ argument_list|(
 name|pdp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 				 * Verify that the inode that we got 				 * did not change while we were waiting 				 * for it to be locked. 				 */
 if|if
@@ -2191,30 +2223,26 @@ operator|.
 name|tv_sec
 expr_stmt|;
 block|}
-comment|/* 	 * Save directory entry in ndp->ni_dent, 	 * and release directory buffer. 	 */
-name|bcopy
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ep
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
+comment|/* 	 * Save directory entry's inode number and reclen in ndp->ni_dent, 	 * and release directory buffer. 	 */
 name|ndp
 operator|->
 name|ni_dent
-argument_list|,
-operator|(
-name|u_int
-operator|)
-name|DIRSIZ
-argument_list|(
+operator|.
+name|d_ino
+operator|=
 name|ep
-argument_list|)
-argument_list|)
+operator|->
+name|d_ino
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_dent
+operator|.
+name|d_reclen
+operator|=
+name|ep
+operator|->
+name|d_reclen
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -2438,6 +2466,7 @@ name|u
 operator|.
 name|u_rdir
 condition|)
+block|{
 name|ndp
 operator|->
 name|ni_dent
@@ -2448,6 +2477,11 @@ name|dp
 operator|->
 name|i_number
 expr_stmt|;
+name|makeentry
+operator|=
+literal|0
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2756,7 +2790,7 @@ block|}
 comment|/* 	 * insert name into cache (if we want it, and it isn't "." or "..") 	 * 	 * all other cases where making a cache entry would be wrong 	 * have already departed from the code sequence somewhere above. 	 */
 if|if
 condition|(
-name|docache
+name|makeentry
 condition|)
 block|{
 if|if
