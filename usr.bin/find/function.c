@@ -115,12 +115,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -403,12 +397,12 @@ name|fts_statp
 operator|->
 name|st_atime
 operator|+
-name|SECSPERDAY
+literal|86400
 operator|-
 literal|1
 operator|)
 operator|/
-name|SECSPERDAY
+literal|86400
 argument_list|,
 name|plan
 operator|->
@@ -514,12 +508,12 @@ name|fts_statp
 operator|->
 name|st_ctime
 operator|+
-name|SECSPERDAY
+literal|86400
 operator|-
 literal|1
 operator|)
 operator|/
-name|SECSPERDAY
+literal|86400
 argument_list|,
 name|plan
 operator|->
@@ -2185,12 +2179,12 @@ name|fts_statp
 operator|->
 name|st_mtime
 operator|+
-name|SECSPERDAY
+literal|86400
 operator|-
 literal|1
 operator|)
 operator|/
-name|SECSPERDAY
+literal|86400
 argument_list|,
 name|plan
 operator|->
