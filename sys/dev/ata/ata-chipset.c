@@ -3241,7 +3241,7 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* set prefetch, postwrite */
+comment|/* disable/set prefetch, postwrite */
 if|if
 condition|(
 name|ctlr
@@ -5386,7 +5386,7 @@ literal|"Intel ICH5"
 block|}
 block|,
 block|{
-name|ATA_I82801EB_1
+name|ATA_I82801EB_S1
 block|,
 literal|0
 block|,
@@ -5400,7 +5400,7 @@ literal|"Intel ICH5"
 block|}
 block|,
 block|{
-name|ATA_I82801EB_2
+name|ATA_I82801EB_R1
 block|,
 literal|0
 block|,
@@ -5428,7 +5428,7 @@ literal|"Intel 6300ESB"
 block|}
 block|,
 block|{
-name|ATA_I6300ESB_1
+name|ATA_I6300ESB_S1
 block|,
 literal|0
 block|,
@@ -5442,7 +5442,7 @@ literal|"Intel 6300ESB"
 block|}
 block|,
 block|{
-name|ATA_I6300ESB_2
+name|ATA_I6300ESB_R1
 block|,
 literal|0
 block|,
@@ -7140,8 +7140,6 @@ block|,
 name|AMDNVIDIA
 block|,
 name|NVIDIA
-operator||
-name|AMDBUG
 block|,
 name|ATA_UDMA5
 block|,
@@ -7156,12 +7154,24 @@ block|,
 name|AMDNVIDIA
 block|,
 name|NVIDIA
-operator||
-name|AMDBUG
 block|,
 name|ATA_UDMA6
 block|,
 literal|"nVidia nForce2"
+block|}
+block|,
+block|{
+name|ATA_NFORCE2_MCP
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nVidia MCP"
 block|}
 block|,
 block|{
@@ -7176,6 +7186,48 @@ block|,
 name|ATA_UDMA6
 block|,
 literal|"nVidia nForce3"
+block|}
+block|,
+block|{
+name|ATA_NFORCE3_PRO
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nVidia nForce3 Pro"
+block|}
+block|,
+block|{
+name|ATA_NFORCE3_MCP
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nVidia nForce3 MCP"
+block|}
+block|,
+block|{
+name|ATA_NFORCE4
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nVidia nForce4"
 block|}
 block|,
 block|{
@@ -7288,17 +7340,7 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* set prefetch, postwrite */
-if|if
-condition|(
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|cfg2
-operator|&
-name|AMDBUG
-condition|)
+comment|/* disable prefetch, postwrite */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -7315,27 +7357,6 @@ literal|1
 argument_list|)
 operator|&
 literal|0x0f
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|else
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x51
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x51
-argument_list|,
-literal|1
-argument_list|)
-operator||
-literal|0xf0
 argument_list|,
 literal|1
 argument_list|)
@@ -16468,7 +16489,7 @@ index|[]
 init|=
 block|{
 block|{
-name|ATA_SIS964_1
+name|ATA_SIS964_S
 block|,
 literal|0x00
 block|,
