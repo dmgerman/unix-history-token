@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: engine.c,v 8.119 2003/12/02 18:53:57 ca Exp $"
+literal|"@(#)$Id: engine.c,v 8.120 2004/10/20 21:09:00 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1880,6 +1880,13 @@ index|]
 operator|.
 name|cm_macros
 expr_stmt|;
+name|call_abort
+operator|=
+name|ST_IN_MAIL
+argument_list|(
+name|curstate
+argument_list|)
+expr_stmt|;
 comment|/* call function to deal with command */
 name|r
 operator|=
@@ -1936,13 +1943,6 @@ name|MI_FAILURE
 expr_stmt|;
 break|break;
 block|}
-name|call_abort
-operator|=
-name|ST_IN_MAIL
-argument_list|(
-name|curstate
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|r

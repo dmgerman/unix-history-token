@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: comm.c,v 8.65 2004/07/07 21:41:30 ca Exp $"
+literal|"@(#)$Id: comm.c,v 8.66 2004/08/20 20:38:35 ca Exp $"
 argument_list|)
 end_macro
 
@@ -33,6 +33,29 @@ include|#
 directive|include
 file|<sys/uio.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|ssize_t
+name|retry_writev
+name|__P
+argument_list|(
+operator|(
+name|socket_t
+operator|,
+expr|struct
+name|iovec
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|timeval
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

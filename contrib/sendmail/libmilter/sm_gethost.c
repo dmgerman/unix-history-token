@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2001, 2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sm_gethost.c,v 8.26 2001/09/11 04:04:45 gshapiro Exp $"
+literal|"@(#)$Id: sm_gethost.c,v 8.27 2004/08/20 21:12:37 ca Exp $"
 argument_list|)
 end_macro
 
@@ -45,6 +45,12 @@ begin_comment
 comment|/* NETINET || NETINET6 */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"libmilter.h"
+end_include
+
 begin_comment
 comment|/* **  MI_GETHOSTBY{NAME,ADDR} -- compatibility routines for gethostbyXXX ** **	Some operating systems have wierd problems with the gethostbyXXX **	routines.  For example, Solaris versions at least through 2.3 **	don't properly deliver a canonical h_name field.  This tries to **	work around these problems. ** **	Support IPv6 as well as IPv4. */
 end_comment
@@ -56,6 +62,29 @@ name|NETINET6
 operator|&&
 name|NEEDSGETIPNODE
 end_if
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|hostent
+modifier|*
+name|getipnodebyname
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2001-2002, 2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: t-event.c,v 1.11 2002/04/25 01:50:25 ca Exp $"
+literal|"@(#)$Id: t-event.c,v 1.12 2004/08/03 20:50:32 ca Exp $"
 argument_list|)
 end_macro
 
@@ -74,12 +74,40 @@ file|<sm/test.h>
 end_include
 
 begin_decl_stmt
+specifier|static
+name|void
+name|evcheck
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ev1
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|check
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|evcheck
 parameter_list|(
@@ -110,6 +138,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ev1
 parameter_list|(

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smfi.c,v 8.72 2004/05/05 00:07:21 msk Exp $"
+literal|"@(#)$Id: smfi.c,v 8.73 2004/09/20 21:26:57 ca Exp $"
 argument_list|)
 end_macro
 
@@ -47,6 +47,23 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|myisenhsc
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

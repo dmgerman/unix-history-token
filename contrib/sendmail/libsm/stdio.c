@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: stdio.c,v 1.68 2004/03/03 19:20:29 ca Exp $"
+literal|"@(#)$Id: stdio.c,v 1.69 2004/08/03 20:46:34 ca Exp $"
 argument_list|)
 end_macro
 
@@ -103,6 +103,41 @@ include|#
 directive|include
 file|"local.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sm_stdsetmode
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|,
+specifier|const
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sm_stdgetmode
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Overall: **  Small standard I/O/seek/close functions. **  These maintain the `known seek offset' for seek optimization. */
@@ -630,6 +665,7 @@ comment|/* **  SM_STDGETMODE -- for getinfo determine open mode ** **  Called by
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sm_stdgetmode
 parameter_list|(

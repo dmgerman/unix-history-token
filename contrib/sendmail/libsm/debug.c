@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000, 2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000, 2001, 2003, 2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: debug.c,v 1.29 2003/01/10 00:26:06 ca Exp $"
+literal|"@(#)$Id: debug.c,v 1.30 2004/08/03 20:10:26 ca Exp $"
 argument_list|)
 end_macro
 
@@ -79,6 +79,36 @@ include|#
 directive|include
 file|<sm/heap.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|sm_debug_reset
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|parse_named_setting_x
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Abstractions for printing trace messages. */
@@ -331,6 +361,7 @@ comment|/* **  SM_DEBUG_RESET -- Reset SM_DEBUG structures. ** **	Reset all SM_D
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sm_debug_reset
 parameter_list|()
@@ -464,7 +495,6 @@ name|parse_named_setting_x
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -619,7 +649,6 @@ name|sm_debug_addsettings_x
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*

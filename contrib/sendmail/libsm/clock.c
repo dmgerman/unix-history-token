@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: clock.c,v 1.45 2004/01/19 19:32:08 ca Exp $"
+literal|"@(#)$Id: clock.c,v 1.46 2004/08/03 19:57:22 ca Exp $"
 argument_list|)
 end_macro
 
@@ -191,31 +191,35 @@ begin_comment
 comment|/* list of free events */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|SM_EVENT
 modifier|*
 name|sm_seteventm
-argument_list|(
+parameter_list|(
 name|intvl
-argument_list|,
+parameter_list|,
 name|func
-argument_list|,
+parameter_list|,
 name|arg
-argument_list|)
+parameter_list|)
 name|int
 name|intvl
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|func
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|void
+parameter_list|(
+function_decl|*func
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -275,31 +279,35 @@ begin_comment
 comment|/* **	NOTE:	THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD **		ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE **		DOING. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|SM_EVENT
 modifier|*
 name|sm_sigsafe_seteventm
-argument_list|(
+parameter_list|(
 name|intvl
-argument_list|,
+parameter_list|,
 name|func
-argument_list|,
+parameter_list|,
 name|arg
-argument_list|)
+parameter_list|)
 name|int
 name|intvl
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|func
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|void
+parameter_list|(
+function_decl|*func
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -1482,12 +1490,16 @@ operator|)
 condition|)
 block|{
 name|void
-function_decl|(
-modifier|*
-name|f
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*f
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
 name|arg
 decl_stmt|;
@@ -1995,7 +2007,7 @@ name|sm_endsleep
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2557,7 +2569,12 @@ begin_function
 specifier|static
 name|void
 name|sm_endsleep
-parameter_list|()
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+decl_stmt|;
 block|{
 comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
 name|SmSleepDone

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.938 2004/06/03 19:02:10 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.939 2004/08/03 19:57:23 ca Exp $"
 argument_list|)
 end_macro
 
@@ -8894,7 +8894,12 @@ end_comment
 begin_function
 name|void
 name|runqueueevent
-parameter_list|()
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+decl_stmt|;
 block|{
 name|int
 name|save_errno

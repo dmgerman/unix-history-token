@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.641 2004/07/23 20:45:02 gshapiro Exp $"
+literal|"@(#)$Id: readcf.c,v 8.642 2004/08/04 21:17:57 ca Exp $"
 argument_list|)
 end_macro
 
@@ -160,6 +160,22 @@ name|char
 operator|*
 operator|,
 name|bool
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|parse_class_words
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
 operator|*
 operator|)
 argument_list|)
