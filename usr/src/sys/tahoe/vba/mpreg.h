@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mpreg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mpreg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -125,6 +125,42 @@ value|8
 end_define
 
 begin_comment
+comment|/*  * Host Interface semaphores  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPSEMA_AVAILABLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPSEMA_WORK
+value|4
+end_define
+
+begin_comment
+comment|/*  * Host Interface imok values  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPIMOK_ALIVE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPIMOK_DEAD
+value|0x80
+end_define
+
+begin_comment
 comment|/*  * Host Interface Structure  */
 end_comment
 
@@ -135,25 +171,9 @@ block|{
 name|u_char
 name|semaphore
 decl_stmt|;
-define|#
-directive|define
-name|MPSEMA_AVAILABLE
-value|1
-define|#
-directive|define
-name|MPSEMA_WORK
-value|4
 name|u_char
 name|imok
 decl_stmt|;
-define|#
-directive|define
-name|MPIMOK_ALIVE
-value|0x01
-define|#
-directive|define
-name|MPIMOK_DEAD
-value|0x80
 name|u_char
 name|brdnum
 decl_stmt|;
@@ -811,12 +831,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MP_PORTUP
+name|MP_IOCTL
 value|2
 end_define
 
 begin_comment
-comment|/* link is up for port */
+comment|/* IOCTL is in progress */
 end_comment
 
 begin_define
@@ -1985,73 +2005,6 @@ name|A_DTR
 value|00200
 end_define
 
-begin_comment
-comment|/* error messages printed at console , board& port # filled in later */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|A_INVSTS
-value|"\n#### Invalid Status Event "
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_INVCMD
-value|"\n#### Invalid Event From the MPCC "
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_NORBUF
-value|"\n#### No More Available Receive Buffers "
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_NOEBUF
-value|"\n#### No More Available Event Buffers "
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_OVRN
-value|"\n#### Overrun Error Detected "
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_OVRF
-value|"\n#### Overflow Error Detected "
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_NOXBUF
-value|"\n#### No More Available Transmit Event Buffers "
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_XSIZE
-value|"\n#### Transmit Data Block Size Exceeds Event Data Buffer Size "
-end_define
-
-begin_define
-define|#
-directive|define
-name|A_NOFREIN
-value|"\n#### No Available Inbound Entries to Send Close Event "
-end_define
-
 begin_define
 define|#
 directive|define
@@ -2298,7 +2251,7 @@ value|1024
 end_define
 
 begin_comment
-comment|/*      mpdlioctl command defines       */
+comment|/* mpdlioctl command defines */
 end_comment
 
 begin_struct
@@ -2416,7 +2369,7 @@ value|_IO('m',12)
 end_define
 
 begin_comment
-comment|/*      mpdlwrite opcode defines        */
+comment|/* mpdlwrite opcode defines */
 end_comment
 
 begin_define
@@ -2424,6 +2377,73 @@ define|#
 directive|define
 name|MPDLCMD_NORMAL
 value|1
+end_define
+
+begin_comment
+comment|/* error messages printed at console , board& port # filled in later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_INVSTS
+value|"Invalid Status Event "
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_INVCMD
+value|"Invalid Event From the MPCC "
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_NORBUF
+value|"No More Available Receive Buffers "
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_NOEBUF
+value|"No More Available Event Buffers "
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_OVRN
+value|"Overrun Error Detected "
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_OVRF
+value|"Overflow Error Detected "
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_NOXBUF
+value|"No More Available Transmit Event Buffers "
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_XSIZE
+value|"Transmit Data Block Size Exceeds Event Data Buffer Size "
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_NOFREIN
+value|"No Available Inbound Entries to Send Close Event "
 end_define
 
 end_unit
