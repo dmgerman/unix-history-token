@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.3 %G%"
+literal|"@(#)pc.c 3.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -685,7 +685,7 @@ literal|'0'
 case|:
 name|pc0
 operator|=
-literal|"/vb/grad/peter/pc/npc0/src/a.pc"
+literal|"/vb/grad/peter/pc/pc0/src/a.out"
 expr_stmt|;
 continue|continue;
 case|case
@@ -1688,7 +1688,7 @@ name|ldargx
 operator|++
 index|]
 operator|=
-literal|"-lc"
+literal|"-lm"
 expr_stmt|;
 name|ldargs
 index|[
@@ -1696,7 +1696,7 @@ name|ldargx
 operator|++
 index|]
 operator|=
-literal|"-lm"
+literal|"-lc"
 expr_stmt|;
 name|ldargs
 index|[
