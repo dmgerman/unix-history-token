@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncrreg.h,v 1.3 1995/03/21 22:48:36 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@cologne.de		Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncrreg.h,v 1.4 1996/10/11 19:50:12 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@cologne.de		Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_ifndef
@@ -365,9 +365,24 @@ name|nc_ctest3
 decl_stmt|;
 define|#
 directive|define
+name|FLF
+value|0x08
+comment|/* cmd: flush dma fifo              */
+define|#
+directive|define
 name|CLF
 value|0x04
-comment|/* clear scsi fifo		    */
+comment|/* cmd: clear dma fifo		    */
+define|#
+directive|define
+name|FM
+value|0x02
+comment|/* mod: fetch pin mode              */
+define|#
+directive|define
+name|WRIE
+value|0x01
+comment|/* mod: write and invalidate enable */
 comment|/*1c*/
 name|u_long
 name|nc_temp
@@ -381,6 +396,16 @@ comment|/*21*/
 name|u_char
 name|nc_ctest4
 decl_stmt|;
+define|#
+directive|define
+name|BDIS
+value|0x80
+comment|/* mod: burst disable               */
+define|#
+directive|define
+name|MPEE
+value|0x08
+comment|/* mod: master parity error enable  */
 comment|/*22*/
 name|u_char
 name|nc_ctest5
@@ -418,6 +443,31 @@ comment|/*38*/
 name|u_char
 name|nc_dmode
 decl_stmt|;
+define|#
+directive|define
+name|BL_2
+value|0x80
+comment|/* mod: burst length shift value +2 */
+define|#
+directive|define
+name|BL_1
+value|0x40
+comment|/* mod: burst length shift value +1 */
+define|#
+directive|define
+name|ERL
+value|0x08
+comment|/* mod: enable read line            */
+define|#
+directive|define
+name|ERMP
+value|0x04
+comment|/* mod: enable read multiple        */
+define|#
+directive|define
+name|BOF
+value|0x02
+comment|/* mod: burst op code fetch         */
 comment|/*39*/
 name|u_char
 name|nc_dien
@@ -433,14 +483,39 @@ decl_stmt|;
 comment|/* --> Script execution control     */
 define|#
 directive|define
+name|CLSE
+value|0x80
+comment|/* mod: cache line size enable      */
+define|#
+directive|define
+name|PFF
+value|0x40
+comment|/* cmd: pre-fetch flush             */
+define|#
+directive|define
+name|PFEN
+value|0x20
+comment|/* mod: pre-fetch enable            */
+define|#
+directive|define
 name|SSM
 value|0x10
 comment|/* mod: single step mode            */
 define|#
 directive|define
+name|IRQM
+value|0x08
+comment|/* mod: irq mode (1 = totem pole !) */
+define|#
+directive|define
 name|STD
 value|0x04
 comment|/* cmd: start dma mode              */
+define|#
+directive|define
+name|IRQD
+value|0x02
+comment|/* mod: irq disable                 */
 define|#
 directive|define
 name|NOCOM
