@@ -90,7 +90,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|dvcfg_hw_t
 name|dvcfg_hw
 name|__P
@@ -108,7 +108,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|dvcfg_hw_t
 name|dvcfg_hw
 parameter_list|(
@@ -135,7 +135,7 @@ operator|->
 name|cfg_max
 operator|)
 condition|?
-name|NULL
+literal|0
 else|:
 name|selp
 operator|->
