@@ -90,7 +90,7 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/*  * Convert a string to a long long integer.  *  * Ignores `locale' stuff.  Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
+comment|/*  * Convert a string to a long long integer.  *  * Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
 end_comment
 
 begin_function
@@ -140,8 +140,6 @@ specifier|register
 name|unsigned
 name|long
 name|long
-name|qbase
-decl_stmt|,
 name|cutoff
 decl_stmt|;
 specifier|register
@@ -272,14 +270,24 @@ literal|8
 else|:
 literal|10
 expr_stmt|;
-comment|/* 	 * Compute the cutoff value between legal numbers and illegal 	 * numbers.  That is the largest legal value, divided by the 	 * base.  An input number that is greater than this value, if 	 * followed by a legal input character, is too big.  One that 	 * is equal to this value may be valid or not; the limit 	 * between valid and invalid numbers is then based on the last 	 * digit.  For instance, if the range for quads is 	 * [-9223372036854775808..9223372036854775807] and the input base 	 * is 10, cutoff will be set to 922337203685477580 and cutlim to 	 * either 7 (neg==0) or 8 (neg==1), meaning that if we have 	 * accumulated a value> 922337203685477580, or equal but the 	 * next digit is> 7 (or 8), the number is too big, and we will 	 * return a range error. 	 * 	 * Set any if any `digits' consumed; make it negative to indicate 	 * overflow. 	 */
-name|qbase
+name|any
 operator|=
-operator|(
-name|unsigned
-operator|)
-name|base
+literal|0
 expr_stmt|;
+if|if
+condition|(
+name|base
+operator|<
+literal|2
+operator|||
+name|base
+operator|>
+literal|36
+condition|)
+goto|goto
+name|noconv
+goto|;
+comment|/* 	 * Compute the cutoff value between legal numbers and illegal 	 * numbers.  That is the largest legal value, divided by the 	 * base.  An input number that is greater than this value, if 	 * followed by a legal input character, is too big.  One that 	 * is equal to this value may be valid or not; the limit 	 * between valid and invalid numbers is then based on the last 	 * digit.  For instance, if the range for quads is 	 * [-9223372036854775808..9223372036854775807] and the input base 	 * is 10, cutoff will be set to 922337203685477580 and cutlim to 	 * either 7 (neg==0) or 8 (neg==1), meaning that if we have 	 * accumulated a value> 922337203685477580, or equal but the 	 * next digit is> 7 (or 8), the number is too big, and we will 	 * return a range error. 	 * 	 * Set 'any' if any `digits' consumed; make it negative to indicate 	 * overflow. 	 */
 name|cutoff
 operator|=
 name|neg
@@ -304,19 +312,15 @@ name|cutlim
 operator|=
 name|cutoff
 operator|%
-name|qbase
+name|base
 expr_stmt|;
 name|cutoff
 operator|/=
-name|qbase
+name|base
 expr_stmt|;
 for|for
 control|(
 name|acc
-operator|=
-literal|0
-operator|,
-name|any
 operator|=
 literal|0
 init|;
@@ -413,7 +417,7 @@ literal|1
 expr_stmt|;
 name|acc
 operator|*=
-name|qbase
+name|base
 expr_stmt|;
 name|acc
 operator|+=
@@ -444,6 +448,20 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|any
+condition|)
+block|{
+name|noconv
+label|:
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|neg
 condition|)
 name|acc
@@ -455,7 +473,7 @@ if|if
 condition|(
 name|endptr
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|endptr

@@ -37,6 +37,28 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -62,7 +84,7 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/*  * Convert a string to a long integer.  *  * Ignores `locale' stuff.  Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
+comment|/*  * Convert a string to a long integer.  *  * Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
 end_comment
 
 begin_function
@@ -95,8 +117,6 @@ specifier|const
 name|char
 modifier|*
 name|s
-init|=
-name|nptr
 decl_stmt|;
 specifier|register
 name|unsigned
@@ -116,14 +136,16 @@ decl_stmt|;
 specifier|register
 name|int
 name|neg
-init|=
-literal|0
 decl_stmt|,
 name|any
 decl_stmt|,
 name|cutlim
 decl_stmt|;
 comment|/* 	 * Skip white space and pick up leading +/- sign if any. 	 * If base is 0, allow 0x for hex and 0 for octal, else 	 * assume decimal; if base is already 16, allow 0x. 	 */
+name|s
+operator|=
+name|nptr
+expr_stmt|;
 do|do
 block|{
 name|c
@@ -159,7 +181,12 @@ name|s
 operator|++
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
+name|neg
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -172,6 +199,7 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -233,17 +261,40 @@ literal|8
 else|:
 literal|10
 expr_stmt|;
-comment|/* 	 * Compute the cutoff value between legal numbers and illegal 	 * numbers.  That is the largest legal value, divided by the 	 * base.  An input number that is greater than this value, if 	 * followed by a legal input character, is too big.  One that 	 * is equal to this value may be valid or not; the limit 	 * between valid and invalid numbers is then based on the last 	 * digit.  For instance, if the range for longs is 	 * [-2147483648..2147483647] and the input base is 10, 	 * cutoff will be set to 214748364 and cutlim to either 	 * 7 (neg==0) or 8 (neg==1), meaning that if we have accumulated 	 * a value> 214748364, or equal but the next digit is> 7 (or 8), 	 * the number is too big, and we will return a range error. 	 * 	 * Set any if any `digits' consumed; make it negative to indicate 	 * overflow. 	 */
+name|any
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|base
+operator|<
+literal|2
+operator|||
+name|base
+operator|>
+literal|36
+condition|)
+goto|goto
+name|noconv
+goto|;
+comment|/* 	 * Compute the cutoff value between legal numbers and illegal 	 * numbers.  That is the largest legal value, divided by the 	 * base.  An input number that is greater than this value, if 	 * followed by a legal input character, is too big.  One that 	 * is equal to this value may be valid or not; the limit 	 * between valid and invalid numbers is then based on the last 	 * digit.  For instance, if the range for longs is 	 * [-2147483648..2147483647] and the input base is 10, 	 * cutoff will be set to 214748364 and cutlim to either 	 * 7 (neg==0) or 8 (neg==1), meaning that if we have accumulated 	 * a value> 214748364, or equal but the next digit is> 7 (or 8), 	 * the number is too big, and we will return a range error. 	 * 	 * Set 'any' if any `digits' consumed; make it negative to indicate 	 * overflow. 	 */
 name|cutoff
 operator|=
 name|neg
 condition|?
-operator|-
 operator|(
 name|unsigned
 name|long
 operator|)
+operator|-
+operator|(
 name|LONG_MIN
+operator|+
+name|LONG_MAX
+operator|)
+operator|+
+name|LONG_MAX
 else|:
 name|LONG_MAX
 expr_stmt|;
@@ -251,27 +302,15 @@ name|cutlim
 operator|=
 name|cutoff
 operator|%
-operator|(
-name|unsigned
-name|long
-operator|)
 name|base
 expr_stmt|;
 name|cutoff
 operator|/=
-operator|(
-name|unsigned
-name|long
-operator|)
 name|base
 expr_stmt|;
 for|for
 control|(
 name|acc
-operator|=
-literal|0
-operator|,
-name|any
 operator|=
 literal|0
 init|;
@@ -399,6 +438,20 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|any
+condition|)
+block|{
+name|noconv
+label|:
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|neg
 condition|)
 name|acc
@@ -410,7 +463,7 @@ if|if
 condition|(
 name|endptr
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|endptr
