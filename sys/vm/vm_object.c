@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/lock.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -252,6 +252,13 @@ begin_decl_stmt
 name|struct
 name|object_q
 name|vm_object_list
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|simplelock
+name|vm_object_list_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -497,6 +504,12 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|vm_object_list
+argument_list|)
+expr_stmt|;
+name|simple_lock_init
+argument_list|(
+operator|&
+name|vm_object_list_lock
 argument_list|)
 expr_stmt|;
 name|vm_object_count
@@ -1180,6 +1193,14 @@ name|object
 operator|->
 name|handle
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|int
 name|waslocked
 decl_stmt|;
@@ -1195,9 +1216,15 @@ condition|(
 operator|!
 name|waslocked
 condition|)
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vm_object_page_clean
@@ -1236,6 +1263,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1298,6 +1329,12 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+name|simple_lock
+argument_list|(
+operator|&
+name|vm_object_list_lock
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1310,6 +1347,12 @@ argument_list|)
 expr_stmt|;
 name|vm_object_count
 operator|--
+expr_stmt|;
+name|simple_unlock
+argument_list|(
+operator|&
+name|vm_object_list_lock
+argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -1422,6 +1465,14 @@ index|[
 name|vm_pageout_page_count
 index|]
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|pproc
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|object
@@ -1451,9 +1502,15 @@ if|if
 condition|(
 name|lockflag
 condition|)
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|pproc
 argument_list|)
 expr_stmt|;
 name|object
@@ -2183,6 +2240,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|pproc
 argument_list|)
 expr_stmt|;
 name|object

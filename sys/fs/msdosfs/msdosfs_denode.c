@@ -409,7 +409,11 @@ argument_list|(
 name|dep
 argument_list|)
 argument_list|,
-literal|1
+name|LK_EXCLUSIVE
+operator||
+name|LK_INTERLOCK
+argument_list|,
+name|curproc
 argument_list|)
 condition|)
 return|return
@@ -855,9 +859,15 @@ argument_list|)
 expr_stmt|;
 comment|/* init the fat cache for this denode */
 comment|/* 	 * Insert the denode into the hash queue and lock the denode so it 	 * can't be accessed until we've read it in and have done what we 	 * need to it. 	 */
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|nvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|curproc
 argument_list|)
 expr_stmt|;
 name|msdosfs_hashins
@@ -2468,9 +2478,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|curproc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2564,6 +2580,10 @@ block|}
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|curproc
 argument_list|)
 expr_stmt|;
 name|dep

@@ -388,5 +388,39 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  *  Arguments to mount MSDOS filesystems.  */
+end_comment
+
+begin_struct
+struct|struct
+name|msdosfs_args
+block|{
+name|char
+modifier|*
+name|fspec
+decl_stmt|;
+comment|/* blocks special holding the fs to mount */
+name|struct
+name|export_args
+name|export
+decl_stmt|;
+comment|/* network export information */
+name|uid_t
+name|uid
+decl_stmt|;
+comment|/* uid that owns msdosfs files */
+name|gid_t
+name|gid
+decl_stmt|;
+comment|/* gid that owns msdosfs files */
+name|mode_t
+name|mask
+decl_stmt|;
+comment|/* mask to be applied for msdosfs perms */
+block|}
+struct|;
+end_struct
+
 end_unit
 

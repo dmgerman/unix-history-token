@@ -2403,16 +2403,16 @@ block|}
 block|,
 comment|/* 205 = utrace */
 block|{
-literal|0
+literal|1
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|undelete
 block|}
 block|,
-comment|/* 206 = nosys */
+comment|/* 206 = undelete */
 block|{
 literal|0
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1995  *	Poul-Henning Kamp.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.3 (Berkeley) 8/22/94  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Poul-Henning Kamp of the FreeBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.3 (Berkeley) 8/22/94  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -71,12 +71,25 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * Name caching works as follows:  *  * Names found by directory scans are retained in a cache  * for future reference.  It is managed LRU, so frequently  * used names will hang around.  Cache is indexed by hash value  * obtained from (vp, name) where vp refers to the directory  * containing name.  *  * If it is a "negative" entry, (that we know a name to>not< exist)  * we point out entry at our own "nchENOENT", to avoid too much special  * casing in the inner loops of lookup.  *  * For simplicity (and economy of storage), names longer than  * a maximum length of NCHNAMLEN are not cached; they occur  * infrequently in any case, and are almost never of interest.  *  * Upon reaching the last segment of a path, if the reference  * is for DELETE, or NOCACHE is set (rewrite), and the  * name is located in the cache, it will be dropped.  */
+comment|/*  * Name caching works as follows:  *  * Names found by directory scans are retained in a cache  * for future reference.  It is managed LRU, so frequently  * used names will hang around.  Cache is indexed by hash value  * obtained from (vp, name) where vp refers to the directory  * containing name.  *  * If it is a "negative" entry, (i.e. for a name that is known NOT to  * exist) the vnode pointer will be NULL.  *  * For simplicity (and economy of storage), names longer than  * a maximum length of NCHNAMLEN are not cached; they occur  * infrequently in any case, and are almost never of interest.  *  * Upon reaching the last segment of a path, if the reference  * is for DELETE, or NOCACHE is set (rewrite), and the  * name is located in the cache, it will be dropped.  */
 end_comment
 
 begin_comment
 comment|/*  * Structures associated with name cacheing.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NCHHASH
+parameter_list|(
+name|dvp
+parameter_list|,
+name|cnp
+parameter_list|)
+define|\
+value|(&nchashtbl[((dvp)->v_id + (cnp)->cn_hash)& nchash])
+end_define
 
 begin_expr_stmt
 specifier|static
@@ -95,21 +108,6 @@ begin_comment
 comment|/* Hash Table */
 end_comment
 
-begin_expr_stmt
-specifier|static
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|namecache
-argument_list|)
-name|nclruhead
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* LRU chain */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -118,30 +116,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* size of hash table */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|nchstats
-name|nchstats
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* cache effectiveness statistics */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|vnode
-name|nchENOENT
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* our own "novnode" */
+comment|/* size of hash table - 1 */
 end_comment
 
 begin_decl_stmt
@@ -185,11 +160,35 @@ name|numcache
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* number of cache entries allocated */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|namecache
+argument_list|)
+name|nclruhead
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* LRU chain */
+end_comment
+
 begin_decl_stmt
-name|u_long
-name|numvnodes
+name|struct
+name|nchstats
+name|nchstats
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* cache effectiveness statistics */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -251,6 +250,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Delete an entry from its hash list and move it to the front  * of the LRU list for immediate reuse.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -258,8 +261,12 @@ name|PURGE
 parameter_list|(
 name|ncp
 parameter_list|)
-value|{						\ 	LIST_REMOVE(ncp, nc_hash);				\ 	ncp->nc_hash.le_prev = 0;				\ 	TAILQ_REMOVE(&nclruhead, ncp, nc_lru);			\ 	TAILQ_INSERT_HEAD(&nclruhead, ncp, nc_lru); }
+value|{						\ 	LIST_REMOVE(ncp, nc_hash);				\ 	ncp->nc_hash.le_prev = 0;				\ 	TAILQ_REMOVE(&nclruhead, ncp, nc_lru);			\ 	TAILQ_INSERT_HEAD(&nclruhead, ncp, nc_lru);		\ }
 end_define
+
+begin_comment
+comment|/*  * Move an entry that has been used to the tail of the LRU list  * so that it will be preserved for future use.  */
+end_comment
 
 begin_define
 define|#
@@ -268,11 +275,11 @@ name|TOUCH
 parameter_list|(
 name|ncp
 parameter_list|)
-value|{						\ 	if (ncp->nc_lru.tqe_next == 0) { } else {		\ 		TAILQ_REMOVE(&nclruhead, ncp, nc_lru);		\ 		TAILQ_INSERT_TAIL(&nclruhead, ncp, nc_lru);	\ 		NCHNBR(ncp); } }
+value|{						\ 	if (ncp->nc_lru.tqe_next != 0) {			\ 		TAILQ_REMOVE(&nclruhead, ncp, nc_lru);		\ 		TAILQ_INSERT_TAIL(&nclruhead, ncp, nc_lru);	\ 		NCHNBR(ncp);					\ 	}							\ }
 end_define
 
 begin_comment
-comment|/*  * Lookup an entry in the cache  *  * We don't do this if the segment name is long, simply so the cache  * can avoid holding long names (which would either waste space, or  * add greatly to the complexity).  *  * Lookup is called with dvp pointing to the directory to search,  * cnp pointing to the name of the entry being sought.  * If the lookup succeeds, the vnode is returned in *vpp, and a status  * of -1 is returned.  * If the lookup determines that the name does not exist (negative cacheing),  * a status of ENOENT is returned.  * If the lookup fails, a status of zero is returned.  */
+comment|/*  * Lookup an entry in the cache   *  * We don't do this if the segment name is long, simply so the cache   * can avoid holding long names (which would either waste space, or  * add greatly to the complexity).  *  * Lookup is called with dvp pointing to the directory to search,  * cnp pointing to the name of the entry being sought. If the lookup  * succeeds, the vnode is returned in *vpp, and a status of -1 is  * returned. If the lookup determines that the name does not exist  * (negative cacheing), a status of ENOENT is returned. If the lookup  * fails, a status of zero is returned.  */
 end_comment
 
 begin_function
@@ -365,21 +372,12 @@ return|;
 block|}
 name|ncpp
 operator|=
-operator|&
-name|nchashtbl
-index|[
-operator|(
+name|NCHHASH
+argument_list|(
 name|dvp
-operator|->
-name|v_id
-operator|+
+argument_list|,
 name|cnp
-operator|->
-name|cn_hash
-operator|)
-operator|%
-name|nchash
-index|]
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -422,6 +420,10 @@ name|v_id
 operator|)
 operator|||
 operator|(
+name|ncp
+operator|->
+name|nc_vp
+operator|&&
 name|ncp
 operator|->
 name|nc_vpid
@@ -482,11 +484,16 @@ operator|->
 name|nc_nlen
 argument_list|)
 condition|)
-goto|goto
-name|found
-goto|;
-comment|/* Fanatism considered bad. */
+break|break;
 block|}
+comment|/* We failed to find an entry */
+if|if
+condition|(
+name|ncp
+operator|==
+literal|0
+condition|)
+block|{
 name|nchstats
 operator|.
 name|ncs_miss
@@ -497,8 +504,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|found
-label|:
+block|}
 name|NCHHIT
 argument_list|(
 name|ncp
@@ -540,9 +546,6 @@ condition|(
 name|ncp
 operator|->
 name|nc_vp
-operator|!=
-operator|&
-name|nchENOENT
 condition|)
 block|{
 name|nchstats
@@ -614,7 +617,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* The name does not exists */
+comment|/* 	 * We found a "negative" match, ENOENT notifies client of this match. 	 * The nc_vpid field records whether this is a whiteout. 	 */
 name|nchstats
 operator|.
 name|ncs_neghits
@@ -624,6 +627,14 @@ name|TOUCH
 argument_list|(
 name|ncp
 argument_list|)
+expr_stmt|;
+name|cnp
+operator|->
+name|cn_flags
+operator||=
+name|ncp
+operator|->
+name|nc_vpid
 expr_stmt|;
 return|return
 operator|(
@@ -681,6 +692,9 @@ operator|!
 name|doingcache
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|cnp
@@ -697,11 +711,34 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
+comment|/* 	 * We allocate a new entry if we are less than the maximum 	 * allowed and the one at the front of the LRU list is in use. 	 * Otherwise we use the one at the front of the LRU list. 	 */
 if|if
 condition|(
 name|numcache
 operator|<
-name|numvnodes
+name|desiredvnodes
+operator|&&
+operator|(
+operator|(
+name|ncp
+operator|=
+name|nclruhead
+operator|.
+name|tqh_first
+operator|)
+operator|==
+name|NULL
+operator|||
+name|ncp
+operator|->
+name|nc_hash
+operator|.
+name|le_prev
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* Add one more entry */
@@ -797,23 +834,25 @@ block|{
 comment|/* give up */
 return|return;
 block|}
-comment|/* If vp is NULL this is a "negative" cache entry */
-if|if
-condition|(
-operator|!
-name|vp
-condition|)
-name|vp
-operator|=
-operator|&
-name|nchENOENT
-expr_stmt|;
-comment|/* fill in cache info */
+comment|/* 	 * Fill in cache info, if vp is NULL this is a "negative" cache entry. 	 * For negative entries, we have to record whether it is a whiteout. 	 * the whiteout flag is stored in the nc_vpid field which is 	 * otherwise unused. 	 */
 name|ncp
 operator|->
 name|nc_vp
 operator|=
 name|vp
+expr_stmt|;
+if|if
+condition|(
+name|vp
+condition|)
+block|{
+name|ncp
+operator|->
+name|nc_vpid
+operator|=
+name|vp
+operator|->
+name|v_id
 expr_stmt|;
 if|if
 condition|(
@@ -828,13 +867,17 @@ name|vp
 operator|->
 name|v_usage
 expr_stmt|;
+block|}
+else|else
 name|ncp
 operator|->
 name|nc_vpid
 operator|=
-name|vp
+name|cnp
 operator|->
-name|v_id
+name|cn_flags
+operator|&
+name|ISWHITEOUT
 expr_stmt|;
 name|ncp
 operator|->
@@ -888,21 +931,12 @@ argument_list|)
 expr_stmt|;
 name|ncpp
 operator|=
-operator|&
-name|nchashtbl
-index|[
-operator|(
+name|NCHHASH
+argument_list|(
 name|dvp
-operator|->
-name|v_id
-operator|+
+argument_list|,
 name|cnp
-operator|->
-name|cn_hash
-operator|)
-operator|%
-name|nchash
-index|]
+argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -943,18 +977,11 @@ operator|&
 name|nchash
 argument_list|)
 expr_stmt|;
-name|cache_purge
-argument_list|(
-operator|&
-name|nchENOENT
-argument_list|)
-expr_stmt|;
-comment|/* Initialize v_id */
 block|}
 end_function
 
 begin_comment
-comment|/*  * Invalidate all entries to a particular vnode.  *  * We actually just increment the v_id, that will do it.  The stale entries   * will be purged by lookup as they get found.  * If the v_id wraps around, we need to ditch the entire cache, to avoid  * confusion.  * No valid vnode will ever have (v_id == 0).  */
+comment|/*  * Invalidate all entries to particular vnode.  *   * We actually just increment the v_id, that will do it. The stale entries  * will be purged by lookup as they get found. If the v_id wraps around, we  * need to ditch the entire cache, to avoid confusion. No valid vnode will  * ever have (v_id == 0).  */
 end_comment
 
 begin_function
@@ -969,6 +996,11 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
+name|struct
+name|namecache
+modifier|*
+name|ncp
+decl_stmt|;
 name|struct
 name|nchashhead
 modifier|*
@@ -1014,25 +1046,18 @@ control|)
 block|{
 while|while
 condition|(
+name|ncp
+operator|=
 name|ncpp
 operator|->
 name|lh_first
 condition|)
 name|PURGE
 argument_list|(
-name|ncpp
-operator|->
-name|lh_first
+name|ncp
 argument_list|)
 expr_stmt|;
 block|}
-name|nchENOENT
-operator|.
-name|v_id
-operator|=
-operator|++
-name|nextvnodeid
-expr_stmt|;
 name|vp
 operator|->
 name|v_id
@@ -1044,7 +1069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Flush all entries referencing a particular filesystem.  *  * Since we need to check it anyway, we will flush all the invalid  * entries at the same time.  *  * If we purge anything, we scan the hash-bucket again.  There is only  * a handful of entries, so it cheap and simple.  */
+comment|/*  * Flush all entries referencing a particular filesystem.  *  * Since we need to check it anyway, we will flush all the invalid  * entries at the same time.  */
 end_comment
 
 begin_function
@@ -1068,6 +1093,9 @@ name|struct
 name|namecache
 modifier|*
 name|ncp
+decl_stmt|,
+modifier|*
+name|nnp
 decl_stmt|;
 comment|/* Scan hash tables for applicable entries */
 for|for
@@ -1090,17 +1118,31 @@ name|ncpp
 operator|--
 control|)
 block|{
+for|for
+control|(
 name|ncp
 operator|=
 name|ncpp
 operator|->
 name|lh_first
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|ncp
-condition|)
+operator|!=
+literal|0
+condition|;
+name|ncp
+operator|=
+name|nnp
+control|)
 block|{
+name|nnp
+operator|=
+name|ncp
+operator|->
+name|nc_hash
+operator|.
+name|le_next
+expr_stmt|;
 if|if
 condition|(
 name|ncp
@@ -1113,6 +1155,11 @@ name|nc_dvp
 operator|->
 name|v_id
 operator|||
+operator|(
+name|ncp
+operator|->
+name|nc_vp
+operator|&&
 name|ncp
 operator|->
 name|nc_vpid
@@ -1122,6 +1169,7 @@ operator|->
 name|nc_vp
 operator|->
 name|v_id
+operator|)
 operator|||
 name|ncp
 operator|->
@@ -1136,23 +1184,6 @@ name|PURGE
 argument_list|(
 name|ncp
 argument_list|)
-expr_stmt|;
-name|ncp
-operator|=
-name|ncpp
-operator|->
-name|lh_first
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ncp
-operator|=
-name|ncp
-operator|->
-name|nc_hash
-operator|.
-name|le_next
 expr_stmt|;
 block|}
 block|}

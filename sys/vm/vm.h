@@ -137,6 +137,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  *	MACH VM locking type mappings to kernel types  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|struct
+name|simplelock
+name|simple_lock_data_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|simplelock
+modifier|*
+name|simple_lock_t
+typedef|;
+end_typedef
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|typedef struct lock		lock_data_t; typedef struct lock		*lock_t;
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

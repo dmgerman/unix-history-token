@@ -800,6 +800,10 @@ operator|(
 expr|struct
 name|vnode
 operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

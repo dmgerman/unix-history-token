@@ -2152,6 +2152,10 @@ argument_list|(
 name|nd
 operator|.
 name|ni_vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2185,6 +2189,10 @@ argument_list|(
 name|nd
 operator|.
 name|ni_vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vn

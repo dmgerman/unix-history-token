@@ -175,6 +175,13 @@ name|register_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int32_t
+name|ufs_daddr_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif

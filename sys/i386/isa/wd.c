@@ -1030,7 +1030,7 @@ name|wddump
 block|,
 name|wdsize
 block|,
-literal|0
+name|D_DISK
 block|,
 literal|"wd"
 block|,

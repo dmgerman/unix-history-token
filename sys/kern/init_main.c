@@ -132,7 +132,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/lock.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -1668,7 +1668,7 @@ argument_list|(
 operator|(
 name|void
 operator|*
-name|dummy
+name|fsnamep
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1679,22 +1679,27 @@ specifier|static
 name|void
 name|xxx_vfs_mountroot
 parameter_list|(
-name|dummy
+name|fsnamep
 parameter_list|)
 name|void
 modifier|*
-name|dummy
+name|fsnamep
 decl_stmt|;
 block|{
 comment|/* Mount the root file system. */
 if|if
 condition|(
-call|(
-modifier|*
-name|mountroot
-call|)
+name|vfs_mountrootfs
 argument_list|(
-name|mountrootvfsops
+operator|*
+operator|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|fsnamep
+operator|)
 argument_list|)
 condition|)
 name|panic
@@ -1716,7 +1721,7 @@ argument|SI_ORDER_FIRST
 argument_list|,
 argument|xxx_vfs_mountroot
 argument_list|,
-argument|NULL
+argument|&mountrootfsname
 argument_list|)
 end_macro
 
@@ -1798,6 +1803,11 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|rootvnode
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|proc0
 argument_list|)
 expr_stmt|;
 name|fdp

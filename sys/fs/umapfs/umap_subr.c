@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)umap_subr.c	8.6 (Berkeley) 1/26/94  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)umap_subr.c	8.9 (Berkeley) 5/14/95  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -57,19 +63,6 @@ directive|include
 file|<miscfs/umapfs/umap.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|umapfs_init
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -88,6 +81,10 @@ name|NUMAPNODECACHE
 value|16
 end_define
 
+begin_comment
+comment|/*  * Null layer cache:  * Each cache entry holds a reference to the target vnode  * along with a pointer to the alias vnode.  When an  * entry is added the target vnode is VREF'd.  When the  * alias is removed the target vnode is vrele'd.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -95,43 +92,25 @@ name|UMAP_NHASH
 parameter_list|(
 name|vp
 parameter_list|)
-value|((((u_long) vp)>>LOG2_SIZEVNODE)& (NUMAPNODECACHE-1))
+define|\
+value|(&umap_node_hashtbl[(((u_long)vp)>>LOG2_SIZEVNODE)& umap_node_hash])
 end_define
 
-begin_comment
-comment|/*  * Null layer cache:  * Each cache entry holds a reference to the target vnode  * along with a pointer to the alias vnode.  When an  * entry is added the target vnode is VREF'd.  When the  * alias is removed the target vnode is vrele'd.  */
-end_comment
-
-begin_comment
-comment|/*  * Cache head  */
-end_comment
-
-begin_struct
-struct|struct
-name|umap_node_cache
-block|{
-name|struct
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|umap_node_hashhead
+argument_list|,
 name|umap_node
-modifier|*
-name|ac_forw
-decl_stmt|;
-name|struct
-name|umap_node
-modifier|*
-name|ac_back
-decl_stmt|;
-block|}
-struct|;
-end_struct
+argument_list|)
+operator|*
+name|umap_node_hashtbl
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-specifier|static
-name|struct
-name|umap_node_cache
-name|umap_node_cache
-index|[
-name|NUMAPNODECACHE
-index|]
+name|u_long
+name|umap_node_hash
 decl_stmt|;
 end_decl_stmt
 
@@ -209,24 +188,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|umap_node_cache
-modifier|*
-name|umap_node_hash
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|targetvp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Initialise cache headers  */
 end_comment
@@ -234,13 +195,15 @@ end_comment
 begin_function
 name|int
 name|umapfs_init
-parameter_list|()
-block|{
+parameter_list|(
+name|vfsp
+parameter_list|)
 name|struct
-name|umap_node_cache
+name|vfsconf
 modifier|*
-name|ac
+name|vfsp
 decl_stmt|;
+block|{
 ifdef|#
 directive|ifdef
 name|UMAPFS_DIAGNOSTIC
@@ -252,73 +215,21 @@ expr_stmt|;
 comment|/* printed during system boot */
 endif|#
 directive|endif
-for|for
-control|(
-name|ac
+name|umap_node_hashtbl
 operator|=
-name|umap_node_cache
-init|;
-name|ac
-operator|<
-name|umap_node_cache
-operator|+
+name|hashinit
+argument_list|(
 name|NUMAPNODECACHE
-condition|;
-name|ac
-operator|++
-control|)
-name|ac
-operator|->
-name|ac_forw
-operator|=
-name|ac
-operator|->
-name|ac_back
-operator|=
-operator|(
-expr|struct
-name|umap_node
-operator|*
-operator|)
-name|ac
+argument_list|,
+name|M_CACHE
+argument_list|,
+operator|&
+name|umap_node_hash
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Compute hash list for given target vnode  */
-end_comment
-
-begin_function
-specifier|static
-name|struct
-name|umap_node_cache
-modifier|*
-name|umap_node_hash
-parameter_list|(
-name|targetvp
-parameter_list|)
-name|struct
-name|vnode
-modifier|*
-name|targetvp
-decl_stmt|;
-block|{
-return|return
-operator|(
-operator|&
-name|umap_node_cache
-index|[
-name|UMAP_NHASH
-argument_list|(
-name|targetvp
-argument_list|)
-index|]
 operator|)
 return|;
 block|}
@@ -528,7 +439,15 @@ name|targetvp
 decl_stmt|;
 block|{
 name|struct
-name|umap_node_cache
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
+name|umap_node_hashhead
 modifier|*
 name|hd
 decl_stmt|;
@@ -559,7 +478,7 @@ directive|endif
 comment|/* 	 * Find hash base, and then search the (two-way) linked 	 * list looking for a umap_node structure which is referencing 	 * the target vnode.  If found, the increment the umap_node 	 * reference count (but NOT the target vnode's VREF counter). 	 */
 name|hd
 operator|=
-name|umap_node_hash
+name|UMAP_NHASH
 argument_list|(
 name|targetvp
 argument_list|)
@@ -572,22 +491,19 @@ name|a
 operator|=
 name|hd
 operator|->
-name|ac_forw
+name|lh_first
 init|;
 name|a
 operator|!=
-operator|(
-expr|struct
-name|umap_node
-operator|*
-operator|)
-name|hd
+literal|0
 condition|;
 name|a
 operator|=
 name|a
 operator|->
-name|umap_forw
+name|umap_hash
+operator|.
+name|le_next
 control|)
 block|{
 if|if
@@ -622,6 +538,8 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 condition|)
 block|{
@@ -701,7 +619,7 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
-name|umap_node_cache
+name|umap_node_hashhead
 modifier|*
 name|hd
 decl_stmt|;
@@ -859,16 +777,18 @@ expr_stmt|;
 comment|/* Extra VREF will be vrele'd in umap_node_create */
 name|hd
 operator|=
-name|umap_node_hash
+name|UMAP_NHASH
 argument_list|(
 name|lowervp
 argument_list|)
 expr_stmt|;
-name|insque
+name|LIST_INSERT_HEAD
 argument_list|(
+name|hd
+argument_list|,
 name|xp
 argument_list|,
-name|hd
+name|umap_hash
 argument_list|)
 expr_stmt|;
 return|return

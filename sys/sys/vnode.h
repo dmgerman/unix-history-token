@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -133,6 +139,10 @@ struct_decl|struct
 name|vm_object
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  * v_freelist is locked by the global vnode_free_list simple lock.  * v_mntvnodes is locked by the global mntvnodes simple lock.  * v_flag, v_usecount, v_holdcount and v_writecount are  *    locked by the v_interlock simple lock.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -268,6 +278,17 @@ modifier|*
 name|v_object
 decl_stmt|;
 comment|/* Place to store VM object */
+name|struct
+name|simplelock
+name|v_interlock
+decl_stmt|;
+comment|/* lock on usecount and flag */
+name|struct
+name|lock
+modifier|*
+name|v_vnlock
+decl_stmt|;
+comment|/* used for non-locking fs's */
 name|enum
 name|vtagtype
 name|v_tag
@@ -318,7 +339,7 @@ begin_define
 define|#
 directive|define
 name|VROOT
-value|0x0001
+value|0x00001
 end_define
 
 begin_comment
@@ -329,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|VTEXT
-value|0x0002
+value|0x00002
 end_define
 
 begin_comment
@@ -340,7 +361,7 @@ begin_define
 define|#
 directive|define
 name|VSYSTEM
-value|0x0004
+value|0x00004
 end_define
 
 begin_comment
@@ -350,30 +371,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VOLOCK
-value|0x0008
+name|VISTTY
+value|0x00008
 end_define
 
 begin_comment
-comment|/* vnode is locked waiting for an object */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VOWANT
-value|0x0010
-end_define
-
-begin_comment
-comment|/* a process is waiting for VOLOCK */
+comment|/* vnode represents a tty */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VXLOCK
-value|0x0100
+value|0x00100
 end_define
 
 begin_comment
@@ -384,7 +394,7 @@ begin_define
 define|#
 directive|define
 name|VXWANT
-value|0x0200
+value|0x00200
 end_define
 
 begin_comment
@@ -395,7 +405,7 @@ begin_define
 define|#
 directive|define
 name|VBWAIT
-value|0x0400
+value|0x00400
 end_define
 
 begin_comment
@@ -406,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|VALIASED
-value|0x0800
+value|0x00800
 end_define
 
 begin_comment
@@ -417,7 +427,7 @@ begin_define
 define|#
 directive|define
 name|VDIROP
-value|0x1000
+value|0x01000
 end_define
 
 begin_comment
@@ -428,7 +438,7 @@ begin_define
 define|#
 directive|define
 name|VVMIO
-value|0x2000
+value|0x02000
 end_define
 
 begin_comment
@@ -439,7 +449,7 @@ begin_define
 define|#
 directive|define
 name|VNINACT
-value|0x4000
+value|0x04000
 end_define
 
 begin_comment
@@ -450,11 +460,33 @@ begin_define
 define|#
 directive|define
 name|VAGE
-value|0x8000
+value|0x08000
 end_define
 
 begin_comment
 comment|/* Insert vnode at head of free list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VOLOCK
+value|0x10000
+end_define
+
+begin_comment
+comment|/* vnode is locked waiting for an object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VOWANT
+value|0x20000
+end_define
+
+begin_comment
+comment|/* a process is waiting for VOLOCK */
 end_comment
 
 begin_comment
@@ -550,7 +582,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flags for va_cflags.  */
+comment|/*  * Flags for va_vaflags.  */
 end_comment
 
 begin_define
@@ -562,6 +594,17 @@ end_define
 
 begin_comment
 comment|/* utimes argument was NULL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VA_EXCLUSIVE
+value|0x02
+end_define
+
+begin_comment
+comment|/* exclusive create request */
 end_comment
 
 begin_comment
@@ -836,6 +879,17 @@ begin_comment
 comment|/* vinvalbuf: leave indirect blocks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|REVOKEALL
+value|0x0001
+end_define
+
+begin_comment
+comment|/* vop_revoke: revoke all aliases */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -910,24 +964,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|vref
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|HOLDRELE
-parameter_list|(
-name|vp
-parameter_list|)
-value|(vp)->v_holdcnt--
-end_define
-
-begin_comment
-comment|/* decrease buf or page ref */
-end_comment
 
 begin_define
 define|#
@@ -946,16 +1001,102 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HOLDRELE
+parameter_list|(
+name|vp
+parameter_list|)
+value|holdrele(vp)
+end_define
+
+begin_comment
+comment|/* decrease buf or page ref */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|holdrele
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+block|{
+name|simple_lock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_holdcnt
+operator|--
+expr_stmt|;
+name|simple_unlock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
 name|VHOLD
 parameter_list|(
 name|vp
 parameter_list|)
-value|(vp)->v_holdcnt++
+value|vhold(vp)
 end_define
 
 begin_comment
 comment|/* increase buf or page ref */
 end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vhold
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+block|{
+name|simple_lock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_holdcnt
+operator|++
+expr_stmt|;
+name|simple_unlock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -971,10 +1112,29 @@ begin_comment
 comment|/* increase reference */
 end_comment
 
+begin_decl_stmt
+name|void
+name|vref
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* DIAGNOSTIC */
+end_comment
 
 begin_define
 define|#
@@ -1097,37 +1257,6 @@ comment|/* Check lease for modifiers */
 end_comment
 
 begin_extern
-extern|extern void	(*lease_check
-end_extern
-
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|ucred
-operator|,
-name|int
-name|flag
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
 extern|extern void	(*lease_updatetime
 end_extern
 
@@ -1158,22 +1287,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|LEASE_CHECK
-parameter_list|(
-name|vp
-parameter_list|,
-name|p
-parameter_list|,
-name|cred
-parameter_list|,
-name|flag
-parameter_list|)
-value|lease_check((vp), (p), (cred), (flag))
-end_define
-
-begin_define
-define|#
-directive|define
 name|LEASE_UPDATETIME
 parameter_list|(
 name|dt
@@ -1185,21 +1298,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|LEASE_CHECK
-parameter_list|(
-name|vp
-parameter_list|,
-name|p
-parameter_list|,
-name|cred
-parameter_list|,
-name|flag
-parameter_list|)
-end_define
 
 begin_define
 define|#
@@ -1223,23 +1321,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|LEASE_CHECK
-parameter_list|(
-name|vp
-parameter_list|,
-name|p
-parameter_list|,
-name|cred
-parameter_list|,
-name|flag
-parameter_list|)
-define|\
-value|do { if(lease_check) lease_check((vp), (p), (cred), (flag)); } while(0)
-end_define
 
 begin_define
 define|#
@@ -1411,6 +1492,18 @@ name|vnodeop_desc
 modifier|*
 name|vnodeop_descs
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Interlock for scanning list of vnodes attached to a mountpoint  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|mntvnode_slock
 decl_stmt|;
 end_decl_stmt
 
@@ -1633,6 +1726,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|ostat
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|proc
 struct_decl|;
 end_struct_decl
@@ -1672,6 +1771,23 @@ struct_decl|struct
 name|vop_bwrite_args
 struct_decl|;
 end_struct_decl
+
+begin_extern
+extern|extern int	(*lease_check_hook
+end_extern
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lease_args
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -1778,25 +1894,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|checkalias
+name|void
+name|cvtstat
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|stat
 operator|*
-name|vp
-operator|,
-name|dev_t
-name|nvp_rdev
+name|st
 operator|,
 expr|struct
-name|mount
+name|ostat
 operator|*
-name|mp
+name|ost
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1847,6 +1958,21 @@ expr|struct
 name|mount
 operator|*
 name|mp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lease_check
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lease_args
+operator|*
+name|ap
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1923,6 +2049,29 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|vflush
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
+expr|struct
+name|vnode
+operator|*
+name|skipvp
+operator|,
+name|int
+name|flags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|vget
 name|__P
 argument_list|(
@@ -1934,6 +2083,11 @@ name|vp
 operator|,
 name|int
 name|lockflag
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2004,6 +2158,50 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|vprint
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|label
+operator|,
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vrecycle
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|,
+expr|struct
+name|simplelock
+operator|*
+name|inter_lkp
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|vn_bwrite
 name|__P
@@ -2036,6 +2234,29 @@ expr|struct
 name|ucred
 operator|*
 name|cred
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vn_lock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|,
+name|int
+name|flags
 operator|,
 expr|struct
 name|proc
@@ -2185,19 +2406,81 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|vprint
+name|int
+name|vop_noislocked
 name|__P
 argument_list|(
 operator|(
-name|char
+expr|struct
+name|vop_islocked_args
 operator|*
-name|label
-operator|,
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vop_nolock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lock_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vop_nounlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_unlock_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vop_revoke
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_revoke_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|checkalias
+name|__P
+argument_list|(
+operator|(
 expr|struct
 name|vnode
 operator|*
 name|vp
+operator|,
+name|dev_t
+name|nvp_rdev
+operator|,
+expr|struct
+name|mount
+operator|*
+name|mp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2206,21 +2489,6 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|vput
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|vref
 name|__P
 argument_list|(
 operator|(

@@ -908,38 +908,11 @@ begin_comment
 comment|/* !_POSIX_SOURCE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|void
-name|cvtstat
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|stat
-operator|*
-operator|,
-expr|struct
-name|ostat
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* KERNEL */
-end_comment
+end_ifndef
 
 begin_include
 include|#
@@ -1125,7 +1098,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* !KERNEL */
 end_comment
 
 begin_endif

@@ -290,7 +290,8 @@ begin_struct
 struct|struct
 name|mount_args
 block|{
-name|int
+name|char
+modifier|*
 name|type
 decl_stmt|;
 name|char
@@ -2436,6 +2437,18 @@ end_struct
 
 begin_struct
 struct|struct
+name|undelete_args
+block|{
+name|char
+modifier|*
+name|path
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|__semctl_args
 block|{
 name|int
@@ -3832,7 +3845,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|mode_t
+name|int
 name|umask
 name|__P
 argument_list|(
@@ -5769,6 +5782,27 @@ operator|*
 operator|,
 expr|struct
 name|utrace_args
+operator|*
+operator|,
+name|int
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|undelete
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|undelete_args
 operator|*
 operator|,
 name|int

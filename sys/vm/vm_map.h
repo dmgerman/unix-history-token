@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.h	8.3 (Berkeley) 3/15/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_map.h	8.9 (Berkeley) 5/17/95  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -94,23 +94,6 @@ name|u_char
 name|eflags
 decl_stmt|;
 comment|/* map entry flags */
-if|#
-directive|if
-literal|0
-block|u_char is_a_map:1,
-comment|/* Is "object" a map? */
-block|is_sub_map:1,
-comment|/* Is "object" a submap? */
-block|copy_on_write:1,
-comment|/* is data copy-on-write */
-block|needs_copy:1,
-comment|/* does object need to be copied */
-block|nofault:1,
-comment|/* should never fault */
-block|user_wired:1;
-comment|/* wired by user */
-endif|#
-directive|endif
 comment|/* Only in task maps: */
 name|vm_prot_t
 name|protection
@@ -188,7 +171,8 @@ modifier|*
 name|pmap
 decl_stmt|;
 comment|/* Physical map */
-name|lock_data_t
+name|struct
+name|lock
 name|lock
 decl_stmt|;
 comment|/* Lock for map data */
@@ -213,6 +197,10 @@ name|int
 name|ref_count
 decl_stmt|;
 comment|/* Reference count */
+name|simple_lock_data_t
+name|ref_lock
+decl_stmt|;
+comment|/* Lock for ref_count field */
 name|vm_map_entry_t
 name|hint
 decl_stmt|;
@@ -343,6 +331,32 @@ begin_comment
 comment|/*  *	Macros:		vm_map_lock, etc.  *	Function:  *		Perform locking on the data portion of a map.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_comment
+comment|/* XXX for curproc and p_pid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vm_map_lock_drain_interlock
+parameter_list|(
+name|map
+parameter_list|)
+value|{ \ 	lockmgr(&(map)->lock, LK_DRAIN|LK_INTERLOCK, \&(map)->ref_lock, curproc); \ 	(map)->timestamp++; \ }
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -350,8 +364,32 @@ name|vm_map_lock
 parameter_list|(
 name|map
 parameter_list|)
-value|{ \ 	lock_write(&(map)->lock); \ 	(map)->timestamp++; \ }
+value|{ \ 	if (lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc) != 0) { \ 		panic("vm_map_lock: failed to get lock"); \ 	} \ 	(map)->timestamp++; \ }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|vm_map_lock
+parameter_list|(
+name|map
+parameter_list|)
+value|{ \ 	lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc); \ 	(map)->timestamp++; \ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DIAGNOSTIC */
+end_comment
 
 begin_define
 define|#
@@ -360,7 +398,8 @@ name|vm_map_unlock
 parameter_list|(
 name|map
 parameter_list|)
-value|lock_write_done(&(map)->lock)
+define|\
+value|lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc)
 end_define
 
 begin_define
@@ -370,7 +409,8 @@ name|vm_map_lock_read
 parameter_list|(
 name|map
 parameter_list|)
-value|lock_read(&(map)->lock)
+define|\
+value|lockmgr(&(map)->lock, LK_SHARED, (void *)0, curproc)
 end_define
 
 begin_define
@@ -380,7 +420,28 @@ name|vm_map_unlock_read
 parameter_list|(
 name|map
 parameter_list|)
-value|lock_read_done(&(map)->lock)
+define|\
+value|lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_map_set_recursive
+parameter_list|(
+name|map
+parameter_list|)
+value|{ \ 	simple_lock(&(map)->lock.lk_interlock); \ 	(map)->lock.lk_flags |= LK_CANRECURSE; \ 	simple_unlock(&(map)->lock.lk_interlock); \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_map_clear_recursive
+parameter_list|(
+name|map
+parameter_list|)
+value|{ \ 	simple_lock(&(map)->lock.lk_interlock); \ 	(map)->lock.lk_flags&= ~LK_CANRECURSE; \ 	simple_unlock(&(map)->lock.lk_interlock); \ }
 end_define
 
 begin_comment

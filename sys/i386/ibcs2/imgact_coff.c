@@ -868,6 +868,8 @@ comment|/* 	 * Lose the lock on the vnode. It's no longer needed, and must not 	
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if

@@ -676,9 +676,9 @@ comment|/* 204 = munlock */
 literal|"utrace"
 block|,
 comment|/* 205 = utrace */
-literal|"#206"
+literal|"undelete"
 block|,
-comment|/* 206 = nosys */
+comment|/* 206 = undelete */
 literal|"#207"
 block|,
 comment|/* 207 = nosys */

@@ -982,7 +982,7 @@ name|nodump
 block|,
 name|nopsize
 block|,
-literal|0
+name|D_TAPE
 block|,
 literal|"st"
 block|,

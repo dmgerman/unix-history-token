@@ -517,14 +517,12 @@ name|MOD_VFS
 parameter_list|(
 name|name
 parameter_list|,
-name|vfsslot
-parameter_list|,
 name|vnodeops
 parameter_list|,
 name|vfsconf
 parameter_list|)
 define|\
-value|static struct lkm_vfs _module = {	\ 		LM_VFS,				\ 		LKM_VERSION,			\ 		name,				\ 		vfsslot,			\ 		vnodeops,			\ 		vfsconf				\ 	}
+value|static struct lkm_vfs _module = {	\ 		LM_VFS,				\ 		LKM_VERSION,			\ 		name,				\ 		0,				\ 		vnodeops,			\ 		vfsconf				\ 	}
 end_define
 
 begin_define

@@ -357,7 +357,7 @@ name|lock_super
 parameter_list|(
 name|devvp
 parameter_list|)
-value|VOP_LOCK(devvp)
+value|vn_lock(devvp, LK_EXCLUSIVE | LK_RETRY, curproc)
 end_define
 
 begin_define
@@ -367,7 +367,7 @@ name|unlock_super
 parameter_list|(
 name|devvp
 parameter_list|)
-value|VOP_UNLOCK(devvp)
+value|VOP_UNLOCK(devvp, 0, curproc)
 end_define
 
 end_unit

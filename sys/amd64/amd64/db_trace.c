@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/lock.h>
+file|<sys/lock.h>
 end_include
 
 begin_include

@@ -939,6 +939,8 @@ comment|/*      * Lock no longer needed      */
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|locked
@@ -1514,6 +1516,8 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/*      * Release the kernel mapping.      */

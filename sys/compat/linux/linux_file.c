@@ -2395,9 +2395,15 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|again
@@ -2802,6 +2808,8 @@ label|:
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|free

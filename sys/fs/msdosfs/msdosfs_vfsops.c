@@ -576,6 +576,12 @@ condition|(
 name|vfs_busy
 argument_list|(
 name|mp
+argument_list|,
+name|LK_NOWAIT
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -595,6 +601,8 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -3305,7 +3313,11 @@ name|vget
 argument_list|(
 name|vp
 argument_list|,
-literal|1
+name|LK_EXCLUSIVE
+operator||
+name|LK_INTERLOCK
+argument_list|,
+name|p
 argument_list|)
 condition|)
 comment|/* not there anymore?	 */

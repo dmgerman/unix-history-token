@@ -674,7 +674,7 @@ name|nodump
 block|,
 name|nopsize
 block|,
-literal|0
+name|D_DISK
 block|,
 literal|"od"
 block|,

@@ -82,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/lock.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -279,6 +279,14 @@ name|vp
 init|=
 name|NULL
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|cnt
 operator|.
 name|v_vm_faults
@@ -307,7 +315,7 @@ value|{				\ 	if (lookup_still_valid) {			\ 		vm_map_lookup_done(map, entry);		\
 define|#
 directive|define
 name|UNLOCK_THINGS
-value|{				\ 	vm_object_pip_wakeup(object); \ 	if (object != first_object) {			\ 		FREE_PAGE(first_m);			\ 		vm_object_pip_wakeup(first_object); \ 	}						\ 	UNLOCK_MAP;					\ 	if (vp != NULL) VOP_UNLOCK(vp);			\ }
+value|{				\ 	vm_object_pip_wakeup(object); \ 	if (object != first_object) {			\ 		FREE_PAGE(first_m);			\ 		vm_object_pip_wakeup(first_object); \ 	}						\ 	UNLOCK_MAP;					\ 	if (vp != NULL) VOP_UNLOCK(vp, 0, p);		\ }
 define|#
 directive|define
 name|UNLOCK_AND_DEALLOCATE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1995 Artisoft, Inc.  All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_conf.c	8.8 (Berkeley) 3/31/94  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1995 Artisoft, Inc.  All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_conf.c	8.8 (Berkeley) 3/31/94  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -71,23 +71,17 @@ begin_comment
 comment|/*  * GLOBALS  */
 end_comment
 
-begin_macro
-name|int
-argument_list|(
-argument|*mountroot
-argument_list|)
-end_macro
+begin_comment
+comment|/*  *  These define the root filesystem, device, and root filesystem type.  */
+end_comment
 
-begin_expr_stmt
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|rootfs
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -98,10 +92,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|vfsops
+name|char
 modifier|*
-name|mountrootvfsops
+name|mountrootfsname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * vfs_init() will set maxvfsconf  * to the highest defined type number.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|maxvfsconf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vfsconf
+modifier|*
+name|vfsconf
 decl_stmt|;
 end_decl_stmt
 
@@ -112,39 +123,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ROOTDIR
-value|"/"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ROOTNAME
 value|"root_device"
 end_define
 
 begin_comment
-comment|/*  * vfs_mountroot  *  * Common entry point for root mounts  *  * PARAMETERS:  *		data	pointer to the vfs_ops for the FS type mounting  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *		ENTRY  *<no locks held>  *		EXIT  *<no locks held>  *  * NOTES:  *		This code is currently supported only for use for  *		the FFS file system type.  This is a matter of  *		fixing the other file systems, not this code!  */
+comment|/*  * vfs_mountrootfs  *  * Common entry point for root mounts  *  * PARAMETERS:  *		fsname	name of the filesystem  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *		ENTRY  *<no locks held>  *		EXIT  *<no locks held>  *  * NOTES:  *		This code is currently supported only for use for  *		the FFS file system type.  This is a matter of  *		fixing the other file systems, not this code!  */
 end_comment
 
 begin_function
 name|int
-name|vfs_mountroot
+name|vfs_mountrootfs
 parameter_list|(
-name|data
+name|fsname
 parameter_list|)
-name|void
+name|char
 modifier|*
-name|data
+name|fsname
 decl_stmt|;
 block|{
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-name|u_int
-name|size
 decl_stmt|;
 name|int
 name|err
@@ -159,165 +160,33 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
-name|struct
-name|vfsops
-modifier|*
-name|mnt_op
-init|=
-operator|(
-expr|struct
-name|vfsops
-operator|*
-operator|)
-name|data
-decl_stmt|;
 comment|/* 	 *  New root mount structure 	 */
-name|mp
+name|err
 operator|=
-name|malloc
+name|vfs_rootmountalloc
 argument_list|(
-operator|(
-name|u_long
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mount
-argument_list|)
+name|fsname
 argument_list|,
-name|M_MOUNT
+name|ROOTNAME
 argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
+operator|&
 name|mp
-argument_list|,
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return
 operator|(
-name|u_long
+name|err
 operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mount
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_op
-operator|=
-name|mnt_op
-expr_stmt|;
+return|;
 name|mp
 operator|->
 name|mnt_flag
-operator|=
+operator||=
 name|MNT_ROOTFS
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_vnodecovered
-operator|=
-name|NULLVP
-expr_stmt|;
-comment|/* 	 * Lock mount point 	 */
-if|if
-condition|(
-operator|(
-name|err
-operator|=
-name|vfs_lock
-argument_list|(
-name|mp
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|error_1
-goto|;
-comment|/* Save "last mounted on" info for mount point (NULL pad)*/
-name|copystr
-argument_list|(
-name|ROOTDIR
-argument_list|,
-comment|/* mount point*/
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntonname
-argument_list|,
-comment|/* save area*/
-name|MNAMELEN
-operator|-
-literal|1
-argument_list|,
-comment|/* max size*/
-operator|&
-name|size
-argument_list|)
-expr_stmt|;
-comment|/* real size*/
-name|bzero
-argument_list|(
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntonname
-operator|+
-name|size
-argument_list|,
-name|MNAMELEN
-operator|-
-name|size
-argument_list|)
-expr_stmt|;
-comment|/* Save "mounted from" info for mount point (NULL pad)*/
-name|copystr
-argument_list|(
-name|ROOTNAME
-argument_list|,
-comment|/* device name*/
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntfromname
-argument_list|,
-comment|/* save area*/
-name|MNAMELEN
-operator|-
-literal|1
-argument_list|,
-comment|/* max size*/
-operator|&
-name|size
-argument_list|)
-expr_stmt|;
-comment|/* real size*/
-name|bzero
-argument_list|(
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntfromname
-operator|+
-name|size
-argument_list|,
-name|MNAMELEN
-operator|-
-name|size
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Attempt the mount 	 */
 name|err
@@ -342,6 +211,12 @@ condition|)
 goto|goto
 name|error_2
 goto|;
+name|simple_lock
+argument_list|(
+operator|&
+name|mountlist_slock
+argument_list|)
+expr_stmt|;
 comment|/* Add fs to list of mounted file systems*/
 name|CIRCLEQ_INSERT_TAIL
 argument_list|(
@@ -353,10 +228,17 @@ argument_list|,
 name|mnt_list
 argument_list|)
 expr_stmt|;
-comment|/* Unlock mount point*/
-name|vfs_unlock
+name|simple_unlock
+argument_list|(
+operator|&
+name|mountlist_slock
+argument_list|)
+expr_stmt|;
+name|vfs_unbusy
 argument_list|(
 name|mp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* root mount, update system time from FS specific data*/
@@ -373,10 +255,11 @@ goto|;
 name|error_2
 label|:
 comment|/* mount error*/
-comment|/* unlock before failing*/
-name|vfs_unlock
+name|vfs_unbusy
 argument_list|(
 name|mp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error_1

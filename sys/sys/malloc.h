@@ -977,8 +977,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_LAST
+name|M_VFSCONF
 value|89
+end_define
+
+begin_comment
+comment|/* vfsconf structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LAST
+value|90
 end_define
 
 begin_comment
@@ -1157,6 +1168,8 @@ value|\ 	"GEOM req",
 comment|/* 87 M_GEOM_REQ */
 value|\ 	"GEOM misc",
 comment|/* 88 M_GEOM_MISC */
+value|\ 	"VFS conf",
+comment|/* 89 M_VFSCONF */
 value|\ }
 end_define
 

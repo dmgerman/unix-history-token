@@ -1087,28 +1087,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VFS_VFSCONF
-value|0
-end_define
-
-begin_comment
-comment|/* get configured filesystems */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VFS_MAXID
-value|1
-end_define
-
-begin_comment
-comment|/* number of items */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CTL_VFS_NAMES
 value|{ \ 	{ "vfsconf", CTLTYPE_STRUCT }, \ }
 end_define

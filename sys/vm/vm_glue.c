@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/lock.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -1362,11 +1362,10 @@ operator|->
 name|vm_map
 argument_list|)
 expr_stmt|;
-comment|/* 			 * do not swapout a process that is waiting for VM 			 * datastructures there is a possible deadlock. 			 */
+comment|/* 			 * do not swapout a process that is waiting for VM 			 * data structures there is a possible deadlock. 			 */
 if|if
 condition|(
-operator|!
-name|lock_try_write
+name|lockmgr
 argument_list|(
 operator|&
 name|vm
@@ -1374,6 +1373,18 @@ operator|->
 name|vm_map
 operator|.
 name|lock
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|,
+name|curproc
 argument_list|)
 condition|)
 block|{

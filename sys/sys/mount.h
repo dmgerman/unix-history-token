@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mount.h	8.13 (Berkeley) 3/27/94  *	$FreeBSD$  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mount.h	8.21 (Berkeley) 5/20/95  *	$FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -38,12 +38,34 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/radix.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_comment
+comment|/* XXX for AF_MAX */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
 name|fsid
 block|{
-name|long
+name|int32_t
 name|val
 index|[
 literal|2
@@ -94,6 +116,17 @@ end_struct
 
 begin_comment
 comment|/*  * file system statistics  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFSNAMELEN
+value|16
+end_define
+
+begin_comment
+comment|/* length of fs type name, including null */
 end_comment
 
 begin_define
@@ -162,10 +195,17 @@ comment|/* copy of mount flags */
 name|long
 name|f_spare
 index|[
-literal|6
+literal|2
 index|]
 decl_stmt|;
 comment|/* spare for later */
+name|char
+name|f_fstypename
+index|[
+name|MFSNAMELEN
+index|]
+decl_stmt|;
+comment|/* fs type name */
 name|char
 name|f_mntonname
 index|[
@@ -185,7 +225,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * File system types.  */
+comment|/*  * File system types (for backwards compat with 4.4Lite.)  */
 end_comment
 
 begin_define
@@ -495,6 +535,11 @@ name|vnodelst
 name|mnt_vnodelist
 decl_stmt|;
 comment|/* list of vnodes this mount */
+name|struct
+name|lock
+name|mnt_lock
+decl_stmt|;
+comment|/* mount structure lock */
 name|int
 name|mnt_flag
 decl_stmt|;
@@ -512,8 +557,6 @@ name|qaddr_t
 name|mnt_data
 decl_stmt|;
 comment|/* private data */
-comment|/*	struct vfsconf	*mnt_vfc; */
-comment|/* configuration info */
 name|time_t
 name|mnt_time
 decl_stmt|;
@@ -729,11 +772,11 @@ begin_define
 define|#
 directive|define
 name|MNT_VISFLAGMASK
-value|(MNT_RDONLY|MNT_SYNCHRONOUS|MNT_NOEXEC|MNT_NOSUID| \ 			 MNT_NODEV|MNT_UNION|MNT_ASYNC|MNT_EXRDONLY|MNT_EXPORTED| \ 			 MNT_DEFEXPORTED|MNT_EXPORTANON|MNT_EXKERB|MNT_LOCAL| \ 			 MNT_QUOTA|MNT_ROOTFS|MNT_USER|MNT_NOATIME)
+value|(MNT_RDONLY|MNT_SYNCHRONOUS|MNT_NOEXEC|MNT_NOSUID| \ 			 MNT_NODEV|MNT_UNION|MNT_ASYNC|MNT_EXRDONLY|MNT_EXPORTED| \ 			 MNT_DEFEXPORTED|MNT_EXPORTANON|MNT_EXKERB|MNT_LOCAL| \ 			 MNT_USER|MNT_QUOTA|MNT_ROOTFS|MNT_NOATIME)
 end_define
 
 begin_comment
-comment|/*  * filesystem control flags.  *  * MNT_MLOCK lock the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  */
+comment|/*  * External filesystem control flags.  */
 end_comment
 
 begin_define
@@ -780,48 +823,8 @@ begin_comment
 comment|/* force unmount or readonly change */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MNT_MLOCK
-value|0x00100000
-end_define
-
 begin_comment
-comment|/* lock so that subtree is stable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_MWAIT
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* someone is waiting for lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_MPBUSY
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* scan of mount point in progress */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_MPWANT
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* waiting for mount point */
+comment|/*  * Internal filesystem control flags.  *  * MNT_UNMOUNT locks the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  */
 end_comment
 
 begin_define
@@ -838,48 +841,230 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNT_WANTRDWR
+name|MNT_MWAIT
 value|0x02000000
 end_define
 
 begin_comment
-comment|/* want upgrade to read/write */
-end_comment
-
-begin_comment
-comment|/*  * used to get configured filesystems information  */
+comment|/* waiting for unmount to finish */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VFS_MAXNAMELEN
-value|32
+name|MNT_WANTRDWR
+value|0x04000000
 end_define
+
+begin_comment
+comment|/* upgrade to read/write requested */
+end_comment
+
+begin_comment
+comment|/*  * Sysctl CTL_VFS definitions.  *  * Second level identifier specifies which filesystem. Second level  * identifier VFS_GENERIC returns information about all filesystems.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VFS_GENERIC
+value|0
+end_define
+
+begin_comment
+comment|/* generic filesystem information */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|VFS_OVFSCONF
+value|0
+end_define
+
+begin_comment
+comment|/* for backward compatibility w/ FreeBSD 2.1 */
+end_comment
+
+begin_comment
+comment|/*  * Third level identifiers for VFS_GENERIC are given below; third  * level identifiers for specific filesystems are given in their  * mount specific header files.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_MAXTYPENUM
+value|1
+end_define
+
+begin_comment
+comment|/* int: highest defined filesystem type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_CONF
+value|2
+end_define
+
+begin_comment
+comment|/* struct: vfsconf for filesystem given 				   as next argument */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_VFSCONF
+value|3
+end_define
+
+begin_comment
+comment|/* for backward compatibility w/ FreeBSD 2.1 */
+end_comment
+
+begin_comment
+comment|/*  * Flags for various system call interfaces.  *  * waitfor flags to vfs_sync() and getfsstat()  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_WAIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_NOWAIT
+value|2
+end_define
+
+begin_comment
+comment|/*  * Generic file handle  */
+end_comment
+
+begin_struct
+struct|struct
+name|fhandle
+block|{
+name|fsid_t
+name|fh_fsid
+decl_stmt|;
+comment|/* File system id of mount point */
+name|struct
+name|fid
+name|fh_fid
+decl_stmt|;
+comment|/* File sys specific id */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|fhandle
+name|fhandle_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Export arguments for local filesystem mount calls.  */
+end_comment
+
+begin_struct
+struct|struct
+name|export_args
+block|{
+name|int
+name|ex_flags
+decl_stmt|;
+comment|/* export related flags */
+name|uid_t
+name|ex_root
+decl_stmt|;
+comment|/* mapping for root uid */
+name|struct
+name|ucred
+name|ex_anon
+decl_stmt|;
+comment|/* mapping for anonymous user */
+name|struct
+name|sockaddr
+modifier|*
+name|ex_addr
+decl_stmt|;
+comment|/* net address to which exported */
+name|int
+name|ex_addrlen
+decl_stmt|;
+comment|/* and the net address length */
+name|struct
+name|sockaddr
+modifier|*
+name|ex_mask
+decl_stmt|;
+comment|/* mask of valid bits in saddr */
+name|int
+name|ex_masklen
+decl_stmt|;
+comment|/* and the smask length */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Filesystem configuration information. One of these exists for each  * type of filesystem supported by the kernel. These are searched at  * mount time to identify the requested filesystem.  */
+end_comment
 
 begin_struct
 struct|struct
 name|vfsconf
 block|{
-name|void
+name|struct
+name|vfsops
 modifier|*
 name|vfc_vfsops
 decl_stmt|;
+comment|/* filesystem operations vector */
 name|char
 name|vfc_name
 index|[
-name|VFS_MAXNAMELEN
+name|MFSNAMELEN
 index|]
 decl_stmt|;
+comment|/* filesystem type name */
 name|int
-name|vfc_index
+name|vfc_typenum
 decl_stmt|;
+comment|/* historic filesystem type number */
 name|int
 name|vfc_refcount
 decl_stmt|;
+comment|/* number mounted of this type */
 name|int
 name|vfc_flags
 decl_stmt|;
+comment|/* permanent flags */
+name|struct
+name|vfsconf
+modifier|*
+name|vfc_next
+decl_stmt|;
+comment|/* next in list */
 block|}
 struct|;
 end_struct
@@ -892,7 +1077,7 @@ begin_define
 define|#
 directive|define
 name|VFCF_STATIC
-value|0x00000001
+value|0x00010000
 end_define
 
 begin_comment
@@ -903,7 +1088,7 @@ begin_define
 define|#
 directive|define
 name|VFCF_NETWORK
-value|0x00000002
+value|0x00020000
 end_define
 
 begin_comment
@@ -914,7 +1099,7 @@ begin_define
 define|#
 directive|define
 name|VFCF_READONLY
-value|0x00000004
+value|0x00040000
 end_define
 
 begin_comment
@@ -925,7 +1110,7 @@ begin_define
 define|#
 directive|define
 name|VFCF_SYNTHETIC
-value|0x00000008
+value|0x00080000
 end_define
 
 begin_comment
@@ -936,7 +1121,7 @@ begin_define
 define|#
 directive|define
 name|VFCF_LOOPBACK
-value|0x00000010
+value|0x00100000
 end_define
 
 begin_comment
@@ -947,15 +1132,11 @@ begin_define
 define|#
 directive|define
 name|VFCF_UNICODE
-value|0x00000020
+value|0x00200000
 end_define
 
 begin_comment
 comment|/* stores file names as Unicode*/
-end_comment
-
-begin_comment
-comment|/*  * Operations supported on mounted file system.  */
 end_comment
 
 begin_ifdef
@@ -967,21 +1148,13 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|int
-name|doforce
+name|maxvfsconf
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Flag to permit forcible unmounting. */
+comment|/* highest defined filesystem type */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vfsconf
-name|void_vfsconf
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -989,9 +1162,16 @@ name|struct
 name|vfsconf
 modifier|*
 name|vfsconf
-index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* head of list of filesystem types */
+end_comment
+
+begin_comment
+comment|/*  * Operations supported on mounted file system.  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1283,7 +1463,9 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vfsconf
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1489,7 +1671,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static struct vfsconf _fs_vfsconf = { \&vfsops, \ 		#fsname, \ 		index, \ 		0, \ 		flags \ 	}; \ 	extern struct linker_set MODVNOPS; \ 	MOD_VFS(#fsname,index,&MODVNOPS,&_fs_vfsconf); \ 	int \ 	fsname ## _mod(struct lkm_table *lkmtp, int cmd, int ver) { \ 		DISPATCH(lkmtp, cmd, ver, lkm_nullcmd, lkm_nullcmd, lkm_nullcmd); }
+value|static struct vfsconf _fs_vfsconf = { \&vfsops, \ 		#fsname, \ 		index, \ 		0, \ 		flags, \ 	}; \ 	extern struct linker_set MODVNOPS; \ 	MOD_VFS(#fsname,&MODVNOPS,&_fs_vfsconf); \ 	int \ 	fsname ## _mod(struct lkm_table *lkmtp, int cmd, int ver) { \ 		DISPATCH(lkmtp, cmd, ver, lkm_nullcmd, lkm_nullcmd, lkm_nullcmd); }
 end_define
 
 begin_else
@@ -1511,7 +1693,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static struct vfsconf _fs_vfsconf = { \&vfsops, \ 		#fsname, \ 		index, \ 		0, \ 		flags | VFCF_STATIC \ 	}; \ 	DATA_SET(vfs_set,_fs_vfsconf)
+value|static struct vfsconf _fs_vfsconf = { \&vfsops, \ 		#fsname, \ 		index, \ 		0, \ 		flags | VFCF_STATIC, \ 	}; \ 	DATA_SET(vfs_set,_fs_vfsconf)
 end_define
 
 begin_endif
@@ -1531,53 +1713,6 @@ end_endif
 begin_comment
 comment|/* KERNEL */
 end_comment
-
-begin_comment
-comment|/*  * Flags for various system call interfaces.  *  * waitfor flags to vfs_sync() and getfsstat()  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_WAIT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MNT_NOWAIT
-value|2
-end_define
-
-begin_comment
-comment|/*  * Generic file handle  */
-end_comment
-
-begin_struct
-struct|struct
-name|fhandle
-block|{
-name|fsid_t
-name|fh_fsid
-decl_stmt|;
-comment|/* File system id of mount point */
-name|struct
-name|fid
-name|fh_fid
-decl_stmt|;
-comment|/* File sys specific id */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|fhandle
-name|fhandle_t
-typedef|;
-end_typedef
 
 begin_ifdef
 ifdef|#
@@ -1655,740 +1790,11 @@ block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
-
-begin_comment
-comment|/*  * Export arguments for local filesystem mount calls.  */
-end_comment
-
-begin_struct
-struct|struct
-name|export_args
-block|{
-name|int
-name|ex_flags
-decl_stmt|;
-comment|/* export related flags */
-name|uid_t
-name|ex_root
-decl_stmt|;
-comment|/* mapping for root uid */
-name|struct
-name|ucred
-name|ex_anon
-decl_stmt|;
-comment|/* mapping for anonymous user */
-name|struct
-name|sockaddr
-modifier|*
-name|ex_addr
-decl_stmt|;
-comment|/* net address to which exported */
-name|int
-name|ex_addrlen
-decl_stmt|;
-comment|/* and the net address length */
-name|struct
-name|sockaddr
-modifier|*
-name|ex_mask
-decl_stmt|;
-comment|/* mask of valid bits in saddr */
-name|int
-name|ex_masklen
-decl_stmt|;
-comment|/* and the smask length */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Arguments to mount UFS-based filesystems  */
-end_comment
-
-begin_struct
-struct|struct
-name|ufs_args
-block|{
-name|char
-modifier|*
-name|fspec
-decl_stmt|;
-comment|/* block special device to mount */
-name|struct
-name|export_args
-name|export
-decl_stmt|;
-comment|/* network export information */
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MFS
-end_ifdef
-
-begin_comment
-comment|/*  * Arguments to mount MFS  */
-end_comment
-
-begin_struct
-struct|struct
-name|mfs_args
-block|{
-name|char
-modifier|*
-name|fspec
-decl_stmt|;
-comment|/* name to export for statfs */
-name|struct
-name|export_args
-name|export
-decl_stmt|;
-comment|/* if exported MFSes are supported */
-name|caddr_t
-name|base
-decl_stmt|;
-comment|/* base of file system in memory */
-name|u_long
-name|size
-decl_stmt|;
-comment|/* size of file system */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MFS */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MSDOSFS
-end_ifdef
-
-begin_comment
-comment|/*  *  Arguments to mount MSDOS filesystems.  */
-end_comment
-
-begin_struct
-struct|struct
-name|msdosfs_args
-block|{
-name|char
-modifier|*
-name|fspec
-decl_stmt|;
-comment|/* blocks special holding the fs to mount */
-name|struct
-name|export_args
-name|export
-decl_stmt|;
-comment|/* network export information */
-name|uid_t
-name|uid
-decl_stmt|;
-comment|/* uid that owns msdosfs files */
-name|gid_t
-name|gid
-decl_stmt|;
-comment|/* gid that owns msdosfs files */
-name|mode_t
-name|mask
-decl_stmt|;
-comment|/* mask to be applied for msdosfs perms */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CD9660
-end_ifdef
-
-begin_comment
-comment|/*  * Arguments to mount ISO 9660 filesystems.  */
-end_comment
-
-begin_struct
-struct|struct
-name|iso_args
-block|{
-name|char
-modifier|*
-name|fspec
-decl_stmt|;
-comment|/* block special device to mount */
-name|struct
-name|export_args
-name|export
-decl_stmt|;
-comment|/* network export info */
-name|int
-name|flags
-decl_stmt|;
-comment|/* mounting flags, see below */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|ISOFSMNT_NORRIP
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* disable Rock Ridge Ext.*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISOFSMNT_GENS
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* enable generation numbers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISOFSMNT_EXTATT
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* enable extended attributes */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CD9660 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS
-end_ifdef
-
-begin_comment
-comment|/*  * Arguments to mount NFS  */
-end_comment
-
-begin_struct
-struct|struct
-name|nfs_args
-block|{
-name|struct
-name|sockaddr
-modifier|*
-name|addr
-decl_stmt|;
-comment|/* file server address */
-name|int
-name|addrlen
-decl_stmt|;
-comment|/* length of address */
-name|int
-name|sotype
-decl_stmt|;
-comment|/* Socket type */
-name|int
-name|proto
-decl_stmt|;
-comment|/* and Protocol */
-name|u_char
-modifier|*
-name|fh
-decl_stmt|;
-comment|/* File handle to be mounted */
-name|int
-name|fhsize
-decl_stmt|;
-comment|/* Size, in bytes, of fh */
-name|int
-name|flags
-decl_stmt|;
-comment|/* flags */
-name|int
-name|wsize
-decl_stmt|;
-comment|/* write size in bytes */
-name|int
-name|rsize
-decl_stmt|;
-comment|/* read size in bytes */
-name|int
-name|readdirsize
-decl_stmt|;
-comment|/* readdir size in bytes */
-name|int
-name|timeo
-decl_stmt|;
-comment|/* initial timeout in .1 secs */
-name|int
-name|retrans
-decl_stmt|;
-comment|/* times to retry send */
-name|int
-name|maxgrouplist
-decl_stmt|;
-comment|/* Max. size of group list */
-name|int
-name|readahead
-decl_stmt|;
-comment|/* # of blocks to readahead */
-name|int
-name|leaseterm
-decl_stmt|;
-comment|/* Term (sec) of lease */
-name|int
-name|deadthresh
-decl_stmt|;
-comment|/* Retrans threshold */
-name|char
-modifier|*
-name|hostname
-decl_stmt|;
-comment|/* server's name */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * NFS mount option flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_SOFT
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* soft mount (hard is default) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_WSIZE
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* set write size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_RSIZE
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* set read size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_TIMEO
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* set initial timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_RETRANS
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* set number of request retrys */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_MAXGRPS
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* set maximum grouplist size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_INT
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* allow interrupts on hard mount */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_NOCONN
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* Don't Connect the socket */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_NQNFS
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* Use Nqnfs protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_NFSV3
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* Use NFS Version 3 protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_KERB
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* Use Kerberos authentication */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_DUMBTIMR
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* Don't estimate rtt dynamically */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_LEASETERM
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* set lease term (nqnfs) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_READAHEAD
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* set read ahead */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_DEADTHRESH
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* set dead server retry thresh */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_RESVPORT
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* Allocate a reserved port */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_RDIRPLUS
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* Use Readdirplus for V3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_READDIRSIZE
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* Set readdir size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_INTERNAL
-value|0xfffc0000
-end_define
-
-begin_comment
-comment|/* Bits set internally */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_HASWRITEVERF
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* Has write verifier for V3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_GOTPATHCONF
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* Got the V3 pathconf info */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_GOTFSINFO
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* Got the V3 fsinfo */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_MNTD
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* Mnt server for mnt point */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_DISMINPROG
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* Dismount in progress */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_DISMNT
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* Dismounted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_SNDLOCK
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* Send socket lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_WANTSND
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Want above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_RCVLOCK
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* Rcv socket lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_WANTRCV
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* Want above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_WAITAUTH
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* Wait for authentication */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_HASAUTH
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* Has authenticator */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_WANTAUTH
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* Wants an authenticator */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_AUTHERR
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Authentication error */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NFS */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_extern
-extern|extern	int (*mountroot
-end_extern
-
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|extern
-name|struct
-name|vfsops
+name|char
 modifier|*
-name|mountrootvfsops
+name|mountrootfsname
 decl_stmt|;
 end_decl_stmt
 
@@ -2417,14 +1823,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|mount
-modifier|*
-name|getvfs
+name|int
+name|vfs_lock
 name|__P
 argument_list|(
 operator|(
-name|fsid_t
+expr|struct
+name|mount
 operator|*
 operator|)
 argument_list|)
@@ -2432,12 +1837,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* return vfs given fsid */
+comment|/* lock a vfs */
 end_comment
 
 begin_decl_stmt
 name|void
-name|getnewfsid
+name|vfs_msync
 name|__P
 argument_list|(
 operator|(
@@ -2452,8 +1857,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|vfs_unlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* unlock a vfs */
+end_comment
+
+begin_decl_stmt
 name|int
-name|vflush
+name|vfs_busy
 name|__P
 argument_list|(
 operator|(
@@ -2461,11 +1884,15 @@ expr|struct
 name|mount
 operator|*
 operator|,
+name|int
+operator|,
 expr|struct
-name|vnode
+name|simplelock
 operator|*
 operator|,
-name|int
+expr|struct
+name|proc
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2520,8 +1947,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|vfs_lock
+name|void
+name|vfs_getnewfsid
 name|__P
 argument_list|(
 operator|(
@@ -2533,8 +1960,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|vfs_getvfs
+name|__P
+argument_list|(
+operator|(
+name|fsid_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* lock a vfs */
+comment|/* return vfs given fsid */
 end_comment
 
 begin_decl_stmt
@@ -2561,20 +2003,37 @@ name|vfs_mountroot
 name|__P
 argument_list|(
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX goes away? */
-end_comment
+begin_decl_stmt
+name|int
+name|vfs_rootmountalloc
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+expr|struct
+name|mount
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|vfs_msync
+name|vfs_unbusy
 name|__P
 argument_list|(
 operator|(
@@ -2582,29 +2041,13 @@ expr|struct
 name|mount
 operator|*
 operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|vfs_unlock
-name|__P
-argument_list|(
-operator|(
 expr|struct
-name|mount
+name|proc
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* unlock a vfs */
-end_comment
 
 begin_decl_stmt
 name|void
@@ -2617,42 +2060,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vfs_busy
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mount
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mark a vfs  busy */
-end_comment
-
-begin_decl_stmt
-name|void
-name|vfs_unbusy
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mount
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mark a vfs not busy */
-end_comment
 
 begin_extern
 extern|extern	CIRCLEQ_HEAD(mntlist
@@ -2673,16 +2080,10 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vfsops
-modifier|*
-name|vfssw
-index|[]
+name|simplelock
+name|mountlist_slock
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* filesystem type table */
-end_comment
 
 begin_else
 else|#
@@ -2690,7 +2091,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* KERNEL */
+comment|/* !KERNEL */
 end_comment
 
 begin_include
@@ -2774,7 +2175,9 @@ name|mount
 name|__P
 argument_list|(
 operator|(
-name|int
+specifier|const
+name|char
+operator|*
 operator|,
 specifier|const
 name|char

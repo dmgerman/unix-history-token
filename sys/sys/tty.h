@@ -104,7 +104,7 @@ name|long
 name|t_outcc
 decl_stmt|;
 comment|/* Output queue statistics. */
-name|int
+name|u_char
 name|t_line
 decl_stmt|;
 comment|/* Interface to device drivers. */

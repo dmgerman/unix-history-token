@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vnops.c	8.3 (Berkeley) 1/23/94  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vnops.c	8.19 (Berkeley) 5/27/95  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
 end_include
 
 begin_include
@@ -422,19 +428,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|cd9660_enotsupp
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|cd9660_islocked
 name|__P
 argument_list|(
@@ -465,13 +458,13 @@ name|ISODEVMAP
 end_ifndef
 
 begin_else
-unit|free(ndp->ni_pnbuf, M_NAMEI); 	vput(ndp->ni_dvp); 	vput(ndp->ni_vp); 	return EINVAL;
+unit|free(ndp->ni_pnbuf, M_NAMEI); 	vput(ndp->ni_dvp); 	vput(ndp->ni_vp); 	return (EINVAL);
 else|#
 directive|else
 end_else
 
 begin_comment
-unit|register struct vnode *vp; 	struct iso_node *ip; 	struct iso_dnode *dp; 	int error;  	vp = ndp->ni_vp; 	ip = VTOI(vp);  	if (ip->i_mnt->iso_ftype != ISO_FTYPE_RRIP 	    || vap->va_type != vp->v_type 	    || (vap->va_type != VCHR&& vap->va_type != VBLK)) { 		free(ndp->ni_pnbuf, M_NAMEI); 		vput(ndp->ni_dvp); 		vput(ndp->ni_vp); 		return EINVAL; 	}  	dp = iso_dmap(ip->i_dev,ip->i_number,1); 	if (ip->inode.iso_rdev == vap->va_rdev || vap->va_rdev == VNOVAL) {
+unit|register struct vnode *vp; 	struct iso_node *ip; 	struct iso_dnode *dp; 	int error;  	vp = ndp->ni_vp; 	ip = VTOI(vp);  	if (ip->i_mnt->iso_ftype != ISO_FTYPE_RRIP 	    || vap->va_type != vp->v_type 	    || (vap->va_type != VCHR&& vap->va_type != VBLK)) { 		free(ndp->ni_pnbuf, M_NAMEI); 		vput(ndp->ni_dvp); 		vput(ndp->ni_vp); 		return (EINVAL); 	}  	dp = iso_dmap(ip->i_dev,ip->i_number,1); 	if (ip->inode.iso_rdev == vap->va_rdev || vap->va_rdev == VNOVAL) {
 comment|/* same as the unmapped one, delete the mapping */
 end_comment
 
@@ -502,7 +495,6 @@ comment|/*  * Setattr call. Only allowed for block and character special devices
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|cd9660_setattr
 parameter_list|(
@@ -651,7 +643,7 @@ block|}
 block|}
 return|return
 operator|(
-name|EOPNOTSUPP
+literal|0
 operator|)
 return|;
 block|}
@@ -739,21 +731,61 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-comment|/* 	 * Disallow write attempts on read-only file systems; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the file system. 	 */
-if|if
-condition|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+name|struct
+name|iso_node
+modifier|*
+name|ip
+init|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
+init|=
+name|ap
+operator|->
+name|a_cred
+decl_stmt|;
+name|mode_t
+name|mask
+decl_stmt|,
+name|mode
+init|=
 name|ap
 operator|->
 name|a_mode
+decl_stmt|;
+name|gid_t
+modifier|*
+name|gp
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* 	 * Disallow write attempts unless the file is a socket, 	 * fifo, or a block or character device resident on the 	 * file system. 	 */
+if|if
+condition|(
+name|mode
 operator|&
 name|VWRITE
 condition|)
 block|{
 switch|switch
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_type
 condition|)
@@ -767,29 +799,230 @@ case|:
 case|case
 name|VREG
 case|:
-if|if
-condition|(
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-condition|)
 return|return
 operator|(
 name|EROFS
 operator|)
 return|;
-break|break;
 block|}
 block|}
+comment|/* User id 0 always gets access. */
+if|if
+condition|(
+name|cred
+operator|->
+name|cr_uid
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+name|mask
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Otherwise, check the owner. */
+if|if
+condition|(
+name|cred
+operator|->
+name|cr_uid
+operator|==
+name|ip
+operator|->
+name|inode
+operator|.
+name|iso_uid
+condition|)
+block|{
+if|if
+condition|(
+name|mode
+operator|&
+name|VEXEC
+condition|)
+name|mask
+operator||=
+name|S_IXUSR
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|VREAD
+condition|)
+name|mask
+operator||=
+name|S_IRUSR
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|VWRITE
+condition|)
+name|mask
+operator||=
+name|S_IWUSR
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|ip
+operator|->
+name|inode
+operator|.
+name|iso_mode
+operator|&
+name|mask
+operator|)
+operator|==
+name|mask
+condition|?
+literal|0
+else|:
+name|EACCES
+operator|)
+return|;
+block|}
+comment|/* Otherwise, check the groups. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|gp
+operator|=
+name|cred
+operator|->
+name|cr_groups
+init|;
+name|i
+operator|<
+name|cred
+operator|->
+name|cr_ngroups
+condition|;
+name|i
+operator|++
+operator|,
+name|gp
+operator|++
+control|)
+if|if
+condition|(
+name|ip
+operator|->
+name|inode
+operator|.
+name|iso_gid
+operator|==
+operator|*
+name|gp
+condition|)
+block|{
+if|if
+condition|(
+name|mode
+operator|&
+name|VEXEC
+condition|)
+name|mask
+operator||=
+name|S_IXGRP
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|VREAD
+condition|)
+name|mask
+operator||=
+name|S_IRGRP
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|VWRITE
+condition|)
+name|mask
+operator||=
+name|S_IWGRP
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|ip
+operator|->
+name|inode
+operator|.
+name|iso_mode
+operator|&
+name|mask
+operator|)
+operator|==
+name|mask
+condition|?
+literal|0
+else|:
+name|EACCES
+operator|)
+return|;
+block|}
+comment|/* Otherwise, check everyone else. */
+if|if
+condition|(
+name|mode
+operator|&
+name|VEXEC
+condition|)
+name|mask
+operator||=
+name|S_IXOTH
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|VREAD
+condition|)
+name|mask
+operator||=
+name|S_IROTH
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|VWRITE
+condition|)
+name|mask
+operator||=
+name|S_IWOTH
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|ip
+operator|->
+name|inode
+operator|.
+name|iso_mode
+operator|&
+name|mask
+operator|)
+operator|==
+name|mask
+condition|?
+literal|0
+else|:
+name|EACCES
 operator|)
 return|;
 block|}
@@ -946,6 +1179,163 @@ name|ip
 operator|->
 name|i_size
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_size
+operator|==
+literal|0
+operator|&&
+operator|(
+name|vap
+operator|->
+name|va_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFLNK
+condition|)
+block|{
+name|struct
+name|vop_readlink_args
+name|rdlnk
+decl_stmt|;
+name|struct
+name|iovec
+name|aiov
+decl_stmt|;
+name|struct
+name|uio
+name|auio
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|MALLOC
+argument_list|(
+name|cp
+argument_list|,
+name|char
+operator|*
+argument_list|,
+name|MAXPATHLEN
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|aiov
+operator|.
+name|iov_base
+operator|=
+name|cp
+expr_stmt|;
+name|aiov
+operator|.
+name|iov_len
+operator|=
+name|MAXPATHLEN
+expr_stmt|;
+name|auio
+operator|.
+name|uio_iov
+operator|=
+operator|&
+name|aiov
+expr_stmt|;
+name|auio
+operator|.
+name|uio_iovcnt
+operator|=
+literal|1
+expr_stmt|;
+name|auio
+operator|.
+name|uio_offset
+operator|=
+literal|0
+expr_stmt|;
+name|auio
+operator|.
+name|uio_rw
+operator|=
+name|UIO_READ
+expr_stmt|;
+name|auio
+operator|.
+name|uio_segflg
+operator|=
+name|UIO_SYSSPACE
+expr_stmt|;
+name|auio
+operator|.
+name|uio_procp
+operator|=
+name|ap
+operator|->
+name|a_p
+expr_stmt|;
+name|auio
+operator|.
+name|uio_resid
+operator|=
+name|MAXPATHLEN
+expr_stmt|;
+name|rdlnk
+operator|.
+name|a_uio
+operator|=
+operator|&
+name|auio
+expr_stmt|;
+name|rdlnk
+operator|.
+name|a_vp
+operator|=
+name|ap
+operator|->
+name|a_vp
+expr_stmt|;
+name|rdlnk
+operator|.
+name|a_cred
+operator|=
+name|ap
+operator|->
+name|a_cred
+expr_stmt|;
+if|if
+condition|(
+name|cd9660_readlink
+argument_list|(
+operator|&
+name|rdlnk
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|vap
+operator|->
+name|va_size
+operator|=
+name|MAXPATHLEN
+operator|-
+name|auio
+operator|.
+name|uio_resid
+expr_stmt|;
+name|FREE
+argument_list|(
+name|cp
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+block|}
 name|vap
 operator|->
 name|va_flags
@@ -1197,7 +1587,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IACC
+name|IN_ACCESS
 expr_stmt|;
 name|imp
 operator|=
@@ -1209,7 +1599,7 @@ do|do
 block|{
 name|lbn
 operator|=
-name|iso_lblkno
+name|lblkno
 argument_list|(
 name|imp
 argument_list|,
@@ -1220,7 +1610,7 @@ argument_list|)
 expr_stmt|;
 name|on
 operator|=
-name|iso_blkoff
+name|blkoff
 argument_list|(
 name|imp
 argument_list|,
@@ -1234,7 +1624,7 @@ operator|=
 name|min
 argument_list|(
 call|(
-name|unsigned
+name|u_int
 call|)
 argument_list|(
 name|imp
@@ -1285,7 +1675,7 @@ name|diff
 expr_stmt|;
 name|size
 operator|=
-name|iso_blksize
+name|blksize
 argument_list|(
 name|imp
 argument_list|,
@@ -1307,7 +1697,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|iso_lblktosize
+name|lblktosize
 argument_list|(
 name|imp
 argument_list|,
@@ -1324,6 +1714,9 @@ name|cluster_read
 argument_list|(
 name|vp
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|ip
 operator|->
 name|i_size
@@ -1380,7 +1773,7 @@ literal|1
 operator|==
 name|lbn
 operator|&&
-name|iso_lblktosize
+name|lblktosize
 argument_list|(
 name|imp
 argument_list|,
@@ -1394,7 +1787,7 @@ condition|)
 block|{
 name|rasize
 operator|=
-name|iso_blksize
+name|blksize
 argument_list|(
 name|imp
 argument_list|,
@@ -1487,9 +1880,7 @@ name|uiomove
 argument_list|(
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|on
 argument_list|,
@@ -1500,6 +1891,33 @@ name|n
 argument_list|,
 name|uio
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|+
+name|on
+operator|==
+name|imp
+operator|->
+name|logical_block_size
+operator|||
+name|uio
+operator|->
+name|uio_offset
+operator|==
+operator|(
+name|off_t
+operator|)
+name|ip
+operator|->
+name|i_size
+condition|)
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_AGE
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -1545,7 +1963,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_ioctl_args
-comment|/* { 		struct vnode *a_vp; 		int  a_command; 		caddr_t	 a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		u_long a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1687,22 +2105,21 @@ decl_stmt|;
 name|off_t
 name|uio_off
 decl_stmt|;
-name|u_int
+name|int
+name|eofflag
+decl_stmt|;
+name|u_long
 modifier|*
-name|cookiep
+name|cookies
 decl_stmt|;
 name|int
 name|ncookies
-decl_stmt|;
-name|int
-name|eof
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_function
-specifier|static
 name|int
 name|iso_uiodir
 parameter_list|(
@@ -1764,20 +2181,22 @@ condition|)
 block|{
 name|idp
 operator|->
-name|eof
+name|eofflag
 operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
 condition|(
 name|idp
 operator|->
-name|cookiep
+name|cookies
 condition|)
 block|{
 if|if
@@ -1791,19 +2210,21 @@ condition|)
 block|{
 name|idp
 operator|->
-name|eof
+name|eofflag
 operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 operator|*
 name|idp
 operator|->
-name|cookiep
+name|cookies
 operator|++
 operator|=
 name|off
@@ -1816,7 +2237,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|error
 operator|=
 name|uiomove
@@ -1834,10 +2254,11 @@ name|idp
 operator|->
 name|uio
 argument_list|)
-operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|idp
 operator|->
@@ -1846,13 +2267,14 @@ operator|=
 name|off
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|iso_shipdir
 parameter_list|(
@@ -2012,7 +2434,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|error
 operator|=
 name|iso_uiodir
@@ -2028,10 +2449,11 @@ name|idp
 operator|->
 name|assocoff
 argument_list|)
-operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|idp
 operator|->
@@ -2053,7 +2475,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|error
 operator|=
 name|iso_uiodir
@@ -2069,10 +2490,11 @@ name|idp
 operator|->
 name|saveoff
 argument_list|)
-operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|idp
 operator|->
@@ -2163,13 +2585,15 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Vnode op for readdir  * XXX make sure everything still works now that eofflagp and cookiep  * are no longer args.  */
+comment|/*  * Vnode op for readdir  */
 end_comment
 
 begin_function
@@ -2181,7 +2605,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		int *a_ncookies; 		u_long *a_cookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2201,43 +2625,24 @@ name|isoreaddir
 modifier|*
 name|idp
 decl_stmt|;
-name|int
-name|entryoffsetinblock
-decl_stmt|;
-name|int
-name|error
+name|struct
+name|vnode
+modifier|*
+name|vdp
 init|=
-literal|0
-decl_stmt|;
-name|int
-name|endsearch
+name|ap
+operator|->
+name|a_vp
 decl_stmt|;
 name|struct
-name|iso_directory_record
+name|iso_node
 modifier|*
-name|ep
-decl_stmt|;
-name|u_short
-name|elen
-decl_stmt|;
-name|int
-name|namlen
-decl_stmt|;
-name|int
-name|reclen
-decl_stmt|;
-name|int
-name|isoflags
+name|dp
 decl_stmt|;
 name|struct
 name|iso_mnt
 modifier|*
 name|imp
-decl_stmt|;
-name|struct
-name|iso_node
-modifier|*
-name|ip
 decl_stmt|;
 name|struct
 name|buf
@@ -2246,34 +2651,60 @@ name|bp
 init|=
 name|NULL
 decl_stmt|;
+name|struct
+name|iso_directory_record
+modifier|*
+name|ep
+decl_stmt|;
+name|int
+name|entryoffsetinblock
+decl_stmt|;
+name|doff_t
+name|endsearch
+decl_stmt|;
+name|u_long
+name|bmask
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|reclen
+decl_stmt|;
 name|u_short
-name|tmplen
+name|namelen
 decl_stmt|;
 name|int
 name|ncookies
 init|=
 literal|0
 decl_stmt|;
-name|u_int
+name|u_long
 modifier|*
 name|cookies
 init|=
 name|NULL
 decl_stmt|;
-name|ip
+name|dp
 operator|=
 name|VTOI
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vdp
 argument_list|)
 expr_stmt|;
 name|imp
 operator|=
-name|ip
+name|dp
 operator|->
 name|i_mnt
+expr_stmt|;
+name|bmask
+operator|=
+name|imp
+operator|->
+name|im_bmask
 expr_stmt|;
 name|MALLOC
 argument_list|(
@@ -2300,8 +2731,6 @@ name|saveent
 operator|.
 name|d_namlen
 operator|=
-literal|0
-expr_stmt|;
 name|idp
 operator|->
 name|assocent
@@ -2309,6 +2738,27 @@ operator|.
 name|d_namlen
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 	 * XXX 	 * Is it worth trying to figure out the type? 	 */
+name|idp
+operator|->
+name|saveent
+operator|.
+name|d_type
+operator|=
+name|idp
+operator|->
+name|assocent
+operator|.
+name|d_type
+operator|=
+name|idp
+operator|->
+name|current
+operator|.
+name|d_type
+operator|=
+name|DT_UNKNOWN
 expr_stmt|;
 name|idp
 operator|->
@@ -2321,9 +2771,18 @@ condition|(
 name|ap
 operator|->
 name|a_ncookies
-operator|!=
+operator|==
 name|NULL
 condition|)
+block|{
+name|idp
+operator|->
+name|cookies
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* 		 * Guess the number of cookies needed. 		 */
 name|ncookies
@@ -2338,7 +2797,7 @@ name|MALLOC
 argument_list|(
 name|cookies
 argument_list|,
-name|u_int
+name|u_long
 operator|*
 argument_list|,
 name|ncookies
@@ -2355,7 +2814,7 @@ argument_list|)
 expr_stmt|;
 name|idp
 operator|->
-name|cookiep
+name|cookies
 operator|=
 name|cookies
 expr_stmt|;
@@ -2366,18 +2825,11 @@ operator|=
 name|ncookies
 expr_stmt|;
 block|}
-else|else
 name|idp
 operator|->
-name|cookiep
+name|eofflag
 operator|=
-literal|0
-expr_stmt|;
-name|idp
-operator|->
-name|eof
-operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|idp
 operator|->
@@ -2387,36 +2839,33 @@ name|uio
 operator|->
 name|uio_offset
 expr_stmt|;
-name|entryoffsetinblock
-operator|=
-name|iso_blkoff
-argument_list|(
-name|imp
-argument_list|,
-name|idp
-operator|->
-name|curroff
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|entryoffsetinblock
-operator|!=
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 operator|(
-name|error
+name|entryoffsetinblock
 operator|=
-name|iso_blkatoff
-argument_list|(
-name|ip
-argument_list|,
 name|idp
 operator|->
 name|curroff
+operator|&
+name|bmask
+operator|)
+operator|&&
+operator|(
+name|error
+operator|=
+name|VOP_BLKATOFF
+argument_list|(
+name|vdp
+argument_list|,
+operator|(
+name|off_t
+operator|)
+name|idp
+operator|->
+name|curroff
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|bp
@@ -2437,10 +2886,9 @@ name|error
 operator|)
 return|;
 block|}
-block|}
 name|endsearch
 operator|=
-name|ip
+name|dp
 operator|->
 name|i_size
 expr_stmt|;
@@ -2456,14 +2904,13 @@ block|{
 comment|/* 		 * If offset is on a block boundary, 		 * read the next directory block. 		 * Release previous if it exists. 		 */
 if|if
 condition|(
-name|iso_blkoff
-argument_list|(
-name|imp
-argument_list|,
+operator|(
 name|idp
 operator|->
 name|curroff
-argument_list|)
+operator|&
+name|bmask
+operator|)
 operator|==
 literal|0
 condition|)
@@ -2481,21 +2928,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|error
 operator|=
-name|iso_blkatoff
+name|VOP_BLKATOFF
 argument_list|(
-name|ip
+name|vdp
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|idp
 operator|->
 name|curroff
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|bp
 argument_list|)
-operator|)
 condition|)
 break|break;
 name|entryoffsetinblock
@@ -2512,11 +2962,13 @@ name|iso_directory_record
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|entryoffsetinblock
 operator|)
@@ -2542,16 +2994,18 @@ name|idp
 operator|->
 name|curroff
 operator|=
-name|roundup
-argument_list|(
+operator|(
 name|idp
 operator|->
 name|curroff
-argument_list|,
+operator|&
+operator|~
+name|bmask
+operator|)
+operator|+
 name|imp
 operator|->
 name|logical_block_size
-argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -2587,7 +3041,11 @@ expr_stmt|;
 comment|/* illegal directory, so stop looking */
 break|break;
 block|}
-name|namlen
+name|idp
+operator|->
+name|current
+operator|.
+name|d_namlen
 operator|=
 name|isonum_711
 argument_list|(
@@ -2602,7 +3060,11 @@ name|reclen
 operator|<
 name|ISO_DIRECTORY_RECORD_SIZE
 operator|+
-name|namlen
+name|idp
+operator|->
+name|current
+operator|.
+name|d_namlen
 condition|)
 block|{
 name|error
@@ -2612,61 +3074,25 @@ expr_stmt|;
 comment|/* illegal entry, stop */
 break|break;
 block|}
-comment|/* XXX: be more intelligent if we can */
-name|idp
-operator|->
-name|current
-operator|.
-name|d_type
-operator|=
-name|DT_UNKNOWN
-expr_stmt|;
-name|idp
-operator|->
-name|current
-operator|.
-name|d_namlen
-operator|=
-name|namlen
-expr_stmt|;
-name|isoflags
-operator|=
+if|if
+condition|(
 name|isonum_711
 argument_list|(
-name|imp
-operator|->
-name|iso_ftype
-operator|==
-name|ISO_FTYPE_HIGH_SIERRA
-condition|?
-operator|&
-name|ep
-operator|->
-name|date
-index|[
-literal|6
-index|]
-else|:
 name|ep
 operator|->
 name|flags
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|isoflags
 operator|&
 literal|2
 condition|)
-name|isodirino
-argument_list|(
-operator|&
 name|idp
 operator|->
 name|current
 operator|.
 name|d_fileno
-argument_list|,
+operator|=
+name|isodirino
+argument_list|(
 name|ep
 argument_list|,
 name|imp
@@ -2686,9 +3112,7 @@ operator|->
 name|b_blkno
 argument_list|)
 operator|+
-name|idp
-operator|->
-name|curroff
+name|entryoffsetinblock
 expr_stmt|;
 name|idp
 operator|->
@@ -2696,7 +3120,6 @@ name|curroff
 operator|+=
 name|reclen
 expr_stmt|;
-comment|/* 		 * 		 */
 switch|switch
 condition|(
 name|imp
@@ -2718,7 +3141,7 @@ operator|.
 name|d_name
 argument_list|,
 operator|&
-name|tmplen
+name|namelen
 argument_list|,
 operator|&
 name|idp
@@ -2736,7 +3159,10 @@ name|current
 operator|.
 name|d_namlen
 operator|=
-name|tmplen
+operator|(
+name|u_char
+operator|)
+name|namelen
 expr_stmt|;
 if|if
 condition|(
@@ -2862,7 +3288,7 @@ operator|.
 name|d_name
 argument_list|,
 operator|&
-name|elen
+name|namelen
 argument_list|,
 name|imp
 operator|->
@@ -2870,7 +3296,12 @@ name|iso_ftype
 operator|==
 name|ISO_FTYPE_9660
 argument_list|,
-name|isoflags
+name|isonum_711
+argument_list|(
+name|ep
+operator|->
+name|flags
+argument_list|)
 operator|&
 literal|4
 argument_list|)
@@ -2884,7 +3315,7 @@ operator|=
 operator|(
 name|u_char
 operator|)
-name|elen
+name|namelen
 expr_stmt|;
 if|if
 condition|(
@@ -2982,7 +3413,7 @@ if|if
 condition|(
 name|error
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|cookies
 argument_list|,
@@ -3029,12 +3460,6 @@ name|idp
 operator|->
 name|uio_off
 expr_stmt|;
-if|if
-condition|(
-name|ap
-operator|->
-name|a_eofflag
-condition|)
 operator|*
 name|ap
 operator|->
@@ -3042,7 +3467,7 @@ name|a_eofflag
 operator|=
 name|idp
 operator|->
-name|eof
+name|eofflag
 expr_stmt|;
 name|FREE
 argument_list|(
@@ -3118,6 +3543,11 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
 name|u_short
 name|symlen
 decl_stmt|;
@@ -3143,6 +3573,12 @@ name|ip
 operator|->
 name|i_mnt
 expr_stmt|;
+name|uio
+operator|=
+name|ap
+operator|->
+name|a_uio
+expr_stmt|;
 if|if
 condition|(
 name|imp
@@ -3152,7 +3588,9 @@ operator|!=
 name|ISO_FTYPE_RRIP
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 comment|/* 	 * Get parents directory record block that this inode included. 	 */
 name|error
@@ -3163,14 +3601,23 @@ name|imp
 operator|->
 name|im_devvp
 argument_list|,
-name|iso_dblkno
-argument_list|(
-name|imp
-argument_list|,
+operator|(
 name|ip
 operator|->
 name|i_number
-argument_list|)
+operator|>>
+name|imp
+operator|->
+name|im_bshift
+operator|)
+operator|<<
+operator|(
+name|imp
+operator|->
+name|im_bshift
+operator|-
+name|DEV_BSHIFT
+operator|)
 argument_list|,
 name|imp
 operator|->
@@ -3193,7 +3640,9 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* 	 * Setup the directory pointer for this inode 	 */
@@ -3206,9 +3655,7 @@ operator|)
 operator|(
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 operator|(
 name|ip
@@ -3221,63 +3668,6 @@ name|im_bmask
 operator|)
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"lbn=%d,off=%d,bsize=%d,DEV_BSIZE=%d, dirp= %08x, b_addr=%08x, offset=%08x(%08x)\n"
-argument_list|,
-call|(
-name|daddr_t
-call|)
-argument_list|(
-name|ip
-operator|->
-name|i_number
-operator|>>
-name|imp
-operator|->
-name|im_bshift
-argument_list|)
-argument_list|,
-name|ip
-operator|->
-name|i_number
-operator|&
-name|imp
-operator|->
-name|im_bmask
-argument_list|,
-name|imp
-operator|->
-name|logical_block_size
-argument_list|,
-name|DEV_BSIZE
-argument_list|,
-name|dirp
-argument_list|,
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
-argument_list|,
-name|ip
-operator|->
-name|i_number
-argument_list|,
-name|ip
-operator|->
-name|i_number
-operator|&
-name|imp
-operator|->
-name|im_bmask
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Just make sure, we have a right one.... 	 *   1: Check not cross boundary on block 	 */
 if|if
 condition|(
@@ -3312,10 +3702,29 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* 	 * Now get a buffer 	 * Abuse a namei buffer for now. 	 */
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_SYSSPACE
+condition|)
+name|symname
+operator|=
+name|uio
+operator|->
+name|uio_iov
+operator|->
+name|iov_base
+expr_stmt|;
+else|else
 name|MALLOC
 argument_list|(
 name|symname
@@ -3348,6 +3757,14 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|!=
+name|UIO_SYSSPACE
+condition|)
 name|FREE
 argument_list|(
 name|symname
@@ -3361,7 +3778,9 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* 	 * Don't forget before you leave from home ;-) 	 */
@@ -3371,6 +3790,15 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * return with the symbolic name to caller's. 	 */
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|!=
+name|UIO_SYSSPACE
+condition|)
+block|{
 name|error
 operator|=
 name|uiomove
@@ -3379,9 +3807,7 @@ name|symname
 argument_list|,
 name|symlen
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -3392,7 +3818,37 @@ name|M_NAMEI
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
+return|;
+block|}
+name|uio
+operator|->
+name|uio_resid
+operator|-=
+name|symlen
+expr_stmt|;
+name|uio
+operator|->
+name|uio_iov
+operator|->
+name|iov_base
+operator|+=
+name|symlen
+expr_stmt|;
+name|uio
+operator|->
+name|uio_iov
+operator|->
+name|iov_len
+operator|-=
+name|symlen
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3445,7 +3901,9 @@ name|M_NAMEI
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3463,31 +3921,46 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lock_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
-name|iso_node
+name|vnode
 modifier|*
-name|ip
+name|vp
 init|=
-name|VTOI
-argument_list|(
 name|ap
 operator|->
 name|a_vp
-argument_list|)
 decl_stmt|;
-name|ISO_ILOCK
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 return|return
-literal|0
+operator|(
+name|lockmgr
+argument_list|(
+operator|&
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+operator|->
+name|i_lock
+argument_list|,
+name|ap
+operator|->
+name|a_flags
+argument_list|,
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|,
+name|ap
+operator|->
+name|a_p
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3505,87 +3978,48 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_unlock_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
-name|iso_node
+name|vnode
 modifier|*
-name|ip
+name|vp
 init|=
-name|VTOI
-argument_list|(
 name|ap
 operator|->
 name|a_vp
-argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|!
+return|return
 operator|(
-name|ip
-operator|->
-name|i_flag
+name|lockmgr
+argument_list|(
 operator|&
-name|ILOCKED
-operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"cd9660_unlock NOT LOCKED"
-argument_list|)
-expr_stmt|;
-name|ISO_IUNLOCK
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Check for a locked inode.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|cd9660_islocked
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_islocked_args
-comment|/* { 		struct vnode *a_vp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-if|if
-condition|(
 name|VTOI
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 operator|->
-name|i_flag
+name|i_lock
+argument_list|,
+name|ap
+operator|->
+name|a_flags
+operator||
+name|LK_RELEASE
+argument_list|,
 operator|&
-name|ILOCKED
-condition|)
-return|return
-literal|1
-return|;
-return|return
-literal|0
+name|vp
+operator|->
+name|v_interlock
+argument_list|,
+name|ap
+operator|->
+name|a_p
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3826,26 +4260,194 @@ literal|"tag VT_ISOFS, isofs vnode\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Unsupported operation  */
+comment|/*  * Check for a locked inode.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|cd9660_enotsupp
-parameter_list|()
+name|cd9660_islocked
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_islocked_args
+comment|/* { 		struct vnode *a_vp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
 block|{
 return|return
 operator|(
-name|EOPNOTSUPP
+name|lockstatus
+argument_list|(
+operator|&
+name|VTOI
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+operator|->
+name|i_lock
+argument_list|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return POSIX pathconf information applicable to cd9660 filesystems.  */
+end_comment
+
+begin_function
+name|int
+name|cd9660_pathconf
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_pathconf_args
+comment|/* { 		struct vnode *a_vp; 		int a_name; 		register_t *a_retval; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|ap
+operator|->
+name|a_name
+condition|)
+block|{
+case|case
+name|_PC_LINK_MAX
+case|:
+operator|*
+name|ap
+operator|->
+name|a_retval
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|_PC_NAME_MAX
+case|:
+if|if
+condition|(
+name|VTOI
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+operator|->
+name|i_mnt
+operator|->
+name|iso_ftype
+operator|==
+name|ISO_FTYPE_RRIP
+condition|)
+operator|*
+name|ap
+operator|->
+name|a_retval
+operator|=
+name|NAME_MAX
+expr_stmt|;
+else|else
+operator|*
+name|ap
+operator|->
+name|a_retval
+operator|=
+literal|37
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|_PC_PATH_MAX
+case|:
+operator|*
+name|ap
+operator|->
+name|a_retval
+operator|=
+name|PATH_MAX
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|_PC_PIPE_BUF
+case|:
+operator|*
+name|ap
+operator|->
+name|a_retval
+operator|=
+name|PIPE_BUF
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|_PC_CHOWN_RESTRICTED
+case|:
+operator|*
+name|ap
+operator|->
+name|a_retval
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|_PC_NO_TRUNC
+case|:
+operator|*
+name|ap
+operator|->
+name|a_retval
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -3858,22 +4460,52 @@ define|#
 directive|define
 name|cd9660_create
 define|\
-value|((int (*) __P((struct  vop_create_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_create_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_mknod
-value|((int (*) __P((struct  vop_mknod_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_mknod_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_write
-value|((int (*) __P((struct  vop_write_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_write_args *)))eopnotsupp)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|cd9660_lease_check
+value|lease_check
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|cd9660_lease_check
+value|((int (*) __P((struct vop_lease_args *)))nullop)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3887,14 +4519,14 @@ define|#
 directive|define
 name|cd9660_remove
 define|\
-value|((int (*) __P((struct  vop_remove_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_remove_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_link
-value|((int (*) __P((struct  vop_link_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_link_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3902,21 +4534,21 @@ define|#
 directive|define
 name|cd9660_rename
 define|\
-value|((int (*) __P((struct  vop_rename_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_rename_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_mkdir
-value|((int (*) __P((struct  vop_mkdir_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_mkdir_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_rmdir
-value|((int (*) __P((struct  vop_rmdir_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_rmdir_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3924,15 +4556,7 @@ define|#
 directive|define
 name|cd9660_symlink
 define|\
-value|((int (*) __P((struct vop_symlink_args *)))cd9660_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cd9660_pathconf
-define|\
-value|((int (*) __P((struct vop_pathconf_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct vop_symlink_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3940,29 +4564,21 @@ define|#
 directive|define
 name|cd9660_advlock
 define|\
-value|((int (*) __P((struct vop_advlock_args *)))cd9660_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cd9660_blkatoff
-define|\
-value|((int (*) __P((struct  vop_blkatoff_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct vop_advlock_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_valloc
-value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) cd9660_enotsupp)
+value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_vfree
-value|((int (*) __P((struct  vop_vfree_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_vfree_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3970,7 +4586,7 @@ define|#
 directive|define
 name|cd9660_truncate
 define|\
-value|((int (*) __P((struct  vop_truncate_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_truncate_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3978,7 +4594,7 @@ define|#
 directive|define
 name|cd9660_update
 define|\
-value|((int (*) __P((struct  vop_update_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_update_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3986,11 +4602,11 @@ define|#
 directive|define
 name|cd9660_bwrite
 define|\
-value|((int (*) __P((struct  vop_bwrite_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_bwrite_args *)))eopnotsupp)
 end_define
 
 begin_comment
-comment|/*  * Global vfs data structures for nfs  */
+comment|/*  * Global vfs data structures for cd9660  */
 end_comment
 
 begin_decl_stmt
@@ -4002,7 +4618,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|cd9660_vnodeop_entries
@@ -4142,6 +4757,18 @@ block|,
 comment|/* write */
 block|{
 operator|&
+name|vop_lease_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|cd9660_lease_check
+block|}
+block|,
+comment|/* lease */
+block|{
+operator|&
 name|vop_ioctl_desc
 block|,
 operator|(
@@ -4164,6 +4791,18 @@ name|cd9660_select
 block|}
 block|,
 comment|/* select */
+block|{
+operator|&
+name|vop_revoke_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|cd9660_revoke
+block|}
+block|,
+comment|/* revoke */
 block|{
 operator|&
 name|vop_mmap_desc
@@ -4499,7 +5138,6 @@ operator|)
 name|vn_bwrite
 block|}
 block|,
-comment|/* bwrite */
 block|{
 name|NULL
 block|,
@@ -4545,7 +5183,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|cd9660_specop_entries
@@ -4583,7 +5220,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_create
+name|spec_create
 block|}
 block|,
 comment|/* create */
@@ -4595,7 +5232,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_mknod
+name|spec_mknod
 block|}
 block|,
 comment|/* mknod */
@@ -4685,6 +5322,18 @@ block|,
 comment|/* write */
 block|{
 operator|&
+name|vop_lease_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|spec_lease_check
+block|}
+block|,
+comment|/* lease */
+block|{
+operator|&
 name|vop_ioctl_desc
 block|,
 operator|(
@@ -4707,6 +5356,18 @@ name|spec_select
 block|}
 block|,
 comment|/* select */
+block|{
+operator|&
+name|vop_revoke_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|spec_revoke
+block|}
+block|,
+comment|/* revoke */
 block|{
 operator|&
 name|vop_mmap_desc
@@ -4751,7 +5412,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_remove
+name|spec_remove
 block|}
 block|,
 comment|/* remove */
@@ -4763,7 +5424,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_link
+name|spec_link
 block|}
 block|,
 comment|/* link */
@@ -4775,7 +5436,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_rename
+name|spec_rename
 block|}
 block|,
 comment|/* rename */
@@ -4787,7 +5448,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_mkdir
+name|spec_mkdir
 block|}
 block|,
 comment|/* mkdir */
@@ -4799,7 +5460,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_rmdir
+name|spec_rmdir
 block|}
 block|,
 comment|/* rmdir */
@@ -4811,7 +5472,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_symlink
+name|spec_symlink
 block|}
 block|,
 comment|/* symlink */
@@ -5033,18 +5694,6 @@ block|,
 comment|/* update */
 block|{
 operator|&
-name|vop_getpages_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|spec_getpages
-block|}
-block|,
-comment|/* getpages */
-block|{
-operator|&
 name|vop_bwrite_desc
 block|,
 operator|(
@@ -5054,7 +5703,6 @@ operator|)
 name|vn_bwrite
 block|}
 block|,
-comment|/* bwrite */
 block|{
 name|NULL
 block|,
@@ -5087,6 +5735,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FIFO
+end_ifdef
+
 begin_decl_stmt
 name|vop_t
 modifier|*
@@ -5096,7 +5750,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|cd9660_fifoop_entries
@@ -5134,7 +5787,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_create
+name|fifo_create
 block|}
 block|,
 comment|/* create */
@@ -5146,7 +5799,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_mknod
+name|fifo_mknod
 block|}
 block|,
 comment|/* mknod */
@@ -5236,6 +5889,18 @@ block|,
 comment|/* write */
 block|{
 operator|&
+name|vop_lease_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|fifo_lease_check
+block|}
+block|,
+comment|/* lease */
+block|{
+operator|&
 name|vop_ioctl_desc
 block|,
 operator|(
@@ -5258,6 +5923,18 @@ name|fifo_select
 block|}
 block|,
 comment|/* select */
+block|{
+operator|&
+name|vop_revoke_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|fifo_revoke
+block|}
+block|,
+comment|/* revoke */
 block|{
 operator|&
 name|vop_mmap_desc
@@ -5302,7 +5979,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_remove
+name|fifo_remove
 block|}
 block|,
 comment|/* remove */
@@ -5314,7 +5991,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_link
+name|fifo_link
 block|}
 block|,
 comment|/* link */
@@ -5326,7 +6003,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_rename
+name|fifo_rename
 block|}
 block|,
 comment|/* rename */
@@ -5338,7 +6015,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_mkdir
+name|fifo_mkdir
 block|}
 block|,
 comment|/* mkdir */
@@ -5350,7 +6027,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_rmdir
+name|fifo_rmdir
 block|}
 block|,
 comment|/* rmdir */
@@ -5362,7 +6039,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_symlink
+name|fifo_symlink
 block|}
 block|,
 comment|/* symlink */
@@ -5470,7 +6147,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|fifo_strategy
 block|}
 block|,
 comment|/* strategy */
@@ -5593,7 +6270,6 @@ operator|)
 name|vn_bwrite
 block|}
 block|,
-comment|/* bwrite */
 block|{
 name|NULL
 block|,
@@ -5625,6 +6301,15 @@ name|cd9660_fifoop_opv_desc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FIFO */
+end_comment
 
 end_unit
 

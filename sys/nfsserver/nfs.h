@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.1 (Berkeley) 6/10/93  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.4 (Berkeley) 5/1/95  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,15 @@ directive|define
 name|_NFS_NFS_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<nfs/rpcv2.h>
-end_include
-
 begin_comment
 comment|/*  * Tunable constants for nfs  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -256,7 +256,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* Max. number async_daemons runnable */
+comment|/* Max. number async_daemons runable */
 end_comment
 
 begin_define
@@ -354,98 +354,8 @@ value|(((n)->nd_flag& ND_NFSV3) ? (((n)->nd_nam2) ? \ 		 NFS_MAXDGRAMDATA : NFS_
 end_define
 
 begin_comment
-comment|/*  * XXX  * sys/buf.h should be edited to change B_APPENDWRITE --> B_NEEDCOMMIT, but  * until then...  * Same goes for sys/malloc.h, which needs M_NFSDIROFF,  * M_NFSRVDESC and M_NFSBIGFH added.  * The VA_EXCLUSIVE flag should be added for va_vaflags and set for an  * exclusive create.  * The B_INVAFTERWRITE flag should be set to whatever is required by the  * buffer cache code to say "Invalidate the block after it is written back".  */
+comment|/*  * XXX  * The B_INVAFTERWRITE flag should be set to whatever is required by the  * buffer cache code to say "Invalidate the block after it is written back".  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|B_NEEDCOMMIT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|B_NEEDCOMMIT
-value|B_APPENDWRITE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|M_NFSRVDESC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|M_NFSRVDESC
-value|M_TEMP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|M_NFSDIROFF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|M_NFSDIROFF
-value|M_TEMP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|M_NFSBIGFH
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|M_NFSBIGFH
-value|M_TEMP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VA_EXCLUSIVE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VA_EXCLUSIVE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -470,78 +380,6 @@ define|#
 directive|define
 name|B_INVAFTERWRITE
 value|B_INVAL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * These ifdefs try to handle the differences between the various 4.4BSD-Lite  * based vfs interfaces.  * btw: NetBSD-current does have a VOP_LEASDE(), but I don't know how to  * differentiate between NetBSD-1.0 and NetBSD-current, so..  * I also don't know about BSDi's 2.0 release.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAS_VOPLEASE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAS_VOPLEASE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAS_VOPREVOKE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAS_VOPREVOKE
-value|1
 end_define
 
 begin_endif
@@ -618,6 +456,848 @@ name|NFS_UIDALLOC
 value|128
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
+
+begin_comment
+comment|/*  * NFS mount option flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_SOFT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* soft mount (hard is default) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WSIZE
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* set write size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RSIZE
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* set read size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_TIMEO
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* set initial timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RETRANS
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* set number of request retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_MAXGRPS
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* set maximum grouplist size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_INT
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* allow interrupts on hard mount */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_NOCONN
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Don't Connect the socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_NQNFS
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Use Nqnfs protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_NFSV3
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Use NFS Version 3 protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_KERB
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Use Kerberos authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DUMBTIMR
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Don't estimate rtt dynamically */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_LEASETERM
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* set lease term (nqnfs) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_READAHEAD
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* set read ahead */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DEADTHRESH
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* set dead server retry thresh */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RESVPORT
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Allocate a reserved port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RDIRPLUS
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Use Readdirplus for V3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_READDIRSIZE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Set readdir size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_INTERNAL
+value|0xfffc0000
+end_define
+
+begin_comment
+comment|/* Bits set internally */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_HASWRITEVERF
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Has write verifier for V3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_GOTPATHCONF
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Got the V3 pathconf info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_GOTFSINFO
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Got the V3 fsinfo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_MNTD
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Mnt server for mnt point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DISMINPROG
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Dismount in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DISMNT
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Dismounted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_SNDLOCK
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Send socket lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WANTSND
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Want above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RCVLOCK
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Rcv socket lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WANTRCV
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Want above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WAITAUTH
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Wait for authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_HASAUTH
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Has authenticator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WANTAUTH
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Wants an authenticator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_AUTHERR
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Authentication error */
+end_comment
+
+begin_comment
+comment|/*  * Arguments to mount NFS  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_ARGSVERSION
+value|3
+end_define
+
+begin_comment
+comment|/* change when nfs_args changes */
+end_comment
+
+begin_struct
+struct|struct
+name|nfs_args
+block|{
+name|int
+name|version
+decl_stmt|;
+comment|/* args structure version number */
+name|struct
+name|sockaddr
+modifier|*
+name|addr
+decl_stmt|;
+comment|/* file server address */
+name|int
+name|addrlen
+decl_stmt|;
+comment|/* length of address */
+name|int
+name|sotype
+decl_stmt|;
+comment|/* Socket type */
+name|int
+name|proto
+decl_stmt|;
+comment|/* and Protocol */
+name|u_char
+modifier|*
+name|fh
+decl_stmt|;
+comment|/* File handle to be mounted */
+name|int
+name|fhsize
+decl_stmt|;
+comment|/* Size, in bytes, of fh */
+name|int
+name|flags
+decl_stmt|;
+comment|/* flags */
+name|int
+name|wsize
+decl_stmt|;
+comment|/* write size in bytes */
+name|int
+name|rsize
+decl_stmt|;
+comment|/* read size in bytes */
+name|int
+name|readdirsize
+decl_stmt|;
+comment|/* readdir size in bytes */
+name|int
+name|timeo
+decl_stmt|;
+comment|/* initial timeout in .1 secs */
+name|int
+name|retrans
+decl_stmt|;
+comment|/* times to retry send */
+name|int
+name|maxgrouplist
+decl_stmt|;
+comment|/* Max. size of group list */
+name|int
+name|readahead
+decl_stmt|;
+comment|/* # of blocks to readahead */
+name|int
+name|leaseterm
+decl_stmt|;
+comment|/* Term (sec) of lease */
+name|int
+name|deadthresh
+decl_stmt|;
+comment|/* Retrans threshold */
+name|char
+modifier|*
+name|hostname
+decl_stmt|;
+comment|/* server's name */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * NFS mount option flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_SOFT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* soft mount (hard is default) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WSIZE
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* set write size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RSIZE
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* set read size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_TIMEO
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* set initial timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RETRANS
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* set number of request retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_MAXGRPS
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* set maximum grouplist size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_INT
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* allow interrupts on hard mount */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_NOCONN
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Don't Connect the socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_NQNFS
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Use Nqnfs protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_NFSV3
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Use NFS Version 3 protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_KERB
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Use Kerberos authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DUMBTIMR
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Don't estimate rtt dynamically */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_LEASETERM
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* set lease term (nqnfs) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_READAHEAD
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* set read ahead */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DEADTHRESH
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* set dead server retry thresh */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RESVPORT
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Allocate a reserved port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RDIRPLUS
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Use Readdirplus for V3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_READDIRSIZE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Set readdir size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_INTERNAL
+value|0xfffc0000
+end_define
+
+begin_comment
+comment|/* Bits set internally */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_HASWRITEVERF
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Has write verifier for V3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_GOTPATHCONF
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Got the V3 pathconf info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_GOTFSINFO
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Got the V3 fsinfo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_MNTD
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Mnt server for mnt point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DISMINPROG
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Dismount in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DISMNT
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Dismounted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_SNDLOCK
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Send socket lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WANTSND
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Want above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RCVLOCK
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Rcv socket lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WANTRCV
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Want above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WAITAUTH
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Wait for authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_HASAUTH
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Has authenticator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WANTAUTH
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Wants an authenticator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_AUTHERR
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Authentication error */
+end_comment
+
 begin_comment
 comment|/*  * Structures for the nfssvc(2) syscall. Not that anyone but nfsd and mount_nfs  * should ever try and use it.  */
 end_comment
@@ -633,7 +1313,7 @@ comment|/* Socket to serve */
 name|caddr_t
 name|name
 decl_stmt|;
-comment|/* Client address for connection based sockets */
+comment|/* Client addr for connection based sockets */
 name|int
 name|namelen
 decl_stmt|;
@@ -740,6 +1420,16 @@ comment|/* Session key */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * XXX to allow amd to include nfs.h without nfsproto.h  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_NPROCS
+end_ifdef
 
 begin_comment
 comment|/*  * Stats structure  */
@@ -858,6 +1548,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Flags for nfssvc() system call.  */
 end_comment
@@ -937,19 +1632,11 @@ begin_comment
 comment|/*  * The set of signals the interrupt an I/O in progress for NFSMNT_INT mounts.  * What should be in this set is open to debate, but I believe that since  * I/O system calls on ufs are never interrupted by signals the set should  * be minimal. My reasoning is that many current programs that use signals  * such as SIGALRM will not expect file I/O system calls to be interrupted  * by them and break.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
+end_ifdef
 
 begin_struct_decl
 struct_decl|struct
@@ -1961,6 +2648,21 @@ end_define
 
 begin_decl_stmt
 name|int
+name|nfs_init
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vfsconf
+operator|*
+name|vfsp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|nfs_reply
 name|__P
 argument_list|(
@@ -2786,21 +3488,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|nfsrv_slpderef
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|nfssvc_sock
-operator|*
-name|slp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|nfsrv_dorec
 name|__P
@@ -2818,18 +3505,6 @@ expr|struct
 name|nfsrv_descript
 operator|*
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|nfsrv_cleancache
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2859,18 +3534,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|nfs_init
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|nfsrv_updatecache
 name|__P
@@ -2885,6 +3548,18 @@ operator|,
 expr|struct
 name|mbuf
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nfsrv_cleancache
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2917,7 +3592,6 @@ operator|(
 expr|struct
 name|nfsmount
 operator|*
-name|nmp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3050,27 +3724,6 @@ name|nfsrv_descript
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|nfsrv_rcv
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|socket
-operator|*
-name|so
-operator|,
-name|caddr_t
-name|arg
-operator|,
-name|int
-name|waitflag
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3954,6 +4607,42 @@ name|mbuf
 operator|*
 operator|*
 name|mrq
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nfsrv_rcv
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+name|so
+operator|,
+name|caddr_t
+name|arg
+operator|,
+name|int
+name|waitflag
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nfsrv_slpderef
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfssvc_sock
+operator|*
+name|slp
 operator|)
 argument_list|)
 decl_stmt|;

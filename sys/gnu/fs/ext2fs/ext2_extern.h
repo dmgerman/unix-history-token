@@ -180,7 +180,9 @@ name|ext2_init
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vfsconf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

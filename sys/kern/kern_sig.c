@@ -160,7 +160,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/lock.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -3216,7 +3216,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a signal to a  process group.  If checktty is 1,  * limit to members which have a controlling terminal.  */
+comment|/*  * Send a signal to a process group.  If checktty is 1,  * limit to members which have a controlling terminal.  */
 end_comment
 
 begin_function
@@ -5329,7 +5329,7 @@ name|va_size
 operator|=
 literal|0
 expr_stmt|;
-name|LEASE_CHECK
+name|VOP_LEASE
 argument_list|(
 name|vp
 argument_list|,
@@ -5532,6 +5532,10 @@ label|:
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error1

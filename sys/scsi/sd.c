@@ -698,7 +698,7 @@ name|sddump
 block|,
 name|sdsize
 block|,
-literal|0
+name|D_DISK
 block|,
 literal|"sd"
 block|,

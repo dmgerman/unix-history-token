@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_node.c	8.2 (Berkeley) 12/30/93  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_node.c	8.6 (Berkeley) 5/22/95  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -295,7 +295,14 @@ modifier|*
 name|npp
 decl_stmt|;
 block|{
-specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|struct
 name|nfsnode
 modifier|*
@@ -403,7 +410,9 @@ name|vget
 argument_list|(
 name|vp
 argument_list|,
-literal|1
+name|LK_EXCLUSIVE
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -645,9 +654,15 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Lock the new nfsnode. 	 */
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -666,7 +681,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -831,6 +846,19 @@ name|NQNFSNONCACHE
 operator||
 name|NQNFSWRITE
 operator|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+literal|0
+argument_list|,
+name|ap
+operator|->
+name|a_p
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1058,163 +1086,86 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Lock an nfsnode  */
 end_comment
 
-begin_function
-name|int
-name|nfs_lock
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_lock_args
+begin_comment
+unit|int nfs_lock(ap) 	struct vop_lock_args
 comment|/* { 		struct vnode *a_vp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-specifier|register
-name|struct
-name|vnode
-modifier|*
-name|vp
-init|=
-name|ap
-operator|->
-name|a_vp
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|*ap; { 	register struct vnode *vp = ap->a_vp;
 comment|/* 	 * Ugh, another place where interruptible mounts will get hung. 	 * If you make this sleep interruptible, then you have to fix all 	 * the VOP_LOCK() calls to expect interruptibility. 	 */
-while|while
-condition|(
-name|vp
-operator|->
-name|v_flag
-operator|&
-name|VXLOCK
-condition|)
-block|{
-name|vp
-operator|->
-name|v_flag
-operator||=
-name|VXWANT
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|tsleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|vp
-argument_list|,
-name|PINOD
-argument_list|,
-literal|"nfslck"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|vp
-operator|->
-name|v_tag
-operator|==
-name|VT_NON
-condition|)
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
+end_comment
+
+begin_if
+unit|while (vp->v_flag& VXLOCK) { 		vp->v_flag |= VXWANT; 		(void) tsleep((caddr_t)vp, PINOD, "nfslck", 0); 	} 	if (vp->v_tag == VT_NON) 		return (ENOENT);
 if|#
 directive|if
 literal|0
-comment|/* 	 * Only lock regular files.  If a server crashed while we were 	 * holding a directory lock, we could easily end up sleeping 	 * until the server rebooted while holding a lock on the root. 	 * Locks are only needed for protecting critical sections in 	 * VMIO at the moment. 	 * New vnodes will have type VNON but they should be locked 	 * since they may become VREG.  This is checked in loadattrcache 	 * and unwanted locks are released there. 	 */
-block|if (vp->v_type == VREG || vp->v_type == VNON) { 		while (np->n_flag& NLOCKED) { 			np->n_flag |= NWANTED; 			(void) tsleep((caddr_t) np, PINOD, "nfslck2", 0);
-comment|/* 			 * If the vnode has transmuted into a VDIR while we 			 * were asleep, then skip the lock. 			 */
-block|if (vp->v_type != VREG&& vp->v_type != VNON) 				return (0); 		} 		np->n_flag |= NLOCKED; 	}
-endif|#
-directive|endif
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+end_if
 
 begin_comment
+comment|/* 	 * Only lock regular files.  If a server crashed while we were 	 * holding a directory lock, we could easily end up sleeping 	 * until the server rebooted while holding a lock on the root. 	 * Locks are only needed for protecting critical sections in 	 * VMIO at the moment. 	 * New vnodes will have type VNON but they should be locked 	 * since they may become VREG.  This is checked in loadattrcache 	 * and unwanted locks are released there. 	 */
+end_comment
+
+begin_comment
+unit|if (vp->v_type == VREG || vp->v_type == VNON) { 		while (np->n_flag& NLOCKED) { 			np->n_flag |= NWANTED; 			(void) tsleep((caddr_t) np, PINOD, "nfslck2", 0);
+comment|/* 			 * If the vnode has transmuted into a VDIR while we 			 * were asleep, then skip the lock. 			 */
+end_comment
+
+begin_endif
+unit|if (vp->v_type != VREG&& vp->v_type != VNON) 				return (0); 		} 		np->n_flag |= NLOCKED; 	}
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+unit|return (0); }
 comment|/*  * Unlock an nfsnode  */
 end_comment
 
-begin_function
-name|int
-name|nfs_unlock
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_unlock_args
+begin_comment
+unit|int nfs_unlock(ap) 	struct vop_unlock_args
 comment|/* { 		struct vnode *a_vp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
+end_comment
+
+begin_if
+unit|*ap; {
 if|#
 directive|if
 literal|0
-block|struct vnode* vp = ap->a_vp;         struct nfsnode* np = VTONFS(vp);  	if (vp->v_type == VREG || vp->v_type == VNON) { 		if (!(np->n_flag& NLOCKED)) 			panic("nfs_unlock: nfsnode not locked"); 		np->n_flag&= ~NLOCKED; 		if (np->n_flag& NWANTED) { 			np->n_flag&= ~NWANTED; 			wakeup((caddr_t) np); 		} 	}
+end_if
+
+begin_endif
+unit|struct vnode* vp = ap->a_vp;         struct nfsnode* np = VTONFS(vp);  	if (vp->v_type == VREG || vp->v_type == VNON) { 		if (!(np->n_flag& NLOCKED)) 			panic("nfs_unlock: nfsnode not locked"); 		np->n_flag&= ~NLOCKED; 		if (np->n_flag& NWANTED) { 			np->n_flag&= ~NWANTED; 			wakeup((caddr_t) np); 		} 	}
 endif|#
 directive|endif
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+end_endif
 
 begin_comment
+unit|return (0); }
 comment|/*  * Check for a locked nfsnode  */
 end_comment
 
-begin_function
-name|int
-name|nfs_islocked
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_islocked_args
+begin_comment
+unit|int nfs_islocked(ap) 	struct vop_islocked_args
 comment|/* { 		struct vnode *a_vp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-return|return
-name|VTONFS
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-operator|->
-name|n_flag
-operator|&
-name|NLOCKED
-condition|?
-literal|1
-else|:
-literal|0
-return|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|*ap; { 	return VTONFS(ap->a_vp)->n_flag& NLOCKED ? 1 : 0; }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Nfs abort op, called after namei() when a CREATE/DELETE isn't actually  * done. Currently nothing to do.  */

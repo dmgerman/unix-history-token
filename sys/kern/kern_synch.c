@@ -1872,18 +1872,20 @@ name|tv
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|SIMPLELOCK_DEBUG
 if|if
 condition|(
 name|p
 operator|->
 name|p_simple_locks
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"sleep: holding simple lock"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Compute the amount of time during which the current 	 * process was running, and add that to its total so far. 	 */

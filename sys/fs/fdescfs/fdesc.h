@@ -101,17 +101,13 @@ begin_struct
 struct|struct
 name|fdescnode
 block|{
-name|struct
-name|fdescnode
-modifier|*
-name|fd_forw
-decl_stmt|;
-comment|/* Hash chain */
-name|struct
-name|fdescnode
-modifier|*
-name|fd_back
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|fdescnode
+argument_list|)
+name|fd_hash
+expr_stmt|;
+comment|/* Hash list */
 name|struct
 name|vnode
 modifier|*
@@ -173,7 +169,9 @@ name|fdesc_init
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vfsconf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

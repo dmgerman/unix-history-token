@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_inode.c	8.5 (Berkeley) 12/30/93  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_inode.c	8.13 (Berkeley) 4/21/95  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -134,11 +134,11 @@ expr|struct
 name|inode
 operator|*
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
 name|int
 operator|,
@@ -148,20 +148,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-name|int
-name|ffs_init
-parameter_list|()
-block|{
-return|return
-operator|(
-name|ufs_init
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Update the access, modified, and inode change times as specified by the  * IN_ACCESS, IN_UPDATE, and IN_CHANGE flags respectively. The IN_MODIFIED  * flag is used to specify that the inode needs to be updated even if none  * of the times needs to be updated. The access and modified times are taken  * from the second and third parameters; the inode change time is always  * taken from the current time. If waitfor is set, then wait for the disk  * write of the inode to complete.  */
@@ -288,8 +274,6 @@ condition|)
 name|ip
 operator|->
 name|i_atime
-operator|.
-name|tv_sec
 operator|=
 operator|(
 name|ap
@@ -320,8 +304,6 @@ block|{
 name|ip
 operator|->
 name|i_mtime
-operator|.
-name|tv_sec
 operator|=
 operator|(
 name|ap
@@ -357,8 +339,6 @@ condition|)
 name|ip
 operator|->
 name|i_ctime
-operator|.
-name|tv_sec
 operator|=
 name|tv_sec
 expr_stmt|;
@@ -604,8 +584,7 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 name|lastblock
 decl_stmt|;
 specifier|register
@@ -614,7 +593,7 @@ name|inode
 modifier|*
 name|oip
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|bn
 decl_stmt|,
 name|lbn
@@ -629,7 +608,7 @@ index|[
 name|NIADDR
 index|]
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|oldblks
 index|[
 name|NDADDR
@@ -716,7 +695,14 @@ condition|(
 name|length
 operator|<
 literal|0
-operator|||
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
 name|length
 operator|>
 name|fs
@@ -725,7 +711,7 @@ name|fs_maxfilesize
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EFBIG
 operator|)
 return|;
 name|tv
@@ -934,13 +920,6 @@ name|aflags
 operator||=
 name|B_SYNC
 expr_stmt|;
-name|vnode_pager_setsize
-argument_list|(
-name|ovp
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ffs_balloc
@@ -977,6 +956,13 @@ operator|->
 name|i_size
 operator|=
 name|length
+expr_stmt|;
+name|vnode_pager_setsize
+argument_list|(
+name|ovp
+argument_list|,
+name|length
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1196,6 +1182,13 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+name|vnode_pager_setsize
+argument_list|(
+name|ovp
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Calculate index into inode's block list of 	 * last direct and indirect blocks (if any) 	 * which we want to keep.  Lastblock is -1 when 	 * the file is truncated to 0. 	 */
 name|lastblock
 operator|=
@@ -2033,12 +2026,12 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|lbn
 decl_stmt|,
 name|lastbn
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|dbn
 decl_stmt|;
 name|int
@@ -2069,7 +2062,7 @@ operator|->
 name|i_fs
 decl_stmt|;
 specifier|register
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|bap
 decl_stmt|;
@@ -2078,7 +2071,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|copy
 init|=
@@ -2281,7 +2274,7 @@ block|}
 name|bap
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -2300,7 +2293,7 @@ name|MALLOC
 argument_list|(
 name|copy
 argument_list|,
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 argument_list|,
 name|fs
@@ -2363,7 +2356,7 @@ argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2466,6 +2459,8 @@ operator|>
 name|SINGLE
 condition|)
 block|{
+if|if
+condition|(
 name|error
 operator|=
 name|ffs_indirtrunc
@@ -2482,7 +2477,7 @@ name|nb
 argument_list|)
 argument_list|,
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|)
 operator|-
 literal|1
@@ -2494,10 +2489,6 @@ argument_list|,
 operator|&
 name|blkcount
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
 condition|)
 name|allerror
 operator|=

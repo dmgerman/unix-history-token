@@ -16,6 +16,35 @@ name|_UFS_UFS_DIR_H_
 end_define
 
 begin_comment
+comment|/*  * Theoretically, directories can be more than 2Gb in length, however, in  * practice this seems unlikely. So, we define the type doff_t as a 32-bit  * quantity to keep down the cost of doing lookup on a 32-bit machine.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|doff_t
+value|int32_t
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAXDIRSIZE
+value|(0x7fffffff)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * A directory consists of some number of blocks of DIRBLKSIZ  * bytes, where DIRBLKSIZ is chosen such that it can be transferred  * to disk in a single atomic operation (e.g. 512 bytes on most machines).  *  * Each DIRBLKSIZ byte block contains some number of directory entry  * structures, which are of variable length.  Each directory entry has  * a struct direct at the front of it, containing its inode number,  * the length of the entry, and the length of the name contained in  * the entry.  These are followed by the name padded to a 4 byte boundary  * with null bytes.  All names are guaranteed null terminated.  * The maximum length of a name in a directory is MAXNAMLEN.  *  * The macro DIRSIZ(fmt, dp) gives the amount of space required to represent  * a directory entry.  Free space in a directory is represented by  * entries which have dp->d_reclen> DIRSIZ(fmt, dp).  All DIRBLKSIZ bytes  * in a directory block are claimed by the directory entries.  This  * usually results in the last entry in a directory having a large  * dp->d_reclen.  When entries are deleted from a directory, the  * space is returned to the previous entry in the same directory  * block by increasing its dp->d_reclen.  If the first entry of  * a directory block is free, then its dp->d_ino is set to 0.  * Entries other than the first in a directory do not normally have  * dp->d_ino set to 0.  */
 end_comment
 
@@ -37,19 +66,19 @@ begin_struct
 struct|struct
 name|direct
 block|{
-name|u_long
+name|u_int32_t
 name|d_ino
 decl_stmt|;
 comment|/* inode number of entry */
-name|u_short
+name|u_int16_t
 name|d_reclen
 decl_stmt|;
 comment|/* length of this record */
-name|u_char
+name|u_int8_t
 name|d_type
 decl_stmt|;
 comment|/* file type, see below */
-name|u_char
+name|u_int8_t
 name|d_namlen
 decl_stmt|;
 comment|/* length of string in d_name */
@@ -124,6 +153,13 @@ define|#
 directive|define
 name|DT_SOCK
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_WHT
+value|14
 end_define
 
 begin_comment
@@ -226,23 +262,23 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * Template for manipulating directories.  * Should use struct direct's, but the name field  * is MAXNAMLEN - 1, and this just won't do.  */
+comment|/*  * Template for manipulating directories.  Should use struct direct's,  * but the name field is MAXNAMLEN - 1, and this just won't do.  */
 end_comment
 
 begin_struct
 struct|struct
 name|dirtemplate
 block|{
-name|u_long
+name|u_int32_t
 name|dot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dot_reclen
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dot_type
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dot_namlen
 decl_stmt|;
 name|char
@@ -252,16 +288,16 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* must be multiple of 4 */
-name|u_long
+name|u_int32_t
 name|dotdot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dotdot_reclen
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dotdot_type
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dotdot_namlen
 decl_stmt|;
 name|char
@@ -283,13 +319,13 @@ begin_struct
 struct|struct
 name|odirtemplate
 block|{
-name|u_long
+name|u_int32_t
 name|dot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dot_reclen
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|dot_namlen
 decl_stmt|;
 name|char
@@ -299,13 +335,13 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* must be multiple of 4 */
-name|u_long
+name|u_int32_t
 name|dotdot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dotdot_reclen
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|dotdot_namlen
 decl_stmt|;
 name|char

@@ -27,7 +27,22 @@ value|((ino_t)2)
 end_define
 
 begin_comment
-comment|/*  * A dinode contains all the meta-data associated with a UFS file.  * This structure defines the on-disk format of a dinode.  */
+comment|/*  * The Whiteout inode# is a dummy non-zero inode number which will  * never be allocated to a real file.  It is used as a place holder  * in the directory entry which has been tagged as a DT_W entry.  * See the comments about ROOTINO above.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WINO
+value|((ino_t)1)
+end_define
+
+begin_comment
+comment|/*  * A dinode contains all the meta-data associated with a UFS file.  * This structure defines the on-disk format of a dinode. Since  * this structure describes an on-disk structure, all its fields  * are defined by types with precise widths.  */
+end_comment
+
+begin_comment
+comment|/* typedef int32_t ufs_daddr_t; */
 end_comment
 
 begin_define
@@ -56,84 +71,93 @@ begin_struct
 struct|struct
 name|dinode
 block|{
-name|u_short
+name|u_int16_t
 name|di_mode
 decl_stmt|;
-comment|/*   0: IFMT and permissions. */
-name|short
+comment|/*   0: IFMT, permissions; see below. */
+name|int16_t
 name|di_nlink
 decl_stmt|;
 comment|/*   2: File link count. */
 union|union
 block|{
-name|u_short
+name|u_int16_t
 name|oldids
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/*   4: Ffs: old user and group ids. */
-name|ino_t
+name|int32_t
 name|inumber
 decl_stmt|;
 comment|/*   4: Lfs: inode number. */
 block|}
 name|di_u
 union|;
-name|u_quad_t
+name|u_int64_t
 name|di_size
 decl_stmt|;
 comment|/*   8: File byte count. */
-name|struct
-name|timespec
+name|int32_t
 name|di_atime
 decl_stmt|;
 comment|/*  16: Last access time. */
-name|struct
-name|timespec
+name|int32_t
+name|di_atimensec
+decl_stmt|;
+comment|/*  20: Last access time. */
+name|int32_t
 name|di_mtime
 decl_stmt|;
 comment|/*  24: Last modified time. */
-name|struct
-name|timespec
+name|int32_t
+name|di_mtimensec
+decl_stmt|;
+comment|/*  28: Last modified time. */
+name|int32_t
 name|di_ctime
 decl_stmt|;
 comment|/*  32: Last inode change time. */
-name|daddr_t
+name|int32_t
+name|di_ctimensec
+decl_stmt|;
+comment|/*  36: Last inode change time. */
+name|ufs_daddr_t
 name|di_db
 index|[
 name|NDADDR
 index|]
 decl_stmt|;
 comment|/*  40: Direct disk blocks. */
-name|daddr_t
+name|ufs_daddr_t
 name|di_ib
 index|[
 name|NIADDR
 index|]
 decl_stmt|;
 comment|/*  88: Indirect disk blocks. */
-name|u_long
+name|u_int32_t
 name|di_flags
 decl_stmt|;
 comment|/* 100: Status flags (chflags). */
-name|long
+name|int32_t
 name|di_blocks
 decl_stmt|;
 comment|/* 104: Blocks actually held. */
-name|long
+name|int32_t
 name|di_gen
 decl_stmt|;
 comment|/* 108: Generation number. */
-name|u_long
+name|u_int32_t
 name|di_uid
 decl_stmt|;
 comment|/* 112: File owner. */
-name|u_long
+name|u_int32_t
 name|di_gid
 decl_stmt|;
 comment|/* 116: File group. */
-name|long
+name|int32_t
 name|di_spare
 index|[
 literal|2
@@ -187,11 +211,11 @@ begin_define
 define|#
 directive|define
 name|MAXSYMLINKLEN
-value|((NDADDR + NIADDR) * sizeof(daddr_t))
+value|((NDADDR + NIADDR) * sizeof(ufs_daddr_t))
 end_define
 
 begin_comment
-comment|/* File modes. */
+comment|/* File permissions. */
 end_comment
 
 begin_define
@@ -350,6 +374,17 @@ end_define
 
 begin_comment
 comment|/* UNIX domain socket. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFWHT
+value|0160000
+end_define
+
+begin_comment
+comment|/* Whiteout. */
 end_comment
 
 begin_endif

@@ -369,7 +369,7 @@ condition|(
 operator|(
 name|mntp
 operator|=
-name|getvfs
+name|vfs_getvfs
 argument_list|(
 operator|&
 name|fsid
@@ -1217,7 +1217,7 @@ condition|(
 operator|(
 name|mntp
 operator|=
-name|getvfs
+name|vfs_getvfs
 argument_list|(
 operator|&
 name|fsid
@@ -1536,7 +1536,7 @@ condition|(
 operator|(
 name|mntp
 operator|=
-name|getvfs
+name|vfs_getvfs
 argument_list|(
 operator|&
 name|fsid
@@ -1865,7 +1865,7 @@ condition|(
 operator|(
 name|mntp
 operator|=
-name|getvfs
+name|vfs_getvfs
 argument_list|(
 operator|&
 name|fsid
@@ -1923,7 +1923,7 @@ condition|(
 operator|(
 name|mntp
 operator|=
-name|getvfs
+name|vfs_getvfs
 argument_list|(
 operator|&
 name|fsid

@@ -395,6 +395,31 @@ typedef|));
 end_typedef
 
 begin_comment
+comment|/*  * Types for d_type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_TAPE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_DISK
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_TTY
+value|3
+end_define
+
+begin_comment
 comment|/*  * Block device switch table  */
 end_comment
 

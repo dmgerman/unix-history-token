@@ -351,7 +351,7 @@ begin_define
 define|#
 directive|define
 name|dead_unlock
-value|((int (*) __P((struct  vop_unlock_args *)))nullop)
+value|((int (*) __P((struct vop_unlock_args *)))vop_nounlock)
 end_define
 
 begin_decl_stmt
@@ -403,7 +403,7 @@ begin_define
 define|#
 directive|define
 name|dead_islocked
-value|((int (*) __P((struct  vop_islocked_args *)))nullop)
+value|((int(*) __P((struct vop_islocked_args *)))vop_noislocked)
 end_define
 
 begin_define
@@ -1104,6 +1104,14 @@ argument_list|(
 literal|"dead_read: lock"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Lite2 behaviour */
+comment|/* 	 * Return EOF for tty devices, EIO for others 	 */
+block|if ((ap->a_vp->v_flag& VISTTY) == 0) 		return (EIO);
+else|#
+directive|else
 comment|/* 	 * Return EOF for character devices, EIO for others 	 */
 if|if
 condition|(
@@ -1120,6 +1128,8 @@ operator|(
 name|EIO
 operator|)
 return|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1342,19 +1352,52 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lock_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+comment|/* 	 * Since we are not using the lock manager, we must clear 	 * the interlock here. 	 */
+if|if
+condition|(
+name|ap
+operator|->
+name|a_flags
+operator|&
+name|LK_INTERLOCK
+condition|)
+block|{
+name|simple_unlock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
+name|ap
+operator|->
+name|a_flags
+operator|&=
+operator|~
+name|LK_INTERLOCK
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
 name|chkvnlock
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 condition|)
 return|return
@@ -1366,9 +1409,7 @@ return|return
 operator|(
 name|VCALL
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 name|VOFFSET
 argument_list|(
