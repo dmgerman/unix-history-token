@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	2.5 %G%"
+literal|"@(#)cmd3.c	2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2753,6 +2753,9 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|int
+name|edit
+decl_stmt|;
 if|if
 condition|(
 name|argv
@@ -2781,6 +2784,9 @@ name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+operator|&
+name|edit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2801,7 +2807,7 @@ name|setfile
 argument_list|(
 name|cp
 argument_list|,
-literal|1
+name|edit
 argument_list|)
 condition|)
 return|return
@@ -2835,10 +2841,16 @@ modifier|*
 name|getfilename
 parameter_list|(
 name|name
+parameter_list|,
+name|aedit
 parameter_list|)
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|int
+modifier|*
+name|aedit
 decl_stmt|;
 block|{
 specifier|register
@@ -2858,6 +2870,12 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+comment|/* 	 * Assume we will be in "edit file" mode, until 	 * proven wrong. 	 */
+operator|*
+name|aedit
+operator|=
+literal|1
+expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -2867,6 +2885,11 @@ block|{
 case|case
 literal|'%'
 case|:
+operator|*
+name|aedit
+operator|=
+literal|0
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|prevfile
