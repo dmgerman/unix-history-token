@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.14	81/03/11	*/
+comment|/*	lp.c	4.15	81/03/14	*/
 end_comment
 
 begin_include
@@ -376,6 +376,13 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|int
+name|br
+decl_stmt|,
+name|cvec
+decl_stmt|;
+comment|/* value-result */
+specifier|register
 name|struct
 name|lpdevice
 modifier|*
@@ -394,15 +401,9 @@ name|lpsr
 operator|=
 name|IENABLE
 expr_stmt|;
-name|lpaddr
-operator|->
-name|lpbuf
-operator|=
-literal|' '
-expr_stmt|;
 name|DELAY
 argument_list|(
-literal|10000
+literal|5
 argument_list|)
 expr_stmt|;
 name|lpaddr
