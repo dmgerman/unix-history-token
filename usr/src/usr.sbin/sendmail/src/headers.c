@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.32
+literal|3.33
 operator|%
 name|G
 operator|%
@@ -513,6 +513,9 @@ expr_stmt|;
 comment|/* hack to see if this is a new format message */
 if|if
 condition|(
+operator|!
+name|def
+operator|&&
 name|bitset
 argument_list|(
 name|H_RCPT
@@ -549,7 +552,6 @@ literal|'<'
 argument_list|)
 operator|!=
 name|NULL
-operator|)
 operator|||
 name|index
 argument_list|(
@@ -559,13 +561,16 @@ literal|';'
 argument_list|)
 operator|!=
 name|NULL
+operator|)
 condition|)
+block|{
 name|CurEnv
 operator|->
 name|e_oldstyle
 operator|=
 name|FALSE
 expr_stmt|;
+block|}
 comment|/* send to this person if we so desire */
 if|if
 condition|(
