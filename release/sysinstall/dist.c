@@ -2254,16 +2254,17 @@ name|i
 operator|=
 name|DITEM_FAILURE
 expr_stmt|;
-else|else
-name|USAResident
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
-else|else
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|USAResident
 operator|=
-name|FALSE
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Are you actually resident in the United States?"
+argument_list|)
 expr_stmt|;
 name|distVerifyFlags
 argument_list|()

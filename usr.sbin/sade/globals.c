@@ -195,7 +195,7 @@ name|FALSE
 expr_stmt|;
 name|USAResident
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 block|}
 end_function
