@@ -115,7 +115,7 @@ argument_list|,
 name|wwrint
 argument_list|)
 operator|==
-name|BADSIG
+name|SIG_ERR
 operator|||
 name|signal
 argument_list|(
@@ -124,7 +124,7 @@ argument_list|,
 name|wwchild
 argument_list|)
 operator|==
-name|BADSIG
+name|SIG_ERR
 operator|||
 name|signal
 argument_list|(
@@ -133,7 +133,7 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 operator|==
-name|BADSIG
+name|SIG_ERR
 condition|)
 block|{
 name|wwerrno
