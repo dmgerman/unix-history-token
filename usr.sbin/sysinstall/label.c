@@ -5888,8 +5888,6 @@ literal|512
 index|]
 decl_stmt|;
 name|int
-name|soft
-decl_stmt|,
 name|entries
 init|=
 literal|1
@@ -5931,6 +5929,10 @@ condition|)
 block|{
 name|int
 name|sz
+decl_stmt|,
+name|soft
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|typ
@@ -6138,11 +6140,6 @@ name|private_free
 operator|=
 name|safe_free
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|soft
-condition|)
 operator|(
 operator|(
 name|PartInfo
@@ -6155,7 +6152,7 @@ operator|)
 operator|->
 name|soft
 operator|=
-literal|1
+name|soft
 expr_stmt|;
 name|status
 operator|=
