@@ -254,9 +254,9 @@ block|,
 block|{
 name|DL_VENDORID
 block|,
-name|DL_DEVICEID_550TX
+name|DL_DEVICEID_DL10050
 block|,
-literal|"D-Link DFE-550TX 10/100BaseTX"
+literal|"D-Link DL10050 10/100BaseTX"
 block|}
 block|,
 block|{
@@ -3940,7 +3940,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|DL_DEVICEID_550TX
+name|DL_DEVICEID_DL10050
 operator|&&
 name|pci_get_revid
 argument_list|(
