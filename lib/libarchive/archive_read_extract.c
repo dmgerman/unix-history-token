@@ -1560,7 +1560,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Keep trying until we either open the file or run out of tricks.  *  * Note: the GNU tar 'unlink first' option seems redundant  * with this strategy, since we never actually write over an  * existing file.  (If it already exists, we remove it.)  */
+comment|/*  * Keep trying until we either open the file or run out of tricks.  */
 end_comment
 
 begin_function
@@ -1588,6 +1588,17 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+comment|/* 	 * If we're not supposed to overwrite pre-existing files, 	 * use O_EXCL.  Otherwise, use O_TRUNC. 	 */
+if|if
+condition|(
+name|flags
+operator|&
+operator|(
+name|ARCHIVE_EXTRACT_UNLINK
+operator||
+name|ARCHIVE_EXTRACT_NO_OVERWRITE
+operator|)
+condition|)
 name|fd
 operator|=
 name|open
@@ -1599,6 +1610,22 @@ operator||
 name|O_CREAT
 operator||
 name|O_EXCL
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
+else|else
+name|fd
+operator|=
+name|open
+argument_list|(
+name|name
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
 argument_list|,
 name|mode
 argument_list|)
@@ -1938,7 +1965,7 @@ name|a
 argument_list|,
 name|EEXIST
 argument_list|,
-literal|"Directory already exists"
+literal|"Can't create directory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1971,6 +1998,7 @@ operator|(
 name|ARCHIVE_OK
 operator|)
 return|;
+comment|/* 	 * XXX TODO: If we get here, just stat() the file on disk and 	 * figure out what's really going on, rather than depending on 	 * such platform vagaries as the precise return value from 	 * unlink().  That would make the following a lot more 	 * straightforward. XXX 	 */
 comment|/* Unlink failed. It's okay if it failed because it's already a dir. */
 comment|/* 	 * BSD returns EPERM for unlink on an dir, 	 * Linux returns EISDIR 	 */
 if|if
@@ -2089,6 +2117,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
+comment|/* 	 * XXX Should we suppress the unlink here unless 	 * ARCHIVE_EXTRACT_UNLINK?  That would make the 	 * !ARCHIVE_EXTRACT_UNLINK case the same as the 	 * ARCHIVE_EXTRACT_NO_OVERWRITE case (at least for hard 	 * links.) XXX 	 */
 comment|/* Just remove any pre-existing file with this name. */
 if|if
 condition|(
@@ -2209,6 +2238,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
+comment|/* 	 * XXX Should we suppress the unlink here unless 	 * ARCHIVE_EXTRACT_UNLINK?  That would make the 	 * !ARCHIVE_EXTRACT_UNLINK case the same as the 	 * ARCHIVE_EXTRACT_NO_OVERWRITE case (at least for hard 	 * links.) XXX 	 */
 comment|/* Just remove any pre-existing file with this name. */
 if|if
 condition|(
@@ -2341,6 +2371,7 @@ block|{
 name|int
 name|r
 decl_stmt|;
+comment|/* 	 * XXX Should we suppress the unlink here unless 	 * ARCHIVE_EXTRACT_UNLINK?  That would make the 	 * !ARCHIVE_EXTRACT_UNLINK case the same as the 	 * ARCHIVE_EXTRACT_NO_OVERWRITE case (at least for device 	 * nodes) XXX 	 */
 comment|/* Just remove any pre-existing file with this name. */
 if|if
 condition|(
@@ -2626,6 +2657,7 @@ block|{
 name|int
 name|r
 decl_stmt|;
+comment|/* 	 * XXX Should we suppress the unlink here unless 	 * ARCHIVE_EXTRACT_UNLINK?  That would make the 	 * !ARCHIVE_EXTRACT_UNLINK case the same as the 	 * ARCHIVE_EXTRACT_NO_OVERWRITE case (at least for fifos.) XXX 	 */
 comment|/* Just remove any pre-existing file with this name. */
 if|if
 condition|(
@@ -3345,7 +3377,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Note: POSIX does not provide a portable way to restore ctime. 	 * So, any restoration of ctime will necessarily be OS-specific. 	 */
-comment|/* TODO: Can FreeBSD restore ctime? */
+comment|/* XXX TODO: Can FreeBSD restore ctime? XXX */
 return|return
 operator|(
 name|ARCHIVE_OK
