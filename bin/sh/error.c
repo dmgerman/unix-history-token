@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: error.c,v 1.10 1998/05/18 06:43:32 charnier Exp $"
+literal|"$Id: error.c,v 1.11 1998/08/24 10:20:36 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,7 +125,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|suppressint
 decl_stmt|;
 end_decl_stmt
