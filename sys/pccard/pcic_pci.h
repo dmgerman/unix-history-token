@@ -14,14 +14,14 @@ file|<dev/pccbb/pccbbdevid.h>
 end_include
 
 begin_comment
-comment|/* CL-PD6832 CardBus defines */
+comment|/* CL-PD683x CardBus defines */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CLPD6832_SOCKET
-value|0x004c
+name|CLPD6833_CFG_MISC_1
+value|0x98
 end_define
 
 begin_comment
@@ -38,9 +38,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLPD6832_BCR_ISA_IRQ
-value|0x0080
+name|CLPD6833_CM1_MGMT_EXCA_ENA
+value|0x0001
 end_define
+
+begin_comment
+comment|/* Set ExCA, Clr PCI */
+end_comment
 
 begin_comment
 comment|/* End of CL-PD6832 defines */
