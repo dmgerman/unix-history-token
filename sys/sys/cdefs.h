@@ -872,13 +872,8 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * This doesn't work in header files. But it may be better than nothing.  * The alternative is: #define __IDSTRING(name,string) /* nothing */
+comment|/*  * This doesn't work in header files. But it may be better than nothing.  * The alternative is: #define __IDSTRING(name,string)  [nothing]  */
 end_comment
-
-begin_expr_stmt
-operator|*
-operator|/
-end_expr_stmt
 
 begin_define
 define|#
