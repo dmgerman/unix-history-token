@@ -684,6 +684,10 @@ condition|(
 name|errno
 operator|==
 name|EEXIST
+operator|||
+name|errno
+operator|==
+name|EISDIR
 condition|)
 block|{
 if|if
