@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.34 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4387,6 +4387,12 @@ name|char
 modifier|*
 name|hostdetail
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|512
+index|]
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -4514,19 +4520,14 @@ name|mname
 operator|=
 literal|"(unknown)"
 expr_stmt|;
-name|syslog
+operator|(
+name|void
+operator|)
+name|sprintf
 argument_list|(
-name|LOG_INFO
+name|buf
 argument_list|,
-literal|"%s: to=%s, delay=%s, mailer=%s, relay=%s (%s), stat=%s"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-name|e
-operator|->
-name|e_to
+literal|"delay=%s, mailer=%s, relay=%s (%s)"
 argument_list|,
 name|pintvl
 argument_list|(
@@ -4545,6 +4546,23 @@ argument_list|,
 name|curhost
 argument_list|,
 name|hostdetail
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: to=%s, %s, stat=%s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|buf
 argument_list|,
 name|stat
 argument_list|)
