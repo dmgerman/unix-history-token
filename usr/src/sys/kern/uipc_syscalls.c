@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.13	82/01/13	*/
+comment|/*	uipc_syscalls.c	4.14	82/02/25	*/
 end_comment
 
 begin_include
@@ -991,6 +991,12 @@ name|SS_CONNAWAITING
 operator|)
 operator|==
 literal|0
+operator|&&
+name|so
+operator|->
+name|so_error
+operator|==
+literal|0
 condition|)
 name|sleep
 argument_list|(
@@ -1007,6 +1013,28 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|->
+name|so_error
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|so
+operator|->
+name|so_error
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|u
 operator|.
 name|u_error
