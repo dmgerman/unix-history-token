@@ -1771,6 +1771,7 @@ name|sockopt
 modifier|*
 name|sopt
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buf
