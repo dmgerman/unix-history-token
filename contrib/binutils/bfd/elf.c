@@ -8,7 +8,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*   /*  SECTION      	ELF backends  	BFD support for ELF formats is being worked on. 	Currently, the best supported back ends are for sparc and i386 	(running svr4 or Solaris 2).  	Documentation of the internals of the support code still needs 	to be written.  The code is changing quickly enough that we 	haven't bothered yet.  */
+comment|/*  SECTION      	ELF backends  	BFD support for ELF formats is being worked on. 	Currently, the best supported back ends are for sparc and i386 	(running svr4 or Solaris 2).  	Documentation of the internals of the support code still needs 	to be written.  The code is changing quickly enough that we 	haven't bothered yet.  */
 end_comment
 
 begin_comment
