@@ -67,13 +67,16 @@ begin_struct
 struct|struct
 name|modes
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|long
 name|set
 decl_stmt|;
+specifier|const
 name|long
 name|unset
 decl_stmt|;
@@ -430,6 +433,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -700,6 +707,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -1119,6 +1130,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -1214,6 +1229,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
