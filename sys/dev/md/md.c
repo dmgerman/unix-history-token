@@ -2570,12 +2570,6 @@ name|PAGE_SIZE
 operator|+
 literal|1
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|kva
 operator|=
 name|kmem_alloc_nofault
@@ -2873,12 +2867,6 @@ operator|->
 name|secsize
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2931,9 +2919,6 @@ name|type
 condition|)
 block|{
 case|case
-name|MD_SWAP
-case|:
-case|case
 name|MD_VNODE
 case|:
 name|mtx_lock
@@ -2952,6 +2937,9 @@ name|MD_MALLOC
 case|:
 case|case
 name|MD_PRELOAD
+case|:
+case|case
+name|MD_SWAP
 case|:
 default|default:
 name|hasgiant
