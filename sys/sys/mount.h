@@ -323,6 +323,17 @@ begin_comment
 comment|/* don't interpret special files */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MNT_NOCORE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* don't create core files */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
