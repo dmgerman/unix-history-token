@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.21	83/06/10	*/
+comment|/*	kern_sig.c	5.22	83/06/21	*/
 end_comment
 
 begin_include
@@ -928,6 +928,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/* KILL SHOULD BE UPDATED */
+end_comment
+
 begin_macro
 name|kill
 argument_list|()
@@ -964,8 +968,23 @@ name|u_error
 operator|=
 name|kill1
 argument_list|(
+name|uap
+operator|->
+name|signo
+operator|<
 literal|0
 argument_list|,
+name|uap
+operator|->
+name|signo
+operator|<
+literal|0
+condition|?
+operator|-
+name|uap
+operator|->
+name|signo
+else|:
 name|uap
 operator|->
 name|signo

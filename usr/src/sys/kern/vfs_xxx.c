@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_xxx.c	4.6	83/05/31	*/
+comment|/*	vfs_xxx.c	4.7	83/06/21	*/
 end_comment
 
 begin_include
@@ -133,11 +133,11 @@ return|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOCOMPAT
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT
+end_ifdef
 
 begin_include
 include|#

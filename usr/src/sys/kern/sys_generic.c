@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.40	83/06/12	*/
+comment|/*	sys_generic.c	5.41	83/06/21	*/
 end_comment
 
 begin_include
@@ -917,10 +917,9 @@ argument_list|(
 name|vax
 argument_list|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|NOCOMPAT
+name|COMPAT
 argument_list|)
 comment|/* 	 * Map old style ioctl's into new for the 	 * sake of backwards compatibility (sigh). 	 */
 if|if
