@@ -3439,6 +3439,7 @@ name|hostIsNew
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 		 * When in6_update_ifa() is called in a process of a received 		 * RA, it is called under splnet().  So, we should call malloc 		 * with M_NOWAIT. 		 */
 name|ia
 operator|=
 operator|(
@@ -3456,7 +3457,7 @@ argument_list|)
 argument_list|,
 name|M_IFADDR
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
