@@ -160,7 +160,7 @@ literal|"Promise SuperTrak SX6000 ATA RAID controller"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 comment|/* support the older SuperTrak 100 as well */
@@ -189,7 +189,7 @@ literal|"Promise SuperTrak 100 ATA RAID controller"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 return|return

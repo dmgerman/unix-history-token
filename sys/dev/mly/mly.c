@@ -1376,26 +1376,12 @@ operator|->
 name|desc
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MLY_MODULE
 return|return
 operator|(
-operator|-
-literal|5
-operator|)
-return|;
-else|#
-directive|else
-return|return
-operator|(
-operator|-
-literal|10
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 comment|/* allow room to be overridden */
-endif|#
-directive|endif
 block|}
 block|}
 return|return

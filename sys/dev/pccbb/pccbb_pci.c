@@ -834,11 +834,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
-comment|/* 	 * We do support generic CardBus bridges.  All that we've seen 	 * to date have progif 0 (the Yenta spec, and successors mandate 	 * this).  We do not support PCI PCMCIA bridges (with one exception) 	 * with this driver since they generally are I/O mapped.  Those 	 * are supported by the pcic driver.  This should help us be more 	 * future proof. 	 */
+comment|/* 	 * We do support generic CardBus bridges.  All that we've seen 	 * to date have progif 0 (the Yenta spec, and successors mandate 	 * this). 	 */
 name|subclass
 operator|=
 name|pci_get_subclass
@@ -873,7 +873,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}

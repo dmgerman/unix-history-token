@@ -1076,6 +1076,8 @@ operator|->
 name|intr_resource
 argument_list|,
 name|INTR_TYPE_TTY
+operator||
+name|INTR_FAST
 argument_list|,
 name|ppsintr
 argument_list|,
