@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	4.8 (Berkeley) %G%"
+literal|"@(#)input.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -602,6 +602,29 @@ operator|>=
 name|HOPCNT_INFINITY
 condition|)
 continue|continue;
+if|if
+condition|(
+name|n
+operator|->
+name|rip_dst
+operator|.
+name|sa_family
+operator|>=
+name|AF_MAX
+condition|)
+continue|continue;
+name|afp
+operator|=
+operator|&
+name|afswitch
+index|[
+name|n
+operator|->
+name|rip_dst
+operator|.
+name|sa_family
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|(
