@@ -161,13 +161,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_CRYPTO
-value|0x08000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_CATPAGES
 value|0x10000
 end_define
@@ -198,45 +191,6 @@ define|#
 directive|define
 name|DIST_ALL
 value|0xFFFFF
-end_define
-
-begin_comment
-comment|/* Subtypes for CRYPTO distribution */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIST_CRYPTO_CRYPTO
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_CRYPTO_SCRYPTO
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_CRYPTO_SSECURE
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_CRYPTO_SKERBEROS5
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_CRYPTO_ALL
-value|0x000F
 end_define
 
 begin_comment
@@ -358,8 +312,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIST_SRC_SCRYPTO
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_SRC_SSECURE
+value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_SRC_SKERBEROS5
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_SRC_ALL
-value|0x0FFFF
+value|0x7FFFF
 end_define
 
 begin_comment
@@ -522,7 +497,7 @@ define|#
 directive|define
 name|_DIST_USER
 define|\
-value|( DIST_BASE | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_CRYPTO | DIST_PERL )
+value|( DIST_BASE | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_PERL )
 end_define
 
 begin_define

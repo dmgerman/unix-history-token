@@ -3305,7 +3305,7 @@ return|return
 name|i
 return|;
 block|}
-comment|/*  * What happens when we finally decide to going ahead with the installation.  *  * This is broken into multiple stages so that the user can do a full  * installation but come back here again to load more distributions,  * perhaps from a different media type.  This would allow, for  * example, the user to load the majority of the system from CDROM and  * then use ftp to load just the CRYPTO dist.  */
+comment|/*  * What happens when we finally decide to going ahead with the installation.  *  * This is broken into multiple stages so that the user can do a full  * installation but come back here again to load more distributions,  * perhaps from a different media type.  This would allow, for  * example, the user to load the majority of the system from CDROM and  * then use ftp to load a different dist.  */
 name|int
 name|installCommit
 parameter_list|(

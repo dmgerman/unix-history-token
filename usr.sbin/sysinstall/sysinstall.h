@@ -408,13 +408,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_DIST_CRYPTO
-value|"distCRYPTO"
-end_define
-
-begin_define
-define|#
-directive|define
 name|VAR_DIST_SRC
 value|"distSRC"
 end_define
@@ -2100,18 +2093,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Which distributions we want			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|int
-name|CRYPTODists
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Which naughty distributions we want		*/
 end_comment
 
 begin_decl_stmt

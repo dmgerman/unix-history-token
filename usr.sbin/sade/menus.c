@@ -53,16 +53,6 @@ name|SrcDists
 operator|=
 name|DIST_SRC_ALL
 expr_stmt|;
-name|CRYPTODists
-operator||=
-operator|(
-name|DIST_CRYPTO_SCRYPTO
-operator||
-name|DIST_CRYPTO_SSECURE
-operator||
-name|DIST_CRYPTO_SKERBEROS5
-operator|)
-expr_stmt|;
 return|return
 name|DITEM_SUCCESS
 operator||
@@ -89,17 +79,6 @@ expr_stmt|;
 name|SrcDists
 operator|=
 literal|0
-expr_stmt|;
-name|CRYPTODists
-operator|&=
-operator|~
-operator|(
-name|DIST_CRYPTO_SCRYPTO
-operator||
-name|DIST_CRYPTO_SSECURE
-operator||
-name|DIST_CRYPTO_SKERBEROS5
-operator|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
@@ -482,8 +461,6 @@ name|Dists
 operator|==
 operator|(
 name|DIST_BASE
-operator||
-name|DIST_CRYPTO
 operator|)
 return|;
 block|}
@@ -503,10 +480,6 @@ return|return
 name|Dists
 operator|==
 name|DIST_ALL
-operator|&&
-name|CRYPTODists
-operator|==
-name|DIST_CRYPTO_ALL
 operator|&&
 name|_IS_SET
 argument_list|(
@@ -5381,29 +5354,6 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|" crypto"
-block|,
-literal|"Basic encryption services"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_CRYPTO
-block|, }
-block|,
-block|{
 literal|" dict"
 block|,
 literal|"Spelling checker dictionary files"
@@ -5784,6 +5734,29 @@ name|DIST_SRC_CONTRIB
 block|}
 block|,
 block|{
+literal|" crypto"
+block|,
+literal|"/usr/src/crypto (contrib encryption sources)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|SrcDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_SRC_SCRYPTO
+block|}
+block|,
+block|{
 literal|" gnu"
 block|,
 literal|"/usr/src/gnu (software from the GNU Project)"
@@ -5873,6 +5846,29 @@ block|,
 literal|']'
 block|,
 name|DIST_SRC_INCLUDE
+block|}
+block|,
+block|{
+literal|" krb5"
+block|,
+literal|"/usr/src/kerberos5 (sources for Kerberos5)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|SrcDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_SRC_SKERBEROS5
 block|}
 block|,
 block|{
@@ -5991,9 +5987,9 @@ name|DIST_SRC_SBIN
 block|}
 block|,
 block|{
-literal|" scrypto"
+literal|" secure"
 block|,
-literal|"/usr/src/crypto (contrib encryption sources)"
+literal|"/usr/src/secure (BSD encryption sources)"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -6002,7 +5998,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|CRYPTODists
+name|SrcDists
 block|,
 literal|'['
 block|,
@@ -6010,7 +6006,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_CRYPTO_SCRYPTO
+name|DIST_SRC_SSECURE
 block|}
 block|,
 block|{
@@ -6034,52 +6030,6 @@ block|,
 literal|']'
 block|,
 name|DIST_SRC_SHARE
-block|}
-block|,
-block|{
-literal|" skrb5"
-block|,
-literal|"/usr/src/kerberos5 (sources for Kerberos5)"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_SKERBEROS5
-block|}
-block|,
-block|{
-literal|" ssecure"
-block|,
-literal|"/usr/src/secure (BSD encryption sources)"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_SSECURE
 block|}
 block|,
 block|{
