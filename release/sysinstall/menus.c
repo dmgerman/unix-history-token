@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.2 1995/07/21 11:45:45 rgrimes Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.3 1995/07/27 01:37:18 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -69,22 +69,6 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Language"
-block|,
-literal|"Set your preferred language."
-block|,
-comment|/* L */
-name|DMENU_SUBMENU
-block|,
-operator|&
-name|MenuOptionsLanguage
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|"Options"
 block|,
 literal|"Select various options for this utility."
@@ -126,6 +110,20 @@ name|DMENU_CALL
 block|,
 operator|&
 name|installExpress
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Shell"
+block|,
+literal|"Go to a shell for debugging or repair"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"sh"
 block|,
 literal|0
 block|,
@@ -254,192 +252,6 @@ block|,
 name|DMENU_CANCEL
 block|,
 name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * The language selection menu.  */
-end_comment
-
-begin_decl_stmt
-name|DMenu
-name|MenuOptionsLanguage
-init|=
-block|{
-name|DMENU_NORMAL_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Natural language selection"
-block|,
-comment|/* title */
-literal|"Please specify the language you would like to use by default.\n\n\ While almost all of the system's documentation is still written\n\ in english (and may never be translated), there are a few guides\n\ and types of system documentation that may be written in your\n\ preferred language.  When such are found, they will be used instead\n\ of the english versions.  This feature is nonetheless considered\n\ to be in experimental status at this time."
-block|,
-comment|/* prompt */
-literal|"Press F1 for more information"
-block|,
-literal|"language.hlp"
-block|,
-block|{
-block|{
-literal|"Danish"
-block|,
-literal|"Danish language and character set (ISO-8859-1)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_Danish
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Dutch"
-block|,
-literal|"Dutch language and character set (ISO-8859-1)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_Dutch
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"English"
-block|,
-literal|"English language (system default)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_English
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"French"
-block|,
-literal|"French language and character set (ISO-8859-1)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_French
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"German"
-block|,
-literal|"German language and character set (ISO-8859-1)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_German
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Italian"
-block|,
-literal|"Italian language and character set (ISO-8859-1)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_Italian
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Japanese"
-block|,
-literal|"Japanese language and default character set (romaji)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_Japanese
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Norwegian"
-block|,
-literal|"Norwegian language and character set (ISO-8859-1)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_Norwegian
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Russian"
-block|,
-literal|"Russian language and character set (KOI8-R)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_Russian
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Spanish"
-block|,
-literal|"Spanish language and character set (ISO-8859-1)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_Spanish
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Swedish"
-block|,
-literal|"Swedish language and character set (ISO-8859-1)"
-block|,
-name|DMENU_CALL
-block|,
-name|lang_set_Swedish
 block|,
 literal|0
 block|,

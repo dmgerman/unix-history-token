@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71 1995/06/11 19:29:58 rgrimes Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.1 1995/07/21 10:53:54 rgrimes Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -805,114 +811,72 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-comment|/* Warn the user what it is we're about to do */
 name|msgConfirm
 argument_list|(
-literal|"You have chosen the express installation option.  This option will\nlead you through all the steps necessary to install FreeBSD for the\nfirst time on your machine.  If you would prefer to do these steps\nmanually then chose the Custom installation method instead.  The\ncontents of your hard disk(s) will not be modified until the very end\nof this installation, and only after a final confirmation."
+literal|"In the next menu, you will need to set up a DOS-style\n"
+literal|"partitioning scheme for your hard disk.  If you don't\n"
+literal|"want to do anything special, just type `A' to use the\n"
+literal|"whole disk and then `Q' to quit."
 argument_list|)
 expr_stmt|;
-comment|/* Bring up the partition editor */
 name|diskPartitionEditor
 argument_list|(
-name|NULL
+literal|"express"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|getenv
-argument_list|(
-name|DISK_PARTITIONED
-argument_list|)
-condition|)
-block|{
 name|msgConfirm
 argument_list|(
-literal|"You need to partition your disk before you can proceed with\nthis installation."
+literal|"Next, you need to lay out BSD partitions inside of the\n"
+literal|"DOS-style partition just created.  If you don't want to\n"
+literal|"do anything special, just type `A' to use the default\n"
+literal|"partitioning scheme and then `Q' to quit."
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-comment|/* Bring up the label editor */
 name|diskLabelEditor
 argument_list|(
-name|NULL
+literal|"express"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|getenv
-argument_list|(
-name|DISK_LABELLED
-argument_list|)
-condition|)
-block|{
 name|msgConfirm
 argument_list|(
-literal|"You need to assign disk labels before you can proceed with\nthis installation."
+literal|"Now it is time to select an installation subset.  There\n"
+literal|"are two basic configurations: Developer and Router.  The\n"
+literal|"Developer subset includes sources, documentation, and\n"
+literal|"binaries for almost everything.  The Router subset\n"
+literal|"includes the same binaries and documentation, but no\n"
+literal|"sources.  You can also install absolutely everything,\n"
+literal|"or select a custom software set."
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-if|if
+while|while
 condition|(
 operator|!
-name|checkLabels
-argument_list|()
+name|Dists
 condition|)
-return|return
-literal|0
-return|;
-comment|/* Ask for the media type */
-if|if
-condition|(
-operator|!
-name|dmenuOpenSimple
-argument_list|(
-operator|&
-name|MenuMedia
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
-if|if
-condition|(
-operator|!
-name|mediaVerify
-argument_list|()
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Select the distribution set we want */
-if|if
-condition|(
-operator|!
+block|{
 name|dmenuOpenSimple
 argument_list|(
 operator|&
 name|MenuInstallType
 argument_list|)
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Do it all */
-operator|(
-name|void
-operator|)
-name|installCommit
+expr_stmt|;
+block|}
+name|msgConfirm
 argument_list|(
-name|NULL
+literal|"Finally, you must specify an installation medium."
 argument_list|)
 expr_stmt|;
-comment|/* Do post-configuration */
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuMedia
+argument_list|)
+expr_stmt|;
+name|installCommit
+argument_list|(
+literal|"express"
+argument_list|)
+expr_stmt|;
 name|dmenuOpenSimple
 argument_list|(
 operator|&
@@ -1233,21 +1197,19 @@ argument_list|(
 literal|"/usr/X11R6"
 argument_list|)
 condition|)
-operator|(
-name|void
-operator|)
-name|system
+name|chmod
 argument_list|(
-literal|"chmod 755 /usr/X11R6"
+literal|"/usr/X11R6"
+argument_list|,
+literal|0755
 argument_list|)
 expr_stmt|;
 comment|/* BOGON #2: We leave /etc in a bad state */
-operator|(
-name|void
-operator|)
-name|system
+name|chmod
 argument_list|(
-literal|"chmod 755 /etc"
+literal|"/etc"
+argument_list|,
+literal|0755
 argument_list|)
 expr_stmt|;
 name|dialog_clear
