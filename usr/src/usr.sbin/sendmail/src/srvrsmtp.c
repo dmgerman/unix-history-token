@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.34 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.35 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.34 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.35 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,10 +387,17 @@ begin_comment
 comment|/* special code for QUIT command */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|smtp
-argument_list|()
-end_macro
+argument_list|(
+name|e
+argument_list|)
+specifier|register
+name|ENVELOPE
+operator|*
+name|e
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -462,7 +469,9 @@ argument_list|)
 expr_stmt|;
 block|}
 name|settime
-argument_list|()
+argument_list|(
+name|e
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -504,7 +513,7 @@ sizeof|sizeof
 name|inp
 index|]
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|message
@@ -556,7 +565,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* setup for the read */
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -622,7 +631,7 @@ expr_stmt|;
 comment|/* echo command to transcript */
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_xfp
 operator|!=
@@ -630,7 +639,7 @@ name|NULL
 condition|)
 name|fprintf
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_xfp
 argument_list|,
@@ -869,7 +878,7 @@ name|macvalue
 argument_list|(
 literal|'s'
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -919,6 +928,8 @@ condition|(
 name|runinchild
 argument_list|(
 literal|"SMTP-MAIL"
+argument_list|,
+name|e
 argument_list|)
 operator|>
 literal|0
@@ -930,7 +941,7 @@ literal|'s'
 argument_list|,
 name|sendinghost
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|define
@@ -939,17 +950,19 @@ literal|'r'
 argument_list|,
 literal|"SMTP"
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|initsys
-argument_list|()
+argument_list|(
+name|e
+argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"%s %s: %s"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_id
 argument_list|,
@@ -979,7 +992,7 @@ name|setsender
 argument_list|(
 name|p
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -1022,7 +1035,7 @@ name|setproctitle
 argument_list|(
 literal|"%s %s: %s"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_id
 argument_list|,
@@ -1041,7 +1054,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 operator|&=
@@ -1118,7 +1131,7 @@ literal|0
 condition|)
 break|break;
 comment|/* no errors during parsing, but might be a duplicate */
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -1154,7 +1167,7 @@ literal|"Addressee unknown"
 argument_list|)
 expr_stmt|;
 block|}
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -1187,7 +1200,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_nrcpts
 operator|<=
@@ -1212,7 +1225,7 @@ name|setproctitle
 argument_list|(
 literal|"%s %s: %s"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_id
 argument_list|,
@@ -1224,6 +1237,8 @@ expr_stmt|;
 name|collect
 argument_list|(
 name|TRUE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -1240,7 +1255,7 @@ literal|"delivery"
 expr_stmt|;
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_nrcpts
 operator|!=
@@ -1256,14 +1271,14 @@ operator|=
 name|EM_MAIL
 expr_stmt|;
 block|}
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 operator|&=
 operator|~
 name|EF_FATALERRS
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_xfp
 operator|=
@@ -1271,14 +1286,14 @@ name|freopen
 argument_list|(
 name|queuename
 argument_list|(
-name|CurEnv
+name|e
 argument_list|,
 literal|'x'
 argument_list|)
 argument_list|,
 literal|"w"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_xfp
 argument_list|)
@@ -1286,12 +1301,12 @@ expr_stmt|;
 comment|/* send to all recipients */
 name|sendall
 argument_list|(
-name|CurEnv
+name|e
 argument_list|,
 name|SM_DEFAULT
 argument_list|)
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -1300,7 +1315,7 @@ expr_stmt|;
 comment|/* save statistics */
 name|markstats
 argument_list|(
-name|CurEnv
+name|e
 argument_list|,
 operator|(
 name|ADDRESS
@@ -1326,7 +1341,7 @@ literal|"Ok"
 argument_list|)
 expr_stmt|;
 else|else
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 operator|&=
@@ -1348,17 +1363,19 @@ literal|0
 expr_stmt|;
 name|dropenvelope
 argument_list|(
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|CurEnv
 operator|=
+name|e
+operator|=
 name|newenvelope
 argument_list|(
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 operator|=
@@ -1395,6 +1412,8 @@ condition|(
 name|runinchild
 argument_list|(
 literal|"SMTP-VRFY"
+argument_list|,
+name|e
 argument_list|)
 operator|>
 literal|0
@@ -1511,7 +1530,7 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_sendqueue
 argument_list|,
@@ -2001,6 +2020,8 @@ begin_macro
 name|runinchild
 argument_list|(
 argument|label
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -2008,6 +2029,14 @@ begin_decl_stmt
 name|char
 modifier|*
 name|label
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -2113,7 +2142,7 @@ name|FALSE
 expr_stmt|;
 name|clearenvelope
 argument_list|(
-name|CurEnv
+name|e
 argument_list|,
 name|FALSE
 argument_list|)
@@ -2126,6 +2155,8 @@ argument_list|(
 name|AliasFile
 argument_list|,
 name|FALSE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return

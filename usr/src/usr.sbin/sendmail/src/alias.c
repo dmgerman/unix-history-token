@@ -97,7 +97,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.33 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.34 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.33 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.34 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.33 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.34 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,6 +293,8 @@ argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 specifier|register
 name|ADDRESS
@@ -306,6 +308,14 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -359,7 +369,7 @@ name|q_flags
 argument_list|)
 condition|)
 return|return;
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -654,6 +664,8 @@ argument_list|(
 argument|aliasfile
 argument_list|,
 argument|init
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -667,6 +679,14 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -1224,6 +1244,8 @@ argument_list|(
 name|aliasfile
 argument_list|,
 name|TRUE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1235,6 +1257,8 @@ argument_list|(
 name|aliasfile
 argument_list|,
 name|init
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1257,6 +1281,8 @@ argument_list|(
 argument|aliasfile
 argument_list|,
 argument|init
+argument_list|,
+argument|e
 argument_list|)
 name|char
 operator|*
@@ -1267,6 +1293,14 @@ end_expr_stmt
 begin_decl_stmt
 name|bool
 name|init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -2177,6 +2211,8 @@ operator|-
 literal|1
 argument_list|,
 literal|','
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -2564,7 +2600,7 @@ argument_list|(
 name|af
 argument_list|)
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -2628,6 +2664,8 @@ argument_list|(
 argument|user
 argument_list|,
 argument|sendq
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -2643,6 +2681,14 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -2717,7 +2763,7 @@ name|user
 operator|->
 name|q_home
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|expand
@@ -2735,7 +2781,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|include
@@ -2747,6 +2793,8 @@ argument_list|,
 name|user
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}

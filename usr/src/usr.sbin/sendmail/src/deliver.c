@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.59 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -464,6 +464,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|TRUE
+argument_list|,
+name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -503,6 +505,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|TRUE
+argument_list|,
+name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -999,6 +1003,8 @@ operator|!
 name|checkcompat
 argument_list|(
 name|to
+argument_list|,
+name|e
 argument_list|)
 condition|)
 block|{
@@ -5072,7 +5078,7 @@ argument_list|)
 expr_stmt|;
 call|(
 modifier|*
-name|CurEnv
+name|e
 operator|->
 name|e_puthdr
 call|)
@@ -5081,7 +5087,7 @@ name|f
 argument_list|,
 name|ProgMailer
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|putline
@@ -5095,7 +5101,7 @@ argument_list|)
 expr_stmt|;
 call|(
 modifier|*
-name|CurEnv
+name|e
 operator|->
 name|e_putbody
 call|)
@@ -5104,7 +5110,7 @@ name|f
 argument_list|,
 name|ProgMailer
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|putline
@@ -5405,6 +5411,8 @@ operator|&
 name|e
 operator|->
 name|e_sendqueue
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -6055,6 +6063,8 @@ operator|&
 name|e
 operator|->
 name|e_errorqueue
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|ErrorMode
@@ -6093,6 +6103,8 @@ operator|&
 name|e
 operator|->
 name|e_errorqueue
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}

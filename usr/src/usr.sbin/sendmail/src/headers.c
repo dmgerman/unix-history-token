@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.19 (Berkeley) %G%"
+literal|"@(#)headers.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect and by readcf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		def -- if set, this is a default value. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
+comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect and by readcf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		def -- if set, this is a default value. **		e -- the envelope including this header. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
 end_comment
 
 begin_macro
@@ -56,6 +56,8 @@ argument_list|(
 argument|line
 argument_list|,
 argument|def
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -69,6 +71,14 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|def
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -340,7 +350,7 @@ operator|->
 name|hi_flags
 argument_list|)
 condition|)
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 operator||=
@@ -377,7 +387,7 @@ name|bitset
 argument_list|(
 name|EF_RESENT
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 argument_list|)
@@ -406,7 +416,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -418,7 +428,7 @@ name|strcmp
 argument_list|(
 name|fvalue
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -496,7 +506,7 @@ control|(
 name|hp
 operator|=
 operator|&
-name|CurEnv
+name|e
 operator|->
 name|e_header
 init|;
@@ -739,7 +749,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 operator|&=
@@ -953,7 +963,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  HVALUE -- return value of a header. ** **	Only "real" fields (i.e., ones that have not been supplied **	as a default) are used. ** **	Parameters: **		field -- the field name. ** **	Returns: **		pointer to the value part. **		NULL if not found. ** **	Side Effects: **		none. */
+comment|/* **  HVALUE -- return value of a header. ** **	Only "real" fields (i.e., ones that have not been supplied **	as a default) are used. ** **	Parameters: **		field -- the field name. **		e -- the envelope containing the header. ** **	Returns: **		pointer to the value part. **		NULL if not found. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -962,10 +972,17 @@ modifier|*
 name|hvalue
 parameter_list|(
 name|field
+parameter_list|,
+name|e
 parameter_list|)
 name|char
 modifier|*
 name|field
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 specifier|register
@@ -977,7 +994,7 @@ for|for
 control|(
 name|h
 operator|=
-name|CurEnv
+name|e
 operator|->
 name|e_header
 init|;
@@ -1238,7 +1255,7 @@ name|bitset
 argument_list|(
 name|EF_RESENT
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 argument_list|)
@@ -1267,9 +1284,11 @@ operator|)
 name|NULL
 argument_list|,
 operator|&
-name|CurEnv
+name|e
 operator|->
 name|e_sendqueue
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1402,6 +1421,8 @@ operator|=
 name|hvalue
 argument_list|(
 literal|"precedence"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -1450,6 +1471,8 @@ operator|=
 name|hvalue
 argument_list|(
 literal|"return-receipt-to"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -1470,6 +1493,8 @@ operator|=
 name|hvalue
 argument_list|(
 literal|"errors-to"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -1492,6 +1517,8 @@ operator|&
 name|e
 operator|->
 name|e_errorqueue
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* full name of from person */
@@ -1500,6 +1527,8 @@ operator|=
 name|hvalue
 argument_list|(
 literal|"full-name"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -1523,6 +1552,8 @@ operator|=
 name|hvalue
 argument_list|(
 literal|"posted-date"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -1536,6 +1567,8 @@ operator|=
 name|hvalue
 argument_list|(
 literal|"date"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -1631,21 +1664,21 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: from=%s, size=%ld, class=%d, received from %s\n"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_id
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
 name|q_paddr
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_msgsize
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_class
 argument_list|,
@@ -2372,6 +2405,8 @@ argument_list|,
 name|oldstyle
 argument_list|,
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -2486,7 +2521,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		fp -- file to put it to. **		oldstyle -- TRUE if this is an old style header. **		m -- a pointer to the mailer descriptor.  If NULL, **			don't transform the name at all. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
+comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		fp -- file to put it to. **		oldstyle -- TRUE if this is an old style header. **		m -- a pointer to the mailer descriptor.  If NULL, **			don't transform the name at all. **		e -- the envelope containing the message. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
 end_comment
 
 begin_expr_stmt
@@ -2501,6 +2536,8 @@ argument_list|,
 name|oldstyle
 argument_list|,
 name|m
+argument_list|,
+name|e
 argument_list|)
 specifier|register
 name|HDR
@@ -2535,6 +2572,14 @@ specifier|register
 name|MAILER
 modifier|*
 name|m
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -2856,6 +2901,8 @@ name|h_flags
 argument_list|)
 argument_list|,
 name|FALSE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if

@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.18 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	5.19 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.18 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	5.19 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -332,6 +332,8 @@ parameter_list|(
 name|a
 parameter_list|,
 name|sendq
+parameter_list|,
+name|e
 parameter_list|)
 specifier|register
 name|ADDRESS
@@ -342,6 +344,11 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 name|int
@@ -415,7 +422,7 @@ condition|)
 return|return
 name|EX_OK
 return|;
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -728,6 +735,8 @@ argument_list|,
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|AliasLevel
@@ -871,6 +880,8 @@ argument_list|,
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|AliasLevel
@@ -2365,6 +2376,8 @@ parameter_list|(
 name|a
 parameter_list|,
 name|sendq
+parameter_list|,
+name|e
 parameter_list|)
 name|ADDRESS
 modifier|*
@@ -2374,6 +2387,10 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 return|return

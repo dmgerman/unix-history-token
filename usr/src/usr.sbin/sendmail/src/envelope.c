@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.27 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -448,7 +448,7 @@ name|NULL
 decl_stmt|;
 name|sendtolist
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_receiptto
 argument_list|,
@@ -460,6 +460,8 @@ name|NULL
 argument_list|,
 operator|&
 name|rlist
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 operator|(
@@ -472,6 +474,8 @@ argument_list|,
 name|rlist
 argument_list|,
 name|FALSE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -819,10 +823,17 @@ begin_comment
 comment|/* **  INITSYS -- initialize instantiation of system ** **	In Daemon mode, this is done in the child. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Initializes the system macros, some global variables, **		etc.  In particular, the current time in various **		forms is set. */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|initsys
-argument_list|()
-end_macro
+argument_list|(
+name|e
+argument_list|)
+specifier|register
+name|ENVELOPE
+operator|*
+name|e
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -881,10 +892,10 @@ decl_stmt|;
 comment|/* 	**  Give this envelope a reality. 	**	I.e., an id, a transcript, and a creation time. 	*/
 name|openxscript
 argument_list|(
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_ctime
 operator|=
@@ -902,7 +913,7 @@ name|QueueRun
 condition|)
 name|OutChannel
 operator|=
-name|CurEnv
+name|e
 operator|->
 name|e_xfp
 expr_stmt|;
@@ -927,7 +938,7 @@ literal|'p'
 argument_list|,
 name|pbuf
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* hop count */
@@ -940,7 +951,7 @@ name|cbuf
 argument_list|,
 literal|"%d"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_hopcount
 argument_list|)
@@ -951,12 +962,14 @@ literal|'c'
 argument_list|,
 name|cbuf
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* time as integer, unix time, arpa time */
 name|settime
-argument_list|()
+argument_list|(
+name|e
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -968,7 +981,7 @@ name|macvalue
 argument_list|(
 literal|'y'
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -1026,7 +1039,7 @@ literal|'y'
 argument_list|,
 name|ybuf
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1044,10 +1057,17 @@ begin_comment
 comment|/* **  SETTIME -- set the current time. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Sets the various time macros -- $a, $b, $d, $t. */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|settime
-argument_list|()
-end_macro
+argument_list|(
+name|e
+argument_list|)
+specifier|register
+name|ENVELOPE
+operator|*
+name|e
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1152,7 +1172,7 @@ literal|'t'
 argument_list|,
 name|tbuf
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1185,7 +1205,7 @@ name|macvalue
 argument_list|(
 literal|'d'
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -1196,7 +1216,7 @@ literal|'d'
 argument_list|,
 name|dbuf
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|p
@@ -1215,7 +1235,7 @@ name|macvalue
 argument_list|(
 literal|'a'
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -1226,7 +1246,7 @@ literal|'a'
 argument_list|,
 name|p
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|define
@@ -1235,7 +1255,7 @@ literal|'b'
 argument_list|,
 name|p
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1637,6 +1657,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|'\0'
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -1717,6 +1739,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|'\0'
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -1733,6 +1757,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|'\0'
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL

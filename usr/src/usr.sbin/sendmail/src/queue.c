@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.42 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.43 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.42 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.43 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1398,6 +1398,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|nullmailer
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1666,12 +1668,22 @@ begin_macro
 name|runqueue
 argument_list|(
 argument|forkflag
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|bool
 name|forkflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -1870,6 +1882,8 @@ argument_list|(
 name|AliasFile
 argument_list|,
 name|FALSE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	*/
@@ -1905,6 +1919,8 @@ expr_stmt|;
 name|dowork
 argument_list|(
 name|w
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|free
@@ -2736,6 +2752,8 @@ begin_expr_stmt
 name|dowork
 argument_list|(
 name|w
+argument_list|,
+name|e
 argument_list|)
 specifier|register
 name|WORK
@@ -2743,6 +2761,14 @@ operator|*
 name|w
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2862,7 +2888,7 @@ argument_list|)
 expr_stmt|;
 name|clearenvelope
 argument_list|(
-name|CurEnv
+name|e
 argument_list|,
 name|FALSE
 argument_list|)
@@ -2875,7 +2901,7 @@ name|ErrorMode
 operator|=
 name|EM_MAIL
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_id
 operator|=
@@ -2902,7 +2928,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"%s: dowork, pid=%d"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_id
 argument_list|,
@@ -2914,7 +2940,7 @@ endif|#
 directive|endif
 endif|LOG
 comment|/* don't use the headers from sendmail.cf... */
-name|CurEnv
+name|e
 operator|->
 name|e_header
 operator|=
@@ -2926,7 +2952,7 @@ condition|(
 operator|!
 name|readqf
 argument_list|(
-name|CurEnv
+name|e
 argument_list|)
 condition|)
 block|{
@@ -2942,7 +2968,7 @@ expr_stmt|;
 else|else
 return|return;
 block|}
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 operator||=
@@ -2950,7 +2976,7 @@ name|EF_INQUEUE
 expr_stmt|;
 name|eatheader
 argument_list|(
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* do the delivery */
@@ -2961,14 +2987,14 @@ name|bitset
 argument_list|(
 name|EF_FATALERRS
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 argument_list|)
 condition|)
 name|sendall
 argument_list|(
-name|CurEnv
+name|e
 argument_list|,
 name|SM_DELIVER
 argument_list|)
@@ -2984,7 +3010,7 @@ expr_stmt|;
 else|else
 name|dropenvelope
 argument_list|(
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -3193,7 +3219,7 @@ name|printf
 argument_list|(
 literal|"%s: locked\n"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_id
 argument_list|)
@@ -3213,7 +3239,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"%s: locked"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_id
 argument_list|)
@@ -3242,7 +3268,9 @@ name|qfp
 expr_stmt|;
 comment|/* do basic system initialization */
 name|initsys
-argument_list|()
+argument_list|(
+name|e
+argument_list|)
 expr_stmt|;
 name|FileName
 operator|=
@@ -3369,6 +3397,8 @@ operator|&
 name|e
 operator|->
 name|e_errorqueue
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3388,6 +3418,8 @@ literal|1
 index|]
 argument_list|,
 name|FALSE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3424,7 +3456,7 @@ literal|1
 index|]
 argument_list|)
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 break|break;

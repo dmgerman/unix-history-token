@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.32 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,11 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 name|u_short
 name|qflags
@@ -202,7 +207,7 @@ operator|!=
 name|NULL
 operator|)
 condition|)
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 operator|&=
@@ -220,7 +225,7 @@ name|bitset
 argument_list|(
 name|EF_OLDSTYLE
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 argument_list|)
@@ -301,6 +306,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|delimiter
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|p
@@ -537,7 +544,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -692,6 +699,8 @@ parameter_list|(
 name|a
 parameter_list|,
 name|sendq
+parameter_list|,
+name|e
 parameter_list|)
 specifier|register
 name|ADDRESS
@@ -703,6 +712,11 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 specifier|register
@@ -749,7 +763,7 @@ name|bool
 name|safefile
 parameter_list|()
 function_decl|;
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -1079,7 +1093,7 @@ name|q_next
 operator|=
 name|NULL
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_nrcpts
 operator|++
@@ -1324,6 +1338,8 @@ argument_list|,
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1336,6 +1352,8 @@ argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1369,6 +1387,8 @@ argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|EX_TEMPFAIL
@@ -1382,13 +1402,13 @@ name|QQUEUEUP
 expr_stmt|;
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_message
 operator|==
 name|NULL
 condition|)
-name|CurEnv
+name|e
 operator|->
 name|e_message
 operator|=
@@ -1412,7 +1432,7 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: deferred: udbexpand"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_id
 argument_list|)
@@ -1574,7 +1594,7 @@ name|EX_CANTCREAT
 argument_list|,
 name|m
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1644,6 +1664,8 @@ argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1701,7 +1723,7 @@ name|EX_NOUSER
 argument_list|,
 name|m
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1855,6 +1877,8 @@ argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -2285,6 +2309,8 @@ argument_list|,
 argument|ctladdr
 argument_list|,
 argument|sendq
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -2316,6 +2342,13 @@ name|sendq
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -2327,7 +2360,7 @@ name|char
 modifier|*
 name|oldto
 init|=
-name|CurEnv
+name|e
 operator|->
 name|e_to
 decl_stmt|;
@@ -2588,7 +2621,7 @@ operator|==
 literal|'#'
 condition|)
 continue|continue;
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -2662,6 +2695,8 @@ comment|/* **  SENDTOARGV -- send to an argument vector. ** **	Parameters: **		a
 name|sendtoargv
 argument_list|(
 name|argv
+argument_list|,
+name|e
 argument_list|)
 specifier|register
 name|char
@@ -2670,6 +2705,14 @@ operator|*
 name|argv
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

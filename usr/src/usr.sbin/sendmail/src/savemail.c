@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	5.17 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -653,6 +653,8 @@ operator|&
 name|e
 operator|->
 name|e_errorqueue
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* deliver a cc: to the postmaster if desired */
@@ -676,6 +678,8 @@ operator|&
 name|e
 operator|->
 name|e_errorqueue
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|q
@@ -698,6 +702,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|'\0'
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -738,6 +744,8 @@ argument_list|,
 name|q
 argument_list|,
 name|TRUE
+argument_list|,
+name|e
 argument_list|)
 operator|==
 literal|0
@@ -932,6 +940,8 @@ name|NULL
 argument_list|,
 operator|&
 name|q
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -1124,7 +1134,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  RETURNTOSENDER -- return a message to the sender with an error. ** **	Parameters: **		msg -- the explanatory message. **		returnq -- the queue of people to send the message to. **		sendbody -- if TRUE, also send back the body of the **			message; otherwise just send the header. ** **	Returns: **		zero -- if everything went ok. **		else -- some error. ** **	Side Effects: **		Returns the current message to the sender via **		mail. */
+comment|/* **  RETURNTOSENDER -- return a message to the sender with an error. ** **	Parameters: **		msg -- the explanatory message. **		returnq -- the queue of people to send the message to. **		sendbody -- if TRUE, also send back the body of the **			message; otherwise just send the header. **		e -- the current envelope. ** **	Returns: **		zero -- if everything went ok. **		else -- some error. ** **	Side Effects: **		Returns the current message to the sender via **		mail. */
 end_comment
 
 begin_decl_stmt
@@ -1153,6 +1163,8 @@ argument_list|,
 argument|returnq
 argument_list|,
 argument|sendbody
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -1173,6 +1185,14 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|sendbody
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -1249,13 +1269,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Return To Sender: msg=\"%s\", depth=%d, CurEnv=%x,\n"
+literal|"Return To Sender: msg=\"%s\", depth=%d, e=%x,\n"
 argument_list|,
 name|msg
 argument_list|,
 name|returndepth
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1321,7 +1341,7 @@ literal|'g'
 argument_list|,
 literal|"\001f"
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1333,7 +1353,7 @@ literal|'<'
 argument_list|,
 literal|"\001f"
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1396,7 +1416,7 @@ name|bitset
 argument_list|(
 name|EF_OLDSTYLE
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 argument_list|)
@@ -1514,7 +1534,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1551,6 +1571,8 @@ operator|-
 literal|1
 argument_list|,
 literal|'\0'
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL

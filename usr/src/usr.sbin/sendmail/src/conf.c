@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.39 (Berkeley) %G%"
+literal|"@(#)conf.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1131,11 +1131,18 @@ name|bool
 name|checkcompat
 parameter_list|(
 name|to
+parameter_list|,
+name|e
 parameter_list|)
 specifier|register
 name|ADDRESS
 modifier|*
 name|to
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 ifdef|#
@@ -1179,7 +1186,7 @@ name|s
 operator|!=
 name|NULL
 operator|&&
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.

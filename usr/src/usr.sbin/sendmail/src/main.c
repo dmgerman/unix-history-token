@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.52 (Berkeley) %G%"
+literal|"@(#)main.c	5.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2283,6 +2283,8 @@ argument_list|(
 name|ConfFile
 argument_list|,
 name|safecf
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 end_if
@@ -2592,6 +2594,8 @@ argument_list|(
 name|AliasFile
 argument_list|,
 name|TRUE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2611,6 +2615,8 @@ argument_list|(
 name|AliasFile
 argument_list|,
 name|FALSE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3070,6 +3076,8 @@ block|{
 name|runqueue
 argument_list|(
 name|FALSE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|finis
@@ -3163,6 +3171,8 @@ block|{
 name|runqueue
 argument_list|(
 name|TRUE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 if|if
@@ -3236,7 +3246,9 @@ operator|==
 name|MD_SMTP
 condition|)
 name|smtp
-argument_list|()
+argument_list|(
+name|CurEnv
+argument_list|)
 expr_stmt|;
 end_if
 
@@ -3252,7 +3264,9 @@ end_comment
 
 begin_expr_stmt
 name|initsys
-argument_list|()
+argument_list|(
+name|CurEnv
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -3293,6 +3307,8 @@ condition|)
 name|collect
 argument_list|(
 name|FALSE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|finis
@@ -3322,6 +3338,8 @@ begin_expr_stmt
 name|sendtoargv
 argument_list|(
 name|av
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3372,6 +3390,8 @@ condition|)
 name|collect
 argument_list|(
 name|FALSE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 end_if

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.22 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.23 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.22 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.23 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -916,12 +916,6 @@ specifier|register
 name|int
 name|r
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|remotename
-parameter_list|()
-function_decl|;
 name|smtpmessage
 argument_list|(
 literal|"RCPT To:<%s>"

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.11 (Berkeley) %G%"
+literal|"@(#)collect.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ name|index
 parameter_list|()
 function_decl|;
 comment|/* 	**  Create the temp file name and create the file. 	*/
-name|CurEnv
+name|e
 operator|->
 name|e_df
 operator|=
@@ -126,7 +126,7 @@ name|newstr
 argument_list|(
 name|queuename
 argument_list|(
-name|CurEnv
+name|e
 argument_list|,
 literal|'d'
 argument_list|)
@@ -139,7 +139,7 @@ name|tf
 operator|=
 name|dfopen
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|,
@@ -154,7 +154,7 @@ name|syserr
 argument_list|(
 literal|"Cannot create %s"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|)
@@ -172,7 +172,7 @@ name|void
 operator|)
 name|chmod
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|,
@@ -251,6 +251,8 @@ goto|;
 name|eatfrom
 argument_list|(
 name|buf
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -471,7 +473,7 @@ literal|'\0'
 expr_stmt|;
 block|}
 block|}
-name|CurEnv
+name|e
 operator|->
 name|e_msgsize
 operator|+=
@@ -507,6 +509,8 @@ argument_list|(
 name|freebuf
 argument_list|,
 name|FALSE
+argument_list|,
+name|e
 argument_list|)
 argument_list|)
 condition|)
@@ -642,7 +646,7 @@ name|bp
 operator|++
 expr_stmt|;
 comment|/* 		**  Figure message length, output the line to the temp 		**  file, and insert a newline if missing. 		*/
-name|CurEnv
+name|e
 operator|->
 name|e_msgsize
 operator|+=
@@ -677,6 +681,8 @@ condition|)
 name|tferror
 argument_list|(
 name|tf
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -708,6 +714,8 @@ condition|)
 name|tferror
 argument_list|(
 name|tf
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 operator|(
@@ -764,7 +772,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"collect: unexpected close on connection from %s: %m\n"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -788,7 +796,7 @@ operator|)
 operator|(
 literal|"collect: unexpected close, from=%s"
 operator|,
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -796,13 +804,13 @@ name|q_paddr
 operator|)
 expr_stmt|;
 comment|/* don't return an error indication */
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
 name|NULL
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 operator|&=
@@ -817,7 +825,7 @@ block|}
 comment|/* 	**  Find out some information from the headers. 	**	Examples are who is the from person& the date. 	*/
 name|eatheader
 argument_list|(
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Add an Apparently-To: line if we have no recipient lines. 	*/
@@ -826,6 +834,8 @@ condition|(
 name|hvalue
 argument_list|(
 literal|"to"
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -833,6 +843,8 @@ operator|&&
 name|hvalue
 argument_list|(
 literal|"cc"
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -840,6 +852,8 @@ operator|&&
 name|hvalue
 argument_list|(
 literal|"bcc"
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -847,6 +861,8 @@ operator|&&
 name|hvalue
 argument_list|(
 literal|"apparently-to"
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -863,7 +879,7 @@ for|for
 control|(
 name|q
 operator|=
-name|CurEnv
+name|e
 operator|->
 name|e_sendqueue
 init|;
@@ -913,7 +929,7 @@ name|q
 operator|->
 name|q_paddr
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -921,13 +937,13 @@ block|}
 if|if
 condition|(
 operator|(
-name|CurEnv
+name|e
 operator|->
 name|e_dfp
 operator|=
 name|fopen
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|,
@@ -941,7 +957,7 @@ name|syserr
 argument_list|(
 literal|"Cannot reopen %s"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|)
@@ -1044,6 +1060,8 @@ begin_macro
 name|tferror
 argument_list|(
 argument|tf
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -1051,6 +1069,14 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|tf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -1068,7 +1094,7 @@ name|void
 operator|)
 name|freopen
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|,
@@ -1095,7 +1121,7 @@ name|syserr
 argument_list|(
 literal|"collect: Cannot write %s"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|)
@@ -1194,6 +1220,8 @@ begin_macro
 name|eatfrom
 argument_list|(
 argument|fm
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -1201,6 +1229,14 @@ begin_decl_stmt
 name|char
 modifier|*
 name|fm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -1434,7 +1470,7 @@ literal|'d'
 argument_list|,
 name|q
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|q
@@ -1453,7 +1489,7 @@ argument_list|(
 name|q
 argument_list|)
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}

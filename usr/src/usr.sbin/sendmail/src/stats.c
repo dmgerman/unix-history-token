@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stats.c	5.11 (Berkeley) %G%"
+literal|"@(#)stats.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,7 +146,7 @@ index|]
 operator|+=
 name|KBYTES
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_msgsize
 argument_list|)
@@ -180,7 +180,7 @@ index|]
 operator|+=
 name|KBYTES
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_msgsize
 argument_list|)

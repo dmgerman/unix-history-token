@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.19 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  PARSEADDR -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	ADDRESS header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. **		delim -- the character to terminate the address, passed **			to prescan. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none */
+comment|/* **  PARSEADDR -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	ADDRESS header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. **		delim -- the character to terminate the address, passed **			to prescan. **		e -- the envelope that will contain this address. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none */
 end_comment
 
 begin_comment
@@ -65,6 +65,8 @@ parameter_list|,
 name|copyf
 parameter_list|,
 name|delim
+parameter_list|,
+name|e
 parameter_list|)
 name|char
 modifier|*
@@ -80,6 +82,11 @@ name|copyf
 decl_stmt|;
 name|char
 name|delim
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 specifier|register
@@ -114,7 +121,7 @@ name|buildaddr
 parameter_list|()
 function_decl|;
 comment|/* 	**  Initialize and prescan address. 	*/
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -4146,6 +4153,8 @@ parameter_list|,
 name|senderaddress
 parameter_list|,
 name|canonical
+parameter_list|,
+name|e
 parameter_list|)
 name|char
 modifier|*
@@ -4161,6 +4170,11 @@ name|senderaddress
 decl_stmt|;
 name|bool
 name|canonical
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 specifier|register
@@ -4187,7 +4201,7 @@ name|macvalue
 argument_list|(
 literal|'g'
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -4309,7 +4323,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_fromdomain
 operator|!=
@@ -4361,7 +4375,7 @@ modifier|*
 modifier|*
 name|qxq
 init|=
-name|CurEnv
+name|e
 operator|->
 name|e_fromdomain
 decl_stmt|;
@@ -4472,7 +4486,7 @@ literal|'g'
 argument_list|,
 name|lbuf
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|expand
@@ -4490,7 +4504,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|define
@@ -4499,7 +4513,7 @@ literal|'g'
 argument_list|,
 name|oldg
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -4539,6 +4553,8 @@ argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 specifier|register
 name|ADDRESS
@@ -4552,6 +4568,13 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -4700,6 +4723,8 @@ argument_list|(
 name|a1
 argument_list|,
 name|sendq
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
