@@ -233,7 +233,7 @@ begin_define
 define|#
 directive|define
 name|PCCBB_START_MEM
-value|0x84000000
+value|0x88000000
 end_define
 
 begin_define
@@ -3268,6 +3268,29 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+comment|/* reset 16-bit pcmcia bus */
+name|exca_clrb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|exca
+argument_list|,
+name|EXCA_INTR
+argument_list|,
+name|EXCA_INTR_RESET
+argument_list|)
+expr_stmt|;
+comment|/* turn off power */
+name|pccbb_power
+argument_list|(
+name|brdev
+argument_list|,
+name|CARD_VCC_0V
+operator||
+name|CARD_VPP_0V
+argument_list|)
+expr_stmt|;
 comment|/* CSC Interrupt: Card detect interrupt on */
 name|pccbb_setb
 argument_list|(
