@@ -349,6 +349,28 @@ begin_comment
 comment|/* max value for a size_t */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OFF_T_MAX
+value|LLONG_MAX
+end_define
+
+begin_comment
+comment|/* max value for a off_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFF_T_MIN
+value|LLONG_MIN
+end_define
+
+begin_comment
+comment|/* min value for a off_t */
+end_comment
+
 begin_comment
 comment|/* Quads and long longs are the same size.  Ensure they stay in sync. */
 end_comment
