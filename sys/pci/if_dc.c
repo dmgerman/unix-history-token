@@ -8033,6 +8033,26 @@ argument_list|,
 name|dc_ifmedia_sts
 argument_list|)
 expr_stmt|;
+comment|/* 		 * For non-MII cards, we need to have the 21143 		 * drive the LEDs. Except there are some systems 		 * like the NEC VersaPro NoteBook PC which have no 		 * LEDs, and twiddling these bits has adverse effects 		 * on them. (I.e. you suddenly can't get a link.) 		 */
+if|if
+condition|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|DC_PCI_CSID
+argument_list|,
+literal|4
+argument_list|)
+operator|!=
+literal|0x80281033
+condition|)
+name|sc
+operator|->
+name|dc_flags
+operator||=
+name|DC_TULIP_LEDS
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -12091,16 +12111,11 @@ expr_stmt|;
 comment|/* 	 * If this is an Intel 21143 and we're not using the 	 * MII port, program the LED control pins so we get 	 * link and activity indications. 	 */
 if|if
 condition|(
-name|DC_IS_INTEL
-argument_list|(
-name|sc
-argument_list|)
-operator|&&
 name|sc
 operator|->
-name|dc_pmode
-operator|==
-name|DC_PMODE_SYM
+name|dc_flags
+operator|&
+name|DC_TULIP_LEDS
 condition|)
 block|{
 name|CSR_WRITE_4
@@ -12122,9 +12137,7 @@ name|sc
 argument_list|,
 name|DC_WATCHDOG
 argument_list|,
-name|DC_WDOG_LINK
-operator||
-name|DC_WDOG_ACTIVITY
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
