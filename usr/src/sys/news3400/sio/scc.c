@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scc.c,v 4.300 91/06/09 06:44:53 root Rel41 $ SONY  *  *	@(#)scc.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scc.c,v 4.300 91/06/09 06:44:53 root Rel41 $ SONY  *  *	@(#)scc.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * LH8530 SCC (serial communication controller) driver  *  * NOTE: This driver is available only for news700/1200/1700/3400.  *  * Any code and mechanism in this module may not be used  * in any form without permissions.  COPYRIGHT (C) 1989-  * SONY  Corporation,   Super Microsystems Group (SMSG),  * Work Station Division, all rights RESERVED.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/fix_machine_type.h>
-end_include
 
 begin_include
 include|#

@@ -1,51 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scc.h,v 4.300 91/06/09 06:44:56 root Rel41 $ SONY  *  *	@(#)scc.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scc.h,v 4.300 91/06/09 06:44:56 root Rel41 $ SONY  *  *	@(#)scc.h	7.2 (Berkeley) %G%  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news700
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|splscc
-value|spl4
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|news1200
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|news1700
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|splscc
-value|spl5
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -53,24 +9,6 @@ directive|ifdef
 name|news3400
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PMAXSPL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|splscc
-value|Mach_spl1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -83,31 +21,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* PMAXSPL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* news3400 */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SCCWAIT
 value|DELAY(2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCCWAIT
-value|_delay(5)
 end_define
 
 begin_define
