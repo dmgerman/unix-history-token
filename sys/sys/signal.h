@@ -539,11 +539,19 @@ name|SIG_ERR
 value|((__sighandler_t *)-1)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_P1003_1B_VISIBLE
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+end_if
 
 begin_union
 union|union
