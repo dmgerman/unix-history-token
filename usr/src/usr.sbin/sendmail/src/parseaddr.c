@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -399,7 +399,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. ** **	Side Effects: **		none. */
+comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			If '\t' then we are reading the .cf file. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -802,7 +802,7 @@ operator|!=
 name|NOCHAR
 condition|)
 block|{
-comment|/* squirrel it away */
+comment|/* see if there is room */
 if|if
 condition|(
 name|q
@@ -832,6 +832,7 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* squirrel it away */
 operator|*
 name|q
 operator|++
@@ -853,6 +854,11 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
+name|c
+operator|&=
+operator|~
+literal|0200
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -878,11 +884,6 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* chew up special characters */
-name|c
-operator|&=
-operator|~
-literal|0200
-expr_stmt|;
 operator|*
 name|q
 operator|=
@@ -3377,7 +3378,7 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		canonical -- if set, strip out any comment information, **			etc. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
-argument|char * remotename(name, m, senderaddress, canonical) 	char *name; 	struct mailer *m; 	bool senderaddress; 	bool canonical; { 	register char **pvp; 	char *fancy; 	extern char *macvalue(); 	char *oldg = macvalue(
+argument|char * remotename(name, m, senderaddress, canonical) 	char *name; 	struct mailer *m; 	bool senderaddress; 	bool canonical; { 	register char **pvp; 	char *fancy; 	register char *p; 	extern char *macvalue(); 	char *oldg = macvalue(
 literal|'g'
 argument|, CurEnv); 	static char buf[MAXNAME]; 	char lbuf[MAXNAME]; 	extern char **prescan(); 	extern char *crackaddr();
 ifdef|#
@@ -3433,14 +3434,20 @@ comment|/* 	**  Do any final sanitation the address may require. 	**	This will n
 argument|rewrite(pvp,
 literal|4
 argument|);
-comment|/* 	**  Now restore the comment information we had at the beginning. 	*/
-argument|cataddr(pvp, lbuf, sizeof lbuf); 	define(
+comment|/* 	**  Now restore the comment information we had at the beginning. 	**	Make sure that any real '$' characters in the input are 	**	not accidently interpreted as macro expansions by quoting 	**	them before expansion. 	*/
+argument|cataddr(pvp, lbuf, sizeof lbuf); 	for (p = lbuf; *p !=
+literal|'\0'
+argument|; p++) 		if (*p ==
+literal|'$'
+argument|) 			*p |=
+literal|0200
+argument|; 	define(
 literal|'g'
 argument|, lbuf, CurEnv); 	expand(fancy, buf,&buf[sizeof buf -
 literal|1
 argument|], CurEnv); 	define(
 literal|'g'
-argument|, oldg, CurEnv);
+argument|, oldg, CurEnv); 	stripquotes(buf, FALSE);
 ifdef|#
 directive|ifdef
 name|DEBUG
