@@ -16,13 +16,13 @@ name|_I386_PCB_H_
 end_define
 
 begin_comment
-comment|/*  * Intel 386 process control block  */
+comment|/*  * AMD64 process control block  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<machine/npx.h>
+file|<machine/fpu.h>
 end_include
 
 begin_struct
@@ -92,18 +92,13 @@ name|pcb_flags
 decl_stmt|;
 define|#
 directive|define
-name|PCB_NPXTRAP
-value|0x01
-comment|/* npx trap pending */
-define|#
-directive|define
 name|PCB_NPXINITDONE
-value|0x02
+value|0x01
 comment|/* fpu state is initialized */
 define|#
 directive|define
 name|PCB_FULLCTX
-value|0x04
+value|0x02
 comment|/* full context restore on sysret */
 name|caddr_t
 name|pcb_onfault

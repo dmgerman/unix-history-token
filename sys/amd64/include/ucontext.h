@@ -132,7 +132,7 @@ comment|/* FP state came from PCB */
 name|long
 name|mc_ownedfp
 decl_stmt|;
-comment|/* 	 * See<machine/npx.h> for the internals of mc_fpstate[]. 	 */
+comment|/* 	 * See<machine/fpu.h> for the internals of mc_fpstate[]. 	 */
 name|long
 name|mc_fpstate
 index|[

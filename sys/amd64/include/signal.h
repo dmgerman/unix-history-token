@@ -178,7 +178,7 @@ name|long
 name|sc_len
 decl_stmt|;
 comment|/* sizeof(mcontext_t) */
-comment|/* 	 * XXX - See<machine/ucontext.h> and<machine/npx.h> for 	 *       the following fields. 	 */
+comment|/* 	 * XXX - See<machine/ucontext.h> and<machine/fpu.h> for 	 *       the following fields. 	 */
 name|long
 name|sc_fpformat
 decl_stmt|;
