@@ -65,7 +65,6 @@ name|error
 operator|=
 name|__cap_get_proc
 argument_list|(
-operator|&
 name|cap
 argument_list|)
 expr_stmt|;
