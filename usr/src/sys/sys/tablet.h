@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tablet.h	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tablet.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,75 +15,72 @@ directive|define
 name|_SYS_TABLET_H_
 end_define
 
-begin_comment
-comment|/*  * Tablet line discipline.  */
-end_comment
-
-begin_include
+begin_expr_stmt
+operator|*
+name|Tablet
+name|line
+name|discipline
+operator|.
+modifier|*
+expr|/
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_comment
 comment|/*  * Reads on the tablet return one of the following structures, depending on  * the underlying tablet type.  The first two are defined such that a read of  * sizeof (gtcopos) on a non-gtco tablet will return meaningful info.  The  * in-proximity bit is simulated where the tablet does not directly provide  * the information.  */
-end_comment
-
-begin_struct
-struct|struct
+expr|struct
 name|tbpos
 block|{
-name|int
+name|int32_t
 name|xpos
-decl_stmt|,
+block|,
 name|ypos
-decl_stmt|;
+block|;
 comment|/* raw x-y coordinates */
-name|short
+name|int16_t
 name|status
-decl_stmt|;
+block|;
 comment|/* buttons/pen down */
 define|#
 directive|define
 name|TBINPROX
 value|0100000
 comment|/* pen in proximity of tablet */
-name|short
+name|int16_t
 name|scount
-decl_stmt|;
+block|;
 comment|/* sample count */
 block|}
-struct|;
-end_struct
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
 name|gtcopos
 block|{
-name|int
+name|int32_t
 name|xpos
 decl_stmt|,
 name|ypos
 decl_stmt|;
 comment|/* raw x-y coordinates */
-name|short
+name|int16_t
 name|status
 decl_stmt|;
 comment|/* as above */
-name|short
+name|int16_t
 name|scount
 decl_stmt|;
 comment|/* sample count */
-name|short
+name|int16_t
 name|xtilt
 decl_stmt|,
 name|ytilt
 decl_stmt|;
 comment|/* raw tilt */
-name|short
+name|int16_t
 name|pressure
 decl_stmt|;
-name|short
+name|int16_t
 name|pad
 decl_stmt|;
 comment|/* pad to longword boundary */
@@ -95,7 +92,7 @@ begin_struct
 struct|struct
 name|polpos
 block|{
-name|short
+name|int16_t
 name|p_x
 decl_stmt|,
 name|p_y
@@ -103,7 +100,7 @@ decl_stmt|,
 name|p_z
 decl_stmt|;
 comment|/* raw 3-space coordinates */
-name|short
+name|int16_t
 name|p_azi
 decl_stmt|,
 name|p_pit
@@ -111,7 +108,7 @@ decl_stmt|,
 name|p_rol
 decl_stmt|;
 comment|/* azimuth, pitch, and roll */
-name|short
+name|int16_t
 name|p_stat
 decl_stmt|;
 comment|/* status, as above */

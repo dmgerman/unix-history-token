@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resource.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resource.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -279,11 +279,11 @@ begin_struct
 struct|struct
 name|orlimit
 block|{
-name|long
+name|int32_t
 name|rlim_cur
 decl_stmt|;
 comment|/* current (soft) limit */
-name|long
+name|int32_t
 name|rlim_max
 decl_stmt|;
 comment|/* maximum value for rlim_cur */
@@ -321,7 +321,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-name|long
+name|int32_t
 name|fscale
 decl_stmt|;
 block|}
