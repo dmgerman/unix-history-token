@@ -252,6 +252,13 @@ name|MPPE_HEADER_FLAGSHIFT
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPPE_HEADER_STATEFUL_KEYCHANGES
+value|16
+end_define
+
 begin_struct
 struct|struct
 name|mppe_state
@@ -1189,6 +1196,16 @@ operator|>>
 name|MPPE_HEADER_FLAGSHIFT
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+name|n
+operator|+=
+name|MPPE_HEADER_STATEFUL_KEYCHANGES
+expr_stmt|;
 while|while
 condition|(
 name|n
@@ -1754,7 +1771,7 @@ operator|)
 condition|?
 literal|"less"
 else|:
-literal|"full"
+literal|"ful"
 argument_list|)
 expr_stmt|;
 name|len
