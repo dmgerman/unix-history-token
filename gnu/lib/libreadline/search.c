@@ -48,12 +48,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"memalloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"rldefs.h"
 end_include
 
@@ -137,6 +131,13 @@ begin_decl_stmt
 specifier|extern
 name|Keymap
 name|_rl_keymap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_editing_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -353,7 +354,7 @@ operator|||
 operator|*
 name|string
 operator|==
-literal|0
+literal|'\0'
 operator|||
 name|noninc_history_pos
 operator|<
@@ -421,6 +422,20 @@ operator|=
 name|current_history
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VI_MODE
+argument_list|)
+if|if
+condition|(
+name|rl_editing_mode
+operator|!=
+name|vi_mode
+condition|)
+endif|#
+directive|endif
 name|history_set_pos
 argument_list|(
 name|oldpos

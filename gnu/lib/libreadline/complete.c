@@ -13,6 +13,26 @@ directive|define
 name|READLINE_LIBRARY
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_CONFIG_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -2060,11 +2080,20 @@ name|i
 operator|++
 control|)
 empty_stmt|;
+comment|/* Try sorting the array without matches[0], since we need it to 	     stay in place no matter what. */
+if|if
+condition|(
+name|i
+condition|)
 name|qsort
 argument_list|(
 name|matches
+operator|+
+literal|1
 argument_list|,
 name|i
+operator|-
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3182,17 +3211,7 @@ operator|)
 operator|/
 name|limit
 expr_stmt|;
-comment|/* Watch out for special case.  If LEN is less than LIMIT, then 	       just do the inner printing loop. */
-if|if
-condition|(
-name|len
-operator|<
-name|limit
-condition|)
-name|count
-operator|=
-literal|1
-expr_stmt|;
+comment|/* Watch out for special case.  If LEN is less than LIMIT, then 	       just do the inner printing loop. 	       0< len<= limit  implies  count = 1. */
 comment|/* Sort the items if they are not already sorted. */
 if|if
 condition|(
@@ -3202,8 +3221,12 @@ condition|)
 name|qsort
 argument_list|(
 name|matches
+operator|+
+literal|1
 argument_list|,
 name|len
+operator|-
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3225,10 +3248,8 @@ operator|=
 literal|1
 init|;
 name|i
-operator|<
+operator|<=
 name|count
-operator|+
-literal|1
 condition|;
 name|i
 operator|++
@@ -3802,6 +3823,15 @@ name|getpwent
 argument_list|()
 condition|)
 block|{
+comment|/* Null usernames should result in all users as possible completions. */
+if|if
+condition|(
+name|namelen
+operator|==
+literal|0
+condition|)
+break|break;
+elseif|else
 if|if
 condition|(
 operator|(

@@ -213,14 +213,6 @@ directive|include
 file|"history.h"
 end_include
 
-begin_function_decl
-specifier|static
-name|void
-name|cr
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -237,26 +229,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|term_cr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|_rl_meta_flag
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|int
-name|_rl_output_character_function
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -460,11 +436,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|cr
-argument_list|()
-expr_stmt|;
-comment|/* was crlf () */
-name|rl_forced_update_display
+name|_rl_redisplay_after_sigwinch
 argument_list|()
 expr_stmt|;
 block|}
@@ -1256,7 +1228,7 @@ name|defined
 argument_list|(
 name|SIGTSTP
 argument_list|)
-name|signal
+name|rl_set_sighandler
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -1271,14 +1243,14 @@ name|defined
 argument_list|(
 name|SIGTTOU
 argument_list|)
-name|signal
+name|rl_set_sighandler
 argument_list|(
 name|SIGTTOU
 argument_list|,
 name|old_ttou
 argument_list|)
 expr_stmt|;
-name|signal
+name|rl_set_sighandler
 argument_list|(
 name|SIGTTIN
 argument_list|,
@@ -1297,7 +1269,7 @@ name|defined
 argument_list|(
 name|SIGWINCH
 argument_list|)
-name|signal
+name|rl_set_sighandler
 argument_list|(
 name|SIGWINCH
 argument_list|,
@@ -1311,32 +1283,6 @@ literal|0
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* Move to the start of the current line. */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|cr
-parameter_list|()
-block|{
-if|if
-condition|(
-name|term_cr
-condition|)
-name|tputs
-argument_list|(
-name|term_cr
-argument_list|,
-literal|1
-argument_list|,
-name|_rl_output_character_function
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_endif
 endif|#

@@ -314,6 +314,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Search the history for STRING, starting at history_offset.    The search is anchored: matching lines must begin with string. */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int
@@ -321,10 +325,6 @@ name|history_search_prefix
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Search the history for @var{string}, starting at history_offset.    The search is anchored: matching lines must begin with string. */
-end_comment
 
 begin_comment
 comment|/* Search for STRING in the history list, starting at POS, an    absolute index into the list.  DIR, if negative, says to search    backwards from POS, else forwards.    Returns the absolute index of the history element where STRING    was found, or -1 otherwise. */

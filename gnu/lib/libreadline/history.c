@@ -17,26 +17,6 @@ directive|define
 name|READLINE_LIBRARY
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_CONFIG_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"config.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -5874,7 +5854,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do \ 	  { \ 	    int sl = strlen (s); \ 	    j += sl; \ 	    if (j>= result_len) \ 	      { \ 	        while (j>= result_len) \ 	          result_len += 128; \ 	        result = xrealloc (result, result_len); \ 	      } \ 	    strcpy (result + j - sl, s); \ 	  } \ 	while (0)
+value|do \ 	  { \ 	    int sl = strlen (s); \ 	    j += sl; \ 	    if (j>= result_len) \ 	      { \ 		while (j>= result_len) \ 		  result_len += 128; \ 		result = xrealloc (result, result_len); \ 	      } \ 	    strcpy (result + j - sl, s); \ 	  } \ 	while (0)
 end_define
 
 begin_define
@@ -7254,7 +7234,7 @@ expr_stmt|;
 if|if
 condition|(
 name|first
-operator|>
+operator|>=
 name|len
 operator|||
 name|last
@@ -7268,6 +7248,10 @@ operator|||
 name|last
 operator|<
 literal|0
+operator|||
+name|first
+operator|>
+name|last
 condition|)
 name|result
 operator|=
@@ -7318,6 +7302,13 @@ name|size
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|result
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 for|for
 control|(

@@ -1217,10 +1217,19 @@ return|;
 block|}
 name|rl_visible_prompt_length
 operator|=
+operator|(
+name|rl_prompt
+operator|&&
+operator|*
+name|rl_prompt
+operator|)
+condition|?
 name|rl_expand_prompt
 argument_list|(
 name|rl_prompt
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 name|rl_initialize
 argument_list|()
@@ -2300,15 +2309,6 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|defining_kbd_macro
-condition|)
-name|add_macro_char
-argument_list|(
-name|key
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|META_CHAR
 argument_list|(
 name|key
@@ -2329,6 +2329,15 @@ operator|==
 name|ISKMAP
 condition|)
 block|{
+if|if
+condition|(
+name|defining_kbd_macro
+condition|)
+name|add_macro_char
+argument_list|(
+name|ESC
+argument_list|)
+expr_stmt|;
 name|map
 operator|=
 name|FUNCTION_TO_KEYMAP
@@ -2368,6 +2377,15 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
+name|defining_kbd_macro
+condition|)
+name|add_macro_char
+argument_list|(
+name|key
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|map
@@ -3362,13 +3380,6 @@ end_macro
 
 begin_block
 block|{
-name|char
-modifier|*
-name|t
-decl_stmt|,
-modifier|*
-name|t1
-decl_stmt|;
 comment|/* If we have never been called before, initialize the      terminal and data structures. */
 if|if
 condition|(
@@ -3405,6 +3416,136 @@ comment|/* We aren't done yet.  We haven't even gotten started yet! */
 name|rl_done
 operator|=
 literal|0
+expr_stmt|;
+comment|/* Tell the history routines what is going on. */
+name|start_using_history
+argument_list|()
+expr_stmt|;
+comment|/* Make the display buffer match the state of the line. */
+name|rl_reset_line_state
+argument_list|()
+expr_stmt|;
+comment|/* No such function typed yet. */
+name|rl_last_func
+operator|=
+operator|(
+name|Function
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+comment|/* Parsing of key-bindings begins in an enabled state. */
+name|_rl_parsing_conditionalized_out
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/* Initialize the entire state of the world. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|readline_initialize_everything
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|t
+decl_stmt|,
+modifier|*
+name|t1
+decl_stmt|;
+comment|/* Find out if we are running in Emacs. */
+name|running_in_emacs
+operator|=
+name|getenv
+argument_list|(
+literal|"EMACS"
+argument_list|)
+operator|!=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+comment|/* Set up input and output if they are not already set up. */
+if|if
+condition|(
+operator|!
+name|rl_instream
+condition|)
+name|rl_instream
+operator|=
+name|stdin
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rl_outstream
+condition|)
+name|rl_outstream
+operator|=
+name|stdout
+expr_stmt|;
+comment|/* Bind in_stream and out_stream immediately.  These values may change,      but they may also be used before readline_internal () is called. */
+name|in_stream
+operator|=
+name|rl_instream
+expr_stmt|;
+name|out_stream
+operator|=
+name|rl_outstream
+expr_stmt|;
+comment|/* Allocate data structures. */
+if|if
+condition|(
+operator|!
+name|rl_line_buffer
+condition|)
+name|rl_line_buffer
+operator|=
+name|xmalloc
+argument_list|(
+name|rl_line_buffer_len
+operator|=
+name|DEFAULT_BUFFER_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* Initialize the terminal interface. */
+name|init_terminal_io
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__GO32__
+argument_list|)
+comment|/* Bind tty characters to readline functions. */
+name|readline_default_bindings
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !__GO32__ */
+comment|/* Initialize the function names. */
+name|rl_initialize_funmap
+argument_list|()
 expr_stmt|;
 comment|/* Check for LC_CTYPE and use its value to decide the defaults for      8-bit character input and output. */
 name|t
@@ -3517,129 +3658,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Tell the history routines what is going on. */
-name|start_using_history
-argument_list|()
-expr_stmt|;
-comment|/* Make the display buffer match the state of the line. */
-name|rl_reset_line_state
-argument_list|()
-expr_stmt|;
-comment|/* No such function typed yet. */
-name|rl_last_func
-operator|=
-operator|(
-name|Function
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-comment|/* Parsing of key-bindings begins in an enabled state. */
-name|_rl_parsing_conditionalized_out
-operator|=
-literal|0
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/* Initialize the entire state of the world. */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|readline_initialize_everything
-parameter_list|()
-block|{
-comment|/* Find out if we are running in Emacs. */
-name|running_in_emacs
-operator|=
-name|getenv
-argument_list|(
-literal|"EMACS"
-argument_list|)
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-expr_stmt|;
-comment|/* Set up input and output if they are not already set up. */
-if|if
-condition|(
-operator|!
-name|rl_instream
-condition|)
-name|rl_instream
-operator|=
-name|stdin
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|rl_outstream
-condition|)
-name|rl_outstream
-operator|=
-name|stdout
-expr_stmt|;
-comment|/* Bind in_stream and out_stream immediately.  These values may change,      but they may also be used before readline_internal () is called. */
-name|in_stream
-operator|=
-name|rl_instream
-expr_stmt|;
-name|out_stream
-operator|=
-name|rl_outstream
-expr_stmt|;
-comment|/* Allocate data structures. */
-if|if
-condition|(
-operator|!
-name|rl_line_buffer
-condition|)
-name|rl_line_buffer
-operator|=
-name|xmalloc
-argument_list|(
-name|rl_line_buffer_len
-operator|=
-name|DEFAULT_BUFFER_SIZE
-argument_list|)
-expr_stmt|;
-comment|/* Initialize the terminal interface. */
-name|init_terminal_io
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GO32__
-argument_list|)
-comment|/* Bind tty characters to readline functions. */
-name|readline_default_bindings
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !__GO32__ */
-comment|/* Initialize the function names. */
-name|rl_initialize_funmap
-argument_list|()
-expr_stmt|;
 comment|/* Read in the init file. */
 name|rl_read_init_file
 argument_list|(
@@ -4262,11 +4280,14 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* If this causes problems, remove the `extern'. */
+comment|/* If this causes problems, add back the `extern'. */
+end_comment
+
+begin_comment
+comment|/*extern*/
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|char
 name|PC
 decl_stmt|,
@@ -6455,6 +6476,16 @@ operator|=
 name|t
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|to
+operator|>
+name|rl_end
+condition|)
+name|to
+operator|=
+name|rl_end
+expr_stmt|;
 name|text
 operator|=
 name|rl_copy_text
@@ -8373,6 +8404,22 @@ name|orig_point
 init|=
 name|rl_point
 decl_stmt|;
+if|if
+condition|(
+name|count
+operator|<=
+literal|0
+condition|)
+name|count
+operator|=
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|count
+operator|--
+condition|)
+block|{
 while|while
 condition|(
 name|rl_point
@@ -8408,6 +8455,7 @@ condition|)
 name|rl_point
 operator|--
 expr_stmt|;
+block|}
 name|rl_kill_text
 argument_list|(
 name|orig_point
@@ -8842,7 +8890,7 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|abort
+name|ding
 argument_list|()
 expr_stmt|;
 return|return

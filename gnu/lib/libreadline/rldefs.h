@@ -46,34 +46,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|HAVE_UNISTD_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_comment
-comment|/* for _POSIX_VERSION */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_UNISTD_H */
-end_comment
-
-begin_if
-if|#
-directive|if
 operator|!
 name|defined
 argument_list|(
@@ -91,6 +63,30 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_UNISTD_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_UNISTD_H */
+end_comment
 
 begin_define
 define|#

@@ -3263,7 +3263,7 @@ condition|(
 operator|(
 name|strchr
 argument_list|(
-literal|" l|h^0%bB"
+literal|" l|h^0bB"
 argument_list|,
 name|c
 argument_list|)
@@ -3370,7 +3370,7 @@ condition|(
 operator|(
 name|strchr
 argument_list|(
-literal|" l|hwW^0%bB"
+literal|" l|hwW^0bB"
 argument_list|,
 name|c
 argument_list|)
@@ -3687,7 +3687,7 @@ name|rl_newline
 argument_list|(
 literal|1
 argument_list|,
-literal|'\010'
+literal|'\n'
 argument_list|)
 expr_stmt|;
 return|return
@@ -4571,11 +4571,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|rl_delete
+name|rl_delete_text
 argument_list|(
-name|count
+name|rl_point
 argument_list|,
-name|key
+name|rl_point
+operator|+
+name|count
 argument_list|)
 expr_stmt|;
 name|rl_end_undo_group
@@ -4850,7 +4852,7 @@ literal|' '
 init|;
 name|i
 operator|<
-literal|127
+name|KEYMAP_SIZE
 condition|;
 name|i
 operator|++
