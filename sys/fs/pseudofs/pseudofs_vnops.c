@@ -1020,7 +1020,7 @@ operator|->
 name|pn_func
 call|)
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|proc
 argument_list|,
@@ -2344,7 +2344,7 @@ operator|->
 name|pn_func
 call|)
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|proc
 argument_list|,
