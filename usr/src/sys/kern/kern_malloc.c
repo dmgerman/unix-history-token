@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -132,15 +132,8 @@ name|DIAGNOSTIC
 end_ifdef
 
 begin_comment
-comment|/*  * This structure serves two purposes.  * The first is to provide a set of masks to catch unaligned frees.  * The second is to provide known text to copy into free objects so  * that modifications after frees can be detected.  */
+comment|/*  * This structure provides a set of masks to catch unaligned frees.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WEIRD_ADDR
-value|0xdeadbeef
-end_define
 
 begin_decl_stmt
 name|long
@@ -148,7 +141,7 @@ name|addrmask
 index|[]
 init|=
 block|{
-name|WEIRD_ADDR
+literal|0
 block|,
 literal|0x00000001
 block|,
@@ -184,6 +177,24 @@ literal|0x0000ffff
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * The WEIRD_ADDR is used as known text to copy into free objects so  * that modifications after frees can be detected.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WEIRD_ADDR
+value|0xdeadbeef
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_COPY
+value|32
+end_define
 
 begin_comment
 comment|/*  * Normally the first word of the structure is used to hold the list  * pointer for free objects. However, when running with diagnostics,  * we use the third and fourth fields, so as to catch modifications  * in the most commonly trashed first two words.  */
@@ -460,15 +471,13 @@ literal|1
 operator|<<
 name|indx
 operator|<
-sizeof|sizeof
-name|addrmask
+name|MAX_COPY
 condition|?
 literal|1
 operator|<<
 name|indx
 else|:
-sizeof|sizeof
-name|addrmask
+name|MAX_COPY
 expr_stmt|;
 endif|#
 directive|endif
@@ -1060,6 +1069,12 @@ name|caddr_t
 name|cp
 decl_stmt|;
 name|long
+modifier|*
+name|end
+decl_stmt|,
+modifier|*
+name|lp
+decl_stmt|,
 name|alloc
 decl_stmt|,
 name|copysize
@@ -1386,18 +1401,6 @@ ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
 comment|/* 	 * Check for multiple frees. Use a quick check to see if 	 * it looks free before laboriously searching the freelist. 	 */
-name|copysize
-operator|=
-name|size
-operator|<
-sizeof|sizeof
-name|addrmask
-condition|?
-name|size
-else|:
-sizeof|sizeof
-name|addrmask
-expr_stmt|;
 if|if
 condition|(
 name|freep
@@ -1405,49 +1408,6 @@ operator|->
 name|spare0
 operator|==
 name|WEIRD_ADDR
-condition|)
-block|{
-name|freep
-operator|->
-name|type
-operator|=
-operator|(
-operator|(
-expr|struct
-name|freelist
-operator|*
-operator|)
-name|addrmask
-operator|)
-operator|->
-name|type
-expr_stmt|;
-name|freep
-operator|->
-name|next
-operator|=
-operator|(
-operator|(
-expr|struct
-name|freelist
-operator|*
-operator|)
-name|addrmask
-operator|)
-operator|->
-name|next
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bcmp
-argument_list|(
-name|addrmask
-argument_list|,
-name|addr
-argument_list|,
-name|copysize
-argument_list|)
 condition|)
 block|{
 for|for
@@ -1473,10 +1433,10 @@ block|{
 if|if
 condition|(
 name|addr
-operator|==
+operator|!=
 name|cp
 condition|)
-block|{
+continue|continue;
 name|printf
 argument_list|(
 literal|"multiply freed item 0x%x\n"
@@ -1491,17 +1451,55 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-block|}
 comment|/* 	 * Copy in known text to detect modification after freeing 	 * and to make it look free. Also, save the type being freed 	 * so we can list likely culprit if modification is detected 	 * when the object is reallocated. 	 */
-name|bcopy
-argument_list|(
-name|addrmask
-argument_list|,
-name|addr
-argument_list|,
 name|copysize
-argument_list|)
+operator|=
+name|size
+operator|<
+name|MAX_COPY
+condition|?
+name|size
+else|:
+name|MAX_COPY
+expr_stmt|;
+name|end
+operator|=
+operator|(
+name|long
+operator|*
+operator|)
+operator|&
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|addr
+operator|)
+index|[
+name|copysize
+index|]
+expr_stmt|;
+for|for
+control|(
+name|lp
+operator|=
+operator|(
+name|long
+operator|*
+operator|)
+name|addr
+init|;
+name|lp
+operator|<
+name|end
+condition|;
+name|lp
+operator|++
+control|)
+operator|*
+name|lp
+operator|=
+name|WEIRD_ADDR
 expr_stmt|;
 name|freep
 operator|->
