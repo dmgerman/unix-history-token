@@ -2022,7 +2022,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|m_free
+name|m_freem
 argument_list|(
 name|m
 argument_list|)
@@ -2169,6 +2169,15 @@ operator|==
 literal|0
 condition|)
 block|{
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_noproto
+operator|++
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
