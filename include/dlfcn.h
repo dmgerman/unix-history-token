@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<sys/_types.h>
 end_include
 
 begin_comment
@@ -88,7 +88,62 @@ comment|/* Trace loaded objects and exit. */
 end_comment
 
 begin_comment
-comment|/*  * Special handle arguments for dlsym().  */
+comment|/*  * Request arguments for dlinfo().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_DI_LINKMAP
+value|2
+end_define
+
+begin_comment
+comment|/* Obtain link map. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_DI_SERINFO
+value|4
+end_define
+
+begin_comment
+comment|/* Obtain search path info. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_DI_SERINFOSIZE
+value|5
+end_define
+
+begin_comment
+comment|/*  ... query for required space. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_DI_ORIGIN
+value|6
+end_define
+
+begin_comment
+comment|/* Obtain object origin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_DI_MAX
+value|RTLD_DI_ORIGIN
+end_define
+
+begin_comment
+comment|/*  * Special handle arguments for dlsym()/dlinfo().  */
 end_comment
 
 begin_define
@@ -113,11 +168,46 @@ begin_comment
 comment|/* Use default search algorithm. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTLD_SELF
+value|((void *) -3)
+end_define
+
+begin_comment
+comment|/* Search the caller itself. */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIZE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__size_t
+name|size_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Structure filled in by dladdr().  */
@@ -182,6 +272,56 @@ name|struct
 name|__dlfunc_arg
 parameter_list|)
 function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * Structures, returned by the RTLD_DI_SERINFO dlinfo() request.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|dl_serpath
+block|{
+name|char
+modifier|*
+name|dls_name
+decl_stmt|;
+comment|/* single search path entry */
+name|unsigned
+name|int
+name|dls_flags
+decl_stmt|;
+comment|/* path information */
+block|}
+name|Dl_serpath
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|dl_serinfo
+block|{
+name|size_t
+name|dls_size
+decl_stmt|;
+comment|/* total buffer size */
+name|unsigned
+name|int
+name|dls_cnt
+decl_stmt|;
+comment|/* number of path entries */
+name|Dl_serpath
+name|dls_serpath
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* there may be more than one */
+block|}
+name|Dl_serinfo
+typedef|;
 end_typedef
 
 begin_endif
@@ -260,9 +400,11 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|__restrict
 parameter_list|,
 name|Dl_info
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -277,6 +419,23 @@ name|__restrict
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dlinfo
+parameter_list|(
+name|void
+modifier|*
+name|__restrict
+parameter_list|,
+name|int
+parameter_list|,
+name|void
 modifier|*
 name|__restrict
 parameter_list|)
