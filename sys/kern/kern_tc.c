@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|NTIMECOUNTER
-value|45
+value|hz
 end_define
 
 begin_endif
@@ -454,6 +454,7 @@ begin_decl_stmt
 name|struct
 name|timecounter
 modifier|*
+specifier|volatile
 name|timecounter
 init|=
 operator|&
@@ -1255,6 +1256,10 @@ expr_stmt|;
 name|t2
 operator|=
 name|t1
+expr_stmt|;
+name|t3
+operator|=
+name|NULL
 expr_stmt|;
 for|for
 control|(

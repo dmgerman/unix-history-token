@@ -137,6 +137,7 @@ specifier|extern
 name|struct
 name|timecounter
 modifier|*
+specifier|volatile
 name|timecounter
 decl_stmt|;
 end_decl_stmt
