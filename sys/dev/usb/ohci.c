@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.119 2001/12/31 12:20:35 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.121 2002/03/16 16:11:18 tsutsui Exp $	*/
 end_comment
 
 begin_comment
@@ -11169,7 +11169,7 @@ name|xfer
 operator|->
 name|timeout_handle
 argument_list|,
-name|ehci_timeout
+name|ohci_timeout
 argument_list|,
 name|xfer
 argument_list|)
@@ -16641,7 +16641,7 @@ name|USBD_IN_PROGRESS
 condition|)
 name|printf
 argument_list|(
-literal|"uhci_device_isoc_start: not in progress %p\n"
+literal|"ohci_device_isoc_start: not in progress %p\n"
 argument_list|,
 name|xfer
 argument_list|)
