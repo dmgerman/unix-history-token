@@ -960,6 +960,12 @@ operator|->
 name|so_rcv
 operator|.
 name|sb_cc
+operator|-
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_ctl
 expr_stmt|;
 name|ub
 operator|->
