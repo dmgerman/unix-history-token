@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.10  */
+comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.11  */
 end_comment
 
 begin_include
@@ -858,14 +858,17 @@ if|if
 condition|(
 operator|(
 name|SG
+operator|>
+literal|0
 operator|||
 operator|!
 name|SO
 operator|)
 operator|&&
 operator|(
-operator|!
 name|UG
+operator|<=
+literal|0
 operator|&&
 name|US
 operator|)
