@@ -4,7 +4,7 @@ comment|/* Copyright 1993,1994 by Paul Vixie  * All rights reserved  *  * Distri
 end_comment
 
 begin_comment
-comment|/*  * $Id: pathnames.h,v 1.3 1994/01/15 20:43:43 vixie Exp $  */
+comment|/*  * $Id: pathnames.h,v 1.1.1.1 1994/08/27 13:43:04 jkh Exp $  */
 end_comment
 
 begin_if
@@ -108,12 +108,9 @@ begin_comment
 comment|/*-*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LOG_FILE
-value|"log"
-end_define
+begin_comment
+comment|/*#define LOG_FILE        "log"*/
+end_comment
 
 begin_comment
 comment|/*-*/
