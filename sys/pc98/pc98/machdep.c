@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.62 1997/11/25 09:54:36 kato Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.63 1997/12/03 09:46:33 kato Exp $  */
 end_comment
 
 begin_include
@@ -18,19 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_sysvipc.h"
+file|"opt_bounce.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_bounce.h"
 end_include
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"opt_smp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_sysvipc.h"
 end_include
 
 begin_include
@@ -3947,14 +3953,24 @@ directive|endif
 comment|/* VM86 */
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|NO_F00F_HACK
+argument_list|)
 name|struct
 name|gate_descriptor
 modifier|*
 name|t_idt
 decl_stmt|;
+specifier|extern
 name|int
 name|has_f00f_bug
 decl_stmt|;
@@ -6981,9 +6997,18 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|NO_F00F_HACK
+argument_list|)
 name|void
 name|f00f_hack
 argument_list|(
@@ -7020,13 +7045,6 @@ name|tmp
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-name|vm_offset_t
-name|vp
-decl_stmt|;
-name|unsigned
-modifier|*
-name|pte
 decl_stmt|;
 if|if
 condition|(
@@ -7142,13 +7160,6 @@ operator|&
 name|r_idt
 argument_list|)
 expr_stmt|;
-name|vp
-operator|=
-name|trunc_page
-argument_list|(
-name|t_idt
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vm_map_protect
@@ -7177,7 +7188,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* NO_F00F_HACK */
+comment|/* defined(I586_CPU)&& !NO_F00F_HACK */
 name|int
 name|ptrace_set_pc
 parameter_list|(
