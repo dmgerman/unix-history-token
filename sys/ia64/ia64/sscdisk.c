@@ -6,16 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_mfs.h"
-end_include
-
-begin_comment
-comment|/* We have adopted some tasks from MFS */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"opt_md.h"
 end_include
 
