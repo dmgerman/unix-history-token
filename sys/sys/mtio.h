@@ -150,6 +150,30 @@ name|__386BSD__
 argument_list|)
 end_if
 
+begin_comment
+comment|/* Set block size for device. If device is a variable size dev		*/
+end_comment
+
+begin_comment
+comment|/* a non zero parameter will change the device to a fixed block size	*/
+end_comment
+
+begin_comment
+comment|/* device with block size set to that of the parameter passed in.	*/
+end_comment
+
+begin_comment
+comment|/* Resetting the block size to 0 will restore the device to a variable	*/
+end_comment
+
+begin_comment
+comment|/* block size device.  At this time this command works across all modes	*/
+end_comment
+
+begin_comment
+comment|/* unlike the density command below.. this may change			*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -158,89 +182,19 @@ value|10
 end_define
 
 begin_comment
-comment|/* Set block size for device */
+comment|/* Set density values for device. Thye aredefined in  the SCSI II spec	*/
 end_comment
 
 begin_comment
-comment|/* If device is a variable size dev */
-end_comment
-
-begin_comment
-comment|/* a non zero parameter will change */
-end_comment
-
-begin_comment
-comment|/* the device to a fixed block size */
-end_comment
-
-begin_comment
-comment|/* device with block size set to */
-end_comment
-
-begin_comment
-comment|/* that of the parameter passed in. */
-end_comment
-
-begin_comment
-comment|/* Resetting the block size to 0 will */
-end_comment
-
-begin_comment
-comment|/* restore the device to a variable */
-end_comment
-
-begin_comment
-comment|/* block size device. */
-end_comment
-
-begin_comment
-comment|/* This ioctl is a noop on fixed block */
-end_comment
-
-begin_comment
-comment|/* devices. */
+comment|/* and range from 0 to 0x17. Sets the value for the openned mode only	*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MTSETHDNSTY
+name|MTSETDNSTY
 value|11
 end_define
-
-begin_comment
-comment|/* Set default high density values for device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTSETMDNSTY
-value|12
-end_define
-
-begin_comment
-comment|/* Set default medium density values for device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTSETLDNSTY
-value|13
-end_define
-
-begin_comment
-comment|/* Set default low density values for device */
-end_comment
-
-begin_comment
-comment|/* These values are as defined in SCSI II spec */
-end_comment
-
-begin_comment
-comment|/* and range from 0 to 0x17 */
-end_comment
 
 begin_endif
 endif|#
@@ -269,7 +223,7 @@ name|mt_erreg
 decl_stmt|;
 comment|/* ``error'' register */
 comment|/* end device-dependent registers */
-name|daddr_t
+name|short
 name|mt_resid
 decl_stmt|;
 comment|/* residual count */
@@ -284,15 +238,19 @@ name|mt_bsiz
 decl_stmt|;
 comment|/* block size, 0 is variable */
 name|short
-name|mt_dns_high
+name|mt_dns_dflt
+decl_stmt|;
+comment|/* density setting for default density */
+name|short
+name|mt_dns_dsty1
 decl_stmt|;
 comment|/* density setting for high density */
 name|short
-name|mt_dns_medium
+name|mt_dns_dsty2
 decl_stmt|;
 comment|/* density setting for medium density */
 name|short
-name|mt_dns_low
+name|mt_dns_dsty3
 decl_stmt|;
 comment|/* density setting for low density */
 endif|#
@@ -307,10 +265,6 @@ name|mt_blkno
 decl_stmt|;
 comment|/* block number of current position */
 comment|/* end not yet implemented */
-name|u_short
-name|mt_flags
-decl_stmt|;
-comment|/* Solbourne compatiable way of getting r/w status */
 block|}
 struct|;
 end_struct
@@ -507,21 +461,6 @@ comment|/* HP 35450A DAT drive */
 end_comment
 
 begin_comment
-comment|/*  * Constants for mt_flags structure.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTF_WRITE_PROT
-value|0x8000
-end_define
-
-begin_comment
-comment|/* write protect status of tape */
-end_comment
-
-begin_comment
 comment|/* mag tape io control commands */
 end_comment
 
@@ -579,7 +518,7 @@ begin_define
 define|#
 directive|define
 name|DEFTAPE
-value|"/dev/rmt12"
+value|"/dev/rst0"
 end_define
 
 begin_endif
