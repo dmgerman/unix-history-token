@@ -489,6 +489,16 @@ parameter_list|)
 value|mtx_assert(SOCKBUF_MTX(_sb), MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SOCKBUF_UNLOCK_ASSERT
+parameter_list|(
+name|_sb
+parameter_list|)
+value|mtx_assert(SOCKBUF_MTX(_sb), MA_NOTOWNED)
+end_define
+
 begin_comment
 comment|/*  * Per-socket mutex: we reuse the receive socket buffer mutex for space  * efficiency.  This decision should probably be revisited as we optimize  * locking for the socket code.  */
 end_comment
