@@ -6,21 +6,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_NEXUSVAR_H_
+name|_MACHINE_LEGACYVAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_NEXUSVAR_H_
-value|1
+name|_MACHINE_LEGACYVAR_H_
 end_define
 
 begin_enum
 enum|enum
-name|nexus_device_ivars
+name|legacy_device_ivars
 block|{
-name|NEXUS_IVAR_PCIBUS
+name|LEGACY_IVAR_PCIBUS
 block|}
 enum|;
 end_enum
@@ -28,7 +27,7 @@ end_enum
 begin_define
 define|#
 directive|define
-name|NEXUS_ACCESSOR
+name|LEGACY_ACCESSOR
 parameter_list|(
 name|var
 parameter_list|,
@@ -37,11 +36,11 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|__BUS_ACCESSOR(nexus, var, NEXUS, ivar, type)
+value|__BUS_ACCESSOR(legacy, var, LEGACY, ivar, type)
 end_define
 
 begin_macro
-name|NEXUS_ACCESSOR
+name|LEGACY_ACCESSOR
 argument_list|(
 argument|pcibus
 argument_list|,
@@ -54,7 +53,7 @@ end_macro
 begin_undef
 undef|#
 directive|undef
-name|NEXUS_ACCESSOR
+name|LEGACY_ACCESSOR
 end_undef
 
 begin_endif
@@ -63,7 +62,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_NEXUSVAR_H_ */
+comment|/* !_MACHINE_LEGACYVAR_H_ */
 end_comment
 
 end_unit
