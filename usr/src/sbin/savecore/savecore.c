@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.1 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,7 +694,7 @@ literal|"dumplo = %d (%d bytes)\n"
 argument_list|,
 name|dumplo
 operator|/
-literal|512
+name|DEV_BSIZE
 argument_list|,
 name|dumplo
 argument_list|)
@@ -1376,7 +1376,7 @@ end_expr_stmt
 begin_expr_stmt
 name|dumplo
 operator|*=
-literal|512L
+name|DEV_BSIZE
 expr_stmt|;
 end_expr_stmt
 
@@ -2403,6 +2403,20 @@ operator|*
 name|NBPG
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: core may be incomplete\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|Write
 argument_list|(
 name|ofd
