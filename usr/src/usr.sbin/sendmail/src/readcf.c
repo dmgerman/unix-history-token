@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.55 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4824,7 +4824,7 @@ block|,
 define|#
 directive|define
 name|O_QUEUESORTORD
-value|,	0x81
+value|0x81
 literal|"QueueSortOrder"
 block|,
 name|O_QUEUESORTORD
