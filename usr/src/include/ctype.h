@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Borman at Krystal Technologies.  *  * %sccs.include.redist.c%  *  *	@(#)ctype.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Borman at Krystal Technologies.  *  * %sccs.include.redist.c%  *  *	@(#)ctype.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -473,17 +473,13 @@ specifier|inline
 name|int
 name|__istype
 parameter_list|(
-name|c
-parameter_list|,
-name|f
-parameter_list|)
 name|_BSD_RUNE_T_
 name|c
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|f
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -525,17 +521,13 @@ specifier|inline
 name|int
 name|__isctype
 parameter_list|(
-name|c
-parameter_list|,
-name|f
-parameter_list|)
 name|_BSD_RUNE_T_
 name|c
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|f
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -588,11 +580,9 @@ specifier|inline
 name|_BSD_RUNE_T_
 name|toupper
 parameter_list|(
-name|c
-parameter_list|)
 name|_BSD_RUNE_T_
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -624,11 +614,9 @@ specifier|inline
 name|_BSD_RUNE_T_
 name|tolower
 parameter_list|(
-name|c
-parameter_list|)
 name|_BSD_RUNE_T_
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
