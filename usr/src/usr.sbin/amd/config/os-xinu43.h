@@ -1,21 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-xinu43.h,v 5.2 90/06/23 22:21:01 jsp Rel $ */
+comment|/* $Id: os-xinu43.h,v 5.2.1.2 90/11/04 23:17:45 jsp Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * mt Xinu 4.3 (MORE/bsd) definitions for Amd (automounter)  * Should work on both Vax and HP ...  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-xinu43.h	5.1 (Berkeley) %G%  */
+comment|/*  * mt Xinu 4.3 (MORE/bsd) definitions for Amd (automounter)  * Should work on both Vax and HP ...  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-xinu43.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Does the compiler grok void *  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|VOIDP
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Which version of the Sun RPC library we are using  * This is the implementation release number, not  * the protocol revision number.  */

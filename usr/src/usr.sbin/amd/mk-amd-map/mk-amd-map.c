@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: mk-amd-map.c,v 5.2 90/06/23 22:20:10 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mk-amd-map.c	5.2 (Berkeley) %G%  */
+comment|/*  * $Id: mk-amd-map.c,v 5.2.1.2 91/03/17 17:37:27 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mk-amd-map.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mk-amd-map.c,v 5.2 90/06/23 22:20:10 jsp Rel $"
+literal|"$Id: mk-amd-map.c,v 5.2.1.2 91/03/17 17:37:27 jsp Alpha $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mk-amd-map.c	5.2 (Berkeley) %G%"
+literal|"@(#)mk-amd-map.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,38 +72,22 @@ directive|include
 file|"am.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OS_HAS_GDBM
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HAS_DATABASE
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIGINT
+end_ifndef
 
 begin_include
 include|#
 directive|include
-file|"gdbm.h"
+file|<signal.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* OS_HAS_GDBM */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAS_DATABASE
-end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -115,12 +99,6 @@ begin_define
 define|#
 directive|define
 name|HAS_DATABASE
-end_define
-
-begin_define
-define|#
-directive|define
-name|USE_NDBM
 end_define
 
 begin_include
@@ -229,15 +207,6 @@ end_endif
 
 begin_comment
 comment|/* OS_HAS_NDBM */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !OS_HAS_DATABASE */
 end_comment
 
 begin_ifdef
@@ -687,21 +656,11 @@ operator|*
 name|cp
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"%s\t%s\n"
-argument_list|,
-name|kp
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
+if|if
+condition|(
+name|db
+condition|)
+block|{
 if|if
 condition|(
 name|store_data
@@ -729,6 +688,19 @@ argument_list|)
 expr_stmt|;
 name|errs
 operator|++
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%s\t%s\n"
+argument_list|,
+name|kp
+argument_list|,
+name|cp
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -795,7 +767,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|xremove
+name|remove_file
 parameter_list|(
 name|f
 parameter_list|)
@@ -860,10 +832,9 @@ name|DBM
 modifier|*
 name|mapd
 decl_stmt|;
-specifier|static
 name|char
+modifier|*
 name|maptmp
-index|[]
 init|=
 literal|"dbmXXXXXX"
 decl_stmt|;
@@ -892,16 +863,75 @@ name|char
 modifier|*
 name|sl
 decl_stmt|;
+name|int
+name|printit
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|usage
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"p"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+name|ch
+condition|)
+block|{
+case|case
+literal|'p'
+case|:
+name|printit
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+name|usage
+operator|++
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
-name|argc
+name|usage
+operator|||
+name|optind
 operator|!=
-literal|2
+operator|(
+name|argc
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"Usage: mk-amd-map file-map\n"
+literal|"Usage: mk-amd-map [-p] file-map\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -916,7 +946,7 @@ name|map
 operator|=
 name|argv
 index|[
-literal|1
+name|optind
 index|]
 expr_stmt|;
 name|sl
@@ -973,9 +1003,12 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|USE_NDBM
+if|if
+condition|(
+operator|!
+name|printit
+condition|)
+block|{
 name|len
 operator|=
 name|strlen
@@ -1020,7 +1053,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"malloc"
+literal|"mk-amd-map: malloc"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1054,14 +1087,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|xremove
+name|remove_file
 argument_list|(
 name|maptpag
 argument_list|)
 operator|<
 literal|0
 operator|||
-name|xremove
+name|remove_file
 argument_list|(
 name|maptdir
 argument_list|)
@@ -1089,9 +1122,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* USE_NDBM */
+block|}
 name|mapf
 operator|=
 name|fopen
@@ -1104,6 +1135,9 @@ expr_stmt|;
 if|if
 condition|(
 name|mapf
+operator|&&
+operator|!
+name|printit
 condition|)
 name|mapd
 operator|=
@@ -1129,10 +1163,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|mapd
+operator|||
+name|printit
 condition|)
 block|{
 name|int
@@ -1157,6 +1192,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|printit
+condition|)
+block|{
+if|if
+condition|(
 name|error
 condition|)
 block|{
@@ -1174,9 +1214,30 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|USE_NDBM
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Error reading source file  %s\n"
+argument_list|,
+name|map
+argument_list|)
+expr_stmt|;
+name|rc
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|sprintf
 argument_list|(
 name|mappag
@@ -1292,15 +1353,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* USE_NDBM */
+block|}
+block|}
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|USE_NDBM
 name|fprintf
 argument_list|(
 name|stderr
@@ -1310,9 +1367,6 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_NDBM */
 name|perror
 argument_list|(
 literal|"writing"
@@ -1342,18 +1396,31 @@ parameter_list|()
 block|{
 name|fputs
 argument_list|(
-literal|"This system does not support hashed database files\n"
+literal|"mk-amd-map: This system does not support hashed database files\n"
 argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+operator|*
+operator|%
+name|sccs
+operator|.
+name|include
+operator|.
+name|redist
+operator|.
+name|c
+operator|%
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-bsd44.h,v 5.2 90/06/23 22:20:38 jsp Rel $ */
+comment|/* $Id: os-bsd44.h,v 5.2.1.2 90/11/04 23:17:39 jsp Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * 4.4 BSD definitions for Amd (automounter)  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-bsd44.h	5.1 (Berkeley) %G%  */
+comment|/*  * 4.4 BSD definitions for Amd (automounter)  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-bsd44.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RPC_3
+name|RPC_4
 end_define
 
 begin_comment
@@ -52,6 +52,16 @@ define|#
 directive|define
 name|OS_HAS_NDBM
 end_define
+
+begin_comment
+comment|/*  * 4.4 doesn't provide NIS.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAS_NIS_MAPS
+end_undef
 
 begin_comment
 comment|/*  * The mount table is obtained from the kernel  */
@@ -248,9 +258,6 @@ comment|/* LITTLE */
 comment|/*  * Miscellaneous 4.4 BSD bits  */
 define|#
 directive|define
-name|MISC_RPC
-define|#
-directive|define
 name|NEED_MNTOPT_PARSER
 define|#
 directive|define
@@ -385,6 +392,23 @@ begin_define
 define|#
 directive|define
 name|NFS_ARGS_NEEDS_PATH
+end_define
+
+begin_comment
+comment|/*  * 4.4 has RE support built in  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|RE_HDR
+end_undef
+
+begin_define
+define|#
+directive|define
+name|RE_HDR
+value|<regexp.h>
 end_define
 
 end_unit

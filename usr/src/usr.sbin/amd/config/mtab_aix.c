@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: mtab_aix.c,v 5.2 90/06/23 22:20:36 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mtab_aix.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: mtab_aix.c,v 5.2.1.1 90/10/21 22:30:40 jsp Exp $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mtab_aix.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -119,6 +119,30 @@ case|:
 name|ty
 operator|=
 name|MTAB_TYPE_NFS
+expr_stmt|;
+name|new_mp
+operator|->
+name|mnt_fsname
+operator|=
+name|str3cat
+argument_list|(
+name|new_mp
+operator|->
+name|mnt_fsname
+argument_list|,
+name|vmt2dataptr
+argument_list|(
+name|mp
+argument_list|,
+name|VMT_HOSTNAME
+argument_list|)
+argument_list|,
+literal|":"
+argument_list|,
+name|new_mp
+operator|->
+name|mnt_fsname
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:

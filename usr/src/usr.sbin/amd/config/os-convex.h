@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-convex.h,v 5.2 90/06/23 22:20:42 jsp Rel $ */
+comment|/* $Id: os-convex.h,v 5.2.1.1 90/10/21 22:30:48 jsp Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Convex C220, version 7.1 definitions for Amd (automounter)  *         from Eitan Mizrotsky<eitan@shum.huji.ac.il>  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-convex.h	5.1 (Berkeley) %G%  */
+comment|/*  * Convex C220, version 7.1 definitions for Amd (automounter)  *         from Eitan Mizrotsky<eitan@shum.huji.ac.il>  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-convex.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment

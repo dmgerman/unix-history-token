@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: amq.h,v 5.2 90/06/23 22:20:13 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)amq.h	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: amq.h,v 5.2.1.2 91/03/17 17:39:26 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)amq.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -436,6 +436,38 @@ specifier|extern
 name|amq_mount_info_list
 modifier|*
 name|amqproc_getmntfs_1
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|AMQPROC_MOUNT
+value|((u_long)7)
+end_define
+
+begin_function_decl
+specifier|extern
+name|int
+modifier|*
+name|amqproc_mount_1
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|AMQPROC_GETVERS
+value|((u_long)8)
+end_define
+
+begin_function_decl
+specifier|extern
+name|amq_string
+modifier|*
+name|amqproc_getvers_1
 parameter_list|()
 function_decl|;
 end_function_decl

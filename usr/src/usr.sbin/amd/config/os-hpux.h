@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-hpux.h,v 5.2 90/06/23 22:20:47 jsp Rel $ */
+comment|/* $Id: os-hpux.h,v 5.2.1.4 91/03/03 20:49:43 jsp Alpha $ */
 end_comment
 
 begin_comment
-comment|/*  * HP/9000 HP-UX definitions for Amd (automounter)  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-hpux.h	5.1 (Berkeley) %G%  */
+comment|/*  * HP/9000 HP-UX definitions for Amd (automounter)  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-hpux.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -70,6 +70,11 @@ name|defined
 argument_list|(
 name|hp9000s300
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|hp9000s800
+argument_list|)
 end_if
 
 begin_define
@@ -84,19 +89,43 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* #if defined(hp9000s800) #define ARCH_ENDIAN	"unknown" #endif */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__hpux
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HPUX_VERSION_6
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*  * No support for syslog()  */
+comment|/*  * No support for syslog() prior to 7.0  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HPUX_VERSION_6
+end_ifdef
 
 begin_undef
 undef|#
 directive|undef
 name|HAS_SYSLOG
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * No support for ndbm  */
@@ -167,11 +196,11 @@ name|WAIT
 value|"uwait.h"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIGCHLD
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HPUX_VERSION_6
+end_ifdef
 
 begin_define
 define|#
@@ -198,7 +227,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MISC_RPC
+name|NEED_XDR_POINTER
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEED_CLNT_SPERRNO
 end_define
 
 begin_comment
@@ -221,26 +256,31 @@ directive|define
 name|LOCK_FCNTL
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
+begin_comment
+comment|/*  * Additional fields in struct mntent  * are fixed up here  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|alloca
+name|FIXUP_MNTENT
 parameter_list|(
-name|sz
+name|mntp
 parameter_list|)
-value|__builtin_alloca(sz)
+value|{ \ 	(mntp)->mnt_time = clocktime(); \ }
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|FIXUP_MNTENT_DUP
+parameter_list|(
+name|mntp
+parameter_list|,
+name|mp
+parameter_list|)
+value|{ \ 	(mntp)->mnt_time = (mp)->mnt_time; \ }
+end_define
 
 begin_define
 define|#

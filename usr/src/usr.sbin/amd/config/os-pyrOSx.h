@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-pyrOSx.h,v 5.2 90/06/23 22:20:50 jsp Rel $ */
+comment|/* $Id: os-pyrOSx.h,v 5.2.1.1 90/10/21 22:31:02 jsp Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Pyramid OSx definitions for Amd (automounter)  *		from Stefan Petri<petri@tubsibr.UUCP>  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-pyrOSx.h	5.1 (Berkeley) %G%  */
+comment|/*  * Pyramid OSx definitions for Amd (automounter)  *		from Stefan Petri<petri@tubsibr.UUCP>  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-pyrOSx.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -40,6 +40,12 @@ end_define
 begin_comment
 comment|/*  * Byte ordering  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ARCH_ENDIAN
+end_undef
 
 begin_define
 define|#

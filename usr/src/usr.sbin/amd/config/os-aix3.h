@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-aix3.h,v 5.2 90/06/23 22:20:33 jsp Rel $ */
+comment|/* $Id: os-aix3.h,v 5.2.1.1 90/10/21 22:30:38 jsp Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * AIX 3.1 definitions for Amd (automounter)  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-aix3.h	5.1 (Berkeley) %G%  */
+comment|/*  * AIX 3.1 definitions for Amd (automounter)  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-aix3.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -338,7 +338,7 @@ name|dst
 parameter_list|,
 name|src
 parameter_list|)
-value|{ (dst).addr = *(src); }
+value|{ (dst) = *(src); }
 end_define
 
 begin_undef
@@ -411,7 +411,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MOUNT_AIX3
+name|MOUNT_HELPER_SOURCE
+value|"mount_aix.c"
 end_define
 
 begin_comment

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-riscix.h,v 5.2 90/06/23 22:20:51 jsp Rel $ */
+comment|/* $Id: os-riscix.h,v 5.2.1.1 90/10/21 22:31:03 jsp Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Acorn Archimedes RISC iX definitions for Amd (automounter)  * Contributed by Piete Brooks.  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-riscix.h	5.1 (Berkeley) %G%  */
+comment|/*  * Acorn Archimedes RISC iX definitions for Amd (automounter)  * Contributed by Piete Brooks.  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-riscix.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
