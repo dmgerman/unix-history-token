@@ -174,7 +174,7 @@ name|width
 decl_stmt|;
 comment|/* printing width */
 comment|/* 	 * The following (optional) elements are hooks for passing information 	 * to the generic output routine pvar (which prints simple elements 	 * from the well known kinfo_proc structure). 	 */
-name|int
+name|size_t
 name|off
 decl_stmt|;
 comment|/* offset in structure */
