@@ -756,7 +756,7 @@ value|17
 define|#
 directive|define
 name|DRIVESPERLINE
-value|((wnd->maxx - INSET) / COLWIDTH)
+value|((wnd->_maxx - INSET) / COLWIDTH)
 for|for
 control|(
 name|ndrives
@@ -801,7 +801,7 @@ operator|=
 operator|(
 name|wnd
 operator|->
-name|maxy
+name|_maxy
 operator|-
 name|row
 operator|-
@@ -856,7 +856,7 @@ name|COLWIDTH
 operator|>=
 name|wnd
 operator|->
-name|maxx
+name|_maxx
 operator|-
 name|INSET
 condition|)
@@ -877,7 +877,7 @@ name|row
 operator|>
 name|wnd
 operator|->
-name|maxy
+name|_maxy
 operator|-
 operator|(
 name|linesperregion
@@ -1024,7 +1024,7 @@ name|row
 operator|>
 name|wnd
 operator|->
-name|maxy
+name|_maxy
 operator|-
 name|linesperregion
 condition|)
@@ -1236,7 +1236,7 @@ name|row
 operator|>
 name|wnd
 operator|->
-name|maxy
+name|_maxy
 operator|-
 name|linesperregion
 condition|)
@@ -1322,7 +1322,7 @@ name|COLWIDTH
 operator|>=
 name|wnd
 operator|->
-name|maxx
+name|_maxx
 operator|-
 name|INSET
 condition|)
@@ -1343,7 +1343,7 @@ name|row
 operator|>
 name|wnd
 operator|->
-name|maxy
+name|_maxy
 operator|-
 operator|(
 name|linesperregion

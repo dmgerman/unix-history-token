@@ -367,7 +367,7 @@ name|i
 operator|>
 name|wnd
 operator|->
-name|maxy
+name|_maxy
 operator|-
 literal|1
 condition|)
@@ -375,7 +375,7 @@ name|i
 operator|=
 name|wnd
 operator|->
-name|maxy
+name|_maxy
 operator|-
 literal|1
 expr_stmt|;

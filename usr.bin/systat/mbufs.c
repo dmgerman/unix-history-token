@@ -289,7 +289,7 @@ name|j
 operator|<
 name|wnd
 operator|->
-name|maxy
+name|_maxy
 condition|;
 name|j
 operator|++
@@ -314,7 +314,7 @@ name|i
 operator|<
 name|wnd
 operator|->
-name|maxy
+name|_maxy
 condition|;
 name|i
 operator|++
