@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.13 1994/03/21 09:35:10 davidg Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.14 1994/03/23 09:15:06 davidg Exp $  */
 end_comment
 
 begin_include
@@ -86,6 +86,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|bouncepages
+decl_stmt|,
+name|bpwait
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +104,13 @@ decl_stmt|,
 name|bmfreeing
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|BITS_IN_UNSIGNED
+value|(8*sizeof(unsigned))
+end_define
 
 begin_decl_stmt
 name|int
@@ -270,12 +279,7 @@ operator|+
 operator|(
 name|i
 operator|*
-literal|8
-operator|*
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
+name|BITS_IN_UNSIGNED
 operator|+
 operator|(
 name|bit
@@ -289,6 +293,10 @@ return|;
 block|}
 block|}
 block|}
+name|bpwait
+operator|=
+literal|1
+expr_stmt|;
 name|tsleep
 argument_list|(
 operator|(
@@ -382,27 +390,13 @@ name|allocindex
 operator|=
 name|index
 operator|/
-operator|(
-literal|8
-operator|*
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|)
+name|BITS_IN_UNSIGNED
 expr_stmt|;
 name|bit
 operator|=
 name|index
 operator|%
-operator|(
-literal|8
-operator|*
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|)
+name|BITS_IN_UNSIGNED
 expr_stmt|;
 name|bounceallocarray
 index|[
@@ -420,6 +414,15 @@ name|bouncefree
 operator|+=
 name|count
 expr_stmt|;
+if|if
+condition|(
+name|bpwait
+condition|)
+block|{
+name|bpwait
+operator|=
+literal|0
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -429,6 +432,7 @@ operator|&
 name|bounceallocarray
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -652,26 +656,12 @@ operator|=
 operator|(
 name|bouncepages
 operator|+
-operator|(
-literal|8
-operator|*
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|)
+name|BITS_IN_UNSIGNED
 operator|-
 literal|1
 operator|)
 operator|/
-operator|(
-literal|8
-operator|*
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|)
+name|BITS_IN_UNSIGNED
 expr_stmt|;
 name|bounceallocarray
 operator|=
@@ -732,10 +722,8 @@ argument_list|)
 expr_stmt|;
 name|bouncepa
 operator|=
-name|pmap_extract
+name|pmap_kextract
 argument_list|(
-name|kernel_pmap
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
@@ -890,10 +878,8 @@ control|)
 block|{
 name|pa
 operator|=
-name|pmap_extract
+name|pmap_kextract
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
@@ -957,10 +943,8 @@ control|)
 block|{
 name|pa
 operator|=
-name|pmap_extract
+name|pmap_kextract
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
@@ -1284,10 +1268,8 @@ name|bouncekva
 expr_stmt|;
 name|mybouncepa
 operator|=
-name|pmap_extract
+name|pmap_kextract
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|i386_trunc_page
 argument_list|(
 name|bouncekva
@@ -1903,10 +1885,8 @@ name|va
 decl_stmt|;
 name|va
 operator|=
-name|pmap_extract
+name|pmap_kextract
 argument_list|(
-name|kernel_pmap
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
