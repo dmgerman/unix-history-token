@@ -95,7 +95,7 @@ struct_decl|struct
 name|rusage
 struct_decl|;
 specifier|extern
-name|_G_pid_t
+name|pid_t
 name|wait
 name|_G_ARGS
 argument_list|(
@@ -106,12 +106,12 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_pid_t
+name|pid_t
 name|waitpid
 name|_G_ARGS
 argument_list|(
 operator|(
-name|_G_pid_t
+name|pid_t
 operator|,
 name|int
 operator|*
@@ -121,7 +121,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_pid_t
+name|pid_t
 name|wait3
 name|_G_ARGS
 argument_list|(
@@ -139,12 +139,12 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_G_pid_t
+name|pid_t
 name|wait4
 name|_G_ARGS
 argument_list|(
 operator|(
-name|_G_pid_t
+name|pid_t
 operator|,
 name|int
 operator|*
