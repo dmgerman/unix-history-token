@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_sysent.c 1.1 90/07/09$  *  *	@(#)ultrix_sysent.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_sysent.c 1.1 90/07/09$  *  *	@(#)ultrix_sysent.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -178,14 +178,14 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|stat
+name|ostat
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|lstat
+name|olstat
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -276,7 +276,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fstat
+name|ofstat
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -514,7 +514,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigstack
+name|osigstack
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -953,7 +953,7 @@ block|,
 comment|/*  37 = kill */
 literal|2
 block|,
-name|stat
+name|ostat
 block|,
 comment|/*  38 = stat */
 literal|0
@@ -963,7 +963,7 @@ block|,
 comment|/*  39 = old setpgrp */
 literal|2
 block|,
-name|lstat
+name|olstat
 block|,
 comment|/*  40 = lstat */
 literal|1
@@ -1073,7 +1073,7 @@ block|,
 comment|/*  61 = chroot */
 literal|2
 block|,
-name|fstat
+name|ofstat
 block|,
 comment|/*  62 = fstat */
 literal|0
@@ -1323,7 +1323,7 @@ block|,
 comment|/* 111 = sigpause */
 literal|2
 block|,
-name|sigstack
+name|osigstack
 block|,
 comment|/* 112 = sigstack */
 literal|3
