@@ -6761,7 +6761,7 @@ name|lo_name
 condition|)
 name|printf
 argument_list|(
-literal|"(%s) "
+literal|" (%s)"
 argument_list|,
 name|lock
 operator|->
