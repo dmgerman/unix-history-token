@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.94 2001/12/30 20:26:59 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.96 2002/02/11 15:11:49 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -746,7 +746,7 @@ name|flags
 argument_list|,
 name|pipe
 argument_list|,
-name|USBD_DEFAULT_INTERVAL
+name|USBD_DEFAULT_TIMEOUT
 argument_list|)
 operator|)
 return|;
@@ -4379,6 +4379,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|USBD_DEFAULT_TIMEOUT
 argument_list|)
 operator|)
 return|;
@@ -4406,6 +4408,9 @@ parameter_list|,
 name|int
 modifier|*
 name|actlen
+parameter_list|,
+name|u_int32_t
+name|timo
 parameter_list|)
 block|{
 return|return
@@ -4425,6 +4430,8 @@ argument_list|,
 name|flags
 argument_list|,
 name|actlen
+argument_list|,
+name|timo
 argument_list|)
 operator|)
 return|;
@@ -4455,6 +4462,9 @@ parameter_list|,
 name|int
 modifier|*
 name|actlen
+parameter_list|,
+name|u_int32_t
+name|timeout
 parameter_list|)
 block|{
 name|usbd_xfer_handle
@@ -4540,7 +4550,7 @@ name|dev
 argument_list|,
 literal|0
 argument_list|,
-name|USBD_DEFAULT_TIMEOUT
+name|timeout
 argument_list|,
 name|req
 argument_list|,

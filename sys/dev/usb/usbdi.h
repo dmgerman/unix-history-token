@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.59 2001/12/24 21:36:15 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.60 2002/02/11 15:11:49 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -696,6 +696,8 @@ name|flags
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -724,6 +726,8 @@ parameter_list|,
 name|int
 modifier|*
 name|actlen
+parameter_list|,
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl

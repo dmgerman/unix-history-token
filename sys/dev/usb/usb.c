@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.66 2002/02/03 18:15:21 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.67 2002/02/11 15:11:49 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -2780,6 +2780,8 @@ operator|&
 name|ur
 operator|->
 name|ucr_actlen
+argument_list|,
+name|USBD_DEFAULT_TIMEOUT
 argument_list|)
 expr_stmt|;
 if|if

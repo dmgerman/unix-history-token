@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ugen.c,v 1.51 2001/11/13 07:59:32 augustss Exp $	*/
+comment|/*	$NetBSD: ugen.c,v 1.57 2002/02/11 15:11:49 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -2511,6 +2511,12 @@ return|;
 case|case
 name|UE_CONTROL
 case|:
+name|sce
+operator|->
+name|timeout
+operator|=
+name|USBD_DEFAULT_TIMEOUT
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -5921,20 +5927,6 @@ return|;
 case|case
 name|USB_SET_TIMEOUT
 case|:
-if|if
-condition|(
-name|endpt
-operator|==
-name|USB_CONTROL_ENDPOINT
-condition|)
-block|{
-comment|/* XXX the lower levels don't support this yet. */
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
 name|sce
 operator|=
 operator|&
@@ -5959,26 +5951,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-if|if
-condition|(
-name|sce
-operator|->
-name|pipeh
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ugenioctl: USB_SET_TIMEOUT, no pipe\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
-block|}
 name|sce
 operator|->
 name|timeout
@@ -7107,6 +7079,19 @@ name|ret
 goto|;
 block|}
 block|}
+name|sce
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_endpoints
+index|[
+name|endpt
+index|]
+index|[
+name|IN
+index|]
+expr_stmt|;
 name|err
 operator|=
 name|usbd_do_request_flags
@@ -7130,6 +7115,10 @@ operator|&
 name|ur
 operator|->
 name|ucr_actlen
+argument_list|,
+name|sce
+operator|->
+name|timeout
 argument_list|)
 expr_stmt|;
 if|if

@@ -2850,6 +2850,8 @@ name|req_flags
 argument_list|,
 operator|&
 name|req_actlen
+argument_list|,
+name|USBD_DEFAULT_TIMEOUT
 argument_list|)
 expr_stmt|;
 if|if
