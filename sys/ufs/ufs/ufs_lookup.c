@@ -3614,6 +3614,10 @@ operator|->
 name|i_dirhash
 operator|!=
 name|NULL
+operator|&&
+name|nep
+operator|->
+name|d_ino
 condition|)
 name|ufsdirhash_move
 argument_list|(
