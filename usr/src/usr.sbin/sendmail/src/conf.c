@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.1 (Berkeley) %G%"
+literal|"@(#)conf.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,10 +108,13 @@ block|,
 literal|"return-receipt-to"
 block|,
 name|H_FROM
+comment|/* |H_RECEIPTTO */
 block|,
 literal|"errors-to"
 block|,
 name|H_FROM
+operator||
+name|H_ERRORSTO
 block|,
 comment|/* destination fields */
 literal|"to"
