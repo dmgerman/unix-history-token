@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Update the symbol table (the .T file) in a MIPS object to    contain debugging information specified by the GNU compiler    in the form of comments (the mips assembler does not support    assembly access to debug information).    Copyright (C) 1991, 1993, 1994. 1995 Free Software Foundation, Inc.    Contributed by Michael Meissner, meissner@osf.org     This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Update the symbol table (the .T file) in a MIPS object to    contain debugging information specified by the GNU compiler    in the form of comments (the mips assembler does not support    assembly access to debug information).    Copyright (C) 1991, 93, 94, 95, 97, 1998 Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).     This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -12,6 +12,12 @@ end_comment
 
 begin_escape
 end_escape
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -44,13 +50,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
+file|"system.h"
 end_include
 
 begin_ifndef
@@ -453,12 +453,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_VPRINTF
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -494,44 +488,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* We must not provide any prototype here, even if ANSI C.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fatal
-name|__proto
-argument_list|(
-operator|(
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|error
-name|__proto
-argument_list|(
-operator|(
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_escape
 end_escape
@@ -637,36 +593,6 @@ end_undef
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -716,9 +642,10 @@ argument_list|(
 name|USG
 argument_list|)
 operator|||
+operator|!
 name|defined
 argument_list|(
-name|NO_STAB_H
+name|HAVE_STAB_H
 argument_list|)
 end_if
 
@@ -756,6 +683,12 @@ begin_comment
 comment|/* not USG */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"machmode.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -780,85 +713,6 @@ directive|define
 name|STAB_CODE_TYPE
 value|int
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_OSF_SOURCE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HAS_STDLIB_H
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAS_UNISTD_H
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAS_STDLIB_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAS_UNISTD_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|errno
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* MIPS errno.h doesn't declare this */
-end_comment
 
 begin_endif
 endif|#
@@ -901,14 +755,14 @@ parameter_list|(
 name|ch
 parameter_list|)
 define|\
-value|(isalnum (ch) || (ch) == '_' || (ch) == '.' || (ch) == '$')
+value|(ISALNUM (ch) || (ch) == '_' || (ch) == '.' || (ch) == '$')
 end_define
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Redefinition of of storage classes as an enumeration for better    debugging.  */
+comment|/* Redefinition of storage classes as an enumeration for better    debugging.  */
 end_comment
 
 begin_typedef
@@ -1689,7 +1543,7 @@ comment|/* ok to hash type, or use previous hash */
 name|hash_record
 init|=
 literal|2
-comment|/* ok to record hash, but don't use prev. */
+comment|/* ok to record hash, but don't use prev.  */
 block|}
 name|hash_state_t
 typedef|;
@@ -1760,7 +1614,7 @@ value|(((x) + 7)& ~7)
 end_define
 
 begin_comment
-comment|/* Structures to provide n-number of virtual arrays, each of which can    grow linearly, and which are written in the object file as sequential    pages.  On systems with a BSD malloc that define USE_MALLOC, the    MAX_CLUSTER_PAGES should be 1 less than a power of two, since malloc    adds it's overhead, and rounds up to the next power of 2.  Pages are    linked together via a linked list.     If PAGE_SIZE is> 4096, the string length in the shash_t structure    can't be represented (assuming there are strings> 4096 bytes).  */
+comment|/* Structures to provide n-number of virtual arrays, each of which can    grow linearly, and which are written in the object file as sequential    pages.  On systems with a BSD malloc that define USE_MALLOC, the    MAX_CLUSTER_PAGES should be 1 less than a power of two, since malloc    adds its overhead, and rounds up to the next power of 2.  Pages are    linked together via a linked list.     If PAGE_SIZE is> 4096, the string length in the shash_t structure    can't be represented (assuming there are strings> 4096 bytes).  */
 end_comment
 
 begin_ifndef
@@ -1967,9 +1821,9 @@ name|type
 parameter_list|)
 value|{
 comment|/* macro to initialize a varray */
-value|\   (vlinks_t *)0,
+value|\   (vlinks_t *) 0,
 comment|/* first */
-value|\   (vlinks_t *)0,
+value|\   (vlinks_t *) 0,
 comment|/* last */
 value|\   0,
 comment|/* num_allocated */
@@ -1983,7 +1837,7 @@ value|\ }
 end_define
 
 begin_comment
-comment|/* Master type for indexes within the symbol table. */
+comment|/* Master type for indexes within the symbol table.  */
 end_comment
 
 begin_typedef
@@ -5550,44 +5404,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sbrk
-name|__proto
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|free
-name|__proto
-argument_list|(
-operator|(
-name|PTR_T
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -5663,7 +5479,7 @@ end_ifndef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DONT_DECLARE_SYS_SIGLIST
+name|SYS_SIGLIST_DECLARED
 end_ifndef
 
 begin_decl_stmt
@@ -5689,59 +5505,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SEEK_SET
-end_ifndef
-
-begin_comment
-comment|/* Symbolic constants for the "fseek" function: */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEEK_SET
-value|0
-end_define
-
-begin_comment
-comment|/* Set file pointer to offset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEEK_CUR
-value|1
-end_define
-
-begin_comment
-comment|/* Set file pointer to its current value plus offset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEEK_END
-value|2
-end_define
-
-begin_comment
-comment|/* Set file pointer to the size of the file plus offset */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/* List of assembler pseudo ops and beginning sequences that need    special actions.  Someday, this should be a hash table, and such,    but for now a linear list of names and calls to memcmp will    do...... */
+comment|/* List of assembler pseudo ops and beginning sequences that need    special actions.  Someday, this should be a hash table, and such,    but for now a linear list of names and calls to memcmp will    do......  */
 end_comment
 
 begin_typedef
@@ -7288,9 +7056,14 @@ literal|" st= %-11s name= %.*s\n"
 argument_list|,
 name|st_str
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|str_end_p1
 operator|-
 name|str_start
+argument_list|)
 argument_list|,
 name|str_start
 argument_list|)
@@ -7311,9 +7084,14 @@ name|stderr
 argument_list|,
 literal|" st= %.*s\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|len
 operator|-
 literal|1
+argument_list|)
 argument_list|,
 name|st_str
 argument_list|)
@@ -7464,9 +7242,14 @@ literal|" st= %-11s name= %.*s\n"
 argument_list|,
 name|st_str
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|str_end_p1
 operator|-
 name|str_start
+argument_list|)
 argument_list|,
 name|str_start
 argument_list|)
@@ -7998,7 +7781,7 @@ index|[
 literal|5
 index|]
 expr_stmt|;
-comment|/* For anything that adds additional information, we must not hash,      so check here, and reset our state. */
+comment|/* For anything that adds additional information, we must not hash,      so check here, and reset our state.  */
 if|if
 condition|(
 name|state
@@ -8235,7 +8018,7 @@ name|hash_ptr
 expr_stmt|;
 block|}
 block|}
-comment|/* Everything is set up, add the aux symbol. */
+comment|/* Everything is set up, add the aux symbol.  */
 if|if
 condition|(
 name|vp
@@ -8608,7 +8391,7 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/* NOTE:  Mips documentation claims that the bitfield width goes here.      But it needs to be emitted earlier. */
+comment|/* NOTE:  Mips documentation claims that the bitfield width goes here.      But it needs to be emitted earlier.  */
 return|return
 name|ret
 return|;
@@ -8976,6 +8759,9 @@ literal|"unknown %s %.*s found\n"
 argument_list|,
 name|agg_type
 argument_list|,
+operator|(
+name|int
+operator|)
 name|hash_ptr
 operator|->
 name|len
@@ -9355,7 +9141,7 @@ argument_list|,
 name|func_start
 argument_list|)
 expr_stmt|;
-comment|/* Determine the start of symbols. */
+comment|/* Determine the start of symbols.  */
 name|new_proc_ptr
 operator|->
 name|isym
@@ -9463,6 +9249,9 @@ name|stderr
 argument_list|,
 literal|"\tfile\t%.*s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|file_start
@@ -9537,7 +9326,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* If this is a new file, create it. */
+comment|/* If this is a new file, create it.  */
 if|if
 condition|(
 name|file_ptr
@@ -10674,7 +10463,7 @@ operator|!=
 literal|'\0'
 operator|&&
 operator|!
-name|isspace
+name|ISSPACE
 argument_list|(
 name|ch
 argument_list|)
@@ -10886,7 +10675,7 @@ operator|!=
 literal|'\0'
 operator|&&
 operator|!
-name|isspace
+name|ISSPACE
 argument_list|(
 name|ch
 argument_list|)
@@ -11318,7 +11107,7 @@ name|ch
 operator|==
 literal|'\0'
 operator|||
-name|isspace
+name|ISSPACE
 argument_list|(
 name|ch
 argument_list|)
@@ -11381,7 +11170,7 @@ name|arg_start
 expr_stmt|;
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|ch
 argument_list|)
@@ -11445,7 +11234,7 @@ name|ch
 operator|==
 literal|'\0'
 operator|||
-name|isspace
+name|ISSPACE
 argument_list|(
 name|ch
 argument_list|)
@@ -11632,7 +11421,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|ch
 argument_list|)
@@ -11942,7 +11731,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|ch
 argument_list|)
@@ -12470,9 +12259,14 @@ name|stderr
 argument_list|,
 literal|"warning, %.*s not found in original or external symbol tables, value defaults to 0\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|arg_end_p1
 operator|-
 name|arg_start
+argument_list|)
 argument_list|,
 name|arg_start
 argument_list|)
@@ -12567,19 +12361,32 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|storage_class
+operator|==
+name|sc_Bits
+condition|)
+block|{
+name|t
+operator|.
+name|bitfield
+operator|=
+literal|1
+expr_stmt|;
 name|t
 operator|.
 name|extra_sizes
 operator|=
-operator|(
-name|tag_start
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|t
+operator|.
+name|extra_sizes
+operator|=
 literal|0
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -12591,15 +12398,24 @@ literal|0
 condition|)
 block|{
 name|int
+name|num_real_sizes
+init|=
+name|t
+operator|.
+name|num_sizes
+operator|-
+name|t
+operator|.
+name|extra_sizes
+decl_stmt|;
+name|int
 name|diff
 init|=
 name|t
 operator|.
 name|num_dims
 operator|-
-name|t
-operator|.
-name|num_sizes
+name|num_real_sizes
 decl_stmt|;
 name|int
 name|i
@@ -12615,9 +12431,7 @@ name|j
 decl_stmt|;
 if|if
 condition|(
-name|t
-operator|.
-name|num_sizes
+name|num_real_sizes
 operator|!=
 literal|1
 operator|||
@@ -12638,12 +12452,6 @@ name|bomb_out
 goto|;
 block|}
 comment|/* If this is an array, make sure the same number of dimensions 	 and sizes were passed, creating extra sizes for multiply 	 dimensioned arrays if not passed.  */
-name|t
-operator|.
-name|extra_sizes
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|diff
@@ -12785,32 +12593,6 @@ index|]
 expr_stmt|;
 block|}
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|symbol_type
-operator|==
-name|st_Member
-operator|&&
-name|t
-operator|.
-name|num_sizes
-operator|-
-name|t
-operator|.
-name|extra_sizes
-operator|==
-literal|1
-condition|)
-block|{
-comment|/* Is this a bitfield?  This is indicated by a structure member 	 having a size field that isn't an array.  */
-name|t
-operator|.
-name|bitfield
-operator|=
-literal|1
-expr_stmt|;
 block|}
 comment|/* Except for enumeration members& begin/ending of scopes, put the      type word in the aux. symbol table.  */
 if|if
@@ -13354,7 +13136,7 @@ name|start_func
 operator|=
 name|start
 init|;
-name|isspace
+name|ISSPACE
 argument_list|(
 operator|*
 name|start_func
@@ -13560,7 +13342,7 @@ name|start_func
 operator|=
 name|start
 init|;
-name|isspace
+name|ISSPACE
 argument_list|(
 operator|*
 name|start_func
@@ -13772,7 +13554,7 @@ operator|!
 name|stabs_seen
 condition|)
 block|{
-comment|/* Add a dummy @stabs symbol. */
+comment|/* Add a dummy @stabs symbol.  */
 name|stabs_seen
 operator|=
 literal|1
@@ -13843,7 +13625,7 @@ name|char
 modifier|*
 name|rest
 decl_stmt|;
-comment|/* rest of the directive. */
+comment|/* rest of the directive.  */
 block|{
 name|efdr_t
 modifier|*
@@ -13885,7 +13667,7 @@ comment|/* Read code from stabs.  */
 if|if
 condition|(
 operator|!
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|rest
@@ -13957,7 +13739,7 @@ operator|!=
 literal|','
 operator|||
 operator|!
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|p
 index|[
@@ -14003,7 +13785,7 @@ index|]
 operator|!=
 literal|','
 operator|||
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|ch
 argument_list|)
@@ -14160,7 +13942,7 @@ goto|;
 for|for
 control|(
 init|;
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|p
@@ -14184,7 +13966,7 @@ goto|;
 for|for
 control|(
 init|;
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|p
@@ -14234,7 +14016,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|ch
 argument_list|)
@@ -14482,7 +14264,7 @@ name|asym
 operator|)
 expr_stmt|;
 block|}
-comment|/* Traditionally, N_LBRAC and N_RBRAC are *not* relocated. */
+comment|/* Traditionally, N_LBRAC and N_RBRAC are *not* relocated.  */
 if|if
 condition|(
 name|code
@@ -14554,7 +14336,7 @@ condition|(
 operator|(
 operator|(
 operator|!
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|end_p1
@@ -14884,7 +14666,7 @@ block|{
 comment|/* Skip leading blanks */
 while|while
 condition|(
-name|isspace
+name|ISSPACE
 argument_list|(
 operator|*
 name|p
@@ -14941,7 +14723,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|isspace
+name|ISSPACE
 argument_list|(
 name|p
 index|[
@@ -14967,7 +14749,7 @@ expr_stmt|;
 comment|/* skip to first argument */
 while|while
 condition|(
-name|isspace
+name|ISSPACE
 argument_list|(
 operator|*
 name|p
@@ -15787,7 +15569,7 @@ name|symbolic_header
 operator|.
 name|iauxMax
 expr_stmt|;
-comment|/* aux syms. */
+comment|/* aux syms.  */
 if|if
 condition|(
 name|i
@@ -16058,14 +15840,33 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\twarray\tvp = "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\twarray\tvp = 0x%.8x, offset = %7u, size = %7u, %s\n"
+name|HOST_PTR_PRINTF
 argument_list|,
 name|vp
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
+literal|", offset = %7lu, size = %7lu, %s\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|offset
 argument_list|,
 name|vp
@@ -16079,6 +15880,7 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|file_offset
@@ -16244,11 +16046,19 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\n\twrite\tvp = "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n\twrite\tvp = 0x%.8x, offset = %7u, size = %7u, %s\n"
+name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
 name|PTR_T
@@ -16256,9 +16066,20 @@ operator|*
 operator|)
 operator|&
 name|symbolic_header
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|", offset = %7u, size = %7lu, %s\n"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|symbolic_header
@@ -16267,6 +16088,7 @@ argument_list|,
 literal|"symbolic header"
 argument_list|)
 expr_stmt|;
+block|}
 name|sys_write
 operator|=
 name|fwrite
@@ -16376,11 +16198,19 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\twrite\tvp = "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\twrite\tvp = 0x%.8x, offset = %7u, size = %7u, %s\n"
+name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
 name|PTR_T
@@ -16388,11 +16218,24 @@ operator|*
 operator|)
 operator|&
 name|orig_linenum
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
+literal|", offset = %7lu, size = %7lu, %s\n"
+argument_list|,
+operator|(
+name|long
+operator|)
 name|symbolic_header
 operator|.
 name|cbLineOffset
 argument_list|,
+operator|(
+name|long
+operator|)
 name|symbolic_header
 operator|.
 name|cbLine
@@ -16400,6 +16243,7 @@ argument_list|,
 literal|"Line numbers"
 argument_list|)
 expr_stmt|;
+block|}
 name|sys_write
 operator|=
 name|fwrite
@@ -16517,11 +16361,19 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\twrite\tvp = "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\twrite\tvp = 0x%.8x, offset = %7u, size = %7u, %s\n"
+name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
 name|PTR_T
@@ -16529,7 +16381,17 @@ operator|*
 operator|)
 operator|&
 name|orig_opt_syms
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
+literal|", offset = %7lu, size = %7lu, %s\n"
+argument_list|,
+operator|(
+name|long
+operator|)
 name|symbolic_header
 operator|.
 name|cbOptOffset
@@ -16539,6 +16401,7 @@ argument_list|,
 literal|"Optimizer symbols"
 argument_list|)
 expr_stmt|;
+block|}
 name|sys_write
 operator|=
 name|fwrite
@@ -16928,11 +16791,19 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\twrite\tvp = "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\twrite\tvp = 0x%.8x, offset = %7u, size = %7u, %s\n"
+name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
 name|PTR_T
@@ -16942,9 +16813,20 @@ operator|&
 name|file_ptr
 operator|->
 name|fdr
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 name|file_offset
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|FDR
@@ -16953,6 +16835,7 @@ argument_list|,
 literal|"File header"
 argument_list|)
 expr_stmt|;
+block|}
 name|sys_write
 operator|=
 name|fwrite
@@ -17073,11 +16956,19 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\twrite\tvp = "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\twrite\tvp = 0x%.8x, offset = %7u, size = %7u, %s\n"
+name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
 name|PTR_T
@@ -17085,7 +16976,17 @@ operator|*
 operator|)
 operator|&
 name|orig_rfds
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
+literal|", offset = %7lu, size = %7lu, %s\n"
+argument_list|,
+operator|(
+name|long
+operator|)
 name|symbolic_header
 operator|.
 name|cbRfdOffset
@@ -17095,6 +16996,7 @@ argument_list|,
 literal|"Relative file descriptors"
 argument_list|)
 expr_stmt|;
+block|}
 name|sys_write
 operator|=
 name|fwrite
@@ -17252,10 +17154,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\trseek\tsize = %7u, offset = %7u, currently at %7u, %s\n"
+literal|"\trseek\tsize = %7lu, offset = %7lu, currently at %7lu, %s\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|size
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|offset
 argument_list|,
 name|file_offset
@@ -17737,7 +17647,7 @@ argument_list|,
 name|sys_read
 argument_list|)
 expr_stmt|;
-comment|/* Read in each of the sections if they exist in the object file.      We read things in in the order the mips assembler creates the      sections, so in theory no extra seeks are done.       For simplicity sake, round each read up to a page boundary,      we may want to revisit this later.... */
+comment|/* Read in each of the sections if they exist in the object file.      We read things in in the order the mips assembler creates the      sections, so in theory no extra seeks are done.       For simplicity sake, round each read up to a page boundary,      we may want to revisit this later....  */
 name|file_offset
 operator|=
 name|orig_file_header
@@ -19128,7 +19038,7 @@ name|cur_file_ptr
 operator|=
 name|first_file
 expr_stmt|;
-comment|/* Copy all of the object file up to the symbol table.  Originally      we were going to use ftruncate, but that doesn't seem to work      on Ultrix 3.1.... */
+comment|/* Copy all of the object file up to the symbol table.  Originally      we were going to use ftruncate, but that doesn't seem to work      on Ultrix 3.1....  */
 if|if
 condition|(
 name|fseek
@@ -20352,7 +20262,7 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-comment|/* just in case... */
+comment|/* just in case...  */
 ifdef|#
 directive|ifdef
 name|NO_SYS_SIGLIST
@@ -20396,7 +20306,7 @@ name|save_errno
 init|=
 name|errno
 decl_stmt|;
-comment|/* just in case.... */
+comment|/* just in case....  */
 if|if
 condition|(
 name|line_number
@@ -20512,7 +20422,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s, %s:%ld index %u is out of bounds for %s, max is %u, mips-tfile.c line# %d\n"
+literal|"%s, %s:%ld index %lu is out of bounds for %s, max is %lu, mips-tfile.c line# %d\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -20545,7 +20455,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Allocate a cluster of pages.  USE_MALLOC says that malloc does not    like sbrk's behind it's back (or sbrk isn't available).  If we use    sbrk, we assume it gives us zeroed pages.  */
+comment|/* Allocate a cluster of pages.  USE_MALLOC says that malloc does not    like sbrk's behind its back (or sbrk isn't available).  If we use    sbrk, we assume it gives us zeroed pages.  */
 end_comment
 
 begin_ifndef
@@ -20753,17 +20663,37 @@ name|debug
 operator|>
 literal|3
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\talloc\tnpages = %d, value = 0x%.8x\n"
+literal|"\talloc\tnpages = %lu, value = "
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|npages
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|HOST_PTR_PRINTF
 argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|ptr
 return|;
@@ -22697,12 +22627,6 @@ end_comment
 begin_escape
 end_escape
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_VPRINTF
-end_ifdef
-
 begin_comment
 comment|/* Output an error message and exit */
 end_comment
@@ -22963,119 +22887,6 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not HAVE_VPRINTF */
-end_comment
-
-begin_function
-name|void
-name|fatal
-parameter_list|(
-name|msg
-parameter_list|,
-name|arg1
-parameter_list|,
-name|arg2
-parameter_list|)
-name|char
-modifier|*
-name|msg
-decl_stmt|,
-decl|*
-name|arg1
-decl_stmt|,
-modifier|*
-name|arg2
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-name|error
-argument_list|(
-name|msg
-argument_list|,
-name|arg1
-argument_list|,
-name|arg2
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_function
-name|void
-name|error
-parameter_list|(
-name|msg
-parameter_list|,
-name|arg1
-parameter_list|,
-name|arg2
-parameter_list|)
-name|char
-modifier|*
-name|msg
-decl_stmt|,
-decl|*
-name|arg1
-decl_stmt|,
-modifier|*
-name|arg2
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|msg
-argument_list|,
-name|arg1
-argument_list|,
-name|arg2
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not HAVE_VPRINTF */
-end_comment
-
 begin_comment
 comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
 end_comment
@@ -23160,17 +22971,37 @@ name|debug
 operator|>
 literal|3
 condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\tmalloc\tptr = "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tmalloc\tptr = 0x%.8x, size = %10u\n"
+name|HOST_PTR_PRINTF
 argument_list|,
 name|value
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
+literal|", size = %10lu\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|value
 return|;
@@ -23223,23 +23054,51 @@ name|debug
 operator|>
 literal|3
 condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\tcalloc\tptr = "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tcalloc\tptr = 0x%.8x, size1 = %10u, size2 = %10u [%u]\n"
+name|HOST_PTR_PRINTF
 argument_list|,
 name|value
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
+literal|", size1 = %10lu, size2 = %10lu [%lu]\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|size1
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|size2
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|size1
-operator|+
+operator|*
 name|size2
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|value
 return|;
@@ -23292,19 +23151,49 @@ name|debug
 operator|>
 literal|3
 condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\trealloc\tptr = "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\trealloc\tptr = 0x%.8x, size = %10u, orig = 0x%.8x\n"
+name|HOST_PTR_PRINTF
 argument_list|,
 name|result
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|", size = %10lu, orig = "
 argument_list|,
 name|size
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|HOST_PTR_PRINTF
 argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|result
 return|;
@@ -23327,15 +23216,31 @@ name|debug
 operator|>
 literal|3
 condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\tfree\tptr = "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tfree\tptr = 0x%.8x\n"
+name|HOST_PTR_PRINTF
 argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|ptr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running SCO Unix System V,    using dbx-in-coff encapsulation.    Copyright (C) 1992, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running SCO Unix System V,    using dbx-in-coff encapsulation.    Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -DM_UNIX -DM_I386 -DM_COFF -DM_WORDSWAP -Asystem(unix) -Asystem(svr3) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -DM_UNIX -DM_I386 -DM_COFF -DM_WORDSWAP -Asystem(svr3)"
 end_define
 
 begin_undef
@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{scointl:-DM_INTERNAT}"
+value|" -Acpu(i386) -Amachine(i386) %{scointl:-DM_INTERNAT}"
 end_define
 
 begin_comment
@@ -170,7 +170,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|(TREE_CODE (FUNTYPE) == IDENTIFIER_NODE ? 0			\    : (TARGET_RTD						\&& (TYPE_ARG_TYPES (FUNTYPE) == 0				\ 	  || (TREE_VALUE (tree_last (TYPE_ARG_TYPES (FUNTYPE)))	\ 	      == void_type_node))) ? (SIZE)			\    : 0)
+value|((FUNDECL)&& TREE_CODE (FUNDECL) == IDENTIFIER_NODE ? 0	\    : (TARGET_RTD						\&& (TYPE_ARG_TYPES (FUNTYPE) == 0				\ 	  || (TREE_VALUE (tree_last (TYPE_ARG_TYPES (FUNTYPE)))	\ 	      == void_type_node))) ? (SIZE)			\    : 0)
 end_define
 
 begin_comment

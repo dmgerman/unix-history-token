@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* longlong.h -- definitions for mixed size 32/64 bit arithmetic.    Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.     This definition file is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public    License as published by the Free Software Foundation; either    version 2, or (at your option) any later version.     This definition file is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* longlong.h -- definitions for mixed size 32/64 bit arithmetic.    Copyright (C) 1991, 92, 94, 95, 96, 1997 Free Software Foundation, Inc.     This definition file is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public    License as published by the Free Software Foundation; either    version 2, or (at your option) any later version.     This definition file is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -166,7 +166,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("add %1,%4,%5 	addc %0,%2,%3"							\ 	   : "=r" ((USItype)(sh)),					\ 	    "=&r" ((USItype)(sl))					\ 	   : "%r" ((USItype)(ah)),					\ 	     "rI" ((USItype)(bh)),					\ 	     "%r" ((USItype)(al)),					\ 	     "rI" ((USItype)(bl)))
+value|__asm__ ("add %1,%4,%5 	addc %0,%2,%3"							\ 	   : "=r" ((USItype) (sh)),					\ 	    "=&r" ((USItype) (sl))					\ 	   : "%r" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "%r" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -187,7 +187,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("sub %1,%4,%5 	subc %0,%2,%3"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "r" ((USItype)(ah)),					\ 	     "rI" ((USItype)(bh)),					\ 	     "r" ((USItype)(al)),					\ 	     "rI" ((USItype)(bl)))
+value|__asm__ ("sub %1,%4,%5 	subc %0,%2,%3"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "r" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "r" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -204,7 +204,7 @@ parameter_list|,
 name|m1
 parameter_list|)
 define|\
-value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("multiplu %0,%1,%2"					\ 	     : "=r" ((USItype)(xl))					\ 	     : "r" (__m0),						\ 	       "r" (__m1));						\     __asm__ ("multmu %0,%1,%2"						\ 	     : "=r" ((USItype)(xh))					\ 	     : "r" (__m0),						\ 	       "r" (__m1));						\   } while (0)
+value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("multiplu %0,%1,%2"					\ 	     : "=r" ((USItype) (xl))					\ 	     : "r" (__m0),						\ 	       "r" (__m1));						\     __asm__ ("multmu %0,%1,%2"						\ 	     : "=r" ((USItype) (xh))					\ 	     : "r" (__m0),						\ 	       "r" (__m1));						\   } while (0)
 end_define
 
 begin_define
@@ -223,7 +223,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|__asm__ ("dividu %0,%3,%4"						\ 	   : "=r" ((USItype)(q)),					\ 	     "=q" ((USItype)(r))					\ 	   : "1" ((USItype)(n1)),					\ 	     "r" ((USItype)(n0)),					\ 	     "r" ((USItype)(d)))
+value|__asm__ ("dividu %0,%3,%4"						\ 	   : "=r" ((USItype) (q)),					\ 	     "=q" ((USItype) (r))					\ 	   : "1" ((USItype) (n1)),					\ 	     "r" ((USItype) (n0)),					\ 	     "r" ((USItype) (d)))
 end_define
 
 begin_define
@@ -236,7 +236,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|__asm__ ("clz %0,%1"						\ 	     : "=r" ((USItype)(count))					\ 	     : "r" ((USItype)(x)))
+value|__asm__ ("clz %0,%1"						\ 	     : "=r" ((USItype) (count))					\ 	     : "r" ((USItype) (x)))
 end_define
 
 begin_endif
@@ -247,6 +247,101 @@ end_endif
 begin_comment
 comment|/* __a29k__ */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arc__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|add_ssaaaa
+parameter_list|(
+name|sh
+parameter_list|,
+name|sl
+parameter_list|,
+name|ah
+parameter_list|,
+name|al
+parameter_list|,
+name|bh
+parameter_list|,
+name|bl
+parameter_list|)
+define|\
+value|__asm__ ("add.f	%1, %4, %5 	adc	%0, %2, %3"						\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%r" ((USItype) (ah)),					\ 	     "rIJ" ((USItype) (bh)),					\ 	     "%r" ((USItype) (al)),					\ 	     "rIJ" ((USItype) (bl)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sub_ddmmss
+parameter_list|(
+name|sh
+parameter_list|,
+name|sl
+parameter_list|,
+name|ah
+parameter_list|,
+name|al
+parameter_list|,
+name|bh
+parameter_list|,
+name|bl
+parameter_list|)
+define|\
+value|__asm__ ("sub.f	%1, %4, %5 	sbc	%0, %2, %3"						\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "r" ((USItype) (ah)),					\ 	     "rIJ" ((USItype) (bh)),					\ 	     "r" ((USItype) (al)),					\ 	     "rIJ" ((USItype) (bl)))
+end_define
+
+begin_comment
+comment|/* Call libgcc1 routine.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|umul_ppmm
+parameter_list|(
+name|w1
+parameter_list|,
+name|w0
+parameter_list|,
+name|u
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|do {									\   DIunion __w;								\   __w.ll = __umulsidi3 (u, v);						\   w1 = __w.s.high;							\   w0 = __w.s.low;							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__umulsidi3
+value|__umulsidi3
+end_define
+
+begin_function_decl
+name|UDItype
+name|__umulsidi3
+parameter_list|(
+name|USItype
+parameter_list|,
+name|USItype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -275,7 +370,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("adds	%1, %4, %5 	adc	%0, %2, %3"						\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "%r" ((USItype)(ah)),					\ 	     "rI" ((USItype)(bh)),					\ 	     "%r" ((USItype)(al)),					\ 	     "rI" ((USItype)(bl)))
+value|__asm__ ("adds	%1, %4, %5 	adc	%0, %2, %3"						\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%r" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "%r" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -296,7 +391,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("subs	%1, %4, %5 	sbc	%0, %2, %3"						\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "r" ((USItype)(ah)),					\ 	     "rI" ((USItype)(bh)),					\ 	     "r" ((USItype)(al)),					\ 	     "rI" ((USItype)(bl)))
+value|__asm__ ("subs	%1, %4, %5 	sbc	%0, %2, %3"						\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "r" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "r" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -313,7 +408,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|{register USItype __t0, __t1, __t2;					\   __asm__ ("%@ Inlined umul_ppmm 	mov	%2, %5, lsr #16 	mov	%0, %6, lsr #16 	bic	%3, %5, %2, lsl #16 	bic	%4, %6, %0, lsl #16 	mul	%1, %3, %4 	mul	%4, %2, %4 	mul	%3, %0, %3 	mul	%0, %2, %0 	adds	%3, %4, %3 	addcs	%0, %0, #65536 	adds	%1, %1, %3, lsl #16 	adc	%0, %0, %3, lsr #16"					\ 	   : "=&r" ((USItype)(xh)),					\ 	     "=r" ((USItype)(xl)),					\ 	     "=&r" (__t0), "=&r" (__t1), "=r" (__t2)			\ 	   : "r" ((USItype)(a)),					\ 	     "r" ((USItype)(b)));}
+value|{register USItype __t0, __t1, __t2;					\   __asm__ ("%@ Inlined umul_ppmm 	mov	%2, %5, lsr #16 	mov	%0, %6, lsr #16 	bic	%3, %5, %2, lsl #16 	bic	%4, %6, %0, lsl #16 	mul	%1, %3, %4 	mul	%4, %2, %4 	mul	%3, %0, %3 	mul	%0, %2, %0 	adds	%3, %4, %3 	addcs	%0, %0, #65536 	adds	%1, %1, %3, lsl #16 	adc	%0, %0, %3, lsr #16"					\ 	   : "=&r" ((USItype) (xh)),					\ 	     "=r" ((USItype) (xl)),					\ 	     "=&r" (__t0), "=&r" (__t1), "=r" (__t2)			\ 	   : "r" ((USItype) (a)),					\ 	     "r" ((USItype) (b)));}
 end_define
 
 begin_define
@@ -362,7 +457,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|({union {UDItype __ll;						\ 	   struct {USItype __l, __h;} __i;				\ 	  } __xx;							\   __asm__ ("mulwux %2,%0"						\ 	   : "=r" (__xx.__ll)						\ 	   : "%0" ((USItype)(u)),					\ 	     "r" ((USItype)(v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
+value|({union {UDItype __ll;						\ 	   struct {USItype __l, __h;} __i;				\ 	  } __xx;							\   __asm__ ("mulwux %2,%0"						\ 	   : "=r" (__xx.__ll)						\ 	   : "%0" ((USItype) (u)),					\ 	     "r" ((USItype) (v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
 end_define
 
 begin_define
@@ -379,7 +474,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|({union {DItype __ll;							\ 	   struct {SItype __l, __h;} __i;				\ 	  } __xx;							\   __asm__ ("mulwx %2,%0"						\ 	   : "=r" (__xx.__ll)						\ 	   : "%0" ((SItype)(u)),					\ 	     "r" ((SItype)(v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
+value|({union {DItype __ll;							\ 	   struct {SItype __l, __h;} __i;				\ 	  } __xx;							\   __asm__ ("mulwx %2,%0"						\ 	   : "=r" (__xx.__ll)						\ 	   : "%0" ((SItype) (u)),					\ 	     "r" ((SItype) (v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
 end_define
 
 begin_define
@@ -392,7 +487,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|({UDItype __w;							\     __asm__ ("mulwux %2,%0"						\ 	     : "=r" (__w)						\ 	     : "%0" ((USItype)(u)),					\ 	       "r" ((USItype)(v)));					\     __w; })
+value|({UDItype __w;							\     __asm__ ("mulwux %2,%0"						\ 	     : "=r" (__w)						\ 	     : "%0" ((USItype) (u)),					\ 	       "r" ((USItype) (v)));					\     __w; })
 end_define
 
 begin_endif
@@ -431,7 +526,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("add.w %5,%1 	addx %3,%0"							\ 	   : "=g" ((USItype)(sh)),					\ 	     "=&g" ((USItype)(sl))					\ 	   : "%0" ((USItype)(ah)),					\ 	     "g" ((USItype)(bh)),					\ 	     "%1" ((USItype)(al)),					\ 	     "g" ((USItype)(bl)))
+value|__asm__ ("add.w %5,%1 	addx %3,%0"							\ 	   : "=g" ((USItype) (sh)),					\ 	     "=&g" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -452,7 +547,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("sub.w %5,%1 	subx %3,%0"							\ 	   : "=g" ((USItype)(sh)),					\ 	     "=&g" ((USItype)(sl))					\ 	   : "0" ((USItype)(ah)),					\ 	     "g" ((USItype)(bh)),					\ 	     "1" ((USItype)(al)),					\ 	     "g" ((USItype)(bl)))
+value|__asm__ ("sub.w %5,%1 	subx %3,%0"							\ 	   : "=g" ((USItype) (sh)),					\ 	     "=&g" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -469,7 +564,7 @@ parameter_list|,
 name|m1
 parameter_list|)
 define|\
-value|__asm__ ("mulx %3,%0,%1"						\ 	   : "=g" ((USItype)(ph)),					\ 	     "=r" ((USItype)(pl))					\ 	   : "%0" ((USItype)(m0)),					\ 	     "g" ((USItype)(m1)))
+value|__asm__ ("mulx %3,%0,%1"						\ 	   : "=g" ((USItype) (ph)),					\ 	     "=r" ((USItype) (pl))					\ 	   : "%0" ((USItype) (m0)),					\ 	     "g" ((USItype) (m1)))
 end_define
 
 begin_define
@@ -488,7 +583,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|__asm__ ("divx %4,%0,%1"						\ 	   : "=g" ((USItype)(q)),					\ 	     "=r" ((USItype)(r))					\ 	   : "1" ((USItype)(nh)),					\ 	     "0" ((USItype)(nl)),					\ 	     "g" ((USItype)(d)))
+value|__asm__ ("divx %4,%0,%1"						\ 	   : "=g" ((USItype) (q)),					\ 	     "=r" ((USItype) (r))					\ 	   : "1" ((USItype) (nh)),					\ 	     "0" ((USItype) (nl)),					\ 	     "g" ((USItype) (d)))
 end_define
 
 begin_define
@@ -501,7 +596,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|__asm__ ("bsch/1 %1,%0"						\ 	   : "=g" (count)						\ 	   : "g" ((USItype)(x)),					\ 	     "0" ((USItype)0))
+value|__asm__ ("bsch/1 %1,%0"						\ 	   : "=g" (count)						\ 	   : "g" ((USItype) (x)),					\ 	     "0" ((USItype) 0))
 end_define
 
 begin_endif
@@ -536,7 +631,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("add %4,%5,%1 	addc %2,%3,%0"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "%rM" ((USItype)(ah)),					\ 	     "rM" ((USItype)(bh)),					\ 	     "%rM" ((USItype)(al)),					\ 	     "rM" ((USItype)(bl)))
+value|__asm__ ("add %4,%5,%1 	addc %2,%3,%0"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%rM" ((USItype) (ah)),					\ 	     "rM" ((USItype) (bh)),					\ 	     "%rM" ((USItype) (al)),					\ 	     "rM" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -557,7 +652,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("sub %4,%5,%1 	subb %2,%3,%0"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "rM" ((USItype)(ah)),					\ 	     "rM" ((USItype)(bh)),					\ 	     "rM" ((USItype)(al)),					\ 	     "rM" ((USItype)(bl)))
+value|__asm__ ("sub %4,%5,%1 	subb %2,%3,%0"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "rM" ((USItype) (ah)),					\ 	     "rM" ((USItype) (bh)),					\ 	     "rM" ((USItype) (al)),					\ 	     "rM" ((USItype) (bl)))
 end_define
 
 begin_if
@@ -583,7 +678,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do {									\     union								\       {									\ 	UDItype __f;							\ 	struct {USItype __w1, __w0;} __w1w0;				\       } __t;								\     __asm__ ("xmpyu %1,%2,%0"						\ 	     : "=x" (__t.__f)						\ 	     : "x" ((USItype)(u)),					\ 	       "x" ((USItype)(v)));					\     (w1) = __t.__w1w0.__w1;						\     (w0) = __t.__w1w0.__w0;						\      } while (0)
+value|do {									\     union								\       {									\ 	UDItype __f;							\ 	struct {USItype __w1, __w0;} __w1w0;				\       } __t;								\     __asm__ ("xmpyu %1,%2,%0"						\ 	     : "=x" (__t.__f)						\ 	     : "x" ((USItype) (u)),					\ 	       "x" ((USItype) (v)));					\     (w1) = __t.__w1w0.__w1;						\     (w0) = __t.__w1w0.__w0;						\      } while (0)
 end_define
 
 begin_define
@@ -667,7 +762,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("addl %5,%1 	adcl %3,%0"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "%0" ((USItype)(ah)),					\ 	     "g" ((USItype)(bh)),					\ 	     "%1" ((USItype)(al)),					\ 	     "g" ((USItype)(bl)))
+value|__asm__ ("addl %5,%1 	adcl %3,%0"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -688,7 +783,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("subl %5,%1 	sbbl %3,%0"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "0" ((USItype)(ah)),					\ 	     "g" ((USItype)(bh)),					\ 	     "1" ((USItype)(al)),					\ 	     "g" ((USItype)(bl)))
+value|__asm__ ("subl %5,%1 	sbbl %3,%0"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -705,7 +800,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|__asm__ ("mull %3"							\ 	   : "=a" ((USItype)(w0)),					\ 	     "=d" ((USItype)(w1))					\ 	   : "%0" ((USItype)(u)),					\ 	     "rm" ((USItype)(v)))
+value|__asm__ ("mull %3"							\ 	   : "=a" ((USItype) (w0)),					\ 	     "=d" ((USItype) (w1))					\ 	   : "%0" ((USItype) (u)),					\ 	     "rm" ((USItype) (v)))
 end_define
 
 begin_define
@@ -724,7 +819,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|__asm__ ("divl %4"							\ 	   : "=a" ((USItype)(q)),					\ 	     "=d" ((USItype)(r))					\ 	   : "0" ((USItype)(n0)),					\ 	     "1" ((USItype)(n1)),					\ 	     "rm" ((USItype)(d)))
+value|__asm__ ("divl %4"							\ 	   : "=a" ((USItype) (q)),					\ 	     "=d" ((USItype) (r))					\ 	   : "0" ((USItype) (n0)),					\ 	     "1" ((USItype) (n1)),					\ 	     "rm" ((USItype) (d)))
 end_define
 
 begin_define
@@ -737,7 +832,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|do {									\     USItype __cbtmp;							\     __asm__ ("bsrl %1,%0"						\ 	     : "=r" (__cbtmp) : "rm" ((USItype)(x)));			\     (count) = __cbtmp ^ 31;						\   } while (0)
+value|do {									\     USItype __cbtmp;							\     __asm__ ("bsrl %1,%0"						\ 	     : "=r" (__cbtmp) : "rm" ((USItype) (x)));			\     (count) = __cbtmp ^ 31;						\   } while (0)
 end_define
 
 begin_define
@@ -861,7 +956,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|({union {UDItype __ll;						\ 	   struct {USItype __l, __h;} __i;				\ 	  } __xx;							\   __asm__ ("emul	%2,%1,%0"					\ 	   : "=d" (__xx.__ll)						\ 	   : "%dI" ((USItype)(u)),					\ 	     "dI" ((USItype)(v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
+value|({union {UDItype __ll;						\ 	   struct {USItype __l, __h;} __i;				\ 	  } __xx;							\   __asm__ ("emul	%2,%1,%0"					\ 	   : "=d" (__xx.__ll)						\ 	   : "%dI" ((USItype) (u)),					\ 	     "dI" ((USItype) (v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
 end_define
 
 begin_define
@@ -874,7 +969,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|({UDItype __w;							\     __asm__ ("emul	%2,%1,%0"					\ 	     : "=d" (__w)						\ 	     : "%dI" ((USItype)(u)),					\ 	       "dI" ((USItype)(v)));					\     __w; })
+value|({UDItype __w;							\     __asm__ ("emul	%2,%1,%0"					\ 	     : "=d" (__w)						\ 	     : "%dI" ((USItype) (u)),					\ 	       "dI" ((USItype) (v)));					\     __w; })
 end_define
 
 begin_endif
@@ -884,6 +979,70 @@ end_endif
 
 begin_comment
 comment|/* __i960__ */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__M32R__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|add_ssaaaa
+parameter_list|(
+name|sh
+parameter_list|,
+name|sl
+parameter_list|,
+name|ah
+parameter_list|,
+name|al
+parameter_list|,
+name|bh
+parameter_list|,
+name|bl
+parameter_list|)
+define|\
+comment|/* The cmp clears the condition bit.  */
+define|\
+value|__asm__ ("cmp %0,%0 	addx %%5,%1 	addx %%3,%0"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "r" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "r" ((USItype) (bl))					\ 	   : "cbit")
+end_define
+
+begin_define
+define|#
+directive|define
+name|sub_ddmmss
+parameter_list|(
+name|sh
+parameter_list|,
+name|sl
+parameter_list|,
+name|ah
+parameter_list|,
+name|al
+parameter_list|,
+name|bh
+parameter_list|,
+name|bl
+parameter_list|)
+define|\
+comment|/* The cmp clears the condition bit.  */
+define|\
+value|__asm__ ("cmp %0,%0 	subx %5,%1 	subx %3,%0"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "r" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "r" ((USItype) (bl))					\ 	   : "cbit")
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __M32R__ */
 end_comment
 
 begin_if
@@ -913,7 +1072,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("add%.l %5,%1 	addx%.l %3,%0"							\ 	   : "=d" ((USItype)(sh)),					\ 	     "=&d" ((USItype)(sl))					\ 	   : "%0" ((USItype)(ah)),					\ 	     "d" ((USItype)(bh)),					\ 	     "%1" ((USItype)(al)),					\ 	     "g" ((USItype)(bl)))
+value|__asm__ ("add%.l %5,%1 	addx%.l %3,%0"							\ 	   : "=d" ((USItype) (sh)),					\ 	     "=&d" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "d" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -934,8 +1093,12 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("sub%.l %5,%1 	subx%.l %3,%0"							\ 	   : "=d" ((USItype)(sh)),					\ 	     "=&d" ((USItype)(sl))					\ 	   : "0" ((USItype)(ah)),					\ 	     "d" ((USItype)(bh)),					\ 	     "1" ((USItype)(al)),					\ 	     "g" ((USItype)(bl)))
+value|__asm__ ("sub%.l %5,%1 	subx%.l %3,%0"							\ 	   : "=d" ((USItype) (sh)),					\ 	     "=&d" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "d" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
+
+begin_comment
+comment|/* The '020, '030, '040 and CPU32 have 32x32->64 and 64/32->32q-32r. */
+end_comment
 
 begin_if
 if|#
@@ -947,12 +1110,46 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__NeXT__
+name|mc68020
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__mc68030__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|mc68020
+name|mc68030
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__mc68040__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|mc68040
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__mcpu32__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|mcpu32
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__NeXT__
 argument_list|)
 end_if
 
@@ -970,7 +1167,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|__asm__ ("mulu%.l %3,%1:%0"						\ 	   : "=d" ((USItype)(w0)),					\ 	     "=d" ((USItype)(w1))					\ 	   : "%0" ((USItype)(u)),					\ 	     "dmi" ((USItype)(v)))
+value|__asm__ ("mulu%.l %3,%1:%0"						\ 	   : "=d" ((USItype) (w0)),					\ 	     "=d" ((USItype) (w1))					\ 	   : "%0" ((USItype) (u)),					\ 	     "dmi" ((USItype) (v)))
 end_define
 
 begin_define
@@ -996,7 +1193,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|__asm__ ("divu%.l %4,%1:%0"						\ 	   : "=d" ((USItype)(q)),					\ 	     "=d" ((USItype)(r))					\ 	   : "0" ((USItype)(n0)),					\ 	     "1" ((USItype)(n1)),					\ 	     "dmi" ((USItype)(d)))
+value|__asm__ ("divu%.l %4,%1:%0"						\ 	   : "=d" ((USItype) (q)),					\ 	     "=d" ((USItype) (r))					\ 	   : "0" ((USItype) (n0)),					\ 	     "1" ((USItype) (n1)),					\ 	     "dmi" ((USItype) (d)))
 end_define
 
 begin_define
@@ -1022,20 +1219,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|__asm__ ("divs%.l %4,%1:%0"						\ 	   : "=d" ((USItype)(q)),					\ 	     "=d" ((USItype)(r))					\ 	   : "0" ((USItype)(n0)),					\ 	     "1" ((USItype)(n1)),					\ 	     "dmi" ((USItype)(d)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|count_leading_zeros
-parameter_list|(
-name|count
-parameter_list|,
-name|x
-parameter_list|)
-define|\
-value|__asm__ ("bfffo %1{%b2:%b2},%0"					\ 	   : "=d" ((USItype)(count))					\ 	   : "od" ((USItype)(x)), "n" (0))
+value|__asm__ ("divs%.l %4,%1:%0"						\ 	   : "=d" ((USItype) (q)),					\ 	     "=d" ((USItype) (r))					\ 	   : "0" ((USItype) (n0)),					\ 	     "1" ((USItype) (n1)),					\ 	     "dmi" ((USItype) (d)))
 end_define
 
 begin_else
@@ -1046,6 +1230,16 @@ end_else
 begin_comment
 comment|/* not mc68020 */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mcf5200__
+argument_list|)
+end_if
 
 begin_comment
 comment|/* %/ inserts REGISTER_PREFIX, %# inserts IMMEDIATE_PREFIX.  */
@@ -1065,7 +1259,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|__asm__ ("| Inlined umul_ppmm 	move%.l	%2,%/d0 	move%.l	%3,%/d1 	move%.l	%/d0,%/d2 	swap	%/d0 	move%.l	%/d1,%/d3 	swap	%/d1 	move%.w	%/d2,%/d4 	mulu	%/d3,%/d4 	mulu	%/d1,%/d2 	mulu	%/d0,%/d3 	mulu	%/d0,%/d1 	move%.l	%/d4,%/d0 	eor%.w	%/d0,%/d0 	swap	%/d0 	add%.l	%/d0,%/d2 	add%.l	%/d3,%/d2 	jcc	1f 	add%.l	%#65536,%/d1 1:	swap	%/d2 	moveq	%#0,%/d0 	move%.w	%/d2,%/d0 	move%.w	%/d4,%/d2 	move%.l	%/d2,%1 	add%.l	%/d1,%/d0 	move%.l	%/d0,%0"						\ 	   : "=g" ((USItype)(xh)),					\ 	     "=g" ((USItype)(xl))					\ 	   : "g" ((USItype)(a)),					\ 	     "g" ((USItype)(b))						\ 	   : "d0", "d1", "d2", "d3", "d4")
+value|__asm__ ("| Inlined umul_ppmm 	move%.l	%2,%/d0 	move%.l	%3,%/d1 	move%.l	%/d0,%/d2 	swap	%/d0 	move%.l	%/d1,%/d3 	swap	%/d1 	move%.w	%/d2,%/d4 	mulu	%/d3,%/d4 	mulu	%/d1,%/d2 	mulu	%/d0,%/d3 	mulu	%/d0,%/d1 	move%.l	%/d4,%/d0 	eor%.w	%/d0,%/d0 	swap	%/d0 	add%.l	%/d0,%/d2 	add%.l	%/d3,%/d2 	jcc	1f 	add%.l	%#65536,%/d1 1:	swap	%/d2 	moveq	%#0,%/d0 	move%.w	%/d2,%/d0 	move%.w	%/d4,%/d2 	move%.l	%/d2,%1 	add%.l	%/d1,%/d0 	move%.l	%/d0,%0"						\ 	   : "=g" ((USItype) (xh)),					\ 	     "=g" ((USItype) (xl))					\ 	   : "g" ((USItype) (a)),					\ 	     "g" ((USItype) (b))					\ 	   : "d0", "d1", "d2", "d3", "d4")
 end_define
 
 begin_define
@@ -1088,8 +1282,92 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* not mcf5200 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* not mc68020 */
 end_comment
+
+begin_comment
+comment|/* The '020, '030, '040 and '060 have bitfield insns. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mc68020__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|mc68020
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__mc68030__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|mc68030
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__mc68040__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|mc68040
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__mc68060__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|mc68060
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__NeXT__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|count_leading_zeros
+parameter_list|(
+name|count
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|__asm__ ("bfffo %1{%b2:%b2},%0"					\ 	   : "=d" ((USItype) (count))					\ 	   : "od" ((USItype) (x)), "n" (0))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1127,7 +1405,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("addu.co %1,%r4,%r5 	addu.ci %0,%r2,%r3"						\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "%rJ" ((USItype)(ah)),					\ 	     "rJ" ((USItype)(bh)),					\ 	     "%rJ" ((USItype)(al)),					\ 	     "rJ" ((USItype)(bl)))
+value|__asm__ ("addu.co %1,%r4,%r5 	addu.ci %0,%r2,%r3"						\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%rJ" ((USItype) (ah)),					\ 	     "rJ" ((USItype) (bh)),					\ 	     "%rJ" ((USItype) (al)),					\ 	     "rJ" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -1148,7 +1426,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("subu.co %1,%r4,%r5 	subu.ci %0,%r2,%r3"						\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "rJ" ((USItype)(ah)),					\ 	     "rJ" ((USItype)(bh)),					\ 	     "rJ" ((USItype)(al)),					\ 	     "rJ" ((USItype)(bl)))
+value|__asm__ ("subu.co %1,%r4,%r5 	subu.ci %0,%r2,%r3"						\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "rJ" ((USItype) (ah)),					\ 	     "rJ" ((USItype) (bh)),					\ 	     "rJ" ((USItype) (al)),					\ 	     "rJ" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -1161,7 +1439,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|do {									\     USItype __cbtmp;							\     __asm__ ("ff1 %0,%1"						\ 	     : "=r" (__cbtmp)						\ 	     : "r" ((USItype)(x)));					\     (count) = __cbtmp ^ 31;						\   } while (0)
+value|do {									\     USItype __cbtmp;							\     __asm__ ("ff1 %0,%1"						\ 	     : "=r" (__cbtmp)						\ 	     : "r" ((USItype) (x)));					\     (count) = __cbtmp ^ 31;						\   } while (0)
 end_define
 
 begin_if
@@ -1187,7 +1465,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do {									\     union {UDItype __ll;						\ 	   struct {USItype __h, __l;} __i;				\ 	  } __xx;							\     __asm__ ("mulu.d	%0,%1,%2"					\ 	     : "=r" (__xx.__ll)						\ 	     : "r" ((USItype)(u)),					\ 	       "r" ((USItype)(v)));					\     (wh) = __xx.__i.__h;						\     (wl) = __xx.__i.__l;						\   } while (0)
+value|do {									\     union {UDItype __ll;						\ 	   struct {USItype __h, __l;} __i;				\ 	  } __xx;							\     __asm__ ("mulu.d	%0,%1,%2"					\ 	     : "=r" (__xx.__ll)						\ 	     : "r" ((USItype) (u)),					\ 	       "r" ((USItype) (v)));					\     (wh) = __xx.__i.__h;						\     (wl) = __xx.__i.__l;						\   } while (0)
 end_define
 
 begin_define
@@ -1206,7 +1484,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|({union {UDItype __ll;						\ 	   struct {USItype __h, __l;} __i;				\ 	  } __xx;							\   USItype __q;								\   __xx.__i.__h = (n1); __xx.__i.__l = (n0);				\   __asm__ ("divu.d %0,%1,%2"						\ 	   : "=r" (__q)							\ 	   : "r" (__xx.__ll),						\ 	     "r" ((USItype)(d)));					\   (r) = (n0) - __q * (d); (q) = __q; })
+value|({union {UDItype __ll;						\ 	   struct {USItype __h, __l;} __i;				\ 	  } __xx;							\   USItype __q;								\   __xx.__i.__h = (n1); __xx.__i.__l = (n0);				\   __asm__ ("divu.d %0,%1,%2"						\ 	   : "=r" (__q)							\ 	   : "r" (__xx.__ll),						\ 	     "r" ((USItype) (d)));					\   (r) = (n0) - __q * (d); (q) = __q; })
 end_define
 
 begin_define
@@ -1283,7 +1561,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|__asm__ ("multu %2,%3"						\ 	   : "=l" ((USItype)(w0)),					\ 	     "=h" ((USItype)(w1))					\ 	   : "d" ((USItype)(u)),					\ 	     "d" ((USItype)(v)))
+value|__asm__ ("multu %2,%3"						\ 	   : "=l" ((USItype) (w0)),					\ 	     "=h" ((USItype) (w1))					\ 	   : "d" ((USItype) (u)),					\ 	     "d" ((USItype) (v)))
 end_define
 
 begin_define
@@ -1332,7 +1610,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|({union {UDItype __ll;						\ 	   struct {USItype __l, __h;} __i;				\ 	  } __xx;							\   __asm__ ("meid %2,%0"							\ 	   : "=g" (__xx.__ll)						\ 	   : "%0" ((USItype)(u)),					\ 	     "g" ((USItype)(v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
+value|({union {UDItype __ll;						\ 	   struct {USItype __l, __h;} __i;				\ 	  } __xx;							\   __asm__ ("meid %2,%0"							\ 	   : "=g" (__xx.__ll)						\ 	   : "%0" ((USItype) (u)),					\ 	     "g" ((USItype) (v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
 end_define
 
 begin_define
@@ -1345,7 +1623,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|({UDItype __w;							\     __asm__ ("meid %2,%0"						\ 	     : "=g" (__w)						\ 	     : "%0" ((USItype)(u)),					\ 	       "g" ((USItype)(v)));					\     __w; })
+value|({UDItype __w;							\     __asm__ ("meid %2,%0"						\ 	     : "=g" (__w)						\ 	     : "%0" ((USItype) (u)),					\ 	       "g" ((USItype) (v)));					\     __w; })
 end_define
 
 begin_define
@@ -1364,7 +1642,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|({union {UDItype __ll;						\ 	   struct {USItype __l, __h;} __i;				\ 	  } __xx;							\   __xx.__i.__h = (n1); __xx.__i.__l = (n0);				\   __asm__ ("deid %2,%0"							\ 	   : "=g" (__xx.__ll)						\ 	   : "0" (__xx.__ll),						\ 	     "g" ((USItype)(d)));					\   (r) = __xx.__i.__l; (q) = __xx.__i.__h; })
+value|({union {UDItype __ll;						\ 	   struct {USItype __l, __h;} __i;				\ 	  } __xx;							\   __xx.__i.__h = (n1); __xx.__i.__l = (n0);				\   __asm__ ("deid %2,%0"							\ 	   : "=g" (__xx.__ll)						\ 	   : "0" (__xx.__ll),						\ 	     "g" ((USItype) (d)));					\   (r) = __xx.__i.__l; (q) = __xx.__i.__h; })
 end_define
 
 begin_endif
@@ -1414,7 +1692,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|do {									\     if (__builtin_constant_p (bh)&& (bh) == 0)				\       __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{aze|addze} %0,%2"		\ 	     : "=r" ((USItype)(sh)),					\ 	       "=&r" ((USItype)(sl))					\ 	     : "%r" ((USItype)(ah)),					\ 	       "%r" ((USItype)(al)),					\ 	       "rI" ((USItype)(bl)));					\     else if (__builtin_constant_p (bh)&& (bh) ==~(USItype) 0)		\       __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{ame|addme} %0,%2"		\ 	     : "=r" ((USItype)(sh)),					\ 	       "=&r" ((USItype)(sl))					\ 	     : "%r" ((USItype)(ah)),					\ 	       "%r" ((USItype)(al)),					\ 	       "rI" ((USItype)(bl)));					\     else								\       __asm__ ("{a%I5|add%I5c} %1,%4,%5\n\t{ae|adde} %0,%2,%3"		\ 	     : "=r" ((USItype)(sh)),					\ 	       "=&r" ((USItype)(sl))					\ 	     : "%r" ((USItype)(ah)),					\ 	       "r" ((USItype)(bh)),					\ 	       "%r" ((USItype)(al)),					\ 	       "rI" ((USItype)(bl)));					\   } while (0)
+value|do {									\     if (__builtin_constant_p (bh)&& (bh) == 0)				\       __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{aze|addze} %0,%2"		\ 	     : "=r" ((USItype) (sh)),					\ 	       "=&r" ((USItype) (sl))					\ 	     : "%r" ((USItype) (ah)),					\ 	       "%r" ((USItype) (al)),					\ 	       "rI" ((USItype) (bl)));					\     else if (__builtin_constant_p (bh)&& (bh) ==~(USItype) 0)		\       __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{ame|addme} %0,%2"		\ 	     : "=r" ((USItype) (sh)),					\ 	       "=&r" ((USItype) (sl))					\ 	     : "%r" ((USItype) (ah)),					\ 	       "%r" ((USItype) (al)),					\ 	       "rI" ((USItype) (bl)));					\     else								\       __asm__ ("{a%I5|add%I5c} %1,%4,%5\n\t{ae|adde} %0,%2,%3"		\ 	     : "=r" ((USItype) (sh)),					\ 	       "=&r" ((USItype) (sl))					\ 	     : "%r" ((USItype) (ah)),					\ 	       "r" ((USItype) (bh)),					\ 	       "%r" ((USItype) (al)),					\ 	       "rI" ((USItype) (bl)));					\   } while (0)
 end_define
 
 begin_define
@@ -1435,7 +1713,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|do {									\     if (__builtin_constant_p (ah)&& (ah) == 0)				\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfze|subfze} %0,%2"	\ 	       : "=r" ((USItype)(sh)),					\ 		 "=&r" ((USItype)(sl))					\ 	       : "r" ((USItype)(bh)),					\ 		 "rI" ((USItype)(al)),					\ 		 "r" ((USItype)(bl)));					\     else if (__builtin_constant_p (ah)&& (ah) ==~(USItype) 0)		\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfme|subfme} %0,%2"	\ 	       : "=r" ((USItype)(sh)),					\ 		 "=&r" ((USItype)(sl))					\ 	       : "r" ((USItype)(bh)),					\ 		 "rI" ((USItype)(al)),					\ 		 "r" ((USItype)(bl)));					\     else if (__builtin_constant_p (bh)&& (bh) == 0)			\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{ame|addme} %0,%2"		\ 	       : "=r" ((USItype)(sh)),					\ 		 "=&r" ((USItype)(sl))					\ 	       : "r" ((USItype)(ah)),					\ 		 "rI" ((USItype)(al)),					\ 		 "r" ((USItype)(bl)));					\     else if (__builtin_constant_p (bh)&& (bh) ==~(USItype) 0)		\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{aze|addze} %0,%2"		\ 	       : "=r" ((USItype)(sh)),					\ 		 "=&r" ((USItype)(sl))					\ 	       : "r" ((USItype)(ah)),					\ 		 "rI" ((USItype)(al)),					\ 		 "r" ((USItype)(bl)));					\     else								\       __asm__ ("{sf%I4|subf%I4c} %1,%5,%4\n\t{sfe|subfe} %0,%3,%2"	\ 	       : "=r" ((USItype)(sh)),					\ 		 "=&r" ((USItype)(sl))					\ 	       : "r" ((USItype)(ah)),					\ 		 "r" ((USItype)(bh)),					\ 		 "rI" ((USItype)(al)),					\ 		 "r" ((USItype)(bl)));					\   } while (0)
+value|do {									\     if (__builtin_constant_p (ah)&& (ah) == 0)				\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfze|subfze} %0,%2"	\ 	       : "=r" ((USItype) (sh)),					\ 		 "=&r" ((USItype) (sl))					\ 	       : "r" ((USItype) (bh)),					\ 		 "rI" ((USItype) (al)),					\ 		 "r" ((USItype) (bl)));					\     else if (__builtin_constant_p (ah)&& (ah) ==~(USItype) 0)		\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfme|subfme} %0,%2"	\ 	       : "=r" ((USItype) (sh)),					\ 		 "=&r" ((USItype) (sl))					\ 	       : "r" ((USItype) (bh)),					\ 		 "rI" ((USItype) (al)),					\ 		 "r" ((USItype) (bl)));					\     else if (__builtin_constant_p (bh)&& (bh) == 0)			\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{ame|addme} %0,%2"		\ 	       : "=r" ((USItype) (sh)),					\ 		 "=&r" ((USItype) (sl))					\ 	       : "r" ((USItype) (ah)),					\ 		 "rI" ((USItype) (al)),					\ 		 "r" ((USItype) (bl)));					\     else if (__builtin_constant_p (bh)&& (bh) ==~(USItype) 0)		\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{aze|addze} %0,%2"		\ 	       : "=r" ((USItype) (sh)),					\ 		 "=&r" ((USItype) (sl))					\ 	       : "r" ((USItype) (ah)),					\ 		 "rI" ((USItype) (al)),					\ 		 "r" ((USItype) (bl)));					\     else								\       __asm__ ("{sf%I4|subf%I4c} %1,%5,%4\n\t{sfe|subfe} %0,%3,%2"	\ 	       : "=r" ((USItype) (sh)),					\ 		 "=&r" ((USItype) (sl))					\ 	       : "r" ((USItype) (ah)),					\ 		 "r" ((USItype) (bh)),					\ 		 "rI" ((USItype) (al)),					\ 		 "r" ((USItype) (bl)));					\   } while (0)
 end_define
 
 begin_define
@@ -1448,7 +1726,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|__asm__ ("{cntlz|cntlzw} %0,%1"					\ 	   : "=r" ((USItype)(count))					\ 	   : "r" ((USItype)(x)))
+value|__asm__ ("{cntlz|cntlzw} %0,%1"					\ 	   : "=r" ((USItype) (count))					\ 	   : "r" ((USItype) (x)))
 end_define
 
 begin_if
@@ -1534,7 +1812,7 @@ parameter_list|,
 name|m1
 parameter_list|)
 define|\
-value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("mul %0,%2,%3"						\ 	     : "=r" ((USItype)(xh)),					\ 	       "=q" ((USItype)(xl))					\ 	     : "r" (__m0),						\ 	       "r" (__m1));						\     (xh) += ((((SItype) __m0>> 31)& __m1)				\ 	     + (((SItype) __m1>> 31)& __m0));				\   } while (0)
+value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("mul %0,%2,%3"						\ 	     : "=r" ((USItype) (xh)),					\ 	       "=q" ((USItype) (xl))					\ 	     : "r" (__m0),						\ 	       "r" (__m1));						\     (xh) += ((((SItype) __m0>> 31)& __m1)				\ 	     + (((SItype) __m1>> 31)& __m0));				\   } while (0)
 end_define
 
 begin_define
@@ -1558,7 +1836,7 @@ parameter_list|,
 name|m1
 parameter_list|)
 define|\
-value|__asm__ ("mul %0,%2,%3"						\ 	   : "=r" ((SItype)(xh)),					\ 	     "=q" ((SItype)(xl))					\ 	   : "r" (m0),							\ 	     "r" (m1))
+value|__asm__ ("mul %0,%2,%3"						\ 	   : "=r" ((SItype) (xh)),					\ 	     "=q" ((SItype) (xl))					\ 	   : "r" (m0),							\ 	     "r" (m1))
 end_define
 
 begin_define
@@ -1584,7 +1862,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|__asm__ ("div %0,%2,%4"						\ 	   : "=r" ((SItype)(q)), "=q" ((SItype)(r))			\ 	   : "r" ((SItype)(nh)), "1" ((SItype)(nl)), "r" ((SItype)(d)))
+value|__asm__ ("div %0,%2,%4"						\ 	   : "=r" ((SItype) (q)), "=q" ((SItype) (r))			\ 	   : "r" ((SItype) (nh)), "1" ((SItype) (nl)), "r" ((SItype) (d)))
 end_define
 
 begin_define
@@ -1635,7 +1913,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("addw	%5,%1 	addwc	%3,%0"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "%0" ((USItype)(ah)),					\ 	     "g" ((USItype)(bh)),					\ 	     "%1" ((USItype)(al)),					\ 	     "g" ((USItype)(bl)))
+value|__asm__ ("addw	%5,%1 	addwc	%3,%0"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -1656,7 +1934,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("subw	%5,%1 	subwb	%3,%0"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "0" ((USItype)(ah)),					\ 	     "g" ((USItype)(bh)),					\ 	     "1" ((USItype)(al)),					\ 	     "g" ((USItype)(bl)))
+value|__asm__ ("subw	%5,%1 	subwb	%3,%0"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
 
 begin_comment
@@ -1677,7 +1955,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|({union {UDItype __ll;						\ 	   struct {USItype __h, __l;} __i;				\ 	  } __xx;							\   __asm__ ("movw %1,%R0 	uemul %2,%0"							\ 	   : "=&r" (__xx.__ll)						\ 	   : "g" ((USItype) (u)),					\ 	     "g" ((USItype)(v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
+value|({union {UDItype __ll;						\ 	   struct {USItype __h, __l;} __i;				\ 	  } __xx;							\   __asm__ ("movw %1,%R0 	uemul %2,%0"							\ 	   : "=&r" (__xx.__ll)						\ 	   : "g" ((USItype) (u)),					\ 	     "g" ((USItype) (v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
 end_define
 
 begin_endif
@@ -1720,7 +1998,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("a %1,%5 	ae %0,%3"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "%0" ((USItype)(ah)),					\ 	     "r" ((USItype)(bh)),					\ 	     "%1" ((USItype)(al)),					\ 	     "r" ((USItype)(bl)))
+value|__asm__ ("a %1,%5 	ae %0,%3"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "r" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "r" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -1741,7 +2019,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("s %1,%5 	se %0,%3"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "0" ((USItype)(ah)),					\ 	     "r" ((USItype)(bh)),					\ 	     "1" ((USItype)(al)),					\ 	     "r" ((USItype)(bl)))
+value|__asm__ ("s %1,%5 	se %0,%3"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "r" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "r" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -1758,7 +2036,7 @@ parameter_list|,
 name|m1
 parameter_list|)
 define|\
-value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ (								\        "s	r2,r2 	mts	r10,%2 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	cas	%0,r2,r0 	mfs	r10,%1"							\ 	     : "=r" ((USItype)(ph)),					\ 	       "=r" ((USItype)(pl))					\ 	     : "%r" (__m0),						\ 		"r" (__m1)						\ 	     : "r2");							\     (ph) += ((((SItype) __m0>> 31)& __m1)				\ 	     + (((SItype) __m1>> 31)& __m0));				\   } while (0)
+value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ (								\        "s	r2,r2 	mts	r10,%2 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	m	r2,%3 	cas	%0,r2,r0 	mfs	r10,%1"							\ 	     : "=r" ((USItype) (ph)),					\ 	       "=r" ((USItype) (pl))					\ 	     : "%r" (__m0),						\ 		"r" (__m1)						\ 	     : "r2");							\     (ph) += ((((SItype) __m0>> 31)& __m1)				\ 	     + (((SItype) __m1>> 31)& __m0));				\   } while (0)
 end_define
 
 begin_define
@@ -1785,7 +2063,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|do {									\     if ((x)>= 0x10000)							\       __asm__ ("clz	%0,%1"						\ 	       : "=r" ((USItype)(count))				\ 	       : "r" ((USItype)(x)>> 16));				\     else								\       {									\ 	__asm__ ("clz	%0,%1"						\ 		 : "=r" ((USItype)(count))				\ 		 : "r" ((USItype)(x)));					\ 	(count) += 16;							\       }									\   } while (0)
+value|do {									\     if ((x)>= 0x10000)							\       __asm__ ("clz	%0,%1"						\ 	       : "=r" ((USItype) (count))				\ 	       : "r" ((USItype) (x)>> 16));				\     else								\       {									\ 	__asm__ ("clz	%0,%1"						\ 		 : "=r" ((USItype) (count))				\ 		 : "r" ((USItype) (x)));					\ 	(count) += 16;							\       }									\   } while (0)
 end_define
 
 begin_endif
@@ -1820,7 +2098,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("addcc %r4,%5,%1 	addx %r2,%3,%0"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "%rJ" ((USItype)(ah)),					\ 	     "rI" ((USItype)(bh)),					\ 	     "%rJ" ((USItype)(al)),					\ 	     "rI" ((USItype)(bl))					\ 	   __CLOBBER_CC)
+value|__asm__ ("addcc %r4,%5,%1 	addx %r2,%3,%0"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%rJ" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "%rJ" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl))					\ 	   __CLOBBER_CC)
 end_define
 
 begin_define
@@ -1841,7 +2119,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("subcc %r4,%5,%1 	subx %r2,%3,%0"							\ 	   : "=r" ((USItype)(sh)),					\ 	     "=&r" ((USItype)(sl))					\ 	   : "rJ" ((USItype)(ah)),					\ 	     "rI" ((USItype)(bh)),					\ 	     "rJ" ((USItype)(al)),					\ 	     "rI" ((USItype)(bl))					\ 	   __CLOBBER_CC)
+value|__asm__ ("subcc %r4,%5,%1 	subx %r2,%3,%0"							\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "rJ" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "rJ" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl))					\ 	   __CLOBBER_CC)
 end_define
 
 begin_if
@@ -1867,7 +2145,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|__asm__ ("umul %2,%3,%1;rd %%y,%0"					\ 	   : "=r" ((USItype)(w1)),					\ 	     "=r" ((USItype)(w0))					\ 	   : "r" ((USItype)(u)),					\ 	     "r" ((USItype)(v)))
+value|__asm__ ("umul %2,%3,%1;rd %%y,%0"					\ 	   : "=r" ((USItype) (w1)),					\ 	     "=r" ((USItype) (w0))					\ 	   : "r" ((USItype) (u)),					\ 	     "r" ((USItype) (v)))
 end_define
 
 begin_define
@@ -1886,7 +2164,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|__asm__ ("mov %2,%%y;nop;nop;nop;udiv %3,%4,%0;umul %0,%4,%1;sub %3,%1,%1"\ 	   : "=&r" ((USItype)(q)),					\ 	     "=&r" ((USItype)(r))					\ 	   : "r" ((USItype)(n1)),					\ 	     "r" ((USItype)(n0)),					\ 	     "r" ((USItype)(d)))
+value|__asm__ ("mov %2,%%y;nop;nop;nop;udiv %3,%4,%0;umul %0,%4,%1;sub %3,%1,%1"\ 	   : "=&r" ((USItype) (q)),					\ 	     "=&r" ((USItype) (r))					\ 	   : "r" ((USItype) (n1)),					\ 	     "r" ((USItype) (n0)),					\ 	     "r" ((USItype) (d)))
 end_define
 
 begin_else
@@ -1921,7 +2199,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|__asm__ ("umul %2,%3,%1;rd %%y,%0"					\ 	   : "=r" ((USItype)(w1)),					\ 	     "=r" ((USItype)(w0))					\ 	   : "r" ((USItype)(u)),					\ 	     "r" ((USItype)(v)))
+value|__asm__ ("umul %2,%3,%1;rd %%y,%0"					\ 	   : "=r" ((USItype) (w1)),					\ 	     "=r" ((USItype) (w0))					\ 	   : "r" ((USItype) (u)),					\ 	     "r" ((USItype) (v)))
 end_define
 
 begin_define
@@ -1940,7 +2218,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|__asm__ ("! Inlined udiv_qrnnd 	wr	%%g0,%2,%%y	! Not a delayed write for sparclite 	tst	%%g0 	divscc	%3,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%0 	rd	%%y,%1 	bl,a 1f 	add	%1,%4,%1 1:	! End of inline udiv_qrnnd"					\ 	   : "=r" ((USItype)(q)),					\ 	     "=r" ((USItype)(r))					\ 	   : "r" ((USItype)(n1)),					\ 	     "r" ((USItype)(n0)),					\ 	     "rI" ((USItype)(d))					\ 	   : "%g1" __AND_CLOBBER_CC)
+value|__asm__ ("! Inlined udiv_qrnnd 	wr	%%g0,%2,%%y	! Not a delayed write for sparclite 	tst	%%g0 	divscc	%3,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%%g1 	divscc	%%g1,%4,%0 	rd	%%y,%1 	bl,a 1f 	add	%1,%4,%1 1:	! End of inline udiv_qrnnd"					\ 	   : "=r" ((USItype) (q)),					\ 	     "=r" ((USItype) (r))					\ 	   : "r" ((USItype) (n1)),					\ 	     "r" ((USItype) (n0)),					\ 	     "rI" ((USItype) (d))					\ 	   : "%g1" __AND_CLOBBER_CC)
 end_define
 
 begin_define
@@ -1960,7 +2238,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|__asm__ ("scan %1,0,%0"						\ 	   : "=r" ((USItype)(x))					\ 	   : "r" ((USItype)(count)))
+value|__asm__ ("scan %1,0,%0"						\ 	   : "=r" ((USItype) (x))					\ 	   : "r" ((USItype) (count)))
 end_define
 
 begin_else
@@ -1986,7 +2264,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|__asm__ ("! Inlined umul_ppmm 	wr	%%g0,%2,%%y	! SPARC has 0-3 delay insn after a wr 	sra	%3,31,%%g2	! Don't move this insn 	and	%2,%%g2,%%g2	! Don't move this insn 	andcc	%%g0,0,%%g1	! Don't move this insn 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,0,%%g1 	add	%%g1,%%g2,%0 	rd	%%y,%1"							\ 	   : "=r" ((USItype)(w1)),					\ 	     "=r" ((USItype)(w0))					\ 	   : "%rI" ((USItype)(u)),					\ 	     "r" ((USItype)(v))						\ 	   : "%g1", "%g2" __AND_CLOBBER_CC)
+value|__asm__ ("! Inlined umul_ppmm 	wr	%%g0,%2,%%y	! SPARC has 0-3 delay insn after a wr 	sra	%3,31,%%g2	! Don't move this insn 	and	%2,%%g2,%%g2	! Don't move this insn 	andcc	%%g0,0,%%g1	! Don't move this insn 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,%3,%%g1 	mulscc	%%g1,0,%%g1 	add	%%g1,%%g2,%0 	rd	%%y,%1"							\ 	   : "=r" ((USItype) (w1)),					\ 	     "=r" ((USItype) (w0))					\ 	   : "%rI" ((USItype) (u)),					\ 	     "r" ((USItype) (v))						\ 	   : "%g1", "%g2" __AND_CLOBBER_CC)
 end_define
 
 begin_define
@@ -2020,7 +2298,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|__asm__ ("! Inlined udiv_qrnnd 	mov	32,%%g1 	subcc	%1,%2,%%g0 1:	bcs	5f 	 addxcc %0,%0,%0	! shift n1n0 and a q-bit in lsb 	sub	%1,%2,%1	! this kills msb of n 	addx	%1,%1,%1	! so this can't give carry 	subcc	%%g1,1,%%g1 2:	bne	1b 	 subcc	%1,%2,%%g0 	bcs	3f 	 addxcc %0,%0,%0	! shift n1n0 and a q-bit in lsb 	b	3f 	 sub	%1,%2,%1	! this kills msb of n 4:	sub	%1,%2,%1 5:	addxcc	%1,%1,%1 	bcc	2b 	 subcc	%%g1,1,%%g1 ! Got carry from n.  Subtract next step to cancel this carry. 	bne	4b 	 addcc	%0,%0,%0	! shift n1n0 and a 0-bit in lsb 	sub	%1,%2,%1 3:	xnor	%0,0,%0 	! End of inline udiv_qrnnd"					\ 	   : "=&r" ((USItype)(q)),					\ 	     "=&r" ((USItype)(r))					\ 	   : "r" ((USItype)(d)),					\ 	     "1" ((USItype)(n1)),					\ 	     "0" ((USItype)(n0)) : "%g1" __AND_CLOBBER_CC)
+value|__asm__ ("! Inlined udiv_qrnnd 	mov	32,%%g1 	subcc	%1,%2,%%g0 1:	bcs	5f 	 addxcc %0,%0,%0	! shift n1n0 and a q-bit in lsb 	sub	%1,%2,%1	! this kills msb of n 	addx	%1,%1,%1	! so this can't give carry 	subcc	%%g1,1,%%g1 2:	bne	1b 	 subcc	%1,%2,%%g0 	bcs	3f 	 addxcc %0,%0,%0	! shift n1n0 and a q-bit in lsb 	b	3f 	 sub	%1,%2,%1	! this kills msb of n 4:	sub	%1,%2,%1 5:	addxcc	%1,%1,%1 	bcc	2b 	 subcc	%%g1,1,%%g1 ! Got carry from n.  Subtract next step to cancel this carry. 	bne	4b 	 addcc	%0,%0,%0	! shift n1n0 and a 0-bit in lsb 	sub	%1,%2,%1 3:	xnor	%0,0,%0 	! End of inline udiv_qrnnd"					\ 	   : "=&r" ((USItype) (q)),					\ 	     "=&r" ((USItype) (r))					\ 	   : "r" ((USItype) (d)),					\ 	     "1" ((USItype) (n1)),					\ 	     "0" ((USItype) (n0)) : "%g1" __AND_CLOBBER_CC)
 end_define
 
 begin_define
@@ -2088,7 +2366,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("addl2 %5,%1 	adwc %3,%0"							\ 	   : "=g" ((USItype)(sh)),					\ 	     "=&g" ((USItype)(sl))					\ 	   : "%0" ((USItype)(ah)),					\ 	     "g" ((USItype)(bh)),					\ 	     "%1" ((USItype)(al)),					\ 	     "g" ((USItype)(bl)))
+value|__asm__ ("addl2 %5,%1 	adwc %3,%0"							\ 	   : "=g" ((USItype) (sh)),					\ 	     "=&g" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -2109,7 +2387,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("subl2 %5,%1 	sbwc %3,%0"							\ 	   : "=g" ((USItype)(sh)),					\ 	     "=&g" ((USItype)(sl))					\ 	   : "0" ((USItype)(ah)),					\ 	     "g" ((USItype)(bh)),					\ 	     "1" ((USItype)(al)),					\ 	     "g" ((USItype)(bl)))
+value|__asm__ ("subl2 %5,%1 	sbwc %3,%0"							\ 	   : "=g" ((USItype) (sh)),					\ 	     "=&g" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -2440,7 +2718,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|do {									\     USItype __xr = (x);							\     USItype __a;							\ 									\     if (SI_TYPE_SIZE<= 32)						\       {									\ 	__a = __xr< (1<<2*__BITS4)					\ 	  ? (__xr< (1<<__BITS4) ? 0 : __BITS4)				\ 	  : (__xr< (1<<3*__BITS4) ?  2*__BITS4 : 3*__BITS4);		\       }									\     else								\       {									\ 	for (__a = SI_TYPE_SIZE - 8; __a> 0; __a -= 8)			\ 	  if (((__xr>> __a)& 0xff) != 0)				\ 	    break;							\       }									\ 									\     (count) = SI_TYPE_SIZE - (__clz_tab[__xr>> __a] + __a);		\   } while (0)
+value|do {									\     USItype __xr = (x);							\     USItype __a;							\ 									\     if (SI_TYPE_SIZE<= 32)						\       {									\ 	__a = __xr< ((USItype)1<<2*__BITS4)				\ 	  ? (__xr< ((USItype)1<<__BITS4) ? 0 : __BITS4)		\ 	  : (__xr< ((USItype)1<<3*__BITS4) ?  2*__BITS4 : 3*__BITS4);	\       }									\     else								\       {									\ 	for (__a = SI_TYPE_SIZE - 8; __a> 0; __a -= 8)			\ 	  if (((__xr>> __a)& 0xff) != 0)				\ 	    break;							\       }									\ 									\     (count) = SI_TYPE_SIZE - (__clz_tab[__xr>> __a] + __a);		\   } while (0)
 end_define
 
 begin_endif

@@ -125,19 +125,5 @@ name|SHARED_BSS_SECTION_ASM_OP
 value|".section .shbss, \"bs\""
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|BSS_SECTION_FUNCTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|BSS_SECTION_FUNCTION
-define|\
-value|void								\ bss_section ()							\ {								\   if (in_section != in_bss)					\     {								\       if (flag_shared_data)                                     \         fprintf (asm_out_file, "%s\n", SHARED_BSS_SECTION_ASM_OP);	\       else							\         fprintf (asm_out_file, "%s\n", BSS_SECTION_ASM_OP);	\       in_section = in_bss;					\     }								\ }
-end_define
-
 end_unit
 

@@ -11,7 +11,23 @@ begin_block
 block|{
 literal|".cc"
 operator|,
+block|{
 literal|"@c++"
+block|}
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|".cp"
+operator|,
+block|{
+literal|"@c++"
+block|}
 block|}
 end_block
 
@@ -23,7 +39,9 @@ begin_block
 block|{
 literal|".cxx"
 operator|,
+block|{
 literal|"@c++"
+block|}
 block|}
 end_block
 
@@ -35,7 +53,9 @@ begin_block
 block|{
 literal|".cpp"
 operator|,
+block|{
 literal|"@c++"
+block|}
 block|}
 end_block
 
@@ -47,7 +67,9 @@ begin_block
 block|{
 literal|".c++"
 operator|,
+block|{
 literal|"@c++"
+block|}
 block|}
 end_block
 
@@ -59,7 +81,9 @@ begin_block
 block|{
 literal|".C"
 operator|,
+block|{
 literal|"@c++"
+block|}
 block|}
 end_block
 
@@ -71,21 +95,53 @@ begin_block
 block|{
 literal|"@c++"
 operator|,
-literal|"cpp -lang-c++ %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C++ does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\ 	-undef -D__GNUC__=%v1 -D__GNUG__=%v1 -D__cplusplus -D__GNUC_MINOR__=%v2\ 	%{ansi:-trigraphs -$ -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional} %{trigraphs}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*} %Z\         %i %{!M:%{!MM:%{!E:%{!pipe:%g.ii}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
-operator|,
-literal|"%{!M:%{!MM:%{!E:cc1plus %{!pipe:%g.ii} %1 %2\ 			    %{!Q:-quiet} -dumpbase %b.cc %{d*} %{m*} %{a}\ 			    %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi}\ 			    %{traditional} %{v:-version} %{pg:-p} %{p}\ 			    %{f*} %{+e*} %{aux-info*}\ 			    %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 			    %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}}|\n\               %{!S:as %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b%O}}%{!c:-o %d%w%u%O}\                       %{!pipe:%g.s} %A\n }}}}"
+if|#
+directive|if
+name|USE_CPPLIB
+block|{
+literal|"%{E|M|MM:cpp -lang-c++ %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C++ does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\ 	-undef -D__GNUC__=%v1 -D__GNUG__=%v1 -D__cplusplus -D__GNUC_MINOR__=%v2\ 	%{ansi:-trigraphs -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\ 	%{!fno-exceptions:-D__EXCEPTIONS}\         %{fhonor-std:-D__HONOR_STD} %{fnew-abi:-D__HONOR_STD}\         %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}} %{trigraphs}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*} %Z\         %i %{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}}\n}\       %{!E:%{!M:%{!MM:cc1plus %i %1 %2\                             -lang-c++ %{nostdinc*} %{C} %{A*} %{I*} %{P} %I\                             -undef -D__GNUC__=%v1 -D__GNUG__=%v1 -D__cplusplus\                             -D__GNUC_MINOR__=%v2\                             %{ansi:-trigraphs -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\                             %{!fno-exceptions:-D__EXCEPTIONS}\                             %{fhonor-std:-D__HONOR_STD} %{fnew-abi:-D__HONOR_STD}\                             %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}}\                             %{trigraphs}\ 			    %{!Q:-quiet} -dumpbase %b.cc %{d*} %{m*} %{a}\ 			    %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi}\                             %{H} %{d*} %C %{D*} %{U*} %{i*} %Z\ 			    %{v:-version} %{pg:-p} %{p}\ 			    %{f*} %{+e*} %{aux-info*}\ 			    %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 			    %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}}|\n\               %{!S:as %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b%O}}%{!c:-o %d%w%u%O}\                       %{!pipe:%g.s} %A\n }}}}"
+block|}
 block|}
 end_block
 
 begin_operator
 operator|,
 end_operator
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! USE_CPPLIB */
+end_comment
+
+begin_block
+block|{
+literal|"cpp -lang-c++ %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C++ does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\ 	-undef -D__GNUC__=%v1 -D__GNUG__=%v1 -D__cplusplus -D__GNUC_MINOR__=%v2\ 	%{ansi:-trigraphs -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\ 	%{!fno-exceptions:-D__EXCEPTIONS}\         %{fhonor-std:-D__HONOR_STD} %{fnew-abi:-D__HONOR_STD}\         %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}} %{trigraphs}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*} %Z\         %i %{!M:%{!MM:%{!E:%{!pipe:%g.ii}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
+operator|,
+literal|"%{!M:%{!MM:%{!E:cc1plus %{!pipe:%g.ii} %1 %2\ 			    %{!Q:-quiet} -dumpbase %b.cc %{d*} %{m*} %{a}\ 			    %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi}\ 			    %{v:-version} %{pg:-p} %{p}\ 			    %{f*} %{+e*} %{aux-info*}\ 			    %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 			    %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}}|\n\               %{!S:as %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b%O}}%{!c:-o %d%w%u%O}\                       %{!pipe:%g.s} %A\n }}}}"
+block|}
+end_block
+
+begin_endif
+unit|},
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! USE_CPPLIB */
+end_comment
 
 begin_block
 block|{
 literal|".ii"
 operator|,
+block|{
 literal|"@c++-cpp-output"
+block|}
 block|}
 end_block
 
@@ -97,7 +153,9 @@ begin_block
 block|{
 literal|"@c++-cpp-output"
 operator|,
-literal|"%{!M:%{!MM:%{!E:cc1plus %i %1 %2 %{!Q:-quiet} %{d*} %{m*} %{a}\ 			    %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi}\ 			    %{traditional} %{v:-version} %{pg:-p} %{p}\ 			    %{f*} %{+e*} %{aux-info*}\ 			    %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 			    %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\ 	            %{!S:as %a %Y\ 			    %{c:%W{o*}%{!o*:-o %w%b%O}}%{!c:-o %d%w%u%O}\ 			    %{!pipe:%g.s} %A\n }}}}"
+block|{
+literal|"%{!M:%{!MM:%{!E:cc1plus %i %1 %2 %{!Q:-quiet} %{d*} %{m*} %{a}\ 			    %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi}\ 			    %{v:-version} %{pg:-p} %{p}\ 			    %{f*} %{+e*} %{aux-info*}\ 			    %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 			    %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\ 	            %{!S:as %a %Y\ 			    %{c:%W{o*}%{!o*:-o %w%b%O}}%{!c:-o %d%w%u%O}\ 			    %{!pipe:%g.s} %A\n }}}}"
+block|}
 block|}
 end_block
 

@@ -6,16 +6,6 @@ file|"i386/xm-i386.h"
 end_include
 
 begin_comment
-comment|/* Inhibit cccp.c's definition of putenv.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PUTENV
-end_define
-
-begin_comment
 comment|/* Use semicolons to separate elements of a path.  */
 end_comment
 
@@ -60,16 +50,6 @@ define|#
 directive|define
 name|NO_PRECOMPILES
 value|1
-end_define
-
-begin_comment
-comment|/* sys_errlist proto in cccp.c doesn't match djgpp */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRERROR
 end_define
 
 end_unit

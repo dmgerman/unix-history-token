@@ -145,23 +145,6 @@ define|\
 value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%eax\n",		\ 	       LPREFIX, (LABELNO));					\       fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\     }									\   else									\     {									\       fprintf (FILE, "\tmovl $%sP%d,%%eax\n", LPREFIX, (LABELNO));	\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
 end_define
 
-begin_comment
-comment|/* There are conflicting reports about whether this system uses    a different assembler syntax.  wilson@cygnus.com says # is right.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|COMMENT_BEGIN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|COMMENT_BEGIN
-value|"#"
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -216,6 +199,8 @@ name|ASM_OUTPUT_ADDR_DIFF_ELT
 parameter_list|(
 name|FILE
 parameter_list|,
+name|BODY
+parameter_list|,
 name|VALUE
 parameter_list|,
 name|REL
@@ -232,6 +217,7 @@ begin_define
 define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
+value|1
 end_define
 
 begin_comment

@@ -50,7 +50,7 @@ define|#
 directive|define
 name|INCLUDE_DEFAULTS
 define|\
-value|{					\     { GPLUSPLUS_INCLUDE_DIR, 1, 1 },	\     { GCC_INCLUDE_DIR, 0, 0 },		\     { 0, 0, 0 }				\   }
+value|{						\     { GPLUSPLUS_INCLUDE_DIR, "G++", 1, 1 },	\     { GCC_INCLUDE_DIR, "GCC", 0, 0 },		\     { 0, 0, 0, 0 }				\   }
 end_define
 
 begin_comment
@@ -158,7 +158,28 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*}"
+value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{R*} %{static:-Bstatic} %{assert*}"
+end_define
+
+begin_comment
+comment|/* This defines which switch letters take arguments. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SWITCH_TAKES_ARG
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SWITCH_TAKES_ARG
+parameter_list|(
+name|CHAR
+parameter_list|)
+define|\
+value|(DEFAULT_SWITCH_TAKES_ARG(CHAR) \    || (CHAR) == 'R')
 end_define
 
 begin_comment
@@ -181,6 +202,16 @@ directive|define
 name|TARGET_MEM_FUNCTIONS
 end_define
 
+begin_comment
+comment|/* Handle #pragma weak and #pragma pack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_SYSV_PRAGMA
+end_define
+
 begin_escape
 end_escape
 
@@ -189,7 +220,7 @@ comment|/*  * Some imports from svr4.h in support of shared libraries.  * Curren
 end_comment
 
 begin_comment
-comment|/* Define the strings used for the special svr4 .type and .size directives.    These strings generally do not vary from one system running svr4 to    another, but if a given system (e.g. m88k running svr) needs to use    different pseudo-op names for these, they may be overridden in the    file which includes this one.  */
+comment|/* Define the strings used for the .type, .size, and .set directives.    These strings generally do not vary from one system running netbsd    to another, but if a given system needs to use different pseudo-op    names for these, they may be overridden in the file which includes    this one.  */
 end_comment
 
 begin_undef
@@ -202,6 +233,12 @@ begin_undef
 undef|#
 directive|undef
 name|SIZE_ASM_OP
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|SET_ASM_OP
 end_undef
 
 begin_define
@@ -216,6 +253,13 @@ define|#
 directive|define
 name|SIZE_ASM_OP
 value|".size"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|".set"
 end_define
 
 begin_comment
@@ -238,7 +282,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do { fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); } while (0)
+value|do { fputs ("\t.globl\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); \        fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); } while (0)
 end_define
 
 begin_comment

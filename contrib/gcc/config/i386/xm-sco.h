@@ -3,22 +3,6 @@ begin_comment
 comment|/* Configuration for GCC for Intel i386 running SCO.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"i386/xm-sysv3.h"
-end_include
-
-begin_comment
-comment|/* On SCO 3.2.1, ldexp rejects values outside [0.5, 1). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BROKEN_LDEXP
-end_define
-
 begin_comment
 comment|/* Big buffers improve performance.  */
 end_comment
@@ -28,16 +12,6 @@ define|#
 directive|define
 name|IO_BUFFER_SIZE
 value|(0x8000 - 1024)
-end_define
-
-begin_comment
-comment|/* SCO has a very small ARG_MAX.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMALL_ARG_MAX
 end_define
 
 begin_ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* OSF/rose half-pic support definitions.    Copyright (C) 1992 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* OSF/rose half-pic support definitions.    Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -9,114 +9,11 @@ directive|ifndef
 name|NO_HALF_PIC
 end_ifndef
 
-begin_comment
-comment|/* Add prototype support.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PROTO
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_PROTOTYPES
-argument_list|)
-condition|?
-name|USE_PROTOTYPES
-expr|:
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|PROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|ARGS
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|STDIO_PROTO
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NO_STDIO_H
-argument_list|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BUFSIZ
-end_ifndef
-
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"gansidecl.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|STDIO_PROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|PROTO(ARGS)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -156,7 +53,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Declare the variable flag_half_pic as 'int' instead of 'extern    int', so that BSS variables are created (even though this is not    strict ANSI).  This is because rtl.c now refers to the    CONSTANT_ADDRESS_P macro, which in turn refers to flag_half_pic,    and wants to call half_pic_address_p, whose address we also store    in in a BSS variable.  This way, the gen* programs won't get    unknown symbol errors when being linked (flag_half_pic will never    be true in the gen* programs).  */
+comment|/* Declare the variable flag_half_pic as 'int' instead of 'extern    int', so that BSS variables are created (even though this is not    strict ANSI).  This is because rtl.c now refers to the    CONSTANT_ADDRESS_P macro, which in turn refers to flag_half_pic,    and wants to call half_pic_address_p, whose address we also store    in a BSS variable.  This way, the gen* programs won't get    unknown symbol errors when being linked (flag_half_pic will never    be true in the gen* programs).  */
 end_comment
 
 begin_decl_stmt
@@ -317,34 +214,23 @@ begin_comment
 comment|/* return RTX for half-pic pointer */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STDIO_PROTO
-end_ifdef
+begin_comment
+comment|/* Can't use prototype since FILE isn't defined yet.  */
+end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|half_pic_finish
-name|STDIO_PROTO
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+comment|/* FILE * */
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* half_pic termination */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Macros to provide access to the half-pic stuff (so they can easily    be stubbed out.  */

@@ -1,18 +1,46 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to perform peephole optimizations.    Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to perform peephole optimizations.    Copyright (C) 1987, 1989, 1992, 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"hconfig.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"system.h"
 end_include
 
 begin_include
@@ -60,21 +88,19 @@ name|obstack_chunk_free
 value|free
 end_define
 
-begin_function_decl
-specifier|extern
-name|void
-name|free
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
+end_comment
 
-begin_function_decl
-specifier|extern
-name|rtx
-name|read_rtx
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|insn_name_ptr
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* While tree-walking an instruction pattern, we keep a chain    of these `struct link's to record how to get down to the    current position.  In each one, POS is the operand number,    and if the operand is a vector VEC is the element number.    VEC is -1 if the operand is not a vector.  */
@@ -99,44 +125,47 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|match_rtx
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gen_exp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|fatal
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PVPROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_1
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|fancy_abort
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -169,21 +198,65 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|gen_peephole
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|match_rtx
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+expr|struct
+name|link
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|print_path
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|link
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|print_code
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|RTX_CODE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -354,7 +427,7 @@ expr_stmt|;
 comment|/* If that matches, construct new pattern and put it in the first insn.      This new pattern will never be matched.      It exists only so that insn-extract can get the operands back.      So use a simple regular form: a PARALLEL containing a vector      of all the operands.  */
 name|printf
 argument_list|(
-literal|"  PATTERN (ins1) = gen_rtx (PARALLEL, VOIDmode, gen_rtvec_v (%d, operands));\n"
+literal|"  PATTERN (ins1) = gen_rtx_PARALLEL (VOIDmode, gen_rtvec_v (%d, operands));\n"
 argument_list|,
 name|n_operands
 argument_list|)
@@ -1094,6 +1167,8 @@ name|fail_label
 argument_list|)
 expr_stmt|;
 return|return;
+default|default:
+break|break;
 block|}
 name|printf
 argument_list|(
@@ -1392,16 +1467,16 @@ literal|";\n"
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|==
-name|HOST_BITS_PER_INT
 name|printf
 argument_list|(
-literal|"  if (XWINT (x, %d) != %d) goto L%d;\n"
+literal|"  if (XWINT (x, %d) != "
 argument_list|,
 name|i
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|XWINT
 argument_list|(
@@ -1409,30 +1484,15 @@ name|x
 argument_list|,
 name|i
 argument_list|)
-argument_list|,
-name|fail_label
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
 name|printf
 argument_list|(
-literal|"  if (XWINT (x, %d) != %ld) goto L%d;\n"
-argument_list|,
-name|i
-argument_list|,
-name|XWINT
-argument_list|(
-name|x
-argument_list|,
-name|i
-argument_list|)
+literal|") goto L%d;\n"
 argument_list|,
 name|fail_label
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if
@@ -1742,22 +1802,55 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|fatal
-parameter_list|(
-name|s
-parameter_list|,
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
+name|VPROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+name|format
+operator|,
+operator|...
+operator|)
+argument_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|__STDC__
 name|char
 modifier|*
-name|s
+name|format
 decl_stmt|;
-block|{
+endif|#
+directive|endif
+name|va_list
+name|ap
+decl_stmt|;
+name|VA_START
+argument_list|(
+name|ap
+argument_list|,
+name|format
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__STDC__
+name|format
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|stderr
@@ -1765,15 +1858,18 @@ argument_list|,
 literal|"genpeep: "
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|vfprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|s
+name|format
 argument_list|,
-name|a1
-argument_list|,
-name|a2
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1789,7 +1885,7 @@ name|FATAL_EXIT_CODE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
@@ -1908,6 +2004,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#include \"system.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#include \"rtl.h\"\n"
 argument_list|)
 expr_stmt|;
@@ -1923,7 +2024,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#include \"real.h\"\n\n"
+literal|"#include \"real.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"except.h\"\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1943,12 +2049,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  rtx insn, x, pat;\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  int i;\n\n"
+literal|"  rtx insn ATTRIBUTE_UNUSED, x ATTRIBUTE_UNUSED, pat ATTRIBUTE_UNUSED;\n\n"
 argument_list|)
 expr_stmt|;
 comment|/* Early out: no peepholes for insns followed by barriers.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Linux    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by H.J. Lu (hjl@nynexst.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Linux-based GNU systems.    Copyright (C) 1995, 1997 Free Software Foundation, Inc.    Contributed by H.J. Lu (hjl@nynexst.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ name|HAVE_ATEXIT
 end_define
 
 begin_comment
-comment|/* Linux uses ctype from glibc.a. I am not sure how complete it is.    For now, we play safe. It may change later. */
+comment|/* GNU/Linux uses ctype from glibc.a. I am not sure how complete it is.    For now, we play safe. It may change later. */
 end_comment
 
 begin_if
@@ -66,23 +66,6 @@ name|STARTFILE_SPEC
 value|"%{pg:gcrt0.o%s} %{!pg:%{p:gcrt0.o%s} %{!p:crt0.o%s}} %{static:-static}"
 end_define
 
-begin_comment
-comment|/* There are conflicting reports about whether this system uses    a different assembler syntax.  wilson@cygnus.com says # is right.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|COMMENT_BEGIN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|COMMENT_BEGIN
-value|"#"
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -107,6 +90,13 @@ define|#
 directive|define
 name|ASM_APP_OFF
 value|"#NO_APP\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|".set"
 end_define
 
 begin_comment

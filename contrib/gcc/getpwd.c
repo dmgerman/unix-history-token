@@ -12,13 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|"system.h"
 end_include
 
 begin_include
@@ -26,24 +20,6 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|errno
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Virtually every UN*X system now in common use (except for pre-4.3-tahoe    BSD systems) now provides getcwd as called for by POSIX.  Allow for    the few exceptions to the general rule here.  */
@@ -75,21 +51,6 @@ argument_list|(
 name|HAVE_GETWD
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getwd
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -142,15 +103,6 @@ begin_comment
 comment|/* (defined (USG) || defined (VMS)) */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getcwd
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* We actually use this as a starting point, not a limit.  */
 end_comment
@@ -171,31 +123,6 @@ begin_comment
 comment|/* (defined (USG) || defined (VMS)) */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_WIN32
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<direct.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|char
 modifier|*
@@ -204,11 +131,30 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
 name|VMS
-end_ifndef
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN32__
+argument_list|)
+operator|)
+operator|)
+end_if
 
 begin_comment
 comment|/* Get the working directory.  Use the PWD environment variable if it's    set correctly, since this is faster and gives more uniform answers    to the user.  Yield the working directory if successful; otherwise,    yield 0 and set errno.  */
@@ -392,7 +338,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VMS */
+comment|/* VMS || _WIN32&& !__CYGWIN32__ */
 end_comment
 
 begin_ifndef
@@ -445,6 +391,13 @@ argument_list|,
 name|MAXPATHLEN
 operator|+
 literal|1
+ifdef|#
+directive|ifdef
+name|VMS
+argument_list|,
+literal|0
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 return|return
@@ -459,7 +412,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VMS */
+comment|/* VMS || _WIN32&& !__CYGWIN32__ */
 end_comment
 
 end_unit

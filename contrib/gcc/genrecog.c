@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to recognize rtl as insns.    Copyright (C) 1987, 88, 92, 93, 94, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to recognize rtl as insns.    Copyright (C) 1987, 88, 92, 93, 94, 95, 97, 98 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,41 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"hconfig.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"system.h"
 end_include
 
 begin_include
@@ -64,21 +92,19 @@ name|obstack_chunk_free
 value|free
 end_define
 
-begin_function_decl
-specifier|extern
-name|void
-name|free
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
+end_comment
 
-begin_function_decl
-specifier|extern
-name|rtx
-name|read_rtx
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|insn_name_ptr
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Data structure for a listhead of decision trees.  The alternatives    to a node are kept in a doublely-linked list so we can easily add nodes    to the proper place when merging.  */
@@ -289,7 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Similar, but counts all expressions in the MD file; used for    error messages. */
+comment|/* Similar, but counts all expressions in the MD file; used for    error messages.  */
 end_comment
 
 begin_decl_stmt
@@ -904,33 +930,18 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
-name|concat
-name|PROTO
+name|void
+name|fatal
+name|PVPROTO
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|,
-name|char
-operator|*
+operator|...
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|fatal
-name|PROTO
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
+name|ATTRIBUTE_PRINTF_1
 decl_stmt|;
 end_decl_stmt
 
@@ -1470,7 +1481,7 @@ modifier|*
 name|fmt
 decl_stmt|;
 specifier|register
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|int
@@ -1751,6 +1762,9 @@ name|MATCH_OPERATOR
 case|:
 case|case
 name|MATCH_PARALLEL
+case|:
+case|case
+name|MATCH_INSN2
 case|:
 name|new
 operator|->
@@ -2577,7 +2591,7 @@ operator|==
 name|CC0
 condition|)
 break|break;
-comment|/* ... fall through ... */
+comment|/* ... fall through ...  */
 case|case
 name|COMPARE
 case|:
@@ -2647,6 +2661,8 @@ expr_stmt|;
 return|return
 name|new
 return|;
+default|default:
+break|break;
 block|}
 name|fmt
 operator|=
@@ -2970,7 +2986,7 @@ decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|;
-comment|/* If they are both to test modes and the modes are different, they aren't      both true.  Similarly for codes, integer elements, and vector lengths. */
+comment|/* If they are both to test modes and the modes are different, they aren't      both true.  Similarly for codes, integer elements, and vector lengths.  */
 if|if
 condition|(
 operator|(
@@ -4912,7 +4928,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"     register rtx x0;\n     rtx insn;\n"
+literal|"     register rtx x0;\n     rtx insn ATTRIBUTE_UNUSED;\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4923,7 +4939,7 @@ name|RECOG
 condition|)
 name|printf
 argument_list|(
-literal|"     int *pnum_clobbers;\n"
+literal|"     int *pnum_clobbers ATTRIBUTE_UNUSED;\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4956,21 +4972,21 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"x%d, "
+literal|"x%d ATTRIBUTE_UNUSED, "
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"x%d;\n"
+literal|"x%d ATTRIBUTE_UNUSED;\n"
 argument_list|,
 name|max_depth
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %s tem;\n"
+literal|"  %s tem ATTRIBUTE_UNUSED;\n"
 argument_list|,
 name|type
 operator|==
@@ -5167,7 +5183,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* One tricky area is what is the exact state when we branch to a      node's label.  There are two cases where we branch: when looking at      successors to a node, or when a set of tests fails.       In the former case, we are always branching to the first node in a      decision list and we want all required tests to be performed.  We      put the labels for such nodes in front of any switch or test statements.      These branches are done without updating the position to that of the      target node.       In the latter case, we are branching to a node that is not the first      node in a decision list.  We have already checked that it is possible      for both the node we originally tested at this level and the node we      are branching to to be both match some pattern.  That means that they      usually will be testing the same mode and code.  So it is normally safe      for such labels to be inside switch statements, since the tests done      by virtue of arriving at that label will usually already have been      done.  The exception is a branch from a node that does not test a      mode or code to one that does.  In such cases, we set the `retest_mode'      or `retest_code' flags.  That will ensure that we start a new switch      at that position and put the label before the switch.        The branches in the latter case must set the position to that of the      target node.  */
+comment|/* One tricky area is what is the exact state when we branch to a      node's label.  There are two cases where we branch: when looking at      successors to a node, or when a set of tests fails.       In the former case, we are always branching to the first node in a      decision list and we want all required tests to be performed.  We      put the labels for such nodes in front of any switch or test statements.      These branches are done without updating the position to that of the      target node.       In the latter case, we are branching to a node that is not the first      node in a decision list.  We have already checked that it is possible      for both the node we originally tested at this level and the node we      are branching to to both match some pattern.  That means that they      usually will be testing the same mode and code.  So it is normally safe      for such labels to be inside switch statements, since the tests done      by virtue of arriving at that label will usually already have been      done.  The exception is a branch from a node that does not test a      mode or code to one that does.  In such cases, we set the `retest_mode'      or `retest_code' flags.  That will ensure that we start a new switch      at that position and put the label before the switch.        The branches in the latter case must set the position to that of the      target node.  */
 name|printf
 argument_list|(
 literal|"\n"
@@ -5413,7 +5429,7 @@ name|p
 operator|->
 name|code
 decl_stmt|;
-comment|/* If P is testing a predicate that we know about and we haven't 	     seen any of the codes that are valid for the predicate, we 	     can write a series of "case" statement, one for each possible 	     code.  Since we are already in a switch, these redundant tests 	     are very cheap and will reduce the number of predicate called. */
+comment|/* If P is testing a predicate that we know about and we haven't 	     seen any of the codes that are valid for the predicate, we 	     can write a series of "case" statement, one for each possible 	     code.  Since we are already in a switch, these redundant tests 	     are very cheap and will reduce the number of predicate called.  */
 if|if
 condition|(
 name|p
@@ -6125,6 +6141,23 @@ literal|4
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%sdefault:\n%sbreak;\n"
+argument_list|,
+name|indents
+index|[
+name|indent
+operator|-
+literal|2
+index|]
+argument_list|,
+name|indents
+index|[
+name|indent
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"%scase %smode:\n"
 argument_list|,
 name|indents
@@ -6226,6 +6259,23 @@ literal|4
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%sdefault:\n%sbreak;\n"
+argument_list|,
+name|indents
+index|[
+name|indent
+operator|-
+literal|2
+index|]
+argument_list|,
+name|indents
+index|[
+name|indent
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"%scase "
 argument_list|,
 name|indents
@@ -6267,7 +6317,7 @@ operator|->
 name|code
 expr_stmt|;
 block|}
-comment|/* Now that most mode and code tests have been done, we can write out 	 a label for an inner node, if we haven't already. */
+comment|/* Now that most mode and code tests have been done, we can write out 	 a label for an inner node, if we haven't already.  */
 if|if
 condition|(
 name|p
@@ -6487,26 +6537,25 @@ literal|1
 decl_stmt|;
 name|printf
 argument_list|(
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|==
-name|HOST_BITS_PER_INT
-literal|"XWINT (x%d, 0) == %d%s&& "
+literal|"XWINT (x%d, 0) == "
 argument_list|,
-else|#
-directive|else
-literal|"XWINT (x%d, 0) == %ld%s&& "
-argument_list|,
-endif|#
-directive|endif
 name|depth
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|p
 operator|->
 name|elt_zero_wide
 operator|+
 name|offset
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s&& "
 argument_list|,
 name|offset
 condition|?
@@ -7728,98 +7777,6 @@ block|}
 end_block
 
 begin_function
-specifier|static
-name|char
-modifier|*
-name|concat
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-name|char
-modifier|*
-name|s1
-decl_stmt|,
-decl|*
-name|s2
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-specifier|register
-name|char
-modifier|*
-name|tem
-decl_stmt|;
-if|if
-condition|(
-name|s1
-operator|==
-literal|0
-condition|)
-return|return
-name|s2
-return|;
-if|if
-condition|(
-name|s2
-operator|==
-literal|0
-condition|)
-return|return
-name|s1
-return|;
-name|tem
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|s1
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|s2
-argument_list|)
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|tem
-argument_list|,
-name|s1
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|tem
-argument_list|,
-literal|" "
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|tem
-argument_list|,
-name|s2
-argument_list|)
-expr_stmt|;
-return|return
-name|tem
-return|;
-block|}
-end_block
-
-begin_function
 name|char
 modifier|*
 name|xrealloc
@@ -7909,18 +7866,55 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|fatal
-parameter_list|(
-name|s
-parameter_list|)
+name|VPROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+name|format
+operator|,
+operator|...
+operator|)
+argument_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|__STDC__
 name|char
 modifier|*
-name|s
+name|format
 decl_stmt|;
-block|{
+endif|#
+directive|endif
+name|va_list
+name|ap
+decl_stmt|;
+name|VA_START
+argument_list|(
+name|ap
+argument_list|,
+name|format
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__STDC__
+name|format
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|stderr
@@ -7928,11 +7922,18 @@ argument_list|,
 literal|"genrecog: "
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|vfprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|s
+name|format
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -7957,7 +7958,7 @@ name|FATAL_EXIT_CODE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
@@ -8101,6 +8102,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"#include \"config.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"system.h\"\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -8249,7 +8255,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   This is the same as the order in the machine description of\n\    the entry that matched.  This number can be used as an index into\n\    entry that matched.  This number can be used as an index into various\n\    insn_* tables, such as insn_templates, insn_outfun, and insn_n_operands\n\    (found in insn-output.c).\n\n"
+literal|"   This is the same as the order in the machine description of\n\    the entry that matched.  This number can be used as an index into various\n\    insn_* tables, such as insn_templates, insn_outfun, and insn_n_operands\n\    (found in insn-output.c).\n\n"
 argument_list|)
 expr_stmt|;
 name|printf

@@ -31,6 +31,12 @@ directive|include
 file|"convert.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"toplev.h"
+end_include
+
 begin_comment
 comment|/* Change of width--truncation and extension of integers or reals--    is represented with NOP_EXPR.  Proper functioning of many things    assumes that no other conversions can be NOP_EXPRs.     Conversion between integer and pointer is represented with CONVERT_EXPR.    Converting integer to real uses FLOAT_EXPR    and real to integer uses FIX_TRUNC_EXPR.     Here is a list of all the functions that assume that widening and    narrowing is always done with a NOP_EXPR:      In convert.c, convert_to_integer.      In c-typeck.c, build_binary_op (boolean ops), and truthvalue_conversion.      In expr.c: expand_expr, for operands of a MULT_EXPR.      In fold-const.c: fold.      In tree.c: get_narrower and get_unwidened.  */
 end_comment

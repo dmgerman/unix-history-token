@@ -1,18 +1,46 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to emit insns as rtl.    Copyright (C) 1987, 1988, 1991, 1994, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to emit insns as rtl.    Copyright (C) 1987, 88, 91, 94, 95, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"hconfig.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"system.h"
 end_include
 
 begin_include
@@ -60,44 +88,61 @@ name|obstack_chunk_free
 value|free
 end_define
 
-begin_function_decl
-specifier|extern
-name|void
-name|free
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|read_rtx
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|fatal
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PVPROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_1
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|fancy_abort
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|insn_name_ptr
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -184,6 +229,128 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|void
+name|max_operand_1
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|max_operand_vec
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|print_code
+name|PROTO
+argument_list|(
+operator|(
+name|RTX_CODE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|gen_exp
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|gen_insn
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|gen_expand
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|gen_split
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|output_add_clobbers
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|output_init_mov_optab
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
 
 begin_function
 specifier|static
@@ -668,7 +835,7 @@ name|MATCH_OP_DUP
 case|:
 name|printf
 argument_list|(
-literal|"gen_rtx (GET_CODE (operand%d), GET_MODE (operand%d)"
+literal|"gen_rtx (GET_CODE (operand%d), "
 argument_list|,
 name|XINT
 argument_list|(
@@ -676,12 +843,40 @@ name|x
 argument_list|,
 literal|0
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|GET_MODE
+argument_list|(
+name|x
+argument_list|)
+operator|==
+name|VOIDmode
+condition|)
+name|printf
+argument_list|(
+literal|"GET_MODE (operand%d)"
 argument_list|,
 name|XINT
 argument_list|(
 name|x
 argument_list|,
 literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%smode"
+argument_list|,
+name|GET_MODE_NAME
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|x
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -823,7 +1018,7 @@ name|MATCH_SCRATCH
 case|:
 name|printf
 argument_list|(
-literal|"gen_rtx (SCRATCH, %smode, 0)"
+literal|"gen_rtx_SCRATCH (%smode)"
 argument_list|,
 name|GET_MODE_NAME
 argument_list|(
@@ -925,27 +1120,28 @@ literal|"const_true_rtx"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|printf
 argument_list|(
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|==
-name|HOST_BITS_PER_INT
-literal|"GEN_INT (%d)"
+literal|"GEN_INT ("
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
-else|#
-directive|else
-literal|"GEN_INT (%ld)"
-argument_list|,
-endif|#
-directive|endif
 name|INTVAL
 argument_list|(
 name|x
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|")"
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 case|case
 name|CONST_DOUBLE
@@ -954,10 +1150,12 @@ comment|/* These shouldn't be written in MD files.  Instead, the appropriate 	 r
 name|abort
 argument_list|()
 expr_stmt|;
+default|default:
+break|break;
 block|}
 name|printf
 argument_list|(
-literal|"gen_rtx ("
+literal|"gen_rtx_"
 argument_list|)
 expr_stmt|;
 name|print_code
@@ -967,7 +1165,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", %smode"
+literal|" (%smode"
 argument_list|,
 name|GET_MODE_NAME
 argument_list|(
@@ -1198,7 +1396,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/* See if the pattern for this insn ends with a group of CLOBBERs of (hard)      registers or MATCH_SCRATCHes.  If so, store away the information for      later. */
+comment|/* See if the pattern for this insn ends with a group of CLOBBERs of (hard)      registers or MATCH_SCRATCHes.  If so, store away the information for      later.  */
 if|if
 condition|(
 name|XVEC
@@ -1741,7 +1939,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"  return gen_rtx (PARALLEL, VOIDmode, gen_rtvec (%d"
+literal|"  return gen_rtx_PARALLEL (VOIDmode, gen_rtvec (%d"
 argument_list|,
 name|XVECLEN
 argument_list|(
@@ -2494,17 +2692,7 @@ block|}
 comment|/* Call `gen_sequence' to make a SEQUENCE out of all the      insns emitted within this gen_... function.  */
 name|printf
 argument_list|(
-literal|" _done:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"  _val = gen_sequence ();\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" _fail:\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3008,17 +3196,7 @@ block|}
 comment|/* Call `gen_sequence' to make a SEQUENCE out of all the      insns emitted within this gen_... function.  */
 name|printf
 argument_list|(
-literal|" _done:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"  _val = gen_sequence ();\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" _fail:\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3073,11 +3251,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"{\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  int i;\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3239,7 +3412,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|printf
@@ -3527,22 +3700,55 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|fatal
-parameter_list|(
-name|s
-parameter_list|,
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
+name|VPROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+name|format
+operator|,
+operator|...
+operator|)
+argument_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|__STDC__
 name|char
 modifier|*
-name|s
+name|format
 decl_stmt|;
-block|{
+endif|#
+directive|endif
+name|va_list
+name|ap
+decl_stmt|;
+name|VA_START
+argument_list|(
+name|ap
+argument_list|,
+name|format
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__STDC__
+name|format
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|stderr
@@ -3550,15 +3756,18 @@ argument_list|,
 literal|"genemit: "
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|vfprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|s
+name|format
 argument_list|,
-name|a1
-argument_list|,
-name|a2
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3574,7 +3783,7 @@ name|FATAL_EXIT_CODE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
@@ -3697,6 +3906,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#include \"system.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#include \"rtl.h\"\n"
 argument_list|)
 expr_stmt|;
@@ -3708,6 +3922,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"#include \"real.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"flags.h\"\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3732,6 +3951,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#include \"reload.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"extern char *insn_operand_constraint[][MAX_RECOG_OPERANDS];\n\n"
 argument_list|)
 expr_stmt|;
@@ -3747,12 +3971,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define FAIL goto _fail\n\n"
+literal|"#define FAIL do {end_sequence (); return _val;} while (0)\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define DONE goto _done\n\n"
+literal|"#define DONE do {_val = gen_sequence (); end_sequence (); return _val;} while (0)\n"
 argument_list|)
 expr_stmt|;
 comment|/* Read the machine description.  */

@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Di386 -Dunix -Asystem(unix) -Asystem(svr3) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -Asystem(svr3)"
 end_define
 
 begin_undef
@@ -90,8 +90,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-define|\
-value|"-D_M_I386 -D_M_I86 -D_M_I86SM -D_M_SDATA -D_M_STEXT \   -D_M_UNIX -D_M_XENIX \   -D_M_SYS5 -D_M_SYSV -D_M_SYS3 -D_M_SYSIII \   -D_M_COFF -D_M_BITFIELDS -D_M_WORDSWAP \   %{scoxpg3:-D_XOPEN_SOURCE -D_STRICT_NAMES} \   %{!scoxpg3:%{posix:-D_POSIX_SOURCE -D_STRICT_NAMES}} \   %{!scoxpg3:%{!posix:\     %{ansi:-D_STRICT_NAMES}%{!ansi:\     -DM_I386 -DM_I86 -DM_I86SM -DM_SDATA -DM_STEXT \     -DM_UNIX -DM_XENIX \     -DM_SYS5 -DM_SYSV -DM_SYS3 -DM_SYSIII \     -DM_COFF -DM_BITFIELDS -DM_WORDSWAP \     %{scointl:-D_M_INTERNAT -DM_INTERNAT} \     %{traditional:-D_KR -D_SVID -D_NO_PROTOTYPE}}}}"
+value|"%(cpp_cpu) \   -D_M_I386 -D_M_I86 -D_M_I86SM -D_M_SDATA -D_M_STEXT \   -D_M_UNIX -D_M_XENIX \   -D_M_SYS5 -D_M_SYSV -D_M_SYS3 -D_M_SYSIII \   -D_M_COFF -D_M_BITFIELDS -D_M_WORDSWAP \   %{scoxpg3:-D_XOPEN_SOURCE -D_STRICT_NAMES} \   %{!scoxpg3:%{posix:-D_POSIX_SOURCE -D_STRICT_NAMES}} \   %{!scoxpg3:%{!posix:\     %{ansi:-D_STRICT_NAMES}%{!ansi:\     -DM_I386 -DM_I86 -DM_I86SM -DM_SDATA -DM_STEXT \     -DM_UNIX -DM_XENIX \     -DM_SYS5 -DM_SYSV -DM_SYS3 -DM_SYSIII \     -DM_COFF -DM_BITFIELDS -DM_WORDSWAP \     %{scointl:-D_M_INTERNAT -DM_INTERNAT} \     %{traditional:-D_KR -D_SVID -D_NO_PROTOTYPE}}}}"
 end_define
 
 end_unit

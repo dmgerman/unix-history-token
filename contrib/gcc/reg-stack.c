@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Register to Stack convert for GNU compiler.    Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Register to Stack convert for GNU compiler.    Copyright (C) 1992, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -13,13 +13,13 @@ end_escape
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"system.h"
 end_include
 
 begin_include
@@ -56,6 +56,18 @@ begin_include
 include|#
 directive|include
 file|"flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"insn-flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"toplev.h"
 end_include
 
 begin_ifdef
@@ -185,7 +197,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is where the BLOCK_NUM values are really stored.  This is set    up by find_blocks and used there and in life_analysis.  It can be used    later, but only to look up an insn that is the head or tail of some    block.  life_analysis and the stack register conversion process can    add insns within a block. */
+comment|/* This is where the BLOCK_NUM values are really stored.  This is set    up by find_blocks and used there and in life_analysis.  It can be used    later, but only to look up an insn that is the head or tail of some    block.  life_analysis and the stack register conversion process can    add insns within a block.  */
 end_comment
 
 begin_decl_stmt
@@ -234,7 +246,7 @@ value|(FP_mode_reg[(regno)-FIRST_STACK_REG][(int)(mode)])
 end_define
 
 begin_comment
-comment|/* Get the basic block number of an insn.  See note at block_number    definition are validity of this information. */
+comment|/* Get the basic block number of an insn.  See note at block_number    definition are validity of this information.  */
 end_comment
 
 begin_define
@@ -255,107 +267,535 @@ name|forced_labels
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|rtx
-name|gen_jump
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|gen_movdf
-argument_list|()
-decl_stmt|,
-name|gen_movxf
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|find_regno_note
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|emit_jump_insn_before
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|emit_label_after
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Forward declarations */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
-name|find_blocks
-parameter_list|()
-function_decl|;
-end_function_decl
+name|mark_regs_pat
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|HARD_REG_SET
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-specifier|static
-name|uses_reg_or_mem
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
-name|stack_reg_life_analysis
-parameter_list|()
-function_decl|;
-end_function_decl
+name|straighten_stack
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|pop_stack
+name|PROTO
+argument_list|(
+operator|(
+name|stack
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|record_label_references
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|rtx
+modifier|*
+name|get_true_reg
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|constrain_asm_operands
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|,
+name|rtx
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+expr|enum
+name|reg_class
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|record_asm_reg_life
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|,
+name|rtx
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|record_reg_life_pat
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|HARD_REG_SET
+operator|*
+operator|,
+name|HARD_REG_SET
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|get_asm_operand_lengths
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|record_reg_life
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|int
+operator|,
+name|stack
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|find_blocks
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|rtx
+name|stack_result
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|stack_reg_life_analysis
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|HARD_REG_SET
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|replace_reg
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|remove_regno_note
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+expr|enum
+name|reg_note
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|get_hard_regnum
+name|PROTO
+argument_list|(
+operator|(
+name|stack
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|delete_insn_for_stacker
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|rtx
+name|emit_pop_insn
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|,
+name|rtx
+operator|,
+name|rtx
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|emit_swap_insn
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|move_for_stack_reg
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|swap_rtx_condition
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|compare_for_stack_reg
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|subst_stack_regs_pat
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|subst_asm_stack_regs
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|,
+name|rtx
+operator|*
+operator|,
+name|rtx
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|subst_stack_regs
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|change_stack
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|,
+name|stack
+operator|,
+name|rtx
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|goto_block_pat
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|stack
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|convert_regs
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|print_blocks
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|dump_stack_info
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -503,6 +943,16 @@ decl_stmt|;
 name|int
 name|top
 decl_stmt|;
+comment|/* If there is only a single register on the stack, then the stack is      already in increasing order and no reorganization is needed.       Similarly if the stack is empty.  */
+if|if
+condition|(
+name|regstack
+operator|->
+name|top
+operator|<=
+literal|0
+condition|)
+return|return;
 name|temp_stack
 operator|.
 name|reg_set
@@ -557,6 +1007,128 @@ argument_list|,
 name|emit_insn_after
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Pop a register from the stack */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|pop_stack
+parameter_list|(
+name|regstack
+parameter_list|,
+name|regno
+parameter_list|)
+name|stack
+name|regstack
+decl_stmt|;
+name|int
+name|regno
+decl_stmt|;
+block|{
+name|int
+name|top
+init|=
+name|regstack
+operator|->
+name|top
+decl_stmt|;
+name|CLEAR_HARD_REG_BIT
+argument_list|(
+name|regstack
+operator|->
+name|reg_set
+argument_list|,
+name|regno
+argument_list|)
+expr_stmt|;
+name|regstack
+operator|->
+name|top
+operator|--
+expr_stmt|;
+comment|/* If regno was not at the top of stack then adjust stack */
+if|if
+condition|(
+name|regstack
+operator|->
+name|reg
+index|[
+name|top
+index|]
+operator|!=
+name|regno
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|regstack
+operator|->
+name|top
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+if|if
+condition|(
+name|regstack
+operator|->
+name|reg
+index|[
+name|i
+index|]
+operator|==
+name|regno
+condition|)
+block|{
+name|int
+name|j
+decl_stmt|;
+for|for
+control|(
+name|j
+operator|=
+name|i
+init|;
+name|j
+operator|<
+name|top
+condition|;
+name|j
+operator|++
+control|)
+name|regstack
+operator|->
+name|reg
+index|[
+name|j
+index|]
+operator|=
+name|regstack
+operator|->
+name|reg
+index|[
+name|j
+operator|+
+literal|1
+index|]
+expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 end_function
 
@@ -760,8 +1332,9 @@ argument_list|)
 expr_stmt|;
 block|{
 specifier|static
+name|int
 name|initialised
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -816,10 +1389,8 @@ argument_list|,
 name|mode
 argument_list|)
 operator|=
-name|gen_rtx
+name|gen_rtx_REG
 argument_list|(
-name|REG
-argument_list|,
 name|mode
 argument_list|,
 name|i
@@ -852,10 +1423,8 @@ argument_list|,
 name|mode
 argument_list|)
 operator|=
-name|gen_rtx
+name|gen_rtx_REG
 argument_list|(
-name|REG
-argument_list|,
 name|mode
 argument_list|,
 name|i
@@ -877,10 +1446,11 @@ name|RTX_CODE
 name|code
 decl_stmt|;
 specifier|register
+name|int
 name|before_function_beg
-operator|=
+init|=
 literal|1
-expr_stmt|;
+decl_stmt|;
 name|max_uid
 operator|=
 literal|0
@@ -976,7 +1546,7 @@ name|before_function_beg
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Remember whether or not this insn mentions an FP regs. 	   Check JUMP_INSNs too, in case someone creates a funny PARALLEL. */
+comment|/* Remember whether or not this insn mentions an FP regs. 	   Check JUMP_INSNs too, in case someone creates a funny PARALLEL.  */
 if|if
 condition|(
 name|GET_RTX_CLASS
@@ -1086,7 +1656,7 @@ operator|!
 name|stack_reg_seen
 condition|)
 return|return;
-comment|/* If there are stack registers, there must be at least one block. */
+comment|/* If there are stack registers, there must be at least one block.  */
 if|if
 condition|(
 operator|!
@@ -1095,7 +1665,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* Allocate some tables that last till end of compiling this function      and some needed only in find_blocks and life_analysis. */
+comment|/* Allocate some tables that last till end of compiling this function      and some needed only in find_blocks and life_analysis.  */
 name|block_begin
 operator|=
 operator|(
@@ -1237,7 +1807,7 @@ operator|&
 name|stackentry
 argument_list|)
 expr_stmt|;
-comment|/* Dump the life analysis debug information before jump      optimization, as that will destroy the LABEL_REFS we keep the      information in. */
+comment|/* Dump the life analysis debug information before jump      optimization, as that will destroy the LABEL_REFS we keep the      information in.  */
 if|if
 condition|(
 name|file
@@ -1272,7 +1842,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Check PAT, which is in INSN, for LABEL_REFs.  Add INSN to the    label's chain of references, and note which insn contains each    reference. */
+comment|/* Check PAT, which is in INSN, for LABEL_REFs.  Add INSN to the    label's chain of references, and note which insn contains each    reference.  */
 end_comment
 
 begin_function
@@ -1343,7 +1913,18 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* Don't make a duplicate in the code_label's chain. */
+comment|/* If this is an undefined label, LABEL_REFS (label) contains          garbage.  */
+if|if
+condition|(
+name|INSN_UID
+argument_list|(
+name|label
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
+comment|/* Don't make a duplicate in the code_label's chain.  */
 for|for
 control|(
 name|ref
@@ -1504,7 +2085,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return a pointer to the REG expression within PAT.  If PAT is not a    REG, possible enclosed by a conversion rtx, return the inner part of    PAT that stopped the search. */
+comment|/* Return a pointer to the REG expression within PAT.  If PAT is not a    REG, possible enclosed by a conversion rtx, return the inner part of    PAT that stopped the search.  */
 end_comment
 
 begin_function
@@ -1537,7 +2118,7 @@ block|{
 case|case
 name|SUBREG
 case|:
-comment|/* eliminate FP subregister accesses in favour of the 		   actual FP register in use. */
+comment|/* eliminate FP subregister accesses in favour of the 		   actual FP register in use.  */
 block|{
 name|rtx
 name|subreg
@@ -1612,7 +2193,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Scan the OPERANDS and OPERAND_CONSTRAINTS of an asm_operands.    N_OPERANDS is the total number of operands.  Return which alternative    matched, or -1 is no alternative matches.     OPERAND_MATCHES is an array which indicates which operand this    operand matches due to the constraints, or -1 if no match is required.    If two operands match by coincidence, but are not required to match by    the constraints, -1 is returned.     OPERAND_CLASS is an array which indicates the smallest class    required by the constraints.  If the alternative that matches calls    for some class `class', and the operand matches a subclass of `class',    OPERAND_CLASS is set to `class' as required by the constraints, not to    the subclass. If an alternative allows more than one class,    OPERAND_CLASS is set to the smallest class that is a union of the    allowed classes. */
+comment|/* Scan the OPERANDS and OPERAND_CONSTRAINTS of an asm_operands.    N_OPERANDS is the total number of operands.  Return which alternative    matched, or -1 is no alternative matches.     OPERAND_MATCHES is an array which indicates which operand this    operand matches due to the constraints, or -1 if no match is required.    If two operands match by coincidence, but are not required to match by    the constraints, -1 is returned.     OPERAND_CLASS is an array which indicates the smallest class    required by the constraints.  If the alternative that matches calls    for some class `class', and the operand matches a subclass of `class',    OPERAND_CLASS is set to `class' as required by the constraints, not to    the subclass. If an alternative allows more than one class,    OPERAND_CLASS is set to the smallest class that is a union of the    allowed classes.  */
 end_comment
 
 begin_function
@@ -1712,6 +2293,18 @@ name|j
 index|]
 expr_stmt|;
 comment|/* Compute the number of alternatives in the operands.  reload has      already guaranteed that all operands have the same number of      alternatives.  */
+if|if
+condition|(
+name|n_operands
+operator|==
+literal|0
+condition|)
+name|n_alternatives
+operator|=
+literal|0
+expr_stmt|;
+else|else
+block|{
 name|n_alternatives
 operator|=
 literal|1
@@ -1740,6 +2333,7 @@ operator|==
 literal|','
 operator|)
 expr_stmt|;
+block|}
 name|this_alternative
 operator|=
 literal|0
@@ -1948,12 +2542,12 @@ case|:
 case|case
 literal|'%'
 case|:
-comment|/* Ignore these. */
+comment|/* Ignore these.  */
 break|break;
 case|case
 literal|'#'
 case|:
-comment|/* Ignore rest of this alternative. */
+comment|/* Ignore rest of this alternative.  */
 while|while
 condition|(
 operator|*
@@ -1986,7 +2580,7 @@ case|:
 case|case
 literal|'5'
 case|:
-comment|/* This operand must be the same as a previous one. 		   This kind of constraint is used for instructions such 		   as add when they take only two operands.  		   Note that the lower-numbered operand is passed first. */
+comment|/* This operand must be the same as a previous one. 		   This kind of constraint is used for instructions such 		   as add when they take only two operands.  		   Note that the lower-numbered operand is passed first.  */
 if|if
 condition|(
 name|operands_match_p
@@ -2023,7 +2617,7 @@ break|break;
 case|case
 literal|'p'
 case|:
-comment|/* p is used for address_operands.  Since this is an asm, 		   just to make sure that the operand is valid for Pmode. */
+comment|/* p is used for address_operands.  Since this is an asm, 		   just to make sure that the operand is valid for Pmode.  */
 if|if
 condition|(
 name|strict_memory_address_p
@@ -2165,7 +2759,7 @@ break|break;
 case|case
 literal|'X'
 case|:
-comment|/* This is used for a MATCH_SCRATCH in the cases when we 		   don't actually need anything.  So anything goes any time. */
+comment|/* This is used for a MATCH_SCRATCH in the cases when we 		   don't actually need anything.  So anything goes any time.  */
 name|win
 operator|=
 literal|1
@@ -2642,7 +3236,7 @@ name|this_alternative
 operator|++
 expr_stmt|;
 block|}
-comment|/* For operands constrained to match another operand, copy the other      operand's class to this operand's class. */
+comment|/* For operands constrained to match another operand, copy the other      operand's class to this operand's class.  */
 for|for
 control|(
 name|j
@@ -2695,7 +3289,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Record the life info of each stack reg in INSN, updating REGSTACK.    N_INPUTS is the number of inputs; N_OUTPUTS the outputs.  CONSTRAINTS    is an array of the constraint strings used in the asm statement.    OPERANDS is an array of all operands for the insn, and is assumed to    contain all output operands, then all inputs operands.     There are many rules that an asm statement for stack-like regs must    follow.  Those rules are explained at the top of this file: the rule    numbers below refer to that explanation. */
+comment|/* Record the life info of each stack reg in INSN, updating REGSTACK.    N_INPUTS is the number of inputs; N_OUTPUTS the outputs.  CONSTRAINTS    is an array of the constraint strings used in the asm statement.    OPERANDS is an array of all operands for the insn, and is assumed to    contain all output operands, then all inputs operands.     There are many rules that an asm statement for stack-like regs must    follow.  Those rules are explained at the top of this file: the rule    numbers below refer to that explanation.  */
 end_comment
 
 begin_function
@@ -2850,7 +3444,7 @@ name|malformed_asm
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Strip SUBREGs here to make the following code simpler. */
+comment|/* Strip SUBREGs here to make the following code simpler.  */
 for|for
 control|(
 name|i
@@ -3043,7 +3637,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Enforce rule #4: Output operands must specifically indicate which      reg an output appears in after an asm.  "=f" is not allowed: the      operand constraints must select a class with a single reg.       Also enforce rule #5: Output operands must start at the top of      the reg-stack: output operands may not "skip" a reg. */
+comment|/* Enforce rule #4: Output operands must specifically indicate which      reg an output appears in after an asm.  "=f" is not allowed: the      operand constraints must select a class with a single reg.       Also enforce rule #5: Output operands must start at the top of      the reg-stack: output operands may not "skip" a reg.  */
 name|bzero
 argument_list|(
 operator|(
@@ -3081,6 +3675,7 @@ name|i
 index|]
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|reg_class_size
@@ -3125,6 +3720,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
+block|}
 comment|/* Search for first non-popped reg.  */
 for|for
 control|(
@@ -3192,7 +3788,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Enforce rule #2: All implicitly popped input regs must be closer      to the top of the reg-stack than any input that is not implicitly      popped. */
+comment|/* Enforce rule #2: All implicitly popped input regs must be closer      to the top of the reg-stack than any input that is not implicitly      popped.  */
 name|bzero
 argument_list|(
 operator|(
@@ -3233,7 +3829,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* An input reg is implicitly popped if it is tied to an 	   output, or if there is a CLOBBER for it. */
+comment|/* An input reg is implicitly popped if it is tied to an 	   output, or if there is a CLOBBER for it.  */
 name|int
 name|j
 decl_stmt|;
@@ -3360,7 +3956,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Enfore rule #3: If any input operand uses the "f" constraint, all      output constraints must use the "&" earlyclobber.       ???  Detect this more deterministically by having constraint_asm_operands      record any earlyclobber. */
+comment|/* Enfore rule #3: If any input operand uses the "f" constraint, all      output constraints must use the "&" earlyclobber.       ???  Detect this more deterministically by having constraint_asm_operands      record any earlyclobber.  */
 for|for
 control|(
 name|i
@@ -3445,10 +4041,8 @@ argument_list|(
 name|insn
 argument_list|)
 operator|=
-name|gen_rtx
+name|gen_rtx_USE
 argument_list|(
-name|USE
-argument_list|,
 name|VOIDmode
 argument_list|,
 name|const0_rtx
@@ -3494,6 +4088,7 @@ argument_list|(
 name|op
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|stack_regs_mentioned_p
@@ -3506,6 +4101,7 @@ argument_list|()
 expr_stmt|;
 else|else
 continue|continue;
+block|}
 comment|/* Each destination is dead before this insn.  If the 	 destination is not used after this insn, record this with 	 REG_UNUSED.  */
 if|if
 condition|(
@@ -3527,10 +4123,8 @@ argument_list|(
 name|insn
 argument_list|)
 operator|=
-name|gen_rtx
+name|gen_rtx_EXPR_LIST
 argument_list|(
-name|EXPR_LIST
-argument_list|,
 name|REG_UNUSED
 argument_list|,
 name|op
@@ -3582,6 +4176,7 @@ name|i
 index|]
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|stack_regs_mentioned_p
@@ -3597,6 +4192,7 @@ argument_list|()
 expr_stmt|;
 else|else
 continue|continue;
+block|}
 comment|/* If an input is dead after the insn, record a death note. 	 But don't record a death note if there is already a death note, 	 or if the input is also an output.  */
 if|if
 condition|(
@@ -3646,10 +4242,8 @@ argument_list|(
 name|insn
 argument_list|)
 operator|=
-name|gen_rtx
+name|gen_rtx_EXPR_LIST
 argument_list|(
-name|EXPR_LIST
-argument_list|,
 name|REG_DEAD
 argument_list|,
 name|operands
@@ -3683,7 +4277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Scan PAT, which is part of INSN, and record registers appearing in    a SET_DEST in DEST, and other registers in SRC.     This function does not know about SET_DESTs that are both input and    output (such as ZERO_EXTRACT) - this cannot happen on a 387. */
+comment|/* Scan PAT, which is part of INSN, and record registers appearing in    a SET_DEST in DEST, and other registers in SRC.     This function does not know about SET_DESTs that are both input and    output (such as ZERO_EXTRACT) - this cannot happen on a 387.  */
 end_comment
 
 begin_function
@@ -3735,6 +4329,7 @@ argument_list|(
 name|pat
 argument_list|)
 operator|||
+operator|(
 name|GET_CODE
 argument_list|(
 name|pat
@@ -3749,6 +4344,7 @@ argument_list|(
 name|pat
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -3819,9 +4415,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* We don't need to consider either of these cases. */
+comment|/* We don't need to consider either of these cases.  */
 if|if
 condition|(
+operator|(
 name|GET_CODE
 argument_list|(
 name|pat
@@ -3831,6 +4428,7 @@ name|USE
 operator|&&
 operator|!
 name|douse
+operator|)
 operator|||
 name|GET_CODE
 argument_list|(
@@ -3959,7 +4557,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Calculate the number of inputs and outputs in BODY, an    asm_operands.  N_OPERANDS is the total number of operands, and    N_INPUTS and N_OUTPUTS are pointers to ints into which the results are    placed. */
+comment|/* Calculate the number of inputs and outputs in BODY, an    asm_operands.  N_OPERANDS is the total number of operands, and    N_INPUTS and N_OUTPUTS are pointers to ints into which the results are    placed.  */
 end_comment
 
 begin_function
@@ -4140,7 +4738,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Scan INSN, which is in BLOCK, and record the life& death of stack    registers in REGSTACK.  This function is called to process insns from    the last insn in a block to the first.  The actual scanning is done in    record_reg_life_pat.     If a register is live after a CALL_INSN, but is not a value return    register for that CALL_INSN, then code is emitted to initialize that    register.  The block_end[] data is kept accurate.     Existing death and unset notes for stack registers are deleted    before processing the insn. */
+comment|/* Scan INSN, which is in BLOCK, and record the life& death of stack    registers in REGSTACK.  This function is called to process insns from    the last insn in a block to the first.  The actual scanning is done in    record_reg_life_pat.     If a register is live after a CALL_INSN, but is not a value return    register for that CALL_INSN, then code is emitted to initialize that    register.  The block_end[] data is kept accurate.     Existing death and unset notes for stack registers are deleted    before processing the insn.  */
 end_comment
 
 begin_function
@@ -4273,7 +4871,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Process all patterns in the insn. */
+comment|/* Process all patterns in the insn.  */
 name|n_operands
 operator|=
 name|asm_noperands
@@ -4291,7 +4889,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* This insn is an `asm' with operands.  Decode the operands, 	 decide how many are inputs, and record the life information. */
+comment|/* This insn is an `asm' with operands.  Decode the operands, 	 decide how many are inputs, and record the life information.  */
 name|rtx
 name|operands
 index|[
@@ -4521,10 +5119,8 @@ argument_list|(
 name|insn
 argument_list|)
 operator|=
-name|gen_rtx
+name|gen_rtx_EXPR_LIST
 argument_list|(
-name|EXPR_LIST
-argument_list|,
 name|REG_DEAD
 argument_list|,
 name|FP_MODE_REG
@@ -4555,10 +5151,8 @@ argument_list|(
 name|insn
 argument_list|)
 operator|=
-name|gen_rtx
+name|gen_rtx_EXPR_LIST
 argument_list|(
-name|EXPR_LIST
-argument_list|,
 name|REG_UNUSED
 argument_list|,
 name|FP_MODE_REG
@@ -4588,7 +5182,7 @@ block|{
 name|int
 name|reg
 decl_stmt|;
-comment|/* There might be a reg that is live after a function call.              Initialize it to zero so that the program does not crash.  See 	     comment towards the end of stack_reg_life_analysis(). */
+comment|/* There might be a reg that is live after a function call.              Initialize it to zero so that the program does not crash.  See 	     comment towards the end of stack_reg_life_analysis().  */
 for|for
 control|(
 name|reg
@@ -4627,13 +5221,11 @@ name|init
 decl_stmt|,
 name|pat
 decl_stmt|;
-comment|/* The insn will use virtual register numbers, and so 	           convert_regs is expected to process these.  But BLOCK_NUM 	           cannot be used on these insns, because they do not appear in 	           block_number[]. */
+comment|/* The insn will use virtual register numbers, and so 	           convert_regs is expected to process these.  But BLOCK_NUM 	           cannot be used on these insns, because they do not appear in 	           block_number[].  */
 name|pat
 operator|=
-name|gen_rtx
+name|gen_rtx_SET
 argument_list|(
-name|SET
-argument_list|,
 name|VOIDmode
 argument_list|,
 name|FP_MODE_REG
@@ -4674,7 +5266,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* If the CALL_INSN was the end of a block, move the 	           block_end to point to the new insn. */
+comment|/* If the CALL_INSN was the end of a block, move the 	           block_end to point to the new insn.  */
 if|if
 condition|(
 name|block_end
@@ -4729,7 +5321,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Find all basic blocks of the function, which starts with FIRST.    For each JUMP_INSN, build the chain of LABEL_REFS on each CODE_LABEL. */
+comment|/* Find all basic blocks of the function, which starts with FIRST.    For each JUMP_INSN, build the chain of LABEL_REFS on each CODE_LABEL.  */
 end_comment
 
 begin_function
@@ -4766,7 +5358,7 @@ name|label_value_list
 init|=
 literal|0
 decl_stmt|;
-comment|/* Record where all the blocks start and end.      Record which basic blocks control can drop in to. */
+comment|/* Record where all the blocks start and end.      Record which basic blocks control can drop in to.  */
 name|block
 operator|=
 operator|-
@@ -4911,10 +5503,8 @@ name|REG_LABEL
 condition|)
 name|label_value_list
 operator|=
-name|gen_rtx
+name|gen_rtx_EXPR_LIST
 argument_list|(
-name|EXPR_LIST
-argument_list|,
 name|VOIDmode
 argument_list|,
 name|XEXP
@@ -5000,198 +5590,15 @@ argument_list|(
 name|insn
 argument_list|)
 decl_stmt|;
-name|int
-name|computed_jump
-init|=
-literal|0
-decl_stmt|;
 name|rtx
 name|x
 decl_stmt|;
 if|if
 condition|(
-name|GET_CODE
+name|computed_jump_p
 argument_list|(
-name|pat
+name|insn
 argument_list|)
-operator|==
-name|PARALLEL
-condition|)
-block|{
-name|int
-name|len
-init|=
-name|XVECLEN
-argument_list|(
-name|pat
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-name|int
-name|has_use_labelref
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|len
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|XVECEXP
-argument_list|(
-name|pat
-argument_list|,
-literal|0
-argument_list|,
-name|i
-argument_list|)
-argument_list|)
-operator|==
-name|USE
-operator|&&
-name|GET_CODE
-argument_list|(
-name|XEXP
-argument_list|(
-name|XVECEXP
-argument_list|(
-name|pat
-argument_list|,
-literal|0
-argument_list|,
-name|i
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-operator|==
-name|LABEL_REF
-condition|)
-name|has_use_labelref
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|has_use_labelref
-condition|)
-for|for
-control|(
-name|i
-operator|=
-name|len
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|XVECEXP
-argument_list|(
-name|pat
-argument_list|,
-literal|0
-argument_list|,
-name|i
-argument_list|)
-argument_list|)
-operator|==
-name|SET
-operator|&&
-name|SET_DEST
-argument_list|(
-name|XVECEXP
-argument_list|(
-name|pat
-argument_list|,
-literal|0
-argument_list|,
-name|i
-argument_list|)
-argument_list|)
-operator|==
-name|pc_rtx
-operator|&&
-name|uses_reg_or_mem
-argument_list|(
-name|SET_SRC
-argument_list|(
-name|XVECEXP
-argument_list|(
-name|pat
-argument_list|,
-literal|0
-argument_list|,
-name|i
-argument_list|)
-argument_list|)
-argument_list|)
-condition|)
-name|computed_jump
-operator|=
-literal|1
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|pat
-argument_list|)
-operator|==
-name|SET
-operator|&&
-name|SET_DEST
-argument_list|(
-name|pat
-argument_list|)
-operator|==
-name|pc_rtx
-operator|&&
-name|uses_reg_or_mem
-argument_list|(
-name|SET_SRC
-argument_list|(
-name|pat
-argument_list|)
-argument_list|)
-condition|)
-name|computed_jump
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|computed_jump
 condition|)
 block|{
 for|for
@@ -5215,10 +5622,8 @@ name|record_label_references
 argument_list|(
 name|insn
 argument_list|,
-name|gen_rtx
+name|gen_rtx_LABEL_REF
 argument_list|(
-name|LABEL_REF
-argument_list|,
 name|VOIDmode
 argument_list|,
 name|XEXP
@@ -5251,10 +5656,8 @@ name|record_label_references
 argument_list|(
 name|insn
 argument_list|,
-name|gen_rtx
+name|gen_rtx_LABEL_REF
 argument_list|(
-name|LABEL_REF
-argument_list|,
 name|VOIDmode
 argument_list|,
 name|XEXP
@@ -5276,178 +5679,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/* Return 1 if X contain a REG or MEM that is not in the constant pool.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|uses_reg_or_mem
-parameter_list|(
-name|x
-parameter_list|)
-name|rtx
-name|x
-decl_stmt|;
-block|{
-name|enum
-name|rtx_code
-name|code
-init|=
-name|GET_CODE
-argument_list|(
-name|x
-argument_list|)
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-if|if
-condition|(
-name|code
-operator|==
-name|REG
-operator|||
-operator|(
-name|code
-operator|==
-name|MEM
-operator|&&
-operator|!
-operator|(
-name|GET_CODE
-argument_list|(
-name|XEXP
-argument_list|(
-name|x
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-operator|==
-name|SYMBOL_REF
-operator|&&
-name|CONSTANT_POOL_ADDRESS_P
-argument_list|(
-name|XEXP
-argument_list|(
-name|x
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-operator|)
-operator|)
-condition|)
-return|return
-literal|1
-return|;
-name|fmt
-operator|=
-name|GET_RTX_FORMAT
-argument_list|(
-name|code
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|GET_RTX_LENGTH
-argument_list|(
-name|code
-argument_list|)
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-block|{
-if|if
-condition|(
-name|fmt
-index|[
-name|i
-index|]
-operator|==
-literal|'e'
-operator|&&
-name|uses_reg_or_mem
-argument_list|(
-name|XEXP
-argument_list|(
-name|x
-argument_list|,
-name|i
-argument_list|)
-argument_list|)
-condition|)
-return|return
-literal|1
-return|;
-if|if
-condition|(
-name|fmt
-index|[
-name|i
-index|]
-operator|==
-literal|'E'
-condition|)
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-name|XVECLEN
-argument_list|(
-name|x
-argument_list|,
-name|i
-argument_list|)
-condition|;
-name|j
-operator|++
-control|)
-if|if
-condition|(
-name|uses_reg_or_mem
-argument_list|(
-name|XVECEXP
-argument_list|(
-name|x
-argument_list|,
-name|i
-argument_list|,
-name|j
-argument_list|)
-argument_list|)
-condition|)
-return|return
-literal|1
-return|;
-block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -5560,7 +5791,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Determine the which registers are live at the start of each basic    block of the function whose first insn is FIRST.     First, if the function returns a real_type, mark the function    return type as live at each return point, as the RTL may not give any    hint that the register is live.     Then, start with the last block and work back to the first block.    Similarly, work backwards within each block, insn by insn, recording    which regs are dead and which are used (and therefore live) in the    hard reg set of block_stack_in[].     After processing each basic block, if there is a label at the start    of the block, propagate the live registers to all jumps to this block.     As a special case, if there are regs live in this block, that are    not live in a block containing a jump to this label, and the block    containing the jump has already been processed, we must propagate this    block's entry register life back to the block containing the jump, and    restart life analysis from there.     In the worst case, this function may traverse the insns    REG_STACK_SIZE times.  This is necessary, since a jump towards the end    of the insns may not know that a reg is live at a target that is early    in the insns.  So we back up and start over with the new reg live.     If there are registers that are live at the start of the function,    insns are emitted to initialize these registers.  Something similar is    done after CALL_INSNs in record_reg_life. */
+comment|/* Determine the which registers are live at the start of each basic    block of the function whose first insn is FIRST.     First, if the function returns a real_type, mark the function    return type as live at each return point, as the RTL may not give any    hint that the register is live.     Then, start with the last block and work back to the first block.    Similarly, work backwards within each block, insn by insn, recording    which regs are dead and which are used (and therefore live) in the    hard reg set of block_stack_in[].     After processing each basic block, if there is a label at the start    of the block, propagate the live registers to all jumps to this block.     As a special case, if there are regs live in this block, that are    not live in a block containing a jump to this label, and the block    containing the jump has already been processed, we must propagate this    block's entry register life back to the block containing the jump, and    restart life analysis from there.     In the worst case, this function may traverse the insns    REG_STACK_SIZE times.  This is necessary, since a jump towards the end    of the insns may not know that a reg is live at a target that is early    in the insns.  So we back up and start over with the new reg live.     If there are registers that are live at the start of the function,    insns are emitted to initialize these registers.  Something similar is    done after CALL_INSNs in record_reg_life.  */
 end_comment
 
 begin_function
@@ -5595,15 +5826,17 @@ name|retvalue
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|retvalue
 operator|=
 name|stack_result
 argument_list|(
 name|current_function_decl
 argument_list|)
+operator|)
 condition|)
 block|{
-comment|/* Find all RETURN insns and mark them. */
+comment|/* Find all RETURN insns and mark them.  */
 for|for
 control|(
 name|block
@@ -5652,7 +5885,7 @@ operator|+
 name|block
 argument_list|)
 expr_stmt|;
-comment|/* Mark off the end of last block if we "fall off" the end of the 	   function into the epilogue. */
+comment|/* Mark off the end of last block if we "fall off" the end of the 	   function into the epilogue.  */
 if|if
 condition|(
 name|GET_CODE
@@ -5748,7 +5981,7 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-comment|/* If the insn is a CALL_INSN, we need to ensure that 	     everything dies.  But otherwise don't process unless there 	     are some stack regs present. */
+comment|/* If the insn is a CALL_INSN, we need to ensure that 	     everything dies.  But otherwise don't process unless there 	     are some stack regs present.  */
 if|if
 condition|(
 name|GET_MODE
@@ -5786,7 +6019,7 @@ name|block
 index|]
 condition|)
 do|;
-comment|/* Set the state at the start of the block.  Mark that no 	 register mapping information known yet. */
+comment|/* Set the state at the start of the block.  Mark that no 	 register mapping information known yet.  */
 name|COPY_HARD_REG_SET
 argument_list|(
 name|block_stack_in
@@ -5811,7 +6044,7 @@ operator|=
 operator|-
 literal|2
 expr_stmt|;
-comment|/* If there is a label, propagate our register life to all jumps 	 to this label. */
+comment|/* If there is a label, propagate our register life to all jumps 	 to this label.  */
 if|if
 condition|(
 name|GET_CODE
@@ -5886,7 +6119,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* The block containing the jump has already been 		     processed.  If there are registers that were not known 		     to be live then, but are live now, we must back up 		     and restart life analysis from that point with the new 		     life information. */
+comment|/* The block containing the jump has already been 		     processed.  If there are registers that were not known 		     to be live then, but are live now, we must back up 		     and restart life analysis from that point with the new 		     life information.  */
 name|GO_IF_HARD_REG_SUBSET
 argument_list|(
 name|block_stack_in
@@ -5927,6 +6160,7 @@ name|must_restart
 operator|=
 literal|1
 expr_stmt|;
+break|break;
 name|win
 label|:
 empty_stmt|;
@@ -5967,8 +6201,8 @@ operator|-=
 literal|1
 expr_stmt|;
 block|}
-comment|/* If any reg is live at the start of the first block of a        function, then we must guarantee that the reg holds some value by        generating our own "load" of that register.  Otherwise a 387 would        fault trying to access an empty register. */
-comment|/* Load zero into each live register.  The fact that a register      appears live at the function start necessarily implies an error      in the user program: it means that (unless the offending code is *never*      executed) this program is using uninitialised floating point      variables.  In order to keep broken code like this happy, we initialise      those variables with zero.       Note that we are inserting virtual register references here:      these insns must be processed by convert_regs later.  Also, these      insns will not be in block_number, so BLOCK_NUM() will fail for them. */
+comment|/* If any reg is live at the start of the first block of a        function, then we must guarantee that the reg holds some value by        generating our own "load" of that register.  Otherwise a 387 would        fault trying to access an empty register.  */
+comment|/* Load zero into each live register.  The fact that a register      appears live at the function start necessarily implies an error      in the user program: it means that (unless the offending code is *never*      executed) this program is using uninitialised floating point      variables.  In order to keep broken code like this happy, we initialise      those variables with zero.       Note that we are inserting virtual register references here:      these insns must be processed by convert_regs later.  Also, these      insns will not be in block_number, so BLOCK_NUM() will fail for them.  */
 for|for
 control|(
 name|reg
@@ -6011,10 +6245,8 @@ name|init_rtx
 decl_stmt|;
 name|init_rtx
 operator|=
-name|gen_rtx
+name|gen_rtx_SET
 argument_list|(
-name|SET
-argument_list|,
 name|VOIDmode
 argument_list|,
 name|FP_MODE_REG
@@ -6076,7 +6308,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Replace REG, which is a pointer to a stack reg RTX, with an RTX for    the desired hard REGNO. */
+comment|/* Replace REG, which is a pointer to a stack reg RTX, with an RTX for    the desired hard REGNO.  */
 end_comment
 
 begin_function
@@ -6158,7 +6390,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Remove a note of type NOTE, which must be found, for register    number REGNO from INSN.  Remove only one such note. */
+comment|/* Remove a note of type NOTE, which must be found, for register    number REGNO from INSN.  Remove only one such note.  */
 end_comment
 
 begin_function
@@ -6278,7 +6510,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the hard register number of virtual register REG in REGSTACK.    The hard register number is relative to the top of the stack.  -1 is    returned if the register is not found. */
+comment|/* Find the hard register number of virtual register REG in REGSTACK.    The hard register number is relative to the top of the stack.  -1 is    returned if the register is not found.  */
 end_comment
 
 begin_function
@@ -6363,7 +6595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Delete INSN from the RTL.  Mark the insn, but don't remove it from    the chain of insns.  Doing so could confuse block_begin and block_end    if this were the only insn in the block. */
+comment|/* Delete INSN from the RTL.  Mark the insn, but don't remove it from    the chain of insns.  Doing so could confuse block_begin and block_end    if this were the only insn in the block.  */
 end_comment
 
 begin_function
@@ -6405,7 +6637,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Emit an insn to pop virtual register REG before or after INSN.    REGSTACK is the stack state after INSN and is updated to reflect this    pop.  WHEN is either emit_insn_before or emit_insn_after.  A pop insn    is represented as a SET whose destination is the register to be popped    and source is the top of stack.  A death note for the top of stack    cases the movdf pattern to pop. */
+comment|/* Emit an insn to pop virtual register REG before or after INSN.    REGSTACK is the stack state after INSN and is updated to reflect this    pop.  WHEN is either emit_insn_before or emit_insn_after.  A pop insn    is represented as a SET whose destination is the register to be popped    and source is the top of stack.  A death note for the top of stack    cases the movdf pattern to pop.  */
 end_comment
 
 begin_decl_stmt
@@ -6478,10 +6710,8 @@ argument_list|()
 expr_stmt|;
 name|pop_rtx
 operator|=
-name|gen_rtx
+name|gen_rtx_SET
 argument_list|(
-name|SET
-argument_list|,
 name|VOIDmode
 argument_list|,
 name|FP_MODE_REG
@@ -6511,7 +6741,7 @@ argument_list|,
 name|insn
 argument_list|)
 expr_stmt|;
-comment|/* ??? This used to be VOIDmode, but that seems wrong. */
+comment|/* ??? This used to be VOIDmode, but that seems wrong.  */
 name|PUT_MODE
 argument_list|(
 name|pop_insn
@@ -6524,10 +6754,8 @@ argument_list|(
 name|pop_insn
 argument_list|)
 operator|=
-name|gen_rtx
+name|gen_rtx_EXPR_LIST
 argument_list|(
-name|EXPR_LIST
-argument_list|,
 name|REG_DEAD
 argument_list|,
 name|FP_MODE_REG
@@ -6595,7 +6823,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Emit an insn before or after INSN to swap virtual register REG with the    top of stack.  WHEN should be `emit_insn_before' or `emit_insn_before'    REGSTACK is the stack state before the swap, and is updated to reflect    the swap.  A swap insn is represented as a PARALLEL of two patterns:    each pattern moves one reg to the other.     If REG is already at the top of the stack, no insn is emitted. */
+comment|/* Emit an insn before or after INSN to swap virtual register REG with the    top of stack.  WHEN should be `emit_insn_before' or `emit_insn_before'    REGSTACK is the stack state before the swap, and is updated to reflect    the swap.  A swap insn is represented as a PARALLEL of two patterns:    each pattern moves one reg to the other.     If REG is already at the top of the stack, no insn is emitted.  */
 end_comment
 
 begin_function
@@ -6770,10 +6998,6 @@ name|i1set
 condition|)
 block|{
 name|rtx
-name|i2
-decl_stmt|;
-comment|/* the stack-reg insn prior to I1 */
-name|rtx
 name|i1src
 init|=
 operator|*
@@ -6799,7 +7023,7 @@ name|i1set
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|/* If the previous register stack push was from the reg we are to 	 swap with, omit the swap. */
+comment|/* If the previous register stack push was from the reg we are to 	 swap with, omit the swap.  */
 if|if
 condition|(
 name|GET_CODE
@@ -6954,7 +7178,7 @@ argument_list|,
 name|i1
 argument_list|)
 expr_stmt|;
-comment|/* ??? This used to be VOIDmode, but that seems wrong. */
+comment|/* ??? This used to be VOIDmode, but that seems wrong.  */
 name|PUT_MODE
 argument_list|(
 name|swap_insn
@@ -6969,7 +7193,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Handle a move to or from a stack register in PAT, which is in INSN.    REGSTACK is the current stack. */
+comment|/* Handle a move to or from a stack register in PAT, which is in INSN.    REGSTACK is the current stack.  */
 end_comment
 
 begin_function
@@ -7050,7 +7274,7 @@ name|dest
 argument_list|)
 condition|)
 block|{
-comment|/* Write from one stack reg to another.  If SRC dies here, then 	 just change the register mapping and delete the insn. */
+comment|/* Write from one stack reg to another.  If SRC dies here, then 	 just change the register mapping and delete the insn.  */
 name|note
 operator|=
 name|find_regno_note
@@ -7073,7 +7297,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* If this is a no-op move, there must not be a REG_DEAD note. */
+comment|/* If this is a no-op move, there must not be a REG_DEAD note.  */
 if|if
 condition|(
 name|REGNO
@@ -7119,7 +7343,7 @@ name|src
 argument_list|)
 condition|)
 break|break;
-comment|/* The source must be live, and the dest must be dead. */
+comment|/* The source must be live, and the dest must be dead.  */
 if|if
 condition|(
 name|i
@@ -7138,7 +7362,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* It is possible that the dest is unused after this insn. 	     If so, just pop the src. */
+comment|/* It is possible that the dest is unused after this insn. 	     If so, just pop the src.  */
 if|if
 condition|(
 name|find_regno_note
@@ -7215,8 +7439,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* The source reg does not die. */
-comment|/* If this appears to be a no-op move, delete it, or else it 	 will confuse the machine description output patterns. But if 	 it is REG_UNUSED, we must pop the reg now, as per-insn processing 	 for REG_UNUSED will not work for deleted insns. */
+comment|/* The source reg does not die.  */
+comment|/* If this appears to be a no-op move, delete it, or else it 	 will confuse the machine description output patterns. But if 	 it is REG_UNUSED, we must pop the reg now, as per-insn processing 	 for REG_UNUSED will not work for deleted insns.  */
 if|if
 condition|(
 name|REGNO
@@ -7333,7 +7557,7 @@ name|src
 argument_list|)
 condition|)
 block|{
-comment|/* Save from a stack reg to MEM, or possibly integer reg.  Since 	 only top of stack may be saved, emit an exchange first if 	 needs be. */
+comment|/* Save from a stack reg to MEM, or possibly integer reg.  Since 	 only top of stack may be saved, emit an exchange first if 	 needs be.  */
 name|emit_swap_insn
 argument_list|(
 name|insn
@@ -7406,8 +7630,10 @@ operator|&&
 name|regstack
 operator|->
 name|top
-operator|!=
+operator|<
 name|REG_STACK_SIZE
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* A 387 cannot write an XFmode value to a MEM without 	     clobbering the source reg.  The output code can handle 	     this by reading back the value from the MEM. 	     But it is more efficient to use a temp register if one is 	     available.  Push the source value here if the register 	     stack is not full, and then write the value to memory via 	     a pop.  */
@@ -7456,10 +7682,8 @@ argument_list|(
 name|insn
 argument_list|)
 operator|=
-name|gen_rtx
+name|gen_rtx_EXPR_LIST
 argument_list|(
-name|EXPR_LIST
-argument_list|,
 name|REG_DEAD
 argument_list|,
 name|top_stack_reg
@@ -7561,6 +7785,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|swap_rtx_condition
 parameter_list|(
@@ -7711,7 +7936,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle a comparison.  Special care needs to be taken to avoid    causing comparisons that a 387 cannot do correctly, such as EQ.     Also, a pop insn may need to be emitted.  The 387 does have an    `fcompp' insn that can pop two regs, but it is sometimes too expensive    to do this - a `fcomp' followed by a `fstpl %st(0)' may be easier to    set up. */
+comment|/* Handle a comparison.  Special care needs to be taken to avoid    causing comparisons that a 387 cannot do correctly, such as EQ.     Also, a pop insn may need to be emitted.  The 387 does have an    `fcompp' insn that can pop two regs, but it is sometimes too expensive    to do this - a `fcomp' followed by a `fstpl %st(0)' may be easier to    set up.  */
 end_comment
 
 begin_function
@@ -7747,6 +7972,12 @@ name|src1_note
 decl_stmt|,
 name|src2_note
 decl_stmt|;
+name|rtx
+name|cc0_user
+decl_stmt|;
+name|int
+name|have_cmove
+decl_stmt|;
 name|src1
 operator|=
 name|get_true_reg
@@ -7779,7 +8010,136 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* ??? If fxch turns out to be cheaper than fstp, give priority to      registers that die in this insn - move those to stack top first. */
+name|cc0_user
+operator|=
+name|next_cc0_user
+argument_list|(
+name|insn
+argument_list|)
+expr_stmt|;
+comment|/* If the insn that uses cc0 is an FP-conditional move, then the destination      must be the top of stack */
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|PATTERN
+argument_list|(
+name|cc0_user
+argument_list|)
+argument_list|)
+operator|==
+name|SET
+operator|&&
+name|SET_DEST
+argument_list|(
+name|PATTERN
+argument_list|(
+name|cc0_user
+argument_list|)
+argument_list|)
+operator|!=
+name|pc_rtx
+operator|&&
+name|GET_CODE
+argument_list|(
+name|SET_SRC
+argument_list|(
+name|PATTERN
+argument_list|(
+name|cc0_user
+argument_list|)
+argument_list|)
+argument_list|)
+operator|==
+name|IF_THEN_ELSE
+operator|&&
+operator|(
+name|GET_MODE_CLASS
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|SET_DEST
+argument_list|(
+name|PATTERN
+argument_list|(
+name|cc0_user
+argument_list|)
+argument_list|)
+argument_list|)
+argument_list|)
+operator|==
+name|MODE_FLOAT
+operator|)
+condition|)
+block|{
+name|rtx
+modifier|*
+name|dest
+decl_stmt|;
+name|dest
+operator|=
+name|get_true_reg
+argument_list|(
+operator|&
+name|SET_DEST
+argument_list|(
+name|PATTERN
+argument_list|(
+name|cc0_user
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|have_cmove
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|get_hard_regnum
+argument_list|(
+name|regstack
+argument_list|,
+operator|*
+name|dest
+argument_list|)
+operator|>=
+name|FIRST_STACK_REG
+operator|&&
+name|REGNO
+argument_list|(
+operator|*
+name|dest
+argument_list|)
+operator|!=
+name|regstack
+operator|->
+name|reg
+index|[
+name|regstack
+operator|->
+name|top
+index|]
+condition|)
+block|{
+name|emit_swap_insn
+argument_list|(
+name|insn
+argument_list|,
+name|regstack
+argument_list|,
+operator|*
+name|dest
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+name|have_cmove
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ??? If fxch turns out to be cheaper than fstp, give priority to      registers that die in this insn - move those to stack top first.  */
 if|if
 condition|(
 operator|!
@@ -7930,7 +8290,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* We will fix any death note later. */
+comment|/* We will fix any death note later.  */
 name|src1_note
 operator|=
 name|find_regno_note
@@ -7974,6 +8334,11 @@ name|src2_note
 operator|=
 name|NULL_RTX
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|have_cmove
+condition|)
 name|emit_swap_insn
 argument_list|(
 name|insn
@@ -8017,11 +8382,9 @@ condition|(
 name|src1_note
 condition|)
 block|{
-name|CLEAR_HARD_REG_BIT
+name|pop_stack
 argument_list|(
 name|regstack
-operator|->
-name|reg_set
 argument_list|,
 name|REGNO
 argument_list|(
@@ -8047,13 +8410,8 @@ argument_list|,
 name|FIRST_STACK_REG
 argument_list|)
 expr_stmt|;
-name|regstack
-operator|->
-name|top
-operator|--
-expr_stmt|;
 block|}
-comment|/* If the second operand dies, handle that.  But if the operands are      the same stack register, don't bother, because only one death is      needed, and it was just handled. */
+comment|/* If the second operand dies, handle that.  But if the operands are      the same stack register, don't bother, because only one death is      needed, and it was just handled.  */
 if|if
 condition|(
 name|src2_note
@@ -8086,7 +8444,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* As a special case, two regs may die in this insn if src2 is 	 next to top of stack and the top of stack also dies.  Since 	 we have already popped src1, "next to top of stack" is really 	 at top (FIRST_STACK_REG) now. */
+comment|/* As a special case, two regs may die in this insn if src2 is 	 next to top of stack and the top of stack also dies.  Since 	 we have already popped src1, "next to top of stack" is really 	 at top (FIRST_STACK_REG) now.  */
 if|if
 condition|(
 name|get_hard_regnum
@@ -8106,11 +8464,9 @@ operator|&&
 name|src1_note
 condition|)
 block|{
-name|CLEAR_HARD_REG_BIT
+name|pop_stack
 argument_list|(
 name|regstack
-operator|->
-name|reg_set
 argument_list|,
 name|REGNO
 argument_list|(
@@ -8138,15 +8494,10 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|regstack
-operator|->
-name|top
-operator|--
-expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The 386 can only represent death of the first operand in 	     the case handled above.  In all other cases, emit a separate 	     pop and remove the death note from here. */
+comment|/* The 386 can only represent death of the first operand in 	     the case handled above.  In all other cases, emit a separate 	     pop and remove the death note from here.  */
 name|link_cc0_insns
 argument_list|(
 name|insn
@@ -8194,7 +8545,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Substitute new registers in PAT, which is part of INSN.  REGSTACK    is the current register layout. */
+comment|/* Substitute new registers in PAT, which is part of INSN.  REGSTACK    is the current register layout.  */
 end_comment
 
 begin_function
@@ -8275,7 +8626,7 @@ name|pat
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* See if this is a `movM' pattern, and handle elsewhere if so. */
+comment|/* See if this is a `movM' pattern, and handle elsewhere if so.  */
 if|if
 condition|(
 operator|*
@@ -8438,7 +8789,7 @@ break|break;
 case|case
 name|REG
 case|:
-comment|/* This is a `tstM2' case. */
+comment|/* This is a `tstM2' case.  */
 if|if
 condition|(
 operator|*
@@ -8453,7 +8804,7 @@ name|src1
 operator|=
 name|src
 expr_stmt|;
-comment|/* Fall through. */
+comment|/* Fall through.  */
 case|case
 name|FLOAT_TRUNCATE
 case|:
@@ -8580,14 +8931,14 @@ case|:
 case|case
 name|DIV
 case|:
-comment|/* On i386, reversed forms of subM3 and divM3 exist for 	   MODE_FLOAT, so the same code that works for addM3 and mulM3 	   can be used. */
+comment|/* On i386, reversed forms of subM3 and divM3 exist for 	   MODE_FLOAT, so the same code that works for addM3 and mulM3 	   can be used.  */
 case|case
 name|MULT
 case|:
 case|case
 name|PLUS
 case|:
-comment|/* These insns can accept the top of stack as a destination 	   from a stack reg or mem, or can use the top of stack as a 	   source and some other stack register (possibly top of stack) 	   as a destination. */
+comment|/* These insns can accept the top of stack as a destination 	   from a stack reg or mem, or can use the top of stack as a 	   source and some other stack register (possibly top of stack) 	   as a destination.  */
 name|src1
 operator|=
 name|get_true_reg
@@ -8620,7 +8971,7 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* We will fix any death note later. */
+comment|/* We will fix any death note later.  */
 if|if
 condition|(
 name|STACK_REG_P
@@ -8677,7 +9028,7 @@ name|src2_note
 operator|=
 name|NULL_RTX
 expr_stmt|;
-comment|/* If either operand is not a stack register, then the dest 	   must be top of stack. */
+comment|/* If either operand is not a stack register, then the dest 	   must be top of stack.  */
 if|if
 condition|(
 operator|!
@@ -8815,7 +9166,7 @@ condition|(
 name|src1_note
 condition|)
 block|{
-comment|/* If the register that dies is at the top of stack, then 	       the destination is somewhere else - merely substitute it. 	       But if the reg that dies is not at top of stack, then 	       move the top of stack to the dead reg, as though we had 	       done the insn and then a store-with-pop. */
+comment|/* If the register that dies is at the top of stack, then 	       the destination is somewhere else - merely substitute it. 	       But if the reg that dies is not at top of stack, then 	       move the top of stack to the dead reg, as though we had 	       done the insn and then a store-with-pop.  */
 if|if
 condition|(
 name|REGNO
@@ -9280,6 +9631,354 @@ argument_list|()
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|IF_THEN_ELSE
+case|:
+comment|/* dest has to be on stack. */
+if|if
+condition|(
+name|get_hard_regnum
+argument_list|(
+name|regstack
+argument_list|,
+operator|*
+name|dest
+argument_list|)
+operator|<
+name|FIRST_STACK_REG
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* This insn requires the top of stack to be the destination. */
+comment|/* If the comparison operator is an FP comparison operator, 	   it is handled correctly by compare_for_stack_reg () who 	   will move the destination to the top of stack. But if the 	   comparison operator is not an FP comparison operator, we 	   have to handle it here. */
+if|if
+condition|(
+name|get_hard_regnum
+argument_list|(
+name|regstack
+argument_list|,
+operator|*
+name|dest
+argument_list|)
+operator|>=
+name|FIRST_STACK_REG
+operator|&&
+name|REGNO
+argument_list|(
+operator|*
+name|dest
+argument_list|)
+operator|!=
+name|regstack
+operator|->
+name|reg
+index|[
+name|regstack
+operator|->
+name|top
+index|]
+condition|)
+name|emit_swap_insn
+argument_list|(
+name|insn
+argument_list|,
+name|regstack
+argument_list|,
+operator|*
+name|dest
+argument_list|)
+expr_stmt|;
+name|src1
+operator|=
+name|get_true_reg
+argument_list|(
+operator|&
+name|XEXP
+argument_list|(
+name|SET_SRC
+argument_list|(
+name|pat
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|src2
+operator|=
+name|get_true_reg
+argument_list|(
+operator|&
+name|XEXP
+argument_list|(
+name|SET_SRC
+argument_list|(
+name|pat
+argument_list|)
+argument_list|,
+literal|2
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|src1_note
+operator|=
+name|find_regno_note
+argument_list|(
+name|insn
+argument_list|,
+name|REG_DEAD
+argument_list|,
+name|REGNO
+argument_list|(
+operator|*
+name|src1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|src2_note
+operator|=
+name|find_regno_note
+argument_list|(
+name|insn
+argument_list|,
+name|REG_DEAD
+argument_list|,
+name|REGNO
+argument_list|(
+operator|*
+name|src2
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|{
+name|rtx
+name|src_note
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|src_note
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|src_note
+index|[
+literal|1
+index|]
+operator|=
+name|src1_note
+expr_stmt|;
+name|src_note
+index|[
+literal|2
+index|]
+operator|=
+name|src2_note
+expr_stmt|;
+if|if
+condition|(
+name|STACK_REG_P
+argument_list|(
+operator|*
+name|src1
+argument_list|)
+condition|)
+name|replace_reg
+argument_list|(
+name|src1
+argument_list|,
+name|get_hard_regnum
+argument_list|(
+name|regstack
+argument_list|,
+operator|*
+name|src1
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|STACK_REG_P
+argument_list|(
+operator|*
+name|src2
+argument_list|)
+condition|)
+name|replace_reg
+argument_list|(
+name|src2
+argument_list|,
+name|get_hard_regnum
+argument_list|(
+name|regstack
+argument_list|,
+operator|*
+name|src2
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<=
+literal|2
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|src_note
+index|[
+name|i
+index|]
+condition|)
+block|{
+comment|/* If the register that dies is not at the top of stack, then 		   move the top of stack to the dead reg */
+if|if
+condition|(
+name|REGNO
+argument_list|(
+name|XEXP
+argument_list|(
+name|src_note
+index|[
+name|i
+index|]
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|!=
+name|regstack
+operator|->
+name|reg
+index|[
+name|regstack
+operator|->
+name|top
+index|]
+condition|)
+block|{
+name|remove_regno_note
+argument_list|(
+name|insn
+argument_list|,
+name|REG_DEAD
+argument_list|,
+name|REGNO
+argument_list|(
+name|XEXP
+argument_list|(
+name|src_note
+index|[
+name|i
+index|]
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|emit_pop_insn
+argument_list|(
+name|insn
+argument_list|,
+name|regstack
+argument_list|,
+name|XEXP
+argument_list|(
+name|src_note
+index|[
+name|i
+index|]
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|emit_insn_after
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|CLEAR_HARD_REG_BIT
+argument_list|(
+name|regstack
+operator|->
+name|reg_set
+argument_list|,
+name|REGNO
+argument_list|(
+name|XEXP
+argument_list|(
+name|src_note
+index|[
+name|i
+index|]
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|replace_reg
+argument_list|(
+operator|&
+name|XEXP
+argument_list|(
+name|src_note
+index|[
+name|i
+index|]
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|FIRST_STACK_REG
+argument_list|)
+expr_stmt|;
+name|regstack
+operator|->
+name|top
+operator|--
+expr_stmt|;
+block|}
+block|}
+block|}
+comment|/* Make dest the top of stack. */
+name|SET_HARD_REG_BIT
+argument_list|(
+name|regstack
+operator|->
+name|reg_set
+argument_list|,
+name|REGNO
+argument_list|(
+operator|*
+name|dest
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|replace_reg
+argument_list|(
+name|dest
+argument_list|,
+name|FIRST_STACK_REG
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|abort
 argument_list|()
@@ -9451,7 +10150,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Find out what the constraints required.  If no constraint      alternative matches, that is a compiler bug: we should have caught      such an insn during the life analysis pass (and reload should have      caught it regardless). */
+comment|/* Find out what the constraints required.  If no constraint      alternative matches, that is a compiler bug: we should have caught      such an insn during the life analysis pass (and reload should have      caught it regardless).  */
 name|i
 operator|=
 name|constrain_asm_operands
@@ -9476,7 +10175,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* Strip SUBREGs here to make the following code simpler. */
+comment|/* Strip SUBREGs here to make the following code simpler.  */
 for|for
 control|(
 name|i
@@ -10019,7 +10718,7 @@ operator|!=
 name|FLOAT_REGS
 condition|)
 block|{
-comment|/* If an operand needs to be in a particular reg in 	   FLOAT_REGS, the constraint was either 't' or 'u'.  Since 	   these constraints are for single register classes, and reload 	   guaranteed that operand[i] is already in that class, we can 	   just use REGNO (operands[i]) to know which actual reg this 	   operand needs to be in. */
+comment|/* If an operand needs to be in a particular reg in 	   FLOAT_REGS, the constraint was either 't' or 'u'.  Since 	   these constraints are for single register classes, and reload 	   guaranteed that operand[i] is already in that class, we can 	   just use REGNO (operands[i]) to know which actual reg this 	   operand needs to be in.  */
 name|int
 name|regno
 init|=
@@ -10056,7 +10755,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* operands[i] is not in the right place.  Find it 	       and swap it with whatever is already in I's place. 	       K is where operands[i] is now.  J is where it should 	       be. */
+comment|/* operands[i] is not in the right place.  Find it 	       and swap it with whatever is already in I's place. 	       K is where operands[i] is now.  J is where it should 	       be.  */
 name|int
 name|j
 decl_stmt|,
@@ -10143,7 +10842,7 @@ argument_list|,
 name|emit_insn_before
 argument_list|)
 expr_stmt|;
-comment|/* Make the needed input register substitutions.  Do death notes and      clobbers too, because these are for inputs, not outputs. */
+comment|/* Make the needed input register substitutions.  Do death notes and      clobbers too, because these are for inputs, not outputs.  */
 for|for
 control|(
 name|i
@@ -10310,7 +11009,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Now remove from REGSTACK any inputs that the asm implicitly popped. */
+comment|/* Now remove from REGSTACK any inputs that the asm implicitly popped.  */
 for|for
 control|(
 name|i
@@ -10337,7 +11036,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* An input reg is implicitly popped if it is tied to an 	   output, or if there is a CLOBBER for it. */
+comment|/* An input reg is implicitly popped if it is tied to an 	   output, or if there is a CLOBBER for it.  */
 name|int
 name|j
 decl_stmt|;
@@ -10408,7 +11107,7 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-comment|/* Now add to REGSTACK any outputs that the asm implicitly pushed.      Note that there isn't any need to substitute register numbers.      ???  Explain why this is true. */
+comment|/* Now add to REGSTACK any outputs that the asm implicitly pushed.      Note that there isn't any need to substitute register numbers.      ???  Explain why this is true.  */
 for|for
 control|(
 name|i
@@ -10680,7 +11379,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Substitute stack hard reg numbers for stack virtual registers in    INSN.  Non-stack register numbers are not changed.  REGSTACK is the    current stack content.  Insns may be emitted as needed to arrange the    stack for the 387 based on the contents of the insn. */
+comment|/* Substitute stack hard reg numbers for stack virtual registers in    INSN.  Non-stack register numbers are not changed.  REGSTACK is the    current stack content.  Insns may be emitted as needed to arrange the    stack for the 387 based on the contents of the insn.  */
 end_comment
 
 begin_function
@@ -10779,7 +11478,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Do the actual substitution if any stack regs are mentioned.      Since we only record whether entire insn mentions stack regs, and      subst_stack_regs_pat only works for patterns that contain stack regs,      we must check each pattern in a parallel here.  A call_value_pop could      fail otherwise. */
+comment|/* Do the actual substitution if any stack regs are mentioned.      Since we only record whether entire insn mentions stack regs, and      subst_stack_regs_pat only works for patterns that contain stack regs,      we must check each pattern in a parallel here.  A call_value_pop could      fail otherwise.  */
 if|if
 condition|(
 name|GET_MODE
@@ -10807,7 +11506,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* This insn is an `asm' with operands.  Decode the operands, 	     decide how many are inputs, and do register substitution. 	     Any REG_UNUSED notes will be handled by subst_asm_stack_regs. */
+comment|/* This insn is an `asm' with operands.  Decode the operands, 	     decide how many are inputs, and do register substitution. 	     Any REG_UNUSED notes will be handled by subst_asm_stack_regs.  */
 name|rtx
 name|operands
 index|[
@@ -10985,7 +11684,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* subst_stack_regs_pat may have deleted a no-op insn.  If so, any      REG_UNUSED will already have been dealt with, so just return. */
+comment|/* subst_stack_regs_pat may have deleted a no-op insn.  If so, any      REG_UNUSED will already have been dealt with, so just return.  */
 if|if
 condition|(
 name|GET_CODE
@@ -10996,7 +11695,7 @@ operator|==
 name|NOTE
 condition|)
 return|return;
-comment|/* If there is a REG_UNUSED note on a stack register on this insn,      the indicated reg must be popped.  The REG_UNUSED note is removed,      since the form of the newly emitted pop insn references the reg,      making it no longer `unset'. */
+comment|/* If there is a REG_UNUSED note on a stack register on this insn,      the indicated reg must be popped.  The REG_UNUSED note is removed,      since the form of the newly emitted pop insn references the reg,      making it no longer `unset'.  */
 name|note_link
 operator|=
 operator|&
@@ -11090,7 +11789,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Change the organization of the stack so that it fits a new basic    block.  Some registers might have to be popped, but there can never be    a register live in the new block that is not now live.     Insert any needed insns before or after INSN.  WHEN is emit_insn_before    or emit_insn_after. OLD is the original stack layout, and NEW is    the desired form.  OLD is updated to reflect the code emitted, ie, it    will be the same as NEW upon return.     This function will not preserve block_end[].  But that information    is no longer needed once this has executed. */
+comment|/* Change the organization of the stack so that it fits a new basic    block.  Some registers might have to be popped, but there can never be    a register live in the new block that is not now live.     Insert any needed insns before or after INSN.  WHEN is emit_insn_before    or emit_insn_after. OLD is the original stack layout, and NEW is    the desired form.  OLD is updated to reflect the code emitted, ie, it    will be the same as NEW upon return.     This function will not preserve block_end[].  But that information    is no longer needed once this has executed.  */
 end_comment
 
 begin_decl_stmt
@@ -11152,7 +11851,7 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-comment|/* Pop any registers that are not needed in the new block. */
+comment|/* Pop any registers that are not needed in the new block.  */
 for|for
 control|(
 name|reg
@@ -11216,7 +11915,7 @@ operator|-
 literal|2
 condition|)
 block|{
-comment|/* If the new block has never been processed, then it can inherit 	 the old stack order. */
+comment|/* If the new block has never been processed, then it can inherit 	 the old stack order.  */
 name|new
 operator|->
 name|top
@@ -11246,8 +11945,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This block has been entered before, and we must match the 	 previously selected stack order. */
-comment|/* By now, the only difference should be the order of the stack, 	 not their depth or liveliness. */
+comment|/* This block has been entered before, and we must match the 	 previously selected stack order.  */
+comment|/* By now, the only difference should be the order of the stack, 	 not their depth or liveliness.  */
 name|GO_IF_HARD_REG_EQUAL
 argument_list|(
 name|old
@@ -11279,10 +11978,10 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* Loop here emitting swaps until the stack is correct.  The 	 worst case number of swaps emitted is N + 2, where N is the 	 depth of the stack.  In some cases, the reg at the top of 	 stack may be correct, but swapped anyway in order to fix 	 other regs.  But since we never swap any other reg away from 	 its correct slot, this algorithm will converge. */
+comment|/* Loop here emitting swaps until the stack is correct.  The 	 worst case number of swaps emitted is N + 2, where N is the 	 depth of the stack.  In some cases, the reg at the top of 	 stack may be correct, but swapped anyway in order to fix 	 other regs.  But since we never swap any other reg away from 	 its correct slot, this algorithm will converge.  */
 do|do
 block|{
-comment|/* Swap the reg at top of stack into the position it is 	     supposed to be in, until the correct top of stack appears. */
+comment|/* Swap the reg at top of stack into the position it is 	     supposed to be in, until the correct top of stack appears.  */
 while|while
 condition|(
 name|old
@@ -11368,7 +12067,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* See if any regs remain incorrect.  If so, bring an 	     incorrect reg to the top of stack, and let the while loop 	     above fix it. */
+comment|/* See if any regs remain incorrect.  If so, bring an 	     incorrect reg to the top of stack, and let the while loop 	     above fix it.  */
 for|for
 control|(
 name|reg
@@ -11430,7 +12129,7 @@ operator|>=
 literal|0
 condition|)
 do|;
-comment|/* At this point there must be no differences. */
+comment|/* At this point there must be no differences.  */
 for|for
 control|(
 name|reg
@@ -11473,7 +12172,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Check PAT, which points to RTL in INSN, for a LABEL_REF.  If it is    found, ensure that a jump from INSN to the code_label to which the    label_ref points ends up with the same stack as that at the    code_label.  Do this by inserting insns just before the code_label to    pop and rotate the stack until it is in the correct order.  REGSTACK    is the order of the register stack in INSN.     Any code that is emitted here must not be later processed as part    of any block, as it will already contain hard register numbers. */
+comment|/* Check PAT, which points to RTL in INSN, for a LABEL_REF.  If it is    found, ensure that a jump from INSN to the code_label to which the    label_ref points ends up with the same stack as that at the    code_label.  Do this by inserting insns just before the code_label to    pop and rotate the stack until it is in the correct order.  REGSTACK    is the order of the register stack in INSN.     Any code that is emitted here must not be later processed as part    of any block, as it will already contain hard register numbers.  */
 end_comment
 
 begin_function
@@ -11679,7 +12378,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* First, see if in fact anything needs to be done to the stack at all. */
+comment|/* First, see if in fact anything needs to be done to the stack at all.  */
 if|if
 condition|(
 name|INSN_UID
@@ -11711,7 +12410,7 @@ operator|-
 literal|2
 condition|)
 block|{
-comment|/* If the target block hasn't had a stack order selected, then 	 we need merely ensure that no pops are needed. */
+comment|/* If the target block hasn't had a stack order selected, then 	 we need merely ensure that no pops are needed.  */
 for|for
 control|(
 name|reg
@@ -11753,7 +12452,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* change_stack will not emit any code in this case. */
+comment|/* change_stack will not emit any code in this case.  */
 name|change_stack
 argument_list|(
 name|label
@@ -11821,7 +12520,7 @@ literal|1
 condition|)
 return|return;
 block|}
-comment|/* At least one insn will need to be inserted before label.  Insert      a jump around the code we are about to emit.  Emit a label for the new      code, and point the original insn at this new label. We can't use      redirect_jump here, because we're using fld[4] of the code labels as      LABEL_REF chains, no NUSES counters. */
+comment|/* At least one insn will need to be inserted before label.  Insert      a jump around the code we are about to emit.  Emit a label for the new      code, and point the original insn at this new label. We can't use      redirect_jump here, because we're using fld[4] of the code labels as      LABEL_REF chains, no NUSES counters.  */
 name|new_jump
 operator|=
 name|emit_jump_insn_before
@@ -11877,7 +12576,7 @@ argument_list|)
 operator|=
 name|new_label
 expr_stmt|;
-comment|/* The old label_ref will no longer point to the code_label if now uses,      so strip the label_ref from the code_label's chain of references. */
+comment|/* The old label_ref will no longer point to the code_label if now uses,      so strip the label_ref from the code_label's chain of references.  */
 for|for
 control|(
 name|ref
@@ -11964,7 +12663,7 @@ argument_list|)
 operator|=
 name|new_label
 expr_stmt|;
-comment|/* Now emit the needed code. */
+comment|/* Now emit the needed code.  */
 name|temp_stack
 operator|=
 operator|*
@@ -11989,7 +12688,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Traverse all basic blocks in a function, converting the register    references in each insn from the "flat" register file that gcc uses, to    the stack-like registers the 387 uses. */
+comment|/* Traverse all basic blocks in a function, converting the register    references in each insn from the "flat" register file that gcc uses, to    the stack-like registers the 387 uses.  */
 end_comment
 
 begin_function
@@ -12098,7 +12797,7 @@ operator|=
 name|reg
 expr_stmt|;
 block|}
-comment|/* Process all insns in this block.  Keep track of `next' here, 	 so that we don't process any insns emitted while making 	 substitutions in INSN. */
+comment|/* Process all insns in this block.  Keep track of `next' here, 	 so that we don't process any insns emitted while making 	 substitutions in INSN.  */
 name|next
 operator|=
 name|block_begin
@@ -12126,7 +12825,7 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-comment|/* Don't bother processing unless there is a stack reg 	     mentioned or if it's a CALL_INSN (register passing of 	     floating point values). */
+comment|/* Don't bother processing unless there is a stack reg 	     mentioned or if it's a CALL_INSN (register passing of 	     floating point values).  */
 if|if
 condition|(
 name|GET_MODE
@@ -12162,7 +12861,36 @@ name|block
 index|]
 condition|)
 do|;
-comment|/* Something failed if the stack life doesn't match. */
+comment|/* For all further actions, INSN needs to be the last insn in          this basic block.  If subst_stack_regs inserted additional          instructions after INSN, it is no longer the last one at          this point.  */
+name|next
+operator|=
+name|PREV_INSN
+argument_list|(
+name|next
+argument_list|)
+expr_stmt|;
+comment|/* If subst_stack_regs inserted something after a JUMP_INSN, that          is almost certainly a bug.  */
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|insn
+argument_list|)
+operator|==
+name|JUMP_INSN
+operator|&&
+name|insn
+operator|!=
+name|next
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+name|insn
+operator|=
+name|next
+expr_stmt|;
+comment|/* Something failed if the stack life doesn't match.  */
 name|GO_IF_HARD_REG_EQUAL
 argument_list|(
 name|regstack
@@ -12182,7 +12910,7 @@ argument_list|()
 expr_stmt|;
 name|win
 label|:
-comment|/* Adjust the stack of this block on exit to match the stack of 	 the target block, or copy stack information into stack of 	 jump target if the target block's stack order hasn't been set 	 yet. */
+comment|/* Adjust the stack of this block on exit to match the stack of 	 the target block, or copy stack information into stack of 	 jump target if the target block's stack order hasn't been set 	 yet.  */
 if|if
 condition|(
 name|GET_CODE
@@ -12205,7 +12933,7 @@ name|insn
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Likewise handle the case where we fall into the next block. */
+comment|/* Likewise handle the case where we fall into the next block.  */
 if|if
 condition|(
 operator|(
@@ -12242,7 +12970,7 @@ name|emit_insn_after
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If the last basic block is the end of a loop, and that loop has      regs live at its start, then the last basic block will have regs live      at its end that need to be popped before the function returns. */
+comment|/* If the last basic block is the end of a loop, and that loop has      regs live at its start, then the last basic block will have regs live      at its end that need to be popped before the function returns.  */
 block|{
 name|int
 name|value_reg_low
@@ -12262,12 +12990,14 @@ name|retvalue
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|retvalue
 operator|=
 name|stack_result
 argument_list|(
 name|current_function_decl
 argument_list|)
+operator|)
 condition|)
 block|{
 name|value_reg_low
@@ -12370,7 +13100,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Check expression PAT, which is in INSN, for label references.  if    one is found, print the block number of destination to FILE. */
+comment|/* Check expression PAT, which is in INSN, for label references.  if    one is found, print the block number of destination to FILE.  */
 end_comment
 
 begin_function

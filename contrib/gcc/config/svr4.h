@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for some    generic System V Release 4 system.    Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@segfault.us.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr4.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr4.h, put something    like:  	#include "?????.h" 	#include "svr4.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR4.  You should    probably override that in your target-specific ?????svr4.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
+comment|/* Operating system specific defines to be used when targeting GCC for some    generic System V Release 4 system.    Copyright (C) 1991, 94-97, 1998 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr4.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr4.h, put something    like:  	#include "?????.h" 	#include "svr4.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR4.  You should    probably override that in your target-specific ?????svr4.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ parameter_list|(
 name|CHAR
 parameter_list|)
 define|\
-value|(   (CHAR) == 'D' \    || (CHAR) == 'U' \    || (CHAR) == 'o' \    || (CHAR) == 'e' \    || (CHAR) == 'u' \    || (CHAR) == 'I' \    || (CHAR) == 'm' \    || (CHAR) == 'L' \    || (CHAR) == 'A' \    || (CHAR) == 'h' \    || (CHAR) == 'z')
+value|(DEFAULT_SWITCH_TAKES_ARG (CHAR) \    || (CHAR) == 'h' \    || (CHAR) == 'x' \    || (CHAR) == 'z')
 end_define
 
 begin_comment
@@ -68,7 +68,7 @@ name|CPP_PREDEFINES
 end_undef
 
 begin_comment
-comment|/* Provide an ASM_SPEC appropriate for svr4.  Here we try to support as    many of the specialized svr4 assembler options as seems reasonable,    given that there are certain options which we can't (or shouldn't)    support directly due to the fact that they conflict with other options     for other svr4 tools (e.g. ld) or with other options for GCC itself.    For example, we don't support the -o (output file) or -R (remove    input file) options because GCC already handles these things.  We    also don't support the -m (run m4) option for the assembler because    that conflicts with the -m (produce load map) option of the svr4    linker.  We do however allow passing arbitrary options to the svr4    assembler via the -Wa, option.     Note that gcc doesn't allow a space to follow -Y in a -Ym,* or -Yd,*    option. */
+comment|/* Provide an ASM_SPEC appropriate for svr4.  Here we try to support as    many of the specialized svr4 assembler options as seems reasonable,    given that there are certain options which we can't (or shouldn't)    support directly due to the fact that they conflict with other options    for other svr4 tools (e.g. ld) or with other options for GCC itself.    For example, we don't support the -o (output file) or -R (remove    input file) options because GCC already handles these things.  We    also don't support the -m (run m4) option for the assembler because    that conflicts with the -m (produce load map) option of the svr4    linker.  We do however allow passing arbitrary options to the svr4    assembler via the -Wa, option.     Note that gcc doesn't allow a space to follow -Y in a -Ym,* or -Yd,*    option. */
 end_comment
 
 begin_undef
@@ -82,7 +82,7 @@ define|#
 directive|define
 name|ASM_SPEC
 define|\
-value|"%{V} %{v:%{!V:-V}} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*}"
+value|"%{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*}"
 end_define
 
 begin_comment
@@ -99,12 +99,18 @@ begin_define
 define|#
 directive|define
 name|ASM_FINAL_SPEC
-value|"%{pipe:-}"
+value|"%|"
 end_define
 
 begin_comment
 comment|/* Under svr4, the normal location of the `ld' and `as' programs is the    /usr/ccs/bin directory.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CROSS_COMPILE
+end_ifndef
 
 begin_undef
 undef|#
@@ -119,9 +125,20 @@ name|MD_EXEC_PREFIX
 value|"/usr/ccs/bin/"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Under svr4, the normal location of the various *crt*.o files is the    /usr/ccs/lib directory.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CROSS_COMPILE
+end_ifndef
 
 begin_undef
 undef|#
@@ -135,6 +152,11 @@ directive|define
 name|MD_STARTFILE_PREFIX
 value|"/usr/ccs/lib/"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Provide a LIB_SPEC appropriate for svr4.  Here we tack on the default    standard C library (unless we are building a shared library).  */
@@ -154,23 +176,6 @@ value|"%{!shared:%{!symbolic:-lc}}"
 end_define
 
 begin_comment
-comment|/* Provide a LIBGCC_SPEC appropriate for svr4.  We also want to exclude    libgcc when -symbolic.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|LIBGCC_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LIBGCC_SPEC
-value|"%{!shared:%{!symbolic:-lgcc}}"
-end_define
-
-begin_comment
 comment|/* Provide an ENDFILE_SPEC appropriate for svr4.  Here we tack on our own    magical crtend.o file (see crtstuff.c) which provides part of the    support for getting C++ file-scope static object constructed before    entering `main', followed by the normal svr3/svr4 "finalizer" file,    which is either `gcrtn.o' or `crtn.o'.  */
 end_comment
 
@@ -184,11 +189,11 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-value|"crtend.o%s %{pg:gcrtn.o}%{!pg:crtn.o%s}"
+value|"crtend.o%s %{pg:gcrtn.o%s}%{!pg:crtn.o%s}"
 end_define
 
 begin_comment
-comment|/* Provide a LINK_SPEC appropriate for svr4.  Here we provide support    for the special GCC options -static, -shared, and -symbolic which    allow us to link things in one of these three modes by applying the    appropriate combinations of options at link-time.  We also provide    support here for as many of the other svr4 linker options as seems    reasonable, given that some of them conflict with options for other    svr4 tools (e.g. the assembler).  In particular, we do support the    -h*, -z*, -V, -b, -t, -Qy, -Qn, and -YP* options here, and the -e*,    -l*, -o*, -r, -s, -u*, and -L* options are directly supported    by gcc.c itself.  We don't directly support the -m (generate load    map) option because that conflicts with the -m (run m4) option of    the svr4 assembler.  We also don't directly support the svr4 linker's    -I* or -M* options because these conflict with existing GCC options.    We do however allow passing arbitrary options to the svr4 linker    via the -Wl, option.  We don't support the svr4 linker's -a option    at all because it is totally useless and because it conflicts with    GCC's own -a option.     Note that gcc doesn't allow a space to follow -Y in a -YP,* option.     When the -G link option is used (-shared and -symbolic) a final link is    not being done.  */
+comment|/* Provide a LINK_SPEC appropriate for svr4.  Here we provide support    for the special GCC options -static, -shared, and -symbolic which    allow us to link things in one of these three modes by applying the    appropriate combinations of options at link-time.  We also provide    support here for as many of the other svr4 linker options as seems    reasonable, given that some of them conflict with options for other    svr4 tools (e.g. the assembler).  In particular, we do support the    -z*, -V, -b, -t, -Qy, -Qn, and -YP* options here, and the -e*,    -l*, -o*, -r, -s, -u*, and -L* options are directly supported    by gcc.c itself.  We don't directly support the -m (generate load    map) option because that conflicts with the -m (run m4) option of    the svr4 assembler.  We also don't directly support the svr4 linker's    -I* or -M* options because these conflict with existing GCC options.    We do however allow passing arbitrary options to the svr4 linker    via the -Wl, option.  We don't support the svr4 linker's -a option    at all because it is totally useless and because it conflicts with    GCC's own -a option.     Note that gcc doesn't allow a space to follow -Y in a -YP,* option.     When the -G link option is used (-shared and -symbolic) a final link is    not being done.  */
 end_comment
 
 begin_undef
@@ -197,12 +202,35 @@ directive|undef
 name|LINK_SPEC
 end_undef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CROSS_COMPILE
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"%{h*} %{V} %{v:%{!V:-V}} \ 		   %{b} %{Wl,*:%*} \ 		   %{static:-dn -Bstatic} \ 		   %{shared:-G -dy -z text %{!h*:%{o*:-h %*}}} \ 		   %{symbolic:-Bsymbolic -G -dy -z text %{!h*:%{o*:-h %*}}} \ 		   %{G:-G} \ 		   %{YP,*} \ 		   %{!YP,*:%{p:-Y P,/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \ 		    %{!p:-Y P,/usr/ccs/lib:/usr/lib}} \ 		   %{Qy:} %{!Qn:-Qy}"
+value|"%{h*} %{v:-V} \ 		   %{b} %{Wl,*:%*} \ 		   %{static:-dn -Bstatic} \ 		   %{shared:-G -dy -z text} \ 		   %{symbolic:-Bsymbolic -G -dy -z text} \ 		   %{G:-G} \ 		   %{YP,*} \ 		   %{Qy:} %{!Qn:-Qy}"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+value|"%{h*} %{v:-V} \ 		   %{b} %{Wl,*:%*} \ 		   %{static:-dn -Bstatic} \ 		   %{shared:-G -dy -z text} \ 		   %{symbolic:-Bsymbolic -G -dy -z text} \ 		   %{G:-G} \ 		   %{YP,*} \ 		   %{!YP,*:%{p:-Y P,/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \ 		    %{!p:-Y P,/usr/ccs/lib:/usr/lib}} \ 		   %{Qy:} %{!Qn:-Qy}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Gcc automatically adds in one of the files /usr/ccs/lib/values-Xc.o,    /usr/ccs/lib/values-Xa.o, or /usr/ccs/lib/values-Xt.o for each final    link step (depending upon the other gcc options selected, such as    -traditional and -ansi).  These files each contain one (initialized)    copy of a special variable called `_lib_version'.  Each one of these    files has `_lib_version' initialized to a different (enum) value.    The SVR4 library routines query the value of `_lib_version' at run    to decide how they should behave.  Specifically, they decide (based    upon the value of `_lib_version') if they will act in a strictly ANSI    conforming manner or not. */
@@ -322,6 +350,16 @@ name|DWARF_DEBUGGING_INFO
 end_define
 
 begin_comment
+comment|/* All ELF targets can support DWARF-2.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_DEBUGGING_INFO
+end_define
+
+begin_comment
 comment|/* The numbers used to denote specific machine registers in the System V    Release 4 DWARF debugging information are quite likely to be totally    different from the numbers used in BSD stabs debugging information    for the same kind of target machine.  Thus, we undefine the macro    DBX_REGISTER_NUMBER here as an extra inducement to get people to    provide proper machine-specific definitions of DBX_REGISTER_NUMBER    (which is also used to provide DWARF registers numbers in dwarfout.c)    in their tm.h files which include this file.  */
 end_comment
 
@@ -339,6 +377,16 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+end_define
+
+begin_comment
+comment|/* When generating stabs debugging, use N_BINCL entries.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBX_USE_BINCL
 end_define
 
 begin_comment
@@ -441,7 +489,7 @@ parameter_list|,
 name|FILENAME
 parameter_list|)
 define|\
-value|fprintf (FILE,							\ 	   "\t.text\n\t.stabs \"\",%d,0,0,.Letext\n.Letext:\n", N_SO)
+value|do									\   {									\     text_section ();							\     fprintf (FILE,							\ 	   "\t.stabs \"\",%d,0,0,.Letext\n.Letext:\n", N_SO);		\   }									\ while (0)
 end_define
 
 begin_comment
@@ -586,25 +634,20 @@ value|fprintf (FILE, "\t%s\t%u\n", SKIP_ASM_OP, (SIZE))
 end_define
 
 begin_comment
-comment|/* This is how to output a reference to a user-level label named NAME.    `assemble_name' uses this.     For System V Release 4 the convention is *not* to prepend a leading    underscore onto user-level symbol names.  */
+comment|/* The prefix to add to user-visible assembler symbols.     For System V Release 4 the convention is *not* to prepend a leading    underscore onto user-level symbol names.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_LABELREF
+name|USER_LABEL_PREFIX
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_LABELREF
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-value|fprintf (FILE, "%s", NAME)
+name|USER_LABEL_PREFIX
+value|""
 end_define
 
 begin_comment
@@ -654,7 +697,7 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|do {									\   sprintf (LABEL, "*.%s%d", PREFIX, NUM);				\ } while (0)
+value|do {									\   sprintf (LABEL, "*.%s%d", PREFIX, (unsigned) (NUM));			\ } while (0)
 end_define
 
 begin_comment
@@ -802,6 +845,17 @@ name|ALIGN
 parameter_list|)
 define|\
 value|do {									\   fprintf ((FILE), "\t%s\t", LOCAL_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), "\n");						\   ASM_OUTPUT_ALIGNED_COMMON (FILE, NAME, SIZE, ALIGN);			\ } while (0)
+end_define
+
+begin_comment
+comment|/* Biggest alignment supported by the object file format of this    machine.  Use this macro to limit the alignment which can be    specified using the `__attribute__ ((aligned (N)))' construct.  If    not defined, the default value is `BIGGEST_ALIGNMENT'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_OFILE_ALIGNMENT
+value|(32768*8)
 end_define
 
 begin_comment
@@ -962,7 +1016,7 @@ value|void									\ dtors_section ()							\ {									\   if (in_section != in
 end_define
 
 begin_comment
-comment|/* Switch into a generic section.    This is currently only used to support section attributes.     We make the section read-only and executable for a function decl,    read-only for a const data decl, and writable for a non-const data decl.  */
+comment|/* Switch into a generic section.      We make the section read-only and executable for a function decl,    read-only for a const data decl, and writable for a non-const data decl.      If the section has already been defined, we must not    emit the attributes here. The SVR4 assembler does not    recognize section redefinitions.    If DECL is NULL, no attributes are emitted.  */
 end_comment
 
 begin_define
@@ -975,9 +1029,44 @@ parameter_list|,
 name|DECL
 parameter_list|,
 name|NAME
+parameter_list|,
+name|RELOC
 parameter_list|)
 define|\
-value|fprintf (FILE, ".section\t%s,\"%s\",@progbits\n", NAME, \ 	   (DECL)&& TREE_CODE (DECL) == FUNCTION_DECL ? "ax" : \ 	   (DECL)&& TREE_READONLY (DECL) ? "a" : "aw")
+value|do {									\   static struct section_info						\     {									\       struct section_info *next;				        \       char *name;						        \       enum sect_enum {SECT_RW, SECT_RO, SECT_EXEC} type;		\     } *sections;							\   struct section_info *s;						\   char *mode;								\   enum sect_enum type;							\ 									\   for (s = sections; s; s = s->next)					\     if (!strcmp (NAME, s->name))					\       break;								\ 									\   if (DECL&& TREE_CODE (DECL) == FUNCTION_DECL)			\     type = SECT_EXEC, mode = "ax";					\   else if (DECL&& DECL_READONLY_SECTION (DECL, RELOC))			\     type = SECT_RO, mode = "a";						\   else									\     type = SECT_RW, mode = "aw";					\ 									\   if (s == 0)								\     {									\       s = (struct section_info *) xmalloc (sizeof (struct section_info));  \       s->name = xmalloc ((strlen (NAME) + 1) * sizeof (*NAME));		\       strcpy (s->name, NAME);						\       s->type = type;							\       s->next = sections;						\       sections = s;							\       fprintf (FILE, ".section\t%s,\"%s\",@progbits\n", NAME, mode);	\     }									\   else									\     {									\       if (DECL&& s->type != type)					\ 	error_with_decl (DECL, "%s causes a section type conflict");	\ 									\       fprintf (FILE, ".section\t%s\n", NAME);				\     }									\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKE_DECL_ONE_ONLY
+parameter_list|(
+name|DECL
+parameter_list|)
+value|(DECL_WEAK (DECL) = 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNIQUE_SECTION_P
+parameter_list|(
+name|DECL
+parameter_list|)
+value|(DECL_ONE_ONLY (DECL))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNIQUE_SECTION
+parameter_list|(
+name|DECL
+parameter_list|,
+name|RELOC
+parameter_list|)
+define|\
+value|do {								\   int len;							\   char *name, *string, *prefix;					\ 								\   name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (DECL));	\ 								\   if (! DECL_ONE_ONLY (DECL))					\     prefix = ".";						\   else if (TREE_CODE (DECL) == FUNCTION_DECL)			\     prefix = ".gnu.linkonce.t.";				\   else if (DECL_READONLY_SECTION (DECL, RELOC))			\     prefix = ".gnu.linkonce.r.";				\   else								\     prefix = ".gnu.linkonce.d.";				\ 								\   len = strlen (name) + strlen (prefix);			\   string = alloca (len + 1);					\   sprintf (string, "%s%s", prefix, name);			\ 								\   DECL_SECTION_NAME (DECL) = build_string (len, string);	\ } while (0)
 end_define
 
 begin_comment
@@ -1028,7 +1117,7 @@ parameter_list|,
 name|RELOC
 parameter_list|)
 define|\
-value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if ((flag_pic&& RELOC)						\ 	  || !TREE_READONLY (DECL) || TREE_SIDE_EFFECTS (DECL)		\ 	  || !DECL_INITIAL (DECL)					\ 	  || (DECL_INITIAL (DECL) != error_mark_node			\&& !TREE_CONSTANT (DECL_INITIAL (DECL))))			\ 	data_section ();						\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
+value|{									\   if (flag_pic&& RELOC)						\     data_section ();							\   else if (TREE_CODE (DECL) == STRING_CST)				\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if (! DECL_READONLY_SECTION (DECL, RELOC))			\ 	data_section ();						\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
 end_define
 
 begin_comment
@@ -1164,7 +1253,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));	\       }									\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
+value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	putc (',', FILE);						\ 	fprintf (FILE, HOST_WIDE_INT_PRINT_DEC,				\ 		 int_size_in_bytes (TREE_TYPE (DECL)));			\ 	fputc ('\n', FILE);						\       }									\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
 end_define
 
 begin_comment
@@ -1185,7 +1274,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do {									 \      char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);			 \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		 \&& ! AT_END&& TOP_LEVEL					 \&& DECL_INITIAL (DECL) == error_mark_node			 \&& !size_directive_output)					 \        {								 \ 	 size_directive_output = 1;					 \ 	 fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);			 \ 	 assemble_name (FILE, name);					 \ 	 fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL))); \        }								 \    } while (0)
+value|do {									 \      char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);			 \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		 \&& ! AT_END&& TOP_LEVEL					 \&& DECL_INITIAL (DECL) == error_mark_node			 \&& !size_directive_output)					 \        {								 \ 	 size_directive_output = 1;					 \ 	 fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);			 \ 	 assemble_name (FILE, name);					 \ 	 putc (',', FILE);						 \ 	 fprintf (FILE, HOST_WIDE_INT_PRINT_DEC,			 \ 		  int_size_in_bytes (TREE_TYPE (DECL))); 		 \ 	fputc ('\n', FILE);						 \        }								 \    } while (0)
 end_define
 
 begin_comment
@@ -1251,7 +1340,7 @@ parameter_list|,
 name|STR
 parameter_list|)
 define|\
-value|do									\     {									\       register unsigned char *_limited_str = (unsigned char *) (STR);	\       register unsigned ch;						\       fprintf ((FILE), "\t%s\t\"", STRING_ASM_OP);			\       for (; ch = *_limited_str; _limited_str++)			\         {								\ 	  register int escape;						\ 	  switch (escape = ESCAPES[ch])					\ 	    {								\ 	    case 0:							\ 	      putc (ch, (FILE));					\ 	      break;							\ 	    case 1:							\ 	      fprintf ((FILE), "\\%03o", ch);				\ 	      break;							\ 	    default:							\ 	      putc ('\\', (FILE));					\ 	      putc (escape, (FILE));					\ 	      break;							\ 	    }								\         }								\       fprintf ((FILE), "\"\n");						\     }									\   while (0)
+value|do									\     {									\       register unsigned char *_limited_str = (unsigned char *) (STR);	\       register unsigned ch;						\       fprintf ((FILE), "\t%s\t\"", STRING_ASM_OP);			\       for (; (ch = *_limited_str); _limited_str++)			\         {								\ 	  register int escape;						\ 	  switch (escape = ESCAPES[ch])					\ 	    {								\ 	    case 0:							\ 	      putc (ch, (FILE));					\ 	      break;							\ 	    case 1:							\ 	      fprintf ((FILE), "\\%03o", ch);				\ 	      break;							\ 	    default:							\ 	      putc ('\\', (FILE));					\ 	      putc (escape, (FILE));					\ 	      break;							\ 	    }								\         }								\       fprintf ((FILE), "\"\n");						\     }									\   while (0)
 end_define
 
 begin_comment

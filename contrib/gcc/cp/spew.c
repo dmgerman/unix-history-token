@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"system.h"
 end_include
 
 begin_include
@@ -40,13 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"parse.h"
+file|"cp-tree.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cp-tree.h"
+file|"parse.h"
 end_include
 
 begin_include
@@ -62,11 +62,11 @@ file|"obstack.h"
 end_include
 
 begin_comment
-comment|/* This takes a token stream that hasn't decided much about types and    tries to figure out as much as it can, with excessive lookahead and    backtracking. */
+comment|/* This takes a token stream that hasn't decided much about types and    tries to figure out as much as it can, with excessive lookahead and    backtracking.  */
 end_comment
 
 begin_comment
-comment|/* fifo of tokens recognized and available to parser. */
+comment|/* fifo of tokens recognized and available to parser.  */
 end_comment
 
 begin_struct
@@ -87,13 +87,131 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|do_aggr
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|probe_obstack
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|obstack
+operator|*
+operator|,
+name|tree
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|scan_tokens
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPEW_DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|num_tokens
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|token
+modifier|*
+name|nth_token
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|add_token
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|token
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|consume_token
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|debug_yychar
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* From lex.c: */
@@ -198,7 +316,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Initialize token_obstack. Called once, from init_lex.  */
+comment|/* Initialize token_obstack. Called once, from init_parse.  */
 end_comment
 
 begin_function
@@ -226,7 +344,7 @@ comment|/* Use functions for debugging...  */
 end_comment
 
 begin_comment
-comment|/* Return the number of tokens available on the fifo. */
+comment|/* Return the number of tokens available on the fifo.  */
 end_comment
 
 begin_function
@@ -256,7 +374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Fetch the token N down the line from the head of the fifo. */
+comment|/* Fetch the token N down the line from the head of the fifo.  */
 end_comment
 
 begin_function
@@ -272,7 +390,7 @@ name|int
 name|n
 decl_stmt|;
 block|{
-comment|/* could just have this do slurp_ implicitly, but this way is easier    * to debug... */
+comment|/* could just have this do slurp_ implicitly, but this way is easier      to debug...  */
 name|my_friendly_assert
 argument_list|(
 name|n
@@ -305,7 +423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add a token to the token fifo. */
+comment|/* Add a token to the token fifo.  */
 end_comment
 
 begin_function
@@ -395,7 +513,7 @@ directive|define
 name|num_tokens
 parameter_list|()
 define|\
-value|((obstack_object_size(&token_obstack)/sizeof(struct token)) - first_token)
+value|((obstack_object_size (&token_obstack) / sizeof (struct token)) - first_token)
 end_define
 
 begin_define
@@ -406,7 +524,7 @@ parameter_list|(
 name|N
 parameter_list|)
 define|\
-value|(((struct token*)obstack_base(&token_obstack))+(N)+first_token)
+value|(((struct token*)obstack_base (&token_obstack))+(N)+first_token)
 end_define
 
 begin_define
@@ -416,7 +534,7 @@ name|add_token
 parameter_list|(
 name|T
 parameter_list|)
-value|obstack_grow(&token_obstack, (T), sizeof (struct token))
+value|obstack_grow (&token_obstack, (T), sizeof (struct token))
 end_define
 
 begin_define
@@ -425,7 +543,7 @@ directive|define
 name|consume_token
 parameter_list|()
 define|\
-value|(num_tokens() == 1							\    ? (obstack_free (&token_obstack, obstack_base (&token_obstack)),	\       (first_token = 0))						\    : first_token++)
+value|(num_tokens () == 1							\    ? (obstack_free (&token_obstack, obstack_base (&token_obstack)),	\       (first_token = 0))						\    : first_token++)
 end_define
 
 begin_endif
@@ -648,144 +766,8 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create room for N tokens at the front of the fifo.  This is used    to insert new tokens into the stream ahead of the current token.  */
+comment|/* Like _obstack_allocated_p, but stop after checking NLEVELS chunks.  */
 end_comment
-
-begin_function
-specifier|static
-name|void
-name|shift_tokens
-parameter_list|(
-name|n
-parameter_list|)
-name|int
-name|n
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|first_token
-operator|>=
-name|n
-condition|)
-name|first_token
-operator|-=
-name|n
-expr_stmt|;
-else|else
-block|{
-name|int
-name|old_token_count
-init|=
-name|num_tokens
-argument_list|()
-decl_stmt|;
-name|char
-modifier|*
-name|tmp
-decl_stmt|;
-name|obstack_blank
-argument_list|(
-operator|&
-name|token_obstack
-argument_list|,
-operator|(
-name|n
-operator|-
-name|first_token
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|token
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|old_token_count
-condition|)
-block|{
-name|tmp
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-operator|(
-name|num_tokens
-argument_list|()
-operator|+
-operator|(
-name|n
-operator|-
-name|first_token
-operator|)
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|token
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* This move does not rely on the system being able to handle 	     overlapping moves.  */
-name|bcopy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|nth_token
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-name|tmp
-argument_list|,
-name|old_token_count
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|token
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|tmp
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|nth_token
-argument_list|(
-name|n
-argument_list|)
-argument_list|,
-name|old_token_count
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|token
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|first_token
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -833,7 +815,7 @@ operator|)
 operator|->
 name|chunk
 expr_stmt|;
-comment|/* We use>= rather than> since the object cannot be exactly at      the beginning of the chunk but might be an empty object exactly      at the end of an adjacent chunk. */
+comment|/* We use>= rather than> since the object cannot be exactly at      the beginning of the chunk but might be an empty object exactly      at the end of an adjacent chunk.  */
 for|for
 control|(
 init|;
@@ -896,7 +878,7 @@ comment|/* from lex.c: */
 end_comment
 
 begin_comment
-comment|/* Value is 1 (or 2) if we should try to make the next identifier look like    a typename (when it may be a local variable or a class variable).    Value is 0 if we treat this name in a default fashion. */
+comment|/* Value is 1 (or 2) if we should try to make the next identifier look like    a typename (when it may be a local variable or a class variable).    Value is 0 if we treat this name in a default fashion.  */
 end_comment
 
 begin_decl_stmt
@@ -909,6 +891,13 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|looking_for_template
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|do_snarf_defarg
 decl_stmt|;
 end_decl_stmt
 
@@ -969,6 +958,11 @@ decl_stmt|;
 name|tree
 name|trrr
 decl_stmt|;
+name|int
+name|old_looking_for_typename
+init|=
+literal|0
+decl_stmt|;
 name|retry
 label|:
 ifdef|#
@@ -994,7 +988,55 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|do_snarf_defarg
+condition|)
+block|{
+name|my_friendly_assert
+argument_list|(
+name|num_tokens
+argument_list|()
+operator|==
+literal|0
+argument_list|,
+literal|2837
+argument_list|)
+expr_stmt|;
+name|tmp_token
+operator|.
+name|yychar
+operator|=
+name|DEFARG
+expr_stmt|;
+name|tmp_token
+operator|.
+name|yylval
+operator|.
+name|ttype
+operator|=
+name|snarf_defarg
+argument_list|()
+expr_stmt|;
+name|tmp_token
+operator|.
+name|end_of_file
+operator|=
+literal|0
+expr_stmt|;
+name|do_snarf_defarg
+operator|=
+literal|0
+expr_stmt|;
+name|add_token
+argument_list|(
+operator|&
+name|tmp_token
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* if we've got tokens, send them */
+elseif|else
 if|if
 condition|(
 name|num_tokens
@@ -1109,7 +1151,7 @@ name|tmp_token
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* many tokens just need to be returned. At first glance, all we    * have to do is send them back up, but some of them are needed to    * figure out local context. */
+comment|/* many tokens just need to be returned. At first glance, all we      have to do is send them back up, but some of them are needed to      figure out local context.  */
 switch|switch
 condition|(
 name|tmp_token
@@ -1162,10 +1204,17 @@ name|yychar
 operator|==
 name|SCOPE
 condition|)
+block|{
 comment|/* Don't interfere with the setting from an 'aggr' prefix.  */
+name|old_looking_for_typename
+operator|=
 name|looking_for_typename
-operator|++
 expr_stmt|;
+name|looking_for_typename
+operator|=
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1220,70 +1269,20 @@ block|{
 case|case
 name|TYPENAME
 case|:
-name|lastiddecl
-operator|=
-name|identifier_typedecl_value
-argument_list|(
-name|tmp_token
-operator|.
-name|yylval
-operator|.
-name|ttype
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lastiddecl
-operator|!=
-name|trrr
-condition|)
-block|{
-name|lastiddecl
-operator|=
-name|trrr
-expr_stmt|;
-if|if
-condition|(
-name|got_scope
-operator|||
-name|got_object
-condition|)
-name|tmp_token
-operator|.
-name|yylval
-operator|.
-name|ttype
-operator|=
-name|DECL_NESTED_TYPENAME
-argument_list|(
-name|trrr
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
 case|case
-name|IDENTIFIER
+name|SELFNAME
 case|:
-name|lastiddecl
-operator|=
-name|trrr
-expr_stmt|;
-break|break;
+case|case
+name|NSNAME
+case|:
 case|case
 name|PTYPENAME
 case|:
 name|lastiddecl
 operator|=
-name|NULL_TREE
-expr_stmt|;
-break|break;
-case|case
-name|NSNAME
-case|:
-name|lastiddecl
-operator|=
 name|trrr
 expr_stmt|;
+comment|/* If this got special lookup, remember it.  In these cases, 	         we don't have to worry about being a declarator-id. */
 if|if
 condition|(
 name|got_scope
@@ -1295,6 +1294,17 @@ operator|.
 name|yylval
 operator|.
 name|ttype
+operator|=
+name|trrr
+expr_stmt|;
+break|break;
+case|case
+name|PFUNCNAME
+case|:
+case|case
+name|IDENTIFIER
+case|:
+name|lastiddecl
 operator|=
 name|trrr
 expr_stmt|;
@@ -1310,13 +1320,13 @@ block|}
 else|else
 name|lastiddecl
 operator|=
-name|trrr
+name|NULL_TREE
 expr_stmt|;
 name|got_scope
 operator|=
 name|NULL_TREE
 expr_stmt|;
-comment|/* and fall through to... */
+comment|/* and fall through to...  */
 case|case
 name|IDENTIFIER_DEFN
 case|:
@@ -1335,14 +1345,10 @@ case|:
 name|consume_token
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
+comment|/* If we see a SCOPE next, restore the old value. 	 Otherwise, we got what we want. */
 name|looking_for_typename
-operator|>
-literal|0
-condition|)
-name|looking_for_typename
-operator|--
+operator|=
+name|old_looking_for_typename
 expr_stmt|;
 name|looking_for_template
 operator|=
@@ -1352,9 +1358,12 @@ break|break;
 case|case
 name|SCSPEC
 case|:
-comment|/* do_aggr needs to check if the previous token was RID_FRIEND, 	 so just increment first_token instead of calling consume_token. */
-name|first_token
+case|case
+name|NEW
+case|:
+comment|/* do_aggr needs to check if the previous token was RID_NEW, 	 so just increment first_token instead of calling consume_token.  */
 operator|++
+name|first_token
 expr_stmt|;
 break|break;
 case|case
@@ -1378,21 +1387,59 @@ expr_stmt|;
 name|do_aggr
 argument_list|()
 expr_stmt|;
-comment|/* fall through to output... */
+comment|/* fall through to output...  */
 case|case
 name|ENUM
 case|:
 comment|/* Set this again, in case we are rescanning.  */
 name|looking_for_typename
 operator|=
-literal|1
+literal|2
 expr_stmt|;
-comment|/* fall through... */
+comment|/* fall through...  */
 default|default:
 name|consume_token
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* class member lookup only applies to the first token after the object      expression, except for explicit destructor calls.  */
+if|if
+condition|(
+name|tmp_token
+operator|.
+name|yychar
+operator|!=
+literal|'~'
+condition|)
+name|got_object
+operator|=
+name|NULL_TREE
+expr_stmt|;
+comment|/* Clear looking_for_typename if we got 'enum { ... };'.  */
+if|if
+condition|(
+name|tmp_token
+operator|.
+name|yychar
+operator|==
+literal|'{'
+operator|||
+name|tmp_token
+operator|.
+name|yychar
+operator|==
+literal|':'
+operator|||
+name|tmp_token
+operator|.
+name|yychar
+operator|==
+literal|';'
+condition|)
+name|looking_for_typename
+operator|=
+literal|0
+expr_stmt|;
 name|yylval
 operator|=
 name|tmp_token
@@ -1432,7 +1479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* token[0] == AGGR (struct/union/enum)  * Thus, token[1] is either a TYPENAME or a TYPENAME_DEFN.  * If token[2] == '{' or ':' then it's TYPENAME_DEFN.  * It's also a definition if it's a forward declaration (as in 'struct Foo;')  * which we can tell lf token[2] == ';' *and* token[-1] != FRIEND.  */
+comment|/* token[0] == AGGR (struct/union/enum)    Thus, token[1] is either a TYPENAME or a TYPENAME_DEFN.    If token[2] == '{' or ':' then it's TYPENAME_DEFN.    It's also a definition if it's a forward declaration (as in 'struct Foo;')    which we can tell if token[2] == ';' *and* token[-1] != FRIEND or NEW.  */
 end_comment
 
 begin_function
@@ -1493,13 +1540,16 @@ operator|==
 literal|';'
 condition|)
 block|{
-comment|/* It's a forward declaration iff we were not preceded by 'friend'. */
+comment|/* It's a forward declaration iff we were not preceded by          'friend' or `new'.  */
 if|if
 condition|(
 name|first_token
 operator|>
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|nth_token
 argument_list|(
 operator|-
@@ -1531,6 +1581,22 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|nth_token
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+operator|->
+name|yychar
+operator|==
+name|NEW
+condition|)
+return|return
+literal|0
+return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1610,7 +1676,7 @@ name|SPEW_DEBUG
 end_ifdef
 
 begin_comment
-comment|/* debug_yychar takes a yychar (token number) value and prints its name. */
+comment|/* debug_yychar takes a yychar (token number) value and prints its name.  */
 end_comment
 
 begin_function

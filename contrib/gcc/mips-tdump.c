@@ -1,48 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read and manage MIPS symbol tables from object modules.    Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.    Contributed by hartzell@boulder.colorado.edu,    Rewritten by meissner@osf.org.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Read and manage MIPS symbol tables from object modules.    Copyright (C) 1991, 1994, 1995, 1997 Free Software Foundation, Inc.    Contributed by hartzell@boulder.colorado.edu,    Rewritten by meissner@osf.org.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"system.h"
 end_include
 
 begin_ifdef
@@ -107,7 +77,7 @@ name|MIPS_IS_STAB
 end_ifndef
 
 begin_comment
-comment|/* Macros for mips-tfile.c to encapsulate stabs in ECOFF, and for    and mips-tdump.c to print them out.  This is used on the Alpha,    which does not include mips.h.     These must match the corresponding definitions in gdb/mipsread.c.    Unfortunately, gcc and gdb do not currently share any directories. */
+comment|/* Macros for mips-tfile.c to encapsulate stabs in ECOFF, and for    and mips-tdump.c to print them out.  This is used on the Alpha,    which does not include mips.h.     These must match the corresponding definitions in gdb/mipsread.c.    Unfortunately, gcc and gdb do not currently share any directories.  */
 end_comment
 
 begin_define
@@ -325,7 +295,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Redefinition of of storage classes as an enumeration for better    debugging.  */
+comment|/* Redefinition of storage classes as an enumeration for better    debugging.  */
 end_comment
 
 begin_ifndef
@@ -3321,7 +3291,7 @@ decl_stmt|;
 name|int
 name|j
 decl_stmt|;
-comment|/* Print array bounds reversed (ie, in the order the C 		   programmer writes them).  C is such a fun language.... */
+comment|/* Print array bounds reversed (ie, in the order the C 		   programmer writes them).  C is such a fun language....  */
 while|while
 condition|(
 name|i
@@ -4582,6 +4552,9 @@ name|printf
 argument_list|(
 literal|"      First symbol: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|aux_base
 index|[
 name|index
@@ -4678,6 +4651,9 @@ name|printf
 argument_list|(
 literal|"      End+1 symbol: %-7ld   Type:  %s\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|aux_base
 index|[
 name|index
@@ -6619,7 +6595,7 @@ operator|->
 name|cbLineOffset
 expr_stmt|;
 else|else
-comment|/* not last proc. */
+comment|/* not last proc.  */
 name|line_end
 operator|=
 operator|(
@@ -7565,6 +7541,7 @@ expr_stmt|;
 else|else
 name|last_aux_in_use
 operator|=
+operator|(
 name|file_desc
 index|[
 name|sym_hdr
@@ -7588,6 +7565,7 @@ operator|.
 name|caux
 operator|-
 literal|1
+operator|)
 expr_stmt|;
 if|if
 condition|(

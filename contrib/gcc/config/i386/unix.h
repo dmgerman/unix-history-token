@@ -154,6 +154,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHIFT_DOUBLE_OMITS_COUNT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|AS3_SHIFT_DOUBLE
 parameter_list|(
 name|a
@@ -164,7 +171,8 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|AS2 (a,c,d)
+define|\
+value|(SHIFT_DOUBLE_OMITS_COUNT ? AS2 (a,c,d) : AS3 (a,b,c,d))
 end_define
 
 begin_comment
@@ -341,13 +349,6 @@ name|ASM_COMMENT_START
 value|"/"
 end_define
 
-begin_define
-define|#
-directive|define
-name|COMMENT_BEGIN
-value|"/"
-end_define
-
 begin_comment
 comment|/* Output to assembler file text saying following lines    may contain character constants, extra white space, comments, etc.  */
 end_comment
@@ -459,6 +460,27 @@ name|N
 parameter_list|)
 define|\
 value|((N) == 0 || ((N)== FIRST_FLOAT_REG&& TARGET_FLOAT_RETURNS_IN_80387))
+end_define
+
+begin_comment
+comment|/* Output code to add DELTA to the first argument, and then jump to FUNCTION.    Used for C++ multiple inheritance.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_MI_THUNK
+parameter_list|(
+name|FILE
+parameter_list|,
+name|THUNK_FNDECL
+parameter_list|,
+name|DELTA
+parameter_list|,
+name|FUNCTION
+parameter_list|)
+define|\
+value|do {									      \   tree parm;								      \ 									      \   if (i386_regparm> 0)							      \     parm = TYPE_ARG_TYPES (TREE_TYPE (function));			      \   else									      \     parm = NULL_TREE;							      \   for (; parm; parm = TREE_CHAIN (parm))				      \     if (TREE_VALUE (parm) == void_type_node)				      \       break;								      \   fprintf (FILE, "\taddl $%d,%s\n", DELTA,				      \ 	   parm ? "%eax"						      \ 	   : aggregate_value_p (TREE_TYPE (TREE_TYPE (FUNCTION))) ? "8(%esp)" \ 	   : "4(%esp)");						      \ 									      \   if (flag_pic)								      \     {									      \       rtx xops[2];							      \       xops[0] = pic_offset_table_rtx;					      \       xops[1] = (rtx) gen_label_rtx ();					      \ 									      \       if (i386_regparm> 2)						      \ 	abort ();							      \       output_asm_insn ("push%L0 %0", xops);				      \       output_asm_insn (AS1 (call,%P1), xops);				      \       ASM_OUTPUT_INTERNAL_LABEL (FILE, "L", CODE_LABEL_NUMBER (xops[1]));     \       output_asm_insn (AS1 (pop%L0,%0), xops);				      \       output_asm_insn ("addl $_GLOBAL_OFFSET_TABLE_+[.-%P1],%0", xops);	      \       fprintf (FILE, "\tmovl ");					      \       assemble_name (FILE, XSTR (XEXP (DECL_RTL (FUNCTION), 0), 0));	      \       fprintf (FILE, "@GOT(%%ebx),%%ecx\n\tpopl %%ebx\n\tjmp *%%ecx\n");      \     }									      \   else									      \     {									      \       fprintf (FILE, "\tjmp ");						      \       assemble_name (FILE, XSTR (XEXP (DECL_RTL (FUNCTION), 0), 0));	      \       fprintf (FILE, "\n");						      \     }									      \ } while (0)
 end_define
 
 end_unit

@@ -830,6 +830,11 @@ block|,
 name|OP_ADD
 init|=
 literal|0x07
+block|,
+comment|/* GNU extensions.  */
+name|OP_MULT
+init|=
+literal|0x80
 block|}
 enum|;
 end_enum

@@ -4,21 +4,6 @@ comment|/* Configuration common to all targets running the GNU system.  */
 end_comment
 
 begin_comment
-comment|/* Macro to produce CPP_PREDEFINES for GNU on a given machine.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GNU_CPP_PREDEFINES
-parameter_list|(
-name|machine
-parameter_list|)
-define|\
-value|"-D" machine " -Acpu(" machine ") -Amachine(" machine ")" \ "-Dunix -Asystem(unix) \ -DMACH -Asystem(mach) \ -D__GNU__ -Asystem(gnu)"
-end_define
-
-begin_comment
 comment|/* Provide GCC options for standard feature-test macros.  */
 end_comment
 

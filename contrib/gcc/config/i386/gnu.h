@@ -23,7 +23,20 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|GNU_CPP_PREDEFINES("i386")
+value|"-Di386 -Acpu(i386) -Amachine(i386) \ -Dunix -Asystem(unix)  -DMACH -Asystem(mach) -D__GNU__ -Asystem(gnu)"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_VERSION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (i386 GNU)");
 end_define
 
 begin_undef
@@ -36,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf_i386 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /lib/ld.so} \ 	%{!rpath:-rpath /lib/}} %{static:-static}}}"
+value|"-m elf_i386 %{shared:-shared} \   %{!shared: \     %{!static: \       %{rdynamic:-export-dynamic} \       %{!dynamic-linker:-dynamic-linker /lib/ld.so}} \     %{static:-static}}"
 end_define
 
 begin_comment

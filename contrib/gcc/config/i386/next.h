@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GNU compiler for Intel x86 CPU running NeXTSTEP    Copyright (C) 1993, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for GNU compiler for Intel x86 CPU running NeXTSTEP    Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -207,23 +207,14 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|AS3_SHIFT_DOUBLE
+name|SHIFT_DOUBLE_OMITS_COUNT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|AS3_SHIFT_DOUBLE
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|AS3 (a,b,c,d)
+name|SHIFT_DOUBLE_OMITS_COUNT
+value|0
 end_define
 
 begin_comment
@@ -489,12 +480,35 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|(TREE_CODE (FUNTYPE) == IDENTIFIER_NODE			\    ? 0								\    : (TARGET_RTD						\&& (TYPE_ARG_TYPES (FUNTYPE) == 0				\           || (TREE_VALUE (tree_last (TYPE_ARG_TYPES (FUNTYPE)))	\               == void_type_node))) ? (SIZE) : 0)
+value|((FUNDECL)&& TREE_CODE (FUNDECL) == IDENTIFIER_NODE		\    ? 0								\    : (TARGET_RTD						\&& (TYPE_ARG_TYPES (FUNTYPE) == 0				\           || (TREE_VALUE (tree_last (TYPE_ARG_TYPES (FUNTYPE)))	\               == void_type_node))) ? (SIZE) : 0)
 end_define
 
 begin_comment
 comment|/* END Calling Convention CHANGES */
 end_comment
+
+begin_comment
+comment|/* NeXT still uses old binutils that don't insert nops by default    when the .align directive demands to insert extra space in the text    segment.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_ALIGN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGN
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LOG
+parameter_list|)
+define|\
+value|if ((LOG)!=0) fprintf ((FILE), "\t.align %d,0x90\n", (LOG))
+end_define
 
 end_unit
 

@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Part of CPP library.  (Macro hash table support.)    Copyright (C) 1986, 87, 89, 92, 93, 94, 1995 Free Software Foundation, Inc.    Written by Per Bothner, 1994.    Based on CCCP program by by Paul Rubin, June 1986    Adapted to ANSI C, Richard Stallman, Jan 1987  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
+comment|/* Part of CPP library.  (Macro hash table support.)    Copyright (C) 1986, 87, 89, 92-95, 1996 Free Software Foundation, Inc.    Written by Per Bothner, 1994.    Based on CCCP program by Paul Rubin, June 1986    Adapted to ANSI C, Richard Stallman, Jan 1987  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gansidecl.h"
+end_include
 
 begin_include
 include|#
@@ -30,52 +48,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Define a generic NULL if one hasn't already been defined.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_define
-define|#
-directive|define
-name|volatile
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * return hash function on name.  must be compatible with the one  * computed a step at a time, elsewhere  */
+comment|/* Return hash function on name.  must be compatible with the one    computed a step at a time, elsewhere  */
 end_comment
 
 begin_function
@@ -136,7 +109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find the most recent hash node for name name (ending with first  * non-identifier char) installed by install  *  * If LEN is>= 0, it is the length of the name.  * Otherwise, compute the length by scanning the entire name.  *  * If HASH is>= 0, it is the precomputed hash code.  * Otherwise, compute the hash code.  */
+comment|/* Find the most recent hash node for name "name" (ending with first    non-identifier char) installed by install     If LEN is>= 0, it is the length of the name.    Otherwise, compute the length by scanning the entire name.     If HASH is>= 0, it is the precomputed hash code.    Otherwise, compute the hash code.  */
 end_comment
 
 begin_function
@@ -152,10 +125,10 @@ name|len
 parameter_list|,
 name|hash
 parameter_list|)
-name|struct
-name|parse_file
+name|cpp_reader
 modifier|*
 name|pfile
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|U_CHAR
@@ -335,7 +308,7 @@ name|hp
 operator|->
 name|prev
 expr_stmt|;
-comment|/* make sure that the bucket chain header that      the deleted guy was on points to the right thing afterwards. */
+comment|/* make sure that the bucket chain header that      the deleted guy was on points to the right thing afterwards.  */
 if|if
 condition|(
 name|hp
@@ -442,7 +415,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * install a name in the main hash table, even if it is already there.  *   name stops with first non alphanumeric, except leading '#'.  * caller must check against redefinition if that is desired.  * delete_macro () removes things installed by install () in fifo order.  * this is important because of the `defined' special symbol used  * in #if, and also if pushdef/popdef directives are ever implemented.  *  * If LEN is>= 0, it is the length of the name.  * Otherwise, compute the length by scanning the entire name.  *  * If HASH is>= 0, it is the precomputed hash code.  * Otherwise, compute the hash code.  */
+comment|/* Install a name in the main hash table, even if it is already there.      name stops with first non alphanumeric, except leading '#'.    caller must check against redefinition if that is desired.    delete_macro () removes things installed by install () in fifo order.    this is important because of the `defined' special symbol used    in #if, and also if pushdef/popdef directives are ever implemented.     If LEN is>= 0, it is the length of the name.    Otherwise, compute the length by scanning the entire name.     If HASH is>= 0, it is the precomputed hash code.    Otherwise, compute the hash code.  */
 end_comment
 
 begin_function
@@ -732,6 +705,7 @@ parameter_list|)
 name|cpp_reader
 modifier|*
 name|pfile
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 specifier|register

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Front-end tree definitions for GNU compiler.    Copyright (C) 1989, 1991, 1994 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of floating-point access for GNU compiler.    Copyright (C) 1989, 1991, 1994, 1996, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -45,6 +45,13 @@ define|#
 directive|define
 name|IBM_FLOAT_FORMAT
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|C4X_FLOAT_FORMAT
+value|4
 end_define
 
 begin_comment
@@ -647,6 +654,9 @@ operator|,
 name|HOST_WIDE_INT
 operator|,
 name|HOST_WIDE_INT
+operator|,
+expr|enum
+name|machine_mode
 operator|)
 argument_list|)
 decl_stmt|;
@@ -667,6 +677,9 @@ name|HOST_WIDE_INT
 operator|,
 name|unsigned
 name|HOST_WIDE_INT
+operator|,
+expr|enum
+name|machine_mode
 operator|)
 argument_list|)
 decl_stmt|;
@@ -814,6 +827,33 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
+name|ereal_unto_float
+name|PROTO
+argument_list|(
+operator|(
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|REAL_VALUE_TYPE
+name|ereal_unto_double
+name|PROTO
+argument_list|(
+operator|(
+name|long
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|REAL_VALUE_TYPE
 name|ereal_from_float
 name|PROTO
 argument_list|(
@@ -902,13 +942,21 @@ parameter_list|)
 value|(etruncui (x))
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|real_value_truncate
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|REAL_VALUE_TYPE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1000,9 +1048,11 @@ parameter_list|,
 name|lo
 parameter_list|,
 name|hi
+parameter_list|,
+name|mode
 parameter_list|)
 define|\
-value|ereal_from_int (&d, (HOST_WIDE_INT) (lo), (HOST_WIDE_INT) (hi))
+value|ereal_from_int (&d, (HOST_WIDE_INT) (lo), (HOST_WIDE_INT) (hi), mode)
 end_define
 
 begin_define
@@ -1015,8 +1065,11 @@ parameter_list|,
 name|lo
 parameter_list|,
 name|hi
+parameter_list|,
+name|mode
 parameter_list|)
-value|(ereal_from_uint (&d, lo, hi))
+define|\
+value|ereal_from_uint (&d, lo, hi, mode)
 end_define
 
 begin_comment
@@ -1091,6 +1144,34 @@ parameter_list|,
 name|OUT
 parameter_list|)
 value|((OUT) = etarsingle ((IN)))
+end_define
+
+begin_comment
+comment|/* Inverse of REAL_VALUE_TO_TARGET_DOUBLE. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_VALUE_UNTO_TARGET_DOUBLE
+parameter_list|(
+name|d
+parameter_list|)
+value|(ereal_unto_double (d))
+end_define
+
+begin_comment
+comment|/* Inverse of REAL_VALUE_TO_TARGET_SINGLE. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_VALUE_UNTO_TARGET_SINGLE
+parameter_list|(
+name|f
+parameter_list|)
+value|(ereal_unto_float (f))
 end_define
 
 begin_comment
@@ -1326,7 +1407,7 @@ parameter_list|,
 name|OUT
 parameter_list|)
 define|\
-value|do { float f = (float) (IN);						\      (OUT) = *(long *)&f;						\    } while (0)
+value|do {							\   union {						\     float f;						\     HOST_WIDE_INT l;					\   } u;							\   if (sizeof(HOST_WIDE_INT)< sizeof(float))		\     abort();						\   u.l = 0;						\   u.f = (IN);						\   (OUT) = u.l;						\ } while (0)
 end_define
 
 begin_endif
@@ -1354,9 +1435,7 @@ parameter_list|,
 name|OUT
 parameter_list|)
 define|\
-value|do { REAL_VALUE_TYPE in = (IN);
-comment|/* Make sure it's not in a register.  */
-value|\      if (HOST_FLOAT_WORDS_BIG_ENDIAN == FLOAT_WORDS_BIG_ENDIAN)		\        {								\ 	 (OUT)[0] = ((long *)&in)[0];					\ 	 (OUT)[1] = ((long *)&in)[1];					\        }								\      else								\        {								\ 	 (OUT)[1] = ((long *)&in)[0];					\ 	 (OUT)[0] = ((long *)&in)[1];					\        }								\    } while (0)
+value|do {									\   union {								\     REAL_VALUE_TYPE f;							\     HOST_WIDE_INT l[2];							\   } u;									\   if (sizeof(HOST_WIDE_INT) * 2< sizeof(REAL_VALUE_TYPE))		\     abort();								\   u.l[0] = u.l[1] = 0;							\   u.f = (IN);								\   if (HOST_FLOAT_WORDS_BIG_ENDIAN == FLOAT_WORDS_BIG_ENDIAN)		\     (OUT)[0] = u.l[0], (OUT)[1] = u.l[1];				\   else									\     (OUT)[1] = u.l[0], (OUT)[0] = u.l[1];				\ } while (0)
 end_define
 
 begin_endif
@@ -1399,6 +1478,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Compare two floating-point objects for bitwise identity.    This is not the same as comparing for equality on IEEE hosts:    -0.0 equals 0.0 but they are not identical, and conversely    two NaNs might be identical but they cannot be equal.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_VALUES_IDENTICAL
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|(!bcmp ((char *)&(x), (char *)&(y), sizeof (REAL_VALUE_TYPE)))
+end_define
 
 begin_comment
 comment|/* Compare two floating-point values for equality.  */
@@ -1738,13 +1834,21 @@ begin_comment
 comment|/* Don't use REAL_VALUE_TRUNCATE directly--always call real_value_truncate.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|real_value_truncate
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|REAL_VALUE_TYPE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -1844,6 +1948,45 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|target_isnan
+name|PROTO
+argument_list|(
+operator|(
+name|REAL_VALUE_TYPE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|target_isinf
+name|PROTO
+argument_list|(
+operator|(
+name|REAL_VALUE_TYPE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|target_negative
+name|PROTO
+argument_list|(
+operator|(
+name|REAL_VALUE_TYPE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Determine whether a floating-point value X is minus 0. */
@@ -1987,19 +2130,36 @@ value|XEXP (r, 0)
 end_define
 
 begin_comment
+comment|/* Given a CONST_DOUBLE in FROM, store into TO the value it represents.  */
+end_comment
+
+begin_comment
 comment|/* Function to return a real value (not a tree node)    from a given integer constant.  */
 end_comment
 
-begin_function_decl
+begin_union_decl
+union_decl|union
+name|tree_node
+union_decl|;
+end_union_decl
+
+begin_decl_stmt
 name|REAL_VALUE_TYPE
 name|real_value_from_int_cst
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Given a CONST_DOUBLE in FROM, store into TO the value it represents.  */
-end_comment
+name|PROTO
+argument_list|(
+operator|(
+expr|union
+name|tree_node
+operator|*
+operator|,
+expr|union
+name|tree_node
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -2076,6 +2236,60 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Replace R by 1/R in the given machine mode, if the result is exact.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|exact_real_inverse
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|REAL_VALUE_TYPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|debug_real
+name|PROTO
+argument_list|(
+operator|(
+name|REAL_VALUE_TYPE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In varasm.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|assemble_real
+name|PROTO
+argument_list|(
+operator|(
+name|REAL_VALUE_TYPE
+operator|,
+expr|enum
+name|machine_mode
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

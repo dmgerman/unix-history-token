@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for insn-output.c.  These functions are defined in recog.c,    final.c, and varasm.c.    Copyright (C) 1987, 1991, 1994 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declarations for insn-output.c.  These functions are defined in recog.c,    final.c, and varasm.c.    Copyright (C) 1987, 1991, 1994, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -155,7 +155,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|final_start_function
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 operator|(
 name|rtx
@@ -177,7 +177,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|final_end_function
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 operator|(
 name|rtx
@@ -199,7 +199,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|final
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 operator|(
 name|rtx
@@ -223,7 +223,7 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|final_scan_insn
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 operator|(
 name|rtx
@@ -298,6 +298,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Compute a worst-case reference address of a branch so that it    can be safely used in the presence of aligned labels.    Defined in final.c.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|insn_current_reference_address
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Output a LABEL_REF, or a bare CODE_LABEL, as an assembler symbol.  */
 end_comment
 
@@ -339,7 +356,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|output_addr_const
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 operator|(
 name|FILE
@@ -359,7 +376,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|asm_fprintf
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 name|PVPROTO
 argument_list|(
@@ -453,6 +470,129 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Functions in flow.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|allocate_for_life_analysis
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|regno_uninitialized
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|regno_clobbered_at_setjmp
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dump_flow_info
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|find_basic_blocks
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|int
+operator|,
+name|FILE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|free_basic_block_vars
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_block_num
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|life_analysis
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|int
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -533,11 +673,35 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|EH_FRAME_SECTION_ASM_OP
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|eh_frame_section
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TREE_CODE
 end_ifdef
 
 begin_comment
-comment|/* Tell assembler to change to section NAME for DECL.    If DECL is NULL, just switch to section NAME.    If NAME is NULL, get the name from DECL.  */
+comment|/* Tell assembler to change to section NAME for DECL.    If DECL is NULL, just switch to section NAME.    If NAME is NULL, get the name from DECL.    If RELOC is 1, the initializer for DECL contains relocs.  */
 end_comment
 
 begin_decl_stmt
@@ -551,6 +715,8 @@ name|tree
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -574,6 +740,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Tell assembler to switch to the section for the exception table.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|exception_section
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Create the rtl to represent a function, for a function definition.    DECL is a FUNCTION_DECL node which describes which function.    The rtl is stored into DECL.  */
 end_comment
 
@@ -585,6 +768,49 @@ name|PROTO
 argument_list|(
 operator|(
 name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Declare DECL to be a weak symbol.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|declare_weak
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TREE_CODE */
+end_comment
+
+begin_comment
+comment|/* Emit any pending weak declarations.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|weak_finish
+name|PROTO
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -607,6 +833,12 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TREE_CODE
+end_ifdef
 
 begin_comment
 comment|/* Create the DECL_RTL for a declaration for a static or external variable    or static or external function.    ASMSPEC, if not 0, is the string which the user specified    as the assembler symbol name.    TOP_LEVEL is nonzero if this is a file-scope variable.     This is never called for PARM_DECL nodes.  */
@@ -658,6 +890,21 @@ name|assemble_constant_align
 name|PROTO
 argument_list|(
 operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|assemble_alias
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
 name|tree
 operator|)
 argument_list|)
@@ -853,42 +1100,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Output text storage for constructor CONSTR. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|bc_output_constructor
-name|PROTO
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Create storage for constructor CONSTR. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|bc_output_data_constructor
-name|PROTO
-argument_list|(
-operator|(
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Output something to declare an external symbol to the assembler.    (Most assemblers don't need this, so we normally output nothing.)    Do nothing if DECL is not external.  */
 end_comment
 
@@ -909,6 +1120,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* TREE_CODE */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -982,7 +1197,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|assemble_name
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 operator|(
 name|FILE
@@ -1481,6 +1696,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Language-specific reason why the current function cannot be made inline.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|current_function_cannot_inline
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The line number of the beginning of the current function.    sdbout.c needs this so that it can output relative linenumbers.  */
 end_comment
 
@@ -1528,6 +1755,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Decide whether DECL needs to be in a writable section.  RELOC is the same    as for SELECT_SECTION.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_READONLY_SECTION
+parameter_list|(
+name|DECL
+parameter_list|,
+name|RELOC
+parameter_list|)
+define|\
+value|(TREE_READONLY (DECL)					\&& ! TREE_THIS_VOLATILE (DECL)			\&& DECL_INITIAL (DECL)				\&& (DECL_INITIAL (DECL) == error_mark_node		\        || TREE_CONSTANT (DECL_INITIAL (DECL)))		\&& ! (RELOC&& (flag_pic || DECL_ONE_ONLY (DECL))))
+end_define
 
 end_unit
 

@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime archiving    Copyright (C) 1993, 1995 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime archiving    Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* As a special exception, if you link this library with files compiled with    GCC to produce an executable, this does not cause the resulting executable    to be covered by the GNU General Public License. This exception does not    however invalidate any other reasons why the executable file might be    covered by the GNU General Public License.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_include
 include|#
@@ -24,6 +30,23 @@ include|#
 directive|include
 file|"encoding.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -67,20 +90,6 @@ parameter_list|(
 name|L
 parameter_list|)
 value|(((char*)0)+(L))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__objc_fatal
-parameter_list|(
-name|format
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-define|\
-value|{ fprintf(stderr, "archiving: "); \    fprintf(stderr, format, ## args); \    fprintf(stderr, "\n"); abort(); }
 end_define
 
 begin_comment
@@ -1920,9 +1929,23 @@ argument_list|)
 return|;
 block|}
 else|else
-name|abort
-argument_list|()
+block|{
+name|objc_error
+argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_OPCODE
+argument_list|,
+literal|"__objc_write_extension: bad opcode %c\n"
+argument_list|,
+name|code
+argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 end_function
 
@@ -2102,6 +2125,8 @@ parameter_list|)
 block|{
 name|int
 name|len
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -2109,10 +2134,15 @@ name|stream
 operator|->
 name|writing_root_p
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_RECURSE_ROOT
+argument_list|,
 literal|"objc_write_root_object called recursively"
 argument_list|)
+expr_stmt|;
 else|else
 block|{
 name|stream
@@ -2269,56 +2299,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|int
-name|atoi
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|size_t
-name|strlen
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|size_t
-name|strcpy
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|__inline__
@@ -2806,8 +2786,12 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected 8bit signed int, got %dbit int"
 argument_list|,
 call|(
@@ -2927,8 +2911,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected 8bit unsigned int, got %dbit int"
 argument_list|,
 call|(
@@ -3056,8 +3044,12 @@ argument_list|(
 name|short
 argument_list|)
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected short, got bigger (%dbits)"
 argument_list|,
 name|nbytes
@@ -3254,8 +3246,12 @@ argument_list|(
 name|short
 argument_list|)
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected short, got int or bigger"
 argument_list|)
 expr_stmt|;
@@ -3426,8 +3422,12 @@ argument_list|(
 name|int
 argument_list|)
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected int, got bigger"
 argument_list|)
 expr_stmt|;
@@ -3618,8 +3618,12 @@ argument_list|(
 name|long
 argument_list|)
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected long, got bigger"
 argument_list|)
 expr_stmt|;
@@ -3753,8 +3757,12 @@ argument_list|(
 name|int
 argument_list|)
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected int, got bigger"
 argument_list|)
 expr_stmt|;
@@ -3971,8 +3979,12 @@ argument_list|(
 name|long
 argument_list|)
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected long, got bigger"
 argument_list|)
 expr_stmt|;
@@ -4288,7 +4300,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|__objc_xmalloc
+name|objc_malloc
 argument_list|(
 name|length
 operator|+
@@ -4390,7 +4402,7 @@ expr_stmt|;
 operator|*
 name|string
 operator|=
-name|__objc_xmalloc
+name|objc_malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -4451,7 +4463,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|__objc_xmalloc
+name|objc_malloc
 argument_list|(
 name|nbytes
 operator|+
@@ -4511,8 +4523,12 @@ block|}
 block|}
 break|break;
 default|default:
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected string, got opcode %c\n"
 argument_list|,
 operator|(
@@ -4768,8 +4784,12 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected null-byte, got opcode %c"
 argument_list|,
 name|buf
@@ -4798,8 +4818,12 @@ if|if
 condition|(
 name|key
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_KEY
+argument_list|,
 literal|"cannot register use upcode..."
 argument_list|)
 expr_stmt|;
@@ -4935,8 +4959,12 @@ if|if
 condition|(
 name|key
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_KEY
+argument_list|,
 literal|"cannot register root object..."
 argument_list|)
 expr_stmt|;
@@ -4956,8 +4984,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected object, got opcode %c"
 argument_list|,
 name|buf
@@ -5127,7 +5159,7 @@ argument_list|(
 name|class_name
 argument_list|)
 expr_stmt|;
-name|free
+name|objc_free
 argument_list|(
 name|class_name
 argument_list|)
@@ -5202,8 +5234,12 @@ if|if
 condition|(
 name|key
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_KEY
+argument_list|,
 literal|"cannot register use upcode..."
 argument_list|)
 expr_stmt|;
@@ -5249,8 +5285,12 @@ operator|!
 operator|*
 name|class
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_CLASS
+argument_list|,
 literal|"cannot find class for key %lu"
 argument_list|,
 name|key
@@ -5258,8 +5298,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected class, got opcode %c"
 argument_list|,
 name|buf
@@ -5451,7 +5495,7 @@ argument_list|(
 name|selector_name
 argument_list|)
 expr_stmt|;
-name|free
+name|objc_free
 argument_list|(
 name|selector_name
 argument_list|)
@@ -5501,8 +5545,12 @@ if|if
 condition|(
 name|key
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_KEY
+argument_list|,
 literal|"cannot register use upcode..."
 argument_list|)
 expr_stmt|;
@@ -5544,8 +5592,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_DATA
+argument_list|,
 literal|"expected selector, got opcode %c"
 argument_list|,
 name|buf
@@ -5915,7 +5967,6 @@ name|type
 operator|!=
 name|_C_STRUCT_E
 condition|)
-empty_stmt|;
 block|{
 name|align
 operator|=
@@ -5973,18 +6024,22 @@ literal|1
 return|;
 block|}
 default|default:
-name|fprintf
+block|{
+name|objc_error
 argument_list|(
-name|stderr
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_TYPE
 argument_list|,
 literal|"objc_write_type: cannot parse typespec: %s\n"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 block|}
 end_function
@@ -6294,7 +6349,6 @@ name|type
 operator|!=
 name|_C_STRUCT_E
 condition|)
-empty_stmt|;
 block|{
 name|align
 operator|=
@@ -6352,18 +6406,22 @@ literal|1
 return|;
 block|}
 default|default:
-name|fprintf
+block|{
+name|objc_error
 argument_list|(
-name|stderr
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_TYPE
 argument_list|,
 literal|"objc_read_type: cannot parse typespec: %s\n"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 block|}
 end_function
@@ -6783,8 +6841,12 @@ name|t
 operator|!=
 name|_C_ARY_E
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_TYPE
+argument_list|,
 literal|"expected `]', got: %s"
 argument_list|,
 name|t
@@ -6793,17 +6855,16 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|fprintf
+name|objc_error
 argument_list|(
-name|stderr
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_TYPE
 argument_list|,
 literal|"objc_write_types: cannot parse typespec: %s\n"
 argument_list|,
 name|type
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -7182,8 +7243,12 @@ name|t
 operator|!=
 name|_C_ARY_E
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_TYPE
+argument_list|,
 literal|"expected `]', got: %s"
 argument_list|,
 name|t
@@ -7192,17 +7257,16 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|fprintf
+name|objc_error
 argument_list|(
-name|stderr
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_TYPE
 argument_list|,
 literal|"objc_read_types: cannot parse typespec: %s\n"
 argument_list|,
 name|type
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -7359,24 +7423,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|__objc_free
-parameter_list|(
-name|void
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|__objc_fread
 parameter_list|(
@@ -7475,11 +7521,18 @@ name|int
 name|len
 parameter_list|)
 block|{
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_NO_WRITE
+argument_list|,
 literal|"TypedStream not open for writing"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -7500,11 +7553,18 @@ name|int
 name|len
 parameter_list|)
 block|{
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_NO_READ
+argument_list|,
 literal|"TypedStream not open for reading"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -7579,8 +7639,12 @@ name|version
 operator|!=
 name|OBJC_TYPED_STREAM_VERSION
 condition|)
-name|__objc_fatal
+name|objc_error
 argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_STREAM_VERSION
+argument_list|,
 literal|"cannot handle TypedStream version %d"
 argument_list|,
 name|stream
@@ -7706,11 +7770,6 @@ block|{
 name|node_ptr
 name|node
 decl_stmt|;
-name|struct
-name|objc_list
-modifier|*
-name|free_list
-decl_stmt|;
 name|SEL
 name|awake_sel
 init|=
@@ -7719,16 +7778,25 @@ argument_list|(
 literal|"awake"
 argument_list|)
 decl_stmt|;
-comment|/* resolve object forward references */
+name|cache_ptr
 name|free_list
-operator|=
-name|list_cons
+init|=
+name|hash_new
 argument_list|(
-name|NULL
+literal|64
 argument_list|,
-name|NULL
+operator|(
+name|hash_func_type
+operator|)
+name|hash_ptr
+argument_list|,
+operator|(
+name|compare_func_type
+operator|)
+name|compare_ptrs
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+comment|/* resolve object forward references */
 for|for
 control|(
 name|node
@@ -7806,9 +7874,8 @@ name|object
 expr_stmt|;
 if|if
 condition|(
-name|list_find
+name|hash_value_for_key
 argument_list|(
-operator|&
 name|free_list
 argument_list|,
 name|reflist
@@ -7816,13 +7883,14 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|free_list
-operator|=
-name|list_cons
+name|hash_add
 argument_list|(
+operator|&
+name|free_list
+argument_list|,
 name|reflist
 argument_list|,
-name|free_list
+name|reflist
 argument_list|)
 expr_stmt|;
 name|reflist
@@ -7833,14 +7901,41 @@ name|tail
 expr_stmt|;
 block|}
 block|}
-name|list_mapcar
+comment|/* apply __objc_free to all objects stored in free_list */
+for|for
+control|(
+name|node
+operator|=
+name|hash_next
 argument_list|(
 name|free_list
 argument_list|,
-name|__objc_free
+name|NULL
+argument_list|)
+init|;
+name|node
+condition|;
+name|node
+operator|=
+name|hash_next
+argument_list|(
+name|free_list
+argument_list|,
+name|node
+argument_list|)
+control|)
+name|objc_free
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|node
+operator|->
+name|key
 argument_list|)
 expr_stmt|;
-name|list_free
+name|hash_delete
 argument_list|(
 name|free_list
 argument_list|)
@@ -7993,7 +8088,7 @@ operator|(
 name|TypedStream
 operator|*
 operator|)
-name|__objc_xmalloc
+name|objc_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -8379,7 +8474,7 @@ operator|->
 name|physical
 argument_list|)
 expr_stmt|;
-name|free
+name|objc_free
 argument_list|(
 name|stream
 argument_list|)

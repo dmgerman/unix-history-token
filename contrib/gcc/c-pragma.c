@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Handle #pragma, system V.4 style.  Supports #pragma weak and #pragma pack.    Copyright (C) 1992 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Handle #pragma, system V.4 style.  Supports #pragma weak and #pragma pack.    Copyright (C) 1992, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -18,7 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rtl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"tree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"except.h"
 end_include
 
 begin_include
@@ -39,6 +51,18 @@ directive|include
 file|"c-pragma.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"toplev.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -46,7 +70,7 @@ name|HANDLE_SYSV_PRAGMA
 end_ifdef
 
 begin_comment
-comment|/* When structure field packing is in effect, this variable is the    number of bits to use as the maximum alignment.  When packing is not    in effect, this is zero. */
+comment|/* When structure field packing is in effect, this variable is the    number of bits to use as the maximum alignment.  When packing is not    in effect, this is zero.  */
 end_comment
 
 begin_decl_stmt
@@ -170,7 +194,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HANDLE_PRAMA_WEAK */
+comment|/* HANDLE_PRAGMA_WEAK */
 block|}
 name|type
 operator|=
@@ -242,12 +266,35 @@ operator|=
 name|ps_weak
 expr_stmt|;
 else|else
+block|{
 name|type
 operator|=
 name|state
 operator|=
 name|ps_done
 expr_stmt|;
+comment|/* Issue a warning message if we have been asked to do so. 		 Ignoring unknown pragmas in system header file unless           		 an explcit -Wunknown-pragmas has been given. */
+if|if
+condition|(
+name|warn_unknown_pragmas
+operator|>
+literal|1
+operator|||
+operator|(
+name|warn_unknown_pragmas
+operator|&&
+operator|!
+name|in_system_header
+operator|)
+condition|)
+name|warning
+argument_list|(
+literal|"ignoring pragma: %s"
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 name|type

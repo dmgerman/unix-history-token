@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Function integration definitions for GNU C-Compiler    Copyright (C) 1990 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Function integration definitions for GNU C-Compiler    Copyright (C) 1990, 1995, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -84,6 +84,15 @@ decl_stmt|;
 comment|/* Likewise, this is the copied constraints vector.  */
 name|rtvec
 name|copy_asm_constraints_vector
+decl_stmt|;
+comment|/* Indications for regs being pointers and their alignment.  */
+name|char
+modifier|*
+name|regno_pointer_flag
+decl_stmt|;
+name|char
+modifier|*
+name|regno_pointer_align
 decl_stmt|;
 comment|/* The next few fields are used for subst_constants to record the SETs      that it saw.  */
 name|int
@@ -173,6 +182,45 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Return the label indicated.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|get_label_from_map
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|inline_remap
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set the label indicated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|set_label_in_map
+parameter_list|(
+name|MAP
+parameter_list|,
+name|I
+parameter_list|,
+name|X
+parameter_list|)
+value|((MAP)->label_map[I] = (X))
+end_define
 
 begin_comment
 comment|/* Unfortunately, we need a global copy of const_equiv map for communication    with a function called from note_stores.  Be *very* careful that this    is used properly in the presence of recursion.  */

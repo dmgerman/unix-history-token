@@ -460,6 +460,26 @@ unit|)
 asm|__asm__("_start");
 end_asm
 
+begin_extern
+extern|extern void __start(
+end_extern
+
+begin_asm
+unit|)
+asm|__asm__("__start");
+end_asm
+
+begin_comment
+comment|/* Provide functions that might be needed by soft-float emulation routines.  */
+end_comment
+
+begin_function
+name|void
+name|memcpy
+parameter_list|()
+block|{}
+end_function
+
 begin_function
 name|void
 name|start
@@ -470,6 +490,20 @@ end_function
 begin_function
 name|void
 name|_start
+parameter_list|()
+block|{}
+end_function
+
+begin_function
+name|void
+name|__start
+parameter_list|()
+block|{}
+end_function
+
+begin_function
+name|void
+name|mainCRTStartup
 parameter_list|()
 block|{}
 end_function

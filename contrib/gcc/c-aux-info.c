@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate information regarding function declarations and definitions based    on information stored in GCC's tree structure.  This code implements the    -aux-info option.    Copyright (C) 1989, 1991, 1994, 1995 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@segfault.us.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate information regarding function declarations and definitions based    on information stored in GCC's tree structure.  This code implements the    -aux-info option.    Copyright (C) 1989, 91, 94, 95, 97, 1998 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@segfault.us.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"system.h"
 end_include
 
 begin_include
@@ -32,15 +32,6 @@ include|#
 directive|include
 file|"c-tree.h"
 end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_enum
 enum|enum
@@ -71,74 +62,141 @@ name|data_type
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|concat
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|concat3
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|affix_data_type
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|gen_formal_list_for_type
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|formals_style
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|deserves_ellipsis
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|gen_formal_list_for_func_def
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|formals_style
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|gen_type
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|tree
+operator|,
+name|formals_style
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|gen_decl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|gen_aux_info_record
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|,
+name|formals_style
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -512,7 +570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a tree node which represents some "function type", generate the    source code version of a formal parameter list (of some given style) for    this function type.  Return the whole formal parameter list (including    a pair of surrounding parens) as a string.   Note that if the style    we are currently aiming for is non-ansi, then we just return a pair    of empty parens here. */
+comment|/* Given a tree node which represents some "function type", generate the    source code version of a formal parameter list (of some given style) for    this function type.  Return the whole formal parameter list (including    a pair of surrounding parens) as a string.   Note that if the style    we are currently aiming for is non-ansi, then we just return a pair    of empty parens here.  */
 end_comment
 
 begin_function
@@ -604,6 +662,7 @@ expr_stmt|;
 name|formal_list
 operator|=
 operator|(
+operator|(
 name|strlen
 argument_list|(
 name|this_type
@@ -626,6 +685,7 @@ name|formal_list
 argument_list|,
 name|data_type
 argument_list|)
+operator|)
 expr_stmt|;
 name|formal_type
 operator|=
@@ -975,6 +1035,7 @@ block|{
 name|tree
 name|chain_p
 decl_stmt|;
+comment|/* If there is a typedef name for this type, use it.  */
 if|if
 condition|(
 name|TYPE_NAME
@@ -982,13 +1043,15 @@ argument_list|(
 name|t
 argument_list|)
 operator|&&
-name|DECL_NAME
+name|TREE_CODE
 argument_list|(
 name|TYPE_NAME
 argument_list|(
 name|t
 argument_list|)
 argument_list|)
+operator|==
+name|TYPE_DECL
 condition|)
 name|data_type
 operator|=
@@ -1861,6 +1924,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|!=
+name|FUNCTION_DECL
+operator|&&
 name|DECL_REGISTER
 argument_list|(
 name|decl

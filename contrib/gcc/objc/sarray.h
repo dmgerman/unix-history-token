@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Sparse Arrays for Objective C dispatch tables    Copyright (C) 1993, 1995 Free Software Foundation, Inc.  Author: Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Sparse Arrays for Objective C dispatch tables    Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objc/thr.h"
 end_include
 
 begin_decl_stmt
@@ -396,31 +402,20 @@ begin_comment
 comment|/* not PRECOMPUTE_SELECTORS */
 end_comment
 
-begin_function_decl
+begin_union
+union|union
+name|sversion
+block|{
+name|int
+name|version
+decl_stmt|;
 name|void
 modifier|*
-name|__objc_xrealloc
-parameter_list|(
-name|void
-modifier|*
-name|optr
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|__objc_xmalloc
-parameter_list|(
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
+name|next_free
+decl_stmt|;
+block|}
+union|;
+end_union
 
 begin_struct
 struct|struct
@@ -434,7 +429,8 @@ name|BUCKET_SIZE
 index|]
 decl_stmt|;
 comment|/* elements stored in array */
-name|short
+name|union
+name|sversion
 name|version
 decl_stmt|;
 comment|/* used for copy-on-write */
@@ -460,9 +456,11 @@ index|[
 name|INDEX_SIZE
 index|]
 decl_stmt|;
-name|short
+name|union
+name|sversion
 name|version
 decl_stmt|;
+comment|/* used for copy-on-write */
 block|}
 struct|;
 end_struct
@@ -511,9 +509,11 @@ name|sbucket
 modifier|*
 name|empty_bucket
 decl_stmt|;
-name|short
+name|union
+name|sversion
 name|version
 decl_stmt|;
+comment|/* used for copy-on-write */
 name|short
 name|ref_count
 decl_stmt|;
@@ -569,23 +569,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|sarray
-modifier|*
-name|sarray_hard_copy
-parameter_list|(
-name|struct
-name|sarray
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* ... like the name? */
-end_comment
-
-begin_function_decl
 name|void
 name|sarray_realloc
 parameter_list|(
@@ -631,6 +614,32 @@ parameter_list|,
 name|void
 modifier|*
 name|elem
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|sarray
+modifier|*
+name|sarray_hard_copy
+parameter_list|(
+name|struct
+name|sarray
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* ... like the name? */
+end_comment
+
+begin_function_decl
+name|void
+name|sarray_remove_garbage
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

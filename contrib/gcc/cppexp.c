@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Parse C expressions for CCCP.    Copyright (C) 1987, 1992, 1994, 1995 Free Software Foundation.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  Written by Per Bothner 1994. */
+comment|/* Parse C expressions for CCCP.    Copyright (C) 1987, 1992, 1994, 1995, 1997, 1998 Free Software Foundation.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  Written by Per Bothner 1994.  */
 end_comment
 
 begin_comment
@@ -11,6 +11,18 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gansidecl.h"
 end_include
 
 begin_include
@@ -41,7 +53,7 @@ name|xrealloc
 name|PARAMS
 argument_list|(
 operator|(
-name|char
+name|void
 operator|*
 operator|,
 name|unsigned
@@ -59,12 +71,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<locale.h>
 end_include
 
@@ -72,12 +78,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_comment
 comment|/* This is used for communicating lists of keywords with cccp.c.  */
@@ -105,106 +105,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* Define a generic NULL if one hasn't already been defined.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GENERIC_PTR
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_PROTOTYPES
-argument_list|)
-condition|?
-name|USE_PROTOTYPES
-expr|:
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|GENERIC_PTR
-value|void *
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|GENERIC_PTR
-value|char *
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL_PTR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL_PTR
-value|((GENERIC_PTR)0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_ifndef
 ifndef|#
@@ -368,29 +268,61 @@ parameter_list|)
 value|((((a) ^ (b)) | ~ ((a) ^ (sum)))< 0)
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|integer_overflow
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|long
 name|left_shift
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|long
+operator|,
+name|int
+operator|,
+name|unsigned
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|long
 name|right_shift
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|long
+operator|,
+name|int
+operator|,
+name|unsigned
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -498,29 +430,100 @@ value|4
 end_define
 
 begin_comment
-comment|/*#define UNSIGNEDP 8*/
+comment|/* SKIP_OPERAND is set for '&&' '||' '?' and ':' when the    following operand should be short-circuited instead of evaluated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SKIP_OPERAND
+value|8
+end_define
+
+begin_comment
+comment|/*#define UNSIGNEDP 16*/
+end_comment
+
+begin_comment
+comment|/* Find the largest host integer type and set its size and type.    Watch out: on some crazy hosts `long' is shorter than `int'.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HOST_BITS_PER_WIDE_INT
+name|HOST_WIDE_INT
 end_ifndef
 
 begin_if
 if|#
 directive|if
+name|HAVE_INTTYPES_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT
+value|intmax_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+operator|(
 name|HOST_BITS_PER_LONG
-operator|>
+operator|<=
 name|HOST_BITS_PER_INT
+expr|\
+operator|&&
+name|HOST_BITS_PER_LONGLONG
+operator|<=
+name|HOST_BITS_PER_INT
+operator|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|HOST_BITS_PER_WIDE_INT
-value|HOST_BITS_PER_LONG
+name|HOST_WIDE_INT
+value|int
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+operator|(
+name|HOST_BITS_PER_LONGLONG
+operator|<=
+name|HOST_BITS_PER_LONG
+expr|\
+operator|||
+operator|!
+operator|(
+name|defined
+name|LONG_LONG_MAX
+operator|||
+name|defined
+name|LLONG_MAX
+operator|)
+operator|)
+end_if
 
 begin_define
 define|#
@@ -537,21 +540,60 @@ end_else
 begin_define
 define|#
 directive|define
-name|HOST_BITS_PER_WIDE_INT
-value|HOST_BITS_PER_INT
-end_define
-
-begin_define
-define|#
-directive|define
 name|HOST_WIDE_INT
-value|int
+value|long long
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CHAR_BIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CHAR_BIT
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HOST_BITS_PER_WIDE_INT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HOST_BITS_PER_WIDE_INT
+value|(CHAR_BIT * sizeof (HOST_WIDE_INT))
+end_define
 
 begin_endif
 endif|#
@@ -568,7 +610,7 @@ decl_stmt|;
 name|char
 name|rprio
 decl_stmt|;
-comment|/* Priority of op (relative to it right operand). */
+comment|/* Priority of op (relative to it right operand).  */
 name|char
 name|flags
 decl_stmt|;
@@ -579,7 +621,7 @@ comment|/* true if value should be treated as unsigned */
 name|HOST_WIDE_INT
 name|value
 decl_stmt|;
-comment|/* The value logically "right" of op. */
+comment|/* The value logically "right" of op.  */
 block|}
 struct|;
 end_struct
@@ -776,7 +818,7 @@ name|base
 operator|=
 literal|8
 expr_stmt|;
-comment|/* Some buggy compilers (e.g. MPW C) seem to need both casts. */
+comment|/* Some buggy compilers (e.g. MPW C) seem to need both casts.  */
 name|ULONG_MAX_over_base
 operator|=
 operator|(
@@ -985,7 +1027,7 @@ operator||=
 name|ULONG_MAX_over_base
 operator|<
 name|n
-operator||
+operator|||
 name|nd
 operator|<
 name|n
@@ -1025,7 +1067,7 @@ name|base
 operator|<=
 name|largest_digit
 condition|)
-name|cpp_warning
+name|cpp_pedwarn
 argument_list|(
 name|pfile
 argument_list|,
@@ -1036,7 +1078,7 @@ if|if
 condition|(
 name|overflow
 condition|)
-name|cpp_warning
+name|cpp_pedwarn
 argument_list|(
 name|pfile
 argument_list|,
@@ -1190,7 +1232,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Read one token. */
+comment|/* Read one token.  */
 end_comment
 
 begin_function
@@ -1199,19 +1241,20 @@ name|operation
 name|cpp_lex
 parameter_list|(
 name|pfile
+parameter_list|,
+name|skip_evaluation
 parameter_list|)
 name|cpp_reader
 modifier|*
 name|pfile
 decl_stmt|;
+name|int
+name|skip_evaluation
+decl_stmt|;
 block|{
 specifier|register
 name|int
 name|c
-decl_stmt|;
-specifier|register
-name|int
-name|namelen
 decl_stmt|;
 specifier|register
 name|struct
@@ -1337,7 +1380,10 @@ block|{
 case|case
 name|CPP_EOF
 case|:
-comment|/* Should not happen ... */
+comment|/* Should not happen ...  */
+case|case
+name|CPP_VSPACE
+case|:
 name|op
 operator|.
 name|op
@@ -1347,9 +1393,6 @@ expr_stmt|;
 return|return
 name|op
 return|;
-case|case
-name|CPP_VSPACE
-case|:
 case|case
 name|CPP_POP
 case|:
@@ -1375,6 +1418,11 @@ return|return
 name|op
 return|;
 block|}
+name|cpp_pop_buffer
+argument_list|(
+name|pfile
+argument_list|)
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
@@ -1433,10 +1481,11 @@ init|=
 literal|0
 decl_stmt|;
 specifier|register
+name|int
 name|num_chars
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|unsigned
 name|width
 init|=
@@ -1560,6 +1609,11 @@ name|cpp_parse_escape
 argument_list|(
 name|pfile
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
 name|ptr
 argument_list|)
@@ -1740,6 +1794,10 @@ name|cpp_lookup
 argument_list|(
 name|pfile
 argument_list|,
+operator|(
+name|U_CHAR
+operator|*
+operator|)
 literal|"__CHAR_UNSIGNED__"
 argument_list|,
 sizeof|sizeof
@@ -1879,7 +1937,7 @@ operator|=
 name|wc
 expr_stmt|;
 else|else
-name|cpp_warning
+name|cpp_pedwarn
 argument_list|(
 name|pfile
 argument_list|,
@@ -1916,6 +1974,34 @@ return|;
 case|case
 name|CPP_NAME
 case|:
+if|if
+condition|(
+name|CPP_WARN_UNDEF
+argument_list|(
+name|pfile
+argument_list|)
+operator|&&
+operator|!
+name|skip_evaluation
+condition|)
+name|cpp_warning
+argument_list|(
+name|pfile
+argument_list|,
+literal|"`%.*s' is not defined"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|tok_end
+operator|-
+name|tok_start
+argument_list|)
+argument_list|,
+name|tok_start
+argument_list|)
+expr_stmt|;
 return|return
 name|parse_number
 argument_list|(
@@ -2291,7 +2377,7 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-name|cpp_warning
+name|cpp_pedwarn
 argument_list|(
 name|pfile
 argument_list|,
@@ -2471,7 +2557,7 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-name|cpp_warning
+name|cpp_pedwarn
 argument_list|(
 name|pfile
 argument_list|,
@@ -2632,6 +2718,7 @@ parameter_list|)
 name|cpp_reader
 modifier|*
 name|pfile
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|long
 name|a
@@ -2690,7 +2777,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* These priorities are all even, so we can handle associatively. */
+comment|/* These priorities are all even, so we can handle associatively.  */
 end_comment
 
 begin_define
@@ -2865,6 +2952,11 @@ name|lprio
 decl_stmt|,
 name|rprio
 decl_stmt|;
+name|int
+name|skip_evaluation
+init|=
+literal|0
+decl_stmt|;
 name|top
 operator|->
 name|rprio
@@ -2898,9 +2990,11 @@ operator|=
 name|cpp_lex
 argument_list|(
 name|pfile
+argument_list|,
+name|skip_evaluation
 argument_list|)
 expr_stmt|;
-comment|/* See if the token is an operand, in which case go to set_value. 	 If the token is an operator, figure out its left and right 	 priorities, and then goto maybe_reduce. */
+comment|/* See if the token is an operand, in which case go to set_value. 	 If the token is an operator, figure out its left and right 	 priorities, and then goto maybe_reduce.  */
 switch|switch
 condition|(
 name|op
@@ -2911,21 +3005,9 @@ block|{
 case|case
 name|NAME
 case|:
-name|top
-operator|->
-name|value
-operator|=
-literal|0
-operator|,
-name|top
-operator|->
-name|unsignedp
-operator|=
-literal|0
+name|abort
+argument_list|()
 expr_stmt|;
-goto|goto
-name|set_value
-goto|;
 case|case
 name|INT
 case|:
@@ -3218,7 +3300,7 @@ goto|;
 block|}
 name|set_value
 label|:
-comment|/* Push a value onto the stack. */
+comment|/* Push a value onto the stack.  */
 if|if
 condition|(
 name|top
@@ -3248,7 +3330,7 @@ expr_stmt|;
 continue|continue;
 name|maybe_reduce
 label|:
-comment|/* Push an operator, and check if we can reduce now. */
+comment|/* Push an operator, and check if we can reduce now.  */
 while|while
 condition|(
 name|top
@@ -3447,6 +3529,9 @@ operator|->
 name|unsignedp
 operator|&&
 operator|!
+name|skip_evaluation
+operator|&&
+operator|!
 name|possible_sum_sign
 argument_list|(
 name|v1
@@ -3490,6 +3575,9 @@ name|v2
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|skip_evaluation
+operator|&&
 operator|(
 name|top
 operator|->
@@ -3548,6 +3636,9 @@ operator|->
 name|unsignedp
 operator|&&
 operator|!
+name|skip_evaluation
+operator|&&
+operator|!
 name|possible_sum_sign
 argument_list|(
 name|top
@@ -3595,7 +3686,12 @@ name|v1
 operator|*
 name|v2
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|skip_evaluation
+condition|)
 block|{
 name|top
 operator|->
@@ -3641,6 +3737,11 @@ break|break;
 case|case
 literal|'/'
 case|:
+if|if
+condition|(
+name|skip_evaluation
+condition|)
+break|break;
 if|if
 condition|(
 name|v2
@@ -3720,6 +3821,11 @@ break|break;
 case|case
 literal|'%'
 case|:
+if|if
+condition|(
+name|skip_evaluation
+condition|)
+break|break;
 if|if
 condition|(
 name|v2
@@ -3940,6 +4046,11 @@ break|break;
 case|case
 name|LSH
 case|:
+if|if
+condition|(
+name|skip_evaluation
+condition|)
+break|break;
 name|top
 operator|->
 name|unsignedp
@@ -3991,6 +4102,11 @@ break|break;
 case|case
 name|RSH
 case|:
+if|if
+condition|(
+name|skip_evaluation
+condition|)
+break|break;
 name|top
 operator|->
 name|unsignedp
@@ -4091,6 +4207,14 @@ name|unsignedp
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|v1
+condition|)
+name|skip_evaluation
+operator|--
+expr_stmt|;
 break|break;
 case|case
 name|OROR
@@ -4108,6 +4232,13 @@ operator|->
 name|unsignedp
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|v1
+condition|)
+name|skip_evaluation
+operator|--
 expr_stmt|;
 break|break;
 case|case
@@ -4237,6 +4368,15 @@ block|}
 else|else
 block|{
 name|top
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|top
+operator|->
+name|value
+condition|)
+name|skip_evaluation
 operator|--
 expr_stmt|;
 name|top
@@ -4426,7 +4566,7 @@ block|}
 name|top
 operator|++
 expr_stmt|;
-comment|/* Check for and handle stack overflow. */
+comment|/* Check for and handle stack overflow.  */
 if|if
 condition|(
 name|top
@@ -4572,6 +4712,92 @@ name|op
 operator|.
 name|op
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|op
+operator|.
+name|op
+operator|==
+name|OROR
+operator|&&
+name|top
+index|[
+operator|-
+literal|1
+index|]
+operator|.
+name|value
+operator|)
+operator|||
+operator|(
+name|op
+operator|.
+name|op
+operator|==
+name|ANDAND
+operator|&&
+operator|!
+name|top
+index|[
+operator|-
+literal|1
+index|]
+operator|.
+name|value
+operator|)
+operator|||
+operator|(
+name|op
+operator|.
+name|op
+operator|==
+literal|'?'
+operator|&&
+operator|!
+name|top
+index|[
+operator|-
+literal|1
+index|]
+operator|.
+name|value
+operator|)
+condition|)
+block|{
+name|skip_evaluation
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|op
+operator|.
+name|op
+operator|==
+literal|':'
+condition|)
+block|{
+if|if
+condition|(
+name|top
+index|[
+operator|-
+literal|2
+index|]
+operator|.
+name|value
+condition|)
+comment|/* Was condition true? */
+name|skip_evaluation
+operator|++
+expr_stmt|;
+else|else
+name|skip_evaluation
+operator|--
+expr_stmt|;
+block|}
 block|}
 name|syntax_error
 label|:
