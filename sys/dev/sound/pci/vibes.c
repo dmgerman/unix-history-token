@@ -4105,7 +4105,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* XXX This is a hack, and it's ugly.  Okay, the deal is this 	 * card has two more io regions that available for automatic 	 * configuration by the pci code.  These need to be allocated 	 * to used as control registers for the DMA engines. 	 * Unfortunately FBSD has no bus_space_foo() functions so we 	 * have to grab port space in region of existing resources.  Go 	 * for space between midi and game ports.   	 */
+comment|/* XXX This is a hack, and it's ugly.  Okay, the deal is this 	 * card has two more io regions that available for automatic 	 * configuration by the pci code.  These need to be allocated 	 * to used as control registers for the DMA engines. 	 * Unfortunately FBSD has no bus_space_foo() functions so we 	 * have to grab port space in region of existing resources.  Go 	 * for space between midi and game ports. 	 */
 name|bus_get_resource
 argument_list|(
 name|dev
