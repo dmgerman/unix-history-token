@@ -742,6 +742,24 @@ argument_list|,
 literal|3.14159e5
 argument_list|)
 expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 0.0"
+argument_list|,
+literal|"%4.1f"
+argument_list|,
+literal|0.0
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 100"
+argument_list|,
+literal|"%4.0f"
+argument_list|,
+literal|100.0
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"PASS printfloat\n"
