@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.20 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -947,7 +947,9 @@ continue|continue;
 block|}
 name|frecverr
 argument_list|(
-literal|"protocol screwup"
+literal|"protocol screwup: %s"
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -1573,6 +1575,11 @@ function|va_dcl
 endif|#
 directive|endif
 block|{
+specifier|extern
+name|char
+modifier|*
+name|fromb
+decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
@@ -1598,6 +1605,15 @@ directive|endif
 name|rcleanup
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s"
+argument_list|,
+name|fromb
 argument_list|)
 expr_stmt|;
 name|vsyslog
