@@ -1042,6 +1042,7 @@ name|st_size
 operator|)
 condition|)
 return|return;
+comment|/* 	 * size not passed directly to mmap() below because unclear error 	 * diagnostic "Invalid argument". 	 */
 if|if
 condition|(
 name|size
@@ -1066,9 +1067,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX: FIXME - mmap() not support files over 2Gb */
-comment|/* Large file processing require alternative implementation */
-comment|/* for now print nice error diagnostic at least */
+comment|/* 	 * XXX: FIXME - mmap() not support files over 2GB 	 * Large file processing require alternative implementation, 	 * for now print nice error diagnostic at least. 	 */
 if|if
 condition|(
 name|size
