@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	1.4 (Berkeley) %G%  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	1.5 (Berkeley) %G%  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Find target node 	 */
+comment|/* 	 * Find lower node 	 */
 name|NDINIT
 argument_list|(
 name|ndp
@@ -224,7 +224,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Sanity check on target vnode 	 */
+comment|/* 	 * Sanity check on lower vnode 	 */
 name|lowerrootvp
 operator|=
 name|ndp
@@ -256,7 +256,7 @@ name|ni_dvp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * NEEDSWORK: Is this really bad, or just not 	 * the way it's been? 	 */
+comment|/* 	 * NEEDSWORK: Is this check really necessary, or just not 	 * the way it's been? 	 */
 if|if
 condition|(
 name|lowerrootvp
@@ -310,7 +310,7 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/* 	 * Save reference to underlying target FS 	 */
+comment|/* 	 * Save reference to underlying lower FS 	 */
 name|amp
 operator|->
 name|nullm_vfs
@@ -332,7 +332,7 @@ operator|&
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unlock the node (either the target or the alias) 	 */
+comment|/* 	 * Unlock the node (either the lower or the alias) 	 */
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -494,7 +494,7 @@ directive|ifdef
 name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"nullfs_mount: target %s, alias at %s\n"
+literal|"nullfs_mount: lower %s, alias at %s\n"
 argument_list|,
 name|mp
 operator|->
@@ -697,7 +697,7 @@ directive|ifdef
 name|NULLFS_DIAGNOSTIC
 name|vprint
 argument_list|(
-literal|"alias root of target"
+literal|"alias root of lower"
 argument_list|,
 name|nullm_rootvp
 argument_list|)

@@ -86,7 +86,7 @@ value|((((u_long)vp)>>LOG2_SIZEVNODE)& (NNULLNODECACHE-1))
 end_define
 
 begin_comment
-comment|/*  * Null layer cache:  * Each cache entry holds a reference to the target vnode  * along with a pointer to the alias vnode.  When an  * entry is added the target vnode is VREF'd.  When the  * alias is removed the target vnode is vrele'd.  */
+comment|/*  * Null layer cache:  * Each cache entry holds a reference to the lower vnode  * along with a pointer to the alias vnode.  When an  * entry is added the lower vnode is VREF'd.  When the  * alias is removed the lower vnode is vrele'd.  */
 end_comment
 
 begin_comment
@@ -183,7 +183,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Compute hash list for given target vnode  */
+comment|/*  * Compute hash list for given lower vnode  */
 end_comment
 
 begin_function
@@ -193,12 +193,12 @@ name|null_node_cache
 modifier|*
 name|null_node_hash
 parameter_list|(
-name|targetvp
+name|lowervp
 parameter_list|)
 name|struct
 name|vnode
 modifier|*
-name|targetvp
+name|lowervp
 decl_stmt|;
 block|{
 return|return
@@ -208,7 +208,7 @@ name|null_node_cache
 index|[
 name|NULL_NHASH
 argument_list|(
-name|targetvp
+name|lowervp
 argument_list|)
 index|]
 operator|)
@@ -217,7 +217,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a new null_node node.  * Vp is the alias vnode, lofsvp is the target vnode.  * Maintain a reference to (targetvp).  */
+comment|/*  * Make a new null_node node.  * Vp is the alias vnode, lofsvp is the lower vnode.  * Maintain a reference to (lowervp).  */
 end_comment
 
 begin_function
@@ -227,7 +227,7 @@ name|null_node_alloc
 parameter_list|(
 name|vp
 parameter_list|,
-name|targetvp
+name|lowervp
 parameter_list|)
 name|struct
 name|vnode
@@ -237,7 +237,7 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|targetvp
+name|lowervp
 decl_stmt|;
 block|{
 name|struct
@@ -259,7 +259,7 @@ literal|"null_node_alloc(%x, %x)\n"
 argument_list|,
 name|vp
 argument_list|,
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -283,6 +283,14 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|vp
+operator|->
+name|v_type
+operator|=
+name|lowervp
+operator|->
+name|v_type
+expr_stmt|;
 name|a
 operator|->
 name|null_vnode
@@ -297,20 +305,21 @@ name|a
 expr_stmt|;
 name|VREF
 argument_list|(
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
+comment|/* Extra VREF will be vrele'd in null_node_create */
 name|a
 operator|->
 name|null_lowervp
 operator|=
-name|targetvp
+name|lowervp
 expr_stmt|;
 name|hd
 operator|=
 name|null_node_hash
 argument_list|(
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
 name|insque
@@ -325,16 +334,16 @@ directive|ifdef
 name|NULLFS_DIAGNOSTIC
 name|vprint
 argument_list|(
-literal|"alloc vp"
+literal|"null_node_alloc vp"
 argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
 name|vprint
 argument_list|(
-literal|"alloc targetvp"
+literal|"null_node_alloc lowervp"
 argument_list|,
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -388,7 +397,7 @@ argument_list|)
 expr_stmt|;
 name|roota
 operator|=
-name|VTONULLNODE
+name|VTONULL
 argument_list|(
 name|MOUNTTONULLMOUNT
 argument_list|(
@@ -441,9 +450,10 @@ name|a
 operator|!=
 name|roota
 operator|&&
+name|NULLTOV
+argument_list|(
 name|a
-operator|->
-name|null_vnode
+argument_list|)
 operator|->
 name|v_mount
 operator|==
@@ -472,7 +482,7 @@ literal|0
 expr_stmt|;
 name|vprint
 argument_list|(
-literal|"would vrele"
+literal|"null_flushmp: would vrele"
 argument_list|,
 name|vp
 argument_list|)
@@ -513,19 +523,149 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Return alias for target vnode if already exists, else 0.  */
+comment|/*  * XXX - this should go elsewhere.  * Just like vget, but with no lock at the end.  */
+end_comment
+
+begin_function
+name|int
+name|vget_nolock
+parameter_list|(
+name|vp
+parameter_list|)
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+block|{
+specifier|extern
+name|struct
+name|vnode
+modifier|*
+name|vfreeh
+decl_stmt|,
+modifier|*
+modifier|*
+name|vfreet
+decl_stmt|;
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vq
+decl_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VXLOCK
+condition|)
+block|{
+name|vp
+operator|->
+name|v_flag
+operator||=
+name|VXWANT
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|vp
+argument_list|,
+name|PINOD
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|vp
+operator|->
+name|v_usecount
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|vq
+operator|=
+name|vp
+operator|->
+name|v_freef
+condition|)
+name|vq
+operator|->
+name|v_freeb
+operator|=
+name|vp
+operator|->
+name|v_freeb
+expr_stmt|;
+else|else
+name|vfreet
+operator|=
+name|vp
+operator|->
+name|v_freeb
+expr_stmt|;
+operator|*
+name|vp
+operator|->
+name|v_freeb
+operator|=
+name|vq
+expr_stmt|;
+name|vp
+operator|->
+name|v_freef
+operator|=
+name|NULL
+expr_stmt|;
+name|vp
+operator|->
+name|v_freeb
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|VREF
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* VOP_LOCK(vp); */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return a VREF'ed alias for lower vnode if already exists, else 0.  */
 end_comment
 
 begin_function
 specifier|static
 name|struct
-name|null_node
+name|vnode
 modifier|*
 name|null_node_find
 parameter_list|(
 name|mp
 parameter_list|,
-name|targetvp
+name|lowervp
 parameter_list|)
 name|struct
 name|mount
@@ -535,7 +675,7 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|targetvp
+name|lowervp
 decl_stmt|;
 block|{
 name|struct
@@ -548,28 +688,35 @@ name|null_node
 modifier|*
 name|a
 decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"null_node_find(mp = %x, target = %x)\n"
+literal|"null_node_find(mp = %x, lower = %x)\n"
 argument_list|,
 name|mp
 argument_list|,
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Find hash base, and then search the (two-way) linked 	 * list looking for a null_node structure which is referencing 	 * the target vnode.  If found, the increment the null_node 	 * reference count (but NOT the target vnode's VREF counter). 	 */
+comment|/* 	 * Find hash base, and then search the (two-way) linked 	 * list looking for a null_node structure which is referencing 	 * the lower vnode.  If found, the increment the null_node 	 * reference count (but NOT the lower vnode's VREF counter). 	 */
 name|hd
 operator|=
 name|null_node_hash
 argument_list|(
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
+name|loop
+label|:
 for|for
 control|(
 name|a
@@ -600,11 +747,12 @@ name|a
 operator|->
 name|null_lowervp
 operator|==
-name|targetvp
+name|lowervp
 operator|&&
+name|NULLTOV
+argument_list|(
 name|a
-operator|->
-name|null_vnode
+argument_list|)
 operator|->
 name|v_mount
 operator|==
@@ -618,22 +766,49 @@ name|printf
 argument_list|(
 literal|"null_node_find(%x): found (%x,%x)->%x\n"
 argument_list|,
-name|targetvp
+name|lowervp
 argument_list|,
 name|mp
 argument_list|,
+name|NULLTOV
+argument_list|(
 name|a
-operator|->
-name|null_vnode
+argument_list|)
 argument_list|,
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|vp
+operator|=
+name|NULLTOV
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+comment|/* 			 * NEEDSWORK: Don't call the normal vget, 			 * it will do a VOP_LOCK which is bypassed 			 * and will lock against ourselves. 			 * Unfortunately, we need vget for the VXLOCK 			 * stuff. 			 */
+if|if
+condition|(
+name|vget_nolock
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"null_node_find: vget failed.\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
+empty_stmt|;
 return|return
 operator|(
-name|a
+name|vp
 operator|)
 return|;
 block|}
@@ -647,21 +822,38 @@ literal|"null_node_find(%x, %x): NOT found\n"
 argument_list|,
 name|mp
 argument_list|,
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 return|return
-operator|(
-literal|0
-operator|)
+name|NULL
 return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_decl_stmt
+name|int
+name|null_node_create_barrier
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Try to find an existing null_node vnode refering  * to it, otherwise make a new null_node vnode which  * contains a reference to the target vnode.  */
+comment|/*  * Try to find an existing null_node vnode refering  * to it, otherwise make a new null_node vnode which  * contains a reference to the lower vnode.  */
 end_comment
 
 begin_function
@@ -670,7 +862,7 @@ name|null_node_create
 parameter_list|(
 name|mp
 parameter_list|,
-name|targetvp
+name|lowervp
 parameter_list|,
 name|newvpp
 parameter_list|)
@@ -682,7 +874,7 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|targetvp
+name|lowervp
 decl_stmt|;
 name|struct
 name|vnode
@@ -691,11 +883,6 @@ modifier|*
 name|newvpp
 decl_stmt|;
 block|{
-name|struct
-name|null_node
-modifier|*
-name|ap
-decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -703,66 +890,33 @@ name|aliasvp
 decl_stmt|;
 if|if
 condition|(
-name|targetvp
-operator|->
-name|v_type
-operator|!=
-name|VDIR
-operator|||
-name|targetvp
-operator|->
-name|v_op
-operator|==
-name|null_vnodeop_p
-condition|)
-block|{
-operator|*
-name|newvpp
-operator|=
-name|targetvp
-expr_stmt|;
-return|return;
-block|}
-name|ap
+name|aliasvp
 operator|=
 name|null_node_find
 argument_list|(
 name|mp
 argument_list|,
-name|targetvp
+name|lowervp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ap
 condition|)
 block|{
-comment|/* 		 * Take another reference to the alias vnode 		 */
+comment|/* 		 * null_node_find has taken another reference 		 * to the alias vnode. 		 */
 ifdef|#
 directive|ifdef
 name|NULLFS_DIAGNOSTIC
 name|vprint
 argument_list|(
-literal|"null_node_alias: exists"
+literal|"null_node_create: exists"
 argument_list|,
+name|NULLTOV
+argument_list|(
 name|ap
-operator|->
-name|null_vnode
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|aliasvp
-operator|=
-name|ap
-operator|->
-name|null_vnode
-expr_stmt|;
-name|VREF
-argument_list|(
-name|aliasvp
-argument_list|)
-expr_stmt|;
+comment|/* VREF(aliasvp); --- done in null_node_find */
 block|}
 else|else
 block|{
@@ -775,7 +929,7 @@ directive|ifdef
 name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"null_node_alias: create new alias vnode\n"
+literal|"null_node_create: create new alias vnode\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -801,44 +955,74 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* XXX: VT_LOFS above */
-comment|/* 		 * Must be a directory 		 */
-name|aliasvp
-operator|->
-name|v_type
-operator|=
-name|VDIR
-expr_stmt|;
+comment|/* XXX: VT_NULL above */
 comment|/* 		 * Make new vnode reference the null_node. 		 */
 name|null_node_alloc
 argument_list|(
 name|aliasvp
 argument_list|,
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
 comment|/* 		 * aliasvp is already VREF'd by getnewvnode() 		 */
 block|}
 name|vrele
 argument_list|(
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lowervp
+operator|->
+name|v_usecount
+operator|<
+literal|1
+condition|)
+block|{
+name|vprint
+argument_list|(
+literal|"null_node_create: alias "
+argument_list|)
+expr_stmt|;
+name|vprint
+argument_list|(
+literal|"null_node_create: lower "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"null_node_create: lower has 0 usecount.\n"
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|null_node_create_barrier
+condition|)
+comment|/* wait */
+empty_stmt|;
+name|panic
+argument_list|(
+literal|"null_node_create: lower has 0 usecount."
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 ifdef|#
 directive|ifdef
 name|NULLFS_DIAGNOSTIC
 name|vprint
 argument_list|(
-literal|"null_node_alias alias"
+literal|"null_node_create: alias"
 argument_list|,
 name|aliasvp
 argument_list|)
 expr_stmt|;
 name|vprint
 argument_list|(
-literal|"null_node_alias target"
+literal|"null_node_create: lower"
 argument_list|,
-name|targetvp
+name|lowervp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -861,6 +1045,14 @@ ifdef|#
 directive|ifdef
 name|NULLFS_DIAGNOSTIC
 end_ifdef
+
+begin_decl_stmt
+name|int
+name|null_checkvp_barrier
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|struct
@@ -892,18 +1084,27 @@ name|null_node
 modifier|*
 name|a
 init|=
-name|VTONULLNODE
+name|VTONULL
 argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * Can't do this check because vop_reclaim runs 	 * with a funny vop vector. 	 */
+block|if (vp->v_op != null_vnodeop_p) { 		printf ("null_checkvp: on non-null-node\n"); 		while (null_checkvp_barrier)
+comment|/*WAIT*/
+block|; 		panic("null_checkvp"); 	};
+endif|#
+directive|endif
 if|if
 condition|(
 name|a
 operator|->
 name|null_lowervp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* Should never happen */
@@ -957,46 +1158,100 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|2000000
-argument_list|)
-expr_stmt|;
+comment|/* wait for debugger */
+while|while
+condition|(
+name|null_checkvp_barrier
+condition|)
+comment|/*WAIT*/
+empty_stmt|;
 name|panic
 argument_list|(
 literal|"null_checkvp"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|a
+operator|->
+name|null_lowervp
+operator|->
+name|v_usecount
+operator|<
+literal|1
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|u_long
+modifier|*
+name|p
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"nullvp %x/%d -> %x/%d [%s, %d]\n"
+literal|"vp = %x, unref'ed lowervp\n"
 argument_list|,
-name|a
-operator|->
-name|null_vnode
-argument_list|,
-name|a
-operator|->
-name|null_vnode
-operator|->
-name|v_usecount
-argument_list|,
-name|a
-operator|->
-name|null_lowervp
-argument_list|,
-name|a
-operator|->
-name|null_lowervp
-operator|->
-name|v_usecount
-argument_list|,
-name|fil
-argument_list|,
-name|lno
+name|vp
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+operator|(
+name|u_long
+operator|*
+operator|)
+name|a
+operator|,
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|8
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|" %x"
+argument_list|,
+name|p
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* wait for debugger */
+while|while
+condition|(
+name|null_checkvp_barrier
+condition|)
+comment|/*WAIT*/
+empty_stmt|;
+name|panic
+argument_list|(
+literal|"null with unref'ed lowervp"
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("null %x/%d -> %x/%d [%s, %d]\n", 	        NULLTOV(a), NULLTOV(a)->v_usecount, 		a->null_lowervp, a->null_lowervp->v_usecount, 		fil, lno);
+endif|#
+directive|endif
 return|return
 name|a
 operator|->

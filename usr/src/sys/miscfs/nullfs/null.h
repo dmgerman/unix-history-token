@@ -123,6 +123,16 @@ parameter_list|)
 value|((struct null_node *)(vp)->v_data)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NULLTOV
+parameter_list|(
+name|xp
+parameter_list|)
+value|((xp)->null_vnode)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
