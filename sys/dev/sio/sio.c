@@ -2634,6 +2634,12 @@ block|}
 block|,
 comment|/* USR3031 */
 block|{
+literal|0x8024b04e
+block|,
+literal|"SupraExpress 56i Sp V.90"
+block|}
+block|,
+block|{
 literal|0
 block|}
 block|}
