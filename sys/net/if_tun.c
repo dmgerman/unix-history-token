@@ -1145,7 +1145,7 @@ name|IFF_UP
 operator||
 name|IFF_RUNNING
 expr_stmt|;
-name|microtime
+name|getmicrotime
 argument_list|(
 operator|&
 name|ifp

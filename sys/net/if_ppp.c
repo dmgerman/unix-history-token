@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.54 1998/03/22 06:51:54 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.55 1998/03/30 09:51:52 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1142,7 +1142,7 @@ operator||
 name|IFF_RUNNING
 operator|)
 expr_stmt|;
-name|microtime
+name|getmicrotime
 argument_list|(
 operator|&
 name|sc
