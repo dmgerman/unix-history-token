@@ -10284,17 +10284,6 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"asr%d: major=%d\n"
-argument_list|,
-name|unit
-argument_list|,
-name|asr_cdevsw
-operator|.
-name|d_maj
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 *	Initialize the software structure 	 */
 name|LIST_INIT
@@ -11790,7 +11779,7 @@ name|GID_OPERATOR
 argument_list|,
 literal|0640
 argument_list|,
-literal|"rasr%d"
+literal|"asr%d"
 argument_list|,
 name|unit
 argument_list|)
