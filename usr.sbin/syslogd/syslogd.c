@@ -3401,13 +3401,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: syslogd [-46Adnsuv] [-a allowed_peer] [-f config_file]"
+literal|"usage: syslogd [-46Acdknsuv] [-a allowed_peer]"
 argument_list|,
-literal|"               [-m mark_interval] [-l log_socket]"
+literal|"               [-b bind address] [-f config_file]"
 argument_list|,
-literal|"               [-p log_socket] [-P pid_file]"
+literal|"               [-l log_socket] [-m mark_interval]"
+argument_list|,
+literal|"               [-P pid_file] [-p log_socket]"
 argument_list|)
 expr_stmt|;
 name|exit
