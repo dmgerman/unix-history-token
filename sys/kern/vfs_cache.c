@@ -4156,13 +4156,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|ASSERT_VOP_LOCKED
-argument_list|(
-name|vp
-argument_list|,
-literal|"vn_fullpath"
-argument_list|)
-expr_stmt|;
 name|buf
 operator|=
 name|malloc
@@ -4222,6 +4215,13 @@ name|rootvnode
 condition|;
 control|)
 block|{
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"vn_fullpath"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
