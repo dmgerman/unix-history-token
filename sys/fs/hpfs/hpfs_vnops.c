@@ -4883,7 +4883,7 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"hpfs_lookup(0x%x, %s, %ld, %d): \n"
+literal|"hpfs_lookup(0x%x, %s, %ld):\n"
 operator|,
 name|dhp
 operator|->

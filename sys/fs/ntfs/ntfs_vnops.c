@@ -2975,7 +2975,7 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_lookup: \"%.*s\" (%ld bytes) in %d, wp: %d \n"
+literal|"ntfs_lookup: \"%.*s\" (%ld bytes) in %d\n"
 operator|,
 operator|(
 name|int
