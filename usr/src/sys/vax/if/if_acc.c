@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_acc.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_acc.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -9,13 +9,13 @@ directive|include
 file|"acc.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NACC
-name|>
-name|0
-end_ifdef
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * ACC LH/DH ARPAnet IMP interface driver.  */
