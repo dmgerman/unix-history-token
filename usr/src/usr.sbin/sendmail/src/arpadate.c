@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arpadate.c	5.12 (Berkeley) %G%"
+literal|"@(#)arpadate.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,46 +289,26 @@ operator|=
 operator|&
 name|ud
 index|[
-literal|22
+literal|20
 index|]
 expr_stmt|;
 comment|/* 1979 */
-if|if
-condition|(
+operator|*
+name|q
+operator|++
+operator|=
 operator|*
 name|p
-operator|>=
-literal|'6'
-condition|)
-block|{
-operator|*
-name|q
 operator|++
-operator|=
-literal|'1'
 expr_stmt|;
 operator|*
 name|q
 operator|++
 operator|=
-literal|'9'
-expr_stmt|;
-block|}
-else|else
-block|{
 operator|*
-name|q
+name|p
 operator|++
-operator|=
-literal|'2'
 expr_stmt|;
-operator|*
-name|q
-operator|++
-operator|=
-literal|'0'
-expr_stmt|;
-block|}
 operator|*
 name|q
 operator|++
