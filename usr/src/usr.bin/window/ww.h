@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.14 83/09/15	  */
+comment|/*  *	@(#)ww.h	3.15 83/09/15	  */
 end_comment
 
 begin_include
@@ -941,6 +941,16 @@ parameter_list|,
 name|c
 parameter_list|)
 value|wwclreol1((w), (r), (c), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wwredrawwin
+parameter_list|(
+name|w
+parameter_list|)
+value|wwredrawwin1((w), (w)->ww_i.t, (w)->ww_i.b, 0)
 end_define
 
 begin_comment

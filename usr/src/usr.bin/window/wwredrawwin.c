@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwredrawwin.c	3.5 83/09/15"
+literal|"@(#)wwredrawwin.c	3.6 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,43 +25,6 @@ include|#
 directive|include
 file|"ww.h"
 end_include
-
-begin_expr_stmt
-name|wwredrawwin
-argument_list|(
-name|w
-argument_list|)
-specifier|register
-expr|struct
-name|ww
-operator|*
-name|w
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-name|wwredrawwin1
-argument_list|(
-name|w
-argument_list|,
-name|w
-operator|->
-name|ww_i
-operator|.
-name|t
-argument_list|,
-name|w
-operator|->
-name|ww_i
-operator|.
-name|b
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_block
 
 begin_expr_stmt
 name|wwredrawwin1
