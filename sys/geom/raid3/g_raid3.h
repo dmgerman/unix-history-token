@@ -41,11 +41,15 @@ name|G_RAID3_MAGIC
 value|"GEOM::RAID3"
 end_define
 
+begin_comment
+comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added 'round-robin reading' algorithm.  * 2 - Added 'verify reading' algorithm.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|G_RAID3_VERSION
-value|0
+value|2
 end_define
 
 begin_define
@@ -93,8 +97,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_RAID3_DEVICE_FLAG_ROUND_ROBIN
+value|0x0000000000000002ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_RAID3_DEVICE_FLAG_VERIFY
+value|0x0000000000000004ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_RAID3_DEVICE_FLAG_MASK
-value|(G_RAID3_DEVICE_FLAG_NOAUTOSYNC)
+value|(G_RAID3_DEVICE_FLAG_NOAUTOSYNC | \ 					 G_RAID3_DEVICE_FLAG_ROUND_ROBIN | \ 					 G_RAID3_DEVICE_FLAG_VERIFY)
 end_define
 
 begin_ifdef
@@ -181,6 +199,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_RAID3_BIO_CFLAG_MASK
+value|(G_RAID3_BIO_CFLAG_REGULAR |	\ 					 G_RAID3_BIO_CFLAG_SYNC |	\ 					 G_RAID3_BIO_CFLAG_PARITY |	\ 					 G_RAID3_BIO_CFLAG_NODISK |	\ 					 G_RAID3_BIO_CFLAG_REGSYNC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_RAID3_BIO_PFLAG_DEGRADED
 value|0x01
 end_define
@@ -190,6 +215,20 @@ define|#
 directive|define
 name|G_RAID3_BIO_PFLAG_NOPARITY
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_RAID3_BIO_PFLAG_VERIFY
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_RAID3_BIO_PFLAG_MASK
+value|(G_RAID3_BIO_PFLAG_DEGRADED |	\ 					 G_RAID3_BIO_PFLAG_NOPARITY |	\ 					 G_RAID3_BIO_PFLAG_VERIFY)
 end_define
 
 begin_comment
@@ -511,6 +550,9 @@ name|u_int
 name|sc_ndisks
 decl_stmt|;
 comment|/* Number of disks. */
+name|u_int
+name|sc_round_robin
+decl_stmt|;
 name|struct
 name|g_raid3_disk
 modifier|*
@@ -1388,6 +1430,40 @@ condition|)
 name|printf
 argument_list|(
 literal|" NOAUTOSYNC"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|md
+operator|->
+name|md_mflags
+operator|&
+name|G_RAID3_DEVICE_FLAG_ROUND_ROBIN
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" ROUND-ROBIN"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|md
+operator|->
+name|md_mflags
+operator|&
+name|G_RAID3_DEVICE_FLAG_VERIFY
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" VERIFY"
 argument_list|)
 expr_stmt|;
 block|}
