@@ -58,6 +58,9 @@ name|acl_posix1e
 parameter_list|(
 name|acl_t
 name|acl
+parameter_list|,
+name|acl_type_t
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl

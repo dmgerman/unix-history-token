@@ -38,7 +38,7 @@ file|"acl_support.h"
 end_include
 
 begin_comment
-comment|/*  * POSIX.1e ACL semantics:  *  * acl_calc_mask(): calculate an ACL_MASK entry for the ACL, then either  * insert into the ACL if there is none already, or replace the existing  * one.  */
+comment|/*  * POSIX.1e ACL semantics:  *  * acl_calc_mask(): calculate an ACL_MASK entry for the ACL, then either  * insert into the ACL if there is none already, or replace the existing  * one.  This will act up if called on a non-POSIX.1e semantics ACL.  */
 end_comment
 
 begin_function
@@ -70,19 +70,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|acl_posix1e
-argument_list|(
-name|acl
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* search for ACL_MASK */
 for|for
 control|(

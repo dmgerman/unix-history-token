@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999 Robert N. M. Watson  * All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*  * acl_init -- return a fresh acl structure  */
+comment|/*  * acl_init -- return a fresh acl structure  * acl_dup -- duplicate an acl and return the new copy  */
 end_comment
 
 begin_include
@@ -97,6 +97,50 @@ expr_stmt|;
 return|return
 operator|(
 name|acl
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|acl_t
+name|acl_dup
+parameter_list|(
+name|acl_t
+name|acl
+parameter_list|)
+block|{
+name|struct
+name|acl
+modifier|*
+name|acl_new
+decl_stmt|;
+name|acl_new
+operator|=
+name|acl_init
+argument_list|(
+name|ACL_MAX_ENTRIES
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|acl_new
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+operator|*
+name|acl_new
+operator|=
+operator|*
+name|acl
+expr_stmt|;
+return|return
+operator|(
+name|acl_new
 operator|)
 return|;
 block|}

@@ -109,6 +109,8 @@ condition|(
 name|acl_posix1e
 argument_list|(
 name|acl
+argument_list|,
+name|type
 argument_list|)
 condition|)
 block|{
@@ -173,6 +175,8 @@ condition|(
 name|acl_posix1e
 argument_list|(
 name|acl
+argument_list|,
+name|type
 argument_list|)
 condition|)
 block|{

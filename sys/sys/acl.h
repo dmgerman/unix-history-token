@@ -189,6 +189,13 @@ name|ACL_TYPE_DEFAULT
 value|0x00000001
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACL_TYPE_AFS
+value|0x00000003
+end_define
+
 begin_comment
 comment|/*  * Possible flags in a_perm field  */
 end_comment
@@ -548,10 +555,28 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acl_delete_def_fd
+name|acl_delete_fd_np
 parameter_list|(
 name|int
 name|filedes
+parameter_list|,
+name|acl_type_t
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|acl_delete_file_np
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path_p
+parameter_list|,
+name|acl_type_t
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -597,6 +622,16 @@ name|acl_get_fd
 parameter_list|(
 name|int
 name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|acl_t
+name|acl_get_fd_np
+parameter_list|(
+name|int
+name|fd
 parameter_list|,
 name|acl_type_t
 name|type
@@ -632,6 +667,19 @@ end_function_decl
 begin_function_decl
 name|int
 name|acl_set_fd
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|acl_t
+name|acl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|acl_set_fd_np
 parameter_list|(
 name|int
 name|fd
@@ -690,7 +738,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acl_valid_fd
+name|acl_valid_fd_np
 parameter_list|(
 name|int
 name|fd
@@ -706,7 +754,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acl_valid_file
+name|acl_valid_file_np
 parameter_list|(
 specifier|const
 name|char

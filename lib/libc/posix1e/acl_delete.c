@@ -27,27 +27,6 @@ end_include
 
 begin_function
 name|int
-name|acl_delete_def_fd
-parameter_list|(
-name|int
-name|filedes
-parameter_list|)
-block|{
-return|return
-operator|(
-name|__acl_delete_fd
-argument_list|(
-name|filedes
-argument_list|,
-name|ACL_TYPE_DEFAULT
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
 name|acl_delete_def_file
 parameter_list|(
 specifier|const
@@ -71,7 +50,7 @@ end_function
 
 begin_function
 name|int
-name|acl_delete_file
+name|acl_delete_file_np
 parameter_list|(
 specifier|const
 name|char
@@ -97,7 +76,7 @@ end_function
 
 begin_function
 name|int
-name|acl_delete_fd
+name|acl_delete_fd_np
 parameter_list|(
 name|int
 name|filedes

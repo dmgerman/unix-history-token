@@ -56,7 +56,7 @@ file|"acl_support.h"
 end_include
 
 begin_comment
-comment|/*  * acl_to_text - generate a text form of an acl  * spec says nothing about output ordering, so leave in acl order  *  * For the time-being, reject the printing of ACLs that aren't an  * understood semantic.  Later on, we might want to try and have a  * generic printing mechanism...  */
+comment|/*  * acl_to_text - generate a text form of an acl  * spec says nothing about output ordering, so leave in acl order  *  * This function will not produce nice results if it is called with  * a non-POSIX.1e semantics ACL.  */
 end_comment
 
 begin_function
@@ -122,25 +122,6 @@ name|effective_perm
 decl_stmt|,
 name|mask_perm
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|acl_posix1e
-argument_list|(
-name|acl
-argument_list|)
-condition|)
-block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|buf
 operator|=
 name|strdup
