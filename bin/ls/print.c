@@ -3248,10 +3248,7 @@ name|printf
 argument_list|(
 literal|"%*s "
 argument_list|,
-operator|(
-name|u_int
-operator|)
-name|width
+literal|4
 argument_list|,
 literal|"0B"
 argument_list|)
@@ -3264,12 +3261,7 @@ name|printf
 argument_list|(
 literal|"%*.*f%c "
 argument_list|,
-operator|(
-name|u_int
-operator|)
-name|width
-operator|-
-literal|1
+literal|3
 argument_list|,
 name|dbytes
 operator|>
