@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	6.14	85/03/19	*/
+comment|/*	kern_sig.c	6.15	85/05/22	*/
 end_comment
 
 begin_include
@@ -1103,11 +1103,6 @@ operator|-
 literal|1
 case|:
 comment|/* broadcast signal */
-if|if
-condition|(
-name|suser
-argument_list|()
-condition|)
 name|u
 operator|.
 name|u_error
@@ -1310,7 +1305,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|ESRCH
 operator|)
 return|;
 block|}
@@ -1373,9 +1368,6 @@ name|u_procp
 operator|)
 condition|)
 continue|continue;
-name|f
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|u
@@ -1405,12 +1397,20 @@ argument_list|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|all
+condition|)
 name|error
 operator|=
 name|EPERM
 expr_stmt|;
 continue|continue;
 block|}
+name|f
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|signo
