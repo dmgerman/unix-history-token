@@ -1225,6 +1225,8 @@ argument_list|(
 name|tcptw_zone
 argument_list|,
 name|maxsockets
+operator|/
+literal|5
 argument_list|)
 expr_stmt|;
 name|tcp_timer_init
