@@ -264,7 +264,7 @@ name|umodem_intr
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
+name|usbd_xfer_handle
 operator|,
 name|usbd_private_handle
 operator|,
