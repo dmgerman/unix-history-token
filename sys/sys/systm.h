@@ -1223,14 +1223,10 @@ parameter_list|(
 function_decl|1
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__nonnull
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|u_long
@@ -1251,14 +1247,10 @@ parameter_list|(
 function_decl|1
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__nonnull
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|quad_t
