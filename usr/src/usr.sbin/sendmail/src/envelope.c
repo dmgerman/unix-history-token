@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.18 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2108,6 +2108,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* don't need to give error -- prescan did that already */
 ifdef|#
 directive|ifdef
 name|LOG
@@ -2128,13 +2129,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|usrerr
-argument_list|(
-literal|"553 cannot prescan from (%s)"
-argument_list|,
-name|from
-argument_list|)
-expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;

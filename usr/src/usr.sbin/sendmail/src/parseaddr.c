@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.21 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1991,23 +1991,9 @@ name|av
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|av
-index|[
-literal|0
-index|]
-operator|!=
-name|NULL
-condition|)
 return|return
 operator|(
 name|av
-operator|)
-return|;
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}
