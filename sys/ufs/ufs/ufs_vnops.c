@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_vnops.c	8.10 (Berkeley) 4/1/94  * $Id: ufs_vnops.c,v 1.19 1995/03/19 13:44:03 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_vnops.c	8.10 (Berkeley) 4/1/94  * $Id: ufs_vnops.c,v 1.20 1995/04/09 06:03:45 davidg Exp $  */
 end_comment
 
 begin_include
@@ -6888,9 +6888,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 name|struct
 name|proc
 modifier|*
@@ -6898,9 +6895,6 @@ name|p
 init|=
 name|curproc
 decl_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
 specifier|register
 name|struct
 name|vnode
@@ -6981,6 +6975,43 @@ operator|&
 name|IN_LOCKED
 condition|)
 block|{
+if|if
+condition|(
+name|p
+operator|->
+name|p_pid
+operator|==
+name|ip
+operator|->
+name|i_lockholder
+condition|)
+block|{
+if|if
+condition|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|IN_RECURSE
+condition|)
+operator|++
+name|ip
+operator|->
+name|i_lockcount
+expr_stmt|;
+else|else
+name|panic
+argument_list|(
+literal|"ufs_lock: recursive lock not expected, pid: %d\n"
+argument_list|,
+name|ip
+operator|->
+name|i_lockholder
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ip
 operator|->
 name|i_flag
@@ -6994,22 +7025,6 @@ if|if
 condition|(
 name|p
 condition|)
-block|{
-if|if
-condition|(
-name|p
-operator|->
-name|p_pid
-operator|==
-name|ip
-operator|->
-name|i_lockholder
-condition|)
-name|panic
-argument_list|(
-literal|"locking against myself"
-argument_list|)
-expr_stmt|;
 name|ip
 operator|->
 name|i_lockwaiter
@@ -7018,7 +7033,6 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
-block|}
 else|else
 name|ip
 operator|->
@@ -7049,6 +7063,7 @@ expr_stmt|;
 goto|goto
 name|start
 goto|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -7091,6 +7106,8 @@ argument_list|(
 literal|"locking by process 0\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|p
@@ -7111,8 +7128,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 name|ip
 operator|->
 name|i_flag
@@ -7165,9 +7180,6 @@ operator|->
 name|a_vp
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 name|struct
 name|proc
 modifier|*
@@ -7175,7 +7187,9 @@ name|p
 init|=
 name|curproc
 decl_stmt|;
-comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -7248,20 +7262,61 @@ operator|->
 name|i_lockholder
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+operator|--
+name|ip
+operator|->
+name|i_lockcount
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|IN_RECURSE
+operator|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"ufs_unlock: recursive lock prematurely released, pid=%d\n"
+argument_list|,
+name|ip
+operator|->
+name|i_lockholder
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|ip
 operator|->
 name|i_lockholder
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|ip
 operator|->
 name|i_flag
 operator|&=
 operator|~
+operator|(
 name|IN_LOCKED
+operator||
+name|IN_RECURSE
+operator|)
 expr_stmt|;
 if|if
 condition|(
