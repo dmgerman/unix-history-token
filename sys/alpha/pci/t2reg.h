@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Doug Rabson& Andrew Gallatin   * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2000, 2001 Doug Rabson& Andrew Gallatin   * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Portions of this file were obtained from Compaq intellectual  * property which was made available under the following copyright:  *  * *****************************************************************  * *                                                               *  * *    Copyright Compaq Computer Corporation, 2000                *  * *                                                               *  * *   Permission to use, copy, modify, distribute, and sell       *  * *   this software and its documentation for any purpose is      *  * *   hereby granted without fee, provided that the above         *  * *   copyright notice appear in all copies and that both         *  * *   that copyright notice and this permission notice appear     *  * *   in supporting documentation, and that the name of           *  * *   Compaq Computer Corporation not be used in advertising      *  * *   or publicity pertaining to distribution of the software     *  * *   without specific, written prior permission.  Compaq         *  * *   makes no representations about the suitability of this      *  * *   software for any purpose.  It is provided "AS IS"           *  * *   without express or implied warranty.                        *  * *                                                               *  * *****************************************************************  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -14,7 +14,7 @@ name|REGVAL
 parameter_list|(
 name|r
 parameter_list|)
-value|(*(volatile int32_t *)				\ 				ALPHA_PHYS_TO_K0SEG(r + t2_csr_base))
+value|(*(volatile int32_t *)				\ 				ALPHA_PHYS_TO_K0SEG(r + sable_lynx_base))
 end_define
 
 begin_define
@@ -24,7 +24,7 @@ name|REGVAL64
 parameter_list|(
 name|r
 parameter_list|)
-value|(*(volatile int64_t *)				\ 				ALPHA_PHYS_TO_K0SEG(r + t2_csr_base))
+value|(*(volatile int64_t *)				\ 				ALPHA_PHYS_TO_K0SEG(r + sable_lynx_base))
 end_define
 
 begin_define
@@ -48,6 +48,20 @@ end_define
 begin_comment
 comment|/* offset of LYNX CSRs */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI0_BASE
+value|0x38e000000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI1_BASE
+value|0x38f000000UL
+end_define
 
 begin_define
 define|#
@@ -1087,6 +1101,450 @@ directive|define
 name|SLAVE3_ICU
 value|0x53f
 end_define
+
+begin_define
+define|#
+directive|define
+name|T2_EISA_IRQ_TO_STDIO_IRQ
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) + 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|T2_STDIO_IRQ_TO_EISA_IRQ
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) - 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STDIO_PCI0_IRQ_TO_SCB_VECTOR
+parameter_list|(
+name|x
+parameter_list|)
+value|(( ( x ) * 0x10) + 0x800)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STDIO_PCI1_IRQ_TO_SCB_VECTOR
+parameter_list|(
+name|x
+parameter_list|)
+value|(( ( x ) * 0x10) + 0xC00)
+end_define
+
+begin_comment
+comment|/*  * T4  Control and Status Registers  *  * All CBUS CSRs in the Cbus2 IO subsystems are in the T4 gate array.  The  * CBUS CSRs in the T4 are all aligned on hexaword boundaries and have   * quadword length.  Note, this structure also works for T2 as the T2  * registers are a proper subset of the T3/T4's.  Just make sure  * that T2 code does not reference T3/T4-only registers.  *  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_long
+name|iocsr
+decl_stmt|;
+name|u_long
+name|fill_00
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* I/O Control/Status */
+name|u_long
+name|cerr1
+decl_stmt|;
+name|u_long
+name|fill_01
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Cbus Error Register 1 */
+name|u_long
+name|cerr2
+decl_stmt|;
+name|u_long
+name|fill_02
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Cbus Error Register 2 */
+name|u_long
+name|cerr3
+decl_stmt|;
+name|u_long
+name|fill_03
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Cbus Error Register 3 */
+name|u_long
+name|pcierr1
+decl_stmt|;
+name|u_long
+name|fill_04
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* PCI Error Register 1 */
+name|u_long
+name|pcierr2
+decl_stmt|;
+name|u_long
+name|fill_05
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* PCI Error Register 2 */
+name|u_long
+name|pciscr
+decl_stmt|;
+name|u_long
+name|fill_06
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* PCI Special Cycle  */
+name|u_long
+name|hae0_1
+decl_stmt|;
+name|u_long
+name|fill_07
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* High Address Extension 1 */
+name|u_long
+name|hae0_2
+decl_stmt|;
+name|u_long
+name|fill_08
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* High Address Extension 2 */
+name|u_long
+name|hbase
+decl_stmt|;
+name|u_long
+name|fill_09
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* PCI Hole Base */
+name|u_long
+name|wbase1
+decl_stmt|;
+name|u_long
+name|fill_0a
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Window Base 1 */
+name|u_long
+name|wmask1
+decl_stmt|;
+name|u_long
+name|fill_0b
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Window Mask 1 */
+name|u_long
+name|tbase1
+decl_stmt|;
+name|u_long
+name|fill_0c
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Translated Base 1 */
+name|u_long
+name|wbase2
+decl_stmt|;
+name|u_long
+name|fill_0d
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Window Base 2 */
+name|u_long
+name|wmask2
+decl_stmt|;
+name|u_long
+name|fill_0e
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Window Mask 2 */
+name|u_long
+name|tbase2
+decl_stmt|;
+name|u_long
+name|fill_0f
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Translated Base 2 */
+name|u_long
+name|tlbbr
+decl_stmt|;
+name|u_long
+name|fill_10
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* TLB by-pass */
+name|u_long
+name|ivr
+decl_stmt|;
+name|u_long
+name|fill_11
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* IVR Passive Rels/Intr Addr  (reserved on T3/T4) */
+name|u_long
+name|hae0_3
+decl_stmt|;
+name|u_long
+name|fill_12
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* High Address Extension 3 */
+name|u_long
+name|hae0_4
+decl_stmt|;
+name|u_long
+name|fill_13
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* High Address Extension 4 */
+name|u_long
+name|wbase3
+decl_stmt|;
+name|u_long
+name|fill_14
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Window Base 3 */
+name|u_long
+name|wmask3
+decl_stmt|;
+name|u_long
+name|fill_15
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Window Mask 3 */
+name|u_long
+name|tbase3
+decl_stmt|;
+name|u_long
+name|fill_16
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Translated Base 3 */
+name|u_long
+name|rsvd1
+decl_stmt|;
+name|u_long
+name|fill_16a
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* unused location */
+name|u_long
+name|tdr0
+decl_stmt|;
+name|u_long
+name|fill_17
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* tlb data register 0 */
+name|u_long
+name|tdr1
+decl_stmt|;
+name|u_long
+name|fill_18
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* tlb data register 1 */
+name|u_long
+name|tdr2
+decl_stmt|;
+name|u_long
+name|fill_19
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* tlb data register 2 */
+name|u_long
+name|tdr3
+decl_stmt|;
+name|u_long
+name|fill_1a
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* tlb data register 3 */
+name|u_long
+name|tdr4
+decl_stmt|;
+name|u_long
+name|fill_1b
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* tlb data register 4 */
+name|u_long
+name|tdr5
+decl_stmt|;
+name|u_long
+name|fill_1c
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* tlb data register 5 */
+name|u_long
+name|tdr6
+decl_stmt|;
+name|u_long
+name|fill_1d
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* tlb data register 6 */
+name|u_long
+name|tdr7
+decl_stmt|;
+name|u_long
+name|fill_1e
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* tlb data register 7 */
+name|u_long
+name|wbase4
+decl_stmt|;
+name|u_long
+name|fill_1f
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Window Base 4 */
+name|u_long
+name|wmask4
+decl_stmt|;
+name|u_long
+name|fill_20
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Window Mask 4 */
+name|u_long
+name|tbase4
+decl_stmt|;
+name|u_long
+name|fill_21
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Translated Base 4 */
+comment|/*  * The following 4 registers are used to get to the ICIC chip  */
+name|u_long
+name|air
+decl_stmt|;
+name|u_long
+name|fill_22
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Address Indirection register */
+name|u_long
+name|var
+decl_stmt|;
+name|u_long
+name|fill_23
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Vector access register */
+name|u_long
+name|dir
+decl_stmt|;
+name|u_long
+name|fill_24
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Data Indirection register */
+name|u_long
+name|ice
+decl_stmt|;
+name|u_long
+name|fill_25
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* IC enable register Indirection register */
+block|}
+name|t2_csr_t
+typedef|;
+end_typedef
 
 end_unit
 
