@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	4.4 (Berkeley) %G%"
+literal|"@(#)ctime.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -853,7 +853,6 @@ name|d0
 decl_stmt|,
 name|d1
 decl_stmt|;
-name|unsigned
 name|long
 name|hms
 decl_stmt|,
