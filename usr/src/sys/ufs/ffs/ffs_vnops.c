@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -252,6 +252,14 @@ name|ffs_write
 block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_lease_desc
+block|,
+name|ufs_lease_check
+block|}
+block|,
+comment|/* lease */
 block|{
 operator|&
 name|vop_ioctl_desc
@@ -639,6 +647,14 @@ name|ufsspec_write
 block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_lease_desc
+block|,
+name|spec_lease_check
+block|}
+block|,
+comment|/* lease */
 block|{
 operator|&
 name|vop_ioctl_desc
@@ -1032,6 +1048,14 @@ name|ufsfifo_write
 block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_lease_desc
+block|,
+name|fifo_lease_check
+block|}
+block|,
+comment|/* lease */
 block|{
 operator|&
 name|vop_ioctl_desc
