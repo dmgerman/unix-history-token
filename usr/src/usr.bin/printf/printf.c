@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	5.4 (Berkeley) %G%"
+literal|"@(#)printf.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,19 +321,19 @@ operator|++
 name|fmt
 control|)
 empty_stmt|;
-if|if
-condition|(
+name|fieldwidth
+operator|=
 operator|*
 name|fmt
 operator|==
 literal|'*'
-condition|)
-name|fieldwidth
-operator|=
+condition|?
 name|getint
 argument_list|()
+else|:
+literal|0
 expr_stmt|;
-comment|/* skip to possible '.' */
+comment|/* skip to possible '.', get following precision */
 for|for
 control|(
 init|;
@@ -359,17 +359,17 @@ condition|)
 operator|++
 name|fmt
 expr_stmt|;
-if|if
-condition|(
+name|precision
+operator|=
 operator|*
 name|fmt
 operator|==
 literal|'*'
-condition|)
-name|precision
-operator|=
+condition|?
 name|getint
 argument_list|()
+else|:
+literal|0
 expr_stmt|;
 comment|/* skip to conversion char */
 for|for
