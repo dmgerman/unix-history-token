@@ -2042,7 +2042,7 @@ directive|ifdef
 name|NETATALK
 if|if
 condition|(
-name|Bcmp
+name|bcmp
 argument_list|(
 operator|&
 operator|(
@@ -2093,7 +2093,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|Bcmp
+name|bcmp
 argument_list|(
 operator|&
 operator|(
