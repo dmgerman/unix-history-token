@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 3.4 %G%"
+literal|"@(#)cc.c 3.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|char
 modifier|*
 name|cpp
 init|=
-literal|"/usr/new/cpp"
+literal|"/lib/cpp"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ name|char
 modifier|*
 name|ccom
 init|=
-literal|"/usr/new/ccom"
+literal|"/lib/ccom"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,7 +66,7 @@ name|char
 modifier|*
 name|c2
 init|=
-literal|"/usr/new/c2"
+literal|"/lib/c2"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,7 +75,7 @@ name|char
 modifier|*
 name|as
 init|=
-literal|"/usr/new/as"
+literal|"/bin/as"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,7 +84,7 @@ name|char
 modifier|*
 name|ld
 init|=
-literal|"/usr/new/ld"
+literal|"/bin/ld"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,7 +93,7 @@ name|char
 modifier|*
 name|crt0
 init|=
-literal|"/usr/new/crt0.o"
+literal|"/lib/crt0.o"
 decl_stmt|;
 end_decl_stmt
 
@@ -767,7 +767,7 @@ literal|0
 condition|)
 name|npassname
 operator|=
-literal|"/usr/new/new"
+literal|"/usr/new"
 expr_stmt|;
 if|if
 condition|(
@@ -839,7 +839,7 @@ name|proflag
 condition|)
 name|crt0
 operator|=
-literal|"/usr/new/mcrt0.o"
+literal|"/lib/mcrt0.o"
 expr_stmt|;
 if|if
 condition|(
