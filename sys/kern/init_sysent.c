@@ -2063,7 +2063,7 @@ block|}
 block|,
 comment|/* 64 = old getpagesize */
 block|{
-literal|2
+literal|3
 block|,
 name|msync
 block|}
