@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rpc_main.c,v 1.5.2.1 1997/08/07 06:38:42 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2806,6 +2806,19 @@ condition|(
 name|mtflag
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|f_print
 argument_list|(
 name|fout
@@ -2820,6 +2833,17 @@ argument_list|,
 literal|"#include<thread.h>\n"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"#include<pthread.h>\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 empty_stmt|;
 comment|/* put the C++ support */

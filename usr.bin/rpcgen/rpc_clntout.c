@@ -1282,7 +1282,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\n\t\tTIMEOUT));\n}\n"
+literal|"\n\t\tTIMEOUT));\n"
 argument_list|)
 expr_stmt|;
 else|else
