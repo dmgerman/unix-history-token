@@ -543,6 +543,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|CS_SECURE
+parameter_list|(
+name|cs
+parameter_list|)
+value|(ISPL(cs) == SEL_UPL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFL_SECURE
+parameter_list|(
+name|ef
+parameter_list|,
+name|oef
+parameter_list|)
+value|((((ef) ^ (oef))& ~PSL_USERCHANGE) == 0)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -761,6 +783,30 @@ name|int
 name|cold
 init|=
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|osendsig
+name|__P
+argument_list|(
+operator|(
+name|sig_t
+name|catcher
+operator|,
+name|int
+name|sig
+operator|,
+name|sigset_t
+operator|*
+name|mask
+operator|,
+name|u_long
+name|code
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2116,56 +2162,65 @@ specifier|static
 name|void
 name|osendsig
 parameter_list|(
-name|sig_t
 name|catcher
 parameter_list|,
-name|int
 name|sig
 parameter_list|,
+name|mask
+parameter_list|,
+name|code
+parameter_list|)
+name|sig_t
+name|catcher
+decl_stmt|;
+name|int
+name|sig
+decl_stmt|;
 name|sigset_t
 modifier|*
 name|mask
-parameter_list|,
+decl_stmt|;
 name|u_long
 name|code
-parameter_list|)
+decl_stmt|;
 block|{
-specifier|register
 name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
+name|osigframe
+name|sf
 decl_stmt|;
-specifier|register
-name|struct
-name|trapframe
-modifier|*
-name|regs
-decl_stmt|;
-specifier|register
 name|struct
 name|osigframe
 modifier|*
 name|fp
 decl_stmt|;
 name|struct
-name|osigframe
-name|sf
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 name|struct
 name|sigacts
 modifier|*
 name|psp
-init|=
-name|p
-operator|->
-name|p_sigacts
+decl_stmt|;
+name|struct
+name|trapframe
+modifier|*
+name|regs
 decl_stmt|;
 name|int
 name|oonstack
 decl_stmt|;
+name|p
+operator|=
+name|curproc
+expr_stmt|;
+name|psp
+operator|=
+name|p
+operator|->
+name|p_sigacts
+expr_stmt|;
 name|regs
 operator|=
 name|p
@@ -2176,7 +2231,6 @@ name|md_regs
 expr_stmt|;
 name|oonstack
 operator|=
-operator|(
 name|p
 operator|->
 name|p_sigstk
@@ -2184,11 +2238,6 @@ operator|.
 name|ss_flags
 operator|&
 name|SS_ONSTACK
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
 expr_stmt|;
 comment|/* Allocate and validate space for the signal handler context. */
 if|if
@@ -2264,7 +2313,7 @@ name|tf_esp
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * grow() will return FALSE if the fp will not fit inside the stack 	 *	and the stack can not be grown. useracc will return FALSE 	 *	if access is denied. 	 */
+comment|/* 	 * grow_stack() will return 0 if *fp does not fit inside the stack 	 * and the stack can not be grown. 	 * useracc() will return FALSE if access is denied. 	 */
 if|if
 condition|(
 name|grow_stack
@@ -2277,7 +2326,7 @@ operator|)
 name|fp
 argument_list|)
 operator|==
-name|FALSE
+literal|0
 operator|||
 operator|!
 name|useracc
@@ -2289,8 +2338,8 @@ name|fp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|osigframe
+operator|*
+name|fp
 argument_list|)
 argument_list|,
 name|VM_PROT_WRITE
@@ -2343,7 +2392,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Translate the signal if appropriate */
+comment|/* Translate the signal if appropriate. */
 if|if
 condition|(
 name|p
@@ -2351,10 +2400,7 @@ operator|->
 name|p_sysent
 operator|->
 name|sv_sigtbl
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|sig
 operator|<=
 name|p
@@ -2377,7 +2423,6 @@ name|sig
 argument_list|)
 index|]
 expr_stmt|;
-block|}
 comment|/* Build the argument list for the signal handler. */
 name|sf
 operator|.
@@ -2481,7 +2526,7 @@ operator|=
 name|catcher
 expr_stmt|;
 block|}
-comment|/* save scratch registers */
+comment|/* Save most if not all of trap frame. */
 name|sf
 operator|.
 name|sf_siginfo
@@ -2637,7 +2682,7 @@ name|regs
 operator|->
 name|tf_isp
 expr_stmt|;
-comment|/* Build the signal context to be used by sigreturn. */
+comment|/* Build the signal context to be used by osigreturn(). */
 name|sf
 operator|.
 name|sf_siginfo
@@ -2744,6 +2789,7 @@ operator|&
 name|PSL_VM
 condition|)
 block|{
+comment|/* XXX confusing names: `tf' isn't a trapframe; `regs' is. */
 name|struct
 name|trapframe_vm86
 modifier|*
@@ -2861,7 +2907,7 @@ name|PSL_VIP
 operator|)
 operator|)
 expr_stmt|;
-comment|/* see sendsig for comment */
+comment|/* See sendsig() for comments. */
 name|tf
 operator|->
 name|tf_eflags
@@ -2892,8 +2938,8 @@ name|fp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|osigframe
+operator|*
+name|fp
 argument_list|)
 argument_list|)
 operator|!=
@@ -2991,11 +3037,18 @@ name|code
 decl_stmt|;
 block|{
 name|struct
+name|sigframe
+name|sf
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
+decl_stmt|;
+name|struct
+name|sigacts
+modifier|*
+name|psp
 decl_stmt|;
 name|struct
 name|trapframe
@@ -3003,24 +3056,23 @@ modifier|*
 name|regs
 decl_stmt|;
 name|struct
-name|sigacts
-modifier|*
-name|psp
-init|=
-name|p
-operator|->
-name|p_sigacts
-decl_stmt|;
-name|struct
 name|sigframe
-name|sf
-decl_stmt|,
 modifier|*
 name|sfp
 decl_stmt|;
 name|int
 name|oonstack
 decl_stmt|;
+name|p
+operator|=
+name|curproc
+expr_stmt|;
+name|psp
+operator|=
+name|p
+operator|->
+name|p_sigacts
+expr_stmt|;
 if|if
 condition|(
 name|SIGISMEMBER
@@ -3056,7 +3108,6 @@ name|md_regs
 expr_stmt|;
 name|oonstack
 operator|=
-operator|(
 name|p
 operator|->
 name|p_sigstk
@@ -3064,13 +3115,8 @@ operator|.
 name|ss_flags
 operator|&
 name|SS_ONSTACK
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
 expr_stmt|;
-comment|/* save user context */
+comment|/* Save user context. */
 name|bzero
 argument_list|(
 operator|&
@@ -3078,8 +3124,7 @@ name|sf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|sigframe
+name|sf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3138,8 +3183,8 @@ name|mc_fs
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|trapframe
+operator|*
+name|regs
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3219,7 +3264,7 @@ name|tf_esp
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * grow() will return FALSE if the sfp will not fit inside the stack 	 * and the stack can not be grown. useracc will return FALSE if 	 * access is denied. 	 */
+comment|/* 	 * grow_stack() will return 0 if *sfp does not fit inside the stack 	 * and the stack can not be grown. 	 * useracc() will return FALSE if access is denied. 	 */
 if|if
 condition|(
 name|grow_stack
@@ -3232,7 +3277,7 @@ operator|)
 name|sfp
 argument_list|)
 operator|==
-name|FALSE
+literal|0
 operator|||
 operator|!
 name|useracc
@@ -3244,8 +3289,8 @@ name|sfp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|sigframe
+operator|*
+name|sfp
 argument_list|)
 argument_list|,
 name|VM_PROT_WRITE
@@ -3312,7 +3357,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Translate the signal is appropriate */
+comment|/* Translate the signal if appropriate. */
 if|if
 condition|(
 name|p
@@ -3320,10 +3365,7 @@ operator|->
 name|p_sysent
 operator|->
 name|sv_sigtbl
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|sig
 operator|<=
 name|p
@@ -3346,7 +3388,6 @@ name|sig
 argument_list|)
 index|]
 expr_stmt|;
-block|}
 comment|/* Build the argument list for the signal handler. */
 name|sf
 operator|.
@@ -3405,7 +3446,7 @@ operator|*
 operator|)
 name|catcher
 expr_stmt|;
-comment|/* fill siginfo structure */
+comment|/* Fill siginfo structure. */
 name|sf
 operator|.
 name|sf_si
@@ -3609,7 +3650,7 @@ name|PSL_VIP
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * Copy the sigframe out to the user's stack. 	 */
+comment|/* Copy the sigframe out to the user's stack. */
 if|if
 condition|(
 name|copyout
@@ -3621,8 +3662,8 @@ name|sfp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|sigframe
+operator|*
+name|sfp
 argument_list|)
 argument_list|)
 operator|!=
@@ -3704,28 +3745,6 @@ begin_comment
 comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * state to gain improper privileges.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|EFL_SECURE
-parameter_list|(
-name|ef
-parameter_list|,
-name|oef
-parameter_list|)
-value|((((ef) ^ (oef))& ~PSL_USERCHANGE) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CS_SECURE
-parameter_list|(
-name|cs
-parameter_list|)
-value|(ISPL(cs) == SEL_UPL)
-end_define
-
 begin_function
 name|int
 name|osigreturn
@@ -3746,27 +3765,27 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-specifier|register
+name|struct
+name|trapframe
+modifier|*
+name|regs
+decl_stmt|;
 name|struct
 name|osigcontext
 modifier|*
 name|scp
 decl_stmt|;
-specifier|register
-name|struct
-name|trapframe
-modifier|*
+name|int
+name|eflags
+decl_stmt|;
 name|regs
-init|=
+operator|=
 name|p
 operator|->
 name|p_md
 operator|.
 name|md_regs
-decl_stmt|;
-name|int
-name|eflags
-decl_stmt|;
+expr_stmt|;
 name|scp
 operator|=
 name|uap
@@ -3785,8 +3804,8 @@ name|scp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|osigcontext
+operator|*
+name|scp
 argument_list|)
 argument_list|,
 name|VM_PROT_READ
@@ -3871,7 +3890,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* go back to user mode if both flags are set */
+comment|/* Go back to user mode if both flags are set. */
 if|if
 condition|(
 operator|(
@@ -4083,7 +4102,7 @@ operator|->
 name|sc_fs
 expr_stmt|;
 block|}
-comment|/* restore scratch registers */
+comment|/* Restore remaining registers. */
 name|regs
 operator|->
 name|tf_eax
@@ -4345,7 +4364,8 @@ name|ucp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ucontext_t
+operator|*
+name|ucp
 argument_list|)
 argument_list|,
 name|VM_PROT_READ
@@ -4440,7 +4460,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* go back to user mode if both flags are set */
+comment|/* Go back to user mode if both flags are set. */
 if|if
 condition|(
 operator|(
@@ -4686,8 +4706,8 @@ name|regs
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|trapframe
+operator|*
+name|regs
 argument_list|)
 argument_list|)
 expr_stmt|;
