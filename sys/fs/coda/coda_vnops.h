@@ -409,19 +409,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|coda_fbsd_putpages
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 function_decl|(

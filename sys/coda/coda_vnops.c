@@ -602,7 +602,7 @@ block|{
 operator|&
 name|vop_putpages_desc
 block|,
-name|coda_fbsd_putpages
+name|vop_stdputpages
 block|}
 block|,
 comment|/* pager intf.*/
