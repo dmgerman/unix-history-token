@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_search.c	8.5 (Berkeley) %G%"
+literal|"@(#)bt_search.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,9 +141,6 @@ block|{
 name|PAGE
 modifier|*
 name|h
-decl_stmt|,
-modifier|*
-name|n
 decl_stmt|;
 name|indx_t
 name|base
