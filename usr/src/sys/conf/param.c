@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	6.4	84/06/06	*/
+comment|/*	param.c	6.5	84/07/02	*/
 end_comment
 
 begin_include
@@ -156,21 +156,6 @@ name|NPROC
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|NCHSIZE
-value|(60 + 2 * MAXUSERS)
-end_define
-
-begin_decl_stmt
-name|int
-name|nchsize
-init|=
-name|NCHSIZE
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|int
 name|ntext
@@ -181,27 +166,30 @@ name|MAXUSERS
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|NINODE
+value|((NPROC + 16 + MAXUSERS) + 32)
+end_define
+
 begin_decl_stmt
 name|int
 name|ninode
 init|=
-operator|(
-name|NPROC
-operator|+
-literal|16
-operator|+
-name|MAXUSERS
-operator|+
-operator|(
-literal|2
+name|NINODE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nchsize
+init|=
+name|NINODE
 operator|*
-name|NCHSIZE
+literal|11
 operator|/
-literal|3
-operator|)
-operator|)
-operator|+
-literal|32
+literal|10
 decl_stmt|;
 end_decl_stmt
 
