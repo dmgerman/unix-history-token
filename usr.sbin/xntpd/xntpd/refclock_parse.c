@@ -763,7 +763,7 @@ decl_stmt|;
 comment|/* io handling structure (user level parsing) */
 comment|/*    * type specific parameters    */
 name|struct
-name|clockinfo
+name|my_clockinfo
 modifier|*
 name|parse_type
 decl_stmt|;
@@ -2259,7 +2259,7 @@ end_define
 begin_struct
 specifier|static
 struct|struct
-name|clockinfo
+name|my_clockinfo
 block|{
 name|U_LONG
 name|cl_flags
@@ -2737,7 +2737,7 @@ operator|/
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|clockinfo
+name|my_clockinfo
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -6776,6 +6776,7 @@ operator|*
 name|s
 operator|++
 argument_list|,
+operator|&
 name|ts
 argument_list|)
 condition|)

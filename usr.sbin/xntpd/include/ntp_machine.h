@@ -1224,6 +1224,12 @@ directive|define
 name|HAVE_BSD_NICE
 end_define
 
+begin_define
+define|#
+directive|define
+name|USE_PROTOTYPES
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1264,6 +1270,12 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_TIMEX_H
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETBOOTFILE
 end_define
 
 begin_define

@@ -6727,8 +6727,8 @@ end_function
 begin_define
 define|#
 directive|define
-name|KEY_TYPE_ASCII
-value|3
+name|KEY_TYPE_MD5
+value|4
 end_define
 
 begin_comment
@@ -6892,7 +6892,7 @@ name|authusekey
 argument_list|(
 name|req_keyid
 argument_list|,
-name|KEY_TYPE_ASCII
+name|KEY_TYPE_MD5
 argument_list|,
 name|rankey
 argument_list|)
