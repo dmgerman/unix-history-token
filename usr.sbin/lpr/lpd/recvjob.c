@@ -1803,16 +1803,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|rcleanup
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s"
+literal|"Error receiving job from %s:"
 argument_list|,
 name|fromb
 argument_list|)
@@ -1831,6 +1826,19 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+comment|/*          * rcleanup is not called until AFTER logging the error message,          * because rcleanup will zap some variables which may have been          * supplied as parameters for that msg... 	 */
+name|rcleanup
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/*  	 * Add a minimal delay before returning the final error code to 	 * the sending host.  This just in case that machine responds 	 * this error by INSTANTLY retrying (and instantly re-failing...). 	 * It would be stupid of the sending host to do that, but if there 	 * was a broken implementation which did it, the result might be 	 * obscure performance problems and a flood of syslog messages on 	 * the receiving host. 	 */
+name|sleep
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* a paranoid throttling measure */
 name|putchar
 argument_list|(
 literal|'\1'
