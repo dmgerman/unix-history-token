@@ -94,6 +94,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|isprint
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)>= ' '&& (c)<= '~')
+end_define
+
+begin_define
+define|#
+directive|define
 name|toupper
 parameter_list|(
 name|c
