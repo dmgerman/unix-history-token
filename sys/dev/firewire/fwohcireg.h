@@ -14,49 +14,49 @@ begin_define
 define|#
 directive|define
 name|FW_VENDORID_NEC
-value|0x1033
+value|(0x1033<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_TI
-value|0x104c
+value|(0x104c<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_SONY
-value|0x104d
+value|(0x104d<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_VIA
-value|0x1106
+value|(0x1106<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_RICOH
-value|0x1180
+value|(0x1180<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_APPLE
-value|0x106b
+value|(0x106b<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_LUCENT
-value|0x11c1
+value|(0x11c1<< 16)
 end_define
 
 begin_define
@@ -97,6 +97,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_DEVICE_TITSB43A
+value|0x8023
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_TIPCI4450
+value|0x8011
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_TIPCI4410A
+value|0x8017
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_DEVICE_CX3022
 value|0x8039
 end_define
@@ -112,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|FW_DEVICE_R5C552
-value|0x1180
+value|0x0552
 end_define
 
 begin_define
