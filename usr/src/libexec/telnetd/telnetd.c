@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.35 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,6 +144,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -1792,7 +1798,7 @@ expr_stmt|;
 comment|/* 	 * -h : pass on name of host. 	 *		WARNING:  -h is accepted by login if and only if 	 *			getuid() == 0. 	 * -p : don't clobber the environment (so terminal type stays set). 	 */
 name|execl
 argument_list|(
-literal|"/bin/login"
+name|_PATH_LOGIN
 argument_list|,
 literal|"login"
 argument_list|,
@@ -1813,14 +1819,16 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"/bin/login: %m\n"
+literal|"%s: %m\n"
+argument_list|,
+name|_PATH_LOGIN
 argument_list|)
 expr_stmt|;
 name|fatalperror
 argument_list|(
 literal|2
 argument_list|,
-literal|"/bin/login"
+name|_PATH_LOGIN
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
