@@ -256,6 +256,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|bio
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|disklabel
 struct_decl|;
 end_struct_decl
@@ -267,7 +273,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|bio
 operator|*
 name|bp
 operator|,

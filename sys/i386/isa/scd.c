@@ -349,7 +349,7 @@ name|u_long
 name|skip
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -436,10 +436,10 @@ name|short
 name|audio_status
 decl_stmt|;
 name|struct
-name|buf_queue_head
+name|bio_queue_head
 name|head
 decl_stmt|;
-comment|/* head of buf queue */
+comment|/* head of bio queue */
 name|struct
 name|scd_mbx
 name|mbx
@@ -1058,7 +1058,7 @@ name|audio_status
 operator|=
 name|CD_AS_AUDIO_INVALID
 expr_stmt|;
-name|bufq_init
+name|bioq_init
 argument_list|(
 operator|&
 name|cd
@@ -1557,7 +1557,7 @@ name|void
 name|scdstrategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -1577,7 +1577,7 @@ name|scd_unit
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 decl_stmt|;
 name|cd
@@ -1600,11 +1600,11 @@ name|long
 operator|)
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1616,14 +1616,14 @@ name|NSCD
 operator|||
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|<
 literal|0
 operator|||
 operator|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|%
 name|SCDBLKSIZE
 operator|)
@@ -1640,22 +1640,22 @@ name|long
 operator|)
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -1685,7 +1685,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
@@ -1700,7 +1700,7 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 operator|)
@@ -1708,7 +1708,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EROFS
 expr_stmt|;
@@ -1721,7 +1721,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|==
 literal|0
 condition|)
@@ -1742,7 +1742,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
@@ -1772,15 +1772,15 @@ name|done
 goto|;
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -1790,7 +1790,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|bufqdisksort
+name|bioqdisksort
 argument_list|(
 operator|&
 name|cd
@@ -1816,7 +1816,7 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -1824,11 +1824,11 @@ name|done
 label|:
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -1858,7 +1858,7 @@ operator|+
 name|unit
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -1891,7 +1891,7 @@ return|return;
 block|}
 name|bp
 operator|=
-name|bufq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|cd
@@ -1907,7 +1907,7 @@ literal|0
 condition|)
 block|{
 comment|/* block found to process, dequeue */
-name|bufq_remove
+name|bioq_remove
 argument_list|(
 operator|&
 name|cd
@@ -1951,7 +1951,7 @@ name|scd_part
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 expr_stmt|;
 name|cd
@@ -4096,7 +4096,7 @@ operator|->
 name|port
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 init|=
@@ -4273,7 +4273,7 @@ operator|=
 operator|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|+
 operator|(
 name|mbx
@@ -4315,7 +4315,7 @@ operator|=
 operator|(
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|/
 operator|(
 name|mbx
@@ -4960,7 +4960,7 @@ name|addr
 operator|=
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|mbx
 operator|->
@@ -5288,7 +5288,7 @@ block|}
 comment|/* return buffer */
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -5345,23 +5345,23 @@ label|:
 comment|/* invalidate the buffer */
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|biodone
 argument_list|(

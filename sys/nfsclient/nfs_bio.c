@@ -6424,7 +6424,7 @@ name|b_resid
 operator|=
 literal|0
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -6816,7 +6816,7 @@ name|b_resid
 operator|=
 literal|0
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -6847,7 +6847,7 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)

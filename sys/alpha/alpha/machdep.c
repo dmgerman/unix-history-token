@@ -8892,7 +8892,7 @@ name|int
 name|bounds_check_with_label
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -8908,19 +8908,19 @@ block|{
 if|#
 directive|if
 literal|0
-block|struct partition *p = lp->d_partitions + dkpart(bp->b_dev);         int labelsect = lp->d_partitions[0].p_offset;         int maxsz = p->p_size,                 sz = (bp->b_bcount + DEV_BSIZE - 1)>> DEV_BSHIFT;
+block|struct partition *p = lp->d_partitions + dkpart(bp->bio_dev);         int labelsect = lp->d_partitions[0].p_offset;         int maxsz = p->p_size,                 sz = (bp->bio_bcount + DEV_BSIZE - 1)>> DEV_BSHIFT;
 comment|/* overwriting disk label ? */
 comment|/* XXX should also protect bootstrap in first 8K */
-block|if (bp->b_blkno + p->p_offset<= LABELSECTOR + labelsect&&
+block|if (bp->bio_blkno + p->p_offset<= LABELSECTOR + labelsect&&
 if|#
 directive|if
 name|LABELSECTOR
 operator|!=
 literal|0
-block|bp->b_blkno + p->p_offset + sz> LABELSECTOR + labelsect&&
+block|bp->bio_blkno + p->p_offset + sz> LABELSECTOR + labelsect&&
 endif|#
 directive|endif
-block|(bp->b_iocmd == BIO_WRITE)&& wlabel == 0) {                 bp->b_error = EROFS;                 goto bad;         }
+block|(bp->bio_cmd == BIO_WRITE)&& wlabel == 0) {                 bp->bio_error = EROFS;                 goto bad;         }
 if|#
 directive|if
 name|defined
@@ -8933,15 +8933,15 @@ argument_list|(
 name|notyet
 argument_list|)
 comment|/* overwriting master boot record? */
-block|if (bp->b_blkno + p->p_offset<= DOSBBSECTOR&&             (bp->b_iocmd == BIO_WRITE)&& wlabel == 0) {                 bp->b_error = EROFS;                 goto bad;         }
+block|if (bp->bio_blkno + p->p_offset<= DOSBBSECTOR&&             (bp->bio_cmd == BIO_WRITE)&& wlabel == 0) {                 bp->bio_error = EROFS;                 goto bad;         }
 endif|#
 directive|endif
 comment|/* beyond partition? */
-block|if (bp->b_blkno< 0 || bp->b_blkno + sz> maxsz) {
+block|if (bp->bio_blkno< 0 || bp->bio_blkno + sz> maxsz) {
 comment|/* if exactly at end of disk, return an EOF */
-block|if (bp->b_blkno == maxsz) {                         bp->b_resid = bp->b_bcount;                         return(0);                 }
+block|if (bp->bio_blkno == maxsz) {                         bp->bio_resid = bp->bio_bcount;                         return(0);                 }
 comment|/* or truncate if part of it fits */
-block|sz = maxsz - bp->b_blkno;                 if (sz<= 0) {                         bp->b_error = EINVAL;                         goto bad;                 }                 bp->b_bcount = sz<< DEV_BSHIFT;         }          bp->b_pblkno = bp->b_blkno + p->p_offset;         return(1);  bad:         bp->b_ioflags |= BIO_ERROR;
+block|sz = maxsz - bp->bio_blkno;                 if (sz<= 0) {                         bp->bio_error = EINVAL;                         goto bad;                 }                 bp->bio_bcount = sz<< DEV_BSHIFT;         }          bp->bio_pblkno = bp->bio_blkno + p->p_offset;         return(1);  bad:         bp->bio_flags |= BIO_ERROR;
 endif|#
 directive|endif
 return|return

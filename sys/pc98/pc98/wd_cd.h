@@ -1090,8 +1090,8 @@ name|ata
 decl_stmt|;
 comment|/* Controller structure */
 name|struct
-name|buf_queue_head
-name|buf_queue
+name|bio_queue_head
+name|bio_queue
 decl_stmt|;
 comment|/* Queue of i/o requests */
 name|struct

@@ -2092,7 +2092,7 @@ name|b_flags
 operator||=
 name|B_INVAL
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -2205,7 +2205,7 @@ name|b_resid
 operator|=
 literal|0
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)

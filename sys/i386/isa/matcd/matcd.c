@@ -322,7 +322,7 @@ name|u_long
 name|skip
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -516,7 +516,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|buf_queue_head
+name|bio_queue_head
 name|request_head
 index|[
 name|NUMCTRLRS
@@ -2732,7 +2732,7 @@ name|void
 name|matcdstrategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -2756,7 +2756,7 @@ name|matcd_ldrive
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 expr_stmt|;
 name|controller
@@ -2765,7 +2765,7 @@ name|matcd_controller
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 expr_stmt|;
 name|cd
@@ -2793,11 +2793,11 @@ name|bp
 argument_list|,
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2811,7 +2811,7 @@ name|TOTALDRIVES
 operator|||
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|<
 literal|0
 condition|)
@@ -2825,7 +2825,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -2847,7 +2847,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
@@ -2861,7 +2861,7 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 operator|)
@@ -2869,7 +2869,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EROFS
 expr_stmt|;
@@ -2881,7 +2881,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|==
 literal|0
 condition|)
@@ -2895,7 +2895,7 @@ name|matcd_partition
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 operator|!=
 name|RAW_PART
@@ -2927,15 +2927,15 @@ else|else
 block|{
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -2946,7 +2946,7 @@ name|splbio
 argument_list|()
 expr_stmt|;
 comment|/*Make sure we don't get intr'ed*/
-name|bufqdisksort
+name|bioqdisksort
 argument_list|(
 operator|&
 name|request_head
@@ -2976,7 +2976,7 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -2985,11 +2985,11 @@ name|done
 label|:
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 comment|/*Show amount of data un read*/
 name|biodone
@@ -3021,7 +3021,7 @@ modifier|*
 name|cd
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -3037,7 +3037,7 @@ name|ldrive
 decl_stmt|;
 name|bp
 operator|=
-name|bufq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|request_head
@@ -3075,7 +3075,7 @@ name|matcd_ldrive
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 expr_stmt|;
 comment|/*Get logical drive#*/
@@ -3131,7 +3131,7 @@ comment|/*DEBUGIO*/
 return|return;
 block|}
 comment|/*	Ok, the controller is idle (not necessarily the drive) and so 	get the command to do and issue it */
-name|bufq_remove
+name|bioq_remove
 argument_list|(
 operator|&
 name|request_head
@@ -3148,7 +3148,7 @@ name|matcd_partition
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 expr_stmt|;
 name|p
@@ -4924,7 +4924,7 @@ argument_list|,
 name|iftype
 argument_list|)
 expr_stmt|;
-name|bufq_init
+name|bioq_init
 argument_list|(
 operator|&
 name|request_head
@@ -7179,7 +7179,7 @@ name|short
 name|iftype
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -7456,7 +7456,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|,
 name|mbx
 operator|->
@@ -7473,7 +7473,7 @@ operator|=
 operator|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|+
 operator|(
 name|mbx
@@ -7511,7 +7511,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7522,7 +7522,7 @@ operator|=
 operator|(
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|/
 operator|(
 name|mbx
@@ -7732,7 +7732,7 @@ name|addr
 operator|=
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|mbx
 operator|->
@@ -7978,7 +7978,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 argument_list|)
 expr_stmt|;
 name|media_chk
@@ -8019,7 +8019,7 @@ comment|/*Oooooh, you flunk the course*/
 block|}
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -8104,7 +8104,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 argument_list|)
 expr_stmt|;
 if|if
@@ -8178,17 +8178,17 @@ block|}
 comment|/*<14>	The other error types are either something very bad or the media<14>	has been removed by the user.  In both cases there is no retry<14>	for this call.  We will invalidate the label in both cases. */
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|biodone
 argument_list|(

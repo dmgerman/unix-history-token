@@ -386,8 +386,8 @@ index|]
 decl_stmt|;
 comment|/* system drives */
 name|struct
-name|buf_queue_head
-name|mlx_bufq
+name|bio_queue_head
+name|mlx_bioq
 decl_stmt|;
 comment|/* outstanding I/O operations */
 name|int
@@ -893,7 +893,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)

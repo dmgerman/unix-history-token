@@ -212,17 +212,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* misuse a flag to identify format operation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_FORMAT
-value|B_XXX
-end_define
-
-begin_comment
 comment|/* configuration flags */
 end_comment
 
@@ -5420,7 +5409,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|bufq_init
+name|bioq_init
 argument_list|(
 operator|&
 name|fdc
@@ -8614,7 +8603,7 @@ name|void
 name|fdstrategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -8649,7 +8638,7 @@ name|minor
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8679,7 +8668,7 @@ name|major
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|,
 operator|(
@@ -8689,7 +8678,7 @@ name|minor
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8710,13 +8699,13 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|ENXIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -8743,9 +8732,9 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|bio_cmd
 operator|&
-name|B_FORMAT
+name|BIO_FORMAT
 operator|)
 condition|)
 block|{
@@ -8753,7 +8742,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|<
 literal|0
 condition|)
@@ -8769,22 +8758,22 @@ name|u_long
 operator|)
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -8797,7 +8786,7 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|%
 name|fdblk
 operator|)
@@ -8807,13 +8796,13 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -8827,7 +8816,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|>
 literal|20000000
 condition|)
@@ -8835,13 +8824,13 @@ block|{
 comment|/* 		 * Reject unreasonably high block number, prevent the 		 * multiplication below from overflowing. 		 */
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -8856,7 +8845,7 @@ name|unsigned
 operator|)
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|*
 name|DEV_BSIZE
 operator|/
@@ -8872,7 +8861,7 @@ name|size
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -8883,7 +8872,7 @@ operator|+
 operator|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|/
 name|fdblk
 operator|)
@@ -8910,11 +8899,11 @@ name|fdblk
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|-
 name|cando
 expr_stmt|;
@@ -8933,13 +8922,13 @@ else|else
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -8950,18 +8939,18 @@ block|}
 block|}
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 expr_stmt|;
 name|s
 operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|bufqdisksort
+name|bioqdisksort
 argument_list|(
 operator|&
 name|fdc
@@ -9417,7 +9406,7 @@ name|fd
 decl_stmt|;
 specifier|register
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -9446,7 +9435,7 @@ condition|)
 block|{
 name|bp
 operator|=
-name|bufq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|fdc
@@ -9461,7 +9450,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|bufq_remove
+name|bioq_remove
 argument_list|(
 operator|&
 name|fdc
@@ -9549,7 +9538,7 @@ name|minor
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9599,7 +9588,7 @@ name|read
 operator|=
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 expr_stmt|;
@@ -9620,9 +9609,9 @@ name|format
 operator|=
 name|bp
 operator|->
-name|b_flags
+name|bio_cmd
 operator|&
-name|B_FORMAT
+name|BIO_FORMAT
 expr_stmt|;
 if|if
 condition|(
@@ -9638,7 +9627,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_data
+name|bio_data
 expr_stmt|;
 name|fd
 operator|->
@@ -9687,7 +9676,7 @@ name|unsigned
 operator|)
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 operator|*
 name|DEV_BSIZE
 operator|/
@@ -10509,7 +10498,7 @@ name|idf
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -10519,7 +10508,7 @@ name|format
 condition|?
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 else|:
 name|fdblk
 argument_list|,
@@ -10620,7 +10609,7 @@ name|idf
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -10630,7 +10619,7 @@ name|format
 condition|?
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 else|:
 name|fdblk
 argument_list|,
@@ -10763,7 +10752,7 @@ literal|1
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|,
 literal|0
 argument_list|)
@@ -10777,11 +10766,11 @@ name|fdc
 argument_list|,
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -10789,7 +10778,7 @@ name|skip
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|)
 expr_stmt|;
 block|}
@@ -10848,7 +10837,7 @@ name|idf
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -10858,7 +10847,7 @@ name|format
 condition|?
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 else|:
 name|fdblk
 argument_list|,
@@ -10921,11 +10910,11 @@ name|fdc
 argument_list|,
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -11014,7 +11003,7 @@ name|idf
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -11024,7 +11013,7 @@ name|format
 condition|?
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 else|:
 name|fdblk
 argument_list|,
@@ -11069,11 +11058,11 @@ name|fdc
 argument_list|,
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -11192,7 +11181,7 @@ name|P_NRD_DATA
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -11213,7 +11202,7 @@ name|P_NRD_DATA
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -11224,7 +11213,7 @@ name|format
 condition|?
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 else|:
 name|fdblk
 operator|)
@@ -11358,11 +11347,11 @@ name|fdc
 argument_list|,
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -11446,7 +11435,7 @@ name|idf
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -11456,7 +11445,7 @@ name|format
 condition|?
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 else|:
 name|fdblk
 argument_list|,
@@ -11529,7 +11518,7 @@ name|idf
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|fd
 operator|->
@@ -11539,7 +11528,7 @@ name|format
 condition|?
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 else|:
 name|fdblk
 argument_list|,
@@ -11703,11 +11692,11 @@ name|skip
 operator|<
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|-
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 condition|)
 block|{
 comment|/* set up next transfer */
@@ -11740,7 +11729,7 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-name|devstat_end_transaction_buf
+name|devstat_end_transaction_bio
 argument_list|(
 operator|&
 name|fd
@@ -12291,7 +12280,7 @@ parameter_list|)
 block|{
 specifier|register
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -12318,7 +12307,7 @@ name|minor
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12404,12 +12393,12 @@ name|sav_b_dev
 init|=
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 decl_stmt|;
 comment|/* Trick diskerr */
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|=
 name|makedev
 argument_list|(
@@ -12417,7 +12406,7 @@ name|major
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|,
 operator|(
@@ -12427,7 +12416,7 @@ name|minor
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|)
 operator|<<
@@ -12463,7 +12452,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|=
 name|sav_b_dev
 expr_stmt|;
@@ -12539,23 +12528,23 @@ expr_stmt|;
 block|}
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|+=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|-
 name|fdc
 operator|->
@@ -12584,7 +12573,7 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-name|devstat_end_transaction_buf
+name|devstat_end_transaction_bio
 argument_list|(
 operator|&
 name|fdc
@@ -12736,7 +12725,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|buf
+name|bio
 argument_list|)
 argument_list|,
 name|M_TEMP
@@ -12791,14 +12780,12 @@ operator|->
 name|b_flags
 operator|=
 name|B_PHYS
-operator||
-name|B_FORMAT
 expr_stmt|;
 name|bp
 operator|->
 name|b_iocmd
 operator|=
-name|BIO_WRITE
+name|BIO_FORMAT
 expr_stmt|;
 comment|/* 	 * calculate a fake blkno, so fdstrategy() would initiate a 	 * seek to the requested cylinder 	 */
 name|bp
@@ -12944,7 +12931,7 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -12954,7 +12941,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_ioflags
+name|b_flags
 operator|&
 name|BIO_ERROR
 condition|)

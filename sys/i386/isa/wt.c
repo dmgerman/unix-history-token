@@ -2678,7 +2678,7 @@ name|void
 name|wtstrategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -2690,7 +2690,7 @@ name|minor
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 operator|&
 name|T_UNIT
@@ -2708,11 +2708,11 @@ name|s
 decl_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 if|if
 condition|(
@@ -2729,7 +2729,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|ENXIO
 expr_stmt|;
@@ -2753,7 +2753,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|%
 name|t
 operator|->
@@ -2764,7 +2764,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -2776,7 +2776,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 condition|)
@@ -2968,7 +2968,7 @@ condition|(
 operator|!
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 condition|)
 goto|goto
 name|xit
@@ -2993,7 +2993,7 @@ name|t
 argument_list|,
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 condition|?
@@ -3003,11 +3003,11 @@ name|ISADMA_WRITE
 argument_list|,
 name|bp
 operator|->
-name|b_data
+name|bio_data
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|)
 condition|)
 block|{
@@ -3020,7 +3020,7 @@ argument_list|,
 operator|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 operator|)
@@ -3032,7 +3032,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|-=
 name|t
 operator|->
@@ -3057,7 +3057,7 @@ name|errxit
 label|:
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
@@ -3065,7 +3065,7 @@ name|err2xit
 label|:
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;

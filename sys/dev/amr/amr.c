@@ -1434,12 +1434,12 @@ operator|->
 name|amr_freecmds
 argument_list|)
 expr_stmt|;
-name|bufq_init
+name|bioq_init
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|amr_bufq
+name|amr_bioq
 argument_list|)
 expr_stmt|;
 comment|/*      * Configure for this controller type.      */
@@ -2089,7 +2089,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Bring the controller down to a dormant state and detach all child devices.  *  * This function is called before detach, system shutdown, or before performing  * an operation which may add or delete system disks.  (Call amr_startup to  * resume normal operation.)  *  * Note that we can assume that the bufq on the controller is empty, as we won't  * allow shutdown if any device is open.  */
+comment|/********************************************************************************  * Bring the controller down to a dormant state and detach all child devices.  *  * This function is called before detach, system shutdown, or before performing  * an operation which may add or delete system disks.  (Call amr_startup to  * resume normal operation.)  *  * Note that we can assume that the bioq on the controller is empty, as we won't  * allow shutdown if any device is open.  */
 end_comment
 
 begin_function
@@ -2506,7 +2506,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -2524,12 +2524,12 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|bufq_insert_tail
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|amr_bufq
+name|amr_bioq
 argument_list|,
 name|bp
 argument_list|)
@@ -3679,7 +3679,7 @@ modifier|*
 name|amrd
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -3724,12 +3724,12 @@ condition|(
 operator|(
 name|bp
 operator|=
-name|bufq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|amr_bufq
+name|amr_bioq
 argument_list|)
 operator|)
 operator|==
@@ -3770,12 +3770,12 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* get the buf containing our work */
-name|bufq_remove
+name|bioq_remove
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|amr_bufq
+name|amr_bioq
 argument_list|,
 name|bp
 argument_list|)
@@ -3809,7 +3809,7 @@ name|ac_data
 operator|=
 name|bp
 operator|->
-name|b_data
+name|bio_data
 expr_stmt|;
 name|ac
 operator|->
@@ -3817,13 +3817,13 @@ name|ac_length
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 if|if
 condition|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 condition|)
@@ -3868,7 +3868,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_drv1
 expr_stmt|;
@@ -3887,7 +3887,7 @@ operator|=
 operator|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|+
 name|AMR_BLKSIZE
 operator|-
@@ -3901,7 +3901,7 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 operator|+
 name|blkcount
 operator|)
@@ -3925,7 +3925,7 @@ literal|"I/O beyond end of unit (%u,%d> %u)\n"
 argument_list|,
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 argument_list|,
 name|blkcount
 argument_list|,
@@ -3964,7 +3964,7 @@ name|mb_lba
 operator|=
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 expr_stmt|;
 name|ac
 operator|->
@@ -4064,13 +4064,13 @@ operator|->
 name|ac_sc
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 init|=
 operator|(
 expr|struct
-name|buf
+name|bio
 operator|*
 operator|)
 name|ac
@@ -4102,13 +4102,13 @@ block|{
 comment|/* could be more verbose here? */
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;

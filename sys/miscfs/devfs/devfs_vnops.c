@@ -5517,7 +5517,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Just call the device strategy routine 	struct vop_strategy_args { 		struct vnode *a_vp; 		struct buf *a_bp; 	}  */
+comment|/*  * Just call the device strategy routine 	struct vop_strategy_args { 		struct vnode *a_vp; 		struct bio *a_bp; 	}  */
 end_comment
 
 begin_function
@@ -5654,7 +5654,10 @@ operator|->
 name|d_strategy
 call|)
 argument_list|(
+operator|&
 name|bp
+operator|->
+name|b_io
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5672,7 +5675,10 @@ operator|->
 name|d_strategy
 call|)
 argument_list|(
+operator|&
 name|bp
+operator|->
+name|b_io
 argument_list|)
 expr_stmt|;
 break|break;

@@ -877,7 +877,7 @@ name|b_error
 operator|=
 name|ENXIO
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -1699,7 +1699,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -1918,7 +1918,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|biodone
+name|bufdone
 argument_list|(
 name|nbp
 argument_list|)
@@ -2018,7 +2018,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -2060,7 +2060,7 @@ name|count
 operator|==
 literal|0
 condition|)
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)

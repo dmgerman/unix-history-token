@@ -11072,7 +11072,7 @@ name|int
 name|bounds_check_with_label
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -11098,7 +11098,7 @@ name|dkpart
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 decl_stmt|;
 name|int
@@ -11125,7 +11125,7 @@ init|=
 operator|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|+
 name|DEV_BSIZE
 operator|-
@@ -11140,7 +11140,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|+
 name|p
 operator|->
@@ -11157,7 +11157,7 @@ operator|!=
 literal|0
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|+
 name|p
 operator|->
@@ -11174,7 +11174,7 @@ directive|endif
 operator|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_WRITE
 operator|)
@@ -11186,7 +11186,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EROFS
 expr_stmt|;
@@ -11210,7 +11210,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|+
 name|p
 operator|->
@@ -11221,7 +11221,7 @@ operator|&&
 operator|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_WRITE
 operator|)
@@ -11233,7 +11233,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EROFS
 expr_stmt|;
@@ -11248,13 +11248,13 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|<
 literal|0
 operator|||
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|+
 name|sz
 operator|>
@@ -11266,18 +11266,18 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|==
 name|maxsz
 condition|)
 block|{
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 return|return
 operator|(
@@ -11292,7 +11292,7 @@ name|maxsz
 operator|-
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 expr_stmt|;
 if|if
 condition|(
@@ -11303,7 +11303,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -11313,7 +11313,7 @@ goto|;
 block|}
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|=
 name|sz
 operator|<<
@@ -11322,11 +11322,11 @@ expr_stmt|;
 block|}
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|+
 name|p
 operator|->
@@ -11341,7 +11341,7 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;

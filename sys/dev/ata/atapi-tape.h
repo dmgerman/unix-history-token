@@ -509,8 +509,8 @@ name|blksize
 decl_stmt|;
 comment|/* block size (512 | 1024) */
 name|struct
-name|buf_queue_head
-name|buf_queue
+name|bio_queue_head
+name|bio_queue
 decl_stmt|;
 comment|/* queue of i/o requests */
 name|struct

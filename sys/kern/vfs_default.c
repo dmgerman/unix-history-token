@@ -597,7 +597,7 @@ name|b_error
 operator|=
 name|EOPNOTSUPP
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|ap
 operator|->

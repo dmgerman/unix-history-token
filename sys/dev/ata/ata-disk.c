@@ -1106,7 +1106,7 @@ name|dev2
 operator|=
 name|dev
 expr_stmt|;
-name|bufq_init
+name|bioq_init
 argument_list|(
 operator|&
 name|adp
@@ -1301,7 +1301,7 @@ name|void
 name|adstrategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -1313,7 +1313,7 @@ name|adp
 init|=
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_drv1
 decl_stmt|;
@@ -1325,14 +1325,14 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|==
 literal|0
 condition|)
 block|{
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -1348,7 +1348,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|bufqdisksort
+name|bioqdisksort
 argument_list|(
 operator|&
 name|adp
@@ -1734,11 +1734,11 @@ name|adp
 parameter_list|)
 block|{
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 init|=
-name|bufq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|adp
@@ -1819,7 +1819,7 @@ name|blockaddr
 operator|=
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 expr_stmt|;
 name|request
 operator|->
@@ -1827,7 +1827,7 @@ name|bytecount
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|request
 operator|->
@@ -1835,7 +1835,7 @@ name|data
 operator|=
 name|bp
 operator|->
-name|b_data
+name|bio_data
 expr_stmt|;
 name|request
 operator|->
@@ -1844,7 +1844,7 @@ operator|=
 operator|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 operator|)
@@ -1854,7 +1854,7 @@ else|:
 literal|0
 expr_stmt|;
 comment|/* remove from drive queue */
-name|bufq_remove
+name|bioq_remove
 argument_list|(
 operator|&
 name|adp
@@ -3033,7 +3033,7 @@ name|request
 operator|->
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
@@ -3041,7 +3041,7 @@ name|request
 operator|->
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -3087,13 +3087,13 @@ name|request
 operator|->
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|request
 operator|->
 name|bytecount
 expr_stmt|;
-name|devstat_end_transaction_buf
+name|devstat_end_transaction_bio
 argument_list|(
 operator|&
 name|adp
@@ -3401,7 +3401,7 @@ name|request
 operator|->
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
@@ -3409,11 +3409,11 @@ name|request
 operator|->
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-name|devstat_end_transaction_buf
+name|devstat_end_transaction_bio
 argument_list|(
 operator|&
 name|adp

@@ -325,11 +325,11 @@ name|bus_addr_t
 name|hwqcb_busaddr
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|buf
 decl_stmt|;
-comment|/* buf associated with qcb */
+comment|/* bio associated with qcb */
 block|}
 struct|;
 end_struct
@@ -518,8 +518,8 @@ argument_list|)
 name|qcb_queue
 expr_stmt|;
 name|struct
-name|buf_queue_head
-name|buf_queue
+name|bio_queue_head
+name|bio_queue
 decl_stmt|;
 name|struct
 name|ida_access
@@ -722,7 +722,7 @@ modifier|*
 name|ida
 parameter_list|,
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -747,7 +747,7 @@ name|void
 name|id_intr
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)

@@ -49,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|b_actf
-value|b_act.tqe_next
+value|bio_queue.tqe_next
 end_define
 
 begin_include
@@ -235,12 +235,12 @@ name|u_short
 name|sample_us
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 name|start_queue
 decl_stmt|;
 comment|/* Start queue */
 name|struct
-name|buf
+name|bio
 modifier|*
 name|last
 decl_stmt|;
@@ -1228,7 +1228,7 @@ name|void
 name|bp_done
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -1238,7 +1238,7 @@ parameter_list|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|err
 expr_stmt|;
@@ -1248,12 +1248,12 @@ name|err
 operator|||
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 condition|)
 block|{
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -1289,7 +1289,7 @@ modifier|*
 name|ctlr
 parameter_list|,
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -1299,7 +1299,7 @@ parameter_list|)
 block|{
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|ctlr
 operator|->
@@ -2656,7 +2656,7 @@ operator|)
 name|p
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -2860,7 +2860,7 @@ operator|)
 condition|)
 block|{
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 init|=
@@ -2955,7 +2955,7 @@ else|else
 comment|/* FIFO interrupt */
 block|{
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 init|=
@@ -3334,7 +3334,7 @@ name|ctlr
 parameter_list|)
 block|{
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -3379,7 +3379,7 @@ name|ctlr
 operator|->
 name|start_queue
 operator|.
-name|b_bcount
+name|bio_bcount
 operator|=
 literal|0
 expr_stmt|;
@@ -3395,7 +3395,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_data
+name|bio_data
 expr_stmt|;
 name|ctlr
 operator|->
@@ -3407,7 +3407,7 @@ name|data
 operator|+
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 if|if
 condition|(
@@ -3468,7 +3468,7 @@ name|ctlr
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|)
 expr_stmt|;
 if|if
@@ -3531,7 +3531,7 @@ name|void
 name|ad_strategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -3561,7 +3561,7 @@ name|ctlr
 operator|->
 name|start_queue
 operator|.
-name|b_bcount
+name|bio_bcount
 condition|)
 block|{
 name|ctlr
@@ -3585,7 +3585,7 @@ name|ctlr
 operator|->
 name|start_queue
 operator|.
-name|b_bcount
+name|bio_bcount
 operator|=
 literal|1
 expr_stmt|;
@@ -3627,7 +3627,7 @@ name|void
 name|da_strategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -3656,7 +3656,7 @@ name|CHAN
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 condition|)
 block|{
@@ -3690,7 +3690,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|<=
 literal|2
 condition|)
@@ -3708,7 +3708,7 @@ name|len
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|/
 literal|2
 expr_stmt|;
@@ -3720,7 +3720,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_data
+name|bio_data
 expr_stmt|;
 for|for
 control|(
@@ -3787,11 +3787,11 @@ expr_stmt|;
 block|}
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|&
 literal|3
 expr_stmt|;
@@ -3818,7 +3818,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|&
 literal|1
 condition|)
@@ -3834,7 +3834,7 @@ name|len
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|data
 operator|=
@@ -3844,7 +3844,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_data
+name|bio_data
 expr_stmt|;
 for|for
 control|(
@@ -3883,7 +3883,7 @@ expr_stmt|;
 block|}
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -3981,7 +3981,7 @@ name|void
 name|digital_out_strategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -4011,7 +4011,7 @@ name|CHAN
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 decl_stmt|;
 name|ctlr
@@ -4043,7 +4043,7 @@ name|len
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|data
 operator|=
@@ -4053,7 +4053,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_data
+name|bio_data
 expr_stmt|;
 for|for
 control|(
@@ -4081,7 +4081,7 @@ expr_stmt|;
 block|}
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -4105,7 +4105,7 @@ name|void
 name|digital_in_strategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|,
@@ -4135,7 +4135,7 @@ name|CHAN
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 decl_stmt|;
 name|ctlr
@@ -4166,7 +4166,7 @@ name|len
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|data
 operator|=
@@ -4176,7 +4176,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_data
+name|bio_data
 expr_stmt|;
 for|for
 control|(
@@ -4204,7 +4204,7 @@ expr_stmt|;
 block|}
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -4224,7 +4224,7 @@ name|void
 name|labpcstrategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -4240,7 +4240,7 @@ name|UNIT
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 index|]
 decl_stmt|;
@@ -4250,7 +4250,7 @@ name|DIGITAL
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 condition|)
 block|{
@@ -4258,7 +4258,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 condition|)
@@ -4324,7 +4324,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 condition|)

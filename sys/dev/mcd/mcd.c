@@ -418,7 +418,7 @@ name|u_long
 name|skip
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -506,10 +506,10 @@ name|short
 name|debug
 decl_stmt|;
 name|struct
-name|buf_queue_head
+name|bio_queue_head
 name|head
 decl_stmt|;
-comment|/* head of buf queue */
+comment|/* head of bio queue */
 name|struct
 name|mcd_mbx
 name|mbx
@@ -1306,7 +1306,7 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-name|bufq_init
+name|bioq_init
 argument_list|(
 operator|&
 name|cd
@@ -2090,7 +2090,7 @@ name|void
 name|mcdstrategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -2110,7 +2110,7 @@ name|mcd_unit
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 decl_stmt|;
 name|cd
@@ -2120,7 +2120,7 @@ operator|+
 name|unit
 expr_stmt|;
 comment|/* test validity */
-comment|/*MCD_TRACE("strategy: buf=0x%lx, unit=%ld, block#=%ld bcount=%ld\n", 	bp,unit,bp->b_blkno,bp->b_bcount);*/
+comment|/*MCD_TRACE("strategy: buf=0x%lx, unit=%ld, block#=%ld bcount=%ld\n", 	bp,unit,bp->bio_blkno,bp->bio_bcount);*/
 if|if
 condition|(
 name|unit
@@ -2129,7 +2129,7 @@ name|NMCD
 operator|||
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|<
 literal|0
 condition|)
@@ -2145,11 +2145,11 @@ name|long
 operator|)
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2159,13 +2159,13 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -2193,7 +2193,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
@@ -2208,7 +2208,7 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 operator|)
@@ -2216,7 +2216,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EROFS
 expr_stmt|;
@@ -2229,7 +2229,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|==
 literal|0
 condition|)
@@ -2243,7 +2243,7 @@ name|mcd_part
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 operator|!=
 name|RAW_PART
@@ -2263,7 +2263,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
@@ -2298,15 +2298,15 @@ else|else
 block|{
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -2317,7 +2317,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|bufqdisksort
+name|bioqdisksort
 argument_list|(
 operator|&
 name|cd
@@ -2343,7 +2343,7 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -2351,11 +2351,11 @@ name|done
 label|:
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -2390,7 +2390,7 @@ modifier|*
 name|p
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -2418,7 +2418,7 @@ return|return;
 block|}
 name|bp
 operator|=
-name|bufq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|cd
@@ -2435,7 +2435,7 @@ condition|)
 block|{
 comment|/* block found to process, dequeue */
 comment|/*MCD_TRACE("mcd_start: found block bp=0x%x\n",bp,0,0,0);*/
-name|bufq_remove
+name|bioq_remove
 argument_list|(
 operator|&
 name|cd
@@ -2493,7 +2493,7 @@ name|mcd_part
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 expr_stmt|;
 name|cd
@@ -2512,7 +2512,7 @@ name|mcd_part
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 index|]
 operator|&
@@ -5193,7 +5193,7 @@ operator|+
 name|mcd_rdata
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 init|=
@@ -5658,7 +5658,7 @@ operator|=
 operator|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|+
 operator|(
 name|mbx
@@ -5686,7 +5686,7 @@ operator|=
 operator|(
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|/
 operator|(
 name|mbx
@@ -5932,7 +5932,7 @@ name|addr
 operator|=
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|mbx
 operator|->
@@ -6064,7 +6064,7 @@ block|}
 comment|/* return buffer */
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
@@ -6207,17 +6207,17 @@ label|:
 comment|/* invalidate the buffer */
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|biodone
 argument_list|(

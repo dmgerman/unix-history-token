@@ -1606,9 +1606,8 @@ name|blkdone
 parameter_list|,
 name|lp
 parameter_list|)
-specifier|register
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -1635,7 +1634,7 @@ name|dkunit
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 decl_stmt|;
 name|int
@@ -1645,7 +1644,7 @@ name|dkslice
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 decl_stmt|;
 name|int
@@ -1655,7 +1654,7 @@ name|dkpart
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 decl_stmt|;
 specifier|register
@@ -1719,7 +1718,7 @@ name|dsname
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|,
 name|unit
 argument_list|,
@@ -1745,7 +1744,7 @@ name|what
 argument_list|,
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 condition|?
@@ -1758,13 +1757,13 @@ name|sn
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 expr_stmt|;
 if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|<=
 name|DEV_BSIZE
 condition|)
@@ -1820,7 +1819,7 @@ name|long
 operator|)
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 argument_list|,
 call|(
 name|long
@@ -1828,12 +1827,12 @@ call|)
 argument_list|(
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 operator|+
 operator|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|-
 literal|1
 operator|)
@@ -1854,7 +1853,7 @@ literal|0
 operator|||
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|<=
 name|lp
 operator|->

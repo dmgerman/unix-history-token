@@ -333,8 +333,8 @@ decl_stmt|;
 comment|/* periodic status check */
 comment|/* per-controller queues */
 name|struct
-name|buf_queue_head
-name|amr_bufq
+name|bio_queue_head
+name|amr_bioq
 decl_stmt|;
 comment|/* pending I/O */
 name|int
@@ -862,7 +862,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)

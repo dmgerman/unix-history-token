@@ -64,7 +64,7 @@ directive|define
 name|AD_F_TAG_ENABLED
 value|0x0008
 name|struct
-name|buf_queue_head
+name|bio_queue_head
 name|queue
 decl_stmt|;
 comment|/* head of request queue */
@@ -148,11 +148,11 @@ name|data
 decl_stmt|;
 comment|/* pointer to data buf */
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
-comment|/* associated buf ptr */
+comment|/* associated bio ptr */
 name|u_int8_t
 name|tag
 decl_stmt|;

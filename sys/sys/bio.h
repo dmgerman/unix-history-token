@@ -2449,6 +2449,20 @@ value|{							\ 	bzero((bp)->b_data, (u_int)(bp)->b_bcount);			\ 	(bp)->b_resid 
 end_define
 
 begin_comment
+comment|/*  * Zero out the bio's data area.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|clrbio
+parameter_list|(
+name|bp
+parameter_list|)
+value|{							\ 	bzero((bp)->bio_data, (u_int)(bp)->bio_bcount);			\ 	(bp)->bio_resid = 0;						\ }
+end_define
+
+begin_comment
 comment|/* Flags to low-level allocation routines. */
 end_comment
 
@@ -2954,12 +2968,26 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|biodone
+name|bufdone
 name|__P
 argument_list|(
 operator|(
 expr|struct
 name|buf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|biodone
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|bio
 operator|*
 operator|)
 argument_list|)

@@ -1653,7 +1653,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|bio
 operator|*
 name|bp
 operator|,
@@ -1676,7 +1676,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|bio
 operator|*
 name|bp
 operator|,

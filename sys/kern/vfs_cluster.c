@@ -2336,7 +2336,7 @@ operator|~
 name|BIO_ERROR
 expr_stmt|;
 block|}
-name|biodone
+name|bufdone
 argument_list|(
 name|tbp
 argument_list|)

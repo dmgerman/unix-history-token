@@ -1974,7 +1974,7 @@ name|b_resid
 operator|=
 literal|0
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -1994,7 +1994,7 @@ name|uiop
 operator|->
 name|uio_resid
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)

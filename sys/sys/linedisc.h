@@ -230,6 +230,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|bio
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|buf
 struct_decl|;
 end_struct_decl
@@ -294,7 +300,7 @@ name|void
 name|d_strategy_t
 name|__P
 typedef|((struct
-name|buf
+name|bio
 modifier|*
 name|bp
 typedef|));
@@ -619,7 +625,7 @@ parameter_list|,
 name|dummy
 parameter_list|)
 define|\
-value|do {					\ 	if ((!(bp)->b_iocmd) || ((bp)->b_iocmd& ((bp)->b_iocmd - 1)))	\ 		Debugger("d_iocmd botch");	\ 	(*devsw((bp)->b_dev)->d_strategy)(bp);	\ 	} while (0)
+value|do {					\ 	if ((!(bp)->b_iocmd) || ((bp)->b_iocmd& ((bp)->b_iocmd - 1)))	\ 		Debugger("d_iocmd botch");	\ 	(*devsw((bp)->b_dev)->d_strategy)(&(bp)->b_io);	\ 	} while (0)
 end_define
 
 begin_comment

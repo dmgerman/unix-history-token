@@ -1240,7 +1240,10 @@ condition|)
 block|{
 name|diskerr
 argument_list|(
+operator|&
 name|bp
+operator|->
+name|b_io
 argument_list|,
 literal|"reading primary partition table: error"
 argument_list|,

@@ -905,7 +905,7 @@ name|void
 name|diskstrategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -922,7 +922,7 @@ name|dp
 operator|=
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_disk
 expr_stmt|;
@@ -940,7 +940,7 @@ name|dkmodslice
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|,
 name|WHOLE_DISK_SLICE
 argument_list|)
@@ -952,7 +952,7 @@ name|dp
 operator|=
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_disk
 operator|=
@@ -962,7 +962,7 @@ name|si_disk
 expr_stmt|;
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_drv1
 operator|=
@@ -972,7 +972,7 @@ name|si_drv1
 expr_stmt|;
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_drv2
 operator|=
@@ -982,7 +982,7 @@ name|si_drv2
 expr_stmt|;
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_iosize_max
 operator|=
@@ -992,7 +992,7 @@ name|si_iosize_max
 expr_stmt|;
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_bsize_phys
 operator|=
@@ -1002,7 +1002,7 @@ name|si_bsize_phys
 expr_stmt|;
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_bsize_best
 operator|=
@@ -1019,13 +1019,13 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|ENXIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;

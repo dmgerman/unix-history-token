@@ -3676,7 +3676,7 @@ name|b_ioflags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -3718,7 +3718,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)

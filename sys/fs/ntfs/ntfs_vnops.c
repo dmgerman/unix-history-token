@@ -1954,7 +1954,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)

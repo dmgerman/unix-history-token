@@ -659,7 +659,7 @@ parameter_list|,
 name|ssp
 parameter_list|)
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -713,7 +713,7 @@ name|blkno
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 expr_stmt|;
 if|if
 condition|(
@@ -724,13 +724,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dscheck(%s): negative b_blkno %ld\n"
+literal|"dscheck(%s): negative bio_blkno %ld\n"
 argument_list|,
 name|devtoname
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|,
 operator|(
@@ -741,7 +741,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -760,7 +760,7 @@ name|dkslice
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 index|]
 expr_stmt|;
@@ -783,7 +783,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|%
 operator|(
 name|u_long
@@ -801,7 +801,7 @@ name|nsec
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|>>
 name|DEV_BSHIFT
 expr_stmt|;
@@ -821,7 +821,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|&
 operator|(
 name|ssp
@@ -861,7 +861,7 @@ name|nsec
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|>>
 operator|(
 name|DEV_BSHIFT
@@ -878,7 +878,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|%
 name|ssp
 operator|->
@@ -910,7 +910,7 @@ name|nsec
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|/
 name|ssp
 operator|->
@@ -977,7 +977,7 @@ name|dkpart
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 index|]
 expr_stmt|;
@@ -1024,7 +1024,7 @@ directive|endif
 operator|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_WRITE
 operator|)
@@ -1038,7 +1038,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EROFS
 expr_stmt|;
@@ -1067,7 +1067,7 @@ operator|&&
 operator|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_WRITE
 operator|)
@@ -1081,7 +1081,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EROFS
 expr_stmt|;
@@ -1111,11 +1111,11 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 return|return
 operator|(
@@ -1139,7 +1139,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -1149,7 +1149,7 @@ goto|;
 block|}
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|=
 name|nsec
 operator|*
@@ -1160,7 +1160,7 @@ expr_stmt|;
 block|}
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 operator|=
 name|sp
 operator|->
@@ -1223,7 +1223,7 @@ name|ic_prev_flags
 operator|=
 name|bp
 operator|->
-name|b_flags
+name|bio_flags
 expr_stmt|;
 name|ic
 operator|->
@@ -1231,7 +1231,7 @@ name|ic_prev_iodone
 operator|=
 name|bp
 operator|->
-name|b_iodone
+name|bio_done
 expr_stmt|;
 name|ic
 operator|->
@@ -1239,7 +1239,7 @@ name|ic_prev_iodone_chain
 operator|=
 name|bp
 operator|->
-name|b_iodone_chain
+name|bio_done_chain
 expr_stmt|;
 name|ic
 operator|->
@@ -1275,13 +1275,13 @@ name|sp
 expr_stmt|;
 name|bp
 operator|->
-name|b_iodone
+name|bio_done
 operator|=
 name|dsiodone
 expr_stmt|;
 name|bp
 operator|->
-name|b_iodone_chain
+name|bio_done_chain
 operator|=
 name|ic
 expr_stmt|;
@@ -1291,13 +1291,16 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|b_iocmd
+name|bio_cmd
 operator|==
 name|BIO_READ
 operator|)
 condition|)
 block|{
 comment|/* 			 * XXX even disklabel(8) writes directly so we need 			 * to adjust writes.  Perhaps we should drop support 			 * for DIOCWLABEL (always write protect labels) and 			 * require the use of DIOCWDINFO. 			 * 			 * XXX probably need to copy the data to avoid even 			 * temporarily corrupting the in-core copy. 			 */
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 name|bp
@@ -1325,6 +1328,8 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* XXX need name here. */
 name|msg
 operator|=
@@ -1346,7 +1351,7 @@ operator|)
 operator|(
 name|bp
 operator|->
-name|b_data
+name|bio_data
 operator|+
 name|ic
 operator|->
@@ -1376,7 +1381,7 @@ name|devtoname
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|,
 name|msg
@@ -1384,7 +1389,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EROFS
 expr_stmt|;
@@ -1403,18 +1408,18 @@ name|bad_bcount
 label|:
 name|printf
 argument_list|(
-literal|"dscheck(%s): b_bcount %ld is not on a sector boundary (ssize %d)\n"
+literal|"dscheck(%s): bio_bcount %ld is not on a sector boundary (ssize %d)\n"
 argument_list|,
 name|devtoname
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|,
 name|ssp
 operator|->
@@ -1423,7 +1428,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -1434,13 +1439,13 @@ name|bad_blkno
 label|:
 name|printf
 argument_list|(
-literal|"dscheck(%s): b_blkno %ld is not on a sector boundary (ssize %d)\n"
+literal|"dscheck(%s): bio_blkno %ld is not on a sector boundary (ssize %d)\n"
 argument_list|,
 name|devtoname
 argument_list|(
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 argument_list|)
 argument_list|,
 operator|(
@@ -1455,7 +1460,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -1466,15 +1471,15 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -2751,9 +2756,15 @@ argument_list|)
 expr_stmt|;
 name|biodone
 argument_list|(
+operator|(
+expr|struct
+name|bio
+operator|*
+operator|)
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 block|}
 end_function
 

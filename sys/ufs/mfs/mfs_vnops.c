@@ -714,7 +714,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_strategy_args
-comment|/* { 		struct vnode *a_vp; 		struct buf *a_bp; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct bio *a_bp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -725,6 +725,11 @@ name|buf
 modifier|*
 name|bp
 init|=
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
 name|ap
 operator|->
 name|a_bp
@@ -861,7 +866,7 @@ operator|->
 name|b_bcount
 argument_list|)
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -1153,7 +1158,7 @@ name|b_ioflags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)

@@ -103,11 +103,11 @@ name|fdc_errs
 decl_stmt|;
 comment|/* number of logged errors */
 name|struct
-name|buf_queue_head
+name|bio_queue_head
 name|head
 decl_stmt|;
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 decl_stmt|;

@@ -15920,7 +15920,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)

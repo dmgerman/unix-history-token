@@ -720,7 +720,7 @@ name|void
 name|amrd_strategy
 parameter_list|(
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 parameter_list|)
@@ -737,7 +737,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_drv1
 decl_stmt|;
@@ -759,15 +759,15 @@ literal|"write"
 argument_list|,
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 argument_list|,
 name|bp
 operator|->
-name|b_blkno
+name|bio_blkno
 argument_list|,
 name|bp
 operator|->
-name|b_pblkno
+name|bio_pblkno
 argument_list|)
 expr_stmt|;
 comment|/* bogus disk? */
@@ -780,7 +780,7 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -792,7 +792,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX may only be temporarily offline - sleep? */
-block|if (sc->amrd_drive->ld_state == AMR_SYSD_OFFLINE) { 	bp->b_error = ENXIO; 	goto bad;     }
+block|if (sc->amrd_drive->ld_state == AMR_SYSD_OFFLINE) { 	bp->bio_error = ENXIO; 	goto bad;     }
 endif|#
 directive|endif
 comment|/* do-nothing operation */
@@ -800,7 +800,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 operator|==
 literal|0
 condition|)
@@ -829,7 +829,7 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -838,11 +838,11 @@ label|:
 comment|/*      * Correctly set the buf to indicate a completed transfer      */
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 name|bp
 operator|->
-name|b_bcount
+name|bio_bcount
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -863,13 +863,13 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|buf
+name|bio
 modifier|*
 name|bp
 init|=
 operator|(
 expr|struct
-name|buf
+name|bio
 operator|*
 operator|)
 name|data
@@ -886,7 +886,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_dev
+name|bio_dev
 operator|->
 name|si_drv1
 decl_stmt|;
@@ -899,14 +899,14 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_ioflags
+name|bio_flags
 operator|&
 name|BIO_ERROR
 condition|)
 block|{
 name|bp
 operator|->
-name|b_error
+name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
@@ -921,17 +921,17 @@ block|{
 if|#
 directive|if
 literal|0
-block|int i; 	for (i = 0; i< 512; i += 16) 	    debug(" %04x  %16D", i, bp->b_data + i, " ");
+block|int i; 	for (i = 0; i< 512; i += 16) 	    debug(" %04x  %16D", i, bp->bio_data + i, " ");
 endif|#
 directive|endif
 name|bp
 operator|->
-name|b_resid
+name|bio_resid
 operator|=
 literal|0
 expr_stmt|;
 block|}
-name|devstat_end_transaction_buf
+name|devstat_end_transaction_bio
 argument_list|(
 operator|&
 name|sc
