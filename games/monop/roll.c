@@ -53,6 +53,12 @@ name|defined
 argument_list|(
 name|tahoe
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|i386
+argument_list|)
 end_if
 
 begin_define
