@@ -21,6 +21,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|mtx
+struct_decl|;
+end_struct_decl
+
 begin_expr_stmt
 name|SLIST_HEAD
 argument_list|(
@@ -82,6 +88,12 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* function to call */
+name|struct
+name|mtx
+modifier|*
+name|c_mtx
+decl_stmt|;
+comment|/* mutex to lock */
 name|int
 name|c_flags
 decl_stmt|;
@@ -132,6 +144,17 @@ end_define
 
 begin_comment
 comment|/* callout handler is mp safe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLOUT_RETURNUNLOCKED
+value|0x0010
+end_define
+
+begin_comment
+comment|/* handler returns with mtx unlocked */
 end_comment
 
 begin_struct
@@ -243,6 +266,23 @@ name|callout_init
 parameter_list|(
 name|struct
 name|callout
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|callout_init_mtx
+parameter_list|(
+name|struct
+name|callout
+modifier|*
+parameter_list|,
+name|struct
+name|mtx
 modifier|*
 parameter_list|,
 name|int
