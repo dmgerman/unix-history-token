@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: ld.h,v 1.11 1994/06/15 22:39:46 rich Exp $  */
+comment|/*  *	$Id: ld.h,v 1.12 1994/12/23 22:30:42 nate Exp $  */
 end_comment
 
 begin_comment
@@ -464,6 +464,51 @@ parameter_list|)
 value|((r)->r_pcrel)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RELOC_INIT_SEGMENT_RELOC
+parameter_list|(
+name|r
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX_GOTOFF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX_GOTOFF
+value|(LONG_MAX)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIN_GOTOFF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MIN_GOTOFF
+value|(LONG_MIN)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -853,8 +898,15 @@ begin_comment
 comment|/* not __GNU_STAB__ */
 end_comment
 
-begin_escape
-end_escape
+begin_define
+define|#
+directive|define
+name|N_ISWEAK
+parameter_list|(
+name|p
+parameter_list|)
+value|(N_BIND(p)& BIND_WEAK)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -912,7 +964,7 @@ value|4
 comment|/* xlat name to `<file>.<name>' */
 define|#
 directive|define
-name|LS_GOTSLOTCLAIMED
+name|LS_HASGOTSLOT
 value|8
 comment|/* This symbol has a GOT entry */
 define|#
@@ -1032,26 +1084,26 @@ decl_stmt|;
 define|#
 directive|define
 name|GS_DEFINED
-value|1
+value|0x1
 comment|/* Symbol has definition (notyetused)*/
 define|#
 directive|define
 name|GS_REFERENCED
-value|2
+value|0x2
 comment|/* Symbol is referred to by something 					   interesting */
 define|#
 directive|define
 name|GS_TRACE
-value|4
+value|0x4
 comment|/* Symbol will be traced */
 define|#
 directive|define
-name|GS_JMPSLOTCLAIMED
-value|8
+name|GS_HASJMPSLOT
+value|0x8
 comment|/*				 */
 define|#
 directive|define
-name|GS_GOTSLOTCLAIMED
+name|GS_HASGOTSLOT
 value|0x10
 comment|/* Some state bits concerning    */
 define|#
@@ -1064,6 +1116,11 @@ directive|define
 name|GS_CPYRELOCCLAIMED
 value|0x40
 comment|/*				 */
+define|#
+directive|define
+name|GS_WEAK
+value|0x80
+comment|/* Symbol is weakly defined */
 block|}
 name|symbol
 typedef|;
@@ -1120,6 +1177,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|undefined_global_sym_count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of weak symbols referenced and not defined.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|undefined_weak_sym_count
 decl_stmt|;
 end_decl_stmt
 
@@ -1754,13 +1822,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|outdesc
+name|FILE
+modifier|*
+name|outstream
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Output file descriptor. */
+comment|/* Output file. */
 end_comment
 
 begin_decl_stmt
@@ -2051,7 +2120,8 @@ name|int
 operator|,
 name|int
 operator|,
-name|int
+name|FILE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2065,7 +2135,8 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|int
+name|FILE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.10 1994/06/15 22:39:49 rich Exp $	- library routines  */
+comment|/*  * $Id: lib.c,v 1.11 1994/12/23 22:30:45 nate Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -1153,7 +1153,7 @@ name|ran_strx
 argument_list|)
 expr_stmt|;
 comment|/* 			 * If we find a symbol that appears to be needed, 			 * think carefully about the archive member that the 			 * symbol is in. 			 */
-comment|/* 			 * Per Mike Karels' recommendation, we no longer load 			 * library files if the only reference(s) that would 			 * be satisfied are 'common' references.  This 			 * prevents some problems with name pollution (e.g. a 			 * global common 'utime' linked to a function). 			 */
+comment|/* 			 * Per Mike Karels' recommendation, we no longer load 			 * library files if the only reference(s) that would 			 * be satisfied are 'common' references.  This 			 * prevents some problems with name pollution (e.g. a 			 * global common 'utime' linked to a function). 			 * 			 * If we're not forcing the archive in then we don't 			 * need to bother if: we've never heard of the symbol, 			 * or if it is already defined. The last clause causes 			 * archive members to be searched for definitions 			 * satisfying undefined shared object symbols. 			 */
 if|if
 condition|(
 operator|!
@@ -1945,6 +1945,16 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|sp
+operator|->
+name|flags
+operator|&
+name|GS_WEAK
+condition|)
+comment|/* Weak symbols don't pull archive members */
+continue|continue;
+if|if
+condition|(
 name|write_map
 condition|)
 block|{
@@ -2111,7 +2121,22 @@ name|iscommon
 condition|)
 comment|/* 					 * But this member wants it to be 					 * a common; ignore it. 					 */
 continue|continue;
+if|if
+condition|(
+name|N_ISWEAK
+argument_list|(
+operator|&
+name|lsp
+operator|->
+name|nzlist
+operator|.
+name|nlist
+argument_list|)
+condition|)
+comment|/* Weak symbols don't pull archive members */
+continue|continue;
 block|}
+comment|/* 			 * At this point, either the new symbol is a common 			 * and the shared object reference is undefined -- 			 * in which case we note the common -- or the shared 			 * object reference has a definition -- in which case 			 * the library member takes precedence. 			 */
 if|if
 condition|(
 name|iscommon
@@ -2151,11 +2176,24 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|" needed due to shared lib ref %s\n"
+literal|" needed due to shared lib ref %s (%d)\n"
 argument_list|,
 name|sp
 operator|->
 name|name
+argument_list|,
+name|lsp
+condition|?
+name|lsp
+operator|->
+name|nzlist
+operator|.
+name|nlist
+operator|.
+name|n_type
+else|:
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.8 1994/06/15 22:40:00 rich Exp $  */
+comment|/*  * $Id: warnings.c,v 1.9 1994/12/23 22:30:57 nate Exp $  */
 end_comment
 
 begin_include
@@ -126,6 +126,13 @@ include|#
 directive|include
 file|"ld.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|reported_undefineds
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Print the filename of ENTRY on OUTFILE (a stdio stream),  * and then a newline.  */
@@ -468,31 +475,15 @@ argument_list|,
 argument|sp
 argument_list|)
 block|{
-if|if
-condition|(
-name|sp
-operator|->
-name|defined
-operator|==
-operator|(
-name|N_UNDF
-operator||
-name|N_EXT
-operator|)
-condition|)
 name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"  %s: common, length %#x\n"
+literal|"  %s: "
 argument_list|,
 name|sp
 operator|->
 name|name
-argument_list|,
-name|sp
-operator|->
-name|common_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -510,11 +501,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"  %s: unreferenced\n"
-argument_list|,
-name|sp
-operator|->
-name|name
+literal|"unreferenced"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -528,11 +515,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"  %s: sodefined\n"
-argument_list|,
-name|sp
-operator|->
-name|name
+literal|"sodefined"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -547,11 +530,31 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"  %s: undefined\n"
+literal|"undefined"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sp
+operator|->
+name|defined
+operator|==
+operator|(
+name|N_UNDF
+operator||
+name|N_EXT
+operator|)
+condition|)
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|"common: size %#x"
 argument_list|,
 name|sp
 operator|->
-name|name
+name|common_size
 argument_list|)
 expr_stmt|;
 else|else
@@ -559,11 +562,11 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"  %s: %#x, size %#x\n"
+literal|"type %d, value %#x, size %#x"
 argument_list|,
 name|sp
 operator|->
-name|name
+name|defined
 argument_list|,
 name|sp
 operator|->
@@ -572,6 +575,32 @@ argument_list|,
 name|sp
 operator|->
 name|size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|alias
+condition|)
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|", aliased to %s"
+argument_list|,
+name|sp
+operator|->
+name|alias
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2057,6 +2086,17 @@ condition|(
 name|g
 operator|->
 name|undef_refs
+operator|==
+literal|0
+condition|)
+name|reported_undefineds
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|g
+operator|->
+name|undef_refs
 operator|>=
 name|MAX_UREFS_PRINTED
 condition|)
@@ -2681,10 +2721,53 @@ operator|-
 literal|1
 expr_stmt|;
 break|break;
+case|case
+name|N_SIZE
+operator||
+name|N_EXT
+case|:
+name|errfmt
+operator|=
+literal|"Size element definition of symbol `%s' (multiply defined)"
+expr_stmt|;
+name|line_number
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|N_INDR
+operator||
+name|N_EXT
+case|:
+name|errfmt
+operator|=
+literal|"Alias definition of symbol `%s' (multiply defined)"
+expr_stmt|;
+name|line_number
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|N_UNDF
+operator||
+name|N_EXT
+case|:
+comment|/* Don't print out multiple defs at references.*/
+continue|continue;
 default|default:
 name|warnx
 argument_list|(
-literal|"Unexpected multiple definitions of symbol `%s', type %#x\n"
+literal|"%s: unexpected multiple definitions "
+literal|"of symbol `%s', type %#x"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
 argument_list|,
 name|g
 operator|->
@@ -2695,8 +2778,7 @@ operator|->
 name|n_type
 argument_list|)
 expr_stmt|;
-comment|/* Don't print out multiple defs at references.*/
-continue|continue;
+break|break;
 block|}
 block|}
 elseif|else
@@ -2728,6 +2810,17 @@ operator|->
 name|so_defined
 condition|)
 block|{
+if|if
+condition|(
+name|g
+operator|->
+name|undef_refs
+operator|==
+literal|0
+condition|)
+name|reported_undefineds
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|g
@@ -2804,9 +2897,10 @@ name|outfile
 argument_list|,
 literal|"%s: Undefined symbol `%s' referenced (use %s ?)\n"
 argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
-operator|->
-name|filename
+argument_list|)
 argument_list|,
 name|g
 operator|->
@@ -2889,9 +2983,10 @@ name|outfile
 argument_list|,
 literal|"%s: "
 argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
-operator|->
-name|filename
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2976,7 +3071,13 @@ operator|!
 name|relocatable_output
 operator|&&
 operator|(
+operator|(
 name|undefined_global_sym_count
+operator|-
+name|undefined_weak_sym_count
+operator|)
+operator|>
+literal|0
 operator|||
 name|undefined_shobj_sym_count
 operator|)
@@ -3031,6 +3132,32 @@ name|void
 operator|*
 operator|)
 name|outfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|list_unresolved_refs
+operator|&&
+name|reported_undefineds
+operator|!=
+operator|(
+name|undefined_global_sym_count
+operator|-
+name|undefined_weak_sym_count
+operator|)
+condition|)
+name|warnx
+argument_list|(
+literal|"Spurious undefined symbols: "
+literal|"# undefined symbols %d, reported %d"
+argument_list|,
+operator|(
+name|undefined_global_sym_count
+operator|-
+name|undefined_weak_sym_count
+operator|)
+argument_list|,
+name|reported_undefineds
 argument_list|)
 expr_stmt|;
 if|if

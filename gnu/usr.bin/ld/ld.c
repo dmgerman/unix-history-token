@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.22 1994/06/15 22:39:40 rich Exp $  */
+comment|/*  *	$Id: ld.c,v 1.23 1994/12/23 22:30:37 nate Exp $  */
 end_comment
 
 begin_comment
@@ -492,8 +492,9 @@ comment|/* Output file name. */
 end_comment
 
 begin_decl_stmt
-name|int
-name|outdesc
+name|FILE
+modifier|*
+name|outstream
 decl_stmt|;
 end_decl_stmt
 
@@ -723,6 +724,22 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|undefined_weak_sym_count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of weak symbols referenced and 					   not defined. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|notused
+end_if
+
+begin_decl_stmt
+name|int
 name|special_sym_count
 decl_stmt|;
 end_decl_stmt
@@ -734,6 +751,11 @@ end_comment
 begin_comment
 comment|/* XXX - Currently, only __DYNAMIC and _G_O_T_ go here if required, 	 *  perhaps _etext, _edata and _end should go here too. 	 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -1553,10 +1575,6 @@ argument_list|(
 name|relocatable_output
 argument_list|)
 expr_stmt|;
-comment|/* Prepare for the run-time linking support. */
-name|init_rrs
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Determine whether to count the header as part of the text size, 	 * and initialize the text size accordingly. This depends on the kind 	 * of system and on the output format selected. 	 */
 if|if
 condition|(
@@ -1643,7 +1661,7 @@ argument_list|()
 expr_stmt|;
 comment|/* 	 * Print error messages for any missing symbols, for any warning 	 * symbols, and possibly multiple definitions 	 */
 name|make_executable
-operator|=
+operator|&=
 name|do_warnings
 argument_list|(
 name|stderr
@@ -5969,6 +5987,9 @@ name|N_INDR
 operator||
 name|N_EXT
 operator|)
+operator|&&
+operator|!
+name|olddef
 condition|)
 block|{
 name|sp
@@ -6043,6 +6064,12 @@ name|global_alias_count
 operator|++
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+block|if (sp->flags& GS_REFERENCED) 			sp->alias->flags |= GS_REFERENCED;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -6163,6 +6190,13 @@ name|oldref
 condition|)
 block|{
 comment|/* 			 * This is an ex common... 			 */
+if|if
+condition|(
+name|com
+condition|)
+name|common_defined_global_count
+operator|--
+expr_stmt|;
 name|sp
 operator|->
 name|common_size
@@ -6323,9 +6357,49 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|olddef
+operator|&&
+name|N_ISWEAK
+argument_list|(
+operator|&
+name|nzp
+operator|->
+name|nlist
+argument_list|)
+operator|&&
+operator|!
+operator|(
+name|sp
+operator|->
+name|flags
+operator|&
+name|GS_WEAK
+operator|)
+condition|)
+block|{
 ifdef|#
 directive|ifdef
-name|N_SIZE
+name|DEBUG
+name|printf
+argument_list|(
+literal|"%s: not overridden by weak symbol from %s\n"
+argument_list|,
+name|sp
+operator|->
+name|name
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return;
+block|}
 if|if
 condition|(
 name|type
@@ -6376,8 +6450,6 @@ name|nz_value
 expr_stmt|;
 block|}
 elseif|else
-endif|#
-directive|endif
 if|if
 condition|(
 name|type
@@ -6411,12 +6483,97 @@ operator||
 name|N_EXT
 operator|)
 condition|)
+block|{
 name|sp
 operator|->
 name|defined
 operator|=
 name|type
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|sp
+operator|->
+name|flags
+operator|&
+name|GS_WEAK
+operator|)
+operator|&&
+operator|!
+name|N_ISWEAK
+argument_list|(
+operator|&
+name|nzp
+operator|->
+name|nlist
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Upgrade an existing weak definition. 			 * We fake it by pretending the symbol is undefined; 			 * must undo any common fiddling, however. 			 */
+if|if
+condition|(
+operator|!
+name|oldref
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"internal error: enter_glob_ref: "
+literal|"weak symbol not referenced"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|olddef
+operator|&&
+operator|!
+name|com
+condition|)
+name|undefined_weak_sym_count
+operator|--
+expr_stmt|;
+name|undefined_global_sym_count
+operator|++
+expr_stmt|;
+name|sp
+operator|->
+name|defined
+operator|=
+name|type
+expr_stmt|;
+name|sp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|GS_WEAK
+expr_stmt|;
+name|olddef
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|com
+condition|)
+name|common_defined_global_count
+operator|--
+expr_stmt|;
+name|com
+operator|=
+literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|common_size
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|oldref
@@ -6424,8 +6581,21 @@ operator|&&
 operator|!
 name|olddef
 condition|)
+block|{
 comment|/* 			 * It used to be undefined and we're defining it. 			 */
 name|undefined_global_sym_count
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|flags
+operator|&
+name|GS_WEAK
+condition|)
+comment|/* Used to be a weak reference */
+name|undefined_weak_sym_count
 operator|--
 expr_stmt|;
 if|if
@@ -6433,15 +6603,41 @@ condition|(
 name|undefined_global_sym_count
 operator|<
 literal|0
+operator|||
+name|undefined_weak_sym_count
+operator|<
+literal|0
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"internal error: enter_glob_ref: undefined_global_sym_count = %d"
+literal|"internal error: enter_glob_ref: "
+literal|"undefined_global_sym_count = %d, "
+literal|"undefined_weak_sym_count = %d"
 argument_list|,
 name|undefined_global_sym_count
+argument_list|,
+name|undefined_weak_sym_count
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|N_ISWEAK
+argument_list|(
+operator|&
+name|nzp
+operator|->
+name|nlist
+argument_list|)
+condition|)
+comment|/* The definition is weak */
+name|sp
+operator|->
+name|flags
+operator||=
+name|GS_WEAK
 expr_stmt|;
 if|if
 condition|(
@@ -6556,10 +6752,34 @@ operator|&&
 operator|!
 name|com
 condition|)
+block|{
 comment|/* 		 * An unreferenced symbol can already be defined 		 * as common by shared objects. 		 */
 name|undefined_global_sym_count
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|N_ISWEAK
+argument_list|(
+operator|&
+name|nzp
+operator|->
+name|nlist
+argument_list|)
+condition|)
+block|{
+comment|/* The reference is weak */
+name|sp
+operator|->
+name|flags
+operator||=
+name|GS_WEAK
+expr_stmt|;
+name|undefined_weak_sym_count
+operator|++
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|sp
@@ -6650,6 +6870,22 @@ operator|=
 literal|"defined in BSS section"
 expr_stmt|;
 break|break;
+case|case
+name|N_INDR
+case|:
+name|reftype
+operator|=
+literal|"alias"
+expr_stmt|;
+break|break;
+case|case
+name|N_SIZE
+case|:
+name|reftype
+operator|=
+literal|"size spec"
+expr_stmt|;
+break|break;
 default|default:
 name|reftype
 operator|=
@@ -6661,11 +6897,25 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"symbol %s %s in "
+literal|"symbol %s %s%s in "
 argument_list|,
 name|sp
 operator|->
 name|name
+argument_list|,
+operator|(
+name|N_ISWEAK
+argument_list|(
+operator|&
+name|nzp
+operator|->
+name|nlist
+argument_list|)
+operator|)
+condition|?
+literal|"weakly "
+else|:
+literal|""
 argument_list|,
 name|reftype
 argument_list|)
@@ -7178,7 +7428,7 @@ if|if
 condition|(
 name|relocatable_output
 condition|)
-comment|/* We write out the original N_SET* symbols */
+comment|/* We write out the original N_SIZE symbols */
 name|global_sym_count
 operator|+=
 name|size_sym_count
@@ -7188,7 +7438,9 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"global symbols %d (defined %d, undefined %d, aliases %d, warnings 2 * %d), \ locals: %d, debug symbols: %d, set_symbols %d\n"
+literal|"global symbols %d "
+literal|"(defined %d, undefined %d, weak %d, aliases %d, warnings 2 * %d, "
+literal|"size symbols %d)\ncommons %d, locals: %d, debug symbols: %d, set_symbols %d\n"
 argument_list|,
 name|global_sym_count
 argument_list|,
@@ -7196,9 +7448,15 @@ name|defined_global_sym_count
 argument_list|,
 name|undefined_global_sym_count
 argument_list|,
+name|undefined_weak_sym_count
+argument_list|,
 name|global_alias_count
 argument_list|,
 name|warn_sym_count
+argument_list|,
+name|size_sym_count
+argument_list|,
+name|common_defined_global_count
 argument_list|,
 name|local_sym_count
 argument_list|,
@@ -7230,6 +7488,10 @@ argument_list|,
 argument|sp
 argument_list|)
 block|{
+name|symbol
+modifier|*
+name|spsave
+decl_stmt|;
 name|struct
 name|localsymbol
 modifier|*
@@ -7432,6 +7694,12 @@ name|reloc
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|RELOC_INIT_SEGMENT_RELOC
+argument_list|(
+operator|&
+name|reloc
+argument_list|)
+expr_stmt|;
 name|RELOC_ADDRESS
 argument_list|(
 operator|&
@@ -7492,19 +7760,20 @@ block|{
 comment|/* non-common definition */
 if|if
 condition|(
-name|defs
-operator|++
-operator|&&
-name|sp
-operator|->
-name|value
-operator|!=
+operator|!
+name|N_ISWEAK
+argument_list|(
 name|p
-operator|->
-name|n_value
-operator|&&
-name|entry_symbol
-comment|/*XXX*/
+argument_list|)
+condition|)
+operator|++
+name|defs
+expr_stmt|;
+if|if
+condition|(
+name|defs
+operator|>
+literal|1
 condition|)
 block|{
 name|sp
@@ -7517,6 +7786,28 @@ name|multiple_def_count
 operator|++
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|N_ISWEAK
+argument_list|(
+name|p
+argument_list|)
+operator|||
+operator|(
+operator|!
+name|sp
+operator|->
+name|def_lsp
+operator|&&
+operator|!
+name|sp
+operator|->
+name|common_size
+operator|)
+condition|)
+block|{
 name|sp
 operator|->
 name|def_lsp
@@ -7546,6 +7837,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -7621,6 +7913,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|spsave
+operator|=
+name|sp
+expr_stmt|;
 name|again
 label|:
 for|for
@@ -7718,8 +8014,65 @@ name|flags
 operator|&
 name|E_SECONDCLASS
 condition|)
+comment|/* Keep looking for something better */
 continue|continue;
-name|lsp
+if|if
+condition|(
+name|N_ISWEAK
+argument_list|(
+name|p
+argument_list|)
+condition|)
+comment|/* Keep looking for something better */
+continue|continue;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|def_lsp
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"pass1: SO definition for %s, type %x in %s at %#x\n"
+argument_list|,
+name|sp
+operator|->
+name|name
+argument_list|,
+name|sp
+operator|->
+name|so_defined
+argument_list|,
+name|get_file_name
+argument_list|(
+name|sp
+operator|->
+name|def_lsp
+operator|->
+name|entry
+argument_list|)
+argument_list|,
+name|sp
+operator|->
+name|def_lsp
+operator|->
+name|nzlist
+operator|.
+name|nz_value
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|sp
+operator|->
+name|def_lsp
 operator|->
 name|entry
 operator|->
@@ -7745,26 +8098,6 @@ name|flags
 operator||=
 name|GS_REFERENCED
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"shr: %s gets defined to %x with value %x\n"
-argument_list|,
-name|sp
-operator|->
-name|name
-argument_list|,
-name|type
-argument_list|,
-name|sp
-operator|->
-name|value
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|undefined_global_sym_count
@@ -7775,7 +8108,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"internal error: digest_pass1,2: %s: undefined_global_sym_count = %d"
+literal|"internal error: digest_pass1,2: "
+literal|"%s: undefined_global_sym_count = %d"
 argument_list|,
 name|sp
 operator|->
@@ -7812,9 +8146,11 @@ goto|goto
 name|again
 goto|;
 block|}
-break|break;
 block|}
-block|}
+name|sp
+operator|=
+name|spsave
+expr_stmt|;
 block|}
 name|END_EACH_SYMBOL
 expr_stmt|;
@@ -7833,7 +8169,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"internal error: allocated set symbol space (%d) \ doesn't match actual (%d)"
+literal|"internal error: allocated set symbol space (%d) "
+literal|"doesn't match actual (%d)"
 argument_list|,
 name|set_sect_size
 operator|/
@@ -8141,7 +8478,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: internal error, sp==NULL"
+literal|"%s: bogus relocation record"
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -8302,6 +8639,10 @@ operator|->
 name|common_size
 operator|==
 literal|0
+operator|&&
+name|sp
+operator|->
+name|so_defined
 condition|)
 name|alloc_rrs_reloc
 argument_list|(
@@ -8898,10 +9239,57 @@ name|so_defined
 operator|)
 operator|)
 condition|)
+block|{
 comment|/* 			 * The alias points at a defined symbol, so it 			 * must itself be counted as one too, in order to 			 * compute the correct number of symbol table entries. 			 */
+if|if
+condition|(
+operator|!
+name|sp
+operator|->
+name|defined
+condition|)
+block|{
+comment|/* 				 * Change aliased symbol's definition too. 				 * These things happen if shared object commons 				 * or data is going into our symbol table. 				 */
+if|if
+condition|(
+name|sp
+operator|->
+name|so_defined
+operator|!=
+operator|(
+name|N_INDR
+operator|+
+name|N_EXT
+operator|)
+condition|)
+name|warnx
+argument_list|(
+literal|"pass2: %s: alias isn't"
+argument_list|,
+name|sp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|defined
+operator|=
+name|sp
+operator|->
+name|so_defined
+expr_stmt|;
+name|sp
+operator|->
+name|so_defined
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|defined_global_sym_count
 operator|++
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -9022,6 +9410,12 @@ sizeof|sizeof
 argument_list|(
 name|reloc
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|RELOC_INIT_SEGMENT_RELOC
+argument_list|(
+operator|&
+name|reloc
 argument_list|)
 expr_stmt|;
 name|RELOC_ADDRESS
@@ -9196,8 +9590,30 @@ operator|&
 name|E_SECONDCLASS
 operator|)
 condition|)
+comment|/* Flag second-hand definitions */
 name|undefined_global_sym_count
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|flags
+operator|&
+name|GS_TRACE
+condition|)
+name|printf
+argument_list|(
+literal|"symbol %s assigned to location %#x\n"
+argument_list|,
+name|sp
+operator|->
+name|name
+argument_list|,
+name|sp
+operator|->
+name|value
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * If not -r'ing, allocate common symbols in the BSS section. 		 */
@@ -9332,6 +9748,10 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+name|align
+operator|<
+name|MAX_ALIGNMENT
+operator|&&
 operator|!
 operator|(
 name|size
@@ -9342,16 +9762,6 @@ condition|)
 name|align
 operator|<<=
 literal|1
-expr_stmt|;
-name|align
-operator|=
-name|align
-operator|>
-name|MAX_ALIGNMENT
-condition|?
-name|MAX_ALIGNMENT
-else|:
-name|align
 expr_stmt|;
 name|bss_size
 operator|=
@@ -9508,26 +9918,20 @@ name|output_filename
 argument_list|)
 expr_stmt|;
 block|}
-name|outdesc
+name|outstream
 operator|=
-name|open
+name|fopen
 argument_list|(
 name|output_filename
 argument_list|,
-name|O_WRONLY
-operator||
-name|O_CREAT
-operator||
-name|O_TRUNC
-argument_list|,
-literal|0666
+literal|"w"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|outdesc
-operator|<
-literal|0
+name|outstream
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -9556,7 +9960,10 @@ if|if
 condition|(
 name|fstat
 argument_list|(
-name|outdesc
+name|fileno
+argument_list|(
+name|outstream
+argument_list|)
 argument_list|,
 operator|&
 name|statbuf
@@ -9579,6 +9986,15 @@ name|statbuf
 operator|.
 name|st_mode
 expr_stmt|;
+if|if
+condition|(
+name|S_ISREG
+argument_list|(
+name|statbuf
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
 name|chmod
 argument_list|(
 name|output_filename
@@ -9587,6 +10003,18 @@ name|filemode
 operator|&
 operator|~
 literal|0111
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"chmod: %s"
+argument_list|,
+name|output_filename
 argument_list|)
 expr_stmt|;
 comment|/* Output the a.out header.  */
@@ -9639,12 +10067,36 @@ argument_list|,
 name|output_filename
 argument_list|)
 expr_stmt|;
-name|close
+name|fflush
 argument_list|(
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
-name|outdesc
+comment|/* Report I/O error such as disk full.  */
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|outstream
+argument_list|)
+operator|||
+name|fclose
+argument_list|(
+name|outstream
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"write_output: %s"
+argument_list|,
+name|output_filename
+argument_list|)
+expr_stmt|;
+name|outstream
 operator|=
 literal|0
 expr_stmt|;
@@ -9676,6 +10128,7 @@ name|link_mode
 operator|&
 name|SHAREABLE
 condition|)
+comment|/* Output is shared object */
 name|flags
 operator|=
 name|EX_DYNAMIC
@@ -9685,8 +10138,11 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|relocatable_output
+operator|&&
 name|pic_code_seen
 condition|)
+comment|/* Output is relocatable and contains PIC code */
 name|flags
 operator|=
 name|EX_PIC
@@ -9698,11 +10154,13 @@ name|rrs_section_type
 operator|==
 name|RRS_FULL
 condition|)
+comment|/* Output is a dynamic executable */
 name|flags
 operator|=
 name|EX_DYNAMIC
 expr_stmt|;
 else|else
+comment|/* 		 * Output is a static executable 		 * or a non-PIC relocatable object 		 */
 name|flags
 operator|=
 literal|0
@@ -9854,7 +10312,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
 name|md_swapin_exec_hdr
@@ -9877,7 +10335,7 @@ operator|-
 sizeof|sizeof
 name|outheader
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9930,7 +10388,7 @@ name|padfile
 argument_list|(
 name|text_pad
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
 block|}
@@ -10119,7 +10577,7 @@ name|header
 operator|.
 name|a_text
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
 block|}
@@ -10161,22 +10619,22 @@ name|rrs_data_start
 expr_stmt|;
 if|if
 condition|(
-name|lseek
+name|fseek
 argument_list|(
-name|outdesc
+name|outstream
 argument_list|,
 name|pos
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 operator|!=
-name|pos
+literal|0
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"write_data: lseek"
+literal|"write_data: fseek"
 argument_list|)
 expr_stmt|;
 name|each_full_file
@@ -10222,7 +10680,7 @@ name|unsigned
 name|long
 operator|)
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
 block|}
@@ -10241,7 +10699,7 @@ name|padfile
 argument_list|(
 name|data_pad
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
 block|}
@@ -10431,7 +10889,7 @@ name|header
 operator|.
 name|a_data
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
 block|}
@@ -10680,6 +11138,24 @@ expr_stmt|;
 if|if
 condition|(
 name|sp
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: bogus relocation record"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
 operator|->
 name|alias
 condition|)
@@ -10879,6 +11355,24 @@ name|symindex
 index|]
 operator|.
 name|symbol
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: bogus relocation record"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11121,10 +11615,9 @@ operator|)
 operator|&&
 name|sp
 operator|->
-name|jmpslot_offset
-operator|!=
-operator|-
-literal|1
+name|flags
+operator|&
+name|GS_HASJMPSLOT
 operator|)
 condition|?
 literal|" (JMPSLOT)"
@@ -11147,10 +11640,9 @@ operator|)
 operator|&&
 name|sp
 operator|->
-name|jmpslot_offset
-operator|!=
-operator|-
-literal|1
+name|flags
+operator|&
+name|GS_HASJMPSLOT
 condition|)
 block|{
 comment|/* 					 * Claim a jmpslot if one was allocated. 					 * 					 * At this point, a jmpslot can only 					 * result from a shared object reference 					 * while `force_alias' is in effect. 					 */
@@ -11192,6 +11684,14 @@ name|addend
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|building_shared_object
+operator|||
+name|sp
+operator|->
+name|so_defined
+operator|)
+operator|&&
 name|claim_rrs_reloc
 argument_list|(
 name|entry
@@ -11925,7 +12425,7 @@ expr|struct
 name|relocation_info
 argument_list|)
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
 block|}
@@ -12212,7 +12712,7 @@ expr|struct
 name|relocation_info
 argument_list|)
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
 block|}
@@ -12254,14 +12754,14 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|symbol_table_offset
+name|symtab_offset
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|int
-name|symbol_table_len
+name|symtab_len
 decl_stmt|;
 end_decl_stmt
 
@@ -12272,7 +12772,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|string_table_offset
+name|strtab_offset
 decl_stmt|;
 end_decl_stmt
 
@@ -12283,7 +12783,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|string_table_len
+name|strtab_len
 decl_stmt|;
 end_decl_stmt
 
@@ -12392,19 +12892,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|FILE
-modifier|*
-name|outstream
-init|=
-operator|(
-name|FILE
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Write the contents of `strtab_vector' into the string table. This is done  * once for each file's local&debugger symbols and once for the global  * symbols.  */
 end_comment
@@ -12420,44 +12907,26 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|lseek
+name|fseek
 argument_list|(
-name|outdesc
+name|outstream
 argument_list|,
-name|string_table_offset
+name|strtab_offset
 operator|+
-name|string_table_len
+name|strtab_len
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
-operator|==
-operator|(
-name|off_t
-operator|)
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write_string_table: %s: lseek"
+literal|"write_string_table: %s: fseek"
 argument_list|,
 name|output_filename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|outstream
-condition|)
-name|outstream
-operator|=
-name|fdopen
-argument_list|(
-name|outdesc
-argument_list|,
-literal|"w"
 argument_list|)
 expr_stmt|;
 for|for
@@ -12474,7 +12943,7 @@ name|i
 operator|++
 control|)
 block|{
-name|fwrite
+name|mywrite
 argument_list|(
 name|strtab_vector
 index|[
@@ -12491,7 +12960,7 @@ argument_list|,
 name|outstream
 argument_list|)
 expr_stmt|;
-name|string_table_len
+name|strtab_len
 operator|+=
 name|strtab_lens
 index|[
@@ -12499,28 +12968,6 @@ name|i
 index|]
 expr_stmt|;
 block|}
-name|fflush
-argument_list|(
-name|outstream
-argument_list|)
-expr_stmt|;
-comment|/* Report I/O error such as disk full.  */
-if|if
-condition|(
-name|ferror
-argument_list|(
-name|outstream
-argument_list|)
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"write_string_table: %s"
-argument_list|,
-name|output_filename
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -12580,25 +13027,25 @@ operator|=
 sizeof|sizeof
 name|strtab_size
 expr_stmt|;
-name|symbol_table_offset
+name|symtab_offset
 operator|=
 name|N_SYMOFF
 argument_list|(
 name|outheader
 argument_list|)
 expr_stmt|;
-name|symbol_table_len
+name|symtab_len
 operator|=
 literal|0
 expr_stmt|;
-name|string_table_offset
+name|strtab_offset
 operator|=
 name|N_STROFF
 argument_list|(
 name|outheader
 argument_list|)
 expr_stmt|;
-name|string_table_len
+name|strtab_len
 operator|=
 name|strtab_size
 expr_stmt|;
@@ -12908,8 +13355,19 @@ block|{
 comment|/* 			 * We're building a shared object and there 			 * are still undefined symbols. Don't output 			 * these, symbol was discounted in digest_pass1() 			 * (they are in the RRS symbol table). 			 */
 if|if
 condition|(
-operator|!
 name|building_shared_object
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|!
+operator|(
+name|sp
+operator|->
+name|flags
+operator|&
+name|GS_WEAK
+operator|)
 condition|)
 name|warnx
 argument_list|(
@@ -12920,7 +13378,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-continue|continue;
 block|}
 if|if
 condition|(
@@ -13020,6 +13477,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|bind
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|sp
@@ -13086,13 +13548,33 @@ name|sp
 operator|->
 name|value
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|def_lsp
+condition|)
+name|bind
+operator|=
+name|N_BIND
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|def_lsp
+operator|->
+name|nzlist
+operator|.
+name|nlist
+argument_list|)
+expr_stmt|;
 name|nl
 operator|.
 name|n_other
 operator|=
 name|N_OTHER
 argument_list|(
-literal|0
+name|bind
 argument_list|,
 name|sp
 operator|->
@@ -13364,7 +13846,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"internal error:\ wrong number (%d) of global symbols written into output file, should be %d"
+literal|"internal error: wrong number (%d) of global symbols "
+literal|"written into output file, should be %d"
 argument_list|,
 name|syms_written
 argument_list|,
@@ -13374,28 +13857,24 @@ expr_stmt|;
 comment|/* Output the buffer full of `struct nlist's.  */
 if|if
 condition|(
-name|lseek
+name|fseek
 argument_list|(
-name|outdesc
+name|outstream
 argument_list|,
-name|symbol_table_offset
+name|symtab_offset
 operator|+
-name|symbol_table_len
+name|symtab_len
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
-operator|==
-operator|(
-name|off_t
-operator|)
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write_syms: lseek"
+literal|"write_syms: fseek"
 argument_list|)
 expr_stmt|;
 name|md_swapout_symbols
@@ -13421,10 +13900,10 @@ expr|struct
 name|nlist
 argument_list|)
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
-name|symbol_table_len
+name|symtab_len
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -13468,7 +13947,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"internal error:\ wrong number of symbols (%d) written into output file, should be %d"
+literal|"internal error: wrong number of symbols (%d) "
+literal|"written into output file, should be %d"
 argument_list|,
 name|syms_written
 argument_list|,
@@ -13477,11 +13957,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|symbol_table_offset
+name|symtab_offset
 operator|+
-name|symbol_table_len
+name|symtab_len
 operator|!=
-name|string_table_offset
+name|strtab_offset
 condition|)
 name|errx
 argument_list|(
@@ -13489,20 +13969,31 @@ literal|1
 argument_list|,
 literal|"internal error: inconsistent symbol table length: %d vs %s"
 argument_list|,
-name|symbol_table_offset
+name|symtab_offset
 operator|+
-name|symbol_table_len
+name|symtab_len
 argument_list|,
-name|string_table_offset
+name|strtab_offset
 argument_list|)
 expr_stmt|;
-name|lseek
+if|if
+condition|(
+name|fseek
 argument_list|(
-name|outdesc
+name|outstream
 argument_list|,
-name|string_table_offset
+name|strtab_offset
 argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
 literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"write_syms: fseek"
 argument_list|)
 expr_stmt|;
 name|strtab_size
@@ -13524,7 +14015,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
 block|}
@@ -13925,15 +14416,26 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* All the symbols are now in BUF; write them.  */
-name|lseek
+if|if
+condition|(
+name|fseek
 argument_list|(
-name|outdesc
+name|outstream
 argument_list|,
-name|symbol_table_offset
+name|symtab_offset
 operator|+
-name|symbol_table_len
+name|symtab_len
 argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
 literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"write local symbols: fseek"
 argument_list|)
 expr_stmt|;
 name|md_swapout_symbols
@@ -13959,10 +14461,10 @@ expr|struct
 name|nlist
 argument_list|)
 argument_list|,
-name|outdesc
+name|outstream
 argument_list|)
 expr_stmt|;
-name|symbol_table_len
+name|symtab_len
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -14077,64 +14579,33 @@ decl_stmt|;
 name|int
 name|eltsize
 decl_stmt|;
-name|int
+name|FILE
+modifier|*
 name|fd
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|val
-decl_stmt|;
-specifier|register
-name|int
-name|bytes
-init|=
-name|count
-operator|*
-name|eltsize
-decl_stmt|;
-while|while
-condition|(
-name|bytes
-operator|>
-literal|0
-condition|)
-block|{
-name|val
-operator|=
-name|write
-argument_list|(
-name|fd
-argument_list|,
-name|buf
-argument_list|,
-name|bytes
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|val
-operator|<=
-literal|0
+name|fwrite
+argument_list|(
+name|buf
+argument_list|,
+name|eltsize
+argument_list|,
+name|count
+argument_list|,
+name|fd
+argument_list|)
+operator|!=
+name|count
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write: %s"
-argument_list|,
-name|output_filename
+literal|"write"
 argument_list|)
 expr_stmt|;
-name|buf
-operator|+=
-name|val
-expr_stmt|;
-name|bytes
-operator|-=
-name|val
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -14150,8 +14621,8 @@ name|statbuf
 decl_stmt|;
 if|if
 condition|(
-name|outdesc
-operator|<=
+name|outstream
+operator|==
 literal|0
 condition|)
 return|return;
@@ -14159,7 +14630,10 @@ if|if
 condition|(
 name|fstat
 argument_list|(
-name|outdesc
+name|fileno
+argument_list|(
+name|outstream
+argument_list|)
 argument_list|,
 operator|&
 name|statbuf
@@ -14204,7 +14678,8 @@ parameter_list|)
 name|int
 name|padding
 decl_stmt|;
-name|int
+name|FILE
+modifier|*
 name|fd
 decl_stmt|;
 block|{

@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: malloc.c,v 1.1 1994/02/13 20:44:09 jkh Exp $"
+literal|"$Id: malloc.c,v 1.2 1994/06/15 22:41:13 rich Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,16 +171,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|getpagesize
-parameter_list|()
-value|NBPG
-end_define
-
-begin_define
-define|#
-directive|define
 name|NPOOLPAGES
-value|(32*1024/NBPG)
+value|(32*1024/pagesz)
 end_define
 
 begin_decl_stmt

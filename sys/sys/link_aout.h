@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: link.h,v 1.2 1994/02/13 20:47:18 jkh Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: link.h,v 1.3 1995/02/07 13:26:39 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -172,7 +172,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|N_RESERVED
+name|N_BIND
 parameter_list|(
 name|p
 parameter_list|)
@@ -202,6 +202,21 @@ begin_define
 define|#
 directive|define
 name|AUX_FUNC
+value|2
+end_define
+
+begin_comment
+comment|/*#define BIND_LOCAL	0	not used */
+end_comment
+
+begin_comment
+comment|/*#define BIND_GLOBAL	1	not used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIND_WEAK
 value|2
 end_define
 
@@ -543,6 +558,7 @@ name|ld_entry
 modifier|*
 name|d_entry
 decl_stmt|;
+comment|/* XXX */
 block|}
 struct|;
 end_struct
@@ -761,7 +777,18 @@ name|char
 modifier|*
 name|crt_prog
 decl_stmt|;
-comment|/* Program name */
+comment|/* Program name (v3) */
+name|char
+modifier|*
+name|crt_ldso
+decl_stmt|;
+comment|/* Link editor name (v4) */
+name|struct
+name|ld_entry
+modifier|*
+name|crt_ldentry
+decl_stmt|;
+comment|/* dl*() access (v4) */
 block|}
 struct|;
 end_struct
@@ -780,13 +807,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CRT_VERSION_BSD
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|CRT_VERSION_BSD_2
 value|2
 end_define
@@ -796,6 +816,13 @@ define|#
 directive|define
 name|CRT_VERSION_BSD_3
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRT_VERSION_BSD_4
+value|4
 end_define
 
 begin_comment
