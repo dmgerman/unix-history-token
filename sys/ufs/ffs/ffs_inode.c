@@ -2599,6 +2599,11 @@ argument_list|(
 literal|"ffs_truncate2"
 argument_list|)
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|ovp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|length
@@ -2644,6 +2649,11 @@ condition|)
 name|panic
 argument_list|(
 literal|"ffs_truncate3"
+argument_list|)
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|ovp
 argument_list|)
 expr_stmt|;
 endif|#

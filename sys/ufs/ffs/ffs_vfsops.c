@@ -1651,6 +1651,7 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
+comment|/* XXX Why lock only to release immediately?? */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2145,6 +2146,7 @@ goto|goto
 name|loop
 goto|;
 comment|/* 		 * Step 5: invalidate all cached file data. 		 */
+comment|/* XXX Why lock only to release immediately? */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2541,6 +2543,7 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
+comment|/* XXX Why lock only to release immediately?? */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5763,12 +5766,9 @@ name|ump
 operator|->
 name|um_devvp
 expr_stmt|;
-name|mtx_lock
+name|VI_LOCK
 argument_list|(
-operator|&
 name|devvp
-operator|->
-name|v_interlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -5794,14 +5794,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|devvp
-operator|->
-name|v_interlock
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|devvp
@@ -5809,6 +5801,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
+operator||
+name|LK_INTERLOCK
 argument_list|,
 name|td
 argument_list|)
@@ -5864,12 +5858,9 @@ goto|;
 block|}
 block|}
 else|else
-name|mtx_unlock
+name|VI_UNLOCK
 argument_list|(
-operator|&
 name|devvp
-operator|->
-name|v_interlock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Write back modified superblock. 	 */

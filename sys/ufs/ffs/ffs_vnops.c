@@ -875,6 +875,11 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|loop
 label|:
 name|TAILQ_FOREACH
@@ -996,6 +1001,11 @@ name|B_DEFERRED
 expr_stmt|;
 continue|continue;
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|BUF_LOCK
@@ -1007,7 +1017,14 @@ operator||
 name|LK_NOWAIT
 argument_list|)
 condition|)
+block|{
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -1225,6 +1242,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Since we may have slept during the I/O, we need  		 * to start from a known point. 		 */
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|nbp
 operator|=
 name|TAILQ_FIRST
@@ -1255,11 +1277,6 @@ condition|(
 name|wait
 condition|)
 block|{
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|vp
@@ -1332,6 +1349,11 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1384,6 +1406,11 @@ endif|#
 directive|endif
 block|}
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s

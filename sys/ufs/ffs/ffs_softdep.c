@@ -9638,6 +9638,11 @@ argument_list|)
 expr_stmt|;
 name|restart
 label|:
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|bp
@@ -9688,6 +9693,11 @@ literal|0
 operator|)
 condition|)
 continue|continue;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getdirtybuf
@@ -9756,6 +9766,11 @@ goto|goto
 name|restart
 goto|;
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|inodedep_lookup
@@ -22333,6 +22348,11 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|bp
@@ -22361,6 +22381,11 @@ argument_list|,
 name|b_vnbufs
 argument_list|)
 expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/*  		 * If it is already scheduled, skip to the next buffer. 		 */
 if|if
 condition|(
@@ -22373,7 +22398,14 @@ operator||
 name|LK_NOWAIT
 argument_list|)
 condition|)
+block|{
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -22436,6 +22468,11 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|bremfree
@@ -22464,6 +22501,11 @@ name|lk
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Since we may have slept during the I/O, we need  		 * to start from a known point. 		 */
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|nbp
 operator|=
 name|TAILQ_FIRST
@@ -22475,6 +22517,11 @@ name|v_dirtyblkhd
 argument_list|)
 expr_stmt|;
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|drain_output
 argument_list|(
 name|vp
@@ -22697,6 +22744,11 @@ literal|0
 operator|)
 return|;
 block|}
+name|mp_fixme
+argument_list|(
+literal|"The locking is somewhat complicated nonexistant here."
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|TAILQ_FIRST
