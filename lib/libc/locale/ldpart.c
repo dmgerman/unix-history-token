@@ -331,7 +331,7 @@ name|no_locale
 goto|;
 if|if
 condition|(
-name|fstat
+name|_fstat
 argument_list|(
 name|fd
 argument_list|,
