@@ -32,6 +32,7 @@ name|THR_GETCONTEXT
 parameter_list|(
 name|ucp
 parameter_list|)
+define|\
 value|(void)_amd64_save_context(&(ucp)->uc_mcontext)
 end_define
 
@@ -42,7 +43,8 @@ name|THR_SETCONTEXT
 parameter_list|(
 name|ucp
 parameter_list|)
-value|(void)_amd64_restore_context(&(ucp)->uc_mcontext)
+define|\
+value|(void)_amd64_restore_context(&(ucp)->uc_mcontext, NULL, NULL)
 end_define
 
 begin_define
