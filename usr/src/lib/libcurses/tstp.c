@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tstp.c	8.1 (Berkeley) %G%"
+literal|"@(#)tstp.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +195,12 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
 operator|&
 name|save
