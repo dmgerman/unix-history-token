@@ -2328,6 +2328,9 @@ name|YPVERS
 argument_list|,
 name|YPPROC_CLEAR
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
@@ -2337,6 +2340,9 @@ operator|)
 operator|&
 name|in
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(

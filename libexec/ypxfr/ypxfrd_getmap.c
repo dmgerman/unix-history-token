@@ -193,6 +193,9 @@ block|}
 block|}
 name|xdr_free
 argument_list|(
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_xfr
 argument_list|,
 operator|(
@@ -502,6 +505,9 @@ name|clnt
 argument_list|,
 name|YPXFRD_GETMAP
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_ypxfr_mapname
 argument_list|,
 operator|(
@@ -511,6 +517,9 @@ operator|)
 operator|&
 name|req
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_my_xfr
 argument_list|,
 operator|(
