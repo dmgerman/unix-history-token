@@ -1091,13 +1091,9 @@ if|if
 condition|(
 name|cp
 operator|->
-name|stat
-operator|->
-name|nop
+name|nstart
 operator|==
 name|cp
-operator|->
-name|stat
 operator|->
 name|nend
 condition|)
@@ -1114,13 +1110,9 @@ if|if
 condition|(
 name|pp
 operator|->
-name|stat
-operator|->
-name|nop
+name|nstart
 operator|==
 name|pp
-operator|->
-name|stat
 operator|->
 name|nend
 condition|)
@@ -1133,7 +1125,6 @@ operator|=
 name|bt
 expr_stmt|;
 comment|/* Provider is idle */
-block|}
 name|cp
 operator|->
 name|stat
@@ -1146,6 +1137,17 @@ operator|->
 name|stat
 operator|->
 name|nop
+operator|++
+expr_stmt|;
+block|}
+name|cp
+operator|->
+name|nstart
+operator|++
+expr_stmt|;
+name|pp
+operator|->
+name|nstart
 operator|++
 expr_stmt|;
 comment|/* Pass it on down. */
@@ -1703,7 +1705,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 name|cp
 operator|->
 name|stat
@@ -1714,6 +1715,17 @@ expr_stmt|;
 name|pp
 operator|->
 name|stat
+operator|->
+name|nend
+operator|++
+expr_stmt|;
+block|}
+name|cp
+operator|->
+name|nend
+operator|++
+expr_stmt|;
+name|pp
 operator|->
 name|nend
 operator|++
