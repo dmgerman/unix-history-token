@@ -2539,8 +2539,13 @@ if|if
 condition|(
 name|uid
 operator|==
+call|(
+name|uid_t
+call|)
+argument_list|(
 operator|-
 literal|1
+argument_list|)
 condition|)
 name|uid
 operator|=
