@@ -3833,7 +3833,7 @@ name|caddr_t
 call|)
 argument_list|(
 call|(
-name|u_int32_t
+name|uintptr_t
 call|)
 argument_list|(
 name|pool
