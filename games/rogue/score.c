@@ -958,7 +958,7 @@ name|fopen
 argument_list|(
 name|_PATH_SCOREFILE
 argument_list|,
-literal|"a+"
+literal|"r+"
 argument_list|)
 operator|)
 operator|==
