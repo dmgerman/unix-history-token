@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -7157,6 +7163,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|CTR3
+argument_list|(
+name|KTR_UMA
+argument_list|,
+literal|"uma_zalloc_arg thread %x zone %s flags %d"
+argument_list|,
+name|curthread
+argument_list|,
+name|zone
+operator|->
+name|uz_name
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -8747,6 +8768,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|CTR2
+argument_list|(
+name|KTR_UMA
+argument_list|,
+literal|"uma_zfree_arg thread %x zone %s"
+argument_list|,
+name|curthread
+argument_list|,
+name|zone
+operator|->
+name|uz_name
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The race here is acceptable.  If we miss it we'll just have to wait 	 * a little longer for the limits to be reset. 	 */
 if|if
 condition|(
