@@ -465,7 +465,7 @@ value|122
 end_define
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|cdevsw
 name|uhid_cdevsw
@@ -523,7 +523,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhid_intr
 name|__P
@@ -540,7 +540,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|uhid_do_read
 name|__P
@@ -562,7 +562,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|uhid_do_write
 name|__P
@@ -584,7 +584,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|uhid_do_ioctl
 name|__P

@@ -431,7 +431,7 @@ value|114
 end_define
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|cdevsw
 name|ugen_cdevsw
@@ -489,7 +489,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|ugenintr
 name|__P
@@ -509,7 +509,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|ugen_do_read
 name|__P
@@ -532,7 +532,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|ugen_do_write
 name|__P
@@ -555,7 +555,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|ugen_do_ioctl
 name|__P
@@ -582,7 +582,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|ugen_set_config
 name|__P
@@ -601,7 +601,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usb_config_descriptor_t
 modifier|*
 name|ugen_get_cdesc
@@ -625,7 +625,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|ugen_set_interface
 name|__P
@@ -644,7 +644,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|ugen_get_alt_index
 name|__P
@@ -851,7 +851,7 @@ block|}
 end_block
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ugen_set_config
 parameter_list|(
@@ -2135,7 +2135,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ugen_do_read
 parameter_list|(
@@ -2783,7 +2783,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ugen_do_write
 parameter_list|(
@@ -3701,7 +3701,7 @@ block|}
 end_block
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|ugenintr
 parameter_list|(
@@ -3887,7 +3887,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|usbd_status
 name|ugen_set_interface
 parameter_list|(
@@ -4231,7 +4231,7 @@ comment|/* Retrieve a complete descriptor for a certain device and index. */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|usb_config_descriptor_t
 modifier|*
 name|ugen_get_cdesc
@@ -4446,7 +4446,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ugen_get_alt_index
 parameter_list|(
@@ -4505,7 +4505,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ugen_do_ioctl
 parameter_list|(

@@ -222,7 +222,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhub_init_port
 name|__P
@@ -237,7 +237,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhub_explore
 name|__P
@@ -251,7 +251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhub_intr
 name|__P
@@ -277,7 +277,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|bus_child_detached_t
 name|uhub_child_detached
 decl_stmt|;
@@ -397,7 +397,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|device_method_t
 name|uhubroot_methods
 index|[]
@@ -449,7 +449,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|driver_t
 name|uhubroot_driver
 init|=
@@ -2571,7 +2571,7 @@ comment|/* Called when a device has been detached from it */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|uhub_child_detached
 parameter_list|(

@@ -168,7 +168,7 @@ comment|/*  * Various supported device vendors/products.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|cue_type
 name|cue_devs
@@ -197,7 +197,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|usb_qdat
 name|cue_qdat
@@ -205,7 +205,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|cue_match
 name|__P
@@ -218,7 +218,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|cue_attach
 name|__P
@@ -231,7 +231,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|cue_detach
 name|__P
@@ -244,7 +244,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|cue_tx_list_init
 name|__P
@@ -259,7 +259,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|cue_rx_list_init
 name|__P
@@ -274,7 +274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|cue_newbuf
 name|__P
@@ -297,7 +297,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|cue_encap
 name|__P
@@ -318,7 +318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_rxeof
 name|__P
@@ -335,7 +335,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_txeof
 name|__P
@@ -352,7 +352,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_tick
 name|__P
@@ -366,7 +366,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_rxstart
 name|__P
@@ -381,7 +381,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_start
 name|__P
@@ -396,7 +396,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|cue_ioctl
 name|__P
@@ -415,7 +415,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_init
 name|__P
@@ -429,7 +429,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_stop
 name|__P
@@ -444,7 +444,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_watchdog
 name|__P
@@ -459,7 +459,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_shutdown
 name|__P
@@ -472,7 +472,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_setmulti
 name|__P
@@ -487,7 +487,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|u_int32_t
 name|cue_crc
 name|__P
@@ -500,7 +500,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|cue_reset
 name|__P
@@ -515,7 +515,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|csr_read_1
 name|__P
@@ -532,7 +532,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|csr_write_1
 name|__P
@@ -551,7 +551,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|csr_read_2
 name|__P
@@ -574,7 +574,7 @@ name|notdef
 end_ifdef
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|csr_write_2
 name|__P
@@ -598,7 +598,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|cue_mem
 name|__P
@@ -622,7 +622,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|cue_getmac
 name|__P
@@ -640,7 +640,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|device_method_t
 name|cue_methods
 index|[]
@@ -685,7 +685,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|driver_t
 name|cue_driver
 init|=
@@ -704,7 +704,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|devclass_t
 name|cue_devclass
 decl_stmt|;
@@ -759,7 +759,7 @@ value|csr_write_1(sc, reg, csr_read_1(sc, reg)& ~(x))
 end_define
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|csr_read_1
 parameter_list|(
@@ -887,7 +887,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|csr_read_2
 parameter_list|(
@@ -1015,7 +1015,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|csr_write_1
 parameter_list|(
@@ -1149,7 +1149,7 @@ name|notdef
 end_ifdef
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|csr_write_2
 parameter_list|(
@@ -1282,7 +1282,7 @@ directive|endif
 end_endif
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|cue_mem
 parameter_list|(
@@ -1435,7 +1435,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|cue_getmac
 parameter_list|(
@@ -1584,7 +1584,7 @@ value|9
 end_define
 
 begin_function
-specifier|static
+name|Static
 name|u_int32_t
 name|cue_crc
 parameter_list|(
@@ -1690,7 +1690,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_setmulti
 parameter_list|(
@@ -1932,7 +1932,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_reset
 parameter_list|(
@@ -2662,7 +2662,7 @@ block|}
 end_block
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|cue_detach
 parameter_list|(
@@ -2809,7 +2809,7 @@ comment|/*  * Initialize an RX descriptor and attach an MBUF cluster.  */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|cue_newbuf
 parameter_list|(
@@ -2985,7 +2985,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|cue_rx_list_init
 parameter_list|(
@@ -3115,7 +3115,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|cue_tx_list_init
 parameter_list|(
@@ -3259,7 +3259,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_rxstart
 parameter_list|(
@@ -3375,7 +3375,7 @@ comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * 
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_rxeof
 parameter_list|(
@@ -3663,7 +3663,7 @@ comment|/*  * A frame was downloaded to the chip. It's safe for us to clean up  
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_txeof
 parameter_list|(
@@ -3867,7 +3867,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_tick
 parameter_list|(
@@ -3993,7 +3993,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|cue_encap
 parameter_list|(
@@ -4185,7 +4185,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_start
 parameter_list|(
@@ -4303,7 +4303,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_init
 parameter_list|(
@@ -4762,7 +4762,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|cue_ioctl
 parameter_list|(
@@ -5009,7 +5009,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_watchdog
 parameter_list|(
@@ -5075,7 +5075,7 @@ comment|/*  * Stop the adapter and free any mbufs allocated to the  * RX and TX 
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_stop
 parameter_list|(
@@ -5717,7 +5717,7 @@ comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|cue_shutdown
 parameter_list|(

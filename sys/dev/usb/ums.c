@@ -387,7 +387,7 @@ value|(HIO_RELATIVE)
 end_define
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|ums_intr
 name|__P
@@ -407,7 +407,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|ums_add_to_queue
 name|__P
@@ -435,7 +435,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|ums_add_to_queue_timeout
 name|__P
@@ -450,7 +450,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|ums_enable
 name|__P
@@ -464,7 +464,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|ums_disable
 name|__P
@@ -478,35 +478,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|d_open_t
 name|ums_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|d_close_t
 name|ums_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|d_read_t
 name|ums_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|d_ioctl_t
 name|ums_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|d_poll_t
 name|ums_poll
 decl_stmt|;
@@ -520,7 +520,7 @@ value|111
 end_define
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|cdevsw
 name|ums_cdevsw
@@ -1844,7 +1844,7 @@ block|}
 end_block
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ums_detach
 parameter_list|(
@@ -2407,7 +2407,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|ums_add_to_queue_timeout
 parameter_list|(
@@ -2453,7 +2453,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|ums_add_to_queue
 parameter_list|(
@@ -2831,7 +2831,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ums_enable
 parameter_list|(
@@ -3003,7 +3003,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|ums_disable
 parameter_list|(
@@ -3076,7 +3076,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ums_open
 parameter_list|(
@@ -3122,7 +3122,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ums_close
 parameter_list|(
@@ -3184,7 +3184,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ums_read
 parameter_list|(
@@ -3550,7 +3550,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ums_poll
 parameter_list|(

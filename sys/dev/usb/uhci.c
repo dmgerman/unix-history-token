@@ -478,7 +478,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_busreset
 name|__P
@@ -492,7 +492,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_run
 name|__P
@@ -509,7 +509,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|uhci_soft_td_t
 modifier|*
 name|uhci_alloc_std
@@ -524,7 +524,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_free_std
 name|__P
@@ -541,7 +541,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|uhci_soft_qh_t
 modifier|*
 name|uhci_alloc_sqh
@@ -556,7 +556,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_free_sqh
 name|__P
@@ -573,7 +573,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|uhci_intr_info_t
 modifier|*
 name|uhci_alloc_intr_info
@@ -588,7 +588,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_free_intr_info
 name|__P
@@ -609,13 +609,13 @@ literal|0
 end_if
 
 begin_endif
-unit|static void		uhci_enter_ctl_q __P((uhci_softc_t *, uhci_soft_qh_t *, 				      uhci_intr_info_t *)); static void		uhci_exit_ctl_q __P((uhci_softc_t *, uhci_soft_qh_t *));
+unit|Static void		uhci_enter_ctl_q __P((uhci_softc_t *, uhci_soft_qh_t *, 				      uhci_intr_info_t *)); Static void		uhci_exit_ctl_q __P((uhci_softc_t *, uhci_soft_qh_t *));
 endif|#
 directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_free_std_chain
 name|__P
@@ -635,7 +635,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_alloc_std_chain
 name|__P
@@ -670,7 +670,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_timo
 name|__P
@@ -684,7 +684,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_waitintr
 name|__P
@@ -700,7 +700,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_check_intr
 name|__P
@@ -717,7 +717,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_idone
 name|__P
@@ -731,7 +731,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_abort_xfer
 name|__P
@@ -747,7 +747,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_abort_xfer_end
 name|__P
@@ -762,7 +762,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_timeout
 name|__P
@@ -776,7 +776,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_lock_frames
 name|__P
@@ -790,7 +790,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_unlock_frames
 name|__P
@@ -804,7 +804,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_add_ctrl
 name|__P
@@ -821,7 +821,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_add_bulk
 name|__P
@@ -838,7 +838,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_remove_ctrl
 name|__P
@@ -855,7 +855,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_remove_bulk
 name|__P
@@ -872,7 +872,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|uhci_str
 name|__P
@@ -891,7 +891,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_setup_isoc
 name|__P
@@ -905,7 +905,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_isoc_enter
 name|__P
@@ -918,7 +918,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_allocm
 name|__P
@@ -938,7 +938,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_freem
 name|__P
@@ -956,7 +956,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_xfer_handle
 name|uhci_allocx
 name|__P
@@ -971,7 +971,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_freex
 name|__P
@@ -988,7 +988,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_device_ctrl_transfer
 name|__P
@@ -1001,7 +1001,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_device_ctrl_start
 name|__P
@@ -1014,7 +1014,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_ctrl_abort
 name|__P
@@ -1027,7 +1027,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_ctrl_close
 name|__P
@@ -1040,7 +1040,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_ctrl_done
 name|__P
@@ -1053,7 +1053,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_device_intr_transfer
 name|__P
@@ -1066,7 +1066,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_device_intr_start
 name|__P
@@ -1079,7 +1079,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_intr_abort
 name|__P
@@ -1092,7 +1092,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_intr_close
 name|__P
@@ -1105,7 +1105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_intr_done
 name|__P
@@ -1118,7 +1118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_device_bulk_transfer
 name|__P
@@ -1131,7 +1131,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_device_bulk_start
 name|__P
@@ -1144,7 +1144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_bulk_abort
 name|__P
@@ -1157,7 +1157,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_bulk_close
 name|__P
@@ -1170,7 +1170,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_bulk_done
 name|__P
@@ -1183,7 +1183,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_device_isoc_transfer
 name|__P
@@ -1196,7 +1196,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_device_isoc_start
 name|__P
@@ -1209,7 +1209,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_isoc_abort
 name|__P
@@ -1222,7 +1222,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_isoc_close
 name|__P
@@ -1235,7 +1235,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_isoc_done
 name|__P
@@ -1248,7 +1248,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_root_ctrl_transfer
 name|__P
@@ -1261,7 +1261,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_root_ctrl_start
 name|__P
@@ -1274,7 +1274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_root_ctrl_abort
 name|__P
@@ -1287,7 +1287,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_root_ctrl_close
 name|__P
@@ -1300,7 +1300,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_root_intr_transfer
 name|__P
@@ -1313,7 +1313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_root_intr_start
 name|__P
@@ -1326,7 +1326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_root_intr_abort
 name|__P
@@ -1339,7 +1339,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_root_intr_close
 name|__P
@@ -1352,7 +1352,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_root_intr_done
 name|__P
@@ -1365,7 +1365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_open
 name|__P
@@ -1378,7 +1378,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_poll
 name|__P
@@ -1393,7 +1393,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_device_request
 name|__P
@@ -1407,7 +1407,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_add_intr
 name|__P
@@ -1426,7 +1426,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_remove_intr
 name|__P
@@ -1445,7 +1445,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|uhci_device_setintr
 name|__P
@@ -1468,7 +1468,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_device_clear_toggle
 name|__P
@@ -1482,7 +1482,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_noop
 name|__P
@@ -1502,7 +1502,7 @@ name|UHCI_DEBUG
 end_ifdef
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_dumpregs
 name|__P
@@ -1516,7 +1516,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_dump_qhs
 name|__P
@@ -1530,7 +1530,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_dump_qh
 name|__P
@@ -1544,7 +1544,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_dump_tds
 name|__P
@@ -1558,7 +1558,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|uhci_dump_td
 name|__P
@@ -3322,7 +3322,7 @@ name|UHCI_DEBUG
 end_ifdef
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|uhci_dumpregs
 parameter_list|(

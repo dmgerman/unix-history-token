@@ -180,7 +180,7 @@ comment|/*  * Various supported device vendors/products.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|kue_type
 name|kue_devs
@@ -287,7 +287,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|usb_qdat
 name|kue_qdat
@@ -295,7 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|kue_match
 name|__P
@@ -308,7 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|kue_attach
 name|__P
@@ -321,7 +321,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|kue_detach
 name|__P
@@ -334,7 +334,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|kue_shutdown
 name|__P
@@ -347,7 +347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|kue_tx_list_init
 name|__P
@@ -362,7 +362,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|kue_rx_list_init
 name|__P
@@ -377,7 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|kue_newbuf
 name|__P
@@ -400,7 +400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|kue_encap
 name|__P
@@ -421,7 +421,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|kue_rxeof
 name|__P
@@ -438,7 +438,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|kue_txeof
 name|__P
@@ -455,7 +455,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|kue_start
 name|__P
@@ -470,7 +470,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|kue_rxstart
 name|__P
@@ -485,7 +485,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|kue_ioctl
 name|__P
@@ -504,7 +504,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|kue_init
 name|__P
@@ -518,7 +518,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|kue_stop
 name|__P
@@ -533,7 +533,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|kue_watchdog
 name|__P
@@ -548,7 +548,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|kue_setmulti
 name|__P
@@ -563,7 +563,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|kue_reset
 name|__P
@@ -578,7 +578,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|kue_do_request
 name|__P
@@ -597,7 +597,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|kue_ctl
 name|__P
@@ -623,7 +623,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|kue_setword
 name|__P
@@ -642,7 +642,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|kue_load_fw
 name|__P
@@ -657,7 +657,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|device_method_t
 name|kue_methods
 index|[]
@@ -702,7 +702,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|driver_t
 name|kue_driver
 init|=
@@ -721,7 +721,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|devclass_t
 name|kue_devclass
 decl_stmt|;
@@ -750,7 +750,7 @@ comment|/*  * We have a custom do_request function which is almost like the  * r
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|usbd_status
 name|kue_do_request
 parameter_list|(
@@ -834,7 +834,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|usbd_status
 name|kue_setword
 parameter_list|(
@@ -955,7 +955,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|usbd_status
 name|kue_ctl
 parameter_list|(
@@ -1105,7 +1105,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|kue_load_fw
 parameter_list|(
@@ -1304,7 +1304,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|kue_setmulti
 parameter_list|(
@@ -1524,7 +1524,7 @@ comment|/*  * Issue a SET_CONFIGURATION command to reset the MAC. This should be
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|kue_reset
 parameter_list|(
@@ -2199,7 +2199,7 @@ block|}
 end_block
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|kue_detach
 parameter_list|(
@@ -2358,7 +2358,7 @@ comment|/*  * Initialize an RX descriptor and attach an MBUF cluster.  */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|kue_newbuf
 parameter_list|(
@@ -2527,7 +2527,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|kue_rx_list_init
 parameter_list|(
@@ -2657,7 +2657,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|kue_tx_list_init
 parameter_list|(
@@ -2801,7 +2801,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|kue_rxstart
 parameter_list|(
@@ -2917,7 +2917,7 @@ comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * 
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|kue_rxeof
 parameter_list|(
@@ -3214,7 +3214,7 @@ comment|/*  * A frame was downloaded to the chip. It's safe for us to clean up  
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|kue_txeof
 parameter_list|(
@@ -3418,7 +3418,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|kue_encap
 parameter_list|(
@@ -3620,7 +3620,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|kue_start
 parameter_list|(
@@ -3738,7 +3738,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|kue_init
 parameter_list|(
@@ -4134,7 +4134,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|kue_ioctl
 parameter_list|(
@@ -4388,7 +4388,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|kue_watchdog
 parameter_list|(
@@ -4454,7 +4454,7 @@ comment|/*  * Stop the adapter and free any mbufs allocated to the  * RX and TX 
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|kue_stop
 parameter_list|(
@@ -5071,7 +5071,7 @@ comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|kue_shutdown
 parameter_list|(

@@ -470,7 +470,7 @@ argument_list|)
 end_if
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|umodem_detach
 parameter_list|(

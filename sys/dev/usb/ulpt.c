@@ -426,28 +426,28 @@ argument_list|)
 end_elif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|d_open_t
 name|ulptopen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|d_close_t
 name|ulptclose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|d_write_t
 name|ulptwrite
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|d_ioctl_t
 name|ulptioctl
 decl_stmt|;
@@ -461,7 +461,7 @@ value|113
 end_define
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|cdevsw
 name|ulpt_cdevsw

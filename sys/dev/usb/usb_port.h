@@ -94,6 +94,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|Static
+value|static
+end_define
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -421,6 +428,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|Static
+value|static
+end_define
 
 begin_define
 define|#
@@ -805,6 +819,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|Static
+value|static
+end_define
+
+begin_define
+define|#
+directive|define
 name|device_ptr_t
 value|device_t
 end_define
@@ -1042,7 +1063,7 @@ name|init
 modifier|...
 parameter_list|)
 define|\
-value|static device_probe_t __CONCAT(dname,_match); \ static device_attach_t __CONCAT(dname,_attach); \ static device_detach_t __CONCAT(dname,_detach); \ \ static devclass_t __CONCAT(dname,_devclass); \ \ static device_method_t __CONCAT(dname,_methods)[] = { \         DEVMETHOD(device_probe, __CONCAT(dname,_match)), \         DEVMETHOD(device_attach, __CONCAT(dname,_attach)), \         DEVMETHOD(device_detach, __CONCAT(dname,_detach)), \ 	init, \         {0,0} \ }; \ \ static driver_t __CONCAT(dname,_driver) = { \         #dname, \         __CONCAT(dname,_methods), \         sizeof(struct __CONCAT(dname,_softc)) \ }
+value|Static device_probe_t __CONCAT(dname,_match); \ Static device_attach_t __CONCAT(dname,_attach); \ Static device_detach_t __CONCAT(dname,_detach); \ \ Static devclass_t __CONCAT(dname,_devclass); \ \ Static device_method_t __CONCAT(dname,_methods)[] = { \         DEVMETHOD(device_probe, __CONCAT(dname,_match)), \         DEVMETHOD(device_attach, __CONCAT(dname,_attach)), \         DEVMETHOD(device_detach, __CONCAT(dname,_detach)), \ 	init, \         {0,0} \ }; \ \ Static driver_t __CONCAT(dname,_driver) = { \         #dname, \         __CONCAT(dname,_methods), \         sizeof(struct __CONCAT(dname,_softc)) \ }
 end_define
 
 begin_define
@@ -1070,7 +1091,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|static int \ __CONCAT(dname,_match)(device_t self)
+value|Static int \ __CONCAT(dname,_match)(device_t self)
 end_define
 
 begin_define
@@ -1094,7 +1115,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|static int \ __CONCAT(dname,_attach)(device_t self)
+value|Static int \ __CONCAT(dname,_attach)(device_t self)
 end_define
 
 begin_define
@@ -1146,7 +1167,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|static int \ __CONCAT(dname,_detach)(device_t self)
+value|Static int \ __CONCAT(dname,_detach)(device_t self)
 end_define
 
 begin_define

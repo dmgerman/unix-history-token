@@ -262,7 +262,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|usbd_ar_pipe
 name|__P
@@ -276,7 +276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|usbd_do_request_async_cb
 name|__P
@@ -293,7 +293,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|usbd_start_next
 name|__P
@@ -307,7 +307,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|usbd_open_pipe_ival
 name|__P
@@ -329,7 +329,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|usbd_nbuses
 init|=
@@ -360,7 +360,7 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|__inline
 name|int
 name|usbd_xfer_isread
@@ -375,7 +375,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
+name|Static
 name|__inline
 name|int
 name|usbd_xfer_isread
@@ -3375,7 +3375,7 @@ comment|/* Dequeue all pipe operations, called at splusb(). */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|usbd_status
 name|usbd_ar_pipe
 parameter_list|(
@@ -3908,6 +3908,7 @@ block|{
 comment|/* XXX should we stop the queue on all errors? */
 if|if
 condition|(
+operator|(
 name|xfer
 operator|->
 name|status
@@ -3919,7 +3920,15 @@ operator|->
 name|status
 operator|==
 name|USBD_TIMEOUT
+operator|)
+operator|&&
+name|pipe
+operator|->
+name|iface
+operator|!=
+name|NULL
 condition|)
+comment|/* not control pipe */
 name|pipe
 operator|->
 name|running
@@ -4276,7 +4285,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"ohci_abort_req in interrupt context"
+literal|"usbd_do_request: in interrupt context"
 operator|)
 argument_list|)
 expr_stmt|;

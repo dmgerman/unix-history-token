@@ -120,7 +120,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|ifqueue
 name|usbq_rx
@@ -128,7 +128,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|ifqueue
 name|usbq_tx
@@ -136,7 +136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|usbintr
 name|__P
@@ -149,7 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|usbintr
 parameter_list|()
