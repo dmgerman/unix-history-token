@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.13 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3643,6 +3643,15 @@ case|:
 name|printf
 argument_list|(
 literal|" tab\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SLIPDISC
+case|:
+name|printf
+argument_list|(
+literal|" slip\n"
 argument_list|)
 expr_stmt|;
 break|break;
