@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51.2.40 1997/04/19 23:54:46 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51.2.41 1997/04/28 06:22:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1388,12 +1388,12 @@ comment|/* Some big number we're not likely to ever reach - I'm being really laz
 end_comment
 
 begin_comment
-comment|/* Load the environment from a sysconfig file */
+comment|/* Load the environment from an rc.conf file */
 end_comment
 
 begin_function
 name|void
-name|configEnvironmentSysconfig
+name|configEnvironmentRC_conf
 parameter_list|(
 name|char
 modifier|*
@@ -1531,6 +1531,17 @@ argument_list|,
 literal|'"'
 argument_list|)
 operator|)
+operator|||
+operator|(
+name|cp2
+operator|=
+name|index
+argument_list|(
+name|cp
+argument_list|,
+literal|'\047'
+argument_list|)
+operator|)
 condition|)
 comment|/* Eliminate leading quote if it's quoted */
 name|cp
@@ -1550,12 +1561,15 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|cp2
+operator|&&
 name|cp
 index|[
 name|j
 index|]
 operator|==
-literal|'"'
+operator|*
+name|cp2
 condition|)
 comment|/* And trailing one */
 name|cp
@@ -1741,12 +1755,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This sucks in /etc/sysconfig, substitutes anything needing substitution, then  * writes it all back out.  It's pretty gross and needs re-writing at some point.  */
+comment|/*  * This sucks in /etc/rc.conf, substitutes anything needing substitution, then  * writes it all back out.  It's pretty gross and needs re-writing at some point.  */
 end_comment
 
 begin_function
 name|void
-name|configSysconfig
+name|configRC_conf
 parameter_list|(
 name|char
 modifier|*
@@ -1890,6 +1904,55 @@ name|name
 argument_list|)
 condition|)
 block|{
+name|char
+modifier|*
+name|cp3
+decl_stmt|,
+modifier|*
+name|comment
+init|=
+name|NULL
+decl_stmt|;
+comment|/* If trailing comment, try and preserve it */
+if|if
+condition|(
+operator|(
+name|cp3
+operator|=
+name|index
+argument_list|(
+name|lines
+index|[
+name|i
+index|]
+argument_list|,
+literal|'#'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|comment
+operator|=
+name|alloca
+argument_list|(
+name|strlen
+argument_list|(
+name|cp3
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|comment
+argument_list|,
+name|cp3
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|lines
@@ -1923,9 +1986,45 @@ operator|->
 name|value
 argument_list|)
 operator|+
-literal|5
+operator|(
+name|comment
+condition|?
+literal|0
+else|:
+name|strlen
+argument_list|(
+name|comment
+argument_list|)
+operator|)
+operator|+
+literal|10
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|comment
+condition|)
+name|sprintf
+argument_list|(
+name|lines
+index|[
+name|i
+index|]
+argument_list|,
+literal|"%s=\"%s\"\t\t%s\n"
+argument_list|,
+name|v
+operator|->
+name|name
+argument_list|,
+name|v
+operator|->
+name|value
+argument_list|,
+name|comment
+argument_list|)
+expr_stmt|;
+else|else
 name|sprintf
 argument_list|(
 name|lines
