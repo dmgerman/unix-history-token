@@ -1223,7 +1223,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" set ifaddr %s %s\n"
+literal|" set ifaddr %s %s 255.255.255.0 0.0.0.0\n"
 argument_list|,
 name|myaddr
 argument_list|,
