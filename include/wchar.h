@@ -919,7 +919,7 @@ name|wc
 parameter_list|,
 name|fp
 parameter_list|)
-value|fputwc(wc, fp)
+value|fputwc((wc), (fp))
 end_define
 
 begin_define
@@ -929,7 +929,7 @@ name|putwchar
 parameter_list|(
 name|wc
 parameter_list|)
-value|fputwc(wc, stdout)
+value|fputwc((wc), stdout)
 end_define
 
 begin_endif
