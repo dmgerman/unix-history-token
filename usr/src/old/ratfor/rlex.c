@@ -12,7 +12,7 @@ comment|/*-  * %sccs.include.proprietary.c%  */
 ifndef|#
 directive|ifndef
 name|lint
-for|static char sccsid[] = "@(#)rlex.c	1.3 (Berkeley) %G%"
+for|static char sccsid[] = "@(#)rlex.c	8.1 (Berkeley) %G%"
 empty_stmt|;
 end_for
 
