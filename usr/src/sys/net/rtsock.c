@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3970,6 +3970,21 @@ operator|->
 name|if_next
 control|)
 block|{
+if|if
+condition|(
+name|w
+operator|->
+name|w_arg
+operator|&&
+name|w
+operator|->
+name|w_arg
+operator|!=
+name|ifp
+operator|->
+name|if_index
+condition|)
+continue|continue;
 name|ifa
 operator|=
 name|ifp
@@ -4102,6 +4117,19 @@ operator|->
 name|ifa_next
 condition|)
 block|{
+if|if
+condition|(
+name|af
+operator|&&
+name|af
+operator|!=
+name|ifa
+operator|->
+name|ifa_addr
+operator|->
+name|sa_family
+condition|)
+continue|continue;
 name|ifaaddr
 operator|=
 name|ifa
@@ -4225,6 +4253,7 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
+block|}
 name|ifaaddr
 operator|=
 name|netmask
@@ -4233,7 +4262,6 @@ name|brdaddr
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -4362,6 +4390,11 @@ operator|.
 name|w_op
 operator|=
 name|op
+operator|=
+name|ki_op
+argument_list|(
+name|op
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
