@@ -2788,17 +2788,6 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-name|bdev_buffered
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
 operator|!
 name|vn_isdisk
 argument_list|(
