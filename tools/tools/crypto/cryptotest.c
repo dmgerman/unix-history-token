@@ -2040,10 +2040,22 @@ break|break;
 case|case
 literal|'b'
 case|:
+ifdef|#
+directive|ifdef
+name|COP_F_BATCH
 name|opflags
 operator||=
 name|COP_F_BATCH
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"Sorry, batching control never got MFC'd!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|usage
