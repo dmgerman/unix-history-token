@@ -281,6 +281,7 @@ name|do_move
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -301,6 +302,7 @@ name|do_exchange
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -321,6 +323,7 @@ name|do_position
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -341,6 +344,7 @@ name|do_params
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -361,6 +365,7 @@ name|do_getpicker
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -381,6 +386,7 @@ name|do_setpicker
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -401,6 +407,7 @@ name|do_status
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -421,6 +428,7 @@ name|do_ielem
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -441,6 +449,7 @@ name|do_return
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -461,6 +470,7 @@ name|do_voltag
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -982,6 +992,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -1286,6 +1297,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -1710,6 +1722,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -1935,6 +1948,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -2182,6 +2196,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -2295,6 +2310,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -2424,6 +2440,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -2458,6 +2475,7 @@ name|schet
 decl_stmt|,
 name|echet
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|description
@@ -3356,6 +3374,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -3472,6 +3491,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -4351,6 +4371,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
