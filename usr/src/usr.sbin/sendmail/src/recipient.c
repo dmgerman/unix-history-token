@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.7	%G%"
+literal|"@(#)recipient.c	3.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,6 +318,31 @@ operator|->
 name|q_user
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PARANOID
+if|if
+condition|(
+name|AliasLevel
+operator|<=
+literal|0
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"Cannot mail directly to programs"
+argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|PARANOID
 block|}
 block|}
 comment|/* 	**  Look up this person in the recipient list.  If they 	**  are there already, return, otherwise continue. 	**  If the list is empty, just add it. 	*/

@@ -11,12 +11,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	3.11	%G%"
+literal|"@(#)readcf.c	3.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	Parameters: **		cfname -- control file name. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
+comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	Parameters: **		cfname -- control file name. **		safe -- set if this is a system configuration file. **			Non-system configuration files can not do **			certain things (e.g., leave the SUID bit on **			when executing mailers). ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
 end_comment
 
 begin_decl_stmt
@@ -34,6 +34,8 @@ begin_macro
 name|readcf
 argument_list|(
 argument|cfname
+argument_list|,
+argument|safe
 argument_list|)
 end_macro
 
@@ -41,6 +43,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|cfname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|safe
 decl_stmt|;
 end_decl_stmt
 
@@ -586,6 +594,8 @@ name|buf
 index|[
 literal|1
 index|]
+argument_list|,
+name|safe
 argument_list|)
 expr_stmt|;
 break|break;
@@ -608,7 +618,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKEMAILER -- define a new mailer. ** **	Parameters: **		line -- description of mailer.  This is in tokens **			separated by white space.  The fields are: **			* the name of the mailer, as refered to **			  in the rewriting rules. **			* the pathname of the program to fork to **			  execute it. **			* the options needed by this program. **			* the macro string needed to translate **			  a local "from" name to one that can be **			  returned to this machine. **			* the argument vector (a series of parameters). ** **	Returns: **		none. ** **	Side Effects: **		enters the mailer into the mailer table. */
+comment|/* **  MAKEMAILER -- define a new mailer. ** **	Parameters: **		line -- description of mailer.  This is in tokens **			separated by white space.  The fields are: **			* the name of the mailer, as refered to **			  in the rewriting rules. **			* the pathname of the program to fork to **			  execute it. **			* the options needed by this program. **			* the macro string needed to translate **			  a local "from" name to one that can be **			  returned to this machine. **			* the argument vector (a series of parameters). **		safe -- set if this is a safe configuration file. ** **	Returns: **		none. ** **	Side Effects: **		enters the mailer into the mailer table. */
 end_comment
 
 begin_define
@@ -623,6 +633,8 @@ begin_macro
 name|makemailer
 argument_list|(
 argument|line
+argument_list|,
+argument|safe
 argument_list|)
 end_macro
 
@@ -630,6 +642,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|line
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|safe
 decl_stmt|;
 end_decl_stmt
 
@@ -722,6 +740,16 @@ name|crackopts
 argument_list|(
 name|q
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|safe
+condition|)
+name|mopts
+operator|&=
+operator|~
+name|M_RESTR
 expr_stmt|;
 name|SETWORD
 expr_stmt|;

@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.25	%G%"
+literal|"@(#)main.c	3.26	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,6 +417,12 @@ init|=
 name|FALSE
 decl_stmt|;
 comment|/* only verify names */
+name|bool
+name|safecf
+init|=
+name|TRUE
+decl_stmt|;
+comment|/* this conf file is sys default */
 name|char
 name|pbuf
 index|[
@@ -483,6 +489,27 @@ operator|)
 name|signal
 argument_list|(
 name|SIGINT
+argument_list|,
+name|finis
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGHUP
 argument_list|,
 name|finis
 argument_list|)
@@ -1126,6 +1153,10 @@ index|[
 literal|2
 index|]
 expr_stmt|;
+name|safecf
+operator|=
+name|FALSE
+expr_stmt|;
 break|break;
 case|case
 literal|'A'
@@ -1265,6 +1296,8 @@ comment|/* 	**  Read control file. 	*/
 name|readcf
 argument_list|(
 name|cfname
+argument_list|,
+name|safecf
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -1330,6 +1363,8 @@ condition|)
 name|readcf
 argument_list|(
 name|cfbuf
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
