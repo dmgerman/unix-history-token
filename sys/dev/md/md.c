@@ -86,13 +86,13 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MDNSECT
+name|MD_NSECT
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MDNSECT
+name|MD_NSECT
 value|(10000 * 2)
 end_define
 
@@ -1937,7 +1937,7 @@ name|sc
 operator|->
 name|nsect
 operator|=
-name|MDNSECT
+name|MD_NSECT
 expr_stmt|;
 comment|/* for now */
 name|MALLOC
