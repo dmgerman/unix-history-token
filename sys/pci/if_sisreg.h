@@ -1832,7 +1832,7 @@ begin_define
 define|#
 directive|define
 name|SIS_RX_LIST_CNT
-value|128
+value|64
 end_define
 
 begin_define
