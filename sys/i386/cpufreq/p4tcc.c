@@ -864,6 +864,12 @@ index|]
 operator|.
 name|rlevel
 expr_stmt|;
+comment|/* 	 * Since after the reboot the TCC is usually in the Automatic 	 * mode, in which reading current performance level is likely to 	 * produce bogus results make sure to switch it to the On-Demand 	 * mode and set to some known performance level. Unfortunately 	 * there is no reliable way to check that TCC is in the Automatic 	 * mode, reading bit 4 of ACPI Thermal Monitor Control Register 	 * produces 0 regardless of the current mode. 	 */
+name|p4tcc_setperf
+argument_list|(
+name|p4tcc_performance
+argument_list|)
+expr_stmt|;
 name|p4tcc_percentage
 operator|=
 name|p4tcc_getperf
