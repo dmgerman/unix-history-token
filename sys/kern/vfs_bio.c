@@ -1555,7 +1555,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|atomic_subtract_int
+name|atomic_add_int
 argument_list|(
 operator|&
 name|numfreebuffers
