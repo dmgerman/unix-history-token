@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_snpac.c	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_snpac.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -176,12 +176,17 @@ name|time
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|void
+name|esis_config
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
-name|esis_config
-argument_list|()
-decl_stmt|,
 name|hz
 decl_stmt|;
 end_decl_stmt
@@ -2650,12 +2655,10 @@ begin_comment
 comment|/*  * FUNCTION:		snpac_age  *  * PURPOSE:			Time out snpac entries  *  * RETURNS:			  *  * SIDE EFFECTS:	  *  * NOTES:			When encountering an entry for the first time, snpac_age  *					may delete up to SNPAC_AGE too many seconds. Ie.  *					if the entry is added a moment before snpac_age is  *					called, the entry will immediately have SNPAC_AGE  *					seconds taken off the holding time, even though  *					it has only been held a brief moment.  *  *					The proper way to do this is set an expiry timeval  *					equal to current time + holding time. Then snpac_age  *					would time out entries where expiry date is older  *					than the current time.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|snpac_age
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -2751,7 +2754,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		snpac_ownmulti  *  * PURPOSE:			Determine if the snpa address is a multicast address  *					of the same type as the system.  *  * RETURNS:			true or false  *  * SIDE EFFECTS:	  *  * NOTES:			Used by interface drivers when not in eavesdrop mode   *					as interm kludge until  *					real multicast addresses can be configured  */
