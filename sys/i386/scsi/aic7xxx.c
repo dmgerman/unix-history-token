@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.14 1995/02/03 17:15:11 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.15 1995/02/22 01:43:24 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -217,6 +217,22 @@ name|ahc_scb_phys_kv
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|ahc_poll
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+name|int
+name|wait
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|u_int32
@@ -1410,7 +1426,7 @@ begin_define
 define|#
 directive|define
 name|INT_PEND
-value|SEQINT | SCSIINT | CMDCMPLT
+value|(SEQINT | SCSIINT | CMDCMPLT)
 end_define
 
 begin_comment
@@ -2104,22 +2120,30 @@ name|hard_error
 index|[]
 init|=
 block|{
+block|{
 name|ILLHADDR
 block|,
 literal|"Illegal Host Access"
+block|}
 block|,
+block|{
 name|ILLSADDR
 block|,
 literal|"Illegal Sequencer Address referrenced"
+block|}
 block|,
+block|{
 name|ILLOPCODE
 block|,
 literal|"Illegal Opcode in sequencer program"
+block|}
 block|,
+block|{
 name|PARERR
 block|,
 literal|"Sequencer Ram Parity Error"
-block|, }
+block|}
+block|}
 struct|;
 end_struct
 
@@ -2147,53 +2171,69 @@ name|ahc_syncrates
 index|[]
 init|=
 block|{
+block|{
 literal|0x00
 block|,
 literal|100
 block|,
 literal|"10.0"
+block|}
 block|,
+block|{
 literal|0x10
 block|,
 literal|125
 block|,
 literal|"8.0"
+block|}
 block|,
+block|{
 literal|0x20
 block|,
 literal|150
 block|,
 literal|"6.67"
+block|}
 block|,
+block|{
 literal|0x30
 block|,
 literal|175
 block|,
 literal|"5.7"
+block|}
 block|,
+block|{
 literal|0x40
 block|,
 literal|200
 block|,
 literal|"5.0"
+block|}
 block|,
+block|{
 literal|0x50
 block|,
 literal|225
 block|,
 literal|"4.4"
+block|}
 block|,
+block|{
 literal|0x60
 block|,
 literal|250
 block|,
 literal|"4.0"
+block|}
 block|,
+block|{
 literal|0x70
 block|,
 literal|275
 block|,
 literal|"3.6"
+block|}
 block|}
 struct|;
 end_struct
@@ -2548,9 +2588,6 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-name|u_char
-name|flags
-decl_stmt|;
 comment|/*          * fill in the prototype scsi_link.          */
 name|ahc
 operator|->
@@ -2695,9 +2732,6 @@ modifier|*
 name|scb
 decl_stmt|;
 block|{
-name|int
-name|old_scbptr
-decl_stmt|;
 name|u_long
 name|iobase
 init|=
@@ -3209,9 +3243,6 @@ case|case
 name|MSG_SDTR
 case|:
 block|{
-name|int
-name|loc
-decl_stmt|;
 name|u_char
 name|scsi_id
 decl_stmt|,
@@ -3393,9 +3424,6 @@ case|case
 name|MSG_WDTR
 case|:
 block|{
-name|int
-name|loc
-decl_stmt|;
 name|u_char
 name|scsi_id
 decl_stmt|,
@@ -3776,11 +3804,6 @@ case|:
 block|{
 name|int
 name|scb_index
-decl_stmt|,
-name|saved_scb_index
-decl_stmt|;
-name|u_short
-name|seqaddr
 decl_stmt|;
 comment|/* The sequencer will notify us when a command                            * has an error that would be of interest to                            * the kernel.  This allows us to leave the sequencer                            * running in the common case of command completes                            * without error.                            */
 name|scb_index
@@ -4026,11 +4049,6 @@ init|=
 name|scb
 operator|->
 name|target_channel_lun
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|active
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -4742,8 +4760,6 @@ condition|)
 block|{
 name|int
 name|scb_index
-decl_stmt|,
-name|saved_scb_index
 decl_stmt|;
 do|do
 block|{
@@ -5166,11 +5182,6 @@ argument_list|,
 name|CHIPRST
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|ahc
@@ -5227,14 +5238,6 @@ break|break;
 case|case
 name|AHC_294
 case|:
-block|{
-define|#
-directive|define
-name|DFTHRESH
-value|0xc0
-name|u_char
-name|threshold
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"ahc%d: 294x "
@@ -5254,26 +5257,19 @@ name|maxscbs
 operator|=
 literal|0x10
 expr_stmt|;
-name|threshold
-operator|=
-name|inb
-argument_list|(
-name|DSPCISTATUS
-operator|+
-name|iobase
-argument_list|)
-expr_stmt|;
-name|threshold
-operator||=
+define|#
+directive|define
 name|DFTHRESH
-expr_stmt|;
+value|3
 name|outb
 argument_list|(
 name|DSPCISTATUS
 operator|+
 name|iobase
 argument_list|,
-name|threshold
+name|DFTHRESH
+operator|<<
+literal|6
 argument_list|)
 expr_stmt|;
 comment|/* XXX Hard coded SCSI ID for now */
@@ -5285,7 +5281,11 @@ name|iobase
 argument_list|,
 literal|0x07
 operator||
+operator|(
 name|DFTHRESH
+operator|<<
+literal|6
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* In case we are a wide card */
@@ -5301,7 +5301,6 @@ literal|0x07
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 default|default:
 block|}
 empty_stmt|;
@@ -5479,17 +5478,14 @@ block|}
 comment|/*  	 * Number of SCBs that will be used. Rev E aic7770s and 	 * aic7870s have 16.  The rest have 4. 	 */
 if|if
 condition|(
+operator|!
+operator|(
 name|ahc
 operator|->
 name|type
 operator|&
-name|AHC_274
-operator|||
-name|ahc
-operator|->
-name|type
-operator|&
-name|AHC_284
+name|AHC_294
+operator|)
 condition|)
 block|{
 comment|/*  		 * See if we have a Rev E or higher 		 * aic7770.  If so, use 16 SCBs. 		 * Anything below a Rev E will have a 		 * R/O autoflush diable configuration bit. 		 */
@@ -5689,53 +5685,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Load the Sequencer program and Enable the adapter. 	 * Place the aic7770 in fastmode which makes a big 	 * difference when doing many small block transfers.          */
-name|printf
-argument_list|(
-literal|"ahc%d: Downloading Sequencer Program..."
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|ahc_loadseq
-argument_list|(
-name|iobase
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Done\n"
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|SEQCTL
-operator|+
-name|iobase
-argument_list|,
-name|FASTMODE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|ahc
-operator|->
-name|type
-operator|&
-name|AHC_294
-operator|)
-condition|)
-name|outb
-argument_list|(
-name|BCTL
-operator|+
-name|iobase
-argument_list|,
-name|ENABLE
-argument_list|)
-expr_stmt|;
 comment|/* Set the SCSI Id, SXFRCTL1, and SIMODE1, for both channes */
 if|if
 condition|(
@@ -6042,6 +5991,53 @@ operator|+
 name|iobase
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Load the Sequencer program and Enable the adapter. 	 * Place the aic7770 in fastmode which makes a big 	 * difference when doing many small block transfers.          */
+name|printf
+argument_list|(
+literal|"ahc%d: Downloading Sequencer Program..."
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|ahc_loadseq
+argument_list|(
+name|iobase
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Done\n"
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|SEQCTL
+operator|+
+name|iobase
+argument_list|,
+name|FASTMODE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ahc
+operator|->
+name|type
+operator|&
+name|AHC_294
+operator|)
+condition|)
+name|outb
+argument_list|(
+name|BCTL
+operator|+
+name|iobase
+argument_list|,
+name|ENABLE
 argument_list|)
 expr_stmt|;
 comment|/* Reset the bus */
@@ -6497,6 +6493,7 @@ operator|&
 literal|0x08
 operator|)
 operator||
+operator|(
 name|xs
 operator|->
 name|sc_link
@@ -6504,6 +6501,7 @@ operator|->
 name|lun
 operator|&
 literal|0x07
+operator|)
 expr_stmt|;
 name|scb
 operator|->
@@ -7652,8 +7650,6 @@ name|INTSTAT
 operator|+
 name|iobase
 decl_stmt|;
-name|retry
-label|:
 while|while
 condition|(
 operator|--
@@ -7952,12 +7948,6 @@ name|ACTIVE_MSG
 condition|)
 block|{
 comment|/*  		 * If there's a message in progress,  		 * reset the bus and have all devices renegotiate. 		 */
-name|int
-name|i
-decl_stmt|;
-name|u_char
-name|flags
-decl_stmt|;
 if|if
 condition|(
 name|scb
@@ -8195,8 +8185,6 @@ name|arg1
 decl_stmt|;
 name|int
 name|unit
-decl_stmt|,
-name|cur_scb_offset
 decl_stmt|;
 name|struct
 name|ahc_data
