@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.26	82/10/13	*/
+comment|/*	tty_pty.c	4.27	82/10/17	*/
 end_comment
 
 begin_comment
@@ -262,15 +262,11 @@ argument_list|)
 operator|>=
 name|NPTY
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|tp
 operator|=
 operator|&
@@ -324,15 +320,11 @@ name|u_uid
 operator|!=
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EBUSY
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 if|if
 condition|(
 name|tp
@@ -379,6 +371,8 @@ name|TTIPRI
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
 operator|(
 operator|*
 name|linesw
@@ -395,7 +389,8 @@ name|dev
 operator|,
 name|tp
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1088,15 +1083,11 @@ argument_list|)
 operator|>=
 name|NPTY
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|tp
 operator|=
 operator|&
@@ -1114,15 +1105,11 @@ name|tp
 operator|->
 name|t_oproc
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|tp
 operator|->
 name|t_oproc
@@ -1177,6 +1164,11 @@ name|pt_send
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -2434,6 +2426,9 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* IF CONTROLLER STTY THEN MUST FLUSH TO PREVENT A HANG ??? */
 if|if
 condition|(
@@ -2480,7 +2475,11 @@ operator|&=
 operator|~
 name|PF_PKT
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|TIOCREMOTE
 case|:
@@ -2516,7 +2515,11 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|FIONBIO
 case|:
@@ -2543,7 +2546,11 @@ operator|&=
 operator|~
 name|PF_NBIO
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|TIOCSETP
 case|:
@@ -2562,8 +2569,8 @@ condition|)
 empty_stmt|;
 break|break;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|ttioctl
 argument_list|(
 name|tp
@@ -2574,12 +2581,14 @@ name|data
 argument_list|,
 name|dev
 argument_list|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|<
 literal|0
 condition|)
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|ENOTTY
 expr_stmt|;
@@ -2693,6 +2702,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 
