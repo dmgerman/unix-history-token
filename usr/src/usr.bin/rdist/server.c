@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.18 (Berkeley) 84/06/28"
+literal|"@(#)server.c	4.19 (Berkeley) 84/07/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -1391,6 +1391,13 @@ if|if
 condition|(
 name|debug
 condition|)
+name|printf
+argument_list|(
+literal|"buf = %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2590,32 +2597,17 @@ literal|0
 operator|)
 return|;
 default|default:
-name|printf
-argument_list|(
-literal|"buf = "
-argument_list|)
-expr_stmt|;
-name|fwrite
-argument_list|(
-name|buf
-argument_list|,
-literal|1
-argument_list|,
+operator|*
+operator|--
 name|cp
-operator|-
-name|s
-argument_list|,
-name|stdout
-argument_list|)
+operator|=
+literal|'\0'
 expr_stmt|;
 name|error
 argument_list|(
-literal|"update: unexpected response '%c'\n"
+literal|"update: unexpected response '%s'\n"
 argument_list|,
 name|buf
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -3848,9 +3840,9 @@ goto|;
 if|if
 condition|(
 name|i
-operator|!=
+operator|==
 name|size
-operator|||
+operator|&&
 name|strncmp
 argument_list|(
 name|buf
@@ -3859,21 +3851,9 @@ name|tbuf
 argument_list|,
 name|size
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|opts
-operator|&
-name|VERIFY
-condition|)
-goto|goto
-name|differ
-goto|;
-block|}
-else|else
 block|{
 operator|(
 name|void
@@ -3888,6 +3868,15 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|opts
+operator|&
+name|VERIFY
+condition|)
+goto|goto
+name|differ
+goto|;
 block|}
 goto|goto
 name|fixup
@@ -4458,7 +4447,7 @@ name|buf
 operator|+
 literal|1
 argument_list|,
-literal|"updated %s:%s\n"
+literal|"%s: updated %s\n"
 argument_list|,
 name|host
 argument_list|,
@@ -7302,6 +7291,12 @@ decl_stmt|,
 modifier|*
 name|s
 decl_stmt|;
+name|char
+name|resp
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|debug
@@ -7315,7 +7310,7 @@ name|cp
 operator|=
 name|s
 operator|=
-name|buf
+name|resp
 expr_stmt|;
 do|do
 block|{
@@ -7347,7 +7342,7 @@ operator|&&
 name|cp
 operator|<
 operator|&
-name|buf
+name|resp
 index|[
 name|BUFSIZ
 index|]
@@ -7470,7 +7465,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|buf
+name|resp
 index|[
 literal|0
 index|]
