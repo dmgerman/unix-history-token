@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: logwtmp.c,v 1.8 1998/10/09 11:24:19 jkh Exp $"
+literal|"$Id: logwtmp.c,v 1.9 1999/04/07 08:27:04 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,7 +216,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 if|if
@@ -225,6 +225,8 @@ name|domain
 index|[
 literal|0
 index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|s
@@ -243,8 +245,9 @@ argument_list|,
 literal|'.'
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
-block|{
 if|if
 condition|(
 operator|!
@@ -263,26 +266,21 @@ condition|(
 name|fullhost
 operator|-
 name|s
-operator|<
+operator|<=
 name|hostsize
 condition|)
-block|{
 operator|*
 name|fullhost
 operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* hit it and acceptable size*/
-block|}
 break|break;
 block|}
 else|else
-block|{
 name|fullhost
 operator|++
 expr_stmt|;
-block|}
-block|}
 block|}
 block|}
 end_function
