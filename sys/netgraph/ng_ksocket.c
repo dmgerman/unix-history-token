@@ -2486,11 +2486,6 @@ modifier|*
 name|td
 init|=
 name|curthread
-condition|?
-name|curthread
-else|:
-operator|&
-name|thread0
 decl_stmt|;
 comment|/* XXX broken */
 specifier|const
@@ -2969,11 +2964,6 @@ modifier|*
 name|td
 init|=
 name|curthread
-condition|?
-name|curthread
-else|:
-operator|&
-name|thread0
 decl_stmt|;
 comment|/* XXX broken */
 specifier|const
@@ -4020,11 +4010,6 @@ modifier|*
 name|td
 init|=
 name|curthread
-condition|?
-name|curthread
-else|:
-operator|&
-name|thread0
 decl_stmt|;
 comment|/* XXX broken */
 specifier|const
