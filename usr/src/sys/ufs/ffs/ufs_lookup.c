@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2356,6 +2356,16 @@ argument_list|(
 literal|"wdir: newblk"
 argument_list|)
 expr_stmt|;
+name|auio
+operator|.
+name|uio_offset
+operator|=
+name|ndp
+operator|->
+name|ni_ufs
+operator|.
+name|ufs_offset
+expr_stmt|;
 name|newdir
 operator|.
 name|d_reclen
@@ -2456,7 +2466,12 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX - should grow w/balloc */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|error
+condition|)
 block|{
 name|dp
 operator|->
