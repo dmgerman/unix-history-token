@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.7 (Berkeley) %G%"
+literal|"@(#)tar.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2433,15 +2433,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|dp
-operator|->
-name|d_ino
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
 operator|!
 name|strcmp
 argument_list|(
@@ -3890,7 +3881,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: %s: HELP - extract write error"
+literal|"tar: %s: HELP - extract write error: "
 argument_list|,
 name|dblock
 operator|.
@@ -7218,6 +7209,9 @@ name|p
 operator|==
 operator|*
 name|q
+operator|&&
+operator|*
+name|p
 condition|)
 block|{
 if|if
