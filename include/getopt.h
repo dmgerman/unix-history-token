@@ -30,7 +30,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_comment
-comment|/*  * GNU-like getopt_long()& getopt() for GNU programs.  */
+comment|/*  * GNU-like getopt_long() with 4.4BSD optreset extension.  * getopt() is declared here too for GNU programs.  */
 end_comment
 
 begin_define
