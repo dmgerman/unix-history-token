@@ -917,9 +917,9 @@ name|p
 decl_stmt|;
 block|{
 name|int
-name|tmp
+name|rss_limit
 decl_stmt|;
-comment|/* 	 * Set up the initial limits on process VM. 	 * Set the maximum resident set size to be all 	 * of (reasonably) available memory.  This causes 	 * any single, large process to start random page 	 * replacement once it fills memory. 	 */
+comment|/* 	 * Set up the initial limits on process VM. 	 * Set the maximum resident set size to be half 	 * of (reasonably) available memory.  Since this 	 * is a soft limit, it comes into effect only 	 * when the system is out of memory - half of 	 * main memory helps to favor smaller processes, 	 * and reduces thrashing of the object cache. 	 */
 name|p
 operator|->
 name|p_rlimit
@@ -964,29 +964,17 @@ name|rlim_max
 operator|=
 name|MAXDSIZ
 expr_stmt|;
-name|tmp
+comment|/* limit the limit to no less than 128K */
+name|rss_limit
 operator|=
-operator|(
-operator|(
-literal|2
-operator|*
+name|max
+argument_list|(
 name|vm_page_free_count
-operator|)
 operator|/
-literal|3
-operator|)
-operator|-
+literal|2
+argument_list|,
 literal|32
-expr_stmt|;
-if|if
-condition|(
-name|vm_page_free_count
-operator|<
-literal|512
-condition|)
-name|tmp
-operator|=
-name|vm_page_free_count
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -999,7 +987,7 @@ name|rlim_cur
 operator|=
 name|ptoa
 argument_list|(
-name|tmp
+name|rss_limit
 argument_list|)
 expr_stmt|;
 name|p
