@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mailstats.c	8.8 (Berkeley) 9/25/96"
+literal|"@(#)mailstats.c	8.10 (Berkeley) 5/30/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,7 +175,7 @@ decl_stmt|;
 name|char
 name|sfilebuf
 index|[
-literal|100
+name|MAXLINE
 index|]
 decl_stmt|;
 name|char
@@ -482,6 +482,32 @@ comment|/* something else boring */
 continue|continue;
 block|}
 comment|/* this is the S or StatusFile option -- save it */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|b
+argument_list|)
+operator|>=
+sizeof|sizeof
+name|sfilebuf
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"StatusFile filename too long: %.30s...\n"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_CONFIG
+argument_list|)
+expr_stmt|;
+block|}
 name|strcpy
 argument_list|(
 name|sfilebuf

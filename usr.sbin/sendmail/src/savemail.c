@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.103 (Berkeley) 1/18/97"
+literal|"@(#)savemail.c	8.110 (Berkeley) 4/7/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -1041,7 +1041,7 @@ argument_list|)
 expr_stmt|;
 name|flags
 operator|=
-name|SFF_NOSLINK
+name|SFF_NOLINK
 operator||
 name|SFF_CREAT
 operator||
@@ -1071,14 +1071,14 @@ operator|==
 name|EX_OK
 condition|)
 block|{
-name|bool
+name|int
 name|oldverb
 init|=
 name|Verbose
 decl_stmt|;
 name|Verbose
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 name|message
 argument_list|(
@@ -1155,15 +1155,15 @@ argument_list|)
 expr_stmt|;
 name|flags
 operator|=
-name|SFF_NOSLINK
+name|SFF_NOLINK
 operator||
 name|SFF_CREAT
 operator||
 name|SFF_REGONLY
 operator||
-name|SFF_ROOTOK
-operator||
 name|SFF_OPENASROOT
+operator||
+name|SFF_MUSTOWN
 expr_stmt|;
 if|if
 condition|(
@@ -1312,14 +1312,14 @@ name|ESM_PANIC
 expr_stmt|;
 else|else
 block|{
-name|bool
+name|int
 name|oldverb
 init|=
 name|Verbose
 decl_stmt|;
 name|Verbose
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 name|message
 argument_list|(
@@ -1332,26 +1332,25 @@ name|Verbose
 operator|=
 name|oldverb
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|3
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"Saved message in %s"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|state
 operator|=
 name|ESM_DONE
@@ -1939,9 +1938,6 @@ name|e_header
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -1985,15 +1981,15 @@ name|p
 operator|=
 literal|"DSN"
 expr_stmt|;
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
-argument_list|,
-literal|"%s: %s: %s: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"%s: %s: %s"
 argument_list|,
 name|ee
 operator|->
@@ -2010,8 +2006,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|SendMIMEErrors
@@ -2968,11 +2962,17 @@ condition|)
 block|{
 name|xfile
 operator|=
-name|fopen
+name|safefopen
 argument_list|(
 name|ErrMsgFile
 argument_list|,
-literal|"r"
+name|O_RDONLY
+argument_list|,
+literal|0444
+argument_list|,
+name|SFF_ROOTOK
+operator||
+name|SFF_REGONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -2997,6 +2997,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|#
+directive|if
+name|_FFR_BUG_FIX
+name|translate_dollars
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|expand
 argument_list|(
 name|buf
@@ -5162,7 +5172,7 @@ literal|553
 case|:
 comment|/* Req action not taken: mailbox name not allowed */
 return|return
-literal|"5.1.3"
+literal|"5.1.0"
 return|;
 case|case
 literal|554

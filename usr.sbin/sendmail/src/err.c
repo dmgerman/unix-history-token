@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.52 (Berkeley) 12/1/96"
+literal|"@(#)err.c	8.62 (Berkeley) 6/5/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|<errno.h>
 end_include
 
 begin_comment
-comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	Parameters: **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, either 554 or **			451 is assumed depending on whether errno **			is set. **		(others) -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
+comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic output. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	Parameters: **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, either 554 or **			451 is assumed depending on whether errno **			is set. **		(others) -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
 end_comment
 
 begin_decl_stmt
@@ -204,9 +204,6 @@ decl_stmt|;
 name|bool
 name|panic
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 name|char
 modifier|*
 name|uname
@@ -222,8 +219,6 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|VA_LOCAL_DECL
 name|panic
 init|=
@@ -236,9 +231,15 @@ if|if
 condition|(
 name|panic
 condition|)
+block|{
 name|fmt
 operator|++
 expr_stmt|;
+name|HoldErrs
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 comment|/* format and output the error message */
 if|if
 condition|(
@@ -360,9 +361,6 @@ name|ExitStat
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LOG
 name|pw
 operator|=
 name|sm_getpwuid
@@ -409,7 +407,7 @@ name|LogLevel
 operator|>
 literal|0
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|panic
 condition|?
@@ -417,19 +415,11 @@ name|LOG_ALERT
 else|:
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SYSERR(%s): %.900s"
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
-name|CurEnv
-operator|->
-name|e_id
-operator|==
-name|NULL
-condition|?
-literal|"NOQUEUE"
-else|:
-name|CurEnv
-operator|->
-name|e_id
+literal|"SYSERR(%s): %.900s"
 argument_list|,
 name|uname
 argument_list|,
@@ -440,9 +430,6 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 switch|switch
 condition|(
 name|olderrno
@@ -550,6 +537,13 @@ expr_stmt|;
 if|if
 condition|(
 name|QuickAbort
+operator|||
+operator|(
+name|OnlyOneError
+operator|&&
+operator|!
+name|HoldErrs
+operator|)
 condition|)
 name|longjmp
 argument_list|(
@@ -745,9 +739,6 @@ argument_list|(
 name|MsgBuf
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -756,23 +747,15 @@ literal|3
 operator|&&
 name|LogUsrErrs
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"%s: %.900s"
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
-name|CurEnv
-operator|->
-name|e_id
-operator|==
-name|NULL
-condition|?
-literal|"NOQUEUE"
-else|:
-name|CurEnv
-operator|->
-name|e_id
+literal|"%.900s"
 argument_list|,
 operator|&
 name|MsgBuf
@@ -781,12 +764,16 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 if|if
 condition|(
 name|QuickAbort
+operator|||
+operator|(
+name|OnlyOneError
+operator|&&
+operator|!
+name|HoldErrs
+operator|)
 condition|)
 name|longjmp
 argument_list|(
@@ -1206,9 +1193,6 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -1225,9 +1209,13 @@ operator|==
 name|MD_DAEMON
 operator|)
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 literal|"--> %s%s"
 argument_list|,
@@ -1240,8 +1228,6 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|msgcode
@@ -1442,32 +1428,21 @@ name|HoldErrs
 operator|=
 name|TRUE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|0
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SYSERR: putoutmsg (%s): error on output channel sending \"%s\": %s"
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
-name|CurEnv
-operator|->
-name|e_id
-operator|==
-name|NULL
-condition|?
-literal|"NOQUEUE"
-else|:
-name|CurEnv
-operator|->
-name|e_id
+literal|"SYSERR: putoutmsg (%s): error on output channel sending \"%s\": %s"
 argument_list|,
 name|CurHostName
 operator|==
@@ -1490,8 +1465,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1631,10 +1604,6 @@ decl_stmt|;
 block|{
 name|char
 name|del
-decl_stmt|;
-name|char
-modifier|*
-name|meb
 decl_stmt|;
 name|int
 name|l
@@ -1824,10 +1793,6 @@ operator|&=
 literal|0177
 expr_stmt|;
 block|}
-name|meb
-operator|=
-name|eb
-expr_stmt|;
 comment|/* output the message */
 operator|(
 name|void
@@ -2001,9 +1966,16 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|HASSTRERROR
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|ERRLIST_PREDEFINED
+argument_list|)
 specifier|extern
 name|char
 modifier|*
@@ -2058,6 +2030,30 @@ name|bp
 operator|=
 name|buf
 expr_stmt|;
+if|#
+directive|if
+name|HASSTRERROR
+name|snprintf
+argument_list|(
+name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
+argument_list|,
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errnum
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|snprintf
 argument_list|(
 name|bp
@@ -2077,6 +2073,8 @@ name|errnum
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bp
 operator|+=
 name|strlen
@@ -2278,12 +2276,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-case|case
-name|EOPENTIMEOUT
-case|:
-return|return
-literal|"Timeout on file open"
-return|;
 if|#
 directive|if
 name|NAMED_BIND
@@ -2335,6 +2327,67 @@ case|:
 comment|/* SunOS gives "Not owner" -- this is the POSIX message */
 return|return
 literal|"Operation not permitted"
+return|;
+comment|/* 	**  Error messages used internally in sendmail. 	*/
+case|case
+name|E_SM_OPENTIMEOUT
+case|:
+return|return
+literal|"Timeout on file open"
+return|;
+case|case
+name|E_SM_NOSLINK
+case|:
+return|return
+literal|"Symbolic links not allowed"
+return|;
+case|case
+name|E_SM_NOHLINK
+case|:
+return|return
+literal|"Hard links not allowed"
+return|;
+case|case
+name|E_SM_REGONLY
+case|:
+return|return
+literal|"Regular files only"
+return|;
+case|case
+name|E_SM_ISEXEC
+case|:
+return|return
+literal|"Executable files not allowed"
+return|;
+case|case
+name|E_SM_WWDIR
+case|:
+return|return
+literal|"World writable directory"
+return|;
+case|case
+name|E_SM_GWDIR
+case|:
+return|return
+literal|"Group writable directory"
+return|;
+case|case
+name|E_SM_FILECHANGE
+case|:
+return|return
+literal|"File changed after open"
+return|;
+case|case
+name|E_SM_WWFILE
+case|:
+return|return
+literal|"World writable file"
+return|;
+case|case
+name|E_SM_GWFILE
+case|:
+return|return
+literal|"Group writable file"
 return|;
 block|}
 if|if
@@ -2418,6 +2471,17 @@ return|return
 name|buf
 return|;
 block|}
+if|#
+directive|if
+name|HASSTRERROR
+return|return
+name|strerror
+argument_list|(
+name|errnum
+argument_list|)
+return|;
+else|#
+directive|else
 if|if
 condition|(
 name|errnum
@@ -2456,6 +2520,8 @@ operator|(
 name|buf
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
