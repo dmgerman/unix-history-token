@@ -249,10 +249,6 @@ name|uintfptr_t
 call|)
 argument_list|(
 name|VM_MAXUSER_ADDRESS
-operator|+
-name|UPAGES
-operator|*
-name|PAGE_SIZE
 argument_list|)
 condition|)
 goto|goto
