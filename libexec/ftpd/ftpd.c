@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.44 1997/12/24 19:13:22 imp Exp $"
+literal|"$Id: ftpd.c,v 1.45 1998/02/24 08:45:57 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2407,6 +2407,35 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Disable Nagle on the control channel so that we don't have to wait 	 * for peer's ACK before issuing our next reply. 	 */
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+literal|0
+argument_list|,
+name|IPPROTO_TCP
+argument_list|,
+name|TCP_NODELAY
+argument_list|,
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"control setsockopt TCP_NODELAY: %m"
+argument_list|)
+expr_stmt|;
 name|data_source
 operator|.
 name|sin_port
