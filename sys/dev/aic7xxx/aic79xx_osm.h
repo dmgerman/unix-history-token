@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * FreeBSD platform specific driver option settings, data structures,  * function declarations and includes.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  *  * $FreeBSD$  */
+comment|/*  * FreeBSD platform specific driver option settings, data structures,  * function declarations and includes.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2001-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/aic7xxx/freebsd/dev/aic7xxx/aic79xx_osm.h#14 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -47,6 +47,25 @@ begin_comment
 comment|/* For device_t */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -70,37 +89,6 @@ include|#
 directive|include
 file|<sys/queue.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_include
-include|#
-directive|include
-file|<pci.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NPCI
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -151,14 +139,6 @@ directive|include
 file|<sys/rman.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -170,11 +150,6 @@ include|#
 directive|include
 file|<pci/pcivar.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -675,9 +650,13 @@ begin_comment
 comment|/********************************* Byte Order *********************************/
 end_comment
 
-begin_comment
-comment|/*  * XXX Waiting for FreeBSD byte swapping functions.  * For now assume host is Little Endian.  */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
 
 begin_define
 define|#
@@ -686,7 +665,7 @@ name|ahd_htobe16
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htobe16(x)
 end_define
 
 begin_define
@@ -696,7 +675,7 @@ name|ahd_htobe32
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htobe32(x)
 end_define
 
 begin_define
@@ -706,7 +685,7 @@ name|ahd_htobe64
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htobe64(x)
 end_define
 
 begin_define
@@ -716,7 +695,7 @@ name|ahd_htole16
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htole16(x)
 end_define
 
 begin_define
@@ -726,7 +705,7 @@ name|ahd_htole32
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htole32(x)
 end_define
 
 begin_define
@@ -736,7 +715,7 @@ name|ahd_htole64
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|htole64(x)
 end_define
 
 begin_define
@@ -746,7 +725,7 @@ name|ahd_be16toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|be16toh(x)
 end_define
 
 begin_define
@@ -756,7 +735,7 @@ name|ahd_be32toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|be32toh(x)
 end_define
 
 begin_define
@@ -766,7 +745,7 @@ name|ahd_be64toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|be64toh(x)
 end_define
 
 begin_define
@@ -776,7 +755,7 @@ name|ahd_le16toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|le16toh(x)
 end_define
 
 begin_define
@@ -786,7 +765,7 @@ name|ahd_le32toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|le32toh(x)
 end_define
 
 begin_define
@@ -796,8 +775,138 @@ name|ahd_le64toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|le64toh(x)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ahd_htobe16
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_htobe32
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_htobe64
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_htole16
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_htole32
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_htole64
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_be16toh
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_be32toh
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_be64toh
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_le16toh
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_le32toh
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahd_le64toh
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/************************** Timer DataStructures ******************************/
@@ -814,6 +923,36 @@ end_typedef
 begin_comment
 comment|/***************************** Core Includes **********************************/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|AHD_REG_PRETTY_PRINT
+end_if
+
+begin_define
+define|#
+directive|define
+name|AIC_DEBUG_REGISTERS
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AIC_DEBUG_REGISTERS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1152,7 +1291,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Lock held during ahc_list manipulation and ahc softc frees */
+comment|/* Lock held during ahd_list manipulation and ahd softc frees */
 end_comment
 
 begin_function_decl
@@ -1317,7 +1456,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|/* Lock held during ahc_list manipulation and ahc softc frees */
+comment|/* Lock held during ahd_list manipulation and ahd softc frees */
 end_comment
 
 begin_function
