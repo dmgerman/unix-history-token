@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<security/mac_bsdextended/mac_bsdextended.h>
 end_include
 
@@ -783,7 +777,7 @@ name|rule
 operator|->
 name|mbr_mode
 operator|&
-name|VALLPERM
+name|MBI_ALLPERM
 operator|)
 expr_stmt|;
 name|unknownmode
@@ -794,7 +788,7 @@ operator|->
 name|mbr_mode
 operator|&
 operator|~
-name|VALLPERM
+name|MBI_ALLPERM
 operator|)
 expr_stmt|;
 if|if
@@ -803,7 +797,7 @@ name|rule
 operator|->
 name|mbr_mode
 operator|&
-name|VADMIN
+name|MBI_ADMIN
 condition|)
 block|{
 name|len
@@ -845,7 +839,7 @@ name|rule
 operator|->
 name|mbr_mode
 operator|&
-name|VREAD
+name|MBI_READ
 condition|)
 block|{
 name|len
@@ -887,7 +881,7 @@ name|rule
 operator|->
 name|mbr_mode
 operator|&
-name|VSTAT
+name|MBI_STAT
 condition|)
 block|{
 name|len
@@ -929,7 +923,7 @@ name|rule
 operator|->
 name|mbr_mode
 operator|&
-name|VWRITE
+name|MBI_WRITE
 condition|)
 block|{
 name|len
@@ -971,7 +965,7 @@ name|rule
 operator|->
 name|mbr_mode
 operator|&
-name|VEXEC
+name|MBI_EXEC
 condition|)
 block|{
 name|len
@@ -2079,7 +2073,7 @@ case|:
 operator|*
 name|mode
 operator||=
-name|VADMIN
+name|MBI_ADMIN
 expr_stmt|;
 break|break;
 case|case
@@ -2088,7 +2082,7 @@ case|:
 operator|*
 name|mode
 operator||=
-name|VREAD
+name|MBI_READ
 expr_stmt|;
 break|break;
 case|case
@@ -2097,7 +2091,7 @@ case|:
 operator|*
 name|mode
 operator||=
-name|VSTAT
+name|MBI_STAT
 expr_stmt|;
 break|break;
 case|case
@@ -2106,7 +2100,7 @@ case|:
 operator|*
 name|mode
 operator||=
-name|VWRITE
+name|MBI_WRITE
 expr_stmt|;
 break|break;
 case|case
@@ -2115,7 +2109,7 @@ case|:
 operator|*
 name|mode
 operator||=
-name|VEXEC
+name|MBI_EXEC
 expr_stmt|;
 break|break;
 case|case
