@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_input.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_input.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -377,6 +377,17 @@ name|pk_bad_packet
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mbuf_cache
+name|pk_input_cache
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*   *  X.25 PACKET INPUT  *  *  This procedure is called by a link level procedure whenever  *  an information frame is received. It decodes the packet and  *  demultiplexes based on the logical channel number.  *  */
 end_comment
@@ -453,6 +464,24 @@ name|pkcb
 modifier|*
 name|lastpkp
 decl_stmt|;
+if|if
+condition|(
+name|pk_input_cache
+operator|.
+name|mbc_size
+operator|||
+name|pk_input_cache
+operator|.
+name|mbc_oldsize
+condition|)
+name|mbuf_cache
+argument_list|(
+operator|&
+name|pk_input_cache
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xcp
@@ -748,7 +777,7 @@ name|CALL
 operator|+
 name|LISTEN
 case|:
-name|incoming_call
+name|pk_incoming_call
 argument_list|(
 name|pkp
 argument_list|,
@@ -790,7 +819,7 @@ argument_list|,
 name|MT_CONTROL
 argument_list|)
 expr_stmt|;
-name|call_accepted
+name|pk_call_accepted
 argument_list|(
 name|lcp
 argument_list|,
@@ -2034,20 +2063,22 @@ begin_comment
 comment|/*   * This routine handles incoming call packets. It matches the protocol  * field on the Call User Data field (usually the first four bytes) with   * sockets awaiting connections.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
-name|incoming_call
+begin_macro
+name|pk_incoming_call
 argument_list|(
 argument|pkp
 argument_list|,
 argument|m0
 argument_list|)
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -2266,7 +2297,7 @@ name|facp
 operator|=
 name|u
 expr_stmt|;
-name|parse_facilities
+name|pk_parse_facilities
 argument_list|(
 name|u
 argument_list|,
@@ -3084,20 +3115,22 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
-name|call_accepted
+begin_macro
+name|pk_call_accepted
 argument_list|(
 argument|lcp
 argument_list|,
 argument|m
 argument_list|)
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|pklcd
-operator|*
+modifier|*
 name|lcp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -3245,7 +3278,7 @@ operator|)
 operator|+
 name|len
 condition|)
-name|parse_facilities
+name|pk_parse_facilities
 argument_list|(
 name|fcp
 argument_list|,
@@ -3293,8 +3326,7 @@ block|}
 end_block
 
 begin_expr_stmt
-specifier|static
-name|parse_facilities
+name|pk_parse_facilities
 argument_list|(
 name|fcp
 argument_list|,
