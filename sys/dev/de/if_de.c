@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.90 1998/11/06 02:13:13 peter Exp $ */
+comment|/*	$Id: if_de.c,v 1.91 1998/11/28 00:25:32 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -27708,6 +27708,7 @@ end_endif
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|tulip_pci_probe
