@@ -341,7 +341,7 @@ literal|1
 block|,
 literal|0
 block|,
-literal|0
+name|FL_MFM
 block|}
 block|,
 comment|/* FDT_12M  */
@@ -373,7 +373,7 @@ literal|1
 block|,
 literal|0
 block|,
-literal|0
+name|FL_MFM
 block|}
 block|,
 comment|/* FDT_144M */
