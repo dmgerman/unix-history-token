@@ -15802,6 +15802,8 @@ operator|(
 name|B_NEEDCOMMIT
 operator||
 name|B_WRITEINPROG
+operator||
+name|B_CLUSTEROK
 operator|)
 expr_stmt|;
 if|if
@@ -16114,8 +16116,6 @@ operator||
 name|B_ASYNC
 operator||
 name|B_WRITEINPROG
-operator||
-name|B_NEEDCOMMIT
 operator|)
 expr_stmt|;
 name|splx
@@ -16747,7 +16747,11 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
+operator|(
 name|B_NEEDCOMMIT
+operator||
+name|B_CLUSTEROK
+operator|)
 expr_stmt|;
 name|biodone
 argument_list|(
