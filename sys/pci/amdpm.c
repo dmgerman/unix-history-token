@@ -1012,14 +1012,33 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"AMD 756 SMBus interface"
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"AMD 756 SMBus interface\n"
+argument_list|)
+expr_stmt|;
 comment|/* Allocate a new smbus device */
 name|amdsmb_sc
 operator|->
 name|smbus
 operator|=
-name|smbus_alloc_bus
+name|device_add_child
 argument_list|(
 name|dev
+argument_list|,
+literal|"smbus"
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1034,18 +1053,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|device_set_desc
+name|bus_generic_attach
 argument_list|(
 name|dev
-argument_list|,
-literal|"AMD 756 SMBus interface"
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"AMD 756 SMBus interface\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3084,6 +3094,32 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|amdpm
+argument_list|,
+name|smbus
+argument_list|,
+name|SMBUS_MINVER
+argument_list|,
+name|SMBUS_PREFVER
+argument_list|,
+name|SMBUS_MAXVER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|amdpm
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
