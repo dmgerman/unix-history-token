@@ -2860,7 +2860,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|out
+name|out0
 goto|;
 name|tv
 operator|.
@@ -4450,6 +4450,8 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|out0
+label|:
 return|return
 name|error
 return|;
