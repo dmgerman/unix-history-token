@@ -482,9 +482,12 @@ name|appendx
 operator|>=
 name|appendnum
 condition|)
+if|if
+condition|(
+operator|(
 name|appends
 operator|=
-name|xrealloc
+name|realloc
 argument_list|(
 name|appends
 argument_list|,
@@ -499,6 +502,16 @@ name|appendnum
 operator|*=
 literal|2
 operator|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"realloc"
 argument_list|)
 expr_stmt|;
 name|appends
@@ -930,9 +943,12 @@ name|appendx
 operator|>=
 name|appendnum
 condition|)
+if|if
+condition|(
+operator|(
 name|appends
 operator|=
-name|xrealloc
+name|realloc
 argument_list|(
 name|appends
 argument_list|,
@@ -947,6 +963,16 @@ name|appendnum
 operator|*=
 literal|2
 operator|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"realloc"
 argument_list|)
 expr_stmt|;
 name|appends
@@ -2758,7 +2784,7 @@ parameter_list|(
 name|reqlen
 parameter_list|)
 define|\
-value|if (sp->len>= sp->blen - (reqlen) - 1) {			\ 		sp->blen += (reqlen) + 1024;				\ 		sp->space = sp->back = xrealloc(sp->back, sp->blen);	\ 		dst = sp->space + sp->len;				\ 	}
+value|if (sp->len>= sp->blen - (reqlen) - 1) {			\ 		sp->blen += (reqlen) + 1024;				\ 		if ((sp->space = sp->back = realloc(sp->back, sp->blen)) \ 		    == NULL)						\ 			err(1, "realloc");				\ 		dst = sp->space + sp->len;				\ 	}
 name|dst
 operator|=
 name|sp
@@ -3021,6 +3047,9 @@ name|tlen
 operator|+
 literal|1024
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|sp
 operator|->
 name|space
@@ -3029,7 +3058,7 @@ name|sp
 operator|->
 name|back
 operator|=
-name|xrealloc
+name|realloc
 argument_list|(
 name|sp
 operator|->
@@ -3038,6 +3067,16 @@ argument_list|,
 name|sp
 operator|->
 name|blen
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"realloc"
 argument_list|)
 expr_stmt|;
 block|}

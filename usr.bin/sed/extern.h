@@ -201,34 +201,5 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|void
-modifier|*
-name|xmalloc
-name|__P
-argument_list|(
-operator|(
-name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-modifier|*
-name|xrealloc
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 
