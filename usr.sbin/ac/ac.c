@@ -2409,7 +2409,7 @@ literal|"tty"
 argument_list|,
 literal|3
 argument_list|)
-operator|!=
+operator|==
 literal|0
 operator|||
 name|strchr
@@ -2423,7 +2423,7 @@ index|[
 literal|3
 index|]
 argument_list|)
-operator|==
+operator|!=
 literal|0
 operator|||
 operator|*
