@@ -837,40 +837,6 @@ begin_comment
 comment|/*  ***************************************************************************  ****  **** The following SYSINIT's belong elsewhere, but have not yet  **** been moved.  ****  ***************************************************************************  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OMIT
-end_ifdef
-
-begin_comment
-comment|/*  * Handled by vfs_mountroot (bad idea) at this time... should be  * done the same as 4.4Lite2.  */
-end_comment
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|swapinit
-argument_list|,
-argument|SI_SUB_SWAP
-argument_list|,
-argument|SI_ORDER_FIRST
-argument_list|,
-argument|swapinit
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OMIT*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -1639,58 +1605,6 @@ end_macro
 begin_comment
 comment|/*  ***************************************************************************  ****  **** The following SYSINIT's and glue code should be moved to the  **** respective files on a per subsystem basis.  ****  ***************************************************************************  */
 end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|void
-name|root_conf
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|dummy
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|root_conf
-parameter_list|(
-name|dummy
-parameter_list|)
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
-block|{
-name|cpu_rootconf
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|root_conf
-argument_list|,
-argument|SI_SUB_ROOT_CONF
-argument_list|,
-argument|SI_ORDER_FIRST
-argument_list|,
-argument|root_conf
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
 
 begin_comment
 comment|/* ARGSUSED*/
