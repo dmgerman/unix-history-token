@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.14	%G%	*/
+comment|/*	fs.h	1.15	%G%	*/
 end_comment
 
 begin_comment
@@ -173,6 +173,17 @@ end_define
 begin_comment
 comment|/* maximum fs_cpg */
 end_comment
+
+begin_comment
+comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXMNTLEN
+value|34
+end_define
 
 begin_comment
 comment|/*  * Per cylinder group information; summarized in blocks allocated  * from first cylinder group data blocks.  These blocks have to be  * read in from fs_csaddr (size fs_cssize) in addition to the  * super block.  *  * N.B. sizeof(struct csum) must be a power of two in order for  * the ``fs_cs'' macro to work (see below).  */
@@ -359,7 +370,7 @@ comment|/* mounted read-only flag */
 name|char
 name|fs_fsmnt
 index|[
-literal|34
+name|MAXMNTLEN
 index|]
 decl_stmt|;
 comment|/* name mounted on */
@@ -374,6 +385,8 @@ modifier|*
 name|fs_csp
 index|[
 name|NBUF
+operator|/
+literal|2
 index|]
 decl_stmt|;
 comment|/* list of fs_cs info buffers */
@@ -404,7 +417,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * convert cylinder group to base address of its global summary info.  *  * N.B. This macro assumes that sizeof(struct csum) is a power of two.  */
+comment|/*  * Convert cylinder group to base address of its global summary info.  *  * N.B. This macro assumes that sizeof(struct csum) is a power of two.  */
 end_comment
 
 begin_define
@@ -576,7 +589,7 @@ value|((b) / ((fs)->fs_fsize / DEV_BSIZE))
 end_define
 
 begin_comment
-comment|/*  * Cylinder group macros to locate things in cylinder groups.  *  * cylinder group to disk block address of spare boot block  * and super block  * Note that these are in absolute addresses, and can NOT  * in general be expressable in terms of file system addresses.  */
+comment|/*  * Cylinder group macros to locate things in cylinder groups.  *  * Cylinder group to disk block address of spare boot block  * and super block.  * Note that these are in absolute addresses, and can NOT  * in general be expressable in terms of file system addresses.  */
 end_comment
 
 begin_define
@@ -604,7 +617,7 @@ value|(fsbtodb(fs, cgbase(fs, c)) + (fs)->fs_sblkno)
 end_define
 
 begin_comment
-comment|/*  * file system addresses of cylinder group data structures  */
+comment|/*  * File system addresses of cylinder group data structures.  */
 end_comment
 
 begin_define
@@ -672,7 +685,7 @@ comment|/* 1st data */
 end_comment
 
 begin_comment
-comment|/*  * macros for handling inode numbers  *     inode number to file system block offset  *     inode number to cylinder group number  *     inode number to file system block address  */
+comment|/*  * Macros for handling inode numbers:  *     inode number to file system block offset.  *     inode number to cylinder group number.  *     inode number to file system block address.  */
 end_comment
 
 begin_define
@@ -713,7 +726,7 @@ value|((daddr_t)(cgimin(fs, itog(fs, x)) + \ 	(x) % (fs)->fs_ipg / INOPB(fs) * (
 end_define
 
 begin_comment
-comment|/*  * give cylinder group number for a file system block  * give cylinder group block number for a file system block  */
+comment|/*  * Give cylinder group number for a file system block.  * Give cylinder group block number for a file system block.  */
 end_comment
 
 begin_define
@@ -741,8 +754,23 @@ value|((d) % (fs)->fs_fpg)
 end_define
 
 begin_comment
-comment|/*  * compute the cylinder and rotational position of a cyl block addr  */
+comment|/*  * Extract the bits for a block from a map.  * Compute the cylinder and rotational position of a cyl block addr.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|blkmap
+parameter_list|(
+name|fs
+parameter_list|,
+name|map
+parameter_list|,
+name|loc
+parameter_list|)
+define|\
+value|(((map)[loc / NBBY]>> (loc % NBBY))& (0xff>> (NBBY - (fs)->fs_frag)))
+end_define
 
 begin_define
 define|#
@@ -859,7 +887,7 @@ value|(((size) + (fs)->fs_fsize - 1)& (fs)->fs_fmask)
 end_define
 
 begin_comment
-comment|/*  * determining the size of a file block in the file system  */
+comment|/*  * Determining the size of a file block in the file system.  */
 end_comment
 
 begin_define
@@ -893,7 +921,7 @@ value|(((lbn)>= NDADDR || (dip)->di_size>= ((lbn) + 1) * (fs)->fs_bsize) \ 	    
 end_define
 
 begin_comment
-comment|/*  * number of disk sectors per block; assumes DEV_BSIZE byte sector size  */
+comment|/*  * Number of disk sectors per block; assumes DEV_BSIZE byte sector size.  */
 end_comment
 
 begin_define
@@ -917,7 +945,7 @@ value|((fs)->fs_fsize / DEV_BSIZE)
 end_define
 
 begin_comment
-comment|/*  * INOPB is the number of inodes in a secondary storage block  */
+comment|/*  * INOPB is the number of inodes in a secondary storage block.  */
 end_comment
 
 begin_define
@@ -941,7 +969,7 @@ value|((fs)->fs_fsize / sizeof (struct dinode))
 end_define
 
 begin_comment
-comment|/*  * NINDIR is the number of indirects in a file system block  */
+comment|/*  * NINDIR is the number of indirects in a file system block.  */
 end_comment
 
 begin_define
