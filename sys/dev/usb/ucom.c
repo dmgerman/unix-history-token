@@ -1415,7 +1415,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: open bulk out error (addr %d): %s\n"
+literal|"%s: open bulk in error (addr %d): %s\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -1470,7 +1470,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: open bulk in error (addr %d): %s\n"
+literal|"%s: open bulk out error (addr %d): %s\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
