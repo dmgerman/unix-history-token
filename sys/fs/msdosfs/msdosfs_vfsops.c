@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.9 1995/11/07 14:10:19 phk Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.10 1995/11/16 11:48:08 bde Exp $ */
 end_comment
 
 begin_comment
@@ -2099,12 +2099,6 @@ name|mnt_flag
 operator||=
 name|MNT_LOCAL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
-comment|/* 	 * If we ever do quotas for DOS filesystems this would be a place 	 * to fill in the info in the msdosfsmount structure. You dolt, 	 * quotas on dos filesystems make no sense because files have no 	 * owners on dos filesystems. of course there is some empty space 	 * in the directory entry where we could put uid's and gid's. 	 */
-endif|#
-directive|endif
 name|devvp
 operator|->
 name|v_specflags
@@ -2335,11 +2329,6 @@ operator||=
 name|FORCECLOSE
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|QUOTA
-endif|#
-directive|endif
 name|error
 operator|=
 name|vflush
@@ -2578,19 +2567,9 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|QUOTA
 return|return
 name|EOPNOTSUPP
 return|;
-else|#
-directive|else
-return|return
-name|EOPNOTSUPP
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 

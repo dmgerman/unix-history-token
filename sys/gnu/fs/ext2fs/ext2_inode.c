@@ -29,6 +29,17 @@ directive|include
 file|"diagnostic.h"
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"opt_quota.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
