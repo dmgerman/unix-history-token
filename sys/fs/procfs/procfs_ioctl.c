@@ -57,12 +57,6 @@ directive|include
 file|<fs/procfs/procfs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PROCFS_DEBUG
-end_ifdef
-
 begin_comment
 comment|/*  * Process ioctls  */
 end_comment
@@ -81,6 +75,8 @@ name|ps
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|flags
 decl_stmt|,
 name|sig
 decl_stmt|;
@@ -134,7 +130,42 @@ break|break;
 case|case
 name|PIOCSFL
 case|:
-comment|/* ignore */
+name|flags
+operator|=
+operator|*
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+name|data
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|PF_ISUGID
+operator|&&
+operator|(
+name|error
+operator|=
+name|suser
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
+name|p
+operator|->
+name|p_pfsflags
+operator|=
+name|flags
+expr_stmt|;
 break|break;
 case|case
 name|PIOCGFL
@@ -147,9 +178,10 @@ operator|*
 operator|)
 name|data
 operator|=
-literal|0
+name|p
+operator|->
+name|p_pfsflags
 expr_stmt|;
-comment|/* nope */
 break|break;
 case|case
 name|PIOCWAIT
@@ -272,6 +304,8 @@ condition|(
 name|p
 operator|->
 name|p_step
+operator|==
+literal|0
 condition|)
 break|break;
 name|sig
@@ -285,6 +319,10 @@ name|data
 expr_stmt|;
 if|if
 condition|(
+name|sig
+operator|!=
+literal|0
+operator|&&
 operator|!
 name|_SIG_VALID
 argument_list|(
@@ -314,6 +352,12 @@ name|p
 argument_list|,
 name|sig
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_step
+operator|=
+literal|0
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -409,11 +453,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -605,9 +605,6 @@ operator||
 name|PFS_RAW
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PROCFS_DEBUG
 name|node
 operator|->
 name|pn_ioctl
@@ -622,8 +619,6 @@ operator|=
 operator|&
 name|procfs_close
 expr_stmt|;
-endif|#
-directive|endif
 name|pfs_create_file
 argument_list|(
 name|dir
