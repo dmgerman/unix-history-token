@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.32 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3773,11 +3773,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|logerror
-argument_list|(
-name|_PATH_UTMP
-argument_list|)
-expr_stmt|;
+comment|/* 		 * don't log, may not have mounted file systems yet 		 * logerror(_PATH_UTMP); 		 */
 name|reenter
 operator|=
 literal|0
