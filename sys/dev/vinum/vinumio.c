@@ -164,6 +164,10 @@ operator|=
 name|ENOTBLK
 expr_stmt|;
 else|else
+block|{
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
 name|drive
 operator|->
 name|lasterror
@@ -187,6 +191,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|PICKUP_GIANT
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|drive
@@ -542,6 +550,9 @@ name|drive
 operator|->
 name|lasterror
 return|;
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
 name|drive
 operator|->
 name|lasterror
@@ -619,6 +630,9 @@ name|FREAD
 operator|,
 name|curthread
 operator|)
+expr_stmt|;
+name|PICKUP_GIANT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -743,6 +757,9 @@ name|int
 name|error
 decl_stmt|;
 comment|/*      * If we can't access the drive, we can't flush      * the queues, which spec_close() will try to      * do.  Get rid of them here first.      */
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 operator|(
@@ -769,6 +786,9 @@ literal|0
 operator|,
 name|NULL
 operator|)
+expr_stmt|;
+name|PICKUP_GIANT
+argument_list|()
 expr_stmt|;
 name|drive
 operator|->
@@ -3138,7 +3158,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Seach disks on system for vinum slices and add  * them to the configuuration if they're not  * there already.  devicename is a blank-separate  * list of device names.  If not provided, use  * sysctl to get a list of all disks on the  * system.  *  * Return an error indication.  */
+comment|/*  * Search disks on system for vinum slices and add  * them to the configuuration if they're not  * there already.  devicename is a blank-separate  * list of device names.  If not provided, use  * sysctl to get a list of all disks on the  * system.  *  * Return an error indication.  */
 end_comment
 
 begin_function
@@ -3577,6 +3597,9 @@ operator|-
 name|partname
 expr_stmt|;
 comment|/* remaining length in partition name */
+ifdef|#
+directive|ifdef
+name|__i386__
 comment|/* first try the partition table */
 for|for
 control|(
@@ -3709,7 +3732,9 @@ block|}
 block|}
 block|}
 block|}
-comment|/* 	 * This is a kludge.  Probably none of this 	 * should be here. 	 */
+endif|#
+directive|endif
+comment|/* 	 * If the machine doesn't have a BIOS 	 * partition table, try normal devices. 	 */
 if|if
 condition|(
 name|gooddrives
