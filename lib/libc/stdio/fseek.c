@@ -71,7 +71,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -84,12 +96,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -412,20 +418,18 @@ name|_bf
 operator|.
 name|_base
 expr_stmt|;
+comment|/* curoff always>= 0 */
 if|if
 condition|(
 name|offset
 operator|>
 literal|0
 operator|&&
-name|offset
-operator|+
-operator|(
-name|off_t
-operator|)
 name|curoff
-operator|<
-literal|0
+operator|>
+name|OFF_MAX
+operator|-
+name|offset
 condition|)
 block|{
 name|errno
@@ -648,6 +652,7 @@ condition|)
 goto|goto
 name|dumb
 goto|;
+comment|/* st.st_size always>= 0 */
 if|if
 condition|(
 name|offset
@@ -657,10 +662,10 @@ operator|&&
 name|st
 operator|.
 name|st_size
-operator|+
+operator|>
+name|OFF_MAX
+operator|-
 name|offset
-operator|<
-literal|0
 condition|)
 block|{
 name|errno
