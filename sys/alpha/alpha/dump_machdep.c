@@ -109,7 +109,7 @@ name|mb
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Dumping %u MB\n"
+literal|"Dumping %ld MB\n"
 argument_list|,
 name|Maxmem
 operator|/
