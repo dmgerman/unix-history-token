@@ -292,40 +292,22 @@ decl_stmt|,
 name|hi
 decl_stmt|,
 name|lo
-decl_stmt|,
-name|t
 decl_stmt|;
 name|int
 name|k
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
 if|if
 condition|(
 name|x
 operator|!=
 name|x
 condition|)
+comment|/* x is NaN */
 return|return
 operator|(
 name|x
 operator|)
 return|;
-comment|/* x is NaN */
-endif|#
-directive|endif
-comment|/* !defined(vax)&&!defined(tahoe) */
 if|if
 condition|(
 name|x

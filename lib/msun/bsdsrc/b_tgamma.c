@@ -363,49 +363,6 @@ begin_comment
 comment|/*  * TRUNC sets trailing bits in a floating-point number to zero.  * is a temporary variable.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|_IEEE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUNC
-parameter_list|(
-name|x
-parameter_list|)
-value|x = (double) (float) (x)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_IEEE
-value|1
-end_define
-
 begin_define
 define|#
 directive|define
@@ -415,21 +372,6 @@ name|x
 parameter_list|)
 value|*(((int *)&x) + endian)&= 0xf8000000
 end_define
-
-begin_define
-define|#
-directive|define
-name|infnan
-parameter_list|(
-name|x
-parameter_list|)
-value|0.0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|double
@@ -552,20 +494,6 @@ name|x
 operator|==
 literal|0.0
 condition|)
-if|if
-condition|(
-operator|!
-name|_IEEE
-condition|)
-return|return
-operator|(
-name|infnan
-argument_list|(
-name|ERANGE
-argument_list|)
-operator|)
-return|;
-else|else
 return|return
 operator|(
 name|one
@@ -595,12 +523,6 @@ argument_list|(
 name|x
 argument_list|)
 condition|)
-block|{
-if|if
-condition|(
-name|_IEEE
-condition|)
-comment|/* x = NaN, -Inf */
 return|return
 operator|(
 name|x
@@ -608,16 +530,7 @@ operator|*
 name|x
 operator|)
 return|;
-else|else
-return|return
-operator|(
-name|infnan
-argument_list|(
-name|EDOM
-argument_list|)
-operator|)
-return|;
-block|}
+comment|/* x = NaN, -Inf */
 else|else
 return|return
 operator|(
@@ -650,9 +563,6 @@ name|double
 name|z
 decl_stmt|,
 name|p
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|struct
 name|Double
@@ -879,8 +789,6 @@ decl_stmt|,
 name|ym1
 decl_stmt|,
 name|t
-decl_stmt|,
-name|x1
 decl_stmt|;
 name|struct
 name|Double
@@ -1380,9 +1288,6 @@ decl_stmt|,
 name|c
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 name|double
 name|p
 decl_stmt|,
@@ -1693,20 +1598,6 @@ operator|==
 name|x
 condition|)
 comment|/* Negative integer. */
-if|if
-condition|(
-operator|!
-name|_IEEE
-condition|)
-return|return
-operator|(
-name|infnan
-argument_list|(
-name|ERANGE
-argument_list|)
-operator|)
-return|;
-else|else
 return|return
 operator|(
 name|one

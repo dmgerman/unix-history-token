@@ -64,49 +64,6 @@ begin_comment
 comment|/* Table-driven natural logarithm.  *  * This code was derived, with minor modifications, from:  *	Peter Tang, "Table-Driven Implementation of the  *	Logarithm in IEEE Floating-Point arithmetic." ACM Trans.  *	Math Software, vol 16. no 4, pp 378-400, Dec 1990).  *  * Calculates log(2^m*F*(1+f/F)), |f/j|<= 1/256,  * where F = j/128 for j an integer in [0, 128].  *  * log(2^m) = log2_hi*m + log2_tail*m  * since m is an integer, the dominant term is exact.  * m has at most 10 digits (for subnormal numbers),  * and log2_hi has 11 trailing zero bits.  *  * log(F) = logF_hi[j] + logF_lo[j] is in tabular form in log_table.h  * logF_hi[] + 512 is exact.  *  * log(1+f/F) = 2*f/(2*F + f) + 1/12 * (2*f/(2*F + f))**3 + ...  * the leading term is calculated to extra precision in two  * parts, the larger of which adds exactly to the dominant  * m and F terms.  * There are two cases:  *	1. when m, j are non-zero (m | j), use absolute  *	   precision for the leading term.  *	2. when m = j = 0, |1-x|< 1/256, and log(x) ~= (x-1).  *	   In this case, use a relative precision of 24 bits.  * (This is done differently in the original paper)  *  * Special cases:  *	0	return signalling -Inf  *	neg	return signalling NaN  *	+Inf	return +Inf */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|_IEEE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUNC
-parameter_list|(
-name|x
-parameter_list|)
-value|x = (double) (float) (x)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_IEEE
-value|1
-end_define
-
 begin_define
 define|#
 directive|define
@@ -123,21 +80,6 @@ name|x
 parameter_list|)
 value|*(((int *)&x) + endian)&= 0xf8000000
 end_define
-
-begin_define
-define|#
-directive|define
-name|infnan
-parameter_list|(
-name|x
-parameter_list|)
-value|0.0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -821,27 +763,21 @@ comment|/* Catch special cases */
 end_comment
 
 begin_comment
-unit|if (x<= 0) 		if (_IEEE&& x == zero)
+unit|if (x<= 0) 		if (x == zero)
 comment|/* log(0) = -Inf */
 end_comment
 
 begin_comment
-unit|return (-one/zero); 		else if (_IEEE)
+unit|return (-one/zero); 		else
 comment|/* log(neg) = NaN */
 end_comment
 
 begin_comment
-unit|return (zero/zero); 		else if (x == zero)
-comment|/* NOT REACHED IF _IEEE */
-end_comment
-
-begin_comment
-unit|return (infnan(-ERANGE)); 		else 			return (infnan(EDOM)); 	else if (!finite(x)) 		if (_IEEE)
+unit|return (zero/zero); 	else if (!finite(x)) 		return (x+x);
 comment|/* x = NaN, Inf */
 end_comment
 
 begin_comment
-unit|return (x+x); 		else 			return (infnan(ERANGE));
 comment|/* Argument reduction: 1<= g< 2; x/2^m = g;	*/
 end_comment
 
@@ -850,7 +786,7 @@ comment|/* y = F*(1 + f/F) for |f|<= 2^-8		*/
 end_comment
 
 begin_comment
-unit|m = logb(x); 	g = ldexp(x, -m); 	if (_IEEE&& m == -1022) { 		j = logb(g), m += j; 		g = ldexp(g, -j); 	} 	j = N*(g-1) + .5; 	F = (1.0/N) * j + 1;
+unit|m = logb(x); 	g = ldexp(x, -m); 	if (m == -1022) { 		j = logb(g), m += j; 		g = ldexp(g, -j); 	} 	j = N*(g-1) + .5; 	F = (1.0/N) * j + 1;
 comment|/* F*128 is an integer in [128, 512] */
 end_comment
 
@@ -982,8 +918,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_IEEE
-operator|&&
 name|m
 operator|==
 operator|-
