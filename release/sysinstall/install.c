@@ -1117,12 +1117,12 @@ block|}
 else|else
 break|break;
 block|}
-comment|/* Since the fixit code expects everything to be in /mnt2, and the CDROM mounting stuff /cdrom, do      * a little kludge dance here..      */
+comment|/* Since the fixit code expects everything to be in /mnt2, and the CDROM mounting stuff /dist, do      * a little kludge dance here..      */
 if|if
 condition|(
 name|symlink
 argument_list|(
-literal|"/cdrom"
+literal|"/dist"
 argument_list|,
 literal|"/mnt2"
 argument_list|)

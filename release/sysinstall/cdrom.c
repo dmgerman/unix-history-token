@@ -314,6 +314,7 @@ literal|"CD_VERSION"
 argument_list|)
 operator|)
 operator|||
+operator|(
 name|strcmp
 argument_list|(
 name|cp
@@ -323,6 +324,17 @@ argument_list|(
 name|VAR_RELNAME
 argument_list|)
 argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+literal|"none"
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_RELNAME
+argument_list|)
+argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
