@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * RRS section definitions.  * Nomenclature and, more importantly, the layout of the various  * data structures defined in this header file are borrowed from  * Sun Microsystems' original<link.h>, so we can provide compatibility  * with the SunOS 4.x shared library scheme.  *  *	$Id: link.h,v 1.2 1993/10/22 21:04:19 pk Exp $  *		(derived from: @(#)link.h 1.6 88/08/19 SMI  *		Copyright (c) 1987 by Sun Microsystems, Inc.)  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id$  */
+end_comment
+
+begin_comment
+comment|/*  * RRS section definitions.  *  * The layout of some data structures defined in this header file is  * such that we can provide compatibility with the SunOS 4.x shared  * library scheme.  */
 end_comment
 
 begin_ifndef
@@ -16,98 +20,100 @@ name|_LINK_H_
 end_define
 
 begin_comment
-comment|/*  * A `link_object' structure descibes a shared object that is needed  * to complete the link edit process of the object containing it.  * A list of such objects (chained through `lo_next') is pointed at  * by `ld_need' in the link_dynamic_2 structure.  */
+comment|/*  * A `Shared Object Descriptor' descibes a shared object that is needed  * to complete the link edit process of the object containing it.  * A list of such objects (chained through `sod_next') is pointed at  * by `sdt_sods' in the section_dispatch_table structure.  */
 end_comment
 
 begin_struct
 struct|struct
-name|link_object
+name|sod
 block|{
+comment|/* Shared Object Descriptor */
 name|long
-name|lo_name
+name|sod_name
 decl_stmt|;
 comment|/* name (relative to load address) */
 name|u_int
-name|lo_library
+name|sod_library
 range|:
 literal|1
 decl_stmt|,
-comment|/* searched for by library rules */
-name|lo_unused
+comment|/* Searched for by library rules */
+name|sod_reserved
 range|:
 literal|31
 decl_stmt|;
 name|short
-name|lo_major
+name|sod_major
 decl_stmt|;
 comment|/* major version number */
 name|short
-name|lo_minor
+name|sod_minor
 decl_stmt|;
 comment|/* minor version number */
 name|long
-name|lo_next
+name|sod_next
 decl_stmt|;
-comment|/* next one (often relative) */
+comment|/* next sod */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * `link_maps' are used by the run-time link editor (ld.so) to keep  * track of all shared objects loaded into a process' address space.  * These structures are only used at run-time and do not occur within  * the text or data segment of an executable or shared library.  */
+comment|/*  * `Shared Object Map's are used by the run-time link editor (ld.so) to  * keep track of all shared objects loaded into a process' address space.  * These structures are only used at run-time and do not occur within  * the text or data segment of an executable or shared library.  */
 end_comment
 
 begin_struct
 struct|struct
-name|link_map
+name|so_map
 block|{
+comment|/* Shared Object Map */
 name|caddr_t
-name|lm_addr
+name|som_addr
 decl_stmt|;
-comment|/* address at which object mapped */
+comment|/* Address at which object mapped */
 name|char
 modifier|*
-name|lm_name
+name|som_path
 decl_stmt|;
-comment|/* full name of loaded object */
+comment|/* Path to mmap'ed file */
 name|struct
-name|link_map
+name|so_map
 modifier|*
-name|lm_next
+name|som_next
 decl_stmt|;
-comment|/* next object in map */
+comment|/* Next map in chain */
 name|struct
-name|link_object
+name|sod
 modifier|*
-name|lm_lop
+name|som_sod
 decl_stmt|;
-comment|/* link object that got us here */
+comment|/* Sod responsible for this map */
 name|caddr_t
-name|lm_lob
+name|som_sodbase
 decl_stmt|;
-comment|/* base address for said link object */
+comment|/* Base address of this sod */
 name|u_int
-name|lm_rwt
+name|som_write
 range|:
 literal|1
 decl_stmt|;
-comment|/* text is read/write */
+comment|/* Text is currently writable */
 name|struct
-name|link_dynamic
+name|_dynamic
 modifier|*
-name|lm_ld
+name|som_dynamic
 decl_stmt|;
-comment|/* dynamic structure */
+comment|/* _dynamic structure */
 name|caddr_t
-name|lm_lpd
+name|som_spd
 decl_stmt|;
-comment|/* loader private data */
+comment|/* Private data */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Symbol description with size. This is simply an `nlist' with  * one field (nz_size) added.  * Used to convey size information on items in the data segment  * of shared objects. An array of these live in the shared object's  * text segment and is address by the `ld_symbols' field.  */
+comment|/*  * Symbol description with size. This is simply an `nlist' with  * one field (nz_size) added.  * Used to convey size information on items in the data segment  * of shared objects. An array of these live in the shared object's  * text segment and is addressed by the `sdt_nzlist' field.  */
 end_comment
 
 begin_struct
@@ -153,82 +159,124 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|N_AUX
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->n_other& 0xf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|N_RESERVED
+parameter_list|(
+name|p
+parameter_list|)
+value|(((unsigned int)(p)->n_other>> 4)& 0xf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|N_OTHER
+parameter_list|(
+name|r
+parameter_list|,
+name|v
+parameter_list|)
+value|(((unsigned int)(r)<< 4) | ((v)& 0xf))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUX_OBJECT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUX_FUNC
+value|2
+end_define
+
 begin_comment
-comment|/*  * The `link_dynamic_2' structure contains offsets to various data  * structures needed to do run-time relocation.  */
+comment|/*  * The `section_dispatch_table' structure contains offsets to various data  * structures needed to do run-time relocation.  */
 end_comment
 
 begin_struct
 struct|struct
-name|link_dynamic_2
+name|section_dispatch_table
 block|{
 name|struct
-name|link_map
+name|so_map
 modifier|*
-name|ld_loaded
+name|sdt_loaded
 decl_stmt|;
-comment|/* list of loaded objects */
+comment|/* List of loaded objects */
 name|long
-name|ld_need
+name|sdt_sods
 decl_stmt|;
-comment|/* list of needed objects */
+comment|/* List of shared objects descriptors */
 name|long
-name|ld_rules
+name|sdt_filler1
 decl_stmt|;
-comment|/* search rules for library objects */
+comment|/* Unused (was: search rules) */
 name|long
-name|ld_got
+name|sdt_got
 decl_stmt|;
-comment|/* global offset table */
+comment|/* Global offset table */
 name|long
-name|ld_plt
+name|sdt_plt
 decl_stmt|;
-comment|/* procedure linkage table */
+comment|/* Procedure linkage table */
 name|long
-name|ld_rel
+name|sdt_rel
 decl_stmt|;
-comment|/* relocation table */
+comment|/* Relocation table */
 name|long
-name|ld_hash
+name|sdt_hash
 decl_stmt|;
-comment|/* symbol hash table */
+comment|/* Symbol hash table */
 name|long
-name|ld_symbols
+name|sdt_nzlist
 decl_stmt|;
-comment|/* symbol table itself */
+comment|/* Symbol table itself */
 name|long
-function_decl|(
-modifier|*
-name|ld_stab_hash
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* "pointer" to symbol hash function */
-name|long
-name|ld_buckets
+name|sdt_filler2
 decl_stmt|;
-comment|/* number of hash buckets */
+comment|/* Unused (was: stab_hash) */
 name|long
-name|ld_strings
+name|sdt_buckets
 decl_stmt|;
-comment|/* symbol strings */
+comment|/* Number of hash buckets */
 name|long
-name|ld_str_sz
+name|sdt_strings
 decl_stmt|;
-comment|/* size of symbol strings */
+comment|/* Symbol strings */
 name|long
-name|ld_text_sz
+name|sdt_str_sz
 decl_stmt|;
-comment|/* size of text area */
+comment|/* Size of symbol strings */
 name|long
-name|ld_plt_sz
+name|sdt_text_sz
 decl_stmt|;
-comment|/* size of procedure linkage table */
+comment|/* Size of text area */
+name|long
+name|sdt_plt_sz
+decl_stmt|;
+comment|/* Size of procedure linkage table */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * RRS symbol hash table, addressed by `ld_hash' in link_dynamic_2  * Used to quickly lookup symbols of the shared object by hashing  * on the symbol's name. `rh_symbolnum' is the index of the symbol  * in the shared object's symbol list (`ld_symbols'), `rh_next' is  * the next symbol in the hash bucket (in case of collisions).  */
+comment|/*  * RRS symbol hash table, addressed by `sdt_hash' in section_dispatch_table.  * Used to quickly lookup symbols of the shared object by hashing  * on the symbol's name. `rh_symbolnum' is the index of the symbol  * in the shared object's symbol list (`sdt_nzlist'), `rh_next' is  * the next symbol in the hash bucket (in case of collisions).  */
 end_comment
 
 begin_struct
@@ -238,11 +286,11 @@ block|{
 name|int
 name|rh_symbolnum
 decl_stmt|;
-comment|/* symbol number */
+comment|/* Symbol number */
 name|int
 name|rh_next
 decl_stmt|;
-comment|/* next hash entry */
+comment|/* Next hash entry */
 block|}
 struct|;
 end_struct
@@ -260,23 +308,29 @@ name|nzlist
 modifier|*
 name|rt_sp
 decl_stmt|;
-comment|/* the symbol */
+comment|/* The symbol */
 name|struct
 name|rt_symbol
 modifier|*
 name|rt_next
 decl_stmt|;
-comment|/* next in linear list */
+comment|/* Next in linear list */
 name|struct
 name|rt_symbol
 modifier|*
 name|rt_link
 decl_stmt|;
-comment|/* next in bucket */
+comment|/* Next in bucket */
 name|caddr_t
 name|rt_srcaddr
 decl_stmt|;
-comment|/* address of "master" copy */
+comment|/* Address of "master" copy */
+name|struct
+name|so_map
+modifier|*
+name|rt_smp
+decl_stmt|;
+comment|/* Originating map */
 block|}
 struct|;
 end_struct
@@ -287,103 +341,227 @@ end_comment
 
 begin_struct
 struct|struct
-name|ld_debug
+name|so_debug
 block|{
 name|int
-name|ldd_version
+name|dd_version
 decl_stmt|;
-comment|/* version # of interface */
+comment|/* Version # of interface */
 name|int
-name|ldd_in_debugger
+name|dd_in_debugger
 decl_stmt|;
-comment|/* a debugger is running us */
+comment|/* Set when run by debugger */
 name|int
-name|ldd_sym_loaded
+name|dd_sym_loaded
 decl_stmt|;
-comment|/* we loaded some symbols */
+comment|/* Run-time linking brought more 					   symbols into scope */
 name|char
 modifier|*
-name|ldd_bp_addr
+name|dd_bpt_addr
 decl_stmt|;
-comment|/* place for ld-generated bpt */
+comment|/* Address of rtld-generated bpt */
 name|int
-name|ldd_bp_inst
+name|dd_bpt_shadow
 decl_stmt|;
-comment|/* instruction which was there */
+comment|/* Original contents of bpt */
 name|struct
 name|rt_symbol
 modifier|*
-name|ldd_cp
+name|dd_cc
 decl_stmt|;
-comment|/* commons we built */
+comment|/* Allocated commons/copied data */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Entry points into ld.so - user interface to the run-time linker.  * (see also libdl.a)  */
+comment|/*  * Entry points into ld.so - user interface to the run-time linker.  */
 end_comment
 
 begin_struct
 struct|struct
 name|ld_entry
 block|{
-name|int
-function_decl|(
-modifier|*
+name|void
+operator|*
+operator|(
+operator|*
 name|dlopen
-function_decl|)
-parameter_list|()
-function_decl|;
+operator|)
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
 name|int
-function_decl|(
-modifier|*
-name|dlclose
-function_decl|)
-parameter_list|()
-function_decl|;
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
-function_decl|(
-modifier|*
+argument_list|(
+argument|*dlclose
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+operator|*
+operator|(
+operator|*
 name|dlsym
-function_decl|)
-parameter_list|()
-function_decl|;
+operator|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*dlctl
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is the structure pointed at by the __DYNAMIC symbol if an  * executable requires the attention of the run-time link editor.  * __DYNAMIC is given the value zero if no run-time linking needs to  * be done (it is always present in shared objects).  * The union `ld_un' provides for different versions of the dynamic  * linking mechanism (switched on by `ld_version'). The last version  * used by Sun is 3. We leave some room here and go to version number  * 8 for NetBSD, the main difference lying in the support for the  * `nz_list' type of symbols.  */
+comment|/*  * dlctl() commands  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DL_GETERRNO
+value|1
+end_define
+
+begin_comment
+comment|/*  * dl*() prototypes.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|dlopen
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dlclose
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|dlsym
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dlctl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * This is the structure pointed at by the __DYNAMIC symbol if an  * executable requires the attention of the run-time link editor.  * __DYNAMIC is given the value zero if no run-time linking needs to  * be done (it is always present in shared objects).  * The union `d_un' provides for different versions of the dynamic  * linking mechanism (switched on by `d_version'). The last version  * used by Sun is 3. We leave some room here and go to version number  * 8 for NetBSD, the main difference lying in the support for the  * `nz_list' type of symbols.  */
 end_comment
 
 begin_struct
 struct|struct
-name|link_dynamic
+name|_dynamic
 block|{
 name|int
-name|ld_version
+name|d_version
 decl_stmt|;
-comment|/* version # of this structure */
+comment|/* version # of this interface */
 name|struct
-name|ld_debug
+name|so_debug
 modifier|*
-name|ldd
+name|d_debug
 decl_stmt|;
 union|union
 block|{
 name|struct
-name|link_dynamic_2
+name|section_dispatch_table
 modifier|*
-name|ld_2
+name|d_sdt
 decl_stmt|;
 block|}
-name|ld_un
+name|d_un
 union|;
 name|struct
 name|ld_entry
 modifier|*
-name|ld_entry
+name|d_entry
 decl_stmt|;
 block|}
 struct|;
@@ -420,7 +598,7 @@ name|LD_GOT
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_got)
+value|((x)->d_un.d_sdt->sdt_got)
 end_define
 
 begin_define
@@ -430,7 +608,7 @@ name|LD_PLT
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_plt)
+value|((x)->d_un.d_sdt->sdt_plt)
 end_define
 
 begin_define
@@ -440,7 +618,7 @@ name|LD_REL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_rel)
+value|((x)->d_un.d_sdt->sdt_rel)
 end_define
 
 begin_define
@@ -450,7 +628,7 @@ name|LD_SYMBOL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_symbols)
+value|((x)->d_un.d_sdt->sdt_nzlist)
 end_define
 
 begin_define
@@ -460,7 +638,7 @@ name|LD_HASH
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_hash)
+value|((x)->d_un.d_sdt->sdt_hash)
 end_define
 
 begin_define
@@ -470,7 +648,7 @@ name|LD_STRINGS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_strings)
+value|((x)->d_un.d_sdt->sdt_strings)
 end_define
 
 begin_define
@@ -480,7 +658,7 @@ name|LD_NEED
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_need)
+value|((x)->d_un.d_sdt->sdt_sods)
 end_define
 
 begin_define
@@ -490,7 +668,7 @@ name|LD_BUCKETS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_buckets)
+value|((x)->d_un.d_sdt->sdt_buckets)
 end_define
 
 begin_define
@@ -500,7 +678,7 @@ name|LD_GOTSZ
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_plt - (x)->ld_un.ld_2->ld_got)
+value|((x)->d_un.d_sdt->sdt_plt - (x)->d_un.d_sdt->sdt_got)
 end_define
 
 begin_define
@@ -510,7 +688,7 @@ name|LD_RELSZ
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_hash - (x)->ld_un.ld_2->ld_rel)
+value|((x)->d_un.d_sdt->sdt_hash - (x)->d_un.d_sdt->sdt_rel)
 end_define
 
 begin_define
@@ -520,7 +698,7 @@ name|LD_HASHSZ
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_symbols - (x)->ld_un.ld_2->ld_hash)
+value|((x)->d_un.d_sdt->sdt_nzlist - (x)->d_un.d_sdt->sdt_hash)
 end_define
 
 begin_define
@@ -530,7 +708,7 @@ name|LD_STABSZ
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_strings - (x)->ld_un.ld_2->ld_symbols)
+value|((x)->d_un.d_sdt->sdt_strings - (x)->d_un.d_sdt->sdt_nzlist)
 end_define
 
 begin_define
@@ -540,7 +718,7 @@ name|LD_PLTSZ
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_plt_sz)
+value|((x)->d_un.d_sdt->sdt_plt_sz)
 end_define
 
 begin_define
@@ -550,7 +728,7 @@ name|LD_STRSZ
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_str_sz)
+value|((x)->d_un.d_sdt->sdt_str_sz)
 end_define
 
 begin_define
@@ -560,11 +738,11 @@ name|LD_TEXTSZ
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->ld_un.ld_2->ld_text_sz)
+value|((x)->d_un.d_sdt->sdt_text_sz)
 end_define
 
 begin_comment
-comment|/*  * Interface to ld.so (see link(5))  */
+comment|/*  * Interface to ld.so  */
 end_comment
 
 begin_struct
@@ -584,7 +762,7 @@ name|crt_ldfd
 decl_stmt|;
 comment|/* ld.so file descriptor */
 name|struct
-name|link_dynamic
+name|_dynamic
 modifier|*
 name|crt_dp
 decl_stmt|;
@@ -599,6 +777,11 @@ name|caddr_t
 name|crt_bp
 decl_stmt|;
 comment|/* Breakpoint if run from debugger */
+name|char
+modifier|*
+name|crt_prog
+decl_stmt|;
+comment|/* Program name */
 block|}
 struct|;
 end_struct
@@ -619,6 +802,20 @@ define|#
 directive|define
 name|CRT_VERSION_BSD
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRT_VERSION_BSD_2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRT_VERSION_BSD_3
+value|3
 end_define
 
 begin_comment
