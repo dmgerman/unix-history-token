@@ -5212,18 +5212,7 @@ decl_stmt|;
 name|u_int
 name|hlen
 init|=
-name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
-decl_stmt|;
-name|struct
-name|ether_header
-modifier|*
-name|eh
-init|=
-name|NULL
+literal|0
 decl_stmt|;
 name|u_short
 name|ip_off
@@ -5297,12 +5286,6 @@ name|BRIDGED
 condition|)
 block|{
 comment|/* this is a bridged packet */
-name|eh
-operator|=
-name|args
-operator|->
-name|eh
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5322,6 +5305,8 @@ argument_list|)
 operator|&&
 name|ntohs
 argument_list|(
+name|args
+operator|->
 name|eh
 operator|->
 name|ether_type
@@ -5337,6 +5322,11 @@ name|ip_hl
 operator|<<
 literal|2
 expr_stmt|;
+else|else
+return|return
+literal|0
+return|;
+comment|/* XXX ipfw1 always accepts non-ip pkts */
 block|}
 else|else
 name|hlen
