@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	6.9	85/02/12	*/
+comment|/*	tcp_input.c	6.10	85/05/27	*/
 end_comment
 
 begin_include
@@ -2425,20 +2425,7 @@ name|t_state
 operator|=
 name|TCPS_FIN_WAIT_2
 expr_stmt|;
-comment|/* 				 * This is contrary to the specification, 				 * but if we haven't gotten our FIN in  				 * 5 minutes, it's not forthcoming. 				 */
-name|tp
-operator|->
-name|t_timer
-index|[
-name|TCPT_2MSL
-index|]
-operator|=
-literal|5
-operator|*
-literal|60
-operator|*
-name|PR_SLOWHZ
-expr_stmt|;
+comment|/* 				 * This is contrary to the specification, 				 * but if we haven't gotten our FIN in  				 * 5 minutes, it's not forthcoming. 				tp->t_timer[TCPT_2MSL] = 5 * 60 * PR_SLOWHZ; 				 * MUST WORRY ABOUT ONE-WAY CONNECTIONS. 				 */
 block|}
 break|break;
 comment|/* 		 * In CLOSING STATE in addition to the processing for 		 * the ESTABLISHED state if the ACK acknowledges our FIN 		 * then enter the TIME-WAIT state, otherwise ignore 		 * the segment. 		 */
@@ -2597,23 +2584,6 @@ operator|=
 name|ti
 operator|->
 name|ti_ack
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|snd_wnd
-operator|!=
-literal|0
-condition|)
-name|tp
-operator|->
-name|t_timer
-index|[
-name|TCPT_PERSIST
-index|]
-operator|=
-literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Process segments with URG. 	 */
