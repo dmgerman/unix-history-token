@@ -272,6 +272,38 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/*  * init_inbound :  *  * Reset variables to initial state.  */
+end_comment
+
+begin_function
+name|void
+name|init_inbound
+parameter_list|()
+block|{
+name|ourPHead
+operator|=
+name|ourPTail
+operator|=
+name|ourBuffer
+expr_stmt|;
+name|HadAid
+operator|=
+literal|0
+expr_stmt|;
+name|shifted
+operator|=
+name|alted
+operator|=
+literal|0
+expr_stmt|;
+name|InsertMode
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Tab() - sets cursor to the start of the next unprotected field */
 end_comment
 

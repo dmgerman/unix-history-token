@@ -221,6 +221,32 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/*  * init_keyboard()  *  * Initialize the keyboard variables.  */
+end_comment
+
+begin_function
+name|void
+name|init_keyboard
+parameter_list|()
+block|{
+name|ourPHead
+operator|=
+name|ourPTail
+operator|=
+name|ourBuffer
+expr_stmt|;
+name|InControl
+operator|=
+literal|0
+expr_stmt|;
+name|WaitingForSynch
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize the keyboard mapping file.  */
 end_comment
 
@@ -555,25 +581,6 @@ name|ourBuffer
 expr_stmt|;
 block|}
 end_function
-
-begin_macro
-name|terminit
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|FlushChar
-argument_list|()
-expr_stmt|;
-name|InControl
-operator|=
-name|WaitingForSynch
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_block
 
 begin_function
 name|int

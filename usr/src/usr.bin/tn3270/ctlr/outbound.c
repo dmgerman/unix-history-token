@@ -294,17 +294,36 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * ctlrinit()  *  *	Initialize all data from the 'data' portion to their startup values.  */
+comment|/*  * init_ctlr()  *  *	Initialize all data from the 'data' portion to their startup values.  */
 end_comment
 
 begin_function
 name|void
-name|ctlrinit
+name|init_ctlr
 parameter_list|()
 block|{
 name|LastWasTerminated
 operator|=
 literal|1
+expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PURE3274
+argument_list|)
+name|OutputClock
+operator|=
+name|TransparentClock
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !defined(PURE3274) */
+name|init_inbound
+argument_list|()
 expr_stmt|;
 block|}
 end_function
