@@ -742,11 +742,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|tsleep
 argument_list|(
 operator|(
@@ -774,11 +769,6 @@ name|lockwaits
 operator|++
 expr_stmt|;
 comment|/* waited one more time */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 block|}
 break|break;
 comment|/* out of the inner level loop */
