@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Peter Wemm<peter@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the author  *    Peter Wemm.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * $Id: libutil.h,v 1.20 1998/10/09 07:32:38 jkh Exp $  */
+comment|/*  * Copyright (c) 1995 Peter Wemm<peter@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the author  *    Peter Wemm.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * $Id: libutil.h,v 1.21 1998/12/16 17:52:15 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -68,6 +68,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|utmp
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|in_addr
 struct_decl|;
 end_struct_decl
 
@@ -384,6 +390,29 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|realhostname
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|host
+operator|,
+name|size_t
+name|hsize
+operator|,
+specifier|const
+expr|struct
+name|in_addr
+operator|*
+name|ip
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|__END_DECLS
 end_macro
@@ -449,6 +478,38 @@ define|#
 directive|define
 name|UU_LOCK_OWNER_ERR
 value|(-7)
+end_define
+
+begin_comment
+comment|/* return values from realhostname() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HOSTNAME_FOUND
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTNAME_INCORRECTNAME
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTNAME_INVALIDADDR
+value|(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTNAME_INVALIDNAME
+value|(3)
 end_define
 
 begin_endif
