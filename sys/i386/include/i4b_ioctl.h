@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  *	$Id: i4b_ioctl.h,v 1.58 1998/12/22 19:48:24 hm Exp $   *  *      last edit-date: [Tue Dec 22 20:33:46 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  *	$Id: i4b_ioctl.h,v 1.69 1999/03/01 09:04:15 hm Exp $   *  *      last edit-date: [Mon Mar  1 10:01:15 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|REL
-value|70
+value|71
 end_define
 
 begin_comment
@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|STEP
-value|00
+value|0
 end_define
 
 begin_comment
@@ -404,6 +404,17 @@ begin_comment
 comment|/* ITK ix1 micro 		*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_AVMA1PCI
+value|19
+end_define
+
+begin_comment
+comment|/* AVM FRITZ!CARD PCI		*/
+end_comment
+
 begin_comment
 comment|/*  * in case you add support for more cards, please update:  *  *	isdnd:		support.c, name_of_controller()  *	diehl/diehlctl:	main.c, listall()  *  * and adjust CARD_TYPEP_MAX below.  */
 end_comment
@@ -412,7 +423,7 @@ begin_define
 define|#
 directive|define
 name|CARD_TYPEP_MAX
-value|18
+value|19
 end_define
 
 begin_comment
@@ -569,6 +580,17 @@ begin_comment
 comment|/* sync Kernel PPP interface driver     */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BDRV_IBC
+value|4
+end_define
+
+begin_comment
+comment|/* BSD/OS point to point driver		*/
+end_comment
+
 begin_comment
 comment|/*---------------------------------------------------------------------------*  * B channel protocol  *---------------------------------------------------------------------------*/
 end_comment
@@ -636,6 +658,54 @@ end_define
 begin_comment
 comment|/* highest valid cdid, wraparound to 1	*/
 end_comment
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	The shorthold algorithm to use  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|msg_shorthold_algorithm
+block|{
+name|msg_alg__fix_unit_size
+block|,
+comment|/* timeout algorithm for fix unit charging */
+name|msg_alg__var_unit_size
+comment|/* timeout algorithm for variable unit charging */
+block|}
+name|msg_shorthold_algorithm_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	The shorthold data struct  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|msg_shorthold_algorithm_t
+name|shorthold_algorithm
+decl_stmt|;
+comment|/* shorthold algorithm to use */
+name|int
+name|unitlen_time
+decl_stmt|;
+comment|/* length of a charging unit		*/
+name|int
+name|idle_time
+decl_stmt|;
+comment|/* time without activity on b ch	*/
+name|int
+name|earlyhup_time
+decl_stmt|;
+comment|/* safety area at end of unit		*/
+block|}
+name|msg_shorthold_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/****************************************************************************  	outgoing call: 	--------------  		userland		kernel 		--------		------  		CDID_REQ -----------------><------------------ cdid 	 		CONNECT_REQ --------------><------------------ PROCEEDING_IND (if connect req ok)<------------------ CONNECT_ACTIVE_IND (if connection ok)  		or<------------------ DISCONNECT_IND (if connection failed) 	             		  	incoming call: 	--------------  		userland		kernel 		--------		------<------------------ CONNECT_IND  		CONNECT_RESP -------------><------------------ CONNECT_ACTIVE_IND (if accepted)    	active disconnect: 	------------------  		userland		kernel 		--------		------  		DISCONNECT_REQ ------------><------------------ DISCONNECT_IND 	              	passive disconnect: 	-------------------  		userland		kernel 		--------		------<------------------ DISCONNECT_IND 	              ****************************************************************************/
@@ -1290,18 +1360,10 @@ name|int
 name|driver_unit
 decl_stmt|;
 comment|/*      unit number for above driver */
-name|int
-name|unitlen_time
+name|msg_shorthold_t
+name|shorthold_data
 decl_stmt|;
-comment|/* length of a charging unit	     */
-name|int
-name|idle_time
-decl_stmt|;
-comment|/* time without activity on b ch     */
-name|int
-name|earlyhup_time
-decl_stmt|;
-comment|/* safety area at end of unit	     */
+comment|/* the shorthold data		     */
 name|int
 name|unitlen_method
 decl_stmt|;
@@ -1541,18 +1603,9 @@ name|int
 name|cdid
 decl_stmt|;
 comment|/* call descriptor id			*/
-name|int
-name|unitlen_time
+name|msg_shorthold_t
+name|shorthold_data
 decl_stmt|;
-comment|/* length of a charging unit		*/
-name|int
-name|idle_time
-decl_stmt|;
-comment|/* time without activity on b ch	*/
-name|int
-name|earlyhup_time
-decl_stmt|;
-comment|/* safety area at end of unit		*/
 block|}
 name|msg_timeout_upd_t
 typedef|;
