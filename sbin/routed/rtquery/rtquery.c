@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: rtquery.c,v 1.10 1999/05/02 13:14:16 markm Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -181,7 +187,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 2.17 $"
+empty|#ident "$Revision: 1.10 $"
 end_empty
 
 begin_ifndef
@@ -1349,14 +1355,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1406,7 +1409,7 @@ operator|*
 literal|1024
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"setsockopt SO_RCVBUF"
 argument_list|)
@@ -1611,14 +1614,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"bind"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"bind"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2160,14 +2160,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"recvfrom"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"recvfrom"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2289,14 +2286,11 @@ operator|==
 name|EINTR
 condition|)
 continue|continue;
-name|perror
-argument_list|(
-literal|"select"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"select"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2342,14 +2336,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"gettimeofday(now)"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"gettimeofday(now)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2419,15 +2410,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"gettimeofday(sent)"
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
 block|}
 name|memset
 argument_list|(
@@ -2559,15 +2549,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
 block|}
 return|return
 literal|0
