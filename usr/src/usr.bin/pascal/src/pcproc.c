@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.21 %G%"
+literal|"@(#)pcproc.c 1.22 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,6 +274,9 @@ decl_stmt|;
 name|struct
 name|tmps
 name|soffset
+decl_stmt|;
+name|bool
+name|soffset_flag
 decl_stmt|;
 define|#
 directive|define
@@ -1004,6 +1007,10 @@ literal|2
 index|]
 control|)
 block|{
+name|soffset_flag
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* 			 * fmtspec indicates the type (CONstant or VARiable) 			 *	and number (none, WIDTH, and/or PRECision) 			 *	of the fields in the printf format for this 			 *	output variable. 			 * stkcnt is the number of longs pushed on the stack 			 * fmt is the format output indicator (D, E, F, O, X, S) 			 * fmtstart = 0 for leading blank; = 1 for no blank 			 */
 name|fmtspec
 operator|=
@@ -2735,6 +2742,10 @@ operator|==
 name|TSTR
 condition|)
 block|{
+name|soffset_flag
+operator|=
+name|TRUE
+expr_stmt|;
 name|soffset
 operator|=
 name|sizes
@@ -3048,12 +3059,6 @@ operator|->
 name|extra_flags
 argument_list|,
 name|P2INT
-argument_list|)
-expr_stmt|;
-name|tmpfree
-argument_list|(
-operator|&
-name|soffset
 argument_list|)
 expr_stmt|;
 name|putleaf
@@ -3797,12 +3802,6 @@ argument_list|,
 name|P2INT
 argument_list|)
 expr_stmt|;
-name|tmpfree
-argument_list|(
-operator|&
-name|soffset
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3929,6 +3928,22 @@ name|filename
 argument_list|,
 name|line
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|soffset_flag
+condition|)
+block|{
+name|tmpfree
+argument_list|(
+operator|&
+name|soffset
+argument_list|)
+expr_stmt|;
+name|soffset_flag
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
 block|}
