@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: portmap.c,v 1.6 1997/10/09 07:17:15 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -2542,6 +2548,13 @@ name|void
 name|reap
 parameter_list|()
 block|{
+name|int
+name|save_errno
+decl_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 while|while
 condition|(
 name|wait3
@@ -2565,6 +2578,10 @@ operator|>
 literal|0
 condition|)
 empty_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 block|}
 end_function
 
