@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_snpac.c	7.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_snpac.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1385,6 +1385,12 @@ init|=
 name|ifp
 operator|->
 name|if_index
+decl_stmt|,
+name|if_type
+init|=
+name|ifp
+operator|->
+name|if_type
 decl_stmt|;
 name|IFDEBUG
 argument_list|(
@@ -1508,6 +1514,12 @@ name|snpalen
 argument_list|,
 name|index
 argument_list|)
+expr_stmt|;
+name|gte_dl
+operator|.
+name|sdl_type
+operator|=
+name|if_type
 expr_stmt|;
 if|if
 condition|(
@@ -1785,6 +1797,12 @@ operator|->
 name|sdl_len
 operator|=
 name|old_sdl_len
+expr_stmt|;
+name|sdl
+operator|->
+name|sdl_type
+operator|=
+name|if_type
 expr_stmt|;
 name|new_entry
 operator|=
@@ -2315,6 +2333,16 @@ name|sdl
 operator|->
 name|sdl_index
 argument_list|)
+expr_stmt|;
+name|gte_dl
+operator|.
+name|sdl_type
+operator|=
+name|sc
+operator|->
+name|rt_ifp
+operator|->
+name|if_type
 expr_stmt|;
 if|if
 condition|(
