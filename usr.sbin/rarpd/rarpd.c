@@ -50,7 +50,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [ -fv ] [ hostname ]  *		rarpd [ -fv ] interface [ hostname ]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
+comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [ -fsv ] [ hostname ]  *		rarpd [ -fsv ] interface [ hostname ]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
 end_comment
 
 begin_include
@@ -833,6 +833,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|sflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ignore /tftpboot */
+end_comment
+
 begin_function
 name|void
 name|main
@@ -941,7 +953,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"afv"
+literal|"afsv"
 argument_list|)
 operator|)
 operator|!=
@@ -965,6 +977,13 @@ literal|'f'
 case|:
 operator|++
 name|fflag
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+operator|++
+name|sflag
 expr_stmt|;
 break|break;
 case|case
@@ -3656,6 +3675,8 @@ return|return;
 block|}
 if|if
 condition|(
+name|sflag
+operator|||
 name|rarp_bootable
 argument_list|(
 name|target_ipaddr
