@@ -264,16 +264,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|srandom
-argument_list|(
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|^
-name|getpid
+name|srandomdev
 argument_list|()
-argument_list|)
 expr_stmt|;
 comment|/* Increase our data size to the max */
 if|if
