@@ -1636,6 +1636,9 @@ name|new_pass_
 decl_stmt|,
 modifier|*
 name|encrypted
+decl_stmt|,
+modifier|*
+name|usrdup
 decl_stmt|;
 name|pam_std_option
 argument_list|(
@@ -2128,15 +2131,38 @@ ifdef|#
 directive|ifdef
 name|YP
 comment|/* If NIS is set in the passwd database, use it */
+if|if
+condition|(
+operator|(
+name|usrdup
+operator|=
+name|strdup
+argument_list|(
+name|user
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|PAM_RETURN
+argument_list|(
+name|PAM_BUF_ERR
+argument_list|)
+expr_stmt|;
 name|res
 operator|=
 name|use_yp
 argument_list|(
-name|user
+name|usrdup
 argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|usrdup
 argument_list|)
 expr_stmt|;
 if|if
@@ -2273,7 +2299,7 @@ block|}
 else|else
 name|retval
 operator|=
-name|PAM_ABORT
+name|PAM_SERVICE_ERR
 expr_stmt|;
 comment|/* Bad juju */
 else|#
@@ -2439,7 +2465,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|PAM_ABORT
+name|PAM_SERVICE_ERR
 operator|)
 return|;
 comment|/* Really bad things */
@@ -2571,7 +2597,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -2683,7 +2711,9 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|PAM_ABORT
+operator|(
+name|PAM_SERVICE_ERR
+operator|)
 return|;
 comment|/* Major disaster */
 comment|/* 	 * It is presumed that by the time we get here, use_yp() 	 * has been called and that we have verified that the user 	 * actually exists. This being the case, the yp_password 	 * stucture has already been filled in for us. 	 */
@@ -3063,7 +3093,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|PAM_ABORT
+operator|(
+name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 block|}
@@ -3104,7 +3136,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|PAM_ABORT
+operator|(
+name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 block|}
@@ -3177,10 +3211,12 @@ operator|*
 name|status
 condition|)
 return|return
-name|PAM_ABORT
-return|;
-return|return
 operator|(
+name|PAM_SERVICE_ERR
+operator|)
+return|;
+if|if
+condition|(
 name|err
 operator|.
 name|re_status
@@ -3191,11 +3227,16 @@ name|NULL
 operator|||
 operator|*
 name|status
+condition|)
+return|return
+operator|(
+name|PAM_SERVICE_ERR
 operator|)
-condition|?
-name|PAM_ABORT
-else|:
+return|;
+return|return
+operator|(
 name|PAM_SUCCESS
+operator|)
 return|;
 block|}
 end_function
