@@ -277,7 +277,7 @@ argument_list|(
 name|uid
 argument_list|)
 expr_stmt|;
-name|name
+name|progname
 operator|=
 operator|*
 name|argv

@@ -871,7 +871,7 @@ argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
-name|name
+name|progname
 operator|=
 name|argv
 index|[
@@ -2022,7 +2022,7 @@ name|printf
 argument_list|(
 literal|"%s: %s: not linked, copying instead\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|arg
 argument_list|)
@@ -2321,7 +2321,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open %s\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|arg
 argument_list|)
@@ -2361,7 +2361,7 @@ name|printf
 argument_list|(
 literal|"%s: %s: not removed\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|arg
 argument_list|)
@@ -2457,7 +2457,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot touch %s\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|tfname
 argument_list|)
@@ -2499,7 +2499,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot rename %s\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|cfname
 argument_list|)
@@ -2721,7 +2721,7 @@ name|printf
 argument_list|(
 literal|"%s: %s: temp file write error\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|n
 argument_list|)
@@ -2765,7 +2765,7 @@ name|printf
 argument_list|(
 literal|"%s: %s: copy file is too large\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|n
 argument_list|)
@@ -2796,7 +2796,7 @@ name|printf
 argument_list|(
 literal|"%s: %s: empty input file\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|f
 condition|?
@@ -3179,7 +3179,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot create %s\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|n
 argument_list|)
@@ -3209,7 +3209,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot chown %s\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|n
 argument_list|)
@@ -3491,7 +3491,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot access %s\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|file
 argument_list|)
@@ -3520,7 +3520,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot stat %s\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|file
 argument_list|)
@@ -3549,7 +3549,7 @@ name|printf
 argument_list|(
 literal|"%s: %s is a directory\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|file
 argument_list|)
@@ -3574,7 +3574,7 @@ name|printf
 argument_list|(
 literal|"%s: %s is an empty file\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|file
 argument_list|)
@@ -3606,7 +3606,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open %s\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|file
 argument_list|)
@@ -3650,7 +3650,7 @@ name|printf
 argument_list|(
 literal|"%s: %s is an executable program"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|file
 argument_list|)
@@ -3781,7 +3781,7 @@ name|printf
 argument_list|(
 literal|"%s: %s: is not removable by you\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|file
 argument_list|)
@@ -4170,7 +4170,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot create %s\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|buf
 argument_list|)
@@ -4195,7 +4195,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot lock %s\n"
 argument_list|,
-name|name
+name|progname
 argument_list|,
 name|buf
 argument_list|)

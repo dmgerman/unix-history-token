@@ -483,12 +483,12 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|name
+name|progname
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* program name */
+comment|/* program name (lpr, lpq, etc) */
 end_comment
 
 begin_comment

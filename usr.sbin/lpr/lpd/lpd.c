@@ -498,7 +498,7 @@ name|host
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|name
+name|progname
 operator|=
 literal|"lpd"
 expr_stmt|;
