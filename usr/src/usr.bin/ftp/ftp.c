@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.1 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,6 +226,11 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|addrbuf
+decl_stmt|;
 name|int
 name|inet_addr
 parameter_list|()
@@ -280,6 +285,13 @@ expr_stmt|;
 name|hostname
 operator|=
 name|namebuf
+expr_stmt|;
+name|def
+operator|.
+name|h_addr_list
+operator|=
+operator|&
+name|addrbuf
 expr_stmt|;
 name|def
 operator|.
