@@ -67,8 +67,8 @@ operator|<
 literal|0
 operator|||
 name|sig
-operator|>=
-name|NSIG
+operator|>
+name|_SIG_MAXSIG
 condition|)
 comment|/* Invalid signal: */
 name|ret

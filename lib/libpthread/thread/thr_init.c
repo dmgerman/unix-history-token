@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
@@ -1332,9 +1338,8 @@ literal|"initial thread"
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the thread for signals: */
-name|sigemptyset
+name|SIGEMPTYSET
 argument_list|(
-operator|&
 name|thread
 operator|->
 name|sigmask
@@ -1348,18 +1353,6 @@ operator|.
 name|tm_udata
 operator|=
 name|thread
-expr_stmt|;
-name|thread
-operator|->
-name|tmbx
-operator|.
-name|tm_context
-operator|.
-name|uc_sigmask
-operator|=
-name|thread
-operator|->
-name|sigmask
 expr_stmt|;
 name|thread
 operator|->
@@ -1546,10 +1539,6 @@ name|struct
 name|clockinfo
 name|clockinfo
 decl_stmt|;
-name|struct
-name|sigaction
-name|act
-decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
@@ -1558,9 +1547,6 @@ name|mib
 index|[
 literal|2
 index|]
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 comment|/* 	 * Avoid reinitializing some things if they don't need to be, 	 * e.g. after a fork(). 	 */
 if|if
@@ -1717,99 +1703,6 @@ name|_thr_guard_default
 operator|=
 name|_thr_page_size
 expr_stmt|;
-comment|/* Enter a loop to get the existing signal status: */
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|NSIG
-condition|;
-name|i
-operator|++
-control|)
-block|{
-comment|/* Check for signals which cannot be trapped: */
-if|if
-condition|(
-name|i
-operator|==
-name|SIGKILL
-operator|||
-name|i
-operator|==
-name|SIGSTOP
-condition|)
-block|{ 			}
-comment|/* Get the signal handler details: */
-elseif|else
-if|if
-condition|(
-name|__sys_sigaction
-argument_list|(
-name|i
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|_thread_sigact
-index|[
-name|i
-operator|-
-literal|1
-index|]
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 				 * Abort this process if signal 				 * initialisation fails: 				 */
-name|PANIC
-argument_list|(
-literal|"Cannot read signal handler info"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/* 		 * Install the signal handler for SIGINFO.  It isn't 		 * really needed, but it is nice to have for debugging 		 * purposes. 		 */
-if|if
-condition|(
-name|__sys_sigaction
-argument_list|(
-name|SIGINFO
-argument_list|,
-operator|&
-name|act
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 			 * Abort this process if signal initialisation fails: 			 */
-name|PANIC
-argument_list|(
-literal|"Cannot initialize signal handler"
-argument_list|)
-expr_stmt|;
-block|}
-name|_thread_sigact
-index|[
-name|SIGINFO
-operator|-
-literal|1
-index|]
-operator|.
-name|sa_flags
-operator|=
-name|SA_SIGINFO
-operator||
-name|SA_RESTART
-expr_stmt|;
 name|init_once
 operator|=
 literal|1
@@ -1857,7 +1750,6 @@ operator|&
 name|_thread_gc_list
 argument_list|)
 expr_stmt|;
-comment|/* Enter a loop to get the existing signal status: */
 comment|/* Initialize the SIG_DFL dummy handler count. */
 name|bzero
 argument_list|(
@@ -1958,20 +1850,9 @@ name|_thr_spinlock_init
 argument_list|()
 expr_stmt|;
 comment|/* Clear pending signals and get the process signal mask. */
-name|sigemptyset
+name|SIGEMPTYSET
 argument_list|(
-operator|&
 name|_thr_proc_sigpending
-argument_list|)
-expr_stmt|;
-name|__sys_sigprocmask
-argument_list|(
-name|SIG_SETMASK
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|_thr_proc_sigmask
 argument_list|)
 expr_stmt|;
 comment|/* 	 * _thread_list_lock and _kse_count are initialized 	 * by _kse_init() 	 */
