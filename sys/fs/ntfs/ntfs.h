@@ -923,7 +923,7 @@ decl_stmt|;
 name|mode_t
 name|ntm_mode
 decl_stmt|;
-name|u_long
+name|u_int
 name|ntm_flag
 decl_stmt|;
 name|cn_t
