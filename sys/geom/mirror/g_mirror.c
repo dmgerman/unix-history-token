@@ -5067,9 +5067,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|disk
-operator|->
-name|d_softc
+name|sc
 operator|->
 name|sc_bump_syncid
 operator|=
