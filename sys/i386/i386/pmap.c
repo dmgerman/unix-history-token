@@ -872,6 +872,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|PMAP2mutex
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|PMAP_INLINE
@@ -1031,6 +1039,18 @@ name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pmap_pte_release
+parameter_list|(
+name|pt_entry_t
+modifier|*
+name|pte
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1455,6 +1475,18 @@ argument_list|,
 name|PADDR2
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|PMAP2mutex
+argument_list|,
+literal|"PMAP2"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|virtual_avail
@@ -2799,7 +2831,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If the given pmap is not the current pmap, Giant must be held.  */
+comment|/*  * If the given pmap is not the current or kernel pmap, the returned pte must  * be released by passing it to pmap_pte_release().  */
 end_comment
 
 begin_function
@@ -2866,7 +2898,11 @@ name|va
 argument_list|)
 operator|)
 return|;
-name|GIANT_REQUIRED
+name|mtx_lock
+argument_list|(
+operator|&
+name|PMAP2mutex
+argument_list|)
 expr_stmt|;
 name|newpf
 operator|=
@@ -2935,6 +2971,47 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Releases a pte that was obtained from pmap_pte().  Be prepared for the pte  * being NULL.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|pmap_pte_release
+parameter_list|(
+name|pt_entry_t
+modifier|*
+name|pte
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|pt_entry_t
+operator|*
+operator|)
+operator|(
+operator|(
+name|vm_offset_t
+operator|)
+name|pte
+operator|&
+name|PAGE_MASK
+operator|)
+operator|==
+name|PADDR2
+condition|)
+name|mtx_unlock
+argument_list|(
+operator|&
+name|PMAP2mutex
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3286,6 +3363,11 @@ name|va
 operator|&
 name|PAGE_MASK
 operator|)
+expr_stmt|;
+name|pmap_pte_release
+argument_list|(
+name|pte
+argument_list|)
 expr_stmt|;
 block|}
 name|PMAP_UNLOCK
@@ -8653,6 +8735,11 @@ argument_list|,
 name|wired
 argument_list|)
 expr_stmt|;
+name|pmap_pte_release
+argument_list|(
+name|pte
+argument_list|)
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
@@ -11081,6 +11168,11 @@ operator|*
 name|ptep
 else|:
 literal|0
+expr_stmt|;
+name|pmap_pte_release
+argument_list|(
+name|ptep
+argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
