@@ -306,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|MAXHOSTNAMELEN
-value|64
+value|256
 end_define
 
 begin_endif
@@ -13730,7 +13730,7 @@ decl_stmt|;
 name|char
 name|m1save
 index|[
-literal|64
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 if|if
@@ -13738,11 +13738,16 @@ condition|(
 name|skiprc
 condition|)
 return|return;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|m1save
 argument_list|,
 name|m1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|m1save
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m1
