@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.87 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.88 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -383,13 +383,6 @@ goto|goto
 name|update
 goto|;
 block|}
-name|vinvalbuf
-argument_list|(
-name|vp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -410,6 +403,28 @@ name|EBUSY
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|error
+operator|=
+name|vinvalbuf
+argument_list|(
+name|vp
+argument_list|,
+literal|1
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|vp
@@ -1161,6 +1176,12 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 operator|)
 operator|==
@@ -1341,6 +1362,12 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_NOWAIT
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|omp
@@ -8832,10 +8859,6 @@ name|vp
 argument_list|,
 name|fp
 operator|->
-name|f_flag
-argument_list|,
-name|fp
-operator|->
 name|f_cred
 argument_list|,
 name|MNT_WAIT
@@ -10031,8 +10054,6 @@ name|off
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|eofflag
 decl_stmt|;
 if|if
 condition|(
@@ -10180,9 +10201,6 @@ argument_list|,
 name|fp
 operator|->
 name|f_cred
-argument_list|,
-operator|&
-name|eofflag
 argument_list|)
 expr_stmt|;
 name|fp
