@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_proto.c	6.4	84/07/31	*/
+comment|/*	in_proto.c	6.5	84/08/21	*/
 end_comment
 
 begin_include
@@ -184,41 +184,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Network disk protocol: runs on top of IP  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"nd.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NND
-operator|>
-literal|0
-end_if
-
 begin_decl_stmt
-name|int
-name|nd_input
-argument_list|()
-decl_stmt|,
-name|nd_slowtimo
-argument_list|()
-decl_stmt|,
-name|nd_init
-argument_list|()
+specifier|extern
+name|struct
+name|domain
+name|inetdomain
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -230,7 +202,8 @@ block|{
 block|{
 literal|0
 block|,
-name|PF_INET
+operator|&
+name|inetdomain
 block|,
 literal|0
 block|,
@@ -258,7 +231,8 @@ block|,
 block|{
 name|SOCK_DGRAM
 block|,
-name|PF_INET
+operator|&
+name|inetdomain
 block|,
 name|IPPROTO_UDP
 block|,
@@ -288,7 +262,8 @@ block|,
 block|{
 name|SOCK_STREAM
 block|,
-name|PF_INET
+operator|&
+name|inetdomain
 block|,
 name|IPPROTO_TCP
 block|,
@@ -318,7 +293,8 @@ block|,
 block|{
 name|SOCK_RAW
 block|,
-name|PF_INET
+operator|&
+name|inetdomain
 block|,
 name|IPPROTO_RAW
 block|,
@@ -348,7 +324,8 @@ block|,
 block|{
 name|SOCK_RAW
 block|,
-name|PF_INET
+operator|&
+name|inetdomain
 block|,
 name|IPPROTO_EGP
 block|,
@@ -378,7 +355,8 @@ block|,
 block|{
 name|SOCK_RAW
 block|,
-name|PF_INET
+operator|&
+name|inetdomain
 block|,
 name|IPPROTO_ICMP
 block|,
@@ -418,6 +396,12 @@ name|AF_INET
 block|,
 literal|"internet"
 block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
 name|inetsw
 block|,
 operator|&
@@ -449,6 +433,14 @@ literal|0
 end_if
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|domain
+name|impdomain
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|protosw
 name|impsw
@@ -458,7 +450,8 @@ block|{
 block|{
 name|SOCK_RAW
 block|,
-name|PF_IMPLINK
+operator|&
+name|impdomain
 block|,
 literal|0
 block|,
@@ -497,6 +490,12 @@ block|{
 name|AF_IMPLINK
 block|,
 literal|"imp"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|,
 name|impsw
 block|,
