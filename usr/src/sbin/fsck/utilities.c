@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.1 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1799,6 +1799,79 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|12
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * When preening, allow a single quit to signal  * a special exit after filesystem checks complete  * so that reboot sequence may be interrupted.  */
+end_comment
+
+begin_macro
+name|catchquit
+argument_list|()
+end_macro
+
+begin_block
+block|{
+extern|extern returntosingle;
+name|printf
+argument_list|(
+literal|"returning to single-user after filesystem check\n"
+argument_list|)
+expr_stmt|;
+name|returntosingle
+operator|=
+literal|1
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Ignore a single quit signal; wait and flush just in case.  * Used by child processes in preen.  */
+end_comment
+
+begin_macro
+name|voidquit
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 block|}

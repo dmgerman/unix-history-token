@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,12 +110,24 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|catch
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|catchquit
+argument_list|()
+decl_stmt|,
+name|voidquit
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|returntosingle
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|int
@@ -315,6 +327,20 @@ argument_list|(
 name|SIGINT
 argument_list|,
 name|catch
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|preen
+condition|)
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|catchquit
 argument_list|)
 expr_stmt|;
 if|if
@@ -521,6 +547,16 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|voidquit
+argument_list|)
+expr_stmt|;
 name|name
 operator|=
 name|blockcheck
@@ -604,6 +640,15 @@ name|void
 operator|)
 name|endfsent
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|returntosingle
+condition|)
+name|exit
+argument_list|(
+literal|2
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
