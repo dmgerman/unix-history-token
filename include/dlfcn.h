@@ -157,10 +157,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX dllockinit() interface is likely to change. */
-end_comment
-
 begin_decl_stmt
 name|void
 name|dllockinit
