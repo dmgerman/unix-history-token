@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_portal.c	8.2 (Berkeley) %G%"
+literal|"@(#)mount_portal.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,7 +253,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|c
+name|argc
 parameter_list|,
 name|argv
 parameter_list|)
