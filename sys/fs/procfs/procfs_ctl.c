@@ -427,6 +427,35 @@ block|{
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Authorization check: rely on normal debugging protection, except 	 * allow processes to disengage debugging on a process onto which 	 * they have previously attached, but no longer have permission to 	 * debug. 	 */
+if|if
+condition|(
+name|op
+operator|!=
+name|PROCFS_CTL_DETACH
+operator|&&
+operator|(
+operator|(
+name|error
+operator|=
+name|p_can
+argument_list|(
+name|curp
+argument_list|,
+name|p
+argument_list|,
+name|P_CAN_DEBUG
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 	 * Attach - attaches the target process for debugging 	 * by the calling process. 	 */
 if|if
 condition|(
@@ -463,24 +492,6 @@ condition|)
 return|return
 operator|(
 name|EINVAL
-operator|)
-return|;
-comment|/* can't trace init when securelevel> 0 */
-if|if
-condition|(
-name|securelevel
-operator|>
-literal|0
-operator|&&
-name|p
-operator|->
-name|p_pid
-operator|==
-literal|1
-condition|)
-return|return
-operator|(
-name|EPERM
 operator|)
 return|;
 comment|/* 		 * Go ahead and set the trace flag. 		 * Save the old parent (it's reset in 		 *   _DETACH, and also in kern_exit.c:wait4() 		 * Reparent the process so that the tracing 		 *   proc gets to see all the action. 		 * Stop the target. 		 */
