@@ -56,7 +56,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  See atomic(9) for details.  * Note that efficient hardware support exists only for the 32 and 64  * bit variants; the 8 and 16 bit versions are not provided and should  * not be used in MI code.  *  * This implementation takes advantage of the fact that the sparc64  * cas instruction is both a load and a store.  The loop is often coded  * as follows:  *  *	do {  *		expect = *p;  *		new = expect + 1;  *	} while (cas(p, expect, new) != expect);  *  * which performs an unnnecessary load on each iteration that the cas  * operation fails.  Modified as follows:  *  *	expect = *p;  *	for (;;) {  *		new = expect + 1;  *		result = cas(p, expect, new);  *		if (result == expect)  *			break;  *		expect = result;  *	}  *  * the return value of cas is used to avoid the extra reload.  At the  * time of writing, with gcc version 2.95.3, the branch for the if  * statement is predicted incorrectly as not taken, rather than taken.  * It is expected that the branch prediction hints available in gcc 3.0,  * __builtin_expect, will allow better code to be generated.  *  * The memory barriers provided by the acq and rel variants are intended  * to be sufficient for use of relaxed memory ordering.  Due to the  * suggested assembly syntax of the membar operands containing a #  * character, they cannot be used in macros.  The cmask and mmask bits  * are hard coded in machine/cpufunc.h and used here through macros.  * Hopefully sun will choose not to change the bit numbers.  */
+comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  See atomic(9) for details.  * Note that efficient hardware support exists only for the 32 and 64  * bit variants; the 8 and 16 bit versions are not provided and should  * not be used in MI code.  *  * This implementation takes advantage of the fact that the sparc64  * cas instruction is both a load and a store.  The loop is often coded  * as follows:  *  *	do {  *		expect = *p;  *		new = expect + 1;  *	} while (cas(p, expect, new) != expect);  *  * which performs an unnnecessary load on each iteration that the cas  * operation fails.  Modified as follows:  *  *	expect = *p;  *	for (;;) {  *		new = expect + 1;  *		result = cas(p, expect, new);  *		if (result == expect)  *			break;  *		expect = result;  *	}  *  * the return value of cas is used to avoid the extra reload.  *  * The memory barriers provided by the acq and rel variants are intended  * to be sufficient for use of relaxed memory ordering.  Due to the  * suggested assembly syntax of the membar operands containing a #  * character, they cannot be used in macros.  The cmask and mmask bits  * are hard coded in machine/cpufunc.h and used here through macros.  * Hopefully sun will choose not to change the bit numbers.  */
 end_comment
 
 begin_define
@@ -159,7 +159,7 @@ name|v
 parameter_list|,
 name|sz
 parameter_list|)
-value|do {					\ 	itype(sz) e, r, s;						\ 	for (e = *(volatile itype(sz) *)p;; e = r) {			\ 		s = e op v;						\ 		r = atomic_cas_ ## sz(p, e, s);				\ 		if (r == e)						\ 			break;						\ 	}								\ } while (0)
+value|({					\ 	itype(sz) e, r, s;						\ 	for (e = *(volatile itype(sz) *)p;; e = r) {			\ 		s = e op v;						\ 		r = atomic_cas_ ## sz(p, e, s);				\ 		if (r == e)						\ 			break;						\ 	}								\ 	e;								\ })
 end_define
 
 begin_define
@@ -175,7 +175,7 @@ name|v
 parameter_list|,
 name|sz
 parameter_list|)
-value|do {				\ 	atomic_op(p, op, v, sz);					\ 	membar(LoadLoad | LoadStore);					\ } while (0)
+value|({					\ 	itype(sz) t;							\ 	t = atomic_op(p, op, v, sz);					\ 	membar(LoadLoad | LoadStore);					\ 	t;								\ })
 end_define
 
 begin_define
@@ -191,7 +191,7 @@ name|v
 parameter_list|,
 name|sz
 parameter_list|)
-value|do {				\ 	membar(LoadStore | StoreStore);					\ 	atomic_op(p, op, v, sz);					\ } while (0)
+value|({					\ 	itype(sz) t;							\ 	membar(LoadStore | StoreStore);					\ 	t = atomic_op(p, op, v, sz);					\ 	t;								\ })
 end_define
 
 begin_define
@@ -275,7 +275,7 @@ parameter_list|,
 name|sz
 parameter_list|)
 define|\ 									\
-value|static __inline void							\ atomic_add_ ## name(volatile ptype p, atype v)				\ {									\ 	atomic_op(p, +, v, sz);						\ }									\ static __inline void							\ atomic_add_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p, +, v, sz);					\ }									\ static __inline void							\ atomic_add_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p, +, v, sz);					\ }									\ 									\ static __inline void							\ atomic_clear_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op(p,&, ~v, sz);					\ }									\ static __inline void							\ atomic_clear_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p,&, ~v, sz);					\ }									\ static __inline void							\ atomic_clear_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p,&, ~v, sz);					\ }									\ 									\ static __inline int							\ atomic_cmpset_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas(p, e, s, sz)) == e);			\ }									\ static __inline int							\ atomic_cmpset_acq_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_acq(p, e, s, sz)) == e);		\ }									\ static __inline int							\ atomic_cmpset_rel_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_rel(p, e, s, sz)) == e);		\ }									\ 									\ static __inline vtype							\ atomic_load_ ## name(volatile ptype p)					\ {									\ 	return ((vtype)atomic_cas(p, 0, 0, sz));			\ }									\ static __inline vtype							\ atomic_load_acq_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_cas_acq(p, 0, 0, sz));			\ }									\ 									\ static __inline vtype							\ atomic_readandclear_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_load_clear(p, sz));			\ }									\ 									\ static __inline void							\ atomic_set_ ## name(volatile ptype p, atype v)				\ {									\ 	atomic_op(p, |, v, sz);						\ }									\ static __inline void							\ atomic_set_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p, |, v, sz);					\ }									\ static __inline void							\ atomic_set_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p, |, v, sz);					\ }									\ 									\ static __inline void							\ atomic_subtract_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op(p, -, v, sz);						\ }									\ static __inline void							\ atomic_subtract_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p, -, v, sz);					\ }									\ static __inline void							\ atomic_subtract_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p, -, v, sz);					\ }									\ 									\ static __inline void							\ atomic_store_ ## name(volatile ptype p, vtype v)			\ {									\ 	atomic_store(p, v, sz);						\ }									\ static __inline void							\ atomic_store_rel_ ## name(volatile ptype p, vtype v)			\ {									\ 	atomic_store_rel(p, v, sz);					\ }
+value|static __inline vtype							\ atomic_add_ ## name(volatile ptype p, atype v)				\ {									\ 	return ((vtype)atomic_op(p, +, v, sz));				\ }									\ static __inline vtype							\ atomic_add_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq(p, +, v, sz));			\ }									\ static __inline vtype							\ atomic_add_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel(p, +, v, sz));			\ }									\ 									\ static __inline vtype							\ atomic_clear_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op(p,&, ~v, sz));			\ }									\ static __inline vtype							\ atomic_clear_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq(p,&, ~v, sz));			\ }									\ static __inline vtype							\ atomic_clear_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel(p,&, ~v, sz));			\ }									\ 									\ static __inline int							\ atomic_cmpset_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas(p, e, s, sz)) == e);			\ }									\ static __inline int							\ atomic_cmpset_acq_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_acq(p, e, s, sz)) == e);		\ }									\ static __inline int							\ atomic_cmpset_rel_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_rel(p, e, s, sz)) == e);		\ }									\ 									\ static __inline vtype							\ atomic_load_ ## name(volatile ptype p)					\ {									\ 	return ((vtype)atomic_cas(p, 0, 0, sz));			\ }									\ static __inline vtype							\ atomic_load_acq_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_cas_acq(p, 0, 0, sz));			\ }									\ 									\ static __inline vtype							\ atomic_readandclear_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_load_clear(p, sz));			\ }									\ 									\ static __inline vtype							\ atomic_set_ ## name(volatile ptype p, atype v)				\ {									\ 	return ((vtype)atomic_op(p, |, v, sz));				\ }									\ static __inline vtype							\ atomic_set_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq(p, |, v, sz));			\ }									\ static __inline vtype							\ atomic_set_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel(p, |, v, sz));			\ }									\ 									\ static __inline vtype							\ atomic_subtract_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op(p, -, v, sz));				\ }									\ static __inline vtype							\ atomic_subtract_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq(p, -, v, sz));			\ }									\ static __inline vtype							\ atomic_subtract_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel(p, -, v, sz));			\ }									\ 									\ static __inline void							\ atomic_store_ ## name(volatile ptype p, vtype v)			\ {									\ 	atomic_store(p, v, sz);						\ }									\ static __inline void							\ atomic_store_rel_ ## name(volatile ptype p, vtype v)			\ {									\ 	atomic_store_rel(p, v, sz);					\ }
 end_define
 
 begin_expr_stmt
@@ -367,25 +367,7 @@ end_expr_stmt
 begin_undef
 undef|#
 directive|undef
-name|__ASI_ATOMIC
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|ATOMIC_GEN
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|atomic_cas_32
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|atomic_cas_64
 end_undef
 
 begin_undef
