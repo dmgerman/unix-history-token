@@ -28,6 +28,56 @@ name|ACPIIO_SETSLPSTATE
 value|_IOW('P', 3, int)
 end_define
 
+begin_struct
+struct|struct
+name|acpi_battdesc
+block|{
+name|int
+name|type
+decl_stmt|;
+comment|/* battery type: e.g. CMBAT */
+name|int
+name|phys_unit
+decl_stmt|;
+comment|/* physical unit of devclass */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ACPI_BATT_TYPE_CMBAT
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BATT_TYPE_SMBAT
+value|0x0001
+end_define
+
+begin_struct
+struct|struct
+name|acpi_battinfo
+block|{
+name|int
+name|cap
+decl_stmt|;
+comment|/* percent */
+name|int
+name|min
+decl_stmt|;
+comment|/* remianing time */
+name|int
+name|state
+decl_stmt|;
+comment|/* battery state */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -131,44 +181,119 @@ block|}
 struct|;
 end_struct
 
-begin_union
-union|union
-name|acpi_cmbat_ioctl_arg
-block|{
-name|int
-name|unit
-decl_stmt|;
-name|struct
-name|acpi_bif
-name|bif
-decl_stmt|;
-name|struct
-name|acpi_bst
-name|bst
-decl_stmt|;
-block|}
-union|;
-end_union
-
 begin_define
 define|#
 directive|define
-name|ACPIIO_CMBAT_GET_UNITS
-value|_IOR('B', 1, int)
+name|ACPI_BATT_STAT_DISCHARG
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
+name|ACPI_BATT_STAT_CHARGING
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BATT_STAT_CRITICAL
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BATT_STAT_NOT_PRESENT
+value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BATT_STAT_MAX
+value|0x0007
+end_define
+
+begin_union
+union|union
+name|acpi_battery_ioctl_arg
+block|{
+name|int
+name|unit
+decl_stmt|;
+comment|/* argument: logical unit (-1 = overall) */
+name|struct
+name|acpi_battdesc
+name|battdesc
+decl_stmt|;
+name|struct
+name|acpi_battinfo
+name|battinfo
+decl_stmt|;
+name|struct
+name|acpi_bif
+name|bif
+decl_stmt|;
+comment|/* for acpi_cmbat */
+name|struct
+name|acpi_bst
+name|bst
+decl_stmt|;
+comment|/* for acpi_cmbat */
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/* Common battery ioctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_BATT_GET_UNITS
+value|_IOR('B', 0x01, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_BATT_GET_TYPE
+value|_IOR('B', 0x02, union acpi_battery_ioctl_arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_BATT_GET_BATTINFO
+value|_IOWR('B', 0x03, union acpi_battery_ioctl_arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_BATT_GET_BATTDESC
+value|_IOWR('B', 0x04, union acpi_battery_ioctl_arg)
+end_define
+
+begin_comment
+comment|/* Cotrol Method battery ioctl */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPIIO_CMBAT_GET_BIF
-value|_IOWR('B', 2, union acpi_cmbat_ioctl_arg)
+value|_IOWR('B', 0x10, union acpi_battery_ioctl_arg)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPIIO_CMBAT_GET_BST
-value|_IOWR('B', 3, union acpi_cmbat_ioctl_arg)
+value|_IOWR('B', 0x11, union acpi_battery_ioctl_arg)
 end_define
 
 begin_define
