@@ -2376,7 +2376,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"microuptime() went backwards (%ld.%06ld -> %ld,%06ld)\n"
+literal|"microuptime() went backwards (%ld.%06ld -> %ld.%06ld)\n"
 argument_list|,
 name|switchtime
 operator|.
