@@ -417,6 +417,11 @@ name|honorlevel
 init|=
 literal|1
 decl_stmt|;
+name|int
+name|just_estimate
+init|=
+literal|0
+decl_stmt|;
 name|ino_t
 name|maxino
 decl_stmt|;
@@ -516,13 +521,13 @@ name|KERBEROS
 define|#
 directive|define
 name|optstring
-value|"0123456789aB:b:cd:f:h:kns:T:uWwD:"
+value|"0123456789aB:b:cd:f:h:kns:ST:uWwD:"
 else|#
 directive|else
 define|#
 directive|define
 name|optstring
-value|"0123456789aB:b:cd:f:h:ns:T:uWwD:"
+value|"0123456789aB:b:cd:f:h:ns:ST:uWwD:"
 endif|#
 directive|endif
 while|while
@@ -740,6 +745,15 @@ operator|*
 literal|12
 operator|*
 literal|10
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* exit after estimating # of tapes */
+name|just_estimate
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2083,6 +2097,16 @@ name|fetapes
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*          * If the user only wants an estimate of the number of          * tapes, exit now.          */
+if|if
+condition|(
+name|just_estimate
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate tape buffer. 	 */
 if|if
 condition|(
@@ -2498,7 +2522,7 @@ name|KERBEROS
 literal|"k"
 endif|#
 directive|endif
-literal|"nu] [-B records] [-b blocksize] [-D dumpdates]\n"
+literal|"nSu] [-B records] [-b blocksize] [-D dumpdates]\n"
 literal|"            [-d density] [-f file ] [-h level] [-s feet] "
 literal|"[-T date] filesystem\n"
 literal|"       dump [-W | -w]\n"
