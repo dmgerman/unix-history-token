@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ops.c 1.2 %G%"
+literal|"@(#)ops.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vaxops.h"
+file|"ops.h"
 end_include
 
 begin_ifndef
