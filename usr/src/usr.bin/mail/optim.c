@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)optim.c	5.3 (Berkeley) %G%"
+literal|"@(#)optim.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -294,6 +294,10 @@ name|c
 decl_stmt|,
 name|host
 decl_stmt|;
+name|cp
+operator|=
+name|str
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|path
@@ -2862,6 +2866,10 @@ decl_stmt|,
 modifier|*
 name|last
 decl_stmt|;
+name|cp
+operator|=
+name|str
+expr_stmt|;
 name|last
 operator|=
 name|NOSTR
