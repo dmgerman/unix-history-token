@@ -831,6 +831,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+end_ifdef
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -851,6 +857,11 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ntp_adjtime() - NTP daemon application interface  *  * See the timex.h header file for synopsis and API description.  */
