@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.9 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2352,18 +2352,18 @@ block|{
 operator|(
 name|void
 operator|)
-name|setuid
+name|setgid
 argument_list|(
-name|getuid
+name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|setgid
+name|setuid
 argument_list|(
-name|getgid
+name|getuid
 argument_list|()
 argument_list|)
 expr_stmt|;
