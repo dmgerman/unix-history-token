@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.22 (Berkeley) %G%"
+literal|"@(#)find.c	4.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5717,6 +5717,9 @@ argument_list|(
 name|fp
 argument_list|)
 init|;
+name|c
+operator|!=
+name|EOF
 condition|;
 control|)
 block|{
@@ -5800,13 +5803,6 @@ name|c
 index|]
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|c
-operator|==
-name|EOF
-condition|)
-break|break;
 operator|*
 name|p
 operator|--
