@@ -2811,6 +2811,10 @@ name|ubsa_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|sc
+operator|=
+name|addr
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -2819,10 +2823,6 @@ operator|,
 name|sc
 operator|)
 argument_list|)
-expr_stmt|;
-name|sc
-operator|=
-name|addr
 expr_stmt|;
 name|ubsa_baudrate
 argument_list|(
