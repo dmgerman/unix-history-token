@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.18 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  * connection-oriented services are invoked each time a  * connection is made, by creating a process.  This process  * is passed the connection as file descriptor 0 and is  * expected to do a getpeername to find out the source host  * and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.   *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must being with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS (5)  *  * Comment lines are indicated by a `#' in column 1.  */
+comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  * connection-oriented services are invoked each time a  * connection is made, by creating a process.  This process  * is passed the connection as file descriptor 0 and is  * expected to do a getpeername to find out the source host  * and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.   *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must being with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS (20)  *  * Comment lines are indicated by a `#' in column 1.  */
 end_comment
 
 begin_include
@@ -327,7 +327,7 @@ comment|/* server program */
 define|#
 directive|define
 name|MAXARGV
-value|5
+value|20
 name|char
 modifier|*
 name|se_argv
