@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pcb.h 1.14 91/03/25$  *  *	@(#)pcb.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pcb.h 1.14 91/03/25$  *  *	@(#)pcb.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -122,6 +122,24 @@ end_define
 begin_comment
 comment|/* copyback caching of stack */
 end_comment
+
+begin_comment
+comment|/*  * The pcb is augmented with machine-dependent additional data for  * core dumps. For the hp300, there is nothing to add.  */
+end_comment
+
+begin_struct
+struct|struct
+name|md_coredump
+block|{
+name|long
+name|md_pad
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 
