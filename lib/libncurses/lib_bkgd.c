@@ -73,6 +73,26 @@ condition|;
 name|x
 operator|++
 control|)
+comment|/* Don't attempt to replace existing attrs */
+if|if
+condition|(
+operator|(
+name|win
+operator|->
+name|_line
+index|[
+name|y
+index|]
+index|[
+name|x
+index|]
+operator|&
+name|A_ATTRIBUTES
+operator|)
+operator|==
+name|A_NORMAL
+condition|)
+block|{
 if|if
 condition|(
 name|win
@@ -84,8 +104,6 @@ index|]
 index|[
 name|x
 index|]
-operator|&
-name|A_CHARTEXT
 operator|==
 literal|' '
 condition|)
@@ -98,7 +116,7 @@ index|]
 index|[
 name|x
 index|]
-operator||=
+operator|=
 name|ch
 expr_stmt|;
 else|else
@@ -118,6 +136,7 @@ operator|&
 name|A_ATTRIBUTES
 operator|)
 expr_stmt|;
+block|}
 name|touchwin
 argument_list|(
 name|win

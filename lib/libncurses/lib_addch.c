@@ -227,24 +227,26 @@ name|win
 operator|->
 name|_attrs
 expr_stmt|;
+comment|/* Don't attempt to replace any given attributes */
 if|if
 condition|(
-name|win
-operator|->
-name|_line
-index|[
-name|y
-index|]
-index|[
-name|x
-index|]
+operator|(
+name|ch
 operator|&
-name|A_CHARTEXT
+name|A_ATTRIBUTES
+operator|)
+operator|==
+name|A_NORMAL
+condition|)
+block|{
+if|if
+condition|(
+name|ch
 operator|==
 literal|' '
 condition|)
 name|ch
-operator||=
+operator|=
 name|win
 operator|->
 name|_bkgd
@@ -260,6 +262,7 @@ operator|&
 name|A_ATTRIBUTES
 operator|)
 expr_stmt|;
+block|}
 name|T
 argument_list|(
 operator|(
