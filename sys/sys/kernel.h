@@ -810,8 +810,7 @@ name|path
 parameter_list|,
 name|var
 parameter_list|)
-define|\
-value|do {							\ 	getenv_int((path), (var));			\ } while (0)
+value|getenv_int((path), (var))
 end_define
 
 begin_function_decl
@@ -894,8 +893,7 @@ name|path
 parameter_list|,
 name|var
 parameter_list|)
-define|\
-value|do {							\ 	getenv_quad((path), (var));			\ } while (0)
+value|getenv_quad((path), (var))
 end_define
 
 begin_function_decl
@@ -990,7 +988,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|do {							\ 	char *tmp;					\ 	tmp = getenv((path));				\ 	if (tmp != NULL) {				\ 		strncpy((var), tmp, (size));		\ 		(var)[(size) - 1] = 0;			\ 	}						\ } while (0)
+value|getenv_string((path), (var), (size))
 end_define
 
 begin_struct
