@@ -3490,7 +3490,7 @@ argument_list|,
 name|LK_NOPAUSE
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|bo
 operator|->
@@ -3499,13 +3499,15 @@ operator|.
 name|bv_cnt
 operator|==
 literal|0
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"cleanbufcnt not 0"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|bo
 operator|->
@@ -3515,12 +3517,14 @@ name|bv_root
 operator|==
 name|NULL
 argument_list|,
+name|vp
+argument_list|,
 operator|(
 literal|"cleanblkroot not NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|bo
 operator|->
@@ -3530,12 +3534,14 @@ name|bv_cnt
 operator|==
 literal|0
 argument_list|,
+name|vp
+argument_list|,
 operator|(
 literal|"dirtybufcnt not 0"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|bo
 operator|->
@@ -3544,6 +3550,8 @@ operator|.
 name|bv_root
 operator|==
 name|NULL
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"dirtyblkroot not NULL"
@@ -3897,13 +3905,15 @@ name|v_mount
 operator|=
 name|NULL
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|mp
 operator|->
 name|mnt_nvnodelistsize
 operator|>
 literal|0
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"bad mount point vnode list size"
@@ -3961,11 +3971,13 @@ name|v_mount
 operator|=
 name|mp
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|mp
 operator|!=
 name|NULL
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"Don't call insmntque(foo, NULL)"
@@ -5132,7 +5144,7 @@ goto|goto
 name|restart
 goto|;
 block|}
-name|KASSERT
+name|VNASSERT
 argument_list|(
 operator|(
 name|bp
@@ -5141,6 +5153,8 @@ name|b_flags
 operator|&
 name|B_DELWRI
 operator|)
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"buf(%p) on dirty queue without DELWRI"
@@ -6163,13 +6177,17 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|bp
 operator|->
 name|b_vp
 operator|==
 name|NULL
+argument_list|,
+name|bp
+operator|->
+name|b_vp
 argument_list|,
 operator|(
 literal|"bgetvp: not free"
@@ -6191,7 +6209,7 @@ operator|->
 name|b_flags
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 operator|(
 name|bp
@@ -6206,6 +6224,8 @@ operator|)
 operator|)
 operator|==
 literal|0
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"bgetvp: bp already attached! %p"
@@ -8075,7 +8095,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|/* Skip this v_writecount check if we're going to panic below. */
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|vp
 operator|->
@@ -8090,6 +8110,8 @@ operator|->
 name|v_usecount
 operator|<
 literal|1
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vrele: missed vn_close"
@@ -8175,7 +8197,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 operator|(
 name|vp
@@ -8186,6 +8208,8 @@ name|VI_DOINGINACT
 operator|)
 operator|==
 literal|0
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vrele: recursed on VI_DOINGINACT"
@@ -8215,13 +8239,15 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|vp
 operator|->
 name|v_iflag
 operator|&
 name|VI_DOINGINACT
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vrele: lost VI_DOINGINACT"
@@ -8335,7 +8361,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|/* Skip this v_writecount check if we're going to panic below. */
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|vp
 operator|->
@@ -8350,6 +8376,8 @@ operator|->
 name|v_usecount
 operator|<
 literal|1
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vput: missed vn_close"
@@ -8418,7 +8446,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We must call VOP_INACTIVE with the node locked, so 		 * we just need to release the vnode mutex. Mark as 		 * as VI_DOINGINACT to avoid recursion. 		 */
-name|KASSERT
+name|VNASSERT
 argument_list|(
 operator|(
 name|vp
@@ -8429,6 +8457,8 @@ name|VI_DOINGINACT
 operator|)
 operator|==
 literal|0
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vput: recursed on VI_DOINGINACT"
@@ -8458,13 +8488,15 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|vp
 operator|->
 name|v_iflag
 operator|&
 name|VI_DOINGINACT
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vput: lost VI_DOINGINACT"
@@ -9045,7 +9077,7 @@ operator|&
 name|FORCECLOSE
 condition|)
 block|{
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|vp
 operator|->
@@ -9058,6 +9090,8 @@ operator|->
 name|v_type
 operator|!=
 name|VBLK
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"device VNODE %p is FORCECLOSED"
@@ -9147,13 +9181,15 @@ literal|"vflush: not busy"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|rootvp
 operator|->
 name|v_usecount
 operator|>=
 name|rootrefs
+argument_list|,
+name|rootvp
 argument_list|,
 operator|(
 literal|"vflush: usecount %d< rootrefs %d"
@@ -9657,7 +9693,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|KASSERT
+name|VNASSERT
 argument_list|(
 operator|(
 name|vp
@@ -9668,6 +9704,8 @@ name|VI_DOINGINACT
 operator|)
 operator|==
 literal|0
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vclean: recursed on VI_DOINGINACT"
@@ -9717,13 +9755,15 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|vp
 operator|->
 name|v_iflag
 operator|&
 name|VI_DOINGINACT
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vclean: lost VI_DOINGINACT"
@@ -9759,13 +9799,15 @@ argument_list|(
 literal|"vclean: cannot reclaim"
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|vp
 operator|->
 name|v_object
 operator|==
 name|NULL
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vop_reclaim left v_object vp=%p, tag=%s"
@@ -12023,7 +12065,7 @@ operator|&
 name|vnode_free_list_mtx
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 operator|(
 name|vp
@@ -12034,6 +12076,8 @@ name|VI_FREE
 operator|)
 operator|==
 literal|0
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vnode already free"
@@ -12120,7 +12164,7 @@ argument_list|,
 literal|"vbusy"
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|VNASSERT
 argument_list|(
 operator|(
 name|vp
@@ -12131,6 +12175,8 @@ name|VI_FREE
 operator|)
 operator|!=
 literal|0
+argument_list|,
+name|vp
 argument_list|,
 operator|(
 literal|"vnode not free"
