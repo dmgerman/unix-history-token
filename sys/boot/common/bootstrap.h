@@ -1345,5 +1345,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|time_t
+name|time
+parameter_list|(
+name|time_t
+modifier|*
+name|tloc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
