@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.129 1999/05/05 11:34:00 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.130 1999/05/12 04:52:40 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2293,7 +2293,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"@kde"
+literal|"kde"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2327,7 +2327,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"@gnomecore"
+literal|"gnomecore"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2344,7 +2344,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"@afterstep"
+literal|"afterstep"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2379,7 +2379,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"@afterstep"
+literal|"afterstep"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2413,7 +2413,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"@windowmaker"
+literal|"windowmaker"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2454,7 +2454,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"@enlightenment"
+literal|"enlightenment"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3121,7 +3121,7 @@ if|if
 condition|(
 name|package_add
 argument_list|(
-literal|"@gated"
+literal|"gated"
 argument_list|)
 operator|!=
 name|DITEM_SUCCESS
@@ -3224,6 +3224,19 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Shared between us and index_initialize() */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|PkgNode
+name|Top
+decl_stmt|,
+name|Plist
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|configPackages
@@ -3233,162 +3246,32 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-specifier|static
-name|PkgNode
-name|top
-decl_stmt|,
-name|plist
-decl_stmt|;
-specifier|static
-name|Boolean
-name|index_initted
-init|=
-name|FALSE
+name|int
+name|i
 decl_stmt|;
 name|PkgNodePtr
 name|tmp
 decl_stmt|;
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|mediaVerify
-argument_list|()
-condition|)
-return|return
-name|DITEM_FAILURE
-return|;
-if|if
-condition|(
-operator|!
-name|mediaDevice
-operator|->
-name|init
-argument_list|(
-name|mediaDevice
-argument_list|)
-condition|)
-return|return
-name|DITEM_FAILURE
-return|;
-if|if
-condition|(
-operator|!
-name|index_initted
-condition|)
-block|{
-name|msgNotify
-argument_list|(
-literal|"Attempting to fetch packages/INDEX file from selected media."
-argument_list|)
-expr_stmt|;
-name|fp
+comment|/* Did we get an INDEX? */
+name|i
 operator|=
-name|mediaDevice
-operator|->
-name|get
+name|index_initialize
 argument_list|(
-name|mediaDevice
-argument_list|,
 literal|"packages/INDEX"
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|fp
-condition|)
-block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
-name|msgConfirm
+name|DITEM_STATUS
 argument_list|(
-literal|"Unable to get packages/INDEX file from selected media.\n"
-literal|"This may be because the packages collection is not available at\n"
-literal|"on the distribution media you've chosen (most likely an FTP site\n"
-literal|"without the packages collection mirrored).  Please verify media\n"
-literal|"(or path to media) and try again.  If your local site does not\n"
-literal|"carry the packages collection, then we recommend either a CD\n"
-literal|"distribution or the master distribution on ftp.freebsd.org."
+name|i
 argument_list|)
-expr_stmt|;
-name|mediaDevice
-operator|->
-name|shutdown
-argument_list|(
-name|mediaDevice
-argument_list|)
-expr_stmt|;
-return|return
+operator|==
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
-return|;
-block|}
-name|msgNotify
-argument_list|(
-literal|"Located INDEX, now reading package data from it..."
-argument_list|)
-expr_stmt|;
-name|index_init
-argument_list|(
-operator|&
-name|top
-argument_list|,
-operator|&
-name|plist
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|index_read
-argument_list|(
-name|fp
-argument_list|,
-operator|&
-name|top
-argument_list|)
 condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"I/O or format error on packages/INDEX file.\n"
-literal|"Please verify media (or path to media) and try again."
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 return|return
-name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
+name|i
 return|;
-block|}
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-name|index_sort
-argument_list|(
-operator|&
-name|top
-argument_list|)
-expr_stmt|;
-name|index_initted
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
 while|while
 condition|(
 literal|1
@@ -3411,13 +3294,13 @@ expr_stmt|;
 name|index_menu
 argument_list|(
 operator|&
-name|top
+name|Top
 argument_list|,
 operator|&
-name|top
+name|Top
 argument_list|,
 operator|&
-name|plist
+name|Plist
 argument_list|,
 operator|&
 name|pos
@@ -3428,11 +3311,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|plist
+name|Plist
 operator|.
 name|kids
 operator|&&
-name|plist
+name|Plist
 operator|.
 name|kids
 operator|->
@@ -3451,10 +3334,10 @@ operator|=
 name|index_menu
 argument_list|(
 operator|&
-name|plist
+name|Plist
 argument_list|,
 operator|&
-name|plist
+name|Plist
 argument_list|,
 name|NULL
 argument_list|,
@@ -3488,10 +3371,10 @@ argument_list|(
 name|mediaDevice
 argument_list|,
 operator|&
-name|top
+name|Top
 argument_list|,
 operator|&
-name|plist
+name|Plist
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3512,7 +3395,7 @@ block|}
 block|}
 name|tmp
 operator|=
-name|plist
+name|Plist
 operator|.
 name|kids
 expr_stmt|;
@@ -3543,7 +3426,7 @@ argument_list|(
 name|NULL
 argument_list|,
 operator|&
-name|plist
+name|Plist
 argument_list|)
 expr_stmt|;
 return|return
@@ -3574,7 +3457,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"@pcnfsd"
+literal|"pcnfsd"
 argument_list|)
 expr_stmt|;
 if|if
