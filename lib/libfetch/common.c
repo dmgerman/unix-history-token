@@ -450,6 +450,13 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
