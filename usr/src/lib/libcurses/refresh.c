@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.19 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,22 +39,6 @@ include|#
 directive|include
 file|<string.h>
 end_include
-
-begin_comment
-comment|/* Equality of characters in terms of standout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__SOEQ
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|!(((a)& __STANDOUT) ^ ((b)& __STANDOUT))
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -2337,7 +2321,7 @@ name|n
 decl_stmt|,
 name|target
 decl_stmt|,
-name|remember
+name|cur_period
 decl_stmt|,
 name|bot
 decl_stmt|,
@@ -2354,7 +2338,7 @@ decl_stmt|;
 name|u_int
 name|blank_hash
 decl_stmt|;
-comment|/* 	 * Search for the largest block of text not changed.          */
+comment|/* 	 * Search for the largest block of text not changed. 	 * Invariants of the loop: 	 * - Startw is the index of the beginning of the examined block in win.          * - Starts is the index of the beginning of the examined block in  	 *    curscr. 	 * - Curs is the index of one past the end of the exmined block in win. 	 * - Curw is the index of one past the end of the exmined block in  	 *   curscr. 	 * - bsize is the current size of the examined block.          */
 for|for
 control|(
 name|bsize
@@ -2769,9 +2753,9 @@ name|startw
 argument_list|,
 name|curs
 argument_list|,
-name|top
+name|curw
 argument_list|,
-name|bot
+name|top
 argument_list|)
 expr_stmt|;
 comment|/* So we don't have to call __hash() each time */
@@ -2823,7 +2807,7 @@ operator|*
 name|__LDATASIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Perform the rotation to maintain the consistency of curscr. 	 */
+comment|/* 	 * Perform the rotation to maintain the consistency of curscr. 	 * This is hairy! 	 * Invariants of the loop: 	 * - I is the index of the current line. 	 * - Target is the index of the target of line i. 	 * - Tmp1 points to current line (i). 	 * - Tmp2 and points to target line (target); 	 * - Cur_period is the index of the end of the current period.  	 *   (see below). 	 * 	 * There are 2 major issues here that make this rotation non-trivial: 	 * 1.  Scrolling in a scrolling region bounded by the top 	 *     and bottom regions determined (whose size is sc_region). 	 * 2.  As a result of the use of the mod function, there may be a  	 *     period introduced, i.e., 2 maps to 4, 4 to 6, n-2 to 0, and 	 *     0 to 2, which then causes all odd lines not to be rotated. 	 *     To remedy this, an index of the end ( = beginning) of the  	 *     current 'period' is kept, cur_period, and when it is reached,  	 *     the next period is started from cur_period + 1 which is  	 *     guaranteed not to have been reached since that would mean that 	 *     all records would have been reached. (think about it...). 	 *  	 * Lines in the rotation can have 3 attributes which are marked on the 	 * line so that curscr is consistent with the visual screen. 	 * 1.  Not dirty -- lines inside the scrolling region, top region or 	 *                  bottom region. 	 * 2.  Blank lines -- lines in the differential of scrolled block  	 *                    between win and curscr in the scrolling region. 	 * 	 * 3.  Dirty line -- all other lines are marked dirty. 	 */
 name|sc_region
 operator|=
 name|bot
@@ -2845,7 +2829,7 @@ index|[
 name|top
 index|]
 expr_stmt|;
-name|remember
+name|cur_period
 operator|=
 name|top
 expr_stmt|;
@@ -3061,18 +3045,6 @@ name|hash
 operator|=
 name|blank_hash
 expr_stmt|;
-block|}
-else|else
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|__TRACE
-argument_list|(
-literal|" -- blank line already: dirty"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|__touchline
 argument_list|(
 name|win
@@ -3090,6 +3062,35 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|__touchline
+argument_list|(
+name|win
+argument_list|,
+name|target
+argument_list|,
+literal|0
+argument_list|,
+name|win
+operator|->
+name|maxx
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|__TRACE
+argument_list|(
+literal|" -- blank line already: dirty"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -3135,7 +3136,7 @@ if|if
 condition|(
 name|target
 operator|==
-name|remember
+name|cur_period
 condition|)
 block|{
 name|i
@@ -3153,7 +3154,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|remember
+name|cur_period
 operator|=
 name|i
 expr_stmt|;
@@ -3246,6 +3247,10 @@ directive|endif
 block|}
 end_function
 
+begin_comment
+comment|/*  * Scrolln performs the scroll by n lines, where n is starts - startw.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -3259,9 +3264,9 @@ name|startw
 parameter_list|,
 name|curs
 parameter_list|,
-name|top
+name|curw
 parameter_list|,
-name|bot
+name|top
 parameter_list|)
 name|WINDOW
 modifier|*
@@ -3274,9 +3279,9 @@ name|startw
 decl_stmt|,
 name|curs
 decl_stmt|,
-name|top
+name|curw
 decl_stmt|,
-name|bot
+name|top
 decl_stmt|;
 block|{
 name|int
@@ -3366,53 +3371,14 @@ argument_list|,
 name|__cputchar
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Push back down the bottom region. 		 */
-if|if
-condition|(
-name|bot
-operator|<=
-name|win
-operator|->
-name|maxy
-operator|-
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|bot
-operator|==
-name|win
-operator|->
-name|maxy
-operator|-
-literal|1
-condition|)
+comment|/*  		 * Push down the bottom region. 		 */
 name|mvcur
 argument_list|(
 name|top
 argument_list|,
 literal|0
 argument_list|,
-name|bot
-operator|-
-name|n
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|else
-name|mvcur
-argument_list|(
-name|top
-argument_list|,
-literal|0
-argument_list|,
-name|bot
-operator|-
-name|n
-operator|+
-literal|1
+name|curw
 argument_list|,
 literal|0
 argument_list|)
@@ -3458,50 +3424,9 @@ argument_list|,
 name|__cputchar
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bot
-operator|==
-name|win
-operator|->
-name|maxy
-operator|-
-literal|1
-condition|)
 name|mvcur
 argument_list|(
-name|bot
-operator|-
-name|n
-argument_list|,
-literal|0
-argument_list|,
-name|oy
-argument_list|,
-name|ox
-argument_list|)
-expr_stmt|;
-else|else
-name|mvcur
-argument_list|(
-name|bot
-operator|-
-name|n
-operator|+
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-name|oy
-argument_list|,
-name|ox
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|mvcur
-argument_list|(
-name|top
+name|curw
 argument_list|,
 literal|0
 argument_list|,
@@ -3514,17 +3439,6 @@ block|}
 else|else
 block|{
 comment|/* Preserve the bottom lines */
-if|if
-condition|(
-name|bot
-operator|<
-name|win
-operator|->
-name|maxy
-operator|-
-literal|1
-condition|)
-block|{
 name|mvcur
 argument_list|(
 name|oy
@@ -3583,19 +3497,6 @@ argument_list|(
 name|curs
 argument_list|,
 literal|0
-argument_list|,
-name|starts
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|mvcur
-argument_list|(
-name|oy
-argument_list|,
-name|ox
 argument_list|,
 name|starts
 argument_list|,
