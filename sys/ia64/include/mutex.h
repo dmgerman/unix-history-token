@@ -75,6 +75,16 @@ parameter_list|()
 value|(save_intr()& IA64_PSR_I)
 end_define
 
+begin_define
+define|#
+directive|define
+name|mtx_intr_enable
+parameter_list|(
+name|mutex
+parameter_list|)
+value|(mutex)->mtx_saveintr |= IA64_PSR_I
+end_define
+
 begin_endif
 endif|#
 directive|endif
