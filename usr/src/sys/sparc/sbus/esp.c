@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)esp.c	8.3 (Berkeley) %G%  *  * from: $Header: esp.c,v 1.28 93/04/27 14:40:44 torek Exp $ (LBL)  *  * Loosely derived from Mary Baker's devSCSIC90.c from the Berkeley  * Sprite project, which is:  *  * Copyright 1988 Regents of the University of California  * Permission to use, copy, modify, and distribute this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies.  The University of California  * makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without  * express or implied warranty.  *  * from /sprite/src/kernel/dev/sun4c.md/RCS/devSCSIC90.c,v 1.4  * 90/12/19 12:37:58 mgbaker Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1988, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)esp.c	8.4 (Berkeley) %G%  *  * from: $Header: esp.c,v 1.28 93/04/27 14:40:44 torek Exp $ (LBL)  *  * Loosely derived from Mary Baker's devSCSIC90.c from the Berkeley  * Sprite project, which is:  *  * Copyright 1988 Regents of the University of California  * Permission to use, copy, modify, and distribute this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies.  The University of California  * makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without  * express or implied warranty.  *  * from /sprite/src/kernel/dev/sun4c.md/RCS/devSCSIC90.c,v 1.4  * 90/12/19 12:37:58 mgbaker Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_comment
@@ -86,7 +86,7 @@ file|<libkern/libkern.h>
 end_include
 
 begin_comment
-comment|/*  * This driver is largely a giant state machine:  *  *	Given some previous SCSI state (as set up or tracked by us  *	earlier) and the interrupt registers provided on the chips  *	(dmacsr, espstat, espstep, and espintr), derive an action.  *	In many cases this is just a matter of reading the target's  *	phase and following its orders, which sets a new state.  *  * This sequencing is done in espact(); the state is primed in espselect().  *  * Data transfer is always done via DMA.  Unfortunately, there are  * limits in the DMA and ESP chips on how much data can be moved  * in a single operation.  The ESP chip has a 16-bit counter, so  * it is limited to 65536 bytes.  More insidiously, while the DMA  * chip has a 32-bit address, this is composed of a 24-bit counter  * with an 8-bit latch, so it cannot cross a 16 MB boundary.  To  * handle these, we program a smaller count than our caller requests;  * when this shorter transfer is done, if the target is still up  * for data transfer, we simply keep going (updating the DMA address)  * as needed.  *  * Another state bit is used to recover from bus resets:  *  *	A single TEST UNIT READY is attempted on each target before any  *	real communication begins; this TEST UNIT READY is allowed to  *	fail in any way.  This is required for the Quantum ProDrive 100  *	MB disks, for instance, which respond to their first selection  *	with status phase, and for anything that insists on implementing  *	the broken SCSI-2 synch transfer initial message.  *  * This is done in espclear() (which calls espselect(); functions that  * call espselect() must check for clearing first).  *  * The state machines actually intermingle, as some SCSI sequences are  * only allowed during clearing.  */
+comment|/*  * This driver is largely a giant state machine:  *  *	Given some previous SCSI state (as set up or tracked by us  *	earlier) and the interrupt registers provided on the chips  *	(dmacsr, espstat, espstep, and espintr), derive an action.  *	In many cases this is just a matter of reading the target's  *	phase and following its orders, which sets a new state.  *  * This sequencing is done in espact(); the state is primed in espselect().  *  * Data transfer is always done via DMA.  Unfortunately, there are  * limits in the DMA and ESP chips on how much data can be moved  * in a single operation.  The ESP chip has a 16-bit counter, so  * it is limited to 65536 bytes.  More insidiously, while the DMA  * chip has a 32-bit address, this is composed of a 24-bit counter  * with an 8-bit latch, so it cannot cross a 16 MB boundary.  To  * handle these, we program a smaller count than our caller requests;  * when this shorter transfer is done, if the target is still up  * for data transfer, we simply keep going (updating the DMA address)  * as needed.  */
 end_comment
 
 begin_comment
@@ -247,10 +247,6 @@ name|sc_id
 decl_stmt|;
 comment|/* initiator ID (default = 7) */
 name|u_char
-name|sc_needclear
-decl_stmt|;
-comment|/* uncleared targets (1 bit each) */
-name|u_char
 name|sc_esptype
 decl_stmt|;
 comment|/* 100, 100A, 2xx (see below) */
@@ -281,10 +277,6 @@ name|char
 name|sc_probing
 decl_stmt|;
 comment|/* used during autoconf; see below */
-name|char
-name|sc_clearing
-decl_stmt|;
-comment|/* true => cmd is just to clear targ */
 name|char
 name|sc_iwant
 decl_stmt|;
@@ -602,13 +594,11 @@ name|espattach
 block|,
 name|DV_DULL
 block|,
-sizeof|sizeof
-argument_list|(
+expr|sizeof
+operator|(
 expr|struct
 name|esp_softc
-argument_list|)
-block|,
-literal|"intr"
+operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1829,12 +1819,6 @@ name|sc_probing
 operator|=
 name|PROBE_TESTING
 expr_stmt|;
-name|sc
-operator|->
-name|sc_clearing
-operator|=
-literal|1
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1865,12 +1849,6 @@ name|sc_probing
 operator|=
 literal|0
 expr_stmt|;
-name|sc
-operator|->
-name|sc_clearing
-operator|=
-literal|0
-expr_stmt|;
 name|SCSI_FOUNDTARGET
 argument_list|(
 operator|&
@@ -1886,12 +1864,6 @@ block|}
 name|sc
 operator|->
 name|sc_probing
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|sc_clearing
 operator|=
 literal|0
 expr_stmt|;
@@ -2276,37 +2248,6 @@ operator|->
 name|sc_state
 operator|=
 name|S_IDLE
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_iwant
-condition|)
-block|{
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|sc
-operator|->
-name|sc_iwant
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_iwant
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|sc
-operator|->
-name|sc_needclear
-operator|=
-literal|0xff
 expr_stmt|;
 block|}
 end_function
@@ -3148,7 +3089,7 @@ operator|==
 literal|3
 condition|)
 block|{
-comment|/* 			 * Device entered command phase and then exited it 			 * before we finished handing out the command. 			 * Let this happen iff we are trying to clear the 			 * target state. 			 */
+comment|/* 			 * Device entered command phase and then exited it 			 * before we finished handing out the command. 			 * Do not know how to handle this. 			 */
 name|esperror
 argument_list|(
 name|sc
@@ -3156,18 +3097,6 @@ argument_list|,
 literal|"DIAG: esp step 3"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sc
-operator|->
-name|sc_clearing
-condition|)
-return|return
-operator|(
-name|ACT_RESET
-operator|)
-return|;
 block|}
 else|else
 block|{
@@ -4105,71 +4034,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Clear out target state by doing a special TEST UNIT READY.  * Note that this calls espicmd (possibly recursively).  */
-end_comment
-
-begin_function
-name|void
-name|espclear
-parameter_list|(
-name|sc
-parameter_list|,
-name|targ
-parameter_list|)
-specifier|register
-name|struct
-name|esp_softc
-modifier|*
-name|sc
-decl_stmt|;
-specifier|register
-name|int
-name|targ
-decl_stmt|;
-block|{
-comment|/* turn off needclear immediately since this calls espicmd() again */
-name|sc
-operator|->
-name|sc_needclear
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-name|targ
-operator|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_clearing
-operator|=
-literal|1
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|scsi_test_unit_ready
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_hba
-argument_list|,
-name|targ
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_clearing
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * THIS SHOULD BE ADJUSTABLE  */
 end_comment
 
@@ -4351,31 +4215,6 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Clear the target if necessary. 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_needclear
-operator|&
-operator|(
-literal|1
-operator|<<
-name|targ
-operator|)
-operator|&&
-operator|!
-name|sc
-operator|->
-name|sc_probing
-condition|)
-name|espclear
-argument_list|(
-name|sc
-argument_list|,
-name|targ
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up DMA transfer control (leaving interrupts disabled). 	 */
@@ -5011,25 +4850,6 @@ operator|*
 operator|)
 name|self
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_needclear
-operator|&
-operator|(
-literal|1
-operator|<<
-name|targ
-operator|)
-condition|)
-name|espclear
-argument_list|(
-name|sc
-argument_list|,
-name|targ
-argument_list|)
-expr_stmt|;
 comment|/* Set up dma control for espact(). */
 name|sc
 operator|->
@@ -5573,6 +5393,32 @@ decl_stmt|;
 comment|/* if there is someone else waiting, give them a crack at it */
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_iwant
+condition|)
+block|{
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sc
+operator|->
+name|sc_iwant
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_iwant
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 operator|(
 name|sq
 operator|=
@@ -5585,6 +5431,17 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|sc
+operator|->
+name|sc_hba
+operator|.
+name|hba_head
+operator|=
+name|sq
+operator|->
+name|sq_forw
+expr_stmt|;
 call|(
 modifier|*
 name|sq
@@ -5602,6 +5459,7 @@ operator|->
 name|sc_cdbspace
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|sc
 operator|->
