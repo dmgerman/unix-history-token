@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.3 2000/10/03 18:31:47 wpaul Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.4 2001/04/21 16:13:28 mjacob Exp   */
 end_comment
 
 begin_comment
@@ -160,6 +160,17 @@ end_define
 
 begin_comment
 comment|/* XaQti Corp. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OUI_MARVELL
+value|0x005043
+end_define
+
+begin_comment
+comment|/* Marvell Semiconductor */
 end_comment
 
 begin_comment
@@ -608,6 +619,24 @@ define|#
 directive|define
 name|MII_STR_XAQTI_XMACII
 value|"XaQti Corp. XMAC II gigabit interface"
+end_define
+
+begin_comment
+comment|/* Marvell Semiconductor PHYs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_MARVELL_E1000
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_MARVELL_E1000
+value|"Marvell Semiconductor 88E1000* gigabit PHY"
 end_define
 
 end_unit
