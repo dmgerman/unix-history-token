@@ -2855,30 +2855,6 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u VM object cache lookups\n"
-argument_list|,
-name|sum
-operator|.
-name|v_lookups
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%9u VM object hits\n"
-argument_list|,
-name|sum
-operator|.
-name|v_hits
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
 literal|"%9u page daemon wakeups\n"
 argument_list|,
 name|sum
@@ -2915,11 +2891,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u intransit blocking page faults\n"
+literal|"%9u copy-on-write faults\n"
 argument_list|,
 name|sum
 operator|.
-name|v_intrans
+name|v_cow_faults
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2939,11 +2915,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u copy-on-write faults\n"
+literal|"%9u intransit blocking page faults\n"
 argument_list|,
 name|sum
 operator|.
-name|v_cow_faults
+name|v_intrans
 argument_list|)
 expr_stmt|;
 operator|(
