@@ -494,6 +494,15 @@ name|struct
 name|radacct
 name|radacct
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NOINET6
+name|struct
+name|radacct
+name|radacct6
+decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
