@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	5.7 (Berkeley) %G%"
+literal|"@(#)msgs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,18 +93,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/dir.h>
 end_include
 
@@ -123,13 +111,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<pwd.h>
 end_include
 
 begin_include
@@ -141,7 +129,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sgtty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -279,6 +297,13 @@ name|char
 name|bool
 typedef|;
 end_typedef
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|msgsrc
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|FILE
@@ -500,22 +525,6 @@ end_decl_stmt
 begin_function_decl
 name|char
 modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
 name|mktemp
 parameter_list|()
 function_decl|;
@@ -542,44 +551,6 @@ name|onsusp
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|off_t
-name|ftell
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|FILE
-modifier|*
-name|popen
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* option initialization */
@@ -705,9 +676,6 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|bounds
-decl_stmt|,
-modifier|*
-name|msgsrc
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2119,10 +2087,6 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-name|already
-operator|=
-name|YES
-expr_stmt|;
 comment|/* 		 * Print header 		 */
 if|if
 condition|(
@@ -2142,6 +2106,10 @@ name|setjmp
 argument_list|(
 name|tstpbuf
 argument_list|)
+expr_stmt|;
+name|already
+operator|=
+name|YES
 expr_stmt|;
 name|nlines
 operator|=
