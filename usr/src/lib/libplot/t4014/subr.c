@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	4.1 (Berkeley) %G%"
+literal|"@(#)subr.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,10 +207,13 @@ literal|037
 expr_stmt|;
 name|extra
 operator|=
+operator|(
 name|x
 operator|&
 literal|03
+operator|)
 operator|+
+operator|(
 operator|(
 name|y
 operator|<<
@@ -218,6 +221,7 @@ literal|2
 operator|)
 operator|&
 literal|014
+operator|)
 expr_stmt|;
 name|n
 operator|=
