@@ -1,33 +1,52 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rwhod.h	4.3	82/12/24	*/
+comment|/*	rwhod.h	4.4	83/05/04	*/
+end_comment
+
+begin_comment
+comment|/*  * rwho protocol packet format.  */
 end_comment
 
 begin_struct
 struct|struct
 name|whod
 block|{
+name|char
+name|wd_type
+decl_stmt|;
+comment|/* packet type, see below */
+name|char
+name|wd_pad
+index|[
+literal|3
+index|]
+decl_stmt|;
 name|int
 name|wd_sendtime
 decl_stmt|;
+comment|/* time stamp by sender */
 name|int
 name|wd_recvtime
 decl_stmt|;
+comment|/* time stamp applied by receiver */
 name|char
 name|wd_hostname
 index|[
 literal|32
 index|]
 decl_stmt|;
+comment|/* hosts's name */
 name|int
 name|wd_loadav
 index|[
 literal|3
 index|]
 decl_stmt|;
+comment|/* load average as in uptime */
 name|int
 name|wd_boottime
 decl_stmt|;
+comment|/* time system booted */
 struct|struct
 name|whoent
 block|{
@@ -35,9 +54,11 @@ name|struct
 name|utmp
 name|we_utmp
 decl_stmt|;
+comment|/* active tty info */
 name|int
 name|we_idle
 decl_stmt|;
+comment|/* tty idle time */
 block|}
 name|wd_we
 index|[
@@ -57,12 +78,12 @@ end_struct
 begin_define
 define|#
 directive|define
-name|RWHODIR
-value|"/usr/spool/rwho"
+name|WHODTYPE_STATUS
+value|1
 end_define
 
 begin_comment
-comment|/* where data is stored */
+comment|/* host status */
 end_comment
 
 end_unit
