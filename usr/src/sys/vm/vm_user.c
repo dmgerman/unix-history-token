@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_user.c	7.3 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_user.c	7.4 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -10,31 +10,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm_page.h"
+file|<vm/vm.h>
 end_include
 
 begin_decl_stmt
@@ -61,19 +55,17 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|svm_allocate
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|uap
+name|uap
 argument_list|,
-argument|retval
+name|retval
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|proc
 modifier|*
 name|p
@@ -225,19 +217,17 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|svm_deallocate
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|uap
+name|uap
 argument_list|,
-argument|retval
+name|retval
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|proc
 modifier|*
 name|p
@@ -316,19 +306,17 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|svm_inherit
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|uap
+name|uap
 argument_list|,
-argument|retval
+name|retval
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|proc
 modifier|*
 name|p
@@ -414,19 +402,17 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|svm_protect
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|uap
+name|uap
 argument_list|,
-argument|retval
+name|retval
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|proc
 modifier|*
 name|p
@@ -524,45 +510,34 @@ begin_comment
 comment|/*  *	vm_allocate allocates "zero fill" memory in the specfied  *	map.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vm_allocate
-argument_list|(
+parameter_list|(
 name|map
-argument_list|,
+parameter_list|,
 name|addr
-argument_list|,
+parameter_list|,
 name|size
-argument_list|,
+parameter_list|,
 name|anywhere
-argument_list|)
+parameter_list|)
 specifier|register
 name|vm_map_t
 name|map
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|vm_offset_t
 modifier|*
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|vm_size_t
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean_t
 name|anywhere
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|result
@@ -651,40 +626,32 @@ name|result
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	vm_deallocate deallocates the specified range of addresses in the  *	specified address map.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vm_deallocate
-argument_list|(
+parameter_list|(
 name|map
-argument_list|,
+parameter_list|,
 name|start
-argument_list|,
+parameter_list|,
 name|size
-argument_list|)
+parameter_list|)
 specifier|register
 name|vm_map_t
 name|map
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|vm_offset_t
 name|start
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_size_t
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -732,48 +699,37 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	vm_inherit sets the inheritence of the specified range in the  *	specified map.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vm_inherit
-argument_list|(
+parameter_list|(
 name|map
-argument_list|,
+parameter_list|,
 name|start
-argument_list|,
+parameter_list|,
 name|size
-argument_list|,
+parameter_list|,
 name|new_inheritance
-argument_list|)
+parameter_list|)
 specifier|register
 name|vm_map_t
 name|map
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|vm_offset_t
 name|start
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_size_t
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_inherit_t
 name|new_inheritance
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -809,56 +765,42 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	vm_protect sets the protection of the specified range in the  *	specified map.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vm_protect
-argument_list|(
+parameter_list|(
 name|map
-argument_list|,
+parameter_list|,
 name|start
-argument_list|,
+parameter_list|,
 name|size
-argument_list|,
+parameter_list|,
 name|set_maximum
-argument_list|,
+parameter_list|,
 name|new_protection
-argument_list|)
+parameter_list|)
 specifier|register
 name|vm_map_t
 name|map
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|vm_offset_t
 name|start
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_size_t
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean_t
 name|set_maximum
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_prot_t
 name|new_protection
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -896,7 +838,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
