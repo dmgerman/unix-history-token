@@ -69,6 +69,18 @@ directive|include
 file|"device_pager.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"vnode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"specdev.h"
+end_include
+
 begin_decl_stmt
 name|queue_head_t
 name|dev_pager_list
@@ -217,6 +229,11 @@ decl_stmt|,
 name|enodev
 argument_list|()
 decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -270,12 +287,20 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Validation.  Make sure this device can be mapped 		 * and that range to map is acceptible to device. 		 */
-name|dev
+name|vp
 operator|=
 operator|(
-name|dev_t
+expr|struct
+name|vnode
+operator|*
 operator|)
 name|handle
+expr_stmt|;
+name|dev
+operator|=
+name|vp
+operator|->
+name|v_rdev
 expr_stmt|;
 name|mapfunc
 operator|=

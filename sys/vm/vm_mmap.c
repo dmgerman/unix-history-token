@@ -2027,8 +2027,6 @@ operator|(
 name|caddr_t
 operator|)
 name|vp
-operator|->
-name|v_rdev
 expr_stmt|;
 block|}
 else|else
