@@ -59,8 +59,8 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_MACHIN
-value|"arm32"
+name|_MACHINE
+value|"arm"
 end_define
 
 begin_endif
@@ -78,7 +78,7 @@ begin_define
 define|#
 directive|define
 name|_MACHINE_ARCH
-value|"arm32"
+value|"arm"
 end_define
 
 begin_endif
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|MACHINE
-value|"arm32"
+value|"arm"
 end_define
 
 begin_endif
@@ -132,7 +132,7 @@ begin_define
 define|#
 directive|define
 name|MACHINE_ARCH
-value|"arm32"
+value|"arm"
 end_define
 
 begin_endif
@@ -144,14 +144,8 @@ begin_define
 define|#
 directive|define
 name|MID_MACHINE
-value|MID_ARM32
+value|MID_ARM6
 end_define
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -239,42 +233,161 @@ end_define
 begin_define
 define|#
 directive|define
-name|KERNBASE
-value|0x100000
+name|PDR_SHIFT
+value|20
 end_define
 
 begin_comment
-comment|/* start of kernel virtual */
+comment|/* log2(NBPDR) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BTOPKERNBASE
-value|((u_long)KERNBASE>> PGSHIFT)
+name|NBPDR
+value|(1<< PDR_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPAGES
+name|NPDEPG
+value|(1<< (32 - PDR_SHIFT))
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KSTACK_PAGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|KSTACK_PAGES
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !KSTACK_PAGES */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UAREA_PAGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|UAREA_PAGES
 value|2
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* pages of u-area */
+comment|/* !UAREA_PAGES */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USPACE
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|USPACE
-value|(UPAGES * PAGE_SIZE)
+value|(UAREA_PAGES * PAGE_SIZE)
 end_define
 
 begin_comment
 comment|/* total size of u-area */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FPCONTEXTSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FPCONTEXTSIZE
+value|(0x100)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KSTACK_GUARD_PAGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|KSTACK_GUARD_PAGES
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !KSTACK_GUARD_PAGES */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USPACE_SVC_STACK_TOP
+value|(USPACE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USPACE_SVC_STACK_BOTTOM
+value|(USPACE_SVC_STACK_TOP - 0x1000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USPACE_UNDEF_STACK_TOP
+value|(USPACE_SVC_STACK_BOTTOM - 0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USPACE_UNDEF_STACK_BOTTOM
+value|(FPCONTEXTSIZE + 10)
+end_define
 
 begin_comment
 comment|/*  * Mach derived conversion macros  */
