@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_proto.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_proto.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -50,7 +50,7 @@ comment|/*  * NS protocol family: IDP, ERR, PE, SPP, ROUTE.  */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|ns_init
 parameter_list|()
 function_decl|;
@@ -58,22 +58,12 @@ end_function_decl
 
 begin_decl_stmt
 name|int
-name|idp_input
-argument_list|()
-decl_stmt|,
 name|idp_output
-argument_list|()
-decl_stmt|,
-name|idp_ctlinput
 argument_list|()
 decl_stmt|,
 name|idp_usrreq
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|idp_raw_usrreq
 argument_list|()
 decl_stmt|,
@@ -83,7 +73,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
+name|idp_input
+argument_list|()
+decl_stmt|,
+name|idp_ctlinput
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|spp_input
 argument_list|()
 decl_stmt|,
@@ -106,7 +106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|spp_init
 argument_list|()
 decl_stmt|,
