@@ -3132,7 +3132,11 @@ name|ARCHIVE_STATE_DATA
 expr_stmt|;
 name|r
 operator|=
-name|archive_write_data
+call|(
+name|a
+operator|->
+name|compression_write
+call|)
 argument_list|(
 name|a
 argument_list|,
