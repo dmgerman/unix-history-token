@@ -897,7 +897,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/*                     * SEAGRAND NP-900 MP3 Player                     * PR: kern/64563                     */
+comment|/* 		 * SEAGRAND NP-900 MP3 Player 		 * PR: kern/64563 		 */
 block|{
 name|T_DIRECT
 block|,
