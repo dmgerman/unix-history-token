@@ -124,6 +124,26 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_PTHREADS_INVARIANTS
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -142,33 +162,17 @@ directive|include
 file|<sys/umtx.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_PTHREADS_INVARIANTS
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * Kernel fatal error handler macro.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PTHREADS_INVARIANTS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PANIC
-parameter_list|(
-name|string
-parameter_list|)
-value|_thread_exit(__FILE__, __LINE__, (string))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _PTHREADS_INVARIANTS */
 end_comment
 
 begin_define
@@ -182,13 +186,75 @@ define|\
 value|do {								     \ 		_thread_printf(STDOUT_FILENO, (string));		     \ 		_thread_printf(STDOUT_FILENO,				     \ 		    "\nAbnormal termination, file: %s, line: %d\n",	     \ 		    __FILE__, __LINE__);				     \ 		abort();						     \ 	} while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PTHREAD_ASSERT
+parameter_list|(
+name|cond
+parameter_list|,
+name|msg
+parameter_list|)
+value|do {	\ 	if (!(cond))			\ 		PANIC(msg);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_ASSERT_NOT_IN_SYNCQ
+parameter_list|(
+name|thrd
+parameter_list|)
+define|\
+value|PTHREAD_ASSERT((((thrd)->flags& PTHREAD_FLAGS_IN_SYNCQ) == 0),	\ 	    "Illegal call from signal handler");
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_PTHREADS_INVARIANTS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PANIC
+parameter_list|(
+name|string
+parameter_list|)
+value|_thread_exit(__FILE__, __LINE__, (string))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_ASSERT
+parameter_list|(
+name|cond
+parameter_list|,
+name|msg
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_ASSERT_NOT_IN_SYNCQ
+parameter_list|(
+name|thrd
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !_PTHREADS_INVARIANTS */
+comment|/* _PTHREADS_INVARIANTS */
 end_comment
 
 begin_comment
@@ -268,7 +334,7 @@ value|do {								\ 		if (umtx_unlock((m), curthread->thr_id) != 0)		\ 			abort(
 end_define
 
 begin_comment
-comment|/*  * State change macro without scheduling queue change:  */
+comment|/*  * State change macro:  */
 end_comment
 
 begin_define
@@ -283,48 +349,6 @@ parameter_list|)
 value|do {				\ 	(thrd)->state = newstate;					\ 	(thrd)->fname = __FILE__;					\ 	(thrd)->lineno = __LINE__;					\ } while (0)
 end_define
 
-begin_comment
-comment|/*  * State change macro with scheduling queue change - This must be  * called with GIANT held.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_PTHREADS_INVARIANTS
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_ASSERT
-parameter_list|(
-name|cond
-parameter_list|,
-name|msg
-parameter_list|)
-value|do {	\ 	if (!(cond))			\ 		PANIC(msg);		\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_ASSERT_NOT_IN_SYNCQ
-parameter_list|(
-name|thrd
-parameter_list|)
-define|\
-value|PTHREAD_ASSERT((((thrd)->flags& PTHREAD_FLAGS_IN_SYNCQ) == 0),	\ 	    "Illegal call from signal handler");
-end_define
-
 begin_define
 define|#
 directive|define
@@ -334,73 +358,8 @@ name|thrd
 parameter_list|,
 name|newstate
 parameter_list|)
-value|do {				\ 	if ((thrd)->state != newstate) {				\ 		if ((thrd)->state == PS_RUNNING) {			\ 			PTHREAD_SET_STATE(thrd, newstate);		\ 		} else if (newstate == PS_RUNNING) { 			\ 			if (thr_kill(thrd->thr_id, SIGTHR))		\ 				abort();				\ 			PTHREAD_SET_STATE(thrd, newstate);		\ 		}							\ 	}								\ } while (0)
+value|do {				\ 	if (newstate == PS_RUNNING) { 					\ 		if (thr_kill(thrd->thr_id, SIGTHR))			\ 			abort();					\ 	}								\ 	PTHREAD_SET_STATE(thrd, newstate);				\ } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_ASSERT
-parameter_list|(
-name|cond
-parameter_list|,
-name|msg
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_ASSERT_NOT_IN_SYNCQ
-parameter_list|(
-name|thrd
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_NEW_STATE
-parameter_list|(
-name|thrd
-parameter_list|,
-name|newstate
-parameter_list|)
-value|do {				\ 	if (thr_kill(thrd->thr_id, SIGTHR))				\ 		abort();						\ 	PTHREAD_SET_STATE(thrd, newstate);				\ } while (0)
-end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_NEW_STATE
-parameter_list|(
-name|thrd
-parameter_list|,
-name|newstate
-parameter_list|)
-value|do {				\ 	if ((thrd)->state != newstate) {				\ 		if ((thrd)->state == PS_RUNNING) {			\ 		} else if (newstate == PS_RUNNING) { 			\ 			if (thr_kill(thrd->thr_id, SIGTHR))		\ 				abort();				\ 		}							\ 	}								\ 	PTHREAD_SET_STATE(thrd, newstate);				\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * TailQ initialization values.  */
