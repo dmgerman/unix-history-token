@@ -35,6 +35,29 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|TIME_WITH_SYS_TIME
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_SYS_TIME_H
 end_ifdef
 
@@ -43,6 +66,22 @@ include|#
 directive|include
 file|<sys/time.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -707,13 +746,6 @@ begin_comment
 comment|/* HAVE_CONFIG_H) */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-name|SYS_WINNT
-end_if
-
 begin_define
 define|#
 directive|define
@@ -749,15 +781,6 @@ name|ifr_mask
 value|iiNetmask.AddressIn
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYS_WINNT */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -779,12 +802,23 @@ name|mktemp
 value|_mktemp
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|getpid
 value|GetCurrentProcessId
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

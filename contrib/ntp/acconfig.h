@@ -1,25 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Package */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PACKAGE
-end_undef
-
-begin_comment
-comment|/* Version */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|VERSION
-end_undef
-
-begin_comment
 comment|/* debugging code */
 end_comment
 
@@ -257,6 +237,26 @@ begin_undef
 undef|#
 directive|undef
 name|CLOCK_HOPF6021
+end_undef
+
+begin_comment
+comment|/* HOPF PCI clock device */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_HOPF_PCI
+end_undef
+
+begin_comment
+comment|/* HOPF serial clock device*/
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_HOPF_SERIAL
 end_undef
 
 begin_comment
@@ -1256,16 +1256,6 @@ name|HAVE_TIO_SERIAL_STUFF
 end_undef
 
 begin_comment
-comment|/* Define if you use struct timespec rather than struct timeval (time in ns rather than us) */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_TIMESPEC
-end_undef
-
-begin_comment
 comment|/* Define if you have the interface in the Draft RFC */
 end_comment
 
@@ -1341,6 +1331,16 @@ begin_undef
 undef|#
 directive|undef
 name|DECL_CFSETISPEED_0
+end_undef
+
+begin_comment
+comment|/* hstrerror()? */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DECL_HSTRERROR_0
 end_undef
 
 begin_comment
@@ -1583,6 +1583,22 @@ begin_undef
 undef|#
 directive|undef
 name|DECL_TOUPPER_0
+end_undef
+
+begin_comment
+comment|/* strerror()? */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DECL_STRERROR_0
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ULONG_CONST
 end_undef
 
 end_unit

@@ -17,6 +17,21 @@ begin_comment
 comment|/*  * A request packet.  These are almost a fixed length.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXFILENAME
+value|128
+end_define
+
+begin_comment
+comment|/* max key file name length */
+end_comment
+
+begin_comment
+comment|/* NOTE: also in ntp.h */
+end_comment
+
 begin_struct
 struct|struct
 name|req_pkt
@@ -48,15 +63,17 @@ comment|/* item size */
 name|char
 name|data
 index|[
-literal|32
+name|MAXFILENAME
+operator|+
+literal|16
 index|]
 decl_stmt|;
-comment|/* data area */
+comment|/* data area [32 prev](144 byte max) */
 name|l_fp
 name|tstamp
 decl_stmt|;
 comment|/* time stamp, for authentication */
-name|u_int32
+name|keyid_t
 name|keyid
 decl_stmt|;
 comment|/* encryption key */
@@ -891,7 +908,18 @@ value|42
 end_define
 
 begin_comment
-comment|/* return data collected by monitor v1 */
+comment|/* return collected v1 monitor data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REQ_HOSTNAME_ASSOCID
+value|43
+end_define
+
+begin_comment
+comment|/* Here is a hostname + assoc_id */
 end_comment
 
 begin_comment
@@ -1015,7 +1043,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/*  * Peer list structure.  Used to return raw lists of peers.  It goes  * without saying that everything returned is in network byte order.  */
+comment|/*  * Peer list structure.  Used to return raw lists of peers.  It goes  * without saying that everything returned is in network byte order.  * Well, it *would* have gone without saying, but somebody said it.  */
 end_comment
 
 begin_struct
@@ -1159,9 +1187,8 @@ name|version
 decl_stmt|;
 comment|/* peer.version */
 name|u_char
-name|valid
+name|unused8
 decl_stmt|;
-comment|/* peer.valid */
 name|u_char
 name|reach
 decl_stmt|;
@@ -1182,11 +1209,11 @@ name|u_short
 name|flash2
 decl_stmt|;
 comment|/* new peer.flash */
-name|u_short
+name|associd_t
 name|associd
 decl_stmt|;
 comment|/* association ID */
-name|u_int32
+name|keyid_t
 name|keyid
 decl_stmt|;
 comment|/* peer.keyid */
@@ -1781,10 +1808,17 @@ name|u_short
 name|unused
 decl_stmt|;
 comment|/* unused */
-name|u_int32
+name|keyid_t
 name|keyid
 decl_stmt|;
 comment|/* key to use for this association */
+name|char
+name|keystr
+index|[
+name|MAXFILENAME
+index|]
+decl_stmt|;
+comment|/* public key file name*/
 block|}
 struct|;
 end_struct
@@ -1793,35 +1827,42 @@ begin_define
 define|#
 directive|define
 name|CONF_FLAG_AUTHENABLE
-value|0x1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONF_FLAG_PREFER
-value|0x2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONF_FLAG_BURST
-value|0x4
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_FLAG_IBURST
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONF_FLAG_NOSELECT
-value|0x8
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONF_FLAG_SKEY
-value|0x10
+value|0x20
 end_define
 
 begin_comment
@@ -1869,7 +1910,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_FLAG_AUTHENTICATE
+name|SYS_FLAG_PPS
 value|0x2
 end_define
 
@@ -2583,6 +2624,44 @@ decl_stmt|;
 name|int32
 name|stbcnt
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Info returned with IP -> hostname lookup  */
+end_comment
+
+begin_comment
+comment|/* 144 might need to become 32, matching data[] member of req_pkt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_MAXHOSTNAME
+value|(32 - sizeof(u_int32) - sizeof(u_short))
+end_define
+
+begin_struct
+struct|struct
+name|info_dns_assoc
+block|{
+name|u_int32
+name|peeraddr
+decl_stmt|;
+comment|/* peer address (HMS: being careful...) */
+name|associd_t
+name|associd
+decl_stmt|;
+comment|/* association ID */
+name|char
+name|hostname
+index|[
+name|NTP_MAXHOSTNAME
+index|]
+decl_stmt|;
+comment|/* hostname */
 block|}
 struct|;
 end_struct

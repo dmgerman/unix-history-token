@@ -37,30 +37,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -86,6 +62,18 @@ begin_include
 include|#
 directive|include
 file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_comment
@@ -541,12 +529,6 @@ name|precision
 operator|=
 name|PRECISION
 expr_stmt|;
-name|peer
-operator|->
-name|burst
-operator|=
-name|NSTAGE
-expr_stmt|;
 name|pp
 operator|->
 name|clockdesc
@@ -568,6 +550,12 @@ name|REFID
 argument_list|,
 literal|4
 argument_list|)
+expr_stmt|;
+name|peer
+operator|->
+name|burst
+operator|=
+name|NSTAGE
 expr_stmt|;
 return|return
 operator|(
@@ -703,6 +691,10 @@ name|char
 name|dstchar
 decl_stmt|;
 comment|/* daylight/standard indicator */
+name|char
+name|tmpchar
+decl_stmt|;
+comment|/* trashbin */
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
@@ -875,7 +867,7 @@ name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-literal|"%c %3d %2d:%2d:%2d %cTZ=%2d"
+literal|"%c %3d %2d:%2d:%2d%c%cTZ=%2d"
 argument_list|,
 operator|&
 name|syncchar
@@ -901,19 +893,22 @@ operator|->
 name|second
 argument_list|,
 operator|&
+name|tmpchar
+argument_list|,
+operator|&
 name|dstchar
 argument_list|,
 operator|&
 name|tz
 argument_list|)
 operator|==
-literal|7
+literal|8
 condition|)
 break|break;
 case|case
 name|LENWWVB2
 case|:
-comment|/* 		 * Timecode format 2: "IQyy ddd hh:mm:ss.mmm LD" 		 */
+comment|/* 		 * Timecode format 2: "IQyy ddd hh:mm:ss.mmm LD" */
 if|if
 condition|(
 name|sscanf

@@ -21,48 +21,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIOS_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_TERMIOS_H */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TERMIOS_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/termios.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_TERMIOS_H */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -73,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_tty.h"
 end_include
 
 begin_comment
@@ -523,8 +487,7 @@ name|trace
 comment|/* trace flags */
 parameter_list|)
 block|{
-name|struct
-name|termios
+name|TTY
 name|ttyb
 decl_stmt|;
 name|int

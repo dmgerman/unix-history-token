@@ -23,7 +23,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|"ntp_types.h"
 end_include
 
 begin_include
@@ -36,12 +36,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_types.h"
 end_include
 
 begin_define
@@ -367,7 +361,7 @@ operator|)
 name|ovfl
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|n
 argument_list|,

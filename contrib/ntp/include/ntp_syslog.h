@@ -18,27 +18,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|GIZMO
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"gizmo_syslog.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !GIZMO */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|VMS
 end_ifdef
 
@@ -86,15 +65,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GIZMO */
-end_comment
 
 begin_decl_stmt
 specifier|extern

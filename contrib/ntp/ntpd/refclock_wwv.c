@@ -37,51 +37,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<math.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_IOCTL_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_IOCTL_H */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"ntpd.h"
 end_include
 
@@ -114,6 +69,45 @@ include|#
 directive|include
 file|"audio.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_IOCTL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_IOCTL_H */
+end_comment
 
 begin_define
 define|#
@@ -153,6 +147,17 @@ end_comment
 
 begin_comment
 comment|/*  * Interface definitions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICE_AUDIO
+value|"/dev/audio"
+end_define
+
+begin_comment
+comment|/* audio device name */
 end_comment
 
 begin_define
@@ -3224,7 +3229,9 @@ comment|/* 	 * Open audio device 	 */
 name|fd
 operator|=
 name|audio_init
-argument_list|()
+argument_list|(
+name|DEVICE_AUDIO
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3807,7 +3814,7 @@ if|if
 condition|(
 name|peer
 operator|->
-name|ttl
+name|ttlmax
 operator|!=
 literal|0
 condition|)
@@ -3816,7 +3823,7 @@ if|if
 condition|(
 name|peer
 operator|->
-name|ttl
+name|ttlmax
 operator|&
 literal|0x80
 condition|)
@@ -7751,7 +7758,7 @@ name|sp
 operator|->
 name|sigmax
 operator|=
-name|sqrt
+name|SQRT
 argument_list|(
 name|sp
 operator|->
@@ -7762,7 +7769,7 @@ name|sp
 operator|->
 name|noise
 operator|=
-name|sqrt
+name|SQRT
 argument_list|(
 name|sp
 operator|->
@@ -9020,7 +9027,7 @@ name|sp
 operator|->
 name|synamp
 operator|=
-name|sqrt
+name|SQRT
 argument_list|(
 name|sp
 operator|->
@@ -9038,7 +9045,7 @@ name|sp
 operator|->
 name|synamp
 operator|=
-name|sqrt
+name|SQRT
 argument_list|(
 name|sp
 operator|->
@@ -9119,7 +9126,7 @@ operator|->
 name|noiamp
 operator|+=
 operator|(
-name|sqrt
+name|SQRT
 argument_list|(
 name|up
 operator|->
@@ -9282,7 +9289,7 @@ name|up
 operator|->
 name|sigamp
 operator|=
-name|sqrt
+name|SQRT
 argument_list|(
 name|up
 operator|->
@@ -12611,6 +12618,14 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|stratum
+operator|<=
+literal|1
+condition|)
 name|memcpy
 argument_list|(
 operator|(
@@ -12730,7 +12745,7 @@ name|fd_icom
 argument_list|,
 name|peer
 operator|->
-name|ttl
+name|ttlmax
 operator|&
 literal|0x7f
 argument_list|,
@@ -12773,10 +12788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * timecode - assemble timecode string and length  *  * Prettytime format - similar to Spectracom  *  * sq yy ddd hh:mm:ss.fff ld dut lset agc stn comp errs freq avgt  *  * s	sync indicator ('?' or ' ')  * q	quality character (hex 0-F)  * yyyy	year of century  * ddd	day of year  * hh	hour of day  * mm	minute of hour  * ss	minute of hour  * fff	millisecond of second  * l	leap second warning ' ' or 'L'  * d	DST state 'S', 'D', 'I', or 'O'  * dut	DUT sign and magnitude in deciseconds  * lset	minutes since last clock update  * agc	audio gain (0-255)  * iden	station identifier (station and frequency)  * comp	minute sync compare counter  * errs	bit errors in last minute
-comment|* freq	frequency offset (PPM)
-comment|* avgt	averaging time (s)
-comment|*/
+comment|/*  * timecode - assemble timecode string and length  *  * Prettytime format - similar to Spectracom  *  * sq yy ddd hh:mm:ss.fff ld dut lset agc stn comp errs freq avgt  *  * s	sync indicator ('?' or ' ')  * q	quality character (hex 0-F)  * yyyy	year of century  * ddd	day of year  * hh	hour of day  * mm	minute of hour  * ss	minute of hour  * fff	millisecond of second  * l	leap second warning ' ' or 'L'  * d	DST state 'S', 'D', 'I', or 'O'  * dut	DUT sign and magnitude in deciseconds  * lset	minutes since last clock update  * agc	audio gain (0-255)  * iden	station identifier (station and frequency)  * comp	minute sync compare counter  * errs	bit errors in last minute  * freq	frequency offset (PPM)  * avgt	averaging time (s)  */
 end_comment
 
 begin_function

@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/time.h>
 end_include
 
 begin_define

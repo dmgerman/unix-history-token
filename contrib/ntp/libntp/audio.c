@@ -20,6 +20,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SYS_AUDIOIO_H
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_SUN_AUDIOIO_H
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -29,13 +43,42 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|"ntp_stdlib.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"ntp_syslog.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_string.h"
 end_include
 
 begin_ifdef
@@ -64,6 +107,12 @@ ifdef|#
 directive|ifdef
 name|HAVE_SUN_AUDIOIO_H
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
 
 begin_include
 include|#
@@ -129,6 +178,15 @@ begin_comment
 comment|/* audio device ident */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_AUDIOIO_H */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -152,15 +210,6 @@ begin_comment
 comment|/* audio control file descriptor */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_AUDIOIO_H */
-end_comment
-
 begin_comment
 comment|/*  * audio_init - open and initialize audio device  *  * This code works with SunOS 4.x and Solaris 2.x; however, it is  * believed generic and applicable to other systems with a minor twid  * or two. All it does is open the device, set the buffer size (Solaris  * only), preset the gain and set the input port. It assumes that the  * codec sample rate (8000 Hz), precision (8 bits), number of channels  * (1) and encoding (ITU-T G.711 mu-law companded) have been set by  * default.  */
 end_comment
@@ -169,27 +218,24 @@ begin_function
 name|int
 name|audio_init
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|dname
+comment|/* device name */
 parameter_list|)
 block|{
 name|int
 name|fd
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_AUDIOIO_H
 name|int
 name|rval
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_SYS_AUDIOIO_H */
-comment|/* 	 * Open audio device 	 */
+comment|/* 	 * Open audio device. Do not complain if not there. 	 */
 name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/audio"
+name|dname
 argument_list|,
 name|O_RDWR
 operator||
@@ -204,22 +250,12 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"audio:"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|fd
 operator|)
 return|;
-block|}
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_AUDIOIO_H
-comment|/* 	 * Open audio control device 	 */
+comment|/* 	 * Open audio control device. 	 */
 name|ctl_fd
 operator|=
 name|open
@@ -236,9 +272,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|msyslog
 argument_list|(
-literal|"audioctl:"
+name|LOG_ERR
+argument_list|,
+literal|"audio: invalid control device\n"
 argument_list|)
 expr_stmt|;
 name|close
@@ -275,6 +313,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"audio: invalid control device parameters\n"
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|ctl_fd
@@ -291,9 +336,6 @@ name|rval
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* HAVE_SYS_AUDIOIO_H */
 return|return
 operator|(
 name|fd
@@ -319,24 +361,18 @@ name|port
 comment|/* port */
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_AUDIOIO_H
 name|int
 name|rval
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_SYS_AUDIOIO_H */
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_AUDIOIO_H
 name|AUDIO_INITINFO
 argument_list|(
 operator|&
 name|info
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_AUDIOIO_H
 name|info
 operator|.
 name|record
@@ -345,6 +381,9 @@ name|buffer_size
 operator|=
 name|AUDIO_BUFSIZ
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_SYS_AUDIOIO_H */
 name|info
 operator|.
 name|record
@@ -391,9 +430,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|msyslog
 argument_list|(
-literal|"audio:"
+name|LOG_ERR
+argument_list|,
+literal|"audio_gain: %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -411,16 +452,6 @@ operator|.
 name|error
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* HAVE_SYS_AUDIOIO_H */
 block|}
 end_function
 
@@ -468,6 +499,9 @@ operator|.
 name|config
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_SYS_AUDIOIO_H */
 name|ioctl
 argument_list|(
 name|ctl_fd
@@ -483,7 +517,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"audio: samples %d, channels %d, precision %d, encoding %d\n"
+literal|"audio: samples %d, channels %d, precision %d, encoding %d, gain %d, port %d\n"
 argument_list|,
 name|info
 operator|.
@@ -508,34 +542,6 @@ operator|.
 name|record
 operator|.
 name|encoding
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"audio: gain %d, port %d, buffer %d\n"
-argument_list|,
-name|info
-operator|.
-name|record
-operator|.
-name|gain
-argument_list|,
-name|info
-operator|.
-name|record
-operator|.
-name|port
-argument_list|,
-name|info
-operator|.
-name|record
-operator|.
-name|buffer_size
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"audio: gain %d, port %d\n"
 argument_list|,
 name|info
 operator|.
@@ -591,55 +597,28 @@ operator|.
 name|balance
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"audio: monitor %d, muted %d\n"
-argument_list|,
-name|info
-operator|.
-name|monitor_gain
-argument_list|,
-name|info
-operator|.
-name|output_muted
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_SYS_AUDIOIO_H */
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|printf
-argument_list|(
-literal|"audio: monitor %d, blocksize %d, hiwat %d, lowat %d, mode %d\n"
-argument_list|,
-name|info
-operator|.
-name|monitor_gain
-argument_list|,
-name|info
-operator|.
-name|blocksize
-argument_list|,
-name|info
-operator|.
-name|hiwat
-argument_list|,
-name|info
-operator|.
-name|lowat
-argument_list|,
-name|info
-operator|.
-name|mode
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* __NetBSD__ */
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|audio_bs
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_AUDIOIO_H HAVE_SUN_AUDIOIO_H */
+end_comment
 
 end_unit
 

@@ -44,8 +44,29 @@ directive|include
 file|"ntp_stdlib.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ntp_crypto.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  *                  Table of valid association combinations  *                  ---------------------------------------  *  *                             packet->mode  * peer->mode      | UNSPEC  ACTIVE PASSIVE  CLIENT  SERVER  BCAST  * ----------      | ---------------------------------------------  * NO_PEER         |   e       1       e       1       1       1  * ACTIVE          |   e       1       1       0       0       0  * PASSIVE         |   e       1       e       0       0       0  * CLIENT          |   e       0       0       0       1       1  * SERVER          |   e       0       0       0       0       0  * BCAST	   |   e       0       0       0       0       0  * CONTROL	   |   e       0       0       0       0       0  * PRIVATE	   |   e       0       0       0       0       0  * BCLIENT         |   e       0       0       0       e       1  * MCLIENT	   |   e       0       0       0       0       0  *  * One point to note here:    *      a packet in BCAST mode can potentially match a peer in CLIENT  *      mode, but we that is a special case and we check for that early  *      in the decision process.  This avoids having to keep track of   *      what kind of associations are possible etc...  We actually   *      circumvent that problem by requiring that the first b(m)roadcast   *      received after the change back to BCLIENT mode sets the clock.  */
+comment|/* AUTOKEY */
+end_comment
+
+begin_comment
+comment|/*  *                  Table of valid association combinations  *                  ---------------------------------------  *  *                             packet->mode  * peer->mode      | UNSPEC  ACTIVE PASSIVE  CLIENT  SERVER  BCAST  * ----------      | ---------------------------------------------  * NO_PEER         |   e       1       e       1       1       1  * ACTIVE          |   e       1       1       0       0       0  * PASSIVE         |   e       1       e       0       0       0  * CLIENT          |   e       0       0       0       1       1  * SERVER          |   e       0       0       0       0       0  * BCAST	   |   e       0       0       0       0       0  * CONTROL	   |   e       0       0       0       0       0  * PRIVATE	   |   e       0       0       0       0       0  * BCLIENT         |   e       0       0       0       e       1  *  * One point to note here: a packet in BCAST mode can potentially match  * a peer in CLIENT mode, but we that is a special case and we check for  * that early in the decision process.  This avoids having to keep track  * of what kind of associations are possible etc...  We actually  * circumvent that problem by requiring that the first b(m)roadcast  * received after the change back to BCLIENT mode sets the clock.  */
 end_comment
 
 begin_decl_stmt
@@ -194,22 +215,7 @@ name|AM_ERR
 block|,
 name|AM_PROCPKT
 block|}
-block|,
-comment|/*MCL*/
-block|{
-name|AM_ERR
-block|,
-name|AM_NOMATCH
-block|,
-name|AM_NOMATCH
-block|,
-name|AM_NOMATCH
-block|,
-name|AM_NOMATCH
-block|,
-name|AM_NOMATCH
-block|}
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -226,11 +232,11 @@ value|AM[(x)][(y)]
 end_define
 
 begin_comment
-comment|/*  * These routines manage the allocation of memory to peer structures  * and the maintenance of the peer hash table.  The two main entry  * points are findpeer(), which looks for corresponding peer data  * in the peer list, newpeer(), which allocates a new peer structure  * and adds it to the list, and unpeer(), which demobilizes the association  * and deallocates the structure.  */
+comment|/*  * These routines manage the allocation of memory to peer structures  * and the maintenance of the peer hash table. The two main entry  * points are findpeer(), which looks for matching peer sturctures in  * the peer list, newpeer(), which allocates a new peer structure and  * adds it to the list, and unpeer(), which demobilizes the association  * and deallocates the structure.  */
 end_comment
 
 begin_comment
-comment|/*  * The peer hash table (imported by the protocol module).  */
+comment|/*  * Peer hash tables  */
 end_comment
 
 begin_decl_stmt
@@ -244,6 +250,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* peer hash table */
+end_comment
+
 begin_decl_stmt
 name|int
 name|peer_hash_count
@@ -254,11 +264,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* count of peers in each bucket */
-end_comment
-
-begin_comment
-comment|/*  * The association ID hash table.  Used for lookups by association ID  */
+comment|/* peers in each bucket */
 end_comment
 
 begin_decl_stmt
@@ -272,6 +278,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* association ID hash table */
+end_comment
+
 begin_decl_stmt
 name|int
 name|assoc_hash_count
@@ -282,7 +292,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The free list.  Clean structures only, please.  */
+comment|/* peers in each bucket */
 end_comment
 
 begin_decl_stmt
@@ -294,6 +304,10 @@ name|peer_free
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* peer structures free list */
+end_comment
+
 begin_decl_stmt
 name|int
 name|peer_free_count
@@ -301,15 +315,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Association ID.  We initialize this value randomly, the assign a new  * value every time the peer structure is incremented.  */
+comment|/* count of free structures */
+end_comment
+
+begin_comment
+comment|/*  * Association ID.  We initialize this value randomly, then assign a new  * value every time the peer structure is incremented.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_short
+name|associd_t
 name|current_association_ID
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* association ID */
+end_comment
 
 begin_comment
 comment|/*  * Memory allocation watermarks.  */
@@ -323,7 +345,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* initialize space for 15 peers */
+comment|/* initialize for 15 peers */
 end_comment
 
 begin_define
@@ -334,7 +356,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* when we run out, add 5 more */
+comment|/* when run out, add 5 more */
 end_comment
 
 begin_comment
@@ -348,7 +370,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* time stat counters were zeroed */
+comment|/* time stat counters zeroed */
 end_comment
 
 begin_decl_stmt
@@ -358,7 +380,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of calls to findpeer */
+comment|/* calls to findpeer */
 end_comment
 
 begin_decl_stmt
@@ -368,7 +390,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of calls to findpeerbyassoc */
+comment|/* calls to findpeerbyassoc */
 end_comment
 
 begin_decl_stmt
@@ -378,7 +400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of allocations from the free list */
+comment|/* allocations from free list */
 end_comment
 
 begin_decl_stmt
@@ -388,7 +410,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of structs freed to free list */
+comment|/* structs freed to free list */
 end_comment
 
 begin_decl_stmt
@@ -398,7 +420,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of peer structs in circulation */
+comment|/* peer structs */
 end_comment
 
 begin_decl_stmt
@@ -408,11 +430,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of active associations */
-end_comment
-
-begin_comment
-comment|/*  * Our initial allocation of peer space  */
+comment|/* active associations */
 end_comment
 
 begin_decl_stmt
@@ -427,11 +445,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Initialization data.  When configuring peers at initialization time,  * we try to get their poll update timers initialized to different values  * to prevent us from sending big clumps of data all at once.  */
-end_comment
-
-begin_comment
-comment|/* static u_long init_peer_starttime; */
+comment|/* init alloc */
 end_comment
 
 begin_decl_stmt
@@ -447,23 +461,8 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|key_expire
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * init_peer - initialize peer data structures and counters  *  * N.B. We use the random number routine in here.  It had better be  *      initialized prior to getting here.  */
+comment|/*  * init_peer - initialize peer data structures and counters  *  * N.B. We use the random number routine in here. It had better be  * initialized prior to getting here.  */
 end_comment
 
 begin_function
@@ -534,8 +533,6 @@ name|peer_demobilizations
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Initialization counter. 	 */
-comment|/* init_peer_starttime = 0; */
 comment|/* 	 * Initialize peer memory. 	 */
 name|peer_free
 operator|=
@@ -585,7 +582,7 @@ comment|/* 	 * Initialize our first association ID 	 */
 name|current_association_ID
 operator|=
 operator|(
-name|u_short
+name|associd_t
 operator|)
 name|ranp2
 argument_list|(
@@ -782,7 +779,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|peer
+operator|)
 return|;
 elseif|else
 if|if
@@ -803,7 +802,9 @@ name|next
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|peer
+operator|)
 return|;
 block|}
 end_function
@@ -907,7 +908,7 @@ name|srcadr
 argument_list|)
 condition|)
 block|{
-comment|/*  			 * if the association matching rules determine that 			 * this is not a valid combination, then look for 			 * the next valid peer association. 			 */
+comment|/*  			 * if the association matching rules determine 			 * that this is not a valid combination, then 			 * look for the next valid peer association. 			 */
 operator|*
 name|action
 operator|=
@@ -920,7 +921,7 @@ argument_list|,
 name|pkt_mode
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Sigh!  Check if BCLIENT peer in client 			 * server mode, else return error 			 */
+comment|/* 			 * Sigh!  Check if BCLIENT peer in client 			 * server mode, else return error. 			 */
 if|if
 condition|(
 operator|(
@@ -934,19 +935,17 @@ operator|!
 operator|(
 name|peer
 operator|->
-name|cast_flags
+name|flags
 operator|&
-name|FLAG_MCAST1
+name|FLAG_MCAST
 operator|)
 condition|)
-block|{
 operator|*
 name|action
 operator|=
 name|AM_ERR
 expr_stmt|;
-block|}
-comment|/* if an error was returned, exit back right here */
+comment|/* 			 * if an error was returned, exit back right 			 * here. 			 */
 if|if
 condition|(
 operator|*
@@ -956,13 +955,15 @@ name|AM_ERR
 condition|)
 return|return
 operator|(
+operator|(
 expr|struct
 name|peer
 operator|*
 operator|)
 literal|0
+operator|)
 return|;
-comment|/* if a match is found, we stop our search */
+comment|/* 			 * if a match is found, we stop our search. 			 */
 if|if
 condition|(
 operator|*
@@ -973,28 +974,7 @@ condition|)
 break|break;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-operator|>
-literal|1
-condition|)
-name|printf
-argument_list|(
-literal|"pkt_mode %d action %d\n"
-argument_list|,
-name|pkt_mode
-argument_list|,
-operator|*
-name|action
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* if no matching association is found */
+comment|/* 	 * If no matching association is found 	 */
 if|if
 condition|(
 name|peer
@@ -1012,47 +992,17 @@ argument_list|,
 name|pkt_mode
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-operator|>
-literal|1
-condition|)
-name|printf
-argument_list|(
-literal|"pkt_mode %d action %d\n"
-argument_list|,
-name|pkt_mode
-argument_list|,
-operator|*
-name|action
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
+operator|(
 operator|(
 expr|struct
 name|peer
 operator|*
 operator|)
 literal|0
+operator|)
 return|;
 block|}
-comment|/* reset the default interface to something more meaningful */
-if|if
-condition|(
-operator|(
-name|peer
-operator|->
-name|dstadr
-operator|==
-name|any_interface
-operator|)
-condition|)
 name|peer
 operator|->
 name|dstadr
@@ -1060,7 +1010,9 @@ operator|=
 name|dstadr
 expr_stmt|;
 return|return
+operator|(
 name|peer
+operator|)
 return|;
 block|}
 end_function
@@ -1075,7 +1027,7 @@ name|peer
 modifier|*
 name|findpeerbyassoc
 parameter_list|(
-name|int
+name|u_int
 name|assoc
 parameter_list|)
 block|{
@@ -1119,9 +1071,6 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
-name|u_short
-operator|)
 name|assoc
 operator|==
 name|peer
@@ -1129,250 +1078,29 @@ operator|->
 name|associd
 condition|)
 return|return
+operator|(
 name|peer
+operator|)
 return|;
-comment|/* got it! */
 block|}
-comment|/* 	 * Out of luck.  Return 0. 	 */
 return|return
 operator|(
-expr|struct
-name|peer
-operator|*
+name|NULL
 operator|)
-literal|0
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * findmanycastpeer - find and return an manycast peer if it exists  *  *  *   the current implementation loops across all hash-buckets  *  *        *** THERE IS AN URGENT NEED TO CHANGE THIS ***  */
-end_comment
-
-begin_function
-name|struct
-name|peer
-modifier|*
-name|findmanycastpeer
-parameter_list|(
-name|l_fp
-modifier|*
-name|p_org
-parameter_list|)
-block|{
-specifier|register
-name|struct
-name|peer
-modifier|*
-name|peer
-decl_stmt|;
-specifier|register
-name|struct
-name|peer
-modifier|*
-name|manycast_peer
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|HASH_SIZE
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|peer_hash_count
-index|[
-name|i
-index|]
-operator|==
-literal|0
-condition|)
-continue|continue;
-for|for
-control|(
-name|peer
-operator|=
-name|peer_hash
-index|[
-name|i
-index|]
-init|;
-name|peer
-operator|!=
-literal|0
-condition|;
-name|peer
-operator|=
-name|peer
-operator|->
-name|next
-control|)
-block|{
-if|if
-condition|(
-name|peer
-operator|->
-name|cast_flags
-operator|&
-name|MDF_ACAST
-operator|&&
-name|peer
-operator|->
-name|flags
-operator|&
-name|FLAG_CONFIG
-condition|)
-block|{
-if|if
-condition|(
-name|L_ISEQU
-argument_list|(
-operator|&
-name|peer
-operator|->
-name|xmt
-argument_list|,
-name|p_org
-argument_list|)
-condition|)
-return|return
-name|peer
-return|;
-comment|/* got it */
-else|else
-name|manycast_peer
-operator|=
-name|peer
-expr_stmt|;
-block|}
-block|}
-block|}
-comment|/* 	 * Out of luck.  Return the manycastpeer for what it is worth. 	 */
-return|return
-name|manycast_peer
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * key_expire - garbage collect keys  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|key_expire
-parameter_list|(
-name|struct
-name|peer
-modifier|*
-name|peer
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-name|peer
-operator|->
-name|keylist
-operator|!=
-literal|0
-condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<=
-name|peer
-operator|->
-name|keynumber
-condition|;
-name|i
-operator|++
-control|)
-name|authtrust
-argument_list|(
-name|peer
-operator|->
-name|keylist
-index|[
-name|i
-index|]
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|peer
-operator|->
-name|keylist
-argument_list|)
-expr_stmt|;
-name|peer
-operator|->
-name|keylist
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|peer
-operator|->
-name|keyid
-operator|>
-name|NTP_MAXKEY
-condition|)
-block|{
-name|authtrust
-argument_list|(
-name|peer
-operator|->
-name|keyid
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|peer
-operator|->
-name|keyid
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * key_rekey - expire all keys and roll a new private value. Note the  * 32-bit mask is necessary for 64-bit u_longs.  */
+comment|/*  * clear_all - flush all time values for all associations  */
 end_comment
 
 begin_function
 name|void
-name|key_expire_all
-parameter_list|( 	)
+name|clear_all
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|peer
@@ -1385,6 +1113,7 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
+comment|/* 	 * This routine is called when the clock is stepped, and so all 	 * previously saved time values are untrusted. 	 */
 for|for
 control|(
 name|n
@@ -1423,22 +1152,13 @@ name|peer
 operator|->
 name|next
 expr_stmt|;
-name|key_expire
+name|peer_clear
 argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|sys_private
-operator|=
-operator|(
-name|u_long
-operator|)
-name|RANDOM
-operator|&
-literal|0xffffffff
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1448,11 +1168,9 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"key_expire_all: at %lu private %08lx\n"
+literal|"clear_all: at %lu\n"
 argument_list|,
 name|current_time
-argument_list|,
-name|sys_private
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1477,27 +1195,30 @@ block|{
 name|int
 name|hash
 decl_stmt|;
+name|peer_associations
+operator|--
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
 if|if
 condition|(
 name|debug
-operator|>
-literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"demobilize %u\n"
+literal|"demobilize %u %d\n"
 argument_list|,
 name|peer_to_remove
 operator|->
 name|associd
+argument_list|,
+name|peer_associations
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|key_expire
+name|peer_clear
 argument_list|(
 name|peer_to_remove
 argument_list|)
@@ -1520,9 +1241,6 @@ operator|--
 expr_stmt|;
 name|peer_demobilizations
 operator|++
-expr_stmt|;
-name|peer_associations
-operator|--
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1766,7 +1484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * peer_config - configure a new peer  */
+comment|/*  * peer_config - configure a new association  */
 end_comment
 
 begin_function
@@ -1797,14 +1515,18 @@ parameter_list|,
 name|int
 name|maxpoll
 parameter_list|,
-name|int
+name|u_int
 name|flags
 parameter_list|,
 name|int
 name|ttl
 parameter_list|,
-name|u_long
+name|keyid_t
 name|key
+parameter_list|,
+name|u_char
+modifier|*
+name|keystr
 parameter_list|)
 block|{
 specifier|register
@@ -1813,7 +1535,10 @@ name|peer
 modifier|*
 name|peer
 decl_stmt|;
-comment|/* 	 * See if we have this guy in the tables already.  If 	 * so just mark him configured. 	 */
+name|u_int
+name|cast_flags
+decl_stmt|;
+comment|/* 	 * First search from the beginning for an association with given 	 * remote address and mode. If an interface is given, search 	 * from there to find the association which matches that 	 * destination. 	 */
 name|peer
 operator|=
 name|findexistingpeer
@@ -1866,7 +1591,74 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If we found one, just change his mode and mark him configured. 	 */
+comment|/* 	 * We do a dirty little jig to figure the cast flags. This is 	 * probably not the best place to do this, at least until the 	 * configure code is rebuilt. Note only one flag can be set. 	 */
+switch|switch
+condition|(
+name|hmode
+condition|)
+block|{
+case|case
+name|MODE_BROADCAST
+case|:
+if|if
+condition|(
+name|IN_CLASSD
+argument_list|(
+name|ntohl
+argument_list|(
+name|srcadr
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
+condition|)
+name|cast_flags
+operator|=
+name|MDF_MCAST
+expr_stmt|;
+else|else
+name|cast_flags
+operator|=
+name|MDF_BCAST
+expr_stmt|;
+break|break;
+case|case
+name|MODE_CLIENT
+case|:
+if|if
+condition|(
+name|IN_CLASSD
+argument_list|(
+name|ntohl
+argument_list|(
+name|srcadr
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
+condition|)
+name|cast_flags
+operator|=
+name|MDF_ACAST
+expr_stmt|;
+else|else
+name|cast_flags
+operator|=
+name|MDF_UCAST
+expr_stmt|;
+break|break;
+default|default:
+name|cast_flags
+operator|=
+name|MDF_UCAST
+expr_stmt|;
+break|break;
+block|}
+comment|/* 	 * If the peer is already configured, some dope has a duplicate 	 * configureation entry or another dope is wiggling from afar. 	 */
 if|if
 condition|(
 name|peer
@@ -1916,6 +1708,10 @@ name|hpoll
 operator|=
 name|peer
 operator|->
+name|kpoll
+operator|=
+name|peer
+operator|->
 name|minpoll
 expr_stmt|;
 name|peer
@@ -1924,7 +1720,7 @@ name|ppoll
 operator|=
 name|peer
 operator|->
-name|minpoll
+name|maxpoll
 expr_stmt|;
 name|peer
 operator|->
@@ -1946,37 +1742,12 @@ name|peer
 operator|->
 name|cast_flags
 operator|=
-operator|(
-name|hmode
-operator|==
-name|MODE_BROADCAST
-operator|)
-condition|?
-name|IN_CLASSD
-argument_list|(
-name|ntohl
-argument_list|(
-name|srcadr
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-argument_list|)
-argument_list|)
-condition|?
-name|MDF_MCAST
-else|:
-name|MDF_BCAST
-else|:
-name|MDF_UCAST
+name|cast_flags
 expr_stmt|;
 name|peer
 operator|->
-name|ttl
+name|ttlmax
 operator|=
-operator|(
-name|u_char
-operator|)
 name|ttl
 expr_stmt|;
 name|peer
@@ -1985,17 +1756,13 @@ name|keyid
 operator|=
 name|key
 expr_stmt|;
-name|peer
-operator|->
-name|keynumber
-operator|=
-literal|0
-expr_stmt|;
 return|return
+operator|(
 name|peer
+operator|)
 return|;
 block|}
-comment|/* 	 * If we're here this guy is unknown to us.  Make a new peer 	 * structure for him. 	 */
+comment|/* 	 * Here no match has been found, so presumably this is a new 	 * persistent association. Mobilize the thing and initialize its 	 * variables. 	 */
 name|peer
 operator|=
 name|newpeer
@@ -2012,79 +1779,21 @@ name|minpoll
 argument_list|,
 name|maxpoll
 argument_list|,
+name|flags
+operator||
+name|FLAG_CONFIG
+argument_list|,
+name|cast_flags
+argument_list|,
 name|ttl
 argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|peer
-operator|!=
-literal|0
-condition|)
-block|{
-name|peer
-operator|->
-name|flags
-operator||=
-name|flags
-operator||
-name|FLAG_CONFIG
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"peer_config: %s mode %d vers %d min %d max %d flags 0x%04x ttl %d key %lu\n"
-argument_list|,
-name|ntoa
-argument_list|(
-operator|&
-name|peer
-operator|->
-name|srcadr
-argument_list|)
-argument_list|,
-name|peer
-operator|->
-name|hmode
-argument_list|,
-name|peer
-operator|->
-name|version
-argument_list|,
-name|peer
-operator|->
-name|minpoll
-argument_list|,
-name|peer
-operator|->
-name|maxpoll
-argument_list|,
-name|peer
-operator|->
-name|flags
-argument_list|,
-name|peer
-operator|->
-name|ttl
-argument_list|,
-name|peer
-operator|->
-name|keyid
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 return|return
+operator|(
 name|peer
+operator|)
 return|;
 block|}
 end_function
@@ -2121,10 +1830,16 @@ parameter_list|,
 name|int
 name|maxpoll
 parameter_list|,
+name|u_int
+name|flags
+parameter_list|,
+name|u_int
+name|cast_flags
+parameter_list|,
 name|int
 name|ttl
 parameter_list|,
-name|u_long
+name|keyid_t
 name|key
 parameter_list|)
 block|{
@@ -2138,7 +1853,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Some dirt here.  Some of the initialization requires 	 * knowlege of our system state. 	 */
+comment|/* 	 * Allocate a new peer structure. Some dirt here, since some of 	 * the initialization requires knowlege of our system state. 	 */
 if|if
 condition|(
 name|peer_free_count
@@ -2164,7 +1879,6 @@ expr_stmt|;
 name|peer_associations
 operator|++
 expr_stmt|;
-comment|/* 	 * Initialize the structure.  This stuff is sort of part of 	 * the receive procedure and part of the clear procedure rolled 		 * into one. 		 * 	 * Zero the whole thing for now.  We might be pickier later. 	 */
 name|memset
 argument_list|(
 operator|(
@@ -2182,31 +1896,26 @@ name|peer
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|peer
-operator|->
-name|srcadr
-operator|=
-operator|*
-name|srcadr
-expr_stmt|;
+comment|/* 	 * Initialize the peer structure and dance the interface jig. 	 * Reference clocks step the loopback waltz, the others 	 * squaredance around the interface list looking for a buddy. If 	 * the dance peters out, there is always the wildcard interface. 	 * This might happen in some systems and would preclude proper 	 * operation with public key cryptography. 	 */
 if|if
 condition|(
-name|dstadr
-operator|!=
-literal|0
+name|ISREFCLOCKADR
+argument_list|(
+name|srcadr
+argument_list|)
 condition|)
 name|peer
 operator|->
 name|dstadr
 operator|=
-name|dstadr
+name|loopback_interface
 expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|hmode
-operator|==
-name|MODE_BROADCAST
+name|cast_flags
+operator|&
+name|MDF_BCLNT
 condition|)
 name|peer
 operator|->
@@ -2217,91 +1926,35 @@ argument_list|(
 name|srcadr
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dstadr
+operator|!=
+name|any_interface
+condition|)
+name|peer
+operator|->
+name|dstadr
+operator|=
+name|dstadr
+expr_stmt|;
 else|else
 name|peer
 operator|->
 name|dstadr
 operator|=
-name|any_interface
+name|findinterface
+argument_list|(
+name|srcadr
+argument_list|)
 expr_stmt|;
 name|peer
 operator|->
-name|cast_flags
-operator|=
-operator|(
-name|hmode
-operator|==
-name|MODE_BROADCAST
-operator|)
-condition|?
-operator|(
-name|IN_CLASSD
-argument_list|(
-name|ntohl
-argument_list|(
 name|srcadr
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-argument_list|)
-argument_list|)
-operator|)
-condition|?
-name|MDF_MCAST
-else|:
-name|MDF_BCAST
-else|:
-operator|(
-name|hmode
-operator|==
-name|MODE_BCLIENT
-operator|||
-name|hmode
-operator|==
-name|MODE_MCLIENT
-operator|)
-condition|?
-operator|(
-name|peer
-operator|->
-name|dstadr
-operator|->
-name|flags
-operator|&
-name|INT_MULTICAST
-operator|)
-condition|?
-name|MDF_MCAST
-else|:
-name|MDF_BCAST
-else|:
-name|MDF_UCAST
-expr_stmt|;
-comment|/* Set manycast flags if appropriate */
-if|if
-condition|(
-name|IN_CLASSD
-argument_list|(
-name|ntohl
-argument_list|(
-name|srcadr
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-argument_list|)
-argument_list|)
-operator|&&
-name|hmode
-operator|==
-name|MODE_CLIENT
-condition|)
-name|peer
-operator|->
-name|cast_flags
 operator|=
-name|MDF_ACAST
+operator|*
+name|srcadr
 expr_stmt|;
 name|peer
 operator|->
@@ -2311,6 +1964,71 @@ operator|(
 name|u_char
 operator|)
 name|hmode
+expr_stmt|;
+name|peer
+operator|->
+name|version
+operator|=
+operator|(
+name|u_char
+operator|)
+name|version
+expr_stmt|;
+name|peer
+operator|->
+name|minpoll
+operator|=
+operator|(
+name|u_char
+operator|)
+name|max
+argument_list|(
+name|NTP_MINPOLL
+argument_list|,
+name|minpoll
+argument_list|)
+expr_stmt|;
+name|peer
+operator|->
+name|maxpoll
+operator|=
+operator|(
+name|u_char
+operator|)
+name|min
+argument_list|(
+name|NTP_MAXPOLL
+argument_list|,
+name|maxpoll
+argument_list|)
+expr_stmt|;
+name|peer
+operator|->
+name|flags
+operator|=
+name|flags
+operator||
+operator|(
+name|key
+operator|>
+name|NTP_MAXKEY
+condition|?
+name|FLAG_SKEY
+else|:
+literal|0
+operator|)
+expr_stmt|;
+name|peer
+operator|->
+name|cast_flags
+operator|=
+name|cast_flags
+expr_stmt|;
+name|peer
+operator|->
+name|ttlmax
+operator|=
+name|ttl
 expr_stmt|;
 name|peer
 operator|->
@@ -2320,126 +2038,23 @@ name|key
 expr_stmt|;
 name|peer
 operator|->
-name|version
-operator|=
-operator|(
-name|u_char
-operator|)
-name|version
-expr_stmt|;
-name|peer
-operator|->
-name|minpoll
-operator|=
-operator|(
-name|u_char
-operator|)
-name|minpoll
-expr_stmt|;
-name|peer
-operator|->
-name|maxpoll
-operator|=
-operator|(
-name|u_char
-operator|)
-name|maxpoll
-expr_stmt|;
-name|peer
-operator|->
-name|hpoll
-operator|=
-name|peer
-operator|->
-name|minpoll
-expr_stmt|;
-name|peer
-operator|->
-name|ppoll
-operator|=
-name|peer
-operator|->
-name|minpoll
-expr_stmt|;
-name|peer
-operator|->
-name|ttl
-operator|=
-name|ttl
-expr_stmt|;
-name|peer
-operator|->
-name|leap
-operator|=
-name|LEAP_NOTINSYNC
-expr_stmt|;
-name|peer
-operator|->
 name|precision
 operator|=
 name|sys_precision
-expr_stmt|;
-name|peer
-operator|->
-name|variance
-operator|=
-name|MAXDISPERSE
-expr_stmt|;
-name|peer
-operator|->
-name|epoch
-operator|=
-name|current_time
-expr_stmt|;
-name|peer
-operator|->
-name|stratum
-operator|=
-name|STRATUM_UNSPEC
 expr_stmt|;
 name|peer_clear
 argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
-name|peer
-operator|->
-name|update
-operator|=
-name|peer
-operator|->
-name|outdate
-operator|=
-name|current_time
-expr_stmt|;
-name|peer
-operator|->
-name|nextdate
-operator|=
-name|peer
-operator|->
-name|outdate
-operator|+
-name|RANDPOLL
-argument_list|(
-name|NTP_MINPOLL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|peer
-operator|->
-name|flags
-operator|&
-name|FLAG_BURST
+name|mode_ntpdate
 condition|)
-name|peer
-operator|->
-name|burst
-operator|=
-name|NTP_SHIFT
+name|peer_ntpdate
+operator|++
 expr_stmt|;
-comment|/* 	 * Assign him an association ID and increment the system variable 	 */
+comment|/* 	 * Assign an association ID and increment the system variable. 	 */
 name|peer
 operator|->
 name|associd
@@ -2514,13 +2129,15 @@ name|peer_free_count
 operator|++
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Put him in the hash tables. 	 */
+comment|/* 	 * Put the new peer in the hash tables. 	 */
 name|i
 operator|=
 name|HASH_ADDR
@@ -2589,30 +2206,68 @@ name|DEBUG
 if|if
 condition|(
 name|debug
-operator|>
-literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"mobilize %u next %lu\n"
+literal|"newpeer: %s->%s mode %d vers %d poll %d %d flags %x %x ttl %d key %08x\n"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|dstadr
+operator|->
+name|sin
+argument_list|)
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|)
 argument_list|,
 name|peer
 operator|->
-name|associd
+name|hmode
 argument_list|,
 name|peer
 operator|->
-name|nextdate
-operator|-
+name|version
+argument_list|,
 name|peer
 operator|->
-name|outdate
+name|minpoll
+argument_list|,
+name|peer
+operator|->
+name|maxpoll
+argument_list|,
+name|peer
+operator|->
+name|flags
+argument_list|,
+name|peer
+operator|->
+name|cast_flags
+argument_list|,
+name|peer
+operator|->
+name|ttlmax
+argument_list|,
+name|peer
+operator|->
+name|keyid
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|peer
+operator|)
 return|;
 block|}
 end_function
@@ -2699,7 +2354,7 @@ block|{
 name|num_found
 operator|++
 expr_stmt|;
-comment|/* 			 * Tricky stuff here.  If the peer is polling us 			 * in active mode, turn off the configuration bit 			 * and make the mode passive.  This allows us to 			 * avoid dumping a lot of history for peers we 			 * might choose to keep track of in passive mode. 			 * The protocol will eventually terminate undesirables 			 * on its own. 			 */
+comment|/* 			 * Tricky stuff here. If the peer is polling us 			 * in active mode, turn off the configuration 			 * bit and make the mode passive. This allows us 			 * to avoid dumping a lot of history for peers 			 * we might choose to keep track of in passive 			 * mode. The protocol will eventually terminate 			 * undesirables on its own. 			 */
 if|if
 condition|(
 name|peer
@@ -2755,44 +2410,10 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|num_found
+operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * peer_copy_manycast - copy manycast peer variables to new association  *   (right now it simply copies the transmit timestamp)  */
-end_comment
-
-begin_function
-name|void
-name|peer_config_manycast
-parameter_list|(
-name|struct
-name|peer
-modifier|*
-name|peer1
-parameter_list|,
-name|struct
-name|peer
-modifier|*
-name|peer2
-parameter_list|)
-block|{
-name|peer2
-operator|->
-name|cast_flags
-operator|=
-name|MDF_ACAST
-expr_stmt|;
-name|peer2
-operator|->
-name|xmt
-operator|=
-name|peer1
-operator|->
-name|xmt
-expr_stmt|;
 block|}
 end_function
 
@@ -2901,12 +2522,6 @@ literal|0
 expr_stmt|;
 name|peer
 operator|->
-name|seltooold
-operator|=
-literal|0
-expr_stmt|;
-name|peer
-operator|->
 name|timereset
 operator|=
 name|current_time
@@ -2970,6 +2585,387 @@ argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+end_ifdef
+
+begin_comment
+comment|/*  * expire_all - flush all crypto data and update timestamps.  */
+end_comment
+
+begin_function
+name|void
+name|expire_all
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|peer
+modifier|*
+name|peer
+decl_stmt|,
+modifier|*
+name|next_peer
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+comment|/* 	 * This routine is called about once per day from the timer 	 * routine and when the client is first synchronized. Search the 	 * peer list for all associations and flush only the key list 	 * and cookie. If a manycast client association, flush 	 * everything. Then, recompute and sign the agreement public 	 * value, if present. 	 */
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|HASH_SIZE
+condition|;
+name|n
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|peer
+operator|=
+name|peer_hash
+index|[
+name|n
+index|]
+init|;
+name|peer
+operator|!=
+literal|0
+condition|;
+name|peer
+operator|=
+name|next_peer
+control|)
+block|{
+name|next_peer
+operator|=
+name|peer
+operator|->
+name|next
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_ACAST
+condition|)
+block|{
+name|peer_clear
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AUTOKEY
+block|}
+else|else
+block|{
+name|key_expire
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
+name|peer
+operator|->
+name|pcookie
+operator|.
+name|tstamp
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* AUTOKEY */
+block|}
+block|}
+block|}
+name|sys_private
+operator|=
+operator|(
+name|u_int32
+operator|)
+name|RANDOM
+operator|&
+literal|0xffffffff
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PUBKEY
+name|crypto_agree
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PUBKEY */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"expire_all: at %lu\n"
+argument_list|,
+name|current_time
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AUTOKEY */
+end_comment
+
+begin_comment
+comment|/*  * findmanycastpeer - find and return a manycast peer  */
+end_comment
+
+begin_function
+name|struct
+name|peer
+modifier|*
+name|findmanycastpeer
+parameter_list|(
+name|struct
+name|recvbuf
+modifier|*
+name|rbufp
+parameter_list|)
+block|{
+specifier|register
+name|struct
+name|peer
+modifier|*
+name|peer
+decl_stmt|;
+name|struct
+name|pkt
+modifier|*
+name|pkt
+decl_stmt|;
+name|l_fp
+name|p_org
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/*  	 * This routine is called upon arrival of a client-mode message 	 * from a manycast server. Search the peer list for a manycast 	 * client association where the last transmit timestamp matches 	 * the originate timestamp. This assumes the transmit timestamps 	 * for possibly more than one manycast association are unique. 	 */
+name|pkt
+operator|=
+operator|&
+name|rbufp
+operator|->
+name|recv_pkt
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|HASH_SIZE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|peer_hash_count
+index|[
+name|i
+index|]
+operator|==
+literal|0
+condition|)
+continue|continue;
+for|for
+control|(
+name|peer
+operator|=
+name|peer_hash
+index|[
+name|i
+index|]
+init|;
+name|peer
+operator|!=
+literal|0
+condition|;
+name|peer
+operator|=
+name|peer
+operator|->
+name|next
+control|)
+block|{
+if|if
+condition|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_ACAST
+condition|)
+block|{
+name|NTOHL_FP
+argument_list|(
+operator|&
+name|pkt
+operator|->
+name|org
+argument_list|,
+operator|&
+name|p_org
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|L_ISEQU
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|xmt
+argument_list|,
+operator|&
+name|p_org
+argument_list|)
+condition|)
+return|return
+operator|(
+name|peer
+operator|)
+return|;
+block|}
+block|}
+block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * resetmanycast - reset all manycast clients  */
+end_comment
+
+begin_function
+name|void
+name|resetmanycast
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|register
+name|struct
+name|peer
+modifier|*
+name|peer
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* 	 * This routine is called when the number of client associations 	 * falls below the minimum. Search the peer list for manycast 	 * client associations and reset the ttl and poll interval. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|HASH_SIZE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|peer_hash_count
+index|[
+name|i
+index|]
+operator|==
+literal|0
+condition|)
+continue|continue;
+for|for
+control|(
+name|peer
+operator|=
+name|peer_hash
+index|[
+name|i
+index|]
+init|;
+name|peer
+operator|!=
+literal|0
+condition|;
+name|peer
+operator|=
+name|peer
+operator|->
+name|next
+control|)
+block|{
+if|if
+condition|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_ACAST
+condition|)
+block|{
+name|peer
+operator|->
+name|ttl
+operator|=
+literal|0
+expr_stmt|;
+name|poll_update
+argument_list|(
+name|peer
+argument_list|,
+name|peer
+operator|->
+name|hpoll
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
 block|}
 end_function
 

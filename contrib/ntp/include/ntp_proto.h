@@ -28,6 +28,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|NTP_MAXFREQ
+value|500e-6
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -15,22 +15,11 @@ begin_comment
 comment|/*  * This implementation of mktime is lifted straight from the NetBSD (BSD 4.4)  * version.  I modified it slightly to divorce it from the internals of the  * ctime library.  Thus this version can't use details of the internal  * timezone state file to figure out strange unnormalized struct tm values,  * as might result from someone doing date math on the tm struct then passing  * it to mktime.  *  * It just does as well as it can at normalizing the tm input, then does a  * binary search of the time space using the system's localtime() function.  *  * The original binary search was defective in that it didn't consider the  * setting of tm_isdst when comparing tm values, causing the search to be  * flubbed for times near the dst/standard time changeover.  The original  * code seems to make up for this by grubbing through the timezone info  * whenever the binary search barfed.  Since I don't have that luxury in  * portable code, I have to take care of tm_isdst in the comparison routine.  * This requires knowing how many minutes offset dst is from standard time.  *  * So, if you live somewhere in the world where dst is not 60 minutes offset,  * and your vendor doesn't supply mktime(), you'll have to edit this variable  * by hand.  Sorry about that.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<config.h>
+file|"ntp_machine.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -147,29 +136,6 @@ name|y
 parameter_list|)
 value|((((y) % 4) == 0&& ((y) % 100) != 0) || ((y) % 400) == 0)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TYPES_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
 
 begin_function_decl
 specifier|extern
