@@ -573,7 +573,6 @@ name|res
 operator|->
 name|ai_canonname
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -595,7 +594,6 @@ name|hostname
 operator|=
 name|hostnamebuf
 expr_stmt|;
-block|}
 while|while
 condition|(
 literal|1
