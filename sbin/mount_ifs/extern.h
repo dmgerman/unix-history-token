@@ -4,51 +4,12 @@ comment|/*-  * Copyright (c) 1997 FreeBSD Inc.  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/* vfslist.c */
-end_comment
-
-begin_decl_stmt
-name|int
-name|checkvfsname
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|makevfslist
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* mount_ufs.c */
 end_comment
 
 begin_decl_stmt
 name|int
-name|mount_ufs
+name|mount_ifs
 name|__P
 argument_list|(
 operator|(

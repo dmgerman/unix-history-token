@@ -124,7 +124,7 @@ end_include
 begin_decl_stmt
 specifier|static
 name|void
-name|ufs_usage
+name|ifs_usage
 name|__P
 argument_list|(
 operator|(
@@ -163,7 +163,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|mount_ufs
+name|mount_ifs
 parameter_list|(
 name|argc
 parameter_list|,
@@ -255,7 +255,7 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|ufs_usage
+name|ifs_usage
 argument_list|()
 expr_stmt|;
 block|}
@@ -273,7 +273,7 @@ name|argc
 operator|!=
 literal|2
 condition|)
-name|ufs_usage
+name|ifs_usage
 argument_list|()
 expr_stmt|;
 name|args
@@ -333,7 +333,7 @@ name|error
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"ufs"
+literal|"ifs"
 argument_list|,
 operator|&
 name|vfc
@@ -345,7 +345,7 @@ name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
-literal|"ufs"
+literal|"ifs"
 argument_list|)
 condition|)
 block|{
@@ -353,13 +353,13 @@ if|if
 condition|(
 name|vfsload
 argument_list|(
-literal|"ufs"
+literal|"ifs"
 argument_list|)
 condition|)
 block|{
 name|warn
 argument_list|(
-literal|"vfsload(ufs)"
+literal|"vfsload(ifs)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -376,7 +376,7 @@ name|error
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"ufs"
+literal|"ifs"
 argument_list|,
 operator|&
 name|vfc
@@ -390,7 +390,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"ufs filesystem is not available"
+literal|"ifs filesystem is not available"
 argument_list|)
 expr_stmt|;
 return|return
@@ -496,7 +496,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ufs_usage
+name|ifs_usage
 parameter_list|()
 block|{
 operator|(
@@ -506,7 +506,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_ufs [-o options] special node\n"
+literal|"usage: mount_ifs [-o options] special node\n"
 argument_list|)
 expr_stmt|;
 name|exit

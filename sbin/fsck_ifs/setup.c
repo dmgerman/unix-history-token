@@ -1574,6 +1574,9 @@ name|dirhash
 operator|=
 name|numdirs
 expr_stmt|;
+if|#
+directive|if
+name|NOTFORIFS
 if|if
 condition|(
 name|numdirs
@@ -1590,6 +1593,8 @@ goto|goto
 name|badsb
 goto|;
 block|}
+endif|#
+directive|endif
 name|inplast
 operator|=
 literal|0

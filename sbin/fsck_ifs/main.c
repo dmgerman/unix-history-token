@@ -944,6 +944,9 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * 2: traverse directories from root to mark all connected directories 	 */
+ifdef|#
+directive|ifdef
+name|NOTFORIFS
 if|if
 condition|(
 name|preen
@@ -957,6 +960,13 @@ argument_list|)
 expr_stmt|;
 name|pass2
 argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|"** Skipping phase 2 for IFS\n"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * 3: scan inodes looking for disconnected directories 	 */
 if|if
@@ -1505,7 +1515,7 @@ name|ret
 operator|=
 name|mount
 argument_list|(
-literal|"ufs"
+literal|"ifs"
 argument_list|,
 name|mntbuf
 operator|->
@@ -1707,7 +1717,7 @@ index|]
 operator|.
 name|f_fstypename
 argument_list|,
-literal|"ufs"
+literal|"ifs"
 argument_list|)
 operator|!=
 literal|0
