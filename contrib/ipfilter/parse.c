@@ -3718,7 +3718,7 @@ name|cp
 argument_list|,
 literal|"opt"
 argument_list|,
-literal|4
+literal|3
 argument_list|)
 operator|||
 operator|!
@@ -3730,7 +3730,7 @@ name|cp
 argument_list|,
 literal|"frag"
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 operator|||
 operator|!

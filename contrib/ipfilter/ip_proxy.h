@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_proxy.h,v 2.8.2.3 2000/05/06 12:32:43 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_proxy.h,v 2.8.2.4 2000/12/02 00:15:03 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -455,6 +455,9 @@ name|ftps_wptr
 decl_stmt|;
 name|u_32_t
 name|ftps_seq
+decl_stmt|;
+name|u_32_t
+name|ftps_len
 decl_stmt|;
 name|int
 name|ftps_junk

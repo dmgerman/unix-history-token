@@ -11,7 +11,7 @@ begin_pragma
 pragma|#
 directive|pragma
 name|ident
-literal|"@(#)$Id: solaris.c,v 2.15.2.7 2000/08/05 14:50:30 darrenr Exp $"
+literal|"@(#)$Id: solaris.c,v 2.15.2.8 2000/11/27 10:28:41 darrenr Exp $"
 end_pragma
 
 begin_include
@@ -3387,9 +3387,9 @@ name|char
 operator|*
 operator|)
 operator|&
-name|ip
+name|ip6
 operator|->
-name|ip_len
+name|ip6_plen
 operator|)
 index|[
 literal|0
@@ -3413,9 +3413,9 @@ name|char
 operator|*
 operator|)
 operator|&
-name|ip
+name|ip6
 operator|->
-name|ip_len
+name|ip6_plen
 operator|)
 index|[
 literal|1
@@ -8625,7 +8625,7 @@ name|ip6
 operator|->
 name|ip6_dst
 argument_list|,
-literal|0xffffffff
+name|NULL
 argument_list|,
 literal|0
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.6 2000/10/19 15:39:05 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.9 2001/01/14 14:58:01 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -6254,13 +6254,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|TCPF_ALL
-value|(TH_FIN|TH_SYN|TH_RST|TH_PUSH|TH_ACK|TH_URG)
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -6359,7 +6352,68 @@ begin_define
 define|#
 directive|define
 name|ICMP6ERR_MINPKTLEN
-value|(20 + 8)
+value|(40 + 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMP6ERR_IPICMPHLEN
+value|(40 + 8 + 40)
+end_define
+
+begin_comment
+comment|/*  * ECN is a new addition to TCP - RFC 2481  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TH_ECN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TH_ECN
+value|0x40
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TH_CWR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TH_CWR
+value|0x80
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|TH_ECNALL
+value|(TH_ECN|TH_CWR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPF_ALL
+value|(TH_FIN|TH_SYN|TH_RST|TH_PUSH|TH_ACK|TH_URG|TH_ECN|TH_CWR)
 end_define
 
 begin_endif

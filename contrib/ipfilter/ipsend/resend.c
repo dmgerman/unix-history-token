@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: resend.c,v 2.1 1999/08/04 17:31:12 darrenr Exp $"
+literal|"@(#)$Id: resend.c,v 2.1.4.1 2001/01/10 06:21:20 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -597,6 +597,22 @@ name|eh
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|eh
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|2
+return|;
+block|}
 name|bzero
 argument_list|(
 argument|(char *)A_A eh->ether_shost

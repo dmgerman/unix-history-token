@@ -119,7 +119,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|IPL_NAME
+name|IPL_AUTH
 argument_list|,
 name|O_RDWR
 argument_list|)
