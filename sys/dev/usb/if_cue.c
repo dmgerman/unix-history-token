@@ -1791,11 +1791,20 @@ operator|<<
 operator|(
 name|h
 operator|&
-literal|0xF
+literal|0x7
 operator|)
 expr_stmt|;
 block|}
 comment|/* 	 * Also include the broadcast address in the filter 	 * so we can receive broadcast frames.  	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_BROADCAST
+condition|)
+block|{
 name|h
 operator|=
 name|cue_crc
@@ -1809,7 +1818,7 @@ name|cue_mctab
 index|[
 name|h
 operator|>>
-literal|4
+literal|3
 index|]
 operator||=
 literal|1
@@ -1817,9 +1826,10 @@ operator|<<
 operator|(
 name|h
 operator|&
-literal|0xF
+literal|0x7
 operator|)
 expr_stmt|;
+block|}
 name|cue_mem
 argument_list|(
 name|sc
