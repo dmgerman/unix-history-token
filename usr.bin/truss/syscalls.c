@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"extern.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"syscall.h"
 end_include
 
@@ -747,19 +753,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-modifier|*
-name|ioctlname
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * If/when the list gets big, it might be desirable to do it  * as a hash table or binary search.  */
 end_comment
@@ -820,6 +813,7 @@ comment|/*  * get_struct  *  * Copy a fixed amount of bytes from the process.  *
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|get_struct
 parameter_list|(
@@ -1504,6 +1498,7 @@ case|case
 name|Ioctl
 case|:
 block|{
+specifier|const
 name|char
 modifier|*
 name|temp
@@ -1665,12 +1660,12 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|lsin
 decl_stmt|;
 name|struct
 name|sockaddr_in6
 modifier|*
-name|sin6
+name|lsin6
 decl_stmt|;
 name|struct
 name|sockaddr_un
@@ -1880,7 +1875,7 @@ block|{
 case|case
 name|AF_INET
 case|:
-name|sin
+name|lsin
 operator|=
 operator|(
 expr|struct
@@ -1895,7 +1890,7 @@ argument_list|(
 name|AF_INET
 argument_list|,
 operator|&
-name|sin
+name|lsin
 operator|->
 name|sin_addr
 argument_list|,
@@ -1916,7 +1911,7 @@ name|addr
 argument_list|,
 name|htons
 argument_list|(
-name|sin
+name|lsin
 operator|->
 name|sin_port
 argument_list|)
@@ -1926,7 +1921,7 @@ break|break;
 case|case
 name|AF_INET6
 case|:
-name|sin6
+name|lsin6
 operator|=
 operator|(
 expr|struct
@@ -1941,7 +1936,7 @@ argument_list|(
 name|AF_INET6
 argument_list|,
 operator|&
-name|sin6
+name|lsin6
 operator|->
 name|sin6_addr
 argument_list|,
@@ -1962,7 +1957,7 @@ name|addr
 argument_list|,
 name|htons
 argument_list|(
-name|sin6
+name|lsin6
 operator|->
 name|sin6_port
 argument_list|)

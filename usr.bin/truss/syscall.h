@@ -79,6 +79,7 @@ begin_struct
 struct|struct
 name|syscall
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
