@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1711,21 +1711,17 @@ if|if
 condition|(
 name|gate
 operator|&&
-operator|(
-name|gate
-operator|->
-name|sa_len
-operator|>
-operator|(
-name|len
-operator|=
+name|rt_setgate
+argument_list|(
 name|rt
-operator|->
-name|rt_gateway
-operator|->
-name|sa_len
-operator|)
-operator|)
+argument_list|,
+name|rt_key
+argument_list|(
+name|rt
+argument_list|)
+argument_list|,
+name|gate
+argument_list|)
 condition|)
 name|senderr
 argument_list|(
@@ -1862,21 +1858,6 @@ name|ifp
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|gate
-condition|)
-name|Bcopy
-argument_list|(
-name|gate
-argument_list|,
-name|rt
-operator|->
-name|rt_gateway
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
 name|rt_setmetrics
 argument_list|(
 name|rtm
