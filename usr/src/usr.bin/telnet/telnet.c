@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.4 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2583,6 +2583,12 @@ argument_list|,
 name|will
 argument_list|,
 name|c
+argument_list|,
+operator|!
+name|hisopts
+index|[
+name|c
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -2617,6 +2623,11 @@ argument_list|,
 name|wont
 argument_list|,
 name|c
+argument_list|,
+name|hisopts
+index|[
+name|c
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -2650,6 +2661,12 @@ argument_list|,
 name|doopt
 argument_list|,
 name|c
+argument_list|,
+operator|!
+name|myopts
+index|[
+name|c
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -2684,6 +2701,11 @@ argument_list|,
 name|dont
 argument_list|,
 name|c
+argument_list|,
+name|myopts
+index|[
+name|c
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -3587,6 +3609,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*VARARGS*/
+end_comment
+
 begin_macro
 name|printoption
 argument_list|(
@@ -3595,6 +3621,8 @@ argument_list|,
 argument|fmt
 argument_list|,
 argument|option
+argument_list|,
+argument|what
 argument_list|)
 end_macro
 
@@ -3611,6 +3639,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|option
+decl_stmt|,
+name|what
 decl_stmt|;
 end_decl_stmt
 
@@ -3679,7 +3709,7 @@ name|TELOPT_SUPDUP
 condition|)
 name|printf
 argument_list|(
-literal|"%s %s\r\n"
+literal|"%s %s"
 argument_list|,
 name|fmt
 argument_list|,
@@ -3692,11 +3722,37 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%s %d\r\n"
+literal|"%s %d"
 argument_list|,
 name|fmt
 argument_list|,
 name|option
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|direction
+operator|==
+literal|'<'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\r\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|printf
+argument_list|(
+literal|" (%s)\r\n"
+argument_list|,
+name|what
+condition|?
+literal|"reply"
+else|:
+literal|"don't reply"
 argument_list|)
 expr_stmt|;
 block|}
