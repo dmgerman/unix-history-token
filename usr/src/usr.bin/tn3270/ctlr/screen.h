@@ -13,6 +13,16 @@ begin_comment
 comment|/* defines and defines to describe how to deal with the screen */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -44,6 +54,57 @@ end_define
 
 begin_comment
 comment|/* (27*132) 3278-5 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !defined(MSDOS) */
+end_comment
+
+begin_comment
+comment|/* MSDOS has memory constraints */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXNUMBERLINES
+value|25
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXNUMBERCOLUMNS
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXSCREENSIZE
+value|(MAXNUMBERLINES*MAXNUMBERCOLUMNS)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(MSDOS) */
+end_comment
+
+begin_comment
+comment|/* MSDOS has memory constraints */
 end_comment
 
 begin_define
