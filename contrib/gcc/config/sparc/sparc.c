@@ -10178,6 +10178,18 @@ name|rtx
 name|x
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|x
+argument_list|)
+operator|==
+name|LABEL_REF
+condition|)
+return|return
+literal|1
+return|;
 comment|/* An address which is a symbolic plus a non SMALL_INT needs a temp reg.  */
 if|if
 condition|(

@@ -13849,7 +13849,7 @@ name|COLLECT_EXPORT_LIST
 end_ifdef
 
 begin_comment
-comment|/* This new function is used to decide whether we should    generate import list for an object or to use it directly.  */
+comment|/* Never generate import list (gcc-2.95 branch).  */
 end_comment
 
 begin_function
@@ -13864,52 +13864,6 @@ modifier|*
 name|prog_name
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
-comment|/* If we do not build a shared object then import list should not be used.  */
-if|if
-condition|(
-operator|!
-name|shared_obj
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Currently we check only for libgcc, but this can be changed in future.  */
-name|p
-operator|=
-name|strstr
-argument_list|(
-name|prog_name
-argument_list|,
-literal|"libgcc.a"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-literal|0
-operator|&&
-operator|(
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-operator|==
-sizeof|sizeof
-argument_list|(
-literal|"libgcc.a"
-argument_list|)
-operator|-
-literal|1
-operator|)
-condition|)
-return|return
-literal|1
-return|;
 return|return
 literal|0
 return|;

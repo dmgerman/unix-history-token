@@ -4,7 +4,7 @@ name|char
 modifier|*
 name|version_string
 init|=
-literal|"2.95.2 19991024 (release)"
+literal|"2.95.3 20010101 (prerelease)"
 decl_stmt|;
 end_decl_stmt
 
