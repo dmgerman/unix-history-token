@@ -2525,7 +2525,6 @@ return|return
 name|EIO
 return|;
 block|}
-comment|/* Set the B_LOCKED flag on the buffer, then brelse() it */
 name|LCK_BUF
 argument_list|(
 argument|fs->s_group_desc[i]

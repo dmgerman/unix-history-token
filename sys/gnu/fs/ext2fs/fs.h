@@ -343,7 +343,7 @@ value|VOP_UNLOCK(devvp, 0, curthread)
 end_define
 
 begin_comment
-comment|/*  * To lock a buffer, set the B_LOCKED flag and then brelse() it. To unlock,  * reset the B_LOCKED flag and brelse() the buffer back on the LRU list  */
+comment|/*  * Historically, ext2fs kept it's metadata buffers on the LOCKED queue.  Now,  * we simply change the lock owner to kern so that it may be released from  * another context.  Later, we release the buffer, and conditionally write it  * when we're done.  */
 end_comment
 
 begin_define
