@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.16	82/11/15	*/
+comment|/*	param.c	4.17	83/07/21	*/
 end_comment
 
 begin_include
@@ -150,6 +150,10 @@ name|NPROC
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* the +20 here is for all the lousy server processes */
+end_comment
+
 begin_decl_stmt
 name|int
 name|ntext
@@ -157,6 +161,8 @@ init|=
 literal|24
 operator|+
 name|MAXUSERS
+operator|+
+literal|20
 decl_stmt|;
 end_decl_stmt
 
@@ -176,6 +182,10 @@ literal|32
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* the +40 here is for 20 server processes */
+end_comment
+
 begin_decl_stmt
 name|int
 name|nfile
@@ -193,6 +203,8 @@ operator|/
 literal|10
 operator|+
 literal|32
+operator|+
+literal|40
 decl_stmt|;
 end_decl_stmt
 
