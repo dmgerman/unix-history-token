@@ -195,22 +195,6 @@ directive|include
 file|<machine/tstate.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ofw_mem_region
-name|sparc64_memreg
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sparc64_nmemreg
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|PMAP_STATS_VAR
 argument_list|(
