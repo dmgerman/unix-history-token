@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_put.c	5.12 (Berkeley) %G%"
+literal|"@(#)rec_put.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +147,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_SEQINIT
+name|B_SEQINIT
 argument_list|)
 condition|)
 goto|goto
@@ -309,9 +309,9 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_EOF
+name|R_EOF
 operator||
-name|BTF_RINMEM
+name|R_INMEM
 argument_list|)
 operator|&&
 name|t
@@ -414,13 +414,6 @@ operator|(
 name|status
 operator|)
 return|;
-name|SET
-argument_list|(
-name|t
-argument_list|,
-name|BTF_MODIFIED
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -432,6 +425,13 @@ operator|->
 name|bt_rcursor
 operator|=
 name|nrec
+expr_stmt|;
+name|SET
+argument_list|(
+name|t
+argument_list|,
+name|R_MODIFIED
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -861,6 +861,18 @@ argument_list|,
 name|dflags
 argument_list|)
 expr_stmt|;
+operator|++
+name|t
+operator|->
+name|bt_nrecs
+expr_stmt|;
+name|SET
+argument_list|(
+name|t
+argument_list|,
+name|B_MODIFIED
+argument_list|)
+expr_stmt|;
 name|mpool_put
 argument_list|(
 name|t
@@ -871,11 +883,6 @@ name|h
 argument_list|,
 name|MPOOL_DIRTY
 argument_list|)
-expr_stmt|;
-operator|++
-name|t
-operator|->
-name|bt_nrecs
 expr_stmt|;
 return|return
 operator|(
