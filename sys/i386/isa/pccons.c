@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/pccons.c,v 1.1.1.1 1993/06/12 14:58:00 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/pccons.c,v 1.2 1993/07/15 17:53:10 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6866,6 +6866,53 @@ argument_list|(
 name|KBDATAP
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|REVERSE_CAPS_CTRL
+comment|/* switch the caps lock and control keys */
+if|if
+condition|(
+operator|(
+name|dt
+operator|&
+literal|0x7f
+operator|)
+operator|==
+literal|29
+condition|)
+name|dt
+operator|=
+operator|(
+name|dt
+operator|&
+literal|0x80
+operator|)
+operator||
+literal|58
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|dt
+operator|&
+literal|0x7f
+operator|)
+operator|==
+literal|58
+condition|)
+name|dt
+operator|=
+operator|(
+name|dt
+operator|&
+literal|0x80
+operator|)
+operator||
+literal|29
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pc_xmode
