@@ -416,7 +416,6 @@ name|error
 return|;
 block|}
 comment|/* 		 * We now compare the vnode of the ibcs2_root to the one 		 * vnode asked. If they resolve to be the same, then we 		 * ignore the match so that the real root gets used. 		 * This avoids the problem of traversing "../.." to find the 		 * root directory and never finding it, because "/" resolves 		 * to the emulation root directory. This is expensive :-( 		 */
-comment|/* XXX: prototype should have const here for NDINIT */
 name|NDINIT
 argument_list|(
 operator|&
@@ -428,10 +427,6 @@ name|FOLLOW
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|ibcs2_emul_path
 argument_list|,
 name|p
