@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.32 1998/07/12 08:10:33 bde Exp $"
+literal|"$Id: mkmakefile.c,v 1.33 1998/09/03 21:03:43 nsouch Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1073,6 +1073,34 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"before trying this again.\n\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"If running the new config fails check your config\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"file against the GENERIC or LINT config files for\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"changes in config syntax, or option/device naming\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"conventions\n\n"
 argument_list|)
 expr_stmt|;
 block|}
