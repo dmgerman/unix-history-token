@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.18 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,6 +385,12 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 *	how long is a clock tick? 	 */
+name|hz
+operator|=
+name|hertz
+argument_list|()
+expr_stmt|;
 comment|/* 	 *	get information about a.out file. 	 */
 name|getnfile
 argument_list|()

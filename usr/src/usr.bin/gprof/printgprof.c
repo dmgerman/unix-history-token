@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printgprof.c	1.11 (Berkeley) %G%"
+literal|"@(#)printgprof.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|totime
 argument_list|,
 name|totime
 operator|/
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 block|}
@@ -436,13 +436,13 @@ name|totime
 argument_list|,
 name|actime
 operator|/
-name|HZ
+name|hz
 argument_list|,
 name|np
 operator|->
 name|time
 operator|/
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 if|if
@@ -536,7 +536,7 @@ name|printtime
 argument_list|,
 name|printtime
 operator|/
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 block|}
@@ -679,13 +679,13 @@ name|np
 operator|->
 name|propself
 operator|/
-name|HZ
+name|hz
 argument_list|,
 name|np
 operator|->
 name|propchild
 operator|/
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 if|if
@@ -1475,13 +1475,13 @@ name|arcp
 operator|->
 name|arc_time
 operator|/
-name|HZ
+name|hz
 argument_list|,
 name|arcp
 operator|->
 name|arc_childtime
 operator|/
-name|HZ
+name|hz
 argument_list|,
 name|arcp
 operator|->
@@ -1634,13 +1634,13 @@ name|arcp
 operator|->
 name|arc_time
 operator|/
-name|HZ
+name|hz
 argument_list|,
 name|arcp
 operator|->
 name|arc_childtime
 operator|/
-name|HZ
+name|hz
 argument_list|,
 name|arcp
 operator|->
@@ -2121,13 +2121,13 @@ name|cyclep
 operator|->
 name|propself
 operator|/
-name|HZ
+name|hz
 argument_list|,
 name|cyclep
 operator|->
 name|propchild
 operator|/
-name|HZ
+name|hz
 argument_list|,
 name|cyclep
 operator|->
@@ -2237,13 +2237,13 @@ name|memberp
 operator|->
 name|propself
 operator|/
-name|HZ
+name|hz
 argument_list|,
 name|memberp
 operator|->
 name|propchild
 operator|/
-name|HZ
+name|hz
 argument_list|,
 name|memberp
 operator|->
