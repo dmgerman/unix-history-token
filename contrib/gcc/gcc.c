@@ -4,6 +4,10 @@ comment|/* Compiler driver program that can handle many languages.    Copyright 
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* This program is the user interface to the C compiler and possibly to other compilers.  It is used because compilation is a complicated procedure which involves running several programs and passing temporary files between them, forwarding the users switches to those programs selectively, and deleting the temporary files at the end.  CC recognizes how to compile each input file by suffixes in the file names. Once it knows which kind of compilation to perform, the procedure for compilation is specified by a string called a "spec".  */
 end_comment
 
@@ -20618,6 +20622,9 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 comment|/* Exclude directories that the linker is known to search.  */
 if|if
 condition|(
@@ -20688,6 +20695,9 @@ condition|)
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
+comment|/* FREEBSD_NATIVE */
 return|return
 operator|(
 name|stat
