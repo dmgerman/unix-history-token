@@ -1940,11 +1940,33 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%9d total reclaims\n"
+literal|"%9d total reclaims (%d%% fast)\n"
 argument_list|,
 name|sum
 operator|.
 name|v_pgrec
+argument_list|,
+operator|(
+name|sum
+operator|.
+name|v_fastpgrec
+operator|*
+literal|100
+operator|)
+operator|/
+operator|(
+name|sum
+operator|.
+name|v_pgrec
+operator|==
+literal|0
+condition|?
+literal|1
+else|:
+name|sum
+operator|.
+name|v_pgrec
+operator|)
 argument_list|)
 expr_stmt|;
 name|printf
