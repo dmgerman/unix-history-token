@@ -2250,7 +2250,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|biowait
+name|bufwait
 argument_list|(
 name|bp
 argument_list|)

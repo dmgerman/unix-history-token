@@ -654,7 +654,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|biowait
+name|bufwait
 argument_list|(
 name|bp
 argument_list|)
@@ -737,7 +737,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* perform the I/O */
-name|biowait
+name|bufwait
 argument_list|(
 name|bp
 argument_list|)
@@ -1351,7 +1351,7 @@ name|pbp
 argument_list|)
 expr_stmt|;
 comment|/* perform the I/O */
-name|biowait
+name|bufwait
 argument_list|(
 name|pbp
 argument_list|)
@@ -1963,7 +1963,7 @@ operator|||
 name|check
 condition|)
 block|{
-name|biowait
+name|bufwait
 argument_list|(
 name|bpp
 index|[
@@ -2439,7 +2439,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* perform the I/O */
-name|biowait
+name|bufwait
 argument_list|(
 name|bp
 argument_list|)
@@ -2598,7 +2598,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|biowait
+name|bufwait
 argument_list|(
 name|bp
 argument_list|)

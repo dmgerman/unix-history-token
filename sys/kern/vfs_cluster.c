@@ -1276,7 +1276,7 @@ name|reqbp
 condition|)
 return|return
 operator|(
-name|biowait
+name|bufwait
 argument_list|(
 name|reqbp
 argument_list|)

@@ -16682,7 +16682,7 @@ block|{
 name|int
 name|rtval
 init|=
-name|biowait
+name|bufwait
 argument_list|(
 name|bp
 argument_list|)
