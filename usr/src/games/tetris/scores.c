@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)scores.c	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek and Darren F. Provine.  *  * %sccs.include.redist.c%  *  *	@(#)scores.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * score code for Tetris, by Darren Provine (kilroy@gboro.glassboro.edu)  * modified 22 January 1992, to limit the number of entries any one  * person has.  *  * Major whacks since then.  */
+comment|/*  * Score code for Tetris, by Darren Provine (kilroy@gboro.glassboro.edu)  * modified 22 January 1992, to limit the number of entries any one  * person has.  *  * Major whacks since then.  */
 end_comment
 
 begin_include
