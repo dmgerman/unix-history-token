@@ -3538,21 +3538,21 @@ name|m
 operator|=
 name|m0
 expr_stmt|;
-comment|/* the packet we are looking at 	*/
+comment|/* the packet we are looking at		*/
 name|args
 operator|.
 name|oif
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* this is an input packet 		*/
+comment|/* this is an input packet		*/
 name|args
 operator|.
 name|divert_rule
 operator|=
 literal|0
 expr_stmt|;
-comment|/* we do not support divert yet 	*/
+comment|/* we do not support divert yet		*/
 name|args
 operator|.
 name|next_hop

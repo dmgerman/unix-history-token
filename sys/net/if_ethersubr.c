@@ -2423,7 +2423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipfw processing for ethernet packets (in and out).  * The second parameter is NULL from ether_demux, and ifp from  * ether_output_frame. This section of code could be used from  * bridge.c as well as long as we put some extra field (e.g. shared)  * to distinguish that case from ether_output_frame();  */
+comment|/*  * ipfw processing for ethernet packets (in and out).  * The second parameter is NULL from ether_demux, and ifp from  * ether_output_frame. This section of code could be used from  * bridge.c as well as long as we use some extra info  * to distinguish that case from ether_output_frame();  */
 end_comment
 
 begin_function
@@ -2463,7 +2463,7 @@ init|=
 operator|*
 name|eh
 decl_stmt|;
-comment|/* could be a ptr in m */
+comment|/* might be a ptr in m */
 name|int
 name|i
 decl_stmt|;
@@ -2483,7 +2483,7 @@ return|return
 literal|1
 return|;
 comment|/* HACK! I should obey the fw_one_pass */
-comment|/*          * i need some amt of data to be contiguous, and in case others need          * the packet (shared==1) also better be in the first mbuf.          */
+comment|/* 	 * I need some amt of data to be contiguous, and in case others need 	 * the packet (shared==1) also better be in the first mbuf. 	 */
 name|i
 operator|=
 name|min
@@ -2572,7 +2572,7 @@ name|next_hop
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* we do not support forward yet 	*/
+comment|/* we do not support forward yet	*/
 name|args
 operator|.
 name|eh
@@ -2793,13 +2793,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*          * XXX add divert/forward actions...          */
-comment|/* if none of the above matches, we have to drop the pkt */
-name|printf
-argument_list|(
-literal|"ether_ipfw: No rules match, so dropping packet!\n"
-argument_list|)
-expr_stmt|;
+comment|/* 	 * XXX at some point add support for divert/forward actions. 	 * If none of the above matches, we have to drop the pkt. 	 */
 return|return
 literal|0
 return|;
@@ -3377,10 +3371,6 @@ operator|->
 name|if_imcasts
 operator|++
 expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* XXX ipfw */
 name|post_stats
 label|:
 if|if
@@ -3424,9 +3414,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* XXX ipfw */
 name|ether_type
 operator|=
 name|ntohs
