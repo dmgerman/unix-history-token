@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_xxx.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_xxx.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -416,8 +410,14 @@ decl_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
 begin_macro
-name|ovhangup
+name|oquota
 argument_list|()
 end_macro
 
@@ -425,26 +425,16 @@ begin_block
 block|{
 return|return
 operator|(
-name|EINVAL
+name|ENOSYS
 operator|)
 return|;
 block|}
 end_block
 
-begin_macro
-name|oldquota
-argument_list|()
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-end_block
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
