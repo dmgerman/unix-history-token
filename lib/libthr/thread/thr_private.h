@@ -333,32 +333,34 @@ define|\
 value|do {								\ 		if (umtx_unlock((m), curthread->thr_id) != 0)		\ 			abort();					\ 	} while (0)
 end_define
 
-begin_comment
-comment|/*  * State change macro:  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|PTHREAD_SET_STATE
+name|PTHREAD_LOCK
 parameter_list|(
-name|thrd
-parameter_list|,
-name|newstate
+name|p
 parameter_list|)
-value|do {				\ 	(thrd)->state = newstate;					\ 	(thrd)->fname = __FILE__;					\ 	(thrd)->lineno = __LINE__;					\ } while (0)
+value|UMTX_LOCK(&(p)->lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTHREAD_NEW_STATE
+name|PTHREAD_UNLOCK
 parameter_list|(
-name|thrd
-parameter_list|,
-name|newstate
+name|p
 parameter_list|)
-value|do {				\ 	if (newstate == PS_RUNNING) 					\ 		thr_wake(thrd->thr_id);					\ 	PTHREAD_SET_STATE(thrd, newstate);				\ } while (0)
+value|UMTX_UNLOCK(&(p)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_WAKE
+parameter_list|(
+name|ptd
+parameter_list|)
+value|thr_wake((ptd)->thr_id)
 end_define
 
 begin_comment
@@ -1154,6 +1156,40 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * The cancel mode a thread is in is determined by the  * the cancel type and state it is set in. The two values  * are combined into one mode:  *	Mode		State		Type  *	----		-----		----  *	off		disabled	deferred  *	off		disabled	async  *	deferred	enabled		deferred  *	async		enabled		async  */
+end_comment
+
+begin_enum
+enum|enum
+name|cancel_mode
+block|{
+name|M_OFF
+block|,
+name|M_DEFERRED
+block|,
+name|M_ASYNC
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * A thread's cancellation is pending until the cancel  * mode has been tested to determine if the thread can be  * cancelled immediately.  */
+end_comment
+
+begin_enum
+enum|enum
+name|cancellation_state
+block|{
+name|CS_NULL
+block|,
+name|CS_PENDING
+block|,
+name|CS_SET
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Thread structure.  */
 end_comment
 
@@ -1187,6 +1223,22 @@ name|int
 name|signest
 decl_stmt|;
 comment|/* blocked signal netsting level */
+name|int
+name|ptdflags
+decl_stmt|;
+comment|/* used by other other threads 					     to signal this thread */
+name|int
+name|isdead
+decl_stmt|;
+name|int
+name|isdeadlocked
+decl_stmt|;
+name|int
+name|exiting
+decl_stmt|;
+name|int
+name|cancellationpoint
+decl_stmt|;
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
 name|struct
 name|umtx
@@ -1234,23 +1286,19 @@ comment|/* 	 * Machine context, including signal state. 	 */
 name|ucontext_t
 name|ctx
 decl_stmt|;
-comment|/* 	 * Cancelability flags - the lower 2 bits are used by cancel 	 * definitions in pthread.h 	 */
-define|#
-directive|define
-name|PTHREAD_AT_CANCEL_POINT
-value|0x0004
-define|#
-directive|define
-name|PTHREAD_CANCELLING
-value|0x0008
-comment|/* 	 * Protected by Giant. 	 */
-name|int
-name|cancelflags
-decl_stmt|;
-comment|/* Thread state: */
+comment|/* 	 * The primary method of obtaining a thread's cancel state 	 * and type is through cancelmode. The cancelstate field is 	 * only so we don't loose the cancel state when the mode is 	 * turned off. 	 */
 name|enum
-name|pthread_state
-name|state
+name|cancel_mode
+name|cancelmode
+decl_stmt|;
+name|enum
+name|cancel_mode
+name|cancelstate
+decl_stmt|;
+comment|/* Specifies if cancellation is pending, acted upon, or neither. */
+name|enum
+name|cancellation_state
+name|cancellation
 decl_stmt|;
 comment|/* 	 * Error variable used instead of errno. The function __error() 	 * returns a pointer to this.  	 */
 name|int
@@ -1266,7 +1314,7 @@ name|struct
 name|join_status
 name|join_status
 decl_stmt|;
-comment|/* 	 * A thread can belong to: 	 * 	 *   o A queue of threads waiting for a mutex 	 *   o A queue of threads waiting for a condition variable 	 * 	 * A thread can also be joining a thread (the joiner field above). 	 * 	 * It must not be possible for a thread to belong to any of the 	 * above queues while it is handling a signal.  Signal handlers 	 * may longjmp back to previous stack frames circumventing normal 	 * control flow.  This could corrupt queue integrity if the thread 	 * retains membership in the queue.  Therefore, if a thread is a 	 * member of one of these queues when a signal handler is invoked, 	 * it must remove itself from the queue before calling the signal 	 * handler and reinsert itself after normal return of the handler. 	 * 	 * Use sqe for synchronization (mutex and condition variable) queue 	 * links. 	 */
+comment|/* 	 * A thread can belong to: 	 * 	 *   o A queue of threads waiting for a mutex 	 *   o A queue of threads waiting for a condition variable 	 * 	 * A thread can also be joining a thread (the joiner field above). 	 * 	 * Use sqe for synchronization (mutex and condition variable) queue 	 * links. 	 */
 name|TAILQ_ENTRY
 argument_list|(
 argument|pthread
@@ -1289,13 +1337,14 @@ name|PTHREAD_FLAGS_PRIVATE
 value|0x0001
 define|#
 directive|define
-name|PTHREAD_EXITING
-value|0x0002
-define|#
-directive|define
 name|PTHREAD_FLAGS_BARR_REL
 value|0x0004
 comment|/* has been released from barrier */
+define|#
+directive|define
+name|PTHREAD_FLAGS_IN_BARRQ
+value|0x0008
+comment|/* in barrier queue using sqe link */
 define|#
 directive|define
 name|PTHREAD_FLAGS_IN_CONDQ
@@ -1320,7 +1369,12 @@ define|#
 directive|define
 name|PTHREAD_FLAGS_IN_SYNCQ
 define|\
-value|(PTHREAD_FLAGS_IN_CONDQ | PTHREAD_FLAGS_IN_MUTEXQ)
+value|(PTHREAD_FLAGS_IN_CONDQ | PTHREAD_FLAGS_IN_MUTEXQ | PTHREAD_FLAGS_IN_BARRQ)
+define|#
+directive|define
+name|PTHREAD_FLAGS_NOT_RUNNING
+define|\
+value|(PTHREAD_FLAGS_IN_SYNCQ | PTHREAD_FLAGS_SUSPENDED)
 comment|/* 	 * Base priority is the user setable and retrievable priority 	 * of the thread.  It is only affected by explicit calls to 	 * set thread priority and upon thread creation via a thread 	 * attribute or default priority. 	 */
 name|char
 name|base_priority
@@ -2255,24 +2309,6 @@ name|void
 name|_thread_init
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_thread_sig_wrapper
-parameter_list|(
-name|int
-name|sig
-parameter_list|,
-name|siginfo_t
-modifier|*
-name|info
-parameter_list|,
-name|void
-modifier|*
-name|context
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -193,28 +193,26 @@ modifier|*
 name|status
 parameter_list|)
 block|{
-name|pthread_t
+name|struct
 name|pthread
-decl_stmt|,
-name|joiner
+modifier|*
+name|pthread
 decl_stmt|;
 name|int
 name|exitNow
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * This thread will no longer handle any signals. 	 */
+name|_thread_sigblock
+argument_list|()
+expr_stmt|;
 comment|/* Check if this thread is already in the process of exiting: */
 if|if
 condition|(
-operator|(
 name|curthread
 operator|->
-name|flags
-operator|&
-name|PTHREAD_EXITING
-operator|)
-operator|!=
-literal|0
+name|exiting
 condition|)
 block|{
 name|char
@@ -246,9 +244,9 @@ block|}
 comment|/* Flag this thread as exiting: */
 name|curthread
 operator|->
-name|flags
-operator||=
-name|PTHREAD_EXITING
+name|exiting
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Save the return value: */
 name|curthread
@@ -328,47 +326,11 @@ operator|->
 name|rwlockList
 argument_list|)
 expr_stmt|;
-name|retry
-label|:
-comment|/* 	 * Proper lock order, to minimize deadlocks, between joining 	 * and exiting threads is: DEAD_LIST, THREAD_LIST, exiting, joiner. 	 * In order to do this *and* protect from races, we must resort 	 * this test-and-retry loop. 	 */
-name|joiner
-operator|=
-name|curthread
-operator|->
-name|joiner
-expr_stmt|;
 comment|/* Lock the dead list first to maintain correct lock order */
 name|DEAD_LIST_LOCK
 expr_stmt|;
 name|THREAD_LIST_LOCK
 expr_stmt|;
-name|_thread_critical_enter
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|joiner
-operator|!=
-name|curthread
-operator|->
-name|joiner
-condition|)
-block|{
-name|_thread_critical_exit
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|THREAD_LIST_UNLOCK
-expr_stmt|;
-name|DEAD_LIST_UNLOCK
-expr_stmt|;
-goto|goto
-name|retry
-goto|;
-block|}
 comment|/* Check if there is a thread joining this one: */
 if|if
 condition|(
@@ -385,27 +347,11 @@ name|curthread
 operator|->
 name|joiner
 expr_stmt|;
-name|UMTX_LOCK
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 name|curthread
 operator|->
 name|joiner
 operator|=
 name|NULL
-expr_stmt|;
-comment|/* Make the joining thread runnable: */
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|pthread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
 expr_stmt|;
 comment|/* Set the return value for the joining thread: */
 name|pthread
@@ -434,32 +380,10 @@ name|thread
 operator|=
 name|NULL
 expr_stmt|;
-name|UMTX_UNLOCK
+comment|/* Make the joining thread runnable: */
+name|PTHREAD_WAKE
 argument_list|(
-operator|&
 name|pthread
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-comment|/* Make this thread collectable by the garbage collector. */
-name|PTHREAD_ASSERT
-argument_list|(
-operator|(
-operator|(
-name|curthread
-operator|->
-name|attr
-operator|.
-name|flags
-operator|&
-name|PTHREAD_DETACHED
-operator|)
-operator|==
-literal|0
-operator|)
-argument_list|,
-literal|"Cannot join a detached thread"
 argument_list|)
 expr_stmt|;
 name|curthread
@@ -495,17 +419,11 @@ argument_list|,
 name|tle
 argument_list|)
 expr_stmt|;
-name|PTHREAD_SET_STATE
-argument_list|(
 name|curthread
-argument_list|,
-name|PS_DEAD
-argument_list|)
-expr_stmt|;
-name|_thread_critical_exit
-argument_list|(
-name|curthread
-argument_list|)
+operator|->
+name|isdead
+operator|=
+literal|1
 expr_stmt|;
 comment|/* If we're the last thread, call it quits */
 if|if

@@ -222,18 +222,22 @@ return|;
 comment|/* 	 * If the pthread is waiting on a mutex grab it now. Doing it now 	 * even though we do not need it immediately greatly simplifies the 	 * LOR avoidance code. 	 */
 do|do
 block|{
-name|_thread_critical_enter
+name|PTHREAD_LOCK
 argument_list|(
 name|pthread
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pthread
 operator|->
-name|state
-operator|==
-name|PS_MUTEX_WAIT
+name|flags
+operator|&
+name|PTHREAD_FLAGS_IN_MUTEXQ
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|mtx
@@ -256,7 +260,7 @@ argument_list|)
 operator|==
 name|EBUSY
 condition|)
-name|_thread_critical_exit
+name|PTHREAD_UNLOCK
 argument_list|(
 name|pthread
 argument_list|)
@@ -374,7 +378,7 @@ name|sched_policy
 operator|=
 name|policy
 expr_stmt|;
-name|_thread_critical_exit
+name|PTHREAD_UNLOCK
 argument_list|(
 name|pthread
 argument_list|)
