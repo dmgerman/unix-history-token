@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.4 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.5 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.4 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.5 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,12 +227,6 @@ specifier|extern
 name|STAB
 modifier|*
 name|stab
-parameter_list|()
-function_decl|;
-specifier|extern
-name|MCI
-modifier|*
-name|openmailer
 parameter_list|()
 function_decl|;
 if|if
@@ -646,6 +640,22 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|17
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"smtpmailfrom: CurHost=%s\n"
+argument_list|,
+name|CurHostName
+argument_list|)
+expr_stmt|;
 comment|/* 	**  Send the HOPS command. 	**	This is non-standard and may give an "unknown command". 	**		This is not an error. 	**	It can give a "bad hop count" error if the hop 	**		count is exceeded. 	*/
 comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
 name|mci

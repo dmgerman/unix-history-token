@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.13 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2852,6 +2852,12 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
+name|CurHostName
+operator|=
+name|mci
+operator|->
+name|mci_host
+expr_stmt|;
 return|return
 name|mci
 return|;

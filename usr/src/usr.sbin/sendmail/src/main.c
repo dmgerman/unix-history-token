@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.13 (Berkeley) %G%"
+literal|"@(#)main.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2010,61 +2010,6 @@ comment|/* run queue files at intervals */
 ifdef|#
 directive|ifdef
 name|QUEUE
-if|if
-condition|(
-name|getuid
-argument_list|()
-operator|!=
-literal|0
-condition|)
-block|{
-name|struct
-name|stat
-name|stbuf
-decl_stmt|;
-comment|/* check to see if we own the queue directory */
-if|if
-condition|(
-name|stat
-argument_list|(
-name|QueueDir
-argument_list|,
-operator|&
-name|stbuf
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|syserr
-argument_list|(
-literal|"main: cannot stat %s"
-argument_list|,
-name|QueueDir
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stbuf
-operator|.
-name|st_uid
-operator|!=
-name|getuid
-argument_list|()
-condition|)
-block|{
-comment|/* nope, really a botch */
-name|usrerr
-argument_list|(
-literal|"Permission denied"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_NOPERM
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 operator|(
 name|void
 operator|)
@@ -2238,7 +2183,7 @@ name|tTd
 argument_list|(
 literal|8
 argument_list|,
-literal|1
+literal|8
 argument_list|)
 condition|)
 name|_res
@@ -2375,6 +2320,81 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QUEUE
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|queuemode
+operator|&&
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|struct
+name|stat
+name|stbuf
+decl_stmt|;
+comment|/* check to see if we own the queue directory */
+if|if
+condition|(
+name|stat
+argument_list|(
+name|QueueDir
+argument_list|,
+operator|&
+name|stbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"main: cannot stat %s"
+argument_list|,
+name|QueueDir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stbuf
+operator|.
+name|st_uid
+operator|!=
+name|getuid
+argument_list|()
+condition|)
+block|{
+comment|/* nope, really a botch */
+name|usrerr
+argument_list|(
+literal|"Permission denied"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_NOPERM
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* QUEUE */
+end_comment
 
 begin_switch
 switch|switch

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.5 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4122,18 +4122,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'w'
-case|:
-comment|/* we don't have wildcard MX records */
-name|NoWildcardMX
-operator|=
-name|atobool
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'x'
 case|:
 comment|/* load avg at which to auto-queue msgs */
@@ -4259,6 +4247,24 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|37
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"%s added to class %c\n"
+argument_list|,
+name|word
+argument_list|,
+name|class
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|stab

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.12 (Berkeley) %G%"
+literal|"@(#)conf.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3136,7 +3136,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|UNAME
+name|HASUNAME
 end_ifndef
 
 begin_function
@@ -3424,7 +3424,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* UNAME */
+comment|/* HASUNAME */
 end_comment
 
 end_unit

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.5 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,6 +314,14 @@ name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
+name|char
+modifier|*
+name|id
+init|=
+name|e
+operator|->
+name|e_id
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -348,6 +356,16 @@ name|e_flags
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|id
+operator|==
+name|NULL
+condition|)
+name|id
+operator|=
+literal|"(none)"
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -363,17 +381,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"dropenvelope, id=%s, flags=%o, pid=%d"
 argument_list|,
-name|e
-operator|->
-name|e_id
-operator|==
-name|NULL
-condition|?
-literal|"(none)"
-else|:
-name|e
-operator|->
-name|e_id
+name|id
 argument_list|,
 name|e
 operator|->
@@ -669,9 +677,7 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: done"
 argument_list|,
-name|e
-operator|->
-name|e_id
+name|id
 argument_list|)
 expr_stmt|;
 endif|#
