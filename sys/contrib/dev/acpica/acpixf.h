@@ -813,16 +813,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiSetSystemSleepState
-parameter_list|(
-name|UINT8
-name|SleepState
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
