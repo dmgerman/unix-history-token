@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: in_cksum.c 1.1 90/07/09$  *  *	@(#)in_cksum.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: in_cksum.c 1.1 90/07/09$  *  *	@(#)in_cksum.c	8.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
