@@ -3822,6 +3822,8 @@ name|void
 operator|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|hdr
 argument_list|)
 expr_stmt|;
@@ -4286,6 +4288,8 @@ name|void
 operator|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|hdr
 argument_list|)
 expr_stmt|;
