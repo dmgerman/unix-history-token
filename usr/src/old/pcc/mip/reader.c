@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)reader.c	4.4 (Berkeley) %G%"
+literal|"@(#)reader.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2656,6 +2656,25 @@ case|case
 name|UNARY
 name|MINUS
 case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+name|order
+argument_list|(
+name|p1
+argument_list|,
+name|INBREG
+operator||
+name|INAREG
+operator||
+name|SOREG
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|order
 argument_list|(
 name|p1
@@ -2665,6 +2684,8 @@ operator||
 name|INAREG
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|again
 goto|;
