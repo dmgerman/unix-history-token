@@ -6680,6 +6680,20 @@ case|case
 name|SIOCGPRIVATE_0
 case|:
 comment|/* used by Cisco client utility */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|suser
+argument_list|(
+name|p
+argument_list|)
+operator|)
+condition|)
+goto|goto
+name|out
+goto|;
 name|copyin
 argument_list|(
 name|ifr
@@ -6798,6 +6812,20 @@ case|case
 name|SIOCGPRIVATE_1
 case|:
 comment|/* used by Cisco client utility */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|suser
+argument_list|(
+name|p
+argument_list|)
+operator|)
+condition|)
+goto|goto
+name|out
+goto|;
 name|copyin
 argument_list|(
 name|ifr
