@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dead_vnops.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dead_vnops.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -500,7 +500,7 @@ begin_define
 define|#
 directive|define
 name|dead_truncate
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		u_long length, \ 		int flags))) nullop)
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t length, \ 		int flags))) nullop)
 end_define
 
 begin_define
