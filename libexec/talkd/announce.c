@@ -500,7 +500,7 @@ index|]
 argument_list|,
 name|N_CHARS
 argument_list|,
-literal|"Message from Talk_Daemon@%s at %d:%02d ..."
+literal|"Message from Talk_Daemon@%s at %d:%02d on %d/%.2d/%.2d ..."
 argument_list|,
 name|hostname
 argument_list|,
@@ -511,6 +511,20 @@ argument_list|,
 name|localclock
 operator|->
 name|tm_min
+argument_list|,
+name|localclock
+operator|->
+name|tm_year
+operator|+
+literal|1900
+argument_list|,
+name|localclock
+operator|->
+name|tm_mon
+argument_list|,
+name|localclock
+operator|->
+name|tm_mday
 argument_list|)
 expr_stmt|;
 name|sizes
