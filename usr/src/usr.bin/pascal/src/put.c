@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.7 %G%"
+literal|"@(#)put.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2208,6 +2208,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|OBJ
 return|return
 operator|(
 name|next
