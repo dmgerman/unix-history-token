@@ -78,11 +78,13 @@ name|n
 parameter_list|)
 name|wchar_t
 modifier|*
+name|__restrict
 name|s1
 decl_stmt|;
 specifier|const
 name|wchar_t
 modifier|*
+name|__restrict
 name|s2
 decl_stmt|;
 name|size_t

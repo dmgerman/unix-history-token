@@ -77,11 +77,13 @@ parameter_list|)
 specifier|const
 name|wchar_t
 modifier|*
+name|__restrict
 name|big
 decl_stmt|;
 specifier|const
 name|wchar_t
 modifier|*
+name|__restrict
 name|little
 decl_stmt|;
 block|{

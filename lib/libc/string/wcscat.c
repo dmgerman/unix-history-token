@@ -76,11 +76,13 @@ name|s2
 parameter_list|)
 name|wchar_t
 modifier|*
+name|__restrict
 name|s1
 decl_stmt|;
 specifier|const
 name|wchar_t
 modifier|*
+name|__restrict
 name|s2
 decl_stmt|;
 block|{
