@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	1.5	87/02/17	*/
+comment|/*	srt0.c	1.6	87/04/02	*/
 end_comment
 
 begin_include
@@ -35,6 +35,12 @@ name|_openfirst
 operator|.
 name|globl
 name|_start
+operator|.
+name|globl
+name|_boothowto
+operator|.
+name|globl
+name|_bootdev
 operator|.
 name|set
 name|HIGH
@@ -181,6 +187,14 @@ name|fp
 decl_stmt|,
 name|ofp
 name|movl
+name|r11
+decl_stmt|,
+name|_boothowto
+name|movl
+name|r10
+decl_stmt|,
+name|_bootdev
+name|movl
 name|$1
 decl_stmt|,
 name|_openfirst
@@ -239,6 +253,16 @@ name|BOOTRELOC
 endif|#
 directive|endif
 name|ofp
+operator|:
+operator|.
+name|long
+literal|0
+name|_boothowto
+operator|:
+operator|.
+name|long
+literal|0
+name|_bootdev
 operator|:
 operator|.
 name|long
