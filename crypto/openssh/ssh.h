@@ -123,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|ETCDIR
-value|"/etc"
+value|"/etc/ssh"
 end_define
 
 begin_define
