@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.15 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2291,42 +2291,6 @@ begin_comment
 comment|/* name of home (local) network */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMTP
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WIZ
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|WizWord
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the stored wizard password */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|WIZ
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|SMTP
-end_endif
-
 begin_macro
 name|setoption
 argument_list|(
@@ -3024,30 +2988,6 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|SMTP
-ifdef|#
-directive|ifdef
-name|WIZ
-case|case
-literal|'W'
-case|:
-comment|/* set the wizards password */
-name|WizWord
-operator|=
-name|newstr
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-endif|WIZ
-endif|#
-directive|endif
-endif|SMTP
 case|case
 literal|'x'
 case|:

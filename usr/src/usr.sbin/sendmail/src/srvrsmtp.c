@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.25 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.26 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.25 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.26 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,28 +272,6 @@ begin_comment
 comment|/* debug -- set debug mode */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CMDDBGKILL
-value|14
-end_define
-
-begin_comment
-comment|/* kill -- kill sendmail */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMDDBGWIZ
-value|15
-end_define
-
-begin_comment
-comment|/* wiz -- become a wizard */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -367,55 +345,12 @@ literal|"debug"
 block|,
 name|CMDDBGDEBUG
 block|,
-literal|"kill"
-block|,
-name|CMDDBGKILL
-block|,
-literal|"wiz"
-block|,
-name|CMDDBGWIZ
-block|,
 name|NULL
 block|,
 name|CMDERROR
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WIZ
-end_ifdef
-
-begin_decl_stmt
-name|bool
-name|IsWiz
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if we are a wizard */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|WizWord
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the wizard word to compare against */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|WIZ
-end_endif
 
 begin_decl_stmt
 name|bool
@@ -1596,139 +1531,6 @@ literal|"Debug set"
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|WIZ
-case|case
-name|CMDDBGKILL
-case|:
-comment|/* kill the parent */
-if|if
-condition|(
-operator|!
-name|iswiz
-argument_list|()
-condition|)
-break|break;
-if|if
-condition|(
-name|kill
-argument_list|(
-name|MotherPid
-argument_list|,
-name|SIGTERM
-argument_list|)
-operator|>=
-literal|0
-condition|)
-name|message
-argument_list|(
-literal|"200"
-argument_list|,
-literal|"Mother is dead"
-argument_list|)
-expr_stmt|;
-else|else
-name|message
-argument_list|(
-literal|"500"
-argument_list|,
-literal|"Can't kill Mom"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CMDDBGWIZ
-case|:
-comment|/* become a wizard */
-if|if
-condition|(
-name|WizWord
-operator|!=
-name|NULL
-condition|)
-block|{
-name|char
-name|seed
-index|[
-literal|3
-index|]
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|crypt
-parameter_list|()
-function_decl|;
-operator|(
-name|void
-operator|)
-name|strncpy
-argument_list|(
-name|seed
-argument_list|,
-name|WizWord
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|WizWord
-argument_list|,
-name|crypt
-argument_list|(
-name|p
-argument_list|,
-name|seed
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|IsWiz
-operator|=
-name|TRUE
-expr_stmt|;
-name|message
-argument_list|(
-literal|"200"
-argument_list|,
-literal|"Please pass, oh mighty wizard"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-name|message
-argument_list|(
-literal|"500"
-argument_list|,
-literal|"You are no wizard!"
-argument_list|)
-expr_stmt|;
-break|break;
-else|#
-directive|else
-else|WIZ
-case|case
-name|CMDDBGWIZ
-case|:
-comment|/* try to become a wizard */
-name|message
-argument_list|(
-literal|"500"
-argument_list|,
-literal|"You wascal wabbit!  Wandering wizards won't win!"
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-endif|WIZ
 else|#
 directive|else
 comment|/* not SMTPDEBUG */
@@ -1740,14 +1542,6 @@ case|case
 name|CMDDBGDEBUG
 case|:
 comment|/* set debug mode */
-case|case
-name|CMDDBGKILL
-case|:
-comment|/* kill the parent */
-case|case
-name|CMDDBGWIZ
-case|:
-comment|/* become a wizard */
 ifdef|#
 directive|ifdef
 name|LOG
@@ -2164,50 +1958,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  ISWIZ -- tell us if we are a wizard ** **	If not, print a nasty message. ** **	Parameters: **		none. ** **	Returns: **		TRUE if we are a wizard. **		FALSE if we are not a wizard. ** **	Side Effects: **		Prints a 500 exit stat if we are not a wizard. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WIZ
-end_ifdef
-
-begin_function
-name|bool
-name|iswiz
-parameter_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|IsWiz
-condition|)
-name|message
-argument_list|(
-literal|"500"
-argument_list|,
-literal|"Mere mortals musn't mutter that mantra"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|IsWiz
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-endif|WIZ
-end_endif
 
 begin_escape
 end_escape
