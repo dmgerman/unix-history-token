@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)errlst.c	4.5 (Berkeley) 82/05/02 */
+comment|/* @(#)errlst.c	4.6 (Berkeley) 82/12/19 */
 end_comment
 
 begin_decl_stmt
@@ -212,6 +212,18 @@ comment|/* 64 - EHOSTDOWN */
 literal|"Host is unreachable"
 block|,
 comment|/* 65 - EHOSTUNREACH */
+literal|"Directory not empty"
+block|,
+comment|/* 66 - ENOTEMPTY */
+literal|"Too many processes"
+block|,
+comment|/* 67 - EPROCLIM */
+literal|"Too many users"
+block|,
+comment|/* 68 - EUSERS */
+literal|"Disc quota exceeded"
+block|,
+comment|/* 69 - EDQUOT */
 block|}
 decl_stmt|;
 end_decl_stmt
