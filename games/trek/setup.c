@@ -31,6 +31,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"trek.h"
 end_include
 
@@ -402,7 +408,7 @@ index|]
 operator|<<
 name|i
 expr_stmt|;
-name|srand
+name|srandom
 argument_list|(
 name|d
 argument_list|)
