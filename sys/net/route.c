@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)route.c	8.2 (Berkeley) 11/15/93  *	$Id: route.c,v 1.35 1996/08/24 03:11:13 peter Exp $  */
+comment|/*  * Copyright (c) 1980, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)route.c	8.2 (Berkeley) 11/15/93  *	$Id: route.c,v 1.36 1996/09/02 02:49:40 fenner Exp $  */
 end_comment
 
 begin_include
@@ -399,6 +399,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Look up the route that matches the address given  * Or, at least try.. Create a cloned route if needed.  */
+end_comment
+
 begin_function
 name|struct
 name|rtentry
@@ -477,6 +481,7 @@ name|msgtype
 init|=
 name|RTM_MISS
 decl_stmt|;
+comment|/*  	 * Look up the address in the table for that Address Family 	 */
 if|if
 condition|(
 name|rnh
@@ -510,6 +515,7 @@ literal|0
 operator|)
 condition|)
 block|{
+comment|/* 		 * If we find it and it's not the root node, then 		 * get a refernce on the rtentry associated. 		 */
 name|newrt
 operator|=
 name|rt
@@ -545,6 +551,7 @@ operator|)
 operator|)
 condition|)
 block|{
+comment|/* 			 * We are apparently adding (report = 0 in delete). 			 * If it requires that it be cloned, do so. 			 * (This implies it wasn't a HOST route.) 			 */
 name|err
 operator|=
 name|rtrequest
@@ -574,6 +581,7 @@ condition|(
 name|err
 condition|)
 block|{
+comment|/* 				 * If the cloning didn't succeed, maybe 				 * what we have will do. Return that. 				 */
 name|newrt
 operator|=
 name|rt
@@ -604,6 +612,7 @@ name|RTF_XRESOLVE
 operator|)
 condition|)
 block|{
+comment|/* 				 * If the new route specifies it be  				 * externally resolved, then go do that. 				 */
 name|msgtype
 operator|=
 name|RTM_RESOLVE
@@ -622,6 +631,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Either we hit the root or couldn't find any match, 		 * Which basically means 		 * "caint get there frm here" 		 */
 name|rtstat
 operator|.
 name|rts_unreach
@@ -634,6 +644,7 @@ condition|(
 name|report
 condition|)
 block|{
+comment|/* 			 * If required, report the failure to the supervising 			 * Authorities. 			 * For a delete, this is not an error. (report == 0) 			 */
 name|bzero
 argument_list|(
 operator|(
@@ -1680,6 +1691,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Do appropriate manipulations of a routing tree given  * all the bits of info needed  */
+end_comment
+
 begin_function
 name|int
 name|rtrequest
@@ -1771,6 +1786,7 @@ parameter_list|(
 name|x
 parameter_list|)
 value|{ error = x ; goto bad; }
+comment|/* 	 * Find the correct routing tree to use for this Address Family 	 */
 if|if
 condition|(
 operator|(
@@ -1791,6 +1807,7 @@ argument_list|(
 name|ESRCH
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we are adding a host route then we don't want to put 	 * a netmask in the tree 	 */
 if|if
 condition|(
 name|flags
@@ -1809,6 +1826,7 @@ block|{
 case|case
 name|RTM_DELETE
 case|:
+comment|/* 		 * Remove the item from the tree and return it. 		 * Complain if it is not there and do no more processing. 		 */
 if|if
 condition|(
 operator|(
@@ -1889,6 +1907,7 @@ name|rt
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Remove any external references we may have. 		 * This might result in another rtentry being freed if 		 * we held it's last reference. 		 */
 if|if
 condition|(
 name|rt
@@ -1931,6 +1950,7 @@ operator|&=
 operator|~
 name|RTF_UP
 expr_stmt|;
+comment|/*  		 * If there is llinfo or similar associated with the  		 * route, give the interface a chance to deal with it.. 		 */
 if|if
 condition|(
 operator|(
@@ -1962,6 +1982,7 @@ expr_stmt|;
 name|rttrash
 operator|++
 expr_stmt|;
+comment|/* 		 * If the caller wants it, then it can have it, but it's up to it 		 * to free the rtentry as we won't be doing it. 		 */
 if|if
 condition|(
 name|ret_nrt
@@ -1986,6 +2007,7 @@ operator|->
 name|rt_refcnt
 operator|++
 expr_stmt|;
+comment|/* make a 1->0 transition */
 name|rtfree
 argument_list|(
 name|rt
@@ -3718,6 +3740,7 @@ name|ifa
 operator|->
 name|ifa_addr
 expr_stmt|;
+comment|/* 	 * If it's a delete, check that if it exists, it's on the correct 	 * interface or we might scrub a route to another ifa which would 	 * be confusing at best and possibly worse. 	 */
 if|if
 condition|(
 name|cmd
@@ -3725,6 +3748,7 @@ operator|==
 name|RTM_DELETE
 condition|)
 block|{
+comment|/*  		 * It's a delete, so it should already exist.. 		 * If it's a net, mask off the host bits 		 * (Assuming we have a mask) 		 */
 if|if
 condition|(
 operator|(
@@ -3776,6 +3800,7 @@ operator|=
 name|deldst
 expr_stmt|;
 block|}
+comment|/* 		 * Get an rtentry that is in the routing tree and 		 * contains the correct info. (if this fails we can't get there). 		 * We set "report" to FALSE so that if it doesn't exist, 		 * it doesn't report an error or clone a route, etc. etc. 		 */
 name|rt
 operator|=
 name|rtalloc1
@@ -3792,6 +3817,7 @@ condition|(
 name|rt
 condition|)
 block|{
+comment|/* 			 * Ok so we found the rtentry. it has an extra reference 			 * for us at this stage. we won't need that so 			 * lop that off now. 			 */
 name|rt
 operator|->
 name|rt_refcnt
@@ -3806,6 +3832,7 @@ operator|!=
 name|ifa
 condition|)
 block|{
+comment|/* 				 * If the interface in the rtentry doesn't match 				 * the interface we are using, then we don't 				 * want to delete it, so return an error. 				 * This seems to be the only point of  				 * this whole RTM_DELETE clause. 				 */
 if|if
 condition|(
 name|m
@@ -3831,7 +3858,17 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* XXX */
+if|#
+directive|if
+literal|0
+block|else {
+comment|/*  			 * One would think that as we are deleting, and we know 			 * it doesn't exist, we could just return at this point 			 * with an "ELSE" clause, but apparently not.. 			 */
+block|return (flags& RTF_HOST ? EHOSTUNREACH 							: ENETUNREACH); 		}
+endif|#
+directive|endif
 block|}
+comment|/* 	 * Do the actual request 	 */
 name|error
 operator|=
 name|rtrequest
@@ -3870,6 +3907,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we are deleting, and we found an entry, then 	 * it's been removed from the tree.. now throw it away. 	 */
 if|if
 condition|(
 name|cmd
@@ -3887,6 +3925,7 @@ name|nrt
 operator|)
 condition|)
 block|{
+comment|/* 		 * notify any listenning routing agents of the change 		 */
 name|rt_newaddrmsg
 argument_list|(
 name|cmd
@@ -3912,6 +3951,7 @@ operator|->
 name|rt_refcnt
 operator|++
 expr_stmt|;
+comment|/* need a 1->0 transition to free */
 name|rtfree
 argument_list|(
 name|rt
@@ -3919,6 +3959,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * We are adding, and we have a returned routing entry. 	 * We need to sanity check the result. 	 */
 if|if
 condition|(
 name|cmd
@@ -3936,11 +3977,13 @@ name|nrt
 operator|)
 condition|)
 block|{
+comment|/* 		 * We just wanted to add it.. we don't actually need a reference 		 */
 name|rt
 operator|->
 name|rt_refcnt
 operator|--
 expr_stmt|;
+comment|/* 		 * If it came back with an unexpected interface, then it must  		 * have already existed or something. (XXX) 		 */
 if|if
 condition|(
 name|rt
@@ -3961,6 +4004,7 @@ operator|->
 name|rt_ifa
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Ask that the route we got back be removed 			 * from the routing tables as we are trying 			 * to supersede it. 			 */
 if|if
 condition|(
 name|rt
@@ -3985,6 +4029,7 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/*  			 * Remove the referenve to the it's ifaddr. 			 */
 name|IFAFREE
 argument_list|(
 name|rt
@@ -3992,6 +4037,7 @@ operator|->
 name|rt_ifa
 argument_list|)
 expr_stmt|;
+comment|/* 			 * And substitute in references to the ifaddr 			 * we are adding. 			 */
 name|rt
 operator|->
 name|rt_ifa
@@ -4011,6 +4057,7 @@ operator|->
 name|ifa_refcnt
 operator|++
 expr_stmt|;
+comment|/* 			 * Now add it to the routing table 			 * XXX could we have just left it? 			 * as it might have been in the right place.. 			 */
 if|if
 condition|(
 name|ifa
@@ -4032,6 +4079,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * notify any listenning routing agents of the change 		 */
 name|rt_newaddrmsg
 argument_list|(
 name|cmd
