@@ -1298,6 +1298,9 @@ expr_stmt|;
 name|tcp_hc_init
 argument_list|()
 expr_stmt|;
+name|tcp_reass_init
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3413,12 +3416,15 @@ operator|->
 name|tqe_m
 argument_list|)
 expr_stmt|;
-name|FREE
+name|uma_zfree
 argument_list|(
-name|q
+name|tcp_reass_zone
 argument_list|,
-name|M_TSEGQ
+name|q
 argument_list|)
+expr_stmt|;
+name|tcp_reass_qsize
+operator|--
 expr_stmt|;
 block|}
 name|inp
@@ -3635,12 +3641,15 @@ operator|->
 name|tqe_m
 argument_list|)
 expr_stmt|;
-name|FREE
+name|uma_zfree
 argument_list|(
-name|te
+name|tcp_reass_zone
 argument_list|,
-name|M_TSEGQ
+name|te
 argument_list|)
+expr_stmt|;
+name|tcp_reass_qsize
+operator|--
 expr_stmt|;
 block|}
 block|}

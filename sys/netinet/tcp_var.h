@@ -93,24 +93,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MALLOC_DECLARE
-end_ifdef
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_reass_qsize
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_TSEGQ
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uma_zone
+modifier|*
+name|tcp_reass_zone
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -1950,6 +1947,15 @@ name|inpcb
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_reass_init
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
