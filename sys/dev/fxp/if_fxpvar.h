@@ -529,7 +529,7 @@ comment|/* size of serial EEPROM */
 name|int
 name|suspended
 decl_stmt|;
-comment|/* 0 = normal  1 = suspended (APM) */
+comment|/* 0 = normal  1 = suspended or dead */
 name|int
 name|cu_resume_bug
 decl_stmt|;
@@ -538,9 +538,6 @@ name|revision
 decl_stmt|;
 name|int
 name|flags
-decl_stmt|;
-name|int
-name|gone
 decl_stmt|;
 name|u_int32_t
 name|saved_maps
