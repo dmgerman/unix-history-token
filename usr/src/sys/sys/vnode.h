@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -33,6 +33,36 @@ name|VBAD
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/*  * Vnode tag types.  * These are for the benefit of external programs only (e.g., pstat)  * and should NEVER be inspected inside the kernel.  */
+end_comment
+
+begin_enum
+enum|enum
+name|vtagtype
+block|{
+name|VT_NON
+block|,
+name|VT_UFS
+block|,
+name|VT_NFS
+block|,
+name|VT_MFS
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * This defines the maximum size of the private data area  * permitted for any file system type. A defined constant   * is used rather than a union structure to cut down on the  * number of header files that must be included.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VN_MAXPRIVATE
+value|204
+end_define
 
 begin_struct
 struct|struct
@@ -70,6 +100,32 @@ name|u_long
 name|v_id
 decl_stmt|;
 comment|/* capability identifier */
+name|struct
+name|vnode
+modifier|*
+name|v_freef
+decl_stmt|;
+comment|/* vnode freelist forward */
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|v_freeb
+decl_stmt|;
+comment|/* vnode freelist back */
+name|struct
+name|vnode
+modifier|*
+name|v_mountf
+decl_stmt|;
+comment|/* vnode mountlist forward */
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|v_mountb
+decl_stmt|;
+comment|/* vnode mountlist back */
 name|enum
 name|vtype
 name|v_type
@@ -102,8 +158,16 @@ comment|/* device (VCHR, VBLK) */
 block|}
 name|v_un
 union|;
-name|qaddr_t
+name|enum
+name|vtagtype
+name|v_tag
+decl_stmt|;
+comment|/* type of underlying data */
+name|char
 name|v_data
+index|[
+name|VN_MAXPRIVATE
+index|]
 decl_stmt|;
 comment|/* private data for fs */
 block|}
@@ -425,6 +489,15 @@ name|int
 function_decl|(
 modifier|*
 name|vn_inactive
+function_decl|)
+parameter_list|(
+comment|/* vp */
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|vn_reclaim
 function_decl|)
 parameter_list|(
 comment|/* vp */
@@ -815,6 +888,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|VOP_RECLAIM
+parameter_list|(
+name|v
+parameter_list|)
+value|(*((v)->v_op->vn_reclaim))(v)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VOP_LOCK
 parameter_list|(
 name|v
@@ -865,12 +948,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_ATOMIC
+name|IO_UNIT
 value|0x01
 end_define
 
 begin_comment
-comment|/* do io as atomic unit for VOP_RDWR */
+comment|/* do I/O as atomic unit */
 end_comment
 
 begin_define
@@ -881,7 +964,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* append write for VOP_RDWR */
+comment|/* append write to end */
 end_comment
 
 begin_define
@@ -892,7 +975,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* sync io for VOP_RDWR */
+comment|/* do I/O synchronously */
 end_comment
 
 begin_define
@@ -915,17 +998,6 @@ end_define
 
 begin_comment
 comment|/* FNDELAY flag set in file table */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_UNIT
-value|IO_ATOMIC
-end_define
-
-begin_comment
-comment|/* compat */
 end_comment
 
 begin_comment
@@ -1138,6 +1210,30 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
+name|vref
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* reference vnode */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|vput
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* unlock and release vnode */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
 name|vrele
 parameter_list|()
 function_decl|;
@@ -1173,22 +1269,6 @@ begin_comment
 comment|/* increment vnode reference count */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|vinit
-parameter_list|(
-name|vp
-parameter_list|,
-name|mountp
-parameter_list|,
-name|type
-parameter_list|,
-name|vops
-parameter_list|)
-value|{ \ 	(vp)->v_flag = 0; \ 	(vp)->v_count++; \ 	(vp)->v_shlockc = (vp)->v_exlockc = 0; \ 	(vp)->v_mount = (mountp); \ 	(vp)->v_type = (type); \ 	(vp)->v_op = (vops); \ 	(vp)->v_socket = 0; \ }
-end_define
-
 begin_comment
 comment|/*  * Global vnode data.  */
 end_comment
@@ -1204,6 +1284,43 @@ end_decl_stmt
 
 begin_comment
 comment|/* root (i.e. "/") vnode */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnode
+modifier|*
+name|vnode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The vnode table itself */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnode
+modifier|*
+name|vnodeNVNODE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The end of the vnode table */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nvnode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of slots in the table */
 end_comment
 
 begin_endif
