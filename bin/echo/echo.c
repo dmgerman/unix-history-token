@@ -106,6 +106,7 @@ block|{
 name|int
 name|nflag
 decl_stmt|;
+comment|/* if not set, output a trailing newline. */
 comment|/* This utility may NOT do getopt(3) option parsing. */
 if|if
 condition|(
@@ -142,11 +143,26 @@ name|argv
 index|[
 literal|0
 index|]
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * If the next argument is NULL then this is this 		 * the last argument, therefore we need to check 		 * for a trailing \c. 		 */
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
 condition|)
 block|{
 name|size_t
 name|len
-init|=
+decl_stmt|;
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|argv
@@ -154,18 +170,13 @@ index|[
 literal|0
 index|]
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+comment|/* is there room for a '\c' and is there one? */
 if|if
 condition|(
 name|len
 operator|>=
 literal|2
-operator|&&
-operator|!
-name|argv
-index|[
-literal|1
-index|]
 operator|&&
 name|argv
 index|[
@@ -192,6 +203,7 @@ operator|==
 literal|'c'
 condition|)
 block|{
+comment|/* chop it and set the no-newline flag. */
 name|argv
 index|[
 literal|0
@@ -208,6 +220,7 @@ name|nflag
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
