@@ -780,7 +780,6 @@ block|{
 case|case
 name|LK_SHARED
 case|:
-comment|/* 		 * If we are not the exclusive lock holder, we have to block 		 * while there is an exclusive lock holder or while an 		 * exclusive lock request or upgrade request is in progress. 		 * 		 * However, if P_DEADLKTREAT is set, we override exclusive 		 * lock requests or upgrade requests ( but not the exclusive 		 * lock itself ). 		 */
 if|if
 condition|(
 name|lkp
@@ -789,29 +788,6 @@ name|lk_lockholder
 operator|!=
 name|pid
 condition|)
-block|{
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_DEADLKTREAT
-condition|)
-block|{
-name|error
-operator|=
-name|acquire
-argument_list|(
-name|lkp
-argument_list|,
-name|extflags
-argument_list|,
-name|LK_HAVE_EXCL
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|error
 operator|=
@@ -828,7 +804,6 @@ operator||
 name|LK_WANT_UPGRADE
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
