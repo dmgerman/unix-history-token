@@ -575,6 +575,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Lock for the pteg and pvo tables.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|pmap_table_mutex
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * PTEG data.  */
 end_comment
 
@@ -2962,6 +2973,25 @@ expr_stmt|;
 end_for
 
 begin_comment
+comment|/* 	 * Initialize the lock that synchronizes access to the pteg and pvo 	 * tables. 	 */
+end_comment
+
+begin_expr_stmt
+name|mtx_init
+argument_list|(
+operator|&
+name|pmap_table_mutex
+argument_list|,
+literal|"pmap table"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Allocate the message buffer. 	 */
 end_comment
 
@@ -4499,7 +4529,6 @@ if|if
 condition|(
 name|pmap_bootstrapped
 condition|)
-block|{
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -4508,7 +4537,6 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * If this is a managed page, and it's the first reference to the page, 	 * clear the execness of the page.  Otherwise fetch the execness. 	 */
 if|if
 condition|(
@@ -4741,10 +4769,6 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pmap_bootstrapped
-condition|)
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
@@ -7823,6 +7847,12 @@ name|va
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove any existing mapping for this page.  Reuse the pvo entry if 	 * there is a mapping. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|pmap_table_mutex
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pvo
@@ -7879,6 +7909,12 @@ name|PTE_PP
 operator|)
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pmap_table_mutex
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -7962,6 +7998,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pmap_table_mutex
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -8152,6 +8194,12 @@ name|pmap_pte_overflow
 operator|++
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pmap_table_mutex
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|first
@@ -8469,6 +8517,12 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|pmap_table_mutex
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pvo
@@ -8508,16 +8562,18 @@ argument_list|,
 name|ptegidx
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pmap_table_mutex
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|pvo
-operator|)
-return|;
-block|}
-block|}
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}
@@ -8864,6 +8920,12 @@ index|[
 name|ptegidx
 index|]
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|pmap_table_mutex
+argument_list|)
+expr_stmt|;
 asm|__asm __volatile("mftb %0" : "=r"(i));
 name|i
 operator|&=
@@ -8964,6 +9026,12 @@ argument_list|(
 name|pvo
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pmap_table_mutex
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -9029,11 +9097,19 @@ name|source_pvo
 operator|==
 name|NULL
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pmap_table_mutex
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|victim_pvo
@@ -9169,6 +9245,12 @@ expr_stmt|;
 name|PMAP_PVO_CHECK
 argument_list|(
 name|source_pvo
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pmap_table_mutex
 argument_list|)
 expr_stmt|;
 return|return
