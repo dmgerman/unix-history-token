@@ -867,6 +867,24 @@ name|DA_Q_NO_6_BYTE
 operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
+block|{
+comment|/* 		 * Nikon Coolpix 995 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"NIKON"
+block|,
+literal|"NIKON DSC E995"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
