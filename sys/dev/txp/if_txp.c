@@ -2684,6 +2684,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
 name|WRITE_REG
 argument_list|(
 name|sc
@@ -2810,6 +2814,10 @@ name|ier
 decl_stmt|,
 name|imr
 decl_stmt|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
 name|ier
 operator|=
 name|READ_REG
@@ -3204,6 +3212,10 @@ name|i
 decl_stmt|,
 name|r
 decl_stmt|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -5074,6 +5086,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
 name|ld
 operator|=
 name|sc
