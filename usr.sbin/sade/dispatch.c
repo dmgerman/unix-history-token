@@ -1056,6 +1056,27 @@ operator|=
 name|DITEM_FAILURE
 expr_stmt|;
 block|}
+comment|/* 	 * Allow a user to prefix a command with "noError" to cause 	 * us to ignore any errors for that one command. 	 */
+if|if
+condition|(
+name|i
+operator|!=
+name|DITEM_SUCCESS
+operator|&&
+name|variable_get
+argument_list|(
+name|VAR_NO_ERROR
+argument_list|)
+condition|)
+name|i
+operator|=
+name|DITEM_SUCCESS
+expr_stmt|;
+name|variable_unset
+argument_list|(
+name|VAR_NO_ERROR
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|i
@@ -1281,21 +1302,6 @@ operator|!=
 name|DITEM_SUCCESS
 condition|)
 block|{
-comment|/* 	     * Allow a user to prefix a command with "noError" to cause 	     * us to ignore any errors for that one command. 	     */
-if|if
-condition|(
-name|variable_get
-argument_list|(
-name|VAR_NO_ERROR
-argument_list|)
-condition|)
-name|variable_unset
-argument_list|(
-name|VAR_NO_ERROR
-argument_list|)
-expr_stmt|;
-else|else
-block|{
 name|msgConfirm
 argument_list|(
 literal|"Command `%s' failed - rest of script aborted.\n"
@@ -1310,7 +1316,6 @@ operator||=
 name|DITEM_FAILURE
 expr_stmt|;
 break|break;
-block|}
 block|}
 name|dispatch_free_command
 argument_list|(
