@@ -7507,6 +7507,7 @@ block|}
 comment|/* end of inner for, scan opcodes */
 name|next_rule
 label|:
+empty_stmt|;
 comment|/* try next rule		*/
 block|}
 comment|/* end of outer for, scan rules */
