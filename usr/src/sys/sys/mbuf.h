@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.h 4.10 81/12/23 */
+comment|/* mbuf.h 4.11 82/01/24 */
 end_comment
 
 begin_comment
@@ -216,6 +216,17 @@ end_define
 begin_comment
 comment|/* don't free; caller wants space */
 end_comment
+
+begin_comment
+comment|/* length to m_copy to copy all */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_COPYALL
+value|1000000000
+end_define
 
 begin_define
 define|#
