@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.10 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3238,6 +3238,11 @@ expr_stmt|;
 comment|/* figure out the user */
 if|if
 condition|(
+operator|*
+name|tv
+operator|==
+name|NULL
+operator|||
 operator|*
 operator|*
 name|tv
