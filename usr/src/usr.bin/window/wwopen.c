@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwopen.c	3.3 83/08/19"
+literal|"@(#)wwopen.c	3.4 83/08/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,31 @@ decl_stmt|;
 name|short
 name|nvis
 decl_stmt|;
+if|if
+condition|(
+name|row
+operator|<
+literal|0
+operator|||
+name|row
+operator|+
+name|nrow
+operator|>=
+name|wwnrow
+operator|||
+name|col
+operator|<
+literal|0
+operator|||
+name|col
+operator|+
+name|ncol
+operator|>=
+name|wwncol
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|i
