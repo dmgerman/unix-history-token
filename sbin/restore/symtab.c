@@ -203,7 +203,6 @@ name|ino_t
 name|inum
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -393,7 +392,6 @@ name|ino_t
 name|inum
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -509,13 +507,11 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
 name|ep
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|np
@@ -773,14 +769,12 @@ name|myname
 parameter_list|(
 name|ep
 parameter_list|)
-specifier|register
 name|struct
 name|entry
 modifier|*
 name|ep
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -924,7 +918,6 @@ name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1220,14 +1213,12 @@ name|freeentry
 parameter_list|(
 name|ep
 parameter_list|)
-specifier|register
 name|struct
 name|entry
 modifier|*
 name|ep
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1446,7 +1437,6 @@ name|ep
 parameter_list|,
 name|newname
 parameter_list|)
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1601,14 +1591,12 @@ name|removeentry
 parameter_list|(
 name|ep
 parameter_list|)
-specifier|register
 name|struct
 name|entry
 modifier|*
 name|ep
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1992,7 +1980,6 @@ name|long
 name|checkpt
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -2001,7 +1988,6 @@ decl_stmt|,
 modifier|*
 name|tep
 decl_stmt|;
-specifier|register
 name|ino_t
 name|i
 decl_stmt|;
@@ -2562,7 +2548,6 @@ decl_stmt|;
 name|long
 name|tblsize
 decl_stmt|;
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -2584,7 +2569,6 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
-specifier|register
 name|long
 name|i
 decl_stmt|;

@@ -123,13 +123,11 @@ name|void
 name|pass2
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|dinode
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|struct
 name|inoinfo
 modifier|*
@@ -1046,7 +1044,6 @@ modifier|*
 name|idesc
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -1056,7 +1053,6 @@ name|idesc
 operator|->
 name|id_dirp
 decl_stmt|;
-specifier|register
 name|struct
 name|inoinfo
 modifier|*

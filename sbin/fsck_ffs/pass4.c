@@ -82,11 +82,9 @@ name|void
 name|pass4
 parameter_list|()
 block|{
-specifier|register
 name|ino_t
 name|inumber
 decl_stmt|;
-specifier|register
 name|struct
 name|zlncnt
 modifier|*
@@ -425,14 +423,12 @@ name|pass4check
 parameter_list|(
 name|idesc
 parameter_list|)
-specifier|register
 name|struct
 name|inodesc
 modifier|*
 name|idesc
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dups
 modifier|*

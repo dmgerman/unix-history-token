@@ -136,7 +136,6 @@ name|dinode
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|struct
 name|inodesc
 modifier|*
@@ -1245,7 +1244,6 @@ name|int
 name|cnt
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -2013,7 +2011,6 @@ name|dp
 parameter_list|,
 name|inumber
 parameter_list|)
-specifier|register
 name|struct
 name|dinode
 modifier|*
@@ -2023,7 +2020,6 @@ name|ino_t
 name|inumber
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inoinfo
 modifier|*
@@ -2281,7 +2277,6 @@ name|ino_t
 name|inumber
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inoinfo
 modifier|*
@@ -2353,7 +2348,6 @@ name|void
 name|inocleanup
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|inoinfo
 modifier|*
@@ -2448,7 +2442,6 @@ name|type
 parameter_list|,
 name|flag
 parameter_list|)
-specifier|register
 name|struct
 name|inodesc
 modifier|*
@@ -2462,7 +2455,6 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dinode
 modifier|*
@@ -2582,7 +2574,6 @@ modifier|*
 name|idesc
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -2662,7 +2653,6 @@ modifier|*
 name|idesc
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -2749,7 +2739,6 @@ modifier|*
 name|idesc
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -2815,13 +2804,11 @@ name|ino_t
 name|ino
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dinode
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -3089,11 +3076,9 @@ name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|ino_t
 name|ino
 decl_stmt|;
-specifier|register
 name|struct
 name|dinode
 modifier|*

@@ -539,7 +539,6 @@ name|void
 name|bufinit
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|bufarea
 modifier|*
@@ -777,7 +776,6 @@ name|long
 name|size
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|bufarea
 modifier|*
@@ -953,7 +951,6 @@ name|blk
 parameter_list|,
 name|size
 parameter_list|)
-specifier|register
 name|struct
 name|bufarea
 modifier|*
@@ -1044,14 +1041,12 @@ parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-specifier|register
 name|struct
 name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1310,7 +1305,6 @@ name|int
 name|markclean
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|bufarea
 modifier|*
@@ -2589,7 +2583,6 @@ block|{
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -2983,7 +2976,6 @@ name|idesc
 parameter_list|,
 name|msg
 parameter_list|)
-specifier|register
 name|struct
 name|inodesc
 modifier|*

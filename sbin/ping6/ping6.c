@@ -1566,7 +1566,6 @@ decl_stmt|;
 name|int
 name|fdmasks
 decl_stmt|;
-specifier|register
 name|int
 name|cc
 decl_stmt|,
@@ -10828,7 +10827,6 @@ name|out
 parameter_list|,
 name|in
 parameter_list|)
-specifier|register
 name|struct
 name|timeval
 modifier|*
@@ -13089,7 +13087,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|int
 name|ii
 decl_stmt|,

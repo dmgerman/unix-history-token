@@ -253,7 +253,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|fstab
 modifier|*
@@ -2064,7 +2063,6 @@ name|vp
 parameter_list|,
 name|max
 parameter_list|)
-specifier|register
 name|void
 modifier|*
 name|vp
@@ -2073,11 +2071,9 @@ name|int
 name|max
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

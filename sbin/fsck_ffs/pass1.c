@@ -796,14 +796,12 @@ parameter_list|)
 name|ino_t
 name|inumber
 decl_stmt|;
-specifier|register
 name|struct
 name|inodesc
 modifier|*
 name|idesc
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dinode
 modifier|*
@@ -2027,7 +2025,6 @@ name|pass1check
 parameter_list|(
 name|idesc
 parameter_list|)
-specifier|register
 name|struct
 name|inodesc
 modifier|*
@@ -2051,7 +2048,6 @@ name|idesc
 operator|->
 name|id_blkno
 decl_stmt|;
-specifier|register
 name|struct
 name|dups
 modifier|*

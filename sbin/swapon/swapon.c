@@ -152,13 +152,11 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|fstab
 modifier|*
 name|fsp
 decl_stmt|;
-specifier|register
 name|int
 name|stat
 decl_stmt|;

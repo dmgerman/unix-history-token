@@ -4017,7 +4017,6 @@ name|caddr_t
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|fhreturn
 modifier|*

@@ -122,7 +122,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -244,7 +243,6 @@ name|mktempname
 parameter_list|(
 name|ep
 parameter_list|)
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -612,7 +610,6 @@ name|removenode
 parameter_list|(
 name|ep
 parameter_list|)
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -724,7 +721,6 @@ name|removeleaf
 parameter_list|(
 name|ep
 parameter_list|)
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1138,7 +1134,6 @@ name|delwhiteout
 parameter_list|(
 name|ep
 parameter_list|)
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1239,7 +1234,6 @@ name|ino_t
 name|start
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1316,7 +1310,6 @@ name|ino_t
 name|start
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1391,7 +1384,6 @@ name|ep
 parameter_list|,
 name|msg
 parameter_list|)
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1580,7 +1572,6 @@ name|flagvalues
 parameter_list|(
 name|ep
 parameter_list|)
-specifier|register
 name|struct
 name|entry
 modifier|*

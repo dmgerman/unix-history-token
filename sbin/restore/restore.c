@@ -200,7 +200,6 @@ name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -524,7 +523,6 @@ name|void
 name|removeoldleaves
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -533,7 +531,6 @@ decl_stmt|,
 modifier|*
 name|nextep
 decl_stmt|;
-specifier|register
 name|ino_t
 name|i
 decl_stmt|,
@@ -763,7 +760,6 @@ name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1867,7 +1863,6 @@ name|void
 name|findunreflinks
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1876,7 +1871,6 @@ decl_stmt|,
 modifier|*
 name|np
 decl_stmt|;
-specifier|register
 name|ino_t
 name|i
 decl_stmt|;
@@ -2081,7 +2075,6 @@ name|void
 name|removeoldnodes
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -2214,7 +2207,6 @@ modifier|*
 name|symtabfile
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -2506,7 +2498,6 @@ name|void
 name|createfiles
 parameter_list|()
 block|{
-specifier|register
 name|ino_t
 name|first
 decl_stmt|,
@@ -2514,7 +2505,6 @@ name|next
 decl_stmt|,
 name|last
 decl_stmt|;
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -2826,7 +2816,6 @@ name|void
 name|createlinks
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -2835,7 +2824,6 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-specifier|register
 name|ino_t
 name|i
 decl_stmt|;
@@ -3055,13 +3043,11 @@ name|void
 name|checkrestore
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
 name|ep
 decl_stmt|;
-specifier|register
 name|ino_t
 name|i
 decl_stmt|;

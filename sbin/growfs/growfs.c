@@ -1613,7 +1613,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|struct
 name|csum
 modifier|*

@@ -3458,7 +3458,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4753,7 +4752,6 @@ name|void
 name|findtapeblksize
 parameter_list|()
 block|{
-specifier|register
 name|long
 name|i
 decl_stmt|;
@@ -6356,13 +6354,11 @@ name|checksum
 parameter_list|(
 name|buf
 parameter_list|)
-specifier|register
 name|int
 modifier|*
 name|buf
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -6588,12 +6584,10 @@ name|sp
 parameter_list|,
 name|n
 parameter_list|)
-specifier|register
 name|u_char
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -6656,12 +6650,10 @@ name|sp
 parameter_list|,
 name|n
 parameter_list|)
-specifier|register
 name|u_char
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -6746,7 +6738,6 @@ name|cp
 parameter_list|,
 name|sp
 parameter_list|)
-specifier|register
 name|u_char
 modifier|*
 name|cp

@@ -1130,7 +1130,6 @@ operator|==
 literal|1
 condition|)
 block|{
-specifier|register
 name|char
 name|runlevel
 init|=
@@ -1140,7 +1139,6 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|sig
 decl_stmt|;
@@ -4034,13 +4032,11 @@ name|char
 operator|*
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
 name|argc
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -4142,7 +4138,6 @@ name|free_session
 parameter_list|(
 name|sp
 parameter_list|)
-specifier|register
 name|session_t
 modifier|*
 name|sp
@@ -4256,14 +4251,12 @@ decl_stmt|;
 name|int
 name|session_index
 decl_stmt|;
-specifier|register
 name|struct
 name|ttyent
 modifier|*
 name|typ
 decl_stmt|;
 block|{
-specifier|register
 name|session_t
 modifier|*
 name|sp
@@ -4829,7 +4822,6 @@ name|session_index
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|session_t
 modifier|*
 name|sp
@@ -4837,7 +4829,6 @@ decl_stmt|,
 modifier|*
 name|snext
 decl_stmt|;
-specifier|register
 name|struct
 name|ttyent
 modifier|*
@@ -5464,7 +5455,6 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
-specifier|register
 name|session_t
 modifier|*
 name|sp
@@ -5708,7 +5698,6 @@ block|{
 name|pid_t
 name|pid
 decl_stmt|;
-specifier|register
 name|session_t
 modifier|*
 name|sp
@@ -5850,7 +5839,6 @@ name|state_func_t
 name|clean_ttys
 parameter_list|()
 block|{
-specifier|register
 name|session_t
 modifier|*
 name|sp
@@ -5858,19 +5846,16 @@ decl_stmt|,
 modifier|*
 name|sprev
 decl_stmt|;
-specifier|register
 name|struct
 name|ttyent
 modifier|*
 name|typ
 decl_stmt|;
-specifier|register
 name|int
 name|session_index
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|devlen
 decl_stmt|;
@@ -6368,7 +6353,6 @@ name|state_func_t
 name|catatonia
 parameter_list|()
 block|{
-specifier|register
 name|session_t
 modifier|*
 name|sp
@@ -6437,12 +6421,10 @@ name|state_func_t
 name|death
 parameter_list|()
 block|{
-specifier|register
 name|session_t
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

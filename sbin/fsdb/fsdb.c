@@ -1176,7 +1176,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|cmdtable
 modifier|*
@@ -2077,7 +2076,6 @@ modifier|*
 name|idesc
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -2661,7 +2659,6 @@ modifier|*
 name|idesc
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -2866,7 +2863,6 @@ modifier|*
 name|idesc
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|direct
 modifier|*

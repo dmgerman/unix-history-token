@@ -2636,7 +2636,6 @@ name|time_t
 name|fintimeout
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

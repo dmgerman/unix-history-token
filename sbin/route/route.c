@@ -896,7 +896,6 @@ decl_stmt|,
 modifier|*
 name|lim
 decl_stmt|;
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -1428,7 +1427,6 @@ modifier|*
 name|sa
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -2166,7 +2164,6 @@ name|net
 decl_stmt|,
 name|mask
 decl_stmt|;
-specifier|register
 name|u_long
 name|i
 decl_stmt|;
@@ -3116,7 +3113,6 @@ parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -4257,7 +4253,6 @@ name|net
 decl_stmt|,
 name|bits
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr_in
 modifier|*
@@ -4271,7 +4266,6 @@ name|mask
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -4538,7 +4532,6 @@ modifier|*
 name|hpp
 decl_stmt|;
 block|{
-specifier|register
 name|sup
 name|su
 decl_stmt|;
@@ -5902,12 +5895,10 @@ name|host
 init|=
 literal|""
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|q
@@ -6195,7 +6186,6 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -6495,7 +6485,6 @@ decl_stmt|;
 name|int
 name|rlen
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -6504,7 +6493,6 @@ name|m_rtmsg
 operator|.
 name|m_space
 decl_stmt|;
-specifier|register
 name|int
 name|l
 decl_stmt|;
@@ -6875,7 +6863,6 @@ name|sa
 operator|.
 name|sa_len
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp1
@@ -7169,7 +7156,6 @@ name|rtm
 parameter_list|,
 name|msglen
 parameter_list|)
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -7558,7 +7544,6 @@ name|rtm
 parameter_list|,
 name|msglen
 parameter_list|)
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -7592,18 +7577,15 @@ name|ifp
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -8175,7 +8157,6 @@ name|pmsg_common
 parameter_list|(
 name|rtm
 parameter_list|)
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -8260,7 +8241,6 @@ name|int
 name|addrs
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|sockaddr
 modifier|*
@@ -8389,22 +8369,18 @@ name|b
 parameter_list|,
 name|s
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|int
 name|b
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -8543,7 +8519,6 @@ modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|keytab
 modifier|*
@@ -8585,7 +8560,6 @@ name|su
 parameter_list|,
 name|which
 parameter_list|)
-specifier|register
 name|sup
 name|su
 decl_stmt|;
@@ -8769,19 +8743,16 @@ name|addr
 parameter_list|,
 name|sa
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|addr
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -8807,7 +8778,6 @@ name|cp
 operator|+
 name|size
 decl_stmt|;
-specifier|register
 name|int
 name|byte
 init|=

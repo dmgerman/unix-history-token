@@ -6044,7 +6044,6 @@ decl_stmt|;
 name|u_int8_t
 name|returned_format
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

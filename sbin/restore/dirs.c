@@ -551,11 +551,9 @@ name|int
 name|genmode
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|struct
 name|dinode
 modifier|*
@@ -1101,13 +1099,11 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|inotab
 modifier|*
 name|itp
 decl_stmt|;
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -1591,13 +1587,11 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|direct
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|struct
 name|inotab
 modifier|*
@@ -1720,7 +1714,6 @@ name|struct
 name|direct
 name|cvtbuf
 decl_stmt|;
-specifier|register
 name|struct
 name|odirect
 modifier|*
@@ -1731,7 +1724,6 @@ name|odirect
 modifier|*
 name|eodp
 decl_stmt|;
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -2272,13 +2264,11 @@ name|odp
 parameter_list|,
 name|ndp
 parameter_list|)
-specifier|register
 name|struct
 name|odirect
 modifier|*
 name|odp
 decl_stmt|;
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -2371,7 +2361,6 @@ name|loc
 parameter_list|,
 name|base
 parameter_list|)
-specifier|register
 name|RST_DIR
 modifier|*
 name|dirp
@@ -2488,13 +2477,11 @@ name|rst_readdir
 parameter_list|(
 name|dirp
 parameter_list|)
-specifier|register
 name|RST_DIR
 modifier|*
 name|dirp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -2879,12 +2866,10 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|RST_DIR
 modifier|*
 name|dirp
 decl_stmt|;
-specifier|register
 name|int
 name|fd
 decl_stmt|;
@@ -3367,7 +3352,6 @@ name|ino_t
 name|ino
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inotab
 modifier|*
@@ -3720,7 +3704,6 @@ name|long
 name|seekpt
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inotab
 modifier|*
@@ -3941,7 +3924,6 @@ name|ino_t
 name|ino
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inotab
 modifier|*

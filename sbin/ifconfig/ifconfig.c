@@ -3434,7 +3434,6 @@ operator|>
 literal|0
 condition|)
 block|{
-specifier|register
 specifier|const
 name|struct
 name|cmd
@@ -8715,7 +8714,6 @@ name|int
 name|which
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|sockaddr_in
 modifier|*
@@ -9059,7 +9057,6 @@ name|int
 name|which
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -9268,7 +9265,6 @@ name|int
 name|which
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -9279,7 +9275,6 @@ index|[
 name|which
 index|]
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp
@@ -9456,18 +9451,15 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|unsigned
 name|v
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|bits
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -9475,7 +9467,6 @@ name|any
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -10430,7 +10421,6 @@ name|int
 name|size
 decl_stmt|;
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|name
@@ -10441,7 +10431,6 @@ operator|*
 operator|)
 name|val
 decl_stmt|;
-specifier|register
 name|int
 name|byte
 decl_stmt|,

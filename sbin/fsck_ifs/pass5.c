@@ -171,7 +171,6 @@ index|[
 name|MAXBSIZE
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|cg
 modifier|*

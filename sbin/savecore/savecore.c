@@ -1905,12 +1905,10 @@ name|void
 name|save_core
 parameter_list|()
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|int
 name|bounds
 decl_stmt|,
@@ -2717,7 +2715,6 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|register
 name|dev_t
 name|dev
 decl_stmt|;
@@ -2785,7 +2782,6 @@ name|find_dev
 parameter_list|(
 name|dev
 parameter_list|)
-specifier|register
 name|dev_t
 name|dev
 decl_stmt|;
@@ -3150,7 +3146,6 @@ name|int
 name|check_space
 parameter_list|()
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp

@@ -1038,11 +1038,9 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|struct
 name|nfs_args
 modifier|*
@@ -4030,14 +4028,12 @@ name|XDR
 modifier|*
 name|xdrsp
 decl_stmt|;
-specifier|register
 name|struct
 name|nfhret
 modifier|*
 name|np
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

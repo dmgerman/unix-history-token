@@ -1220,11 +1220,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp

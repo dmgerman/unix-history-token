@@ -374,7 +374,6 @@ name|void
 name|runcmdshell
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|entry
 modifier|*
@@ -1238,7 +1237,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1647,7 +1645,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1859,7 +1856,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -2177,7 +2173,6 @@ modifier|*
 name|basename
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|afile
 modifier|*
@@ -2189,7 +2184,6 @@ decl_stmt|,
 modifier|*
 name|listp
 decl_stmt|;
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -2736,7 +2730,6 @@ name|direct
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|struct
 name|afile
 modifier|*
@@ -2998,7 +2991,6 @@ name|list
 parameter_list|,
 name|nentry
 parameter_list|)
-specifier|register
 name|struct
 name|afile
 modifier|*
@@ -3008,7 +3000,6 @@ name|int
 name|nentry
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|afile
 modifier|*
@@ -3538,7 +3529,6 @@ modifier|*
 name|stp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -3635,7 +3625,6 @@ name|f1
 parameter_list|,
 name|f2
 parameter_list|)
-specifier|register
 specifier|const
 name|void
 modifier|*

@@ -302,13 +302,11 @@ end_function_decl
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|fstab
 modifier|*
 name|fsp
 decl_stmt|;
-specifier|register
 name|struct
 name|disk
 modifier|*
@@ -317,7 +315,6 @@ decl_stmt|,
 modifier|*
 name|nextdisk
 decl_stmt|;
-specifier|register
 name|struct
 name|part
 modifier|*
@@ -1060,7 +1057,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|disk
 modifier|*
@@ -1070,7 +1066,6 @@ modifier|*
 modifier|*
 name|dkp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1364,7 +1359,6 @@ argument_list|(
 name|name
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|part
 modifier|*
@@ -1583,7 +1577,7 @@ name|dk
 argument_list|,
 name|checkit
 argument_list|)
-decl|register struct
+decl|struct
 name|disk
 modifier|*
 name|dk
@@ -1612,7 +1606,6 @@ end_function_decl
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|part
 modifier|*
