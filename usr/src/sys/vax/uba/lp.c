@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.31	82/12/17	*/
+comment|/*	lp.c	4.32	83/01/03	*/
 end_comment
 
 begin_include
@@ -66,6 +66,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../vaxuba/ubavar.h"
 end_include
 
@@ -111,35 +129,12 @@ name|LPHWAT
 value|800
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CAD
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|MAXCOL
 value|132
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MAXCOL
-value|512
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -194,6 +189,9 @@ name|sc_physline
 decl_stmt|;
 name|char
 name|sc_flags
+decl_stmt|;
+name|short
+name|sc_maxcol
 decl_stmt|;
 name|int
 name|sc_lpchar
@@ -317,10 +315,6 @@ begin_comment
 comment|/* awaiting draining of printer */
 end_comment
 
-begin_extern
-extern|extern	lbolt;
-end_extern
-
 begin_function_decl
 name|int
 name|lptout
@@ -367,6 +361,27 @@ name|sc_lpchar
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ui
+operator|->
+name|ui_flags
+condition|)
+name|sc
+operator|->
+name|sc_maxcol
+operator|=
+name|ui
+operator|->
+name|ui_flags
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|sc_maxcol
+operator|=
+name|MAXCOL
 expr_stmt|;
 block|}
 end_block
@@ -428,19 +443,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|INGVAX
-name|br
-operator|=
-literal|0x14
-expr_stmt|;
-name|cvec
-operator|=
-literal|0200
-expr_stmt|;
-else|#
-directive|else
 name|lpaddr
 operator|->
 name|lpsr
@@ -458,8 +460,6 @@ name|lpsr
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 sizeof|sizeof
@@ -1173,7 +1173,9 @@ if|if
 condition|(
 name|logcol
 operator|<
-name|MAXCOL
+name|sc
+operator|->
+name|sc_maxcol
 condition|)
 block|{
 while|while
