@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Stand alone driver for the HDC controller  *  *	@(#)hd.c	7.2 (Berkeley) %G%  */
+comment|/*  * Stand alone driver for the HDC controller  *  *	@(#)hd.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -204,7 +204,7 @@ index|[
 name|GB_MAXPART
 index|]
 decl_stmt|;
-comment|/* partition definitions     */
+comment|/* partition definitions            */
 name|int
 name|ctlr
 decl_stmt|;
@@ -273,14 +273,13 @@ name|int
 name|format
 decl_stmt|;
 comment|/* format program is active         */
-name|unsigned
-name|long
+name|u_long
 name|phio_data
 index|[
 name|HDC_PHIO_SIZE
 index|]
 decl_stmt|;
-comment|/* data for physical io   */
+comment|/* data for physical io     */
 block|}
 name|hdunit_type
 typedef|;
@@ -302,7 +301,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/************************************************************************* *  Procedure:	hdopen * *  Description: The hdc open routine. Initializes the hdc and reads the *               hdc status and the geometry block. * *  Returns:     0   open was not successful *               1   open was successful *               -1  this is not an hdc controller **************************************************************************/
+comment|/************************************************************************* *  Procedure:	hdopen * *  Description:	The hdc open routine. Initializes the hdc and reads the *		hdc status and the geometry block. * *  Returns:	 0  open was successful *		-1  this is not an hdc controller **************************************************************************/
 end_comment
 
 begin_expr_stmt
@@ -319,7 +318,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* i/o block 				 */
+comment|/* i/o block */
 end_comment
 
 begin_block
@@ -357,14 +356,18 @@ name|drive_stat_type
 name|status
 decl_stmt|;
 comment|/* the hdc status is read to here   */
+name|long
+name|ctlr
+decl_stmt|;
+comment|/* the controller number            */
+name|long
+name|junk
+decl_stmt|;
+comment|/* badaddr will write junk here     */
 name|int
 name|par
 decl_stmt|;
 comment|/* partition number                 */
-name|int
-name|ctlr
-decl_stmt|;
-comment|/* the controller number            */
 name|int
 name|drive
 decl_stmt|;
@@ -374,17 +377,9 @@ name|bus
 decl_stmt|;
 comment|/* the bus number                   */
 name|int
-name|unit
-decl_stmt|;
-comment|/* the unit number		    */
-name|int
 name|i
 decl_stmt|;
 comment|/* temp                             */
-name|long
-name|junk
-decl_stmt|;
-comment|/* badaddr will write junk here     */
 name|hdc_regs_type
 modifier|*
 name|ctlr_addr
@@ -396,12 +391,12 @@ name|io
 operator|->
 name|i_boff
 expr_stmt|;
-comment|/* io->i_part; */
+comment|/* io->i_part;	*/
 name|bus
 operator|=
 literal|0
 expr_stmt|;
-comment|/* io->i_bus; */
+comment|/* io->i_bus;	*/
 name|ctlr
 operator|=
 name|HDCTLR
@@ -411,7 +406,7 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_ctlr; */
+comment|/* io->i_ctlr;	*/
 name|drive
 operator|=
 name|HDSLAVE
@@ -421,7 +416,7 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_drive; */
+comment|/* io->i_drive;	*/
 name|hu
 operator|=
 operator|&
@@ -481,11 +476,9 @@ literal|0
 operator|||
 name|drive
 operator|>
-operator|(
 name|HDC_MAXDRIVE
 operator|-
 literal|1
-operator|)
 condition|)
 block|{
 name|printf
@@ -495,7 +488,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|EUNIT
 operator|)
 return|;
 block|}
@@ -517,7 +510,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|EUNIT
 operator|)
 return|;
 block|}
@@ -553,7 +546,6 @@ operator|<<
 literal|16
 operator|)
 expr_stmt|;
-comment|/* ctlr_addr = (hdc_regs_type *) io->i_ctlr_addr; */
 comment|/* 	 * Init drive structure. 	 */
 name|hu
 operator|->
@@ -594,6 +586,9 @@ literal|"hd%d: %x: invalid csr\n"
 argument_list|,
 name|ctlr
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|ctlr_addr
 argument_list|)
 expr_stmt|;
@@ -615,7 +610,7 @@ argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read in the hdc module id word. 	 * The controller is bad if the hdc's writeable control 	 * store is not loaded or if the hdc failed the 	 * functional integrity test for any reason. 	 */
+comment|/* 	 * Read in the hdc module id word.  The controller is bad if the 	 * hdc's writeable control store is not loaded or if the hdc failed 	 * the functional integrity test for any reason. 	 */
 name|id
 operator|=
 operator|&
@@ -629,8 +624,7 @@ name|module_id_reg
 argument_list|)
 operator|=
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|)
 name|id
 expr_stmt|;
@@ -653,15 +647,14 @@ operator|->
 name|module_id
 operator|!=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 name|HDC_MID
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"hdc: Controller bad module id: id= %x\n"
+literal|"hdc: Controller bad module id: id = %x\n"
 argument_list|,
 name|id
 operator|->
@@ -682,20 +675,19 @@ operator|->
 name|code_rev
 operator|==
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 literal|0xFF
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"hdc:  Controller micro-code is not loaded.\n"
+literal|"hdc: Controller micro-code is not loaded.\n"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -706,8 +698,7 @@ operator|->
 name|fit
 operator|!=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 literal|0xFF
 condition|)
@@ -723,7 +714,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -803,7 +794,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|1
+name|EIO
 operator|)
 return|;
 name|hu
@@ -1015,7 +1006,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|EIO
 operator|)
 return|;
 block|}
@@ -1107,7 +1098,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|EIO
 operator|)
 return|;
 block|}
@@ -1139,7 +1130,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -1168,7 +1159,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -1195,7 +1186,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -1206,7 +1197,6 @@ name|par
 operator|!=
 name|HDC_DEFPART
 condition|)
-block|{
 if|if
 condition|(
 name|geo
@@ -1228,7 +1218,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -1284,7 +1274,6 @@ operator|.
 name|start
 expr_stmt|;
 block|}
-block|}
 return|return
 operator|(
 literal|0
@@ -1294,7 +1283,7 @@ block|}
 end_block
 
 begin_comment
-comment|/************************************************************************* *  Procedure:	hdstrategy * *  Description: The hdc strategy routine. This routine does the disk *               reads/writes. If this is the format program, read/writes *               are forced to be within the disk definition partition. * *  Returns:     The number of bytes transfered. **************************************************************************/
+comment|/************************************************************************* *  Procedure:	hdstrategy * *  Description:	The hdc strategy routine. This routine does the disk *		reads/writes. If this is the format program, read/writes *		are forced to be within the disk definition partition. * *  Returns:	The number of bytes transfered. **************************************************************************/
 end_comment
 
 begin_expr_stmt
@@ -1302,7 +1291,7 @@ name|hdstrategy
 argument_list|(
 name|io
 argument_list|,
-name|func
+name|cmd
 argument_list|)
 specifier|register
 expr|struct
@@ -1313,17 +1302,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* i/o block 				 */
+comment|/* i/o block */
 end_comment
 
 begin_decl_stmt
-name|long
-name|func
+name|int
+name|cmd
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* i/o operation to perform 				 */
+comment|/* i/o operation to perform */
 end_comment
 
 begin_block
@@ -1379,7 +1368,7 @@ name|bus
 operator|=
 literal|0
 expr_stmt|;
-comment|/* io->i_bus; */
+comment|/* io->i_bus;	*/
 name|ctlr
 operator|=
 name|HDCTLR
@@ -1389,7 +1378,7 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_ctlr; */
+comment|/* io->i_ctlr;	*/
 name|drive
 operator|=
 name|HDSLAVE
@@ -1399,7 +1388,7 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_drive; */
+comment|/* io->i_drive;	*/
 name|hu
 operator|=
 operator|&
@@ -1433,9 +1422,7 @@ operator|->
 name|i_boff
 operator|==
 name|HDC_DEFPART
-condition|)
-if|if
-condition|(
+operator|&&
 operator|!
 name|hu
 operator|->
@@ -1448,10 +1435,11 @@ literal|"hdc: partition 7 is protected\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-empty_stmt|;
 comment|/* 	 * Insure the transfer fits in the partition. 	 * Set and validate transfer size. 	 */
 name|partstart
 operator|=
@@ -1481,15 +1469,12 @@ name|length
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|io
 operator|->
 name|i_bn
 operator|<
 name|partstart
-operator|)
 operator|||
-operator|(
 name|io
 operator|->
 name|i_bn
@@ -1497,7 +1482,6 @@ operator|>=
 name|partstart
 operator|+
 name|partlen
-operator|)
 condition|)
 return|return
 operator|(
@@ -1536,11 +1520,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"hdc:  i/o not a longword multiple\n"
+literal|"hdc: i/o not a longword multiple\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* 	 * Set up the mcb and send it to the hdc. 	 */
@@ -1564,7 +1550,7 @@ operator|->
 name|command
 operator|=
 operator|(
-name|func
+name|cmd
 operator|==
 name|READ
 operator|)
@@ -1633,8 +1619,7 @@ operator|.
 name|ta
 operator|=
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|)
 name|io
 operator|->
@@ -1685,34 +1670,58 @@ block|}
 end_block
 
 begin_comment
-comment|/************************************************************************* *  Procedure:	hdioctl * *  Description: ioctl routine. * *  Returns:     0       no errors *               non-0    error **************************************************************************/
+comment|/************************************************************************* *  Procedure:	hdioctl * *  Description:	ioctl routine. * *  Returns:	0	no errors *		non-0	error **************************************************************************/
 end_comment
 
-begin_function
-name|int
+begin_macro
 name|hdioctl
-parameter_list|(
-name|io
-parameter_list|,
-name|command
-parameter_list|,
-name|arg
-parameter_list|)
+argument_list|(
+argument|io
+argument_list|,
+argument|command
+argument_list|,
+argument|arg
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|struct
 name|iob
 modifier|*
 name|io
 decl_stmt|;
-comment|/* i/o block. 				 */
+end_decl_stmt
+
+begin_comment
+comment|/* i/o block */
+end_comment
+
+begin_decl_stmt
 name|int
 name|command
 decl_stmt|;
-comment|/* The ioctl commmand. 				 */
+end_decl_stmt
+
+begin_comment
+comment|/* The ioctl commmand */
+end_comment
+
+begin_decl_stmt
 name|int
 name|arg
 decl_stmt|;
-comment|/* Data. Format depends on ioctl. 				 */
+end_decl_stmt
+
+begin_comment
+comment|/* Data.  Format depends on ioctl */
+end_comment
+
+begin_block
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 name|mcb_type
 modifier|*
 name|mcb
@@ -1721,33 +1730,29 @@ name|hdunit_type
 modifier|*
 name|hu
 decl_stmt|;
-comment|/* disk unit information table      */
+comment|/* disk unit information table	*/
 name|hdctlr_type
 modifier|*
 name|hc
 decl_stmt|;
-comment|/* hdc ctlr information table       */
-specifier|register
-name|int
-name|i
-decl_stmt|;
+comment|/* hdc ctlr information table	*/
 name|int
 name|bus
 decl_stmt|;
-comment|/* bus number	                    */
+comment|/* bus number			*/
 name|int
 name|ctlr
 decl_stmt|;
-comment|/* the controller number            */
+comment|/* the controller number	*/
 name|int
 name|drive
 decl_stmt|;
-comment|/* the drive number                 */
+comment|/* the drive number		*/
 name|bus
 operator|=
 literal|0
 expr_stmt|;
-comment|/* io->i_bus; */
+comment|/* io->i_bus;	*/
 name|ctlr
 operator|=
 name|HDCTLR
@@ -1757,7 +1762,7 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_ctlr; */
+comment|/* io->i_ctlr;	*/
 name|drive
 operator|=
 name|HDSLAVE
@@ -1767,7 +1772,7 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_drive; */
+comment|/* io->i_drive;	*/
 name|hu
 operator|=
 operator|&
@@ -1914,8 +1919,7 @@ operator|.
 name|ta
 operator|=
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|)
 name|hu
 operator|->
@@ -1966,7 +1970,9 @@ name|io
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 break|break;
 block|}
@@ -1989,7 +1995,9 @@ operator|->
 name|format
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 name|track
 operator|=
@@ -2031,8 +2039,7 @@ operator|.
 name|ta
 operator|=
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|)
 name|hu
 operator|->
@@ -2083,7 +2090,9 @@ name|io
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 name|track
 operator|->
@@ -2255,7 +2264,9 @@ name|io
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 break|break;
 block|}
@@ -2263,7 +2274,7 @@ case|case
 name|DSKIOCFORMATCTL
 case|:
 block|{
-comment|/* 		 * This ioctl provides special format control. 		 * Currently the valid arguments are: 		 * 		 * arg= 0  disable formatting; 		 * 		 * arg= 1  enable formatting (allow privileged access); 		 *         formatting must not already be enabled; 		 *         For formatting, change to use partition 7. 		 */
+comment|/* 		 * This ioctl provides special format control. 		 * Currently the valid arguments are: 		 * 		 * arg = 0	disable formatting; 		 * 		 * arg = 1	enable formatting (allow privileged access); 		 *		formatting must not already be enabled; 		 *		For formatting, change to use partition 7. 		 */
 if|if
 condition|(
 name|arg
@@ -2536,8 +2547,7 @@ operator|.
 name|ta
 operator|=
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|)
 name|hu
 operator|->
@@ -2575,7 +2585,9 @@ name|io
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 name|vendor
 operator|=
@@ -2643,71 +2655,83 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
-comment|/************************************************************************* *  Procedure:	hdmcb * *  Description: Internal routine used to send mcb's to the hdc. * *  Returns:     0          normal *               non-zero   error occurred **************************************************************************/
+comment|/************************************************************************* *  Procedure:	hdmcb * *  Description:	Internal routine used to send mcb's to the hdc. * *  Returns:	0		normal *		non-zero	error occurred **************************************************************************/
 end_comment
 
-begin_function
-name|int
+begin_expr_stmt
 name|hdmcb
-parameter_list|(
+argument_list|(
 name|mcb
-parameter_list|,
+argument_list|,
 name|io
-parameter_list|)
+argument_list|)
 specifier|register
 name|mcb_type
-modifier|*
+operator|*
 name|mcb
-decl_stmt|;
-comment|/* mcb to send to the hdc		    */
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* mcb to send to the hdc	*/
+end_comment
+
+begin_decl_stmt
 specifier|register
 name|struct
 name|iob
 modifier|*
 name|io
 decl_stmt|;
-comment|/* i/o block				    */
+end_decl_stmt
+
+begin_comment
+comment|/* i/o block			*/
+end_comment
+
+begin_block
 block|{
 name|master_mcb_type
 modifier|*
 name|master_mcb
 decl_stmt|;
-comment|/* the hdc's master mcb             */
+comment|/* the hdc's master mcb		*/
 name|hdctlr_type
 modifier|*
 name|hc
 decl_stmt|;
-comment|/* hdc ctlr information table       */
+comment|/* hdc ctlr information table	*/
 name|hdc_regs_type
 modifier|*
 name|ctlr_addr
 decl_stmt|;
-comment|/* pointer to hdc i/o registers     */
+comment|/* pointer to hdc i/o registers	*/
 name|int
 name|timeout
 decl_stmt|;
-comment|/* used to timeout the mcb          */
+comment|/* used to timeout the mcb	*/
 name|int
 name|bus
 decl_stmt|;
-comment|/* bus number	                    */
+comment|/* bus number			*/
 name|int
 name|ctlr
 decl_stmt|;
-comment|/* the controller number            */
+comment|/* the controller number	*/
 name|int
 name|i
 decl_stmt|,
 name|end
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 modifier|*
 name|ptr
 decl_stmt|;
@@ -2715,7 +2739,7 @@ name|bus
 operator|=
 literal|0
 expr_stmt|;
-comment|/* io->i_bus; */
+comment|/* io->i_bus;	*/
 name|ctlr
 operator|=
 name|HDCTLR
@@ -2725,7 +2749,7 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_ctlr; */
+comment|/* io->i_ctlr;	*/
 name|hc
 operator|=
 operator|&
@@ -2868,8 +2892,7 @@ name|master_mcb_reg
 argument_list|)
 operator|=
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|)
 name|master_mcb
 expr_stmt|;
@@ -2877,10 +2900,11 @@ name|timeout
 operator|=
 literal|15000
 expr_stmt|;
-while|while
-condition|(
-name|TRUE
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|DELAY
 argument_list|(
@@ -2896,13 +2920,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|master_mcb
 operator|->
 name|mcs
 operator|&
 name|MCS_DONE
-operator|)
 operator|&&
 operator|!
 operator|(
@@ -2914,7 +2936,9 @@ name|MCS_FATALERROR
 operator|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|timeout
 operator|--
@@ -2962,8 +2986,7 @@ expr_stmt|;
 name|ptr
 operator|=
 operator|(
-name|unsigned
-name|int
+name|u_int
 operator|*
 operator|)
 name|master_mcb
@@ -3058,8 +3081,7 @@ expr_stmt|;
 name|ptr
 operator|=
 operator|(
-name|unsigned
-name|int
+name|u_int
 operator|*
 operator|)
 operator|&
@@ -3148,7 +3170,7 @@ operator|)
 return|;
 block|}
 block|}
-end_function
+end_block
 
 end_unit
 
