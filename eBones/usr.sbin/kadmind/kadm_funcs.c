@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid_kadm_funcs_c[] = "Id: kadm_funcs.c,v 4.3 90/03/20 01:39:51 jon Exp "; static const char rcsid[] = 	"$Id: kadm_funcs.c,v 1.2 1995/09/07 20:50:48 mark Exp $";
+unit|static char rcsid_kadm_funcs_c[] = "Id: kadm_funcs.c,v 4.3 90/03/20 01:39:51 jon Exp "; static const char rcsid[] = 	"$Id$";
 endif|#
 directive|endif
 endif|lint
@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberosIV/kadm_err.h>
+file|<kadm_err.h>
 end_include
 
 begin_include
