@@ -41,7 +41,14 @@ begin_define
 define|#
 directive|define
 name|AAC_FIB_COUNT
-value|8
+value|(PAGE_SIZE/sizeof(struct aac_fib))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_PREALLOCATE_FIBS
+value|128
 end_define
 
 begin_define
