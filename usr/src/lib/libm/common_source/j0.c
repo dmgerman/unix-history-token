@@ -11,15 +11,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)j0.c	4.2 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)j0.c	4.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* 	floating point Bessel's function 	of the first and second kinds 	of order zero  	j0(x) returns the value of J0(x) 	for all real values of x.  	There are no error returns. 	Calls sin, cos, sqrt.  	There is a niggling bug in J0 which 	causes errors up to 2e-16 for x in the 	interval [-8,8]. 	The bug is caused by an inappropriate order 	of summation of the series.  rhm will fix it 	someday.  	Coefficients are from Hart& Cheney. 	#5849 (19.22D) 	#6549 (19.25D) 	#6949 (19.41D)  	y0(x) returns the value of Y0(x) 	for positive real values of x. 	For x<=0, if on the VAX, error number EDOM is set and 	the reserved operand fault is generated; 	otherwise (an IEEE machine) an invalid operation is performed.  	Calls sin, cos, sqrt, log, j0.  	The values of Y0 have not been checked 	to more than ten places.  	Coefficients are from Hart& Cheney. 	#6245 (18.78D) 	#6549 (19.25D) 	#6949 (19.41D) */
@@ -31,11 +34,19 @@ directive|include
 file|<math.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VAX
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -49,7 +60,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 end_comment
 
 begin_decl_stmt
@@ -65,6 +76,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -506,9 +521,17 @@ operator|<=
 literal|0.
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|VAX
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 specifier|extern
 name|double
 name|infnan
@@ -525,7 +548,7 @@ return|;
 comment|/* NaN */
 else|#
 directive|else
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 return|return
 operator|(
 name|zero
@@ -536,6 +559,7 @@ return|;
 comment|/* IEEE machines: invalid operation */
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|}
 if|if
 condition|(

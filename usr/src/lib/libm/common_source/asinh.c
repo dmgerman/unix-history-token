@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asinh.c	1.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)asinh.c	1.2 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* ASINH(X)  * RETURN THE INVERSE HYPERBOLIC SINE OF X  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 2/16/85;  * REVISED BY K.C. NG on 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions :  *	copysign(x,y)  *	sqrt(x)  *  * Required kernel function:  *	log1p(x) 		...return log(1+x)  *  * Method :  *	Based on   *		asinh(x) = sign(x) * log [ |x| + sqrt(x*x+1) ]  *	we have  *	asinh(x) := x  if  1+x*x=1,  *		 := sign(x)*(log1p(x)+ln2))	 if sqrt(1+x*x)=x, else  *		 := sign(x)*log1p(|x| + |x|/(1/|x| + sqrt(1+(1/|x|)^2)) )    *  * Accuracy:  *	asinh(x) returns the exact inverse hyperbolic sine of x nearly rounded.  *	In a test run with 52,000 random arguments on a VAX, the maximum   *	observed error was 1.58 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
@@ -32,27 +35,25 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_comment
-comment|/* VAX D format */
+comment|/* VAX/TAHOE D format */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_define
@@ -77,7 +78,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_define
@@ -102,7 +103,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_comment
@@ -185,7 +186,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 end_comment
 
 begin_decl_stmt
@@ -214,6 +215,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
 
 begin_function
 name|double
@@ -259,19 +264,17 @@ literal|1.0
 decl_stmt|;
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 name|x
@@ -286,6 +289,7 @@ return|;
 comment|/* x is NaN */
 endif|#
 directive|endif
+comment|/* !defined(vax)&&!defined(tahoe) */
 if|if
 condition|(
 operator|(

@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pow.c	4.5 (Berkeley) 8/21/85; 1.6 (ucb.elefunt) %G%"
+literal|"@(#)pow.c	4.5 (Berkeley) 8/21/85; 1.7 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* POW(X,Y)    * RETURN X**Y   * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY K.C. NG on 7/10/85.  *  * Required system supported functions:  *      scalb(x,n)        *      logb(x)           *	copysign(x,y)	  *	finite(x)	  *	drem(x,y)  *  * Required kernel functions:  *	exp__E(a,c)	...return  exp(a+c) - 1 - a*a/2  *	log__L(x)	...return  (log(1+x) - 2s)/s, s=x/(2+x)   *	pow_p(x,y)	...return  +(anything)**(finite non zero)  *  * Method  *	1. Compute and return log(x) in three pieces:  *		log(x) = n*ln2 + hi + lo,  *	   where n is an integer.  *	2. Perform y*log(x) by simulating muti-precision arithmetic and   *	   return the answer in three pieces:  *		y*log(x) = m*ln2 + hi + lo,  *	   where m is an integer.  *	3. Return x**y = exp(y*log(x))  *		= 2^m * ( exp(hi+lo) ).  *  * Special cases:  *	(anything) ** 0  is 1 ;  *	(anything) ** 1  is itself;  *	(anything) ** NaN is NaN;  *	NaN ** (anything except 0) is NaN;  *	+-(anything> 1) ** +INF is +INF;  *	+-(anything> 1) ** -INF is +0;  *	+-(anything< 1) ** +INF is +0;  *	+-(anything< 1) ** -INF is +INF;  *	+-1 ** +-INF is NaN and signal INVALID;  *	+0 ** +(anything except 0, NaN)  is +0;  *	-0 ** +(anything except 0, NaN, odd integer)  is +0;  *	+0 ** -(anything except 0, NaN)  is +INF and signal DIV-BY-ZERO;  *	-0 ** -(anything except 0, NaN, odd integer)  is +INF with signal;  *	-0 ** (odd integer) = -( +0 ** (odd integer) );  *	+INF ** +(anything except 0,NaN) is +INF;  *	+INF ** -(anything except 0,NaN) is +0;  *	-INF ** (odd integer) = -( +INF ** (odd integer) );  *	-INF ** (even integer) = ( +INF ** (even integer) );  *	-INF ** -(anything except integer,NaN) is NaN with signal;  *	-(x=anything) ** (k=integer) is (-1)**k * (x ** k);  *	-(anything except 0) ** (non-integer) is NaN with signal;  *  * Accuracy:  *	pow(x,y) returns x**y nearly rounded. In particular, on a SUN, a VAX,  *	and a Zilog Z8000,  *			pow(integer,integer)  *	always returns the correct integer provided it is representable.  *	In a test run with 100,000 random arguments with 0< x, y< 20.0  *	on a VAX, the maximum observed error was 1.79 ulps (units in the   *	last place).  *  * Constants :  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
@@ -32,17 +35,15 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_comment
@@ -66,7 +67,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_define
@@ -91,7 +92,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_define
@@ -116,7 +117,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_comment
@@ -269,7 +270,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe)	*/
 end_comment
 
 begin_decl_stmt
@@ -308,6 +309,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe)	*/
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -386,25 +391,24 @@ operator|==
 name|one
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 operator|||
 name|x
 operator|!=
 name|x
 endif|#
 directive|endif
+comment|/* !defined(vax)&&!defined(tahoe) */
 condition|)
 return|return
 operator|(
@@ -414,19 +418,17 @@ return|;
 comment|/* if x is NaN or y=1 */
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 elseif|else
 if|if
 condition|(
@@ -442,6 +444,7 @@ return|;
 comment|/* if y is NaN */
 endif|#
 directive|endif
+comment|/* !defined(vax)&&!defined(tahoe) */
 elseif|else
 if|if
 condition|(
@@ -647,17 +650,15 @@ block|{
 comment|/* return NaN */
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 return|return
 operator|(
 name|infnan
@@ -669,7 +670,7 @@ return|;
 comment|/* NaN */
 else|#
 directive|else
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 return|return
 operator|(
 name|zero
@@ -679,6 +680,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|}
 block|}
 end_function
@@ -733,12 +735,13 @@ name|ty
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|TAHOE
+name|tahoe
 name|double
 name|tahoe_tmp
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* tahoe */
 name|float
 name|sx
 decl_stmt|,
@@ -770,17 +773,15 @@ block|{
 comment|/* if x is +INF or +0 */
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 return|return
 operator|(
 operator|(
@@ -800,6 +801,7 @@ return|;
 comment|/* if y<zero, return +INF */
 else|#
 directive|else
+comment|/* defined(vax)||defined(tahoe) */
 return|return
 operator|(
 operator|(
@@ -817,6 +819,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|}
 if|if
 condition|(
@@ -850,19 +853,17 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 comment|/* IEEE double; subnormal number */
 if|if
 condition|(
@@ -896,6 +897,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* !defined(vax)&&!defined(tahoe) */
 if|if
 condition|(
 name|z
@@ -1110,7 +1112,7 @@ expr_stmt|;
 comment|/* y ~ sy + ty */
 ifdef|#
 directive|ifdef
-name|TAHOE
+name|tahoe
 name|s
 operator|=
 operator|(
@@ -1127,6 +1129,7 @@ name|ln2hi
 expr_stmt|;
 else|#
 directive|else
+comment|/* tahoe */
 name|s
 operator|=
 operator|(
@@ -1143,6 +1146,7 @@ expr_stmt|;
 comment|/* (sy+ty)*(sx+tx)-kln2 */
 endif|#
 directive|endif
+comment|/* tahoe */
 name|z
 operator|=
 operator|(

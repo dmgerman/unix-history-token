@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acosh.c	1.2 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
+literal|"@(#)acosh.c	1.2 (Berkeley) 8/21/85; 1.5 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* ACOSH(X)  * RETURN THE INVERSE HYPERBOLIC COSINE OF X  * DOUBLE PRECISION (VAX D FORMAT 56 BITS, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 2/16/85;  * REVISED BY K.C. NG on 3/6/85, 3/24/85, 4/16/85, 8/17/85.  *  * Required system supported functions :  *	sqrt(x)  *  * Required kernel function:  *	log1p(x) 		...return log(1+x)  *  * Method :  *	Based on   *		acosh(x) = log [ x + sqrt(x*x-1) ]  *	we have  *		acosh(x) := log1p(x)+ln2,	if (x> 1.0E20); else		  *		acosh(x) := log1p( sqrt(x-1) * (sqrt(x-1) + sqrt(x+1)) ) .  *	These formulae avoid the over/underflow complication.  *  * Special cases:  *	acosh(x) is NaN with signal if x<1.  *	acosh(NaN) is NaN without signal.  *  * Accuracy:  *	acosh(x) returns the exact inverse hyperbolic cosine of x nearly   *	rounded. In a test run with 512,000 random arguments on a VAX, the  *	maximum observed error was 3.30 ulps (units of the last place) at  *	x=1.0070493753568216 .  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
@@ -32,17 +35,15 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_comment
@@ -52,7 +53,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_define
@@ -77,7 +78,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_define
@@ -102,7 +103,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_comment
@@ -185,7 +186,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 end_comment
 
 begin_decl_stmt
@@ -215,6 +216,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
+
 begin_function
 name|double
 name|acosh
@@ -241,19 +246,17 @@ decl_stmt|;
 comment|/* big+1==big */
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 name|x
@@ -268,6 +271,7 @@ return|;
 comment|/* x is NaN */
 endif|#
 directive|endif
+comment|/* !defined(vax)&&!defined(tahoe) */
 comment|/* return log1p(x) + log(2) if x is large */
 if|if
 condition|(

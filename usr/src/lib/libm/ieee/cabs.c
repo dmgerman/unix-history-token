@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cabs.c	1.2 (Berkeley) 8/21/85; 1.5 (ucb.elefunt) %G%"
+literal|"@(#)cabs.c	1.2 (Berkeley) 8/21/85; 1.6 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* CABS(Z)  * RETURN THE ABSOLUTE VALUE OF THE COMPLEX NUMBER  Z = X + iY  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 11/28/84.  * REVISED BY K.C. NG, 7/12/85.  *  * Required kernel function :  *	hypot(x,y)  *  * Method :  *	cabs(z) = hypot(x,y) .  */
@@ -80,17 +83,15 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_comment
@@ -100,7 +101,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_define
@@ -125,7 +126,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_define
@@ -150,7 +151,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_comment
@@ -268,7 +269,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double format */
+comment|/* defined(vax)||defined(tahoe)	*/
 end_comment
 
 begin_decl_stmt
@@ -300,6 +301,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe)	*/
+end_comment
 
 begin_function
 name|double
@@ -361,21 +366,6 @@ argument_list|()
 decl_stmt|,
 name|exp
 decl_stmt|;
-if|#
-directive|if
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|VAX
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|TAHOE
-argument_list|)
-operator|)
 if|if
 condition|(
 name|finite
@@ -391,8 +381,6 @@ name|y
 argument_list|)
 condition|)
 block|{
-endif|#
-directive|endif
 name|x
 operator|=
 name|copysign
@@ -575,21 +563,6 @@ operator|+
 name|r
 operator|)
 return|;
-if|#
-directive|if
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|VAX
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|TAHOE
-argument_list|)
-operator|)
 block|}
 elseif|else
 if|if
@@ -648,6 +621,19 @@ name|x
 operator|)
 return|;
 comment|/* x is NaN, y is finite */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 elseif|else
 if|if
 condition|(
@@ -661,6 +647,9 @@ name|y
 operator|)
 return|;
 comment|/* x and y is NaN */
+endif|#
+directive|endif
+comment|/* !defined(vax)&&!defined(tahoe) */
 else|else
 return|return
 operator|(
@@ -673,8 +662,6 @@ argument_list|)
 operator|)
 return|;
 comment|/* y is INF */
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp__E.c	1.2 (Berkeley) 8/21/85; 1.5 (ucb.elefunt) %G%"
+literal|"@(#)exp__E.c	1.2 (Berkeley) 8/21/85; 1.6 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* exp__E(x,c)  * ASSUMPTION: c<< x  SO THAT  fl(x+c)=x.  * (c is the correction term for x)  * exp__E RETURNS  *  *			 /  exp(x+c) - 1 - x ,  1E-19< |x|< .3465736  *       exp__E(x,c) = 	| 		       *			 \  0 ,  |x|< 1E-19.  *  * DOUBLE PRECISION (IEEE 53 bits, VAX D FORMAT 56 BITS)  * KERNEL FUNCTION OF EXP, EXPM1, POW FUNCTIONS  * CODED IN C BY K.C. NG, 1/31/85;  * REVISED BY K.C. NG on 3/16/85, 4/16/85.  *  * Required system supported function:  *	copysign(x,y)	  *  * Method:  *	1. Rational approximation. Let r=x+c.  *	   Based on  *                                   2 * sinh(r/2)       *                exp(r) - 1 =   ----------------------   ,  *                               cosh(r/2) - sinh(r/2)  *	   exp__E(r) is computed using  *                   x*x            (x/2)*W - ( Q - ( 2*P  + x*P ) )  *                   --- + (c + x*[---------------------------------- + c ])  *                    2                          1 - W  * 	   where  P := p1*x^2 + p2*x^4,  *	          Q := q1*x^2 + q2*x^4 (for 56 bits precision, add q3*x^6)  *	          W := x/2-(Q-x*P),  *  *	   (See the listing below for the values of p1,p2,q1,q2,q3. The poly-  *	    nomials P and Q may be regarded as the approximations to sinh  *	    and cosh :  *		sinh(r/2) =  r/2 + r * P  ,  cosh(r/2) =  1 + Q . )  *  *         The coefficients were obtained by a special Remez algorithm.  *  * Approximation error:  *  *   |	exp(x) - 1			   |        2**(-57),  (IEEE double)  *   | ------------  -  (exp__E(x,0)+x)/x  |<=   *   |	     x			           |	    2**(-69).  (VAX D)  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
@@ -32,17 +35,15 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_comment
@@ -52,7 +53,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_define
@@ -77,7 +78,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_define
@@ -102,7 +103,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_comment
@@ -290,7 +291,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe)	*/
 end_comment
 
 begin_decl_stmt
@@ -333,6 +334,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe)	*/
+end_comment
 
 begin_function
 name|double
@@ -418,17 +423,15 @@ operator|)
 expr_stmt|;
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 name|q
 operator|=
 name|z
@@ -449,7 +452,7 @@ operator|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 name|q
 operator|=
 name|z
@@ -464,6 +467,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 name|xp
 operator|=
 name|x

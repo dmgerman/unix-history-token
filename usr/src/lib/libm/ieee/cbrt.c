@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cbrt.c	1.1 (Berkeley) 5/23/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)cbrt.c	1.1 (Berkeley) 5/23/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* kahan's cube root (53 bits IEEE double precision)  * for IEEE machines only  * coded in C by K.C. Ng, 4/30/85  *  * Accuracy:  *	better than 0.667 ulps according to an error analysis. Maximum  * error observed was 0.666 ulps in an 1,000,000 random arguments test.  *  * Warning: this code is semi machine dependent; the ordering of words in  * a floating point number must be known in advance. I assume that the  * long interger at the address of a floating point number will be the  * leading 32 bits of that floating point number (i.e., sign, exponent,  * and the 20 most significant bits).  * On a National machine, it has different ordering; therefore, this code   * must be compiled with flag -DNATIONAL.   */
@@ -32,19 +35,17 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_decl_stmt
@@ -153,7 +154,7 @@ name|sign
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|NATIONAL
+name|national
 comment|/* ordering of words in a floating points number */
 name|int
 name|n0
@@ -166,6 +167,7 @@ literal|0
 decl_stmt|;
 else|#
 directive|else
+comment|/* national */
 name|int
 name|n0
 init|=
@@ -177,6 +179,7 @@ literal|1
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* national */
 name|mexp
 operator|=
 name|px

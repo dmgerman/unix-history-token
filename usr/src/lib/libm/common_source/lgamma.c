@@ -11,15 +11,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lgamma.c	4.4 (Berkeley) 9/11/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)lgamma.c	4.4 (Berkeley) 9/11/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* 	C program for floating point log Gamma function  	lgamma(x) computes the log of the absolute 	value of the Gamma function. 	The sign of the Gamma function is returned in the 	external quantity signgam.  	The coefficients for expansion around zero 	are #5243 from Hart& Cheney; for expansion 	around infinity they are #5404.  	Calls log, floor and sin. */
@@ -36,7 +39,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|VAX
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
 argument_list|)
 end_if
 
@@ -50,6 +58,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -400,7 +412,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|VAX
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
 argument_list|)
 if|if
 condition|(
@@ -426,6 +443,7 @@ comment|/* +INF */
 block|}
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 name|signgam
 operator|=
 call|(

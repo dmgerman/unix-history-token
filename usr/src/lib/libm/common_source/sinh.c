@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sinh.c	4.3 (Berkeley) 8/21/85; 1.5 (ucb.elefunt) %G%"
+literal|"@(#)sinh.c	4.3 (Berkeley) 8/21/85; 1.6 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* SINH(X)  * RETURN THE HYPERBOLIC SINE OF X  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY K.C. NG on 2/8/85, 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions :  *	copysign(x,y)  *	scalb(x,N)  *  * Required kernel functions:  *	expm1(x)	...return exp(x)-1  *  * Method :  *	1. reduce x to non-negative by sinh(-x) = - sinh(x).  *	2.   *  *	                                      expm1(x) + expm1(x)/(expm1(x)+1)  *	    0<= x<= lnovfl     : sinh(x) := --------------------------------  *			       		                      2  *     lnovfl<= x<= lnovfl+ln2 : sinh(x) := expm1(x)/2 (avoid overflow)  * lnovfl+ln2<  x<  INF        :  overflow to INF  *	  *  * Special cases:  *	sinh(x) is x if x is +INF, -INF, or NaN.  *	only sinh(0)=0 is exact for finite argument.  *  * Accuracy:  *	sinh(x) returns the exact hyperbolic sine of x nearly rounded. In  *	a test run with 1,024,000 random arguments on a VAX, the maximum  *	observed error was 1.93 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
@@ -32,23 +35,21 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_define
@@ -73,7 +74,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_define
@@ -98,7 +99,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_comment
@@ -216,7 +217,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 end_comment
 
 begin_decl_stmt
@@ -249,20 +250,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
+
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_expr_stmt
@@ -279,7 +282,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 end_comment
 
 begin_expr_stmt
@@ -294,6 +297,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
 
 begin_function
 name|double
@@ -333,19 +340,17 @@ name|sign
 decl_stmt|;
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 name|x
@@ -360,6 +365,7 @@ return|;
 comment|/* x is NaN */
 endif|#
 directive|endif
+comment|/* !defined(vax)&&!defined(tahoe) */
 name|sign
 operator|=
 name|copysign

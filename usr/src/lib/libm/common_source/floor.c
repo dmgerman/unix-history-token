@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)floor.c	4.2	9/11/85; 1.5 (ucb.elefunt) %G% */
+comment|/*	@(#)floor.c	4.2	9/11/85; 1.6 (ucb.elefunt) %G% */
 end_comment
 
 begin_comment
@@ -108,7 +108,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NATIONAL
+name|national
 end_ifndef
 
 begin_comment
@@ -122,23 +122,21 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_define
@@ -163,7 +161,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_define
@@ -188,7 +186,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_decl_stmt
@@ -232,7 +230,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 end_comment
 
 begin_decl_stmt
@@ -252,6 +250,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
 
 begin_function
 name|double
@@ -277,19 +279,17 @@ argument_list|()
 decl_stmt|;
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 name|x
@@ -304,6 +304,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* !defined(vax)&&!defined(tahoe) */
 if|if
 condition|(
 name|copysign
@@ -353,7 +354,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NATIONAL */
+comment|/* not national */
 end_comment
 
 end_unit

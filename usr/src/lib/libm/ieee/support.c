@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)support.c	1.1 (Berkeley) 5/23/85; 1.9 (ucb.elefunt) %G%"
+literal|"@(#)support.c	1.1 (Berkeley) 5/23/85; 1.10 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*   * Some IEEE standard 754 recommended functions and remainder and sqrt for   * supporting the C elementary functions.  ******************************************************************************  * WARNING:  *      These codes are developed (in double) to support the C elementary  * functions temporarily. They are not universal, and some of them are very  * slow (in particular, drem and sqrt is extremely inefficient). Each   * computer system should have its implementation of these functions using   * its own assembler.  ******************************************************************************  *  * IEEE 754 required operations:  *     drem(x,p)   *              returns  x REM y  =  x - [x/y]*y , where [x/y] is the integer  *              nearest x/y; in half way case, choose the even one.  *     sqrt(x)   *              returns the square root of x correctly rounded according to   *		the rounding mod.  *  * IEEE 754 recommended functions:  * (a) copysign(x,y)   *              returns x with the sign of y.   * (b) scalb(x,N)   *              returns  x * (2**N), for integer values N.  * (c) logb(x)   *              returns the unbiased exponent of x, a signed integer in   *              double precision, except that logb(0) is -INF, logb(INF)   *              is +INF, and logb(NAN) is that NAN.  * (d) finite(x)   *              returns the value TRUE if -INF< x< +INF and returns   *              FALSE otherwise.  *  *  * CODED IN C BY K.C. NG, 11/25/84;  * REVISED BY K.C. NG on 1/22/85, 2/13/85, 3/24/85.  */
@@ -32,17 +35,15 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_comment
@@ -111,7 +112,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*IEEE double format */
+comment|/* defined(vax)||defined(tahoe) */
 end_comment
 
 begin_decl_stmt
@@ -169,6 +170,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
+
 begin_function
 name|double
 name|scalb
@@ -193,7 +198,7 @@ parameter_list|()
 function_decl|;
 ifdef|#
 directive|ifdef
-name|NATIONAL
+name|national
 name|unsigned
 name|short
 modifier|*
@@ -211,7 +216,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG, TAHOE */
+comment|/* national */
 name|unsigned
 name|short
 modifier|*
@@ -227,6 +232,7 @@ name|x
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* national */
 if|if
 condition|(
 name|x
@@ -240,17 +246,15 @@ operator|)
 return|;
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 operator|(
@@ -312,7 +316,7 @@ return|;
 block|}
 else|#
 directive|else
-comment|/* IEEE */
+comment|/* defined(vax)||defined(tahoe) */
 if|if
 condition|(
 operator|(
@@ -391,6 +395,7 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 if|if
 condition|(
 operator|(
@@ -514,7 +519,7 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|NATIONAL
+name|national
 name|unsigned
 name|short
 modifier|*
@@ -545,7 +550,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG,TAHOE */
+comment|/* national */
 name|unsigned
 name|short
 modifier|*
@@ -572,19 +577,18 @@ name|y
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* national */
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 operator|(
@@ -603,6 +607,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 operator|*
 name|px
 operator|=
@@ -638,7 +643,7 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|NATIONAL
+name|national
 name|short
 modifier|*
 name|px
@@ -656,7 +661,7 @@ name|k
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG, TAHOE */
+comment|/* national */
 name|short
 modifier|*
 name|px
@@ -672,19 +677,18 @@ name|k
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* national */
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 return|return
 call|(
 name|int
@@ -706,7 +710,7 @@ argument_list|)
 return|;
 else|#
 directive|else
-comment|/* IEEE */
+comment|/* defined(vax)||defined(tahoe) */
 if|if
 condition|(
 operator|(
@@ -788,6 +792,7 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|}
 name|finite
 argument_list|(
@@ -799,17 +804,15 @@ decl_stmt|;
 block|{
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 return|return
 operator|(
 literal|1
@@ -817,10 +820,10 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* IEEE */
+comment|/* defined(vax)||defined(tahoe) */
 ifdef|#
 directive|ifdef
-name|NATIONAL
+name|national
 return|return
 operator|(
 operator|(
@@ -844,7 +847,7 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* SUN, ZILOG */
+comment|/* national */
 return|return
 operator|(
 operator|(
@@ -866,8 +869,10 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* national */
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|}
 name|double
 name|drem
@@ -904,7 +909,7 @@ name|k
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|NATIONAL
+name|national
 name|unsigned
 name|short
 modifier|*
@@ -961,7 +966,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG, TAHOE */
+comment|/* national */
 name|unsigned
 name|short
 modifier|*
@@ -1010,6 +1015,7 @@ name|tmp
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* national */
 operator|*
 name|pp
 operator|&=
@@ -1017,17 +1023,15 @@ name|msign
 expr_stmt|;
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 operator|(
@@ -1043,7 +1047,7 @@ condition|)
 comment|/* is x a reserved operand? */
 else|#
 directive|else
-comment|/* IEEE */
+comment|/* defined(vax)||defined(tahoe) */
 if|if
 condition|(
 operator|(
@@ -1057,6 +1061,7 @@ name|mexp
 condition|)
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 return|return
 operator|(
 name|x
@@ -1080,17 +1085,15 @@ condition|)
 block|{
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 specifier|extern
 name|double
 name|infnan
@@ -1106,6 +1109,7 @@ operator|)
 return|;
 else|#
 directive|else
+comment|/* defined(vax)||defined(tahoe) */
 return|return
 name|zero
 operator|/
@@ -1113,20 +1117,19 @@ name|zero
 return|;
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|}
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 operator|(
@@ -1142,7 +1145,7 @@ condition|)
 comment|/* is p a reserved operand? */
 else|#
 directive|else
-comment|/* IEEE */
+comment|/* defined(vax)||defined(tahoe) */
 if|if
 condition|(
 operator|(
@@ -1156,6 +1159,7 @@ name|mexp
 condition|)
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|{
 if|if
 condition|(
@@ -1326,17 +1330,15 @@ name|k
 expr_stmt|;
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 name|x
@@ -1350,7 +1352,7 @@ literal|128
 expr_stmt|;
 else|#
 directive|else
-comment|/* IEEE */
+comment|/* defined(vax)||defined(tahoe) */
 if|if
 condition|(
 name|x
@@ -1364,6 +1366,7 @@ literal|16
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 name|x
 operator|-=
 name|tmp
@@ -1393,23 +1396,22 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 name|x
 condition|)
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 operator|*
 name|px
 operator|^=
@@ -1466,17 +1468,15 @@ argument_list|()
 decl_stmt|;
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 name|int
 name|k
 init|=
@@ -1484,7 +1484,7 @@ literal|54
 decl_stmt|;
 else|#
 directive|else
-comment|/* IEEE */
+comment|/* defined(vax)||defined(tahoe) */
 name|int
 name|k
 init|=
@@ -1492,6 +1492,7 @@ literal|51
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 comment|/* sqrt(NaN) is NaN, sqrt(+-0) = +-0 */
 if|if
 condition|(
@@ -1518,17 +1519,15 @@ condition|)
 block|{
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 specifier|extern
 name|double
 name|infnan
@@ -1545,7 +1544,7 @@ return|;
 comment|/* NaN */
 else|#
 directive|else
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 return|return
 operator|(
 name|zero
@@ -1555,6 +1554,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|}
 comment|/* sqrt(INF) is INF */
 if|if
@@ -1931,7 +1931,7 @@ begin_ifdef
 unit|double drem(x,y)	 double x,y; {
 ifdef|#
 directive|ifdef
-name|NATIONAL
+name|national
 end_ifdef
 
 begin_comment
@@ -2058,7 +2058,7 @@ begin_ifdef
 unit|long mx,scalx,mexp=0x7ff00000;         int i,j,r,e,swapINX(),swapRM(),swapENI();                unsigned long *py=(unsigned long *)&y   ,                       *pt=(unsigned long *)&t   ,                       *px=(unsigned long *)&x   ;
 ifdef|#
 directive|ifdef
-name|NATIONAL
+name|national
 end_ifdef
 
 begin_comment

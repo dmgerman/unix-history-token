@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trig.c	1.2 (Berkeley) 8/22/85; 1.6 (ucb.elefunt) %G%"
+literal|"@(#)trig.c	1.2 (Berkeley) 8/22/85; 1.7 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* SIN(X), COS(X), TAN(X)  * RETURN THE SINE, COSINE, AND TANGENT OF X RESPECTIVELY  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY W. Kahan and K.C. NG, 8/17/85.  *  * Required system supported functions:  *      copysign(x,y)  *      finite(x)  *      drem(x,p)  *  * Static kernel functions:  *      sin__S(z)       ....sin__S(x*x) return (sin(x)-x)/x  *      cos__C(z)       ....cos__C(x*x) return cos(x)-1-x*x/2  *  * Method.  *      Let S and C denote the polynomial approximations to sin and cos   *      respectively on [-PI/4, +PI/4].  *  *      SIN and COS:  *      1. Reduce the argument into [-PI , +PI] by the remainder function.    *      2. For x in (-PI,+PI), there are three cases:  *			case 1:	|x|< PI/4  *			case 2:	PI/4<= |x|< 3PI/4  *			case 3:	3PI/4<= |x|.  *	   SIN and COS of x are computed by:  *  *                   sin(x)      cos(x)       remark  *     ----------------------------------------------------------  *        case 1     S(x)         C(x)         *        case 2 sign(x)*C(y)     S(y)      y=PI/2-|x|  *        case 3     S(y)        -C(y)      y=sign(x)*(PI-|x|)  *     ----------------------------------------------------------  *  *      TAN:  *      1. Reduce the argument into [-PI/2 , +PI/2] by the remainder function.    *      2. For x in (-PI/2,+PI/2), there are two cases:  *			case 1:	|x|< PI/4  *			case 2:	PI/4<= |x|< PI/2  *         TAN of x is computed by:  *  *                   tan (x)            remark  *     ----------------------------------------------------------  *        case 1     S(x)/C(x)  *        case 2     C(y)/S(y)     y=sign(x)*(PI/2-|x|)  *     ----------------------------------------------------------  *  *   Notes:  *      1. S(y) and C(y) were computed by:  *              S(y) = y+y*sin__S(y*y)   *              C(y) = 1-(y*y/2-cos__C(x*x))          ... if y*y/2<  thresh,  *                   = 0.5-((y*y/2-0.5)-cos__C(x*x))  ... if y*y/2>= thresh.  *         where  *              thresh = 0.5*(acos(3/4)**2)  *  *      2. For better accuracy, we use the following formula for S/C for tan  *         (k=0): let ss=sin__S(y*y), and cc=cos__C(y*y), then  *  *                            y+y*ss             (y*y/2-cc)+ss  *             S(y)/C(y)   = -------- = y + y * ---------------.  *                               C                     C   *  *  * Special cases:  *      Let trig be any of sin, cos, or tan.  *      trig(+-INF)  is NaN, with signals;  *      trig(NaN)    is that NaN;  *      trig(n*PI/2) is exact for any integer n, provided n*PI is   *      representable; otherwise, trig(x) is inexact.   *  * Accuracy:  *      trig(x) returns the exact trig(x*pi/PI) nearly rounded, where  *  *      Decimal:  *              pi = 3.141592653589793 23846264338327 .....   *    53 bits   PI = 3.141592653589793 115997963 ..... ,  *    56 bits   PI = 3.141592653589793 227020265 ..... ,    *  *      Hexadecimal:  *              pi = 3.243F6A8885A308D313198A2E....  *    53 bits   PI = 3.243F6A8885A30  =  2 * 1.921FB54442D18    error=.276ulps  *    56 bits   PI = 3.243F6A8885A308 =  4 * .C90FDAA22168C2    error=.206ulps  *  *      In a test run with 1,024,000 random arguments on a VAX, the maximum  *      observed errors (compared with the exact trig(x*pi/PI)) were  *                      tan(x) : 2.09 ulps (around 4.716340404662354)  *                      sin(x) : .861 ulps  *                      cos(x) : .857 ulps  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
@@ -32,23 +35,21 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_define
@@ -73,7 +74,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_define
@@ -98,7 +99,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_comment
@@ -317,7 +318,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double  */
+comment|/* defined(vax)||defined(tahoe) */
 end_comment
 
 begin_decl_stmt
@@ -365,7 +366,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NATIONAL
+name|national
 end_ifdef
 
 begin_decl_stmt
@@ -395,13 +396,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NATIONAL */
+comment|/* national */
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -476,28 +481,11 @@ decl_stmt|,
 name|c
 decl_stmt|;
 name|int
+name|finite
+argument_list|()
+decl_stmt|,
 name|k
 decl_stmt|;
-if|#
-directive|if
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|VAX
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|TAHOE
-argument_list|)
-operator|)
-specifier|extern
-name|int
-name|finite
-parameter_list|()
-function_decl|;
 comment|/* tan(NaN) and tan(INF) must be NaN */
 if|if
 condition|(
@@ -514,8 +502,6 @@ operator|-
 name|x
 operator|)
 return|;
-endif|#
-directive|endif
 name|x
 operator|=
 name|drem
@@ -668,7 +654,7 @@ return|;
 comment|/* sin/cos */
 ifdef|#
 directive|ifdef
-name|NATIONAL
+name|national
 elseif|else
 if|if
 condition|(
@@ -687,7 +673,7 @@ return|;
 comment|/* no inf on 32k */
 endif|#
 directive|endif
-comment|/* NATIONAL */
+comment|/* national */
 else|else
 return|return
 operator|(
@@ -735,22 +721,6 @@ name|c
 decl_stmt|,
 name|z
 decl_stmt|;
-if|#
-directive|if
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|VAX
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|TAHOE
-argument_list|)
-operator|)
-specifier|extern
 name|int
 name|finite
 parameter_list|()
@@ -771,8 +741,6 @@ operator|-
 name|x
 operator|)
 return|;
-endif|#
-directive|endif
 name|x
 operator|=
 name|drem
@@ -958,22 +926,6 @@ name|s
 init|=
 literal|1.0
 decl_stmt|;
-if|#
-directive|if
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|VAX
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|TAHOE
-argument_list|)
-operator|)
-specifier|extern
 name|int
 name|finite
 parameter_list|()
@@ -994,8 +946,6 @@ operator|-
 name|x
 operator|)
 return|;
-endif|#
-directive|endif
 name|x
 operator|=
 name|drem
@@ -1152,17 +1102,15 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_comment
@@ -1490,17 +1438,15 @@ decl_stmt|;
 block|{
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 return|return
 operator|(
 name|z
@@ -1546,7 +1492,7 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 return|return
 operator|(
 name|z
@@ -1586,6 +1532,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|}
 end_function
 
@@ -1596,17 +1543,15 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_comment
@@ -1825,7 +1770,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double  */
+comment|/* defined(vax)||defined(tahoe) */
 end_comment
 
 begin_decl_stmt
@@ -1885,6 +1830,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
 
 begin_function
 specifier|static

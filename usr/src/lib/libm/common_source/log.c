@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	4.5 (Berkeley) 8/21/85; 1.5 (ucb.elefunt) %G%"
+literal|"@(#)log.c	4.5 (Berkeley) 8/21/85; 1.6 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* LOG(X)  * RETURN THE LOGARITHM OF x   * DOUBLE PRECISION (VAX D FORMAT 56 bits or IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/19/85;  * REVISED BY K.C. NG on 2/7/85, 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions:  *	scalb(x,n)  *	copysign(x,y)  *	logb(x)	  *	finite(x)  *  * Required kernel function:  *	log__L(z)   *  * Method :  *	1. Argument Reduction: find k and f such that   *			x = 2^k * (1+f),   *	   where  sqrt(2)/2< 1+f< sqrt(2) .  *  *	2. Let s = f/(2+f) ; based on log(1+f) = log(1+s) - log(1-s)  *		 = 2s + 2/3 s**3 + 2/5 s**5 + .....,  *	   log(1+f) is computed by  *  *	     		log(1+f) = 2s + s*log__L(s*s)  *	   where  *		log__L(z) = z*(L1 + z*(L2 + z*(... (L6 + z*L7)...)))  *  *	   See log__L() for the values of the coefficients.  *  *	3. Finally,  log(x) = k*ln2 + log(1+f).  (Here n*ln2 will be stored  *	   in two floating point number: n*ln2hi + n*ln2lo, n*ln2hi is exact  *	   since the last 20 bits of ln2hi is 0.)  *  * Special cases:  *	log(x) is NaN with signal if x< 0 (including -INF) ;   *	log(+INF) is +INF; log(0) is -INF with signal;  *	log(NaN) is that NaN with no signal.  *  * Accuracy:  *	log(x) returns the exact log(x) nearly rounded. In a test run with  *	1,536,000 random arguments on a VAX, the maximum observed error was  *	.826 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
@@ -32,17 +35,15 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 end_if
 
 begin_comment
@@ -58,7 +59,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_define
@@ -83,7 +84,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_define
@@ -108,7 +109,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VAX */
+comment|/* vax */
 end_comment
 
 begin_comment
@@ -226,7 +227,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe)	*/
 end_comment
 
 begin_decl_stmt
@@ -260,6 +261,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe)	*/
+end_comment
 
 begin_function
 name|double
@@ -317,19 +322,17 @@ argument_list|()
 decl_stmt|;
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 if|if
 condition|(
 name|x
@@ -344,6 +347,7 @@ return|;
 comment|/* x is NaN */
 endif|#
 directive|endif
+comment|/* !defined(vax)&&!defined(tahoe) */
 if|if
 condition|(
 name|finite
@@ -489,17 +493,15 @@ else|else
 block|{
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|VAX
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TAHOE
+name|tahoe
 argument_list|)
-operator|)
 specifier|extern
 name|double
 name|infnan
@@ -533,7 +535,7 @@ return|;
 comment|/* NaN */
 else|#
 directive|else
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 comment|/* zero argument, return -INF with signal */
 if|if
 condition|(
@@ -559,10 +561,11 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|}
 block|}
 comment|/* end of if (finite(x)) */
-comment|/* NOT REACHED ifdef VAX */
+comment|/* NOTREACHED if defined(vax)||defined(tahoe) */
 comment|/* log(-INF) is NaN with signal */
 elseif|else
 if|if

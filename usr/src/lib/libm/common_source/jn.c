@@ -11,15 +11,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)jn.c	4.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)jn.c	4.2 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* 	floating point Bessel's function of 	the first and second kinds and of 	integer order.  	int n; 	double x; 	jn(n,x);  	returns the value of Jn(x) for all 	integer values of n and all real values 	of x.  	There are no error returns. 	Calls j0, j1.  	For n=0, j0(x) is called, 	for n=1, j1(x) is called, 	for n<x, forward recursion us used starting 	from values of j0(x) and j1(x). 	for n>x, a continued fraction approximation to 	j(n,x)/j(n-1,x) is evaluated and then backward 	recursion is used starting from a supposed value 	for j(n,x). The resulting value of j(0,x) is 	compared with the actual value to correct the 	supposed value of j(n,x).  	yn(n,x) is similar in all respects, except 	that forward recursion is used for all 	values of n>1. */
@@ -36,7 +39,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|VAX
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
 argument_list|)
 end_if
 
@@ -52,7 +60,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 end_comment
 
 begin_decl_stmt
@@ -68,6 +76,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(vax)||defined(tahoe) */
+end_comment
 
 begin_function
 name|double
@@ -389,7 +401,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|VAX
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
 argument_list|)
 specifier|extern
 name|double
@@ -407,7 +424,7 @@ return|;
 comment|/* NaN */
 else|#
 directive|else
-comment|/* IEEE double */
+comment|/* defined(vax)||defined(tahoe) */
 return|return
 operator|(
 name|zero
@@ -418,6 +435,7 @@ return|;
 comment|/* IEEE machines: invalid operation */
 endif|#
 directive|endif
+comment|/* defined(vax)||defined(tahoe) */
 block|}
 name|sign
 operator|=
