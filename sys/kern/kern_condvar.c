@@ -331,9 +331,9 @@ decl_stmt|;
 comment|/* 	 * We put ourselves on the sleep queue and start our timeout before 	 * calling CURSIG, as we could stop there, and a wakeup or a SIGCONT (or 	 * both) could occur while we were stopped.  A SIGCONT would cause us to 	 * be marked as SSLEEP without resuming us, thus we must be ready for 	 * sleep when CURSIG is called.  If the wakeup happens while we're 	 * stopped, p->p_wchan will be 0 upon return from CURSIG. 	 */
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_SINTR
+name|PS_SINTR
 expr_stmt|;
 name|mtx_exit
 argument_list|(
@@ -343,7 +343,6 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-comment|/* proc_lock(p); */
 name|sig
 operator|=
 name|CURSIG
@@ -359,7 +358,6 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-comment|/* proc_unlock_noswitch(p); */
 if|if
 condition|(
 name|sig
@@ -405,10 +403,10 @@ expr_stmt|;
 block|}
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&=
 operator|~
-name|P_SINTR
+name|PS_SINTR
 expr_stmt|;
 return|return
 name|sig
@@ -453,9 +451,9 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_CVWAITQ
+name|PS_CVWAITQ
 expr_stmt|;
 name|p
 operator|->
@@ -1155,17 +1153,17 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_TIMEOUT
+name|PS_TIMEOUT
 condition|)
 block|{
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&=
 operator|~
-name|P_TIMEOUT
+name|PS_TIMEOUT
 expr_stmt|;
 name|rval
 operator|=
@@ -1420,17 +1418,17 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_TIMEOUT
+name|PS_TIMEOUT
 condition|)
 block|{
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&=
 operator|~
-name|P_TIMEOUT
+name|PS_TIMEOUT
 expr_stmt|;
 name|rval
 operator|=
@@ -1570,6 +1568,14 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|TAILQ_FIRST
@@ -1599,9 +1605,9 @@ name|KASSERT
 argument_list|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_CVWAITQ
+name|PS_CVWAITQ
 argument_list|,
 operator|(
 literal|"%s: not on waitq"
@@ -1624,10 +1630,10 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&=
 operator|~
-name|P_CVWAITQ
+name|PS_CVWAITQ
 expr_stmt|;
 name|p
 operator|->
@@ -1691,9 +1697,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 condition|)
 block|{
 name|setrunqueue
@@ -1711,9 +1717,9 @@ else|else
 block|{
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_SWAPINREQ
+name|PS_SWAPINREQ
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -1904,9 +1910,9 @@ name|NULL
 operator|&&
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_CVWAITQ
+name|PS_CVWAITQ
 condition|)
 block|{
 name|TAILQ_REMOVE
@@ -1923,10 +1929,10 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&=
 operator|~
-name|P_CVWAITQ
+name|PS_CVWAITQ
 expr_stmt|;
 name|p
 operator|->
@@ -2024,9 +2030,9 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_TIMEOUT
+name|PS_TIMEOUT
 expr_stmt|;
 block|}
 name|mtx_exit
