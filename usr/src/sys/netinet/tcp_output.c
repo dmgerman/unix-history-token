@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.27	81/12/22	*/
+comment|/*	tcp_output.c	4.28	82/01/17	*/
 end_comment
 
 begin_include
@@ -713,12 +713,6 @@ name|ti
 operator|->
 name|ti_urp
 operator|=
-name|htons
-argument_list|(
-call|(
-name|u_short
-call|)
-argument_list|(
 name|tp
 operator|->
 name|snd_up
@@ -726,9 +720,23 @@ operator|-
 name|tp
 operator|->
 name|snd_nxt
-argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|vax
+name|ti
+operator|->
+name|ti_urp
+operator|=
+name|htons
+argument_list|(
+name|ti
+operator|->
+name|ti_urp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ti
 operator|->
 name|ti_flags
@@ -1032,18 +1040,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ip_output failed\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 comment|/* 	 * Data sent (as far as we can tell). 	 * If this advertises a larger window than any other segment, 	 * then remember the size of the advertised window. 	 * Drop send for purpose of ACK requirements. 	 */
 if|if
 condition|(
