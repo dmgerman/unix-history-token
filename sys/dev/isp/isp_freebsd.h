@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Qlogic ISP SCSI Host Adapter FreeBSD Wrapper Definitions (CAM version)  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Qlogic ISP SCSI Host Adapter FreeBSD Wrapper Definitions  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -30,18 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|8
-end_define
-
-begin_comment
-comment|/*  * We're not ready for primetime yet  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_SMPLOCK
-value|1
+value|9
 end_define
 
 begin_include
@@ -423,12 +412,6 @@ begin_comment
 comment|/*  * Locking macros...  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_SMPLOCK
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -470,52 +453,6 @@ parameter_list|)
 define|\
 value|mtx_unlock(&Giant); mtx_lock(&(isp)->isp_lock)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP_LOCK
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_UNLOCK
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISPLOCK_2_CAMLOCK
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAMLOCK_2_ISPLOCK
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Required Macros/Defines  */
@@ -1513,9 +1450,6 @@ name|mboxwaiting
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_SMPLOCK
 operator|(
 name|void
 operator|)
@@ -1542,31 +1476,6 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|tsleep
-argument_list|(
-operator|&
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|mboxwaiting
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"isp_mboxwaiting"
-argument_list|,
-literal|10
-operator|*
-name|hz
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|isp
