@@ -4266,7 +4266,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%d forks, %d pages, average %.2f\n"
+literal|"%u forks, %u pages, average %.2f\n"
 argument_list|,
 name|sum
 operator|.
@@ -4301,7 +4301,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%d vforks, %d pages, average %.2f\n"
+literal|"%u vforks, %u pages, average %.2f\n"
 argument_list|,
 name|sum
 operator|.
@@ -4336,7 +4336,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%d rforks, %d pages, average %.2f\n"
+literal|"%u rforks, %u pages, average %.2f\n"
 argument_list|,
 name|sum
 operator|.
