@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/random.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -15951,26 +15945,6 @@ condition|)
 name|sc_touch_scrn_saver
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__i386__
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|SCGETC_CN
-operator|)
-condition|)
-comment|/* do the /dev/random device a favour */
-name|add_keyboard_randomness
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|scp

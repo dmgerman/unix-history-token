@@ -3197,11 +3197,6 @@ index|]
 operator|=
 name|dt
 expr_stmt|;
-name|add_keyboard_randomness
-argument_list|(
-name|dt
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -3447,11 +3442,6 @@ goto|;
 comment|/* got a normal scan key */
 name|regular
 label|:
-name|add_keyboard_randomness
-argument_list|(
-name|dt
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|PCVT_SCANSET
