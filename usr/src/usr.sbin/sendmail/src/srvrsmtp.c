@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.64 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.65 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.64 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.65 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3820,14 +3820,19 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+name|bool
+name|noinfo
+decl_stmt|;
 name|char
 name|buf
 index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-name|bool
-name|noinfo
+specifier|extern
+name|char
+name|Version
+index|[]
 decl_stmt|;
 if|if
 condition|(
@@ -3856,7 +3861,9 @@ literal|0
 expr_stmt|;
 name|message
 argument_list|(
-literal|"502 HELP not implemented"
+literal|"502 Sendmail %s -- HELP not implemented"
+argument_list|,
+name|Version
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3872,19 +3879,26 @@ name|topic
 operator|==
 literal|'\0'
 condition|)
+block|{
 name|topic
 operator|=
 literal|"smtp"
 expr_stmt|;
-else|else
-name|makelower
+name|message
 argument_list|(
-name|topic
+literal|"214-This is Sendmail version %s"
+argument_list|,
+name|Version
 argument_list|)
 expr_stmt|;
-name|len
+name|noinfo
 operator|=
-name|strlen
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|makelower
 argument_list|(
 name|topic
 argument_list|)
@@ -3892,6 +3906,14 @@ expr_stmt|;
 name|noinfo
 operator|=
 name|TRUE
+expr_stmt|;
+block|}
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|topic
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
