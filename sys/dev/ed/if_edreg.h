@@ -1546,6 +1546,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ED_FLAGS_LINKSYS
+value|0x80000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ED_FLAGS_GETTYPE
 parameter_list|(
 name|flg
