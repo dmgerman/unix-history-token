@@ -1630,16 +1630,6 @@ define|\
 value|((int)(((u_quad_t)((pc) - (prof)->pr_off) *	\             (u_quad_t)((prof)->pr_scale))>> 16)& ~1)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|long
-name|cp_time
-index|[
-name|CPUSTATES
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -3443,7 +3433,7 @@ name|CTR2
 argument_list|(
 name|KTR_SMP
 argument_list|,
-literal|"smp_ipi_selected"
+literal|"smp_ipi_selected: cpus: %x ipi: %lx"
 argument_list|,
 name|cpus
 argument_list|,
@@ -3676,7 +3666,7 @@ name|CTR1
 argument_list|(
 name|KTR_SMP
 argument_list|,
-literal|"smp_handle_ipi(), ipis=%x"
+literal|"smp_handle_ipi(), ipis=%lx"
 argument_list|,
 name|ipis
 argument_list|)
