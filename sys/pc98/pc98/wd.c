@@ -3627,7 +3627,7 @@ argument|; 			head = ((blknum>>
 literal|24
 argument|)&
 literal|0xf
-argument|) | WDSD_LBA;  		} 		else { 			cylin = blknum / secpercyl; 			head = (blknum % secpercyl) / secpertrk; 			sector = blknum % secpertrk; 		}
+argument|) | WDSD_LBA;  		} else { 			cylin = blknum / secpercyl; 			head = (blknum % secpercyl) / secpertrk; 			sector = blknum % secpertrk; 		}
 comment|/*  		 * XXX this looks like an attempt to skip bad sectors 		 * on write. 		 */
 argument|if (wdtab[ctrlr].b_errcnt&& (bp->b_flags& B_READ) ==
 literal|0
@@ -4548,7 +4548,7 @@ else|#
 directive|else
 argument|register struct disk *du; 	struct disklabel *lp; 	long	num;
 comment|/* number of sectors to write */
-argument|int	lunit, part; 	long	blkoff, blknum; 	long	blkchk, blkcnt, blknext; 	u_long	ds_offset; 	u_long	nblocks; 	static int wddoingadump =
+argument|int	lunit, part; 	long	blkoff, blknum; 	long	blkcnt, blknext; 	u_long	ds_offset; 	u_long	nblocks; 	static int wddoingadump =
 literal|0
 argument|; 	long	cylin, head, sector; 	long	secpertrk, secpercyl; 	char   *addr;
 comment|/* Toss any characters present prior to dump. */
@@ -4577,7 +4577,7 @@ argument|ds_offset = du->dk_slices->dss_slices[dkslice(dev)].ds_offset; 	blkoff 
 if|#
 directive|if
 literal|0
-argument|pg("part %x, nblocks %d, dumplo %d num %d\n", 	   part, nblocks, dumplo, num);
+argument|printf("part %d, nblocks %lu, dumplo %ld num %ld\n", 	    part, nblocks, dumplo, num);
 endif|#
 directive|endif
 comment|/* Check transfer bounds against partition size. */
@@ -4621,20 +4621,32 @@ argument|); 		return (EIO); 	}  	du->dk_flags |= DKFL_SINGLE; 	addr = (char *)
 literal|0
 argument|; 	blknum = dumplo + blkoff; 	while (num>
 literal|0
-argument|) { 		blkcnt = num; 		if (blkcnt> MAXTRANSFER) 			blkcnt = MAXTRANSFER;
-comment|/* Keep transfer within current cylinder. */
+argument|) { 		blkcnt = num; 		if (blkcnt> MAXTRANSFER) 			blkcnt = MAXTRANSFER; 		if ((du->dk_flags& DKFL_LBA) ==
+literal|0
+argument|) {
+comment|/* XXX keep transfer within current cylinder. */
 argument|if ((blknum + blkcnt -
 literal|1
-argument|) / secpercyl != blknum / secpercyl) 			blkcnt = secpercyl - (blknum % secpercyl); 		blknext = blknum + blkcnt;
-comment|/* 		 * See if one of the sectors is in the bad sector list 		 * (if we have one).  If the first sector is bad, then 		 * reduce the transfer to this one bad sector; if another 		 * sector is bad, then reduce reduce the transfer to 		 * avoid any bad sectors. 		 */
-argument|out:
+argument|) / secpercyl != 			    blknum / secpercyl) 				blkcnt = secpercyl - (blknum % secpercyl); 		} 		blknext = blknum + blkcnt;
 comment|/* Compute disk address. */
-argument|cylin = blknum / secpercyl; 		head = (blknum % secpercyl) / secpertrk; 		sector = blknum % secpertrk;
+argument|if (du->dk_flags& DKFL_LBA) { 			sector = (blknum>>
+literal|0
+argument|)&
+literal|0xff
+argument|;  			cylin = (blknum>>
+literal|8
+argument|)&
+literal|0xffff
+argument|; 			head = ((blknum>>
+literal|24
+argument|)&
+literal|0xf
+argument|) | WDSD_LBA;  		} else { 			cylin = blknum / secpercyl; 			head = (blknum % secpercyl) / secpertrk; 			sector = blknum % secpertrk; 		}
 if|#
 directive|if
 literal|0
 comment|/* Let's just talk about this first... */
-argument|pg("cylin l%d head %ld sector %ld addr 0x%x count %ld", 		   cylin, head, sector, addr, blkcnt);
+argument|printf("cylin %ld head %ld sector %ld addr %p count %ld\n", 		    cylin, head, sector, addr, blkcnt); 		cngetc();
 endif|#
 directive|endif
 comment|/* Do the write. */
