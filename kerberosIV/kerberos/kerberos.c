@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Source: /usr/src/kerberosIV/kerberos/RCS/kerberos.c,v $  * $Author: bostic $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  */
+comment|/*  * $Source: /home/cvs/386BSD/src/kerberosIV/kerberos/kerberos.c,v $  * $Author: wollman $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid_kerberos_c
 init|=
-literal|"$Id: /usr/src/kerberosIV/kerberos/RCS/kerberos.c,v 4.21 91/02/25 15:40:32 bostic Exp Locker: bostic $"
+literal|"$Id: kerberos.c,v 1.1.1.1 1994/02/25 01:14:04 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -388,16 +388,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|req_act_vno
-init|=
-name|KRB_PROT_VERSION
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Temporary for version skew */
-end_comment
 
 begin_decl_stmt
 specifier|static

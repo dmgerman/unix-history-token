@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Source: /usr/src/kerberosIV/krb/RCS/cr_err_reply.c,v $  * $Author: kfall $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  */
+comment|/*  * $Source: /home/cvs/386BSD/src/kerberosIV/krb/cr_err_reply.c,v $  * $Author: wollman $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid_cr_err_reply_c
 init|=
-literal|"$Header: /usr/src/kerberosIV/krb/RCS/cr_err_reply.c,v 4.11 90/06/25 20:55:11 kfall Exp $"
+literal|"$Header: /home/cvs/386BSD/src/kerberosIV/krb/cr_err_reply.c,v 1.1.1.1 1994/02/25 01:14:11 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,14 +65,15 @@ file|<strings.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|req_act_vno
+init|=
+name|KRB_PROT_VERSION
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* this is defined in the kerberos 				 * server code */
+comment|/* Temporary for version skew */
 end_comment
 
 begin_comment
