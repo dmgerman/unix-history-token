@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufsmount.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufsmount.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -227,6 +227,46 @@ parameter_list|(
 name|mp
 parameter_list|)
 value|((struct ufsmount *)((mp)->mnt_data))
+end_define
+
+begin_comment
+comment|/*  * Macros to access file system parameters in the ufsmount structure.  * Used by ufs_bmap.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|blkptrtodb
+parameter_list|(
+name|ump
+parameter_list|,
+name|b
+parameter_list|)
+value|((b)<< (ump)->um_bptrtodb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_sequential
+parameter_list|(
+name|ump
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((b) == (a) + ump->um_seqinc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNINDIR
+parameter_list|(
+name|ump
+parameter_list|)
+value|((ump)->um_nindir)
 end_define
 
 end_unit
