@@ -851,26 +851,31 @@ parameter_list|)
 value|(y)
 end_define
 
+begin_comment
+comment|/*  * Now, it is somewhat of a pain, but we need to keep  * 8086 conventions about which of the "highlow"'s map  * into which of the "words".  */
+end_comment
+
 begin_struct
 struct|struct
 name|highlow
 block|{
+name|unsigned
 name|char
-name|ah
-decl_stmt|,
 name|al
 decl_stmt|,
-name|bh
+name|ah
 decl_stmt|,
 name|bl
 decl_stmt|,
-name|ch
+name|bh
 decl_stmt|,
 name|cl
 decl_stmt|,
-name|dh
+name|ch
 decl_stmt|,
 name|dl
+decl_stmt|,
+name|dh
 decl_stmt|;
 block|}
 struct|;
@@ -880,7 +885,8 @@ begin_struct
 struct|struct
 name|words
 block|{
-name|int
+name|unsigned
+name|short
 name|ax
 decl_stmt|,
 name|bx
@@ -888,7 +894,9 @@ decl_stmt|,
 name|cx
 decl_stmt|,
 name|dx
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|si
 decl_stmt|,
 name|di
@@ -917,6 +925,7 @@ begin_struct
 struct|struct
 name|SREGS
 block|{
+name|unsigned
 name|int
 name|cs
 decl_stmt|,
