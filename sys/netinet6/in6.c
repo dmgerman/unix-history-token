@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6.c,v 1.87 2000/07/03 15:44:21 itojun Exp $	*/
+comment|/*	$KAME: in6.c,v 1.99 2000/07/11 17:00:58 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -504,6 +504,12 @@ modifier|*
 name|nrt
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+modifier|*
+name|nrtp
+init|=
+name|NULL
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -560,6 +566,17 @@ operator|=
 name|in6mask128
 expr_stmt|;
 comment|/* 	 * So we add or remove static loopback entry, here. 	 * This request for deletion could fail, e.g. when we remove 	 * an address right after adding it. 	 */
+if|if
+condition|(
+name|cmd
+operator|==
+name|RTM_ADD
+condition|)
+name|nrtp
+operator|=
+operator|&
+name|nrt
+expr_stmt|;
 name|rtrequest
 argument_list|(
 name|cmd
@@ -588,8 +605,7 @@ name|RTF_UP
 operator||
 name|RTF_HOST
 argument_list|,
-operator|&
-name|nrt
+name|nrtp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure rt_ifa be equal to IFA, the second argument of the 	 * function. 	 * We need this because when we refer rt_ifa->ia6_flags in ip6_input, 	 * we assume that the rt_ifa points to the address instead of the 	 * loopback address. 	 */
