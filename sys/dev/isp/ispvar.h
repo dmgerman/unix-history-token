@@ -1111,7 +1111,15 @@ range|:
 literal|8
 decl_stmt|,
 range|:
-literal|4
+literal|2
+decl_stmt|,
+name|was_fabric_dev
+range|:
+literal|1
+decl_stmt|,
+name|fabric_dev
+range|:
+literal|1
 decl_stmt|,
 name|loggedin
 range|:
@@ -1333,14 +1341,26 @@ name|isp_maxluns
 decl_stmt|;
 comment|/* maximum luns supported */
 name|u_int32_t
+name|isp_clock
+range|:
+literal|8
+decl_stmt|,
+comment|/* input clock */
+range|:
+literal|6
+decl_stmt|,
+name|isp_role
+range|:
+literal|2
+decl_stmt|,
+range|:
+literal|1
+decl_stmt|,
 name|isp_touched
 range|:
 literal|1
 decl_stmt|,
 comment|/* board ever seen? */
-range|:
-literal|1
-decl_stmt|,
 name|isp_bustype
 range|:
 literal|1
@@ -1354,16 +1374,10 @@ comment|/* loaded firmware */
 name|isp_dblev
 range|:
 literal|12
-decl_stmt|,
+decl_stmt|;
 comment|/* debug log mask */
-name|isp_clock
-range|:
-literal|8
-decl_stmt|,
-comment|/* input clock */
+name|u_int32_t
 name|isp_confopts
-range|:
-literal|8
 decl_stmt|;
 comment|/* config options */
 comment|/* 	 * Instrumentation 	 */
@@ -1432,6 +1446,11 @@ index|[
 name|MAX_MAILBOX
 index|]
 decl_stmt|;
+specifier|volatile
+name|u_int16_t
+name|isp_lastmbxcmd
+decl_stmt|;
+comment|/* last mbox command sent */
 comment|/* 	 * Active commands are stored here, indexed by handle functions. 	 */
 name|XS_T
 modifier|*
@@ -1610,6 +1629,63 @@ end_define
 begin_comment
 comment|/* insist on {N/F}L-Port connection */
 end_comment
+
+begin_comment
+comment|/*  * Prior to calling isp_reset for the first time, the outer layer  * should set isp_role to one of NONE, INITIATOR, TARGET, BOTH.  *  * If you set ISP_ROLE_NONE, the cards will be reset, new firmware loaded,  * NVRAM read, and defaults set, but any further initialization (e.g.  * INITIALIZE CONTROL BLOCK commands for 2X00 cards) won't be done.  *  * If INITIATOR MODE isn't set, attempts to run commands will be stopped  * at isp_start and completed with the moral equivalent of SELECTION TIMEOUT.  *  * If TARGET MODE is set, it doesn't mean that the rest of target mode support  * needs to be enabled, or will even work. What happens with the 2X00 cards  * here is that if you have enabled it with TARGET MODE as part of the ICB  * options, but you haven't given the f/w any ram resources for ATIOs or  * Immediate Notifies, the f/w just handles what it can and you never see  * anything. Basically, it sends a single byte of data (the first byte,  * which you can set as part of the INITIALIZE CONTROL BLOCK command) for  * INQUIRY, and sends back QUEUE FULL status for any other command.  *   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_NONE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_INITIATOR
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_TARGET
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_BOTH
+value|(ISP_ROLE_TARGET|ISP_ROLE_INITIATOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_EITHER
+value|ISP_ROLE_BOTH
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISP_DEFAULT_ROLES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ISP_DEFAULT_ROLES
+value|ISP_ROLE_INITIATOR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Firmware related defines  */
@@ -2139,7 +2215,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * Assumes all locks are held and that no reentrancy issues need be dealt with.  *  */
+comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * Assumes all locks are held and that no reentrancy issues need be dealt with.  */
 end_comment
 
 begin_typedef
@@ -2157,15 +2233,15 @@ comment|/* FC Loop Down */
 name|ISPASYNC_LOOP_UP
 block|,
 comment|/* FC Loop Up */
-name|ISPASYNC_PDB_CHANGED
-block|,
-comment|/* FC Port Data Base Changed */
 name|ISPASYNC_CHANGE_NOTIFY
 block|,
-comment|/* FC SNS Change Notification */
+comment|/* FC SNS or Port Database Changed */
 name|ISPASYNC_FABRIC_DEV
 block|,
-comment|/* FC New Fabric Device */
+comment|/* FC Fabric Device Arrived/Left */
+name|ISPASYNC_LOGGED_INOUT
+block|,
+comment|/* FC Object Logged In/Out */
 name|ISPASYNC_TARGET_MESSAGE
 block|,
 comment|/* target message */
@@ -2202,6 +2278,53 @@ begin_comment
 comment|/*  * Platform Dependent Error and Debug Printout  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|isp_prt
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ispsoftc
+operator|*
+operator|,
+name|int
+name|level
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__format__
+argument_list|(
+name|__printf__
+argument_list|,
+literal|3
+argument_list|,
+literal|4
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|void
 name|isp_prt
@@ -2224,6 +2347,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
