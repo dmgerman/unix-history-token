@@ -451,13 +451,11 @@ define|#
 directive|define
 name|_VLAN_INPUT
 parameter_list|(
-name|ifp
-parameter_list|,
 name|eh
 parameter_list|,
 name|m
 parameter_list|)
-value|do {				\ 	if (vlan_input_p != NULL) {				\ 		if ((*vlan_input_p)(eh, m) == -1)		\ 			(ifp)->if_noproto++;			\ 	} else {						\ 		m_free(m);					\ 		(ifp)->if_noproto++;				\ 	}							\ } while (0)
+value|do {					\ 	if (vlan_input_p != NULL) {				\ 		if ((*vlan_input_p)(eh, m) == -1)		\ 			(m)->m_pkthdr.rcvif->if_noproto++;	\ 	} else {						\ 		m_free(m);					\ 		(m)->m_pkthdr.rcvif->if_noproto++;		\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -465,15 +463,13 @@ define|#
 directive|define
 name|VLAN_INPUT
 parameter_list|(
-name|ifp
-parameter_list|,
 name|eh
 parameter_list|,
 name|m
 parameter_list|)
-value|do {				\
+value|do {					\
 comment|/* XXX: lock */
-value|\ 	_VLAN_INPUT(ifp, eh, m);				\
+value|\ 	_VLAN_INPUT(eh, m);					\
 comment|/* XXX: unlock */
 value|\ } while (0)
 end_define
@@ -483,15 +479,13 @@ define|#
 directive|define
 name|_VLAN_INPUT_TAG
 parameter_list|(
-name|ifp
-parameter_list|,
 name|eh
 parameter_list|,
 name|m
 parameter_list|,
 name|t
 parameter_list|)
-value|do {			\ 	if (vlan_input_tag_p != NULL) { 			\ 		if ((*vlan_input_tag_p)(eh, m, t) == -1)	\ 			(ifp)->if_noproto++;			\ 	} else {						\ 		m_free(m);					\ 		(ifp)->if_noproto++;				\ 	}							\ } while (0)
+value|do {			\ 	if (vlan_input_tag_p != NULL) { 			\ 		if ((*vlan_input_tag_p)(eh, m, t) == -1)	\ 			(m)->m_pkthdr.rcvif->if_noproto++;	\ 	} else {						\ 		m_free(m);					\ 		(m)->m_pkthdr.rcvif->if_noproto++;		\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -499,17 +493,15 @@ define|#
 directive|define
 name|VLAN_INPUT_TAG
 parameter_list|(
-name|ifp
-parameter_list|,
 name|eh
 parameter_list|,
 name|m
 parameter_list|,
 name|t
 parameter_list|)
-value|do {			\
+value|do {				\
 comment|/* XXX: lock */
-value|\ 	_VLAN_INPUT_TAG(ifp, eh, m, t);				\
+value|\ 	_VLAN_INPUT_TAG(eh, m, t);				\
 comment|/* XXX: unlock */
 value|\ } while (0)
 end_define

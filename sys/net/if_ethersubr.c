@@ -2771,8 +2771,6 @@ name|ETHERTYPE_VLAN
 case|:
 name|VLAN_INPUT
 argument_list|(
-name|ifp
-argument_list|,
 name|eh
 argument_list|,
 name|m

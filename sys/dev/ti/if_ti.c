@@ -8668,8 +8668,6 @@ condition|)
 block|{
 name|VLAN_INPUT_TAG
 argument_list|(
-name|ifp
-argument_list|,
 name|eh
 argument_list|,
 name|m
