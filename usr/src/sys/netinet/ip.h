@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -22,9 +22,11 @@ begin_struct
 struct|struct
 name|ip
 block|{
-ifdef|#
-directive|ifdef
-name|vax
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|LITTLE
 name|u_char
 name|ip_hl
 range|:
@@ -36,6 +38,24 @@ range|:
 literal|4
 decl_stmt|;
 comment|/* version */
+endif|#
+directive|endif
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|BIG
+name|u_char
+name|ip_v
+range|:
+literal|4
+decl_stmt|,
+comment|/* version */
+name|ip_hl
+range|:
+literal|4
+decl_stmt|;
+comment|/* header length */
 endif|#
 directive|endif
 name|u_char
@@ -305,6 +325,11 @@ name|u_char
 name|ipt_ptr
 decl_stmt|;
 comment|/* index of current entry */
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|LITTLE
 name|u_char
 name|ipt_flg
 range|:
@@ -316,6 +341,26 @@ range|:
 literal|4
 decl_stmt|;
 comment|/* overflow counter */
+endif|#
+directive|endif
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|BIG
+name|u_char
+name|ipt_oflw
+range|:
+literal|4
+decl_stmt|,
+comment|/* overflow counter */
+name|ipt_flg
+range|:
+literal|4
+decl_stmt|;
+comment|/* flags, see below */
+endif|#
+directive|endif
 union|union
 block|{
 name|n_long

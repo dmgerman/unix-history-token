@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -34,9 +34,11 @@ name|tcp_seq
 name|th_ack
 decl_stmt|;
 comment|/* acknowledgement number */
-ifdef|#
-directive|ifdef
-name|vax
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|LITTLE
 name|u_char
 name|th_x2
 range|:
@@ -48,6 +50,24 @@ range|:
 literal|4
 decl_stmt|;
 comment|/* data offset */
+endif|#
+directive|endif
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|BIG
+name|u_char
+name|th_off
+range|:
+literal|4
+decl_stmt|,
+comment|/* data offset */
+name|th_x2
+range|:
+literal|4
+decl_stmt|;
+comment|/* (unused) */
 endif|#
 directive|endif
 name|u_char
