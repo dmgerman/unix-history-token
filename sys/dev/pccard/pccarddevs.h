@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.81 2004/01/21 16:02:20 ume Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.82 2004/03/25 21:56:28 imp Exp   */
 end_comment
 
 begin_comment
@@ -2676,7 +2676,7 @@ comment|/* Intersil */
 end_comment
 
 begin_comment
-comment|/* Note: The following likely is an OEM card under a different Intersil name */
+comment|/* OEMs sell these things under different marketing names */
 end_comment
 
 begin_define
@@ -2698,6 +2698,27 @@ define|#
 directive|define
 name|PCMCIA_STR_INTERSIL_MA401RA
 value|"Netgear MA401RA"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_INTERSIL_DWL650
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_INTERSIL_DWL650
+value|0x7110
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_INTERSIL_DWL650
+value|"Dlink DWL650"
 end_define
 
 begin_comment
