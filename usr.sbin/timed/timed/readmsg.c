@@ -879,17 +879,24 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * The 4.3BSD protocol spec had a 32-byte tsp_name field, and 		 * this is still OS-dependent.  Demand that the packet is at 		 * least long enough to hold a 4.3BSD packet. 		 */
 if|if
 condition|(
 name|n
 operator|<
-operator|(
+call|(
 name|ssize_t
-operator|)
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tsp
+argument_list|)
+operator|-
+name|MAXHOSTNAMELEN
+operator|+
+literal|32
 argument_list|)
 condition|)
 block|{
@@ -906,6 +913,10 @@ argument_list|(
 expr|struct
 name|tsp
 argument_list|)
+operator|-
+name|MAXHOSTNAMELEN
+operator|+
+literal|32
 argument_list|,
 name|inet_ntoa
 argument_list|(

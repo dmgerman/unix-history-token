@@ -1404,15 +1404,22 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 			 * The 4.3BSD protocol spec had a 32-byte tsp_name field, and 			 * this is still OS-dependent.  Demand that the packet is at 			 * least long enough to hold a 4.3BSD packet. 			 */
 if|if
 condition|(
 name|cc
 operator|<
+operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tsp
 argument_list|)
+operator|-
+name|MAXHOSTNAMELEN
+operator|+
+literal|32
+operator|)
 condition|)
 block|{
 name|fprintf
@@ -1428,6 +1435,10 @@ argument_list|(
 expr|struct
 name|tsp
 argument_list|)
+operator|-
+name|MAXHOSTNAMELEN
+operator|+
+literal|32
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -2158,22 +2169,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 		 * The 4.3BSD protocol spec had a 32-byte tsp_name field, and 		 * this is still OS-dependent.  Demand that the packet is at 		 * least long enough to hold a 4.3BSD packet. 		 */
 if|if
 condition|(
 name|cc
 operator|<
+operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tsp
 argument_list|)
+operator|-
+name|MAXHOSTNAMELEN
+operator|+
+literal|32
+operator|)
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"short pack (%u/%u bytes) from %s\n"
+literal|"short packet (%u/%u bytes) from %s\n"
 argument_list|,
 name|cc
 argument_list|,
@@ -2182,6 +2200,10 @@ argument_list|(
 expr|struct
 name|tsp
 argument_list|)
+operator|-
+name|MAXHOSTNAMELEN
+operator|+
+literal|32
 argument_list|,
 name|inet_ntoa
 argument_list|(
