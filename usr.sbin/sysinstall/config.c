@@ -2121,14 +2121,7 @@ condition|(
 operator|!
 name|fp
 condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Unable to open /etc/resolv.conf!  You will need to do this manually."
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 if|if
 condition|(
 name|variable_get
