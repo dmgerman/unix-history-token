@@ -3527,9 +3527,7 @@ condition|)
 if|if
 condition|(
 operator|!
-name|tmp
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|tmp
 argument_list|)

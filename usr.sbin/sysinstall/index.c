@@ -3802,9 +3802,7 @@ comment|/* Does it move when you kick it? */
 if|if
 condition|(
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -3831,9 +3829,7 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|=
-name|mediaDevice
-operator|->
-name|get
+name|DEVICE_GET
 argument_list|(
 name|mediaDevice
 argument_list|,
@@ -3857,9 +3853,7 @@ literal|"without the packages collection mirrored.  Please verify that\n"
 literal|"your media, or your path to the media, is correct and try again."
 argument_list|)
 expr_stmt|;
-name|mediaDevice
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|mediaDevice
 argument_list|)

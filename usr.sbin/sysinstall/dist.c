@@ -3300,9 +3300,7 @@ name|getinfo
 label|:
 name|fp
 operator|=
-name|mediaDevice
-operator|->
-name|get
+name|DEVICE_GET
 argument_list|(
 name|mediaDevice
 argument_list|,
@@ -3351,9 +3349,7 @@ literal|"User interrupt."
 argument_list|)
 condition|)
 block|{
-name|mediaDevice
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -3361,9 +3357,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -3513,9 +3507,7 @@ name|getsingle
 label|:
 name|fp
 operator|=
-name|mediaDevice
-operator|->
-name|get
+name|DEVICE_GET
 argument_list|(
 name|mediaDevice
 argument_list|,
@@ -3566,9 +3558,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|mediaDevice
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -3576,9 +3566,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -3880,9 +3868,7 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|=
-name|mediaDevice
-operator|->
-name|get
+name|DEVICE_GET
 argument_list|(
 name|mediaDevice
 argument_list|,
@@ -3942,9 +3928,7 @@ else|:
 literal|"User interrupt"
 argument_list|)
 expr_stmt|;
-name|mediaDevice
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -3952,9 +3936,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -4747,9 +4729,7 @@ name|mediaVerify
 argument_list|()
 operator|||
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)

@@ -105,9 +105,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -358,9 +356,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|dev
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|dev
 argument_list|)
@@ -522,9 +518,7 @@ expr_stmt|;
 comment|/* We have a path, call the device strategy routine to get the file */
 name|fp
 operator|=
-name|dev
-operator|->
-name|get
+name|DEVICE_GET
 argument_list|(
 name|dev
 argument_list|,
