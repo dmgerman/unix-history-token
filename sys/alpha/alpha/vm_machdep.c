@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * Copyright (c) 1994 John Dyson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.7 1998/12/30 10:38:58 dfr Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * Copyright (c) 1994 John Dyson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.8 1999/01/26 02:49:51 julian Exp $  */
 end_comment
 
 begin_comment
@@ -1573,6 +1573,8 @@ argument_list|(
 name|PQ_FREE
 argument_list|,
 name|free_rover
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1580,6 +1582,16 @@ condition|(
 name|m
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_ZERO
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 operator|--
@@ -1648,11 +1660,18 @@ operator|)
 name|splvm
 argument_list|()
 expr_stmt|;
+name|vm_page_flag_set
+argument_list|(
+name|m
+argument_list|,
+name|PG_ZERO
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|queue
 operator|=
-name|PQ_ZERO
+name|PQ_FREE
 operator|+
 name|m
 operator|->
@@ -1671,7 +1690,7 @@ operator|.
 name|lcnt
 operator|)
 expr_stmt|;
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_TAIL
 argument_list|(
 name|vm_page_queues
 index|[
@@ -1687,6 +1706,13 @@ argument_list|,
 name|pageq
 argument_list|)
 expr_stmt|;
+operator|++
+name|vm_page_zero_count
+expr_stmt|;
+operator|++
+name|cnt_prezero
+expr_stmt|;
+block|}
 name|free_rover
 operator|=
 operator|(
@@ -1697,13 +1723,6 @@ operator|)
 operator|&
 name|PQ_L2_MASK
 expr_stmt|;
-operator|++
-name|vm_page_zero_count
-expr_stmt|;
-operator|++
-name|cnt_prezero
-expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
