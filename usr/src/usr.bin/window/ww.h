@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)ww.h	3.37 %G%	  */
+comment|/*  * @(#)ww.h	3.38 %G%	  */
 end_comment
 
 begin_comment
@@ -316,9 +316,12 @@ decl_stmt|;
 comment|/* as a word */
 struct|struct
 block|{
-ifndef|#
-directive|ifndef
-name|mc68000
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
 name|char
 name|C_c
 decl_stmt|;
