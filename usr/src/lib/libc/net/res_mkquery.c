@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.7 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,97 +403,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the domain name contains no dots (single label), then 	 * append the default domain name to the one given. 	 */
-if|if
-condition|(
-operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_DEFNAMES
-operator|)
-operator|&&
-name|dname
-operator|!=
-literal|0
-operator|&&
-name|dname
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-operator|&&
-name|index
-argument_list|(
-name|dname
-argument_list|,
-literal|'.'
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_INIT
-operator|)
-condition|)
-if|if
-condition|(
-name|res_init
-argument_list|()
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-name|_res
-operator|.
-name|defdname
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|dnbuf
-argument_list|,
-literal|"%s.%s"
-argument_list|,
-name|dname
-argument_list|,
-name|_res
-operator|.
-name|defdname
-argument_list|)
-expr_stmt|;
-name|dname
-operator|=
-name|dnbuf
-expr_stmt|;
-block|}
-block|}
 comment|/* 	 * perform opcode specific processing 	 */
 switch|switch
 condition|(
