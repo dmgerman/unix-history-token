@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.13 1995/05/03 06:30:55 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.14 1995/05/03 17:37:58 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -972,12 +972,6 @@ index|]
 operator|.
 name|p_fstype
 argument_list|,
-name|j
-operator|==
-literal|0
-condition|?
-name|CHUNK_IS_ROOT
-else|:
 literal|0
 argument_list|)
 operator|&&

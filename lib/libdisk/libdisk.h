@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.9 1995/05/03 06:30:57 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.10 1995/05/03 17:37:59 jkh Exp $  *  */
 end_comment
 
 begin_define
@@ -128,6 +128,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|char
+modifier|*
+name|oname
+decl_stmt|;
+comment|/* Used during Fixup_Names() to avoid renaming more than 		 * absolutely needed. 		 */
 name|chunk_e
 name|type
 decl_stmt|;
@@ -161,6 +166,32 @@ directive|define
 name|CHUNK_IS_ROOT
 value|16
 comment|/* This 'part' is a rootfs, allocate 'a' */
+name|void
+function_decl|(
+modifier|*
+name|private_free
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|private_clone
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+name|private
+decl_stmt|;
+comment|/* For data private to the application, and the management 		 * thereof.  If the functions are not provided, no storage 		 * management is done, Cloning will just copy the pointer 		 * and freeing will just forget it. 		 */
 block|}
 struct|;
 end_struct
