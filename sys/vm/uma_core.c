@@ -5553,6 +5553,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * The general UMA lock is a recursion-allowed lock because 	 * there is a code path where, while we're still configured 	 * to use startup_alloc() for backend page allocations, we 	 * may end up in uma_reclaim() which calls zone_foreach(zone_drain), 	 * which grabs uma_mtx, only to later call into startup_alloc() 	 * because while freeing we needed to allocate a bucket.  Since 	 * startup_alloc() also takes uma_mtx, we need to be able to 	 * recurse on it. 	 */
 name|mtx_init
 argument_list|(
 operator|&
@@ -5563,6 +5564,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 comment|/* "manually" create the initial zone */
