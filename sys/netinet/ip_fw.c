@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.33 1996/02/26 15:28:15 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.34 1996/04/03 13:52:13 phk Exp $  */
 end_comment
 
 begin_comment
@@ -2166,11 +2166,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|fwc
 operator|=
 name|malloc
@@ -2235,11 +2230,6 @@ argument_list|,
 name|M_IPFW
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOSPC
@@ -2276,6 +2266,11 @@ operator|->
 name|rule
 operator|=
 name|ftmp
+expr_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2516,18 +2511,14 @@ operator|->
 name|rule
 operator|->
 name|fw_number
-operator|==
+operator|!=
 operator|(
 name|u_short
 operator|)
 operator|-
 literal|1
 condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+block|{
 for|for
 control|(
 init|;
@@ -2586,6 +2577,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 block|}
 block|}
 name|splx
@@ -3010,6 +3002,12 @@ name|ip_fw_chain
 operator|.
 name|lh_first
 decl_stmt|;
+name|int
+name|s
+init|=
+name|splnet
+argument_list|()
+decl_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|ip_fw_chain
@@ -3017,6 +3015,11 @@ operator|.
 name|lh_first
 argument_list|,
 name|chain
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|free
@@ -3061,6 +3064,12 @@ operator|==
 name|IP_FW_ZERO
 condition|)
 block|{
+name|int
+name|s
+init|=
+name|splnet
+argument_list|()
+decl_stmt|;
 name|struct
 name|ip_fw_chain
 modifier|*
@@ -3097,6 +3106,11 @@ operator|->
 name|fw_pcnt
 operator|=
 literal|0
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
