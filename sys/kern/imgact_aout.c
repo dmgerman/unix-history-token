@@ -222,6 +222,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|exec_aout_imgact
 parameter_list|(
@@ -936,8 +937,6 @@ name|p_vmspace
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1131,7 +1130,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
