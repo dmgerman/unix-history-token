@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)temp.c	5.14 (Berkeley) %G%"
+literal|"@(#)temp.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,15 +59,6 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|tempEdit
-index|[
-literal|24
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|tempSet
 index|[
 literal|24
 index|]
@@ -169,23 +160,6 @@ argument_list|(
 name|tempEdit
 argument_list|,
 literal|"ReXXXXXX"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|tempSet
-argument_list|,
-name|_PATH_TMP
-argument_list|)
-expr_stmt|;
-name|mktemp
-argument_list|(
-name|strcat
-argument_list|(
-name|tempSet
-argument_list|,
-literal|"RxXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.21 (Berkeley) %G%"
+literal|"@(#)lex.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,7 +419,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|remove
+name|rm
 argument_list|(
 name|tempMesg
 argument_list|)

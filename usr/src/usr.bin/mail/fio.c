@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.23 (Berkeley) %G%"
+literal|"@(#)fio.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -63,7 +69,7 @@ comment|/*  * Mail -- a mail program  *  * File I/O.  */
 end_comment
 
 begin_comment
-comment|/*  * Set up the input pointers while copying the mail file into  * /tmp.  */
+comment|/*  * Set up the input pointers while copying the mail file into /tmp.  */
 end_comment
 
 begin_expr_stmt
@@ -81,8 +87,11 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|c
-expr_stmt|;
+decl_stmt|,
+name|count
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -91,19 +100,9 @@ decl_stmt|,
 modifier|*
 name|cp2
 decl_stmt|;
-specifier|register
-name|count
-expr_stmt|;
-name|char
-name|linebuf
-index|[
-name|LINESIZE
-index|]
-decl_stmt|;
-name|int
-name|maybe
-decl_stmt|,
-name|inhead
+name|struct
+name|message
+name|this
 decl_stmt|;
 name|FILE
 modifier|*
@@ -112,35 +111,44 @@ decl_stmt|;
 name|off_t
 name|offset
 decl_stmt|;
-name|struct
-name|message
-name|this
+name|int
+name|maybe
+decl_stmt|,
+name|inhead
 decl_stmt|;
-specifier|extern
 name|char
-name|tempSet
-index|[]
+name|linebuf
+index|[
+name|LINESIZE
+index|]
 decl_stmt|;
+comment|/* Get temporary file. */
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|linebuf
+argument_list|,
+literal|"%s/mail.XXXXXX"
+argument_list|,
+name|_PATH_TMP
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|c
 operator|=
-name|opentemp
+name|mkstemp
 argument_list|(
-name|tempSet
+name|linebuf
 argument_list|)
 operator|)
-operator|<
-literal|0
-condition|)
-name|exit
-argument_list|(
+operator|==
+operator|-
 literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 operator|(
 name|mestmp
 operator|=
@@ -154,9 +162,31 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|panic
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"Can't open temporary"
+name|stderr
+argument_list|,
+literal|"mail: can't open %s\n"
+argument_list|,
+name|linebuf
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|linebuf
 argument_list|)
 expr_stmt|;
 name|msgCount
@@ -240,7 +270,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|tempSet
+literal|"temporary file"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -340,7 +370,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|tempSet
+literal|"temporary file"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1024,7 +1054,7 @@ comment|/*  * Delete a file, but only if the file is a plain file.  */
 end_comment
 
 begin_macro
-name|remove
+name|rm
 argument_list|(
 argument|name
 argument_list|)
@@ -1032,8 +1062,8 @@ end_macro
 
 begin_decl_stmt
 name|char
+modifier|*
 name|name
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1041,11 +1071,7 @@ begin_block
 block|{
 name|struct
 name|stat
-name|statb
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
+name|sb
 decl_stmt|;
 if|if
 condition|(
@@ -1054,7 +1080,7 @@ argument_list|(
 name|name
 argument_list|,
 operator|&
-name|statb
+name|sb
 argument_list|)
 operator|<
 literal|0
@@ -1067,15 +1093,13 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
-name|statb
+operator|!
+name|S_ISREG
+argument_list|(
+name|sb
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|!=
-name|S_IFREG
+argument_list|)
 condition|)
 block|{
 name|errno
@@ -1090,10 +1114,12 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 name|unlink
 argument_list|(
 name|name
 argument_list|)
+operator|)
 return|;
 block|}
 end_block
@@ -1180,68 +1206,6 @@ argument_list|(
 name|omask
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Open a temp file by creating and unlinking.  * Return the open file descriptor.  */
-end_comment
-
-begin_macro
-name|opentemp
-argument_list|(
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-name|file
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|f
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|f
-operator|=
-name|open
-argument_list|(
-name|file
-argument_list|,
-name|O_CREAT
-operator||
-name|O_EXCL
-operator||
-name|O_RDWR
-argument_list|,
-literal|0600
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|perror
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-name|remove
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|f
-operator|)
-return|;
 block|}
 end_block
 
