@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_msdos.c,v 1.14 1998/02/23 16:49:16 ache Exp $"
+literal|"$Id: mount_msdos.c,v 1.15 1998/06/30 06:23:42 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,10 @@ directive|include
 file|"mntopts.h"
 end_include
 
+begin_comment
+comment|/*  * XXX - no way to specify "foo=<bar>"-type options; that's what we'd  * want for "-u", "-g", "-m", "-L", and "-W".  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -138,6 +142,51 @@ block|,
 name|MOPT_SYNC
 block|,
 name|MOPT_UPDATE
+block|,
+ifdef|#
+directive|ifdef
+name|MSDOSFSMNT_GEMDOSFS
+block|{
+literal|"gemdosfs"
+block|,
+literal|0
+block|,
+name|MSDOSFSMNT_GEMDOSFS
+block|,
+literal|1
+block|}
+block|,
+endif|#
+directive|endif
+block|{
+literal|"shortnames"
+block|,
+literal|0
+block|,
+name|MSDOSFSMNT_SHORTNAME
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"longnames"
+block|,
+literal|0
+block|,
+name|MSDOSFSMNT_LONGNAME
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"nowin95"
+block|,
+literal|0
+block|,
+name|MSDOSFSMNT_NOWIN95
+block|,
+literal|1
+block|}
 block|,
 block|{
 name|NULL
@@ -494,7 +543,10 @@ argument_list|,
 operator|&
 name|mntflags
 argument_list|,
-literal|0
+operator|&
+name|args
+operator|.
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;
