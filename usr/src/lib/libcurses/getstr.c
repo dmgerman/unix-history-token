@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine gets a string starting at (_cury,_curx)  *  * %G% (Berkeley) @(#)getstr.c	1.4  */
+comment|/*  *	This routine gets a string starting at (_cury,_curx)  *  * @(#)getstr.c	1.5 (Berkeley) %G%  */
 end_comment
 
 begin_macro

@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine reads in a character from the window.  *  * %G% (Berkeley) @(#)getch.c	1.2  */
+comment|/*  *	This routine reads in a character from the window.  *  * @(#)getch.c	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_macro
