@@ -3319,7 +3319,7 @@ comment|/****************************************************************** 		  
 end_comment
 
 begin_comment
-comment|/*  * Hash algorithm  *  * Only hashing bytes 3-6 of the Ethernet address is sufficient and fast.  */
+comment|/*  * Hash algorithm  */
 end_comment
 
 begin_define
