@@ -5628,9 +5628,13 @@ name|namebuf
 index|[
 name|IFNAMSIZ
 operator|+
-literal|1
+sizeof|sizeof
+argument_list|(
+literal|"net"
+argument_list|)
 index|]
 decl_stmt|;
+comment|/* XXX net_cdevsw.d_name */
 name|struct
 name|ifnet
 modifier|*
@@ -5645,7 +5649,10 @@ name|snprintf
 argument_list|(
 name|namebuf
 argument_list|,
-name|IFNAMSIZ
+sizeof|sizeof
+argument_list|(
+name|namebuf
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
