@@ -4618,7 +4618,7 @@ condition|(
 operator|(
 name|status
 operator|&
-name|CBB_SOCKET_STAT_CD
+name|CBB_STATE_CD
 operator|)
 operator|==
 literal|0
@@ -4807,7 +4807,7 @@ if|if
 condition|(
 name|sockstate
 operator|&
-name|CBB_SOCKET_STAT_16BIT
+name|CBB_STATE_R2_CARD
 condition|)
 block|{
 if|if
@@ -4840,7 +4840,7 @@ if|if
 condition|(
 name|sockstate
 operator|&
-name|CBB_SOCKET_STAT_CB
+name|CBB_STATE_CB_CARD
 condition|)
 block|{
 if|if
@@ -5250,7 +5250,7 @@ if|if
 condition|(
 name|psr
 operator|&
-name|CBB_SOCKET_STAT_5VCARD
+name|CBB_STATE_5VCARD
 condition|)
 name|vol
 operator||=
@@ -5260,7 +5260,7 @@ if|if
 condition|(
 name|psr
 operator|&
-name|CBB_SOCKET_STAT_3VCARD
+name|CBB_STATE_3VCARD
 condition|)
 name|vol
 operator||=
@@ -5270,7 +5270,7 @@ if|if
 condition|(
 name|psr
 operator|&
-name|CBB_SOCKET_STAT_XVCARD
+name|CBB_STATE_XVCARD
 condition|)
 name|vol
 operator||=
@@ -5280,7 +5280,7 @@ if|if
 condition|(
 name|psr
 operator|&
-name|CBB_SOCKET_STAT_YVCARD
+name|CBB_STATE_YVCARD
 condition|)
 name|vol
 operator||=
@@ -5660,7 +5660,7 @@ if|if
 condition|(
 name|status
 operator|&
-name|CBB_SOCKET_STAT_BADVCC
+name|CBB_STATE_BAD_VCC_REQ
 condition|)
 block|{
 name|device_printf
@@ -5920,7 +5920,7 @@ argument_list|,
 name|CBB_SOCKET_STATE
 argument_list|)
 operator|&
-name|CBB_SOCKET_STAT_CD
+name|CBB_STATE_CD
 operator|)
 operator|==
 literal|0
@@ -5983,10 +5983,10 @@ argument_list|,
 name|CBB_SOCKET_STATE
 argument_list|)
 operator|&
-name|CBB_SOCKET_STAT_CD
+name|CBB_STATE_CD
 operator|)
 operator|==
-name|CBB_SOCKET_STAT_CD
+name|CBB_STATE_CD
 condition|)
 return|return
 operator|(
@@ -9675,7 +9675,7 @@ operator|(
 operator|(
 name|sockstate
 operator|&
-name|CBB_SOCKET_STAT_CD
+name|CBB_STATE_CD
 operator|)
 operator|!=
 literal|0

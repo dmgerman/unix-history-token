@@ -865,8 +865,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_CARDSTS
-value|0x00000001
+name|CBB_STATE_CSTCHG
+value|(1UL<<  0)
 end_define
 
 begin_comment
@@ -876,8 +876,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_CD1
-value|0x00000002
+name|CBB_STATE_CD1_CHANGE
+value|(1UL<<  1)
 end_define
 
 begin_comment
@@ -887,8 +887,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_CD2
-value|0x00000004
+name|CBB_STATE_CD2_CHANGE
+value|(1UL<<  2)
 end_define
 
 begin_comment
@@ -898,8 +898,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_CD
-value|0x00000006
+name|CBB_STATE_CD
+value|(3UL<<  1)
 end_define
 
 begin_comment
@@ -909,8 +909,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_PWRCYCLE
-value|0x00000008
+name|CBB_STATE_POWER_CYCLE
+value|(1UL<<  3)
 end_define
 
 begin_comment
@@ -920,8 +920,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_16BIT
-value|0x00000010
+name|CBB_STATE_R2_CARD
+value|(1UL<<  4)
 end_define
 
 begin_comment
@@ -931,8 +931,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_CB
-value|0x00000020
+name|CBB_STATE_CB_CARD
+value|(1UL<<  5)
 end_define
 
 begin_comment
@@ -942,8 +942,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_IREQ
-value|0x00000040
+name|CBB_STATE_IREQ
+value|(1UL<<  6)
 end_define
 
 begin_comment
@@ -953,8 +953,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_NOTCARD
-value|0x00000080
+name|CBB_STATE_NOT_A_CARD
+value|(1UL<<  7)
 end_define
 
 begin_comment
@@ -964,8 +964,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_DATALOST
-value|0x00000100
+name|CBB_STATE_DATA_LOST
+value|(1UL<<  8)
 end_define
 
 begin_comment
@@ -975,8 +975,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_BADVCC
-value|0x00000200
+name|CBB_STATE_BAD_VCC_REQ
+value|(1UL<<  9)
 end_define
 
 begin_comment
@@ -986,8 +986,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_5VCARD
-value|0x00000400
+name|CBB_STATE_5VCARD
+value|(1UL<< 10)
 end_define
 
 begin_comment
@@ -997,8 +997,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_3VCARD
-value|0x00000800
+name|CBB_STATE_3VCARD
+value|(1UL<< 11)
 end_define
 
 begin_comment
@@ -1008,8 +1008,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_XVCARD
-value|0x00001000
+name|CBB_STATE_XVCARD
+value|(1UL<< 12)
 end_define
 
 begin_comment
@@ -1019,8 +1019,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_YVCARD
-value|0x00002000
+name|CBB_STATE_YVCARD
+value|(1UL<< 13)
 end_define
 
 begin_comment
@@ -1030,8 +1030,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_5VSOCK
-value|0x10000000
+name|CBB_STATE_5VSOCK
+value|(1UL<< 28)
 end_define
 
 begin_comment
@@ -1041,8 +1041,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_3VSOCK
-value|0x20000000
+name|CBB_STATE_3VSOCK
+value|(1UL<< 29)
 end_define
 
 begin_comment
@@ -1052,8 +1052,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_XVSOCK
-value|0x40000000
+name|CBB_STATE_XVSOCK
+value|(1UL<< 30)
 end_define
 
 begin_comment
@@ -1063,8 +1063,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBB_SOCKET_STAT_YVSOCK
-value|0x80000000
+name|CBB_STATE_YVSOCK
+value|(1UL<< 31)
 end_define
 
 begin_comment
@@ -1167,6 +1167,90 @@ define|#
 directive|define
 name|CBB_SOCKET_CTRL_STOPCLK
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_CV_TEST
+value|(1UL<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_3VCARD
+value|(1UL<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_5VCARD
+value|(1UL<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_BAD_VCC_REQ
+value|(1UL<<  9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_DATA_LOST
+value|(1UL<<  8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_NOT_A_CARD
+value|(1UL<<  7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_CB_CARD
+value|(1UL<<  5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_R2_CARD
+value|(1UL<<  4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_POWER_CYCLE
+value|(1UL<<  3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_CD2_CHANGE
+value|(1UL<<  2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_CD1_CHANGE
+value|(1UL<<  1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_FORCE_CSTCHG
+value|(1UL<<  0)
 end_define
 
 begin_include
