@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.35	81/12/03	*/
+comment|/*	tcp_input.c	1.36	81/12/07	*/
 end_comment
 
 begin_include
@@ -233,7 +233,8 @@ operator|)
 name|ti
 argument_list|,
 operator|(
-name|char
+expr|struct
+name|mbuf
 operator|*
 operator|)
 literal|0
@@ -2048,9 +2049,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* no FIN */
-name|int
-name|overage
-decl_stmt|;
 name|COUNT
 argument_list|(
 name|TCP_REASS
