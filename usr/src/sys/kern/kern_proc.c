@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.17	%G%	*/
+comment|/*	kern_proc.c	3.18	%G%	*/
 end_comment
 
 begin_include
@@ -103,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"../h/psl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/limit.h"
 end_include
 
 begin_comment
