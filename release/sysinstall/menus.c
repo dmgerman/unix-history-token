@@ -462,7 +462,11 @@ block|{
 return|return
 name|Dists
 operator|==
+operator|(
 name|DIST_BIN
+operator||
+name|DIST_CRYPTO
+operator|)
 return|;
 block|}
 end_function
