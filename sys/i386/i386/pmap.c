@@ -7239,11 +7239,40 @@ name|origpte
 operator|&
 name|PG_PS
 condition|)
+block|{
+comment|/* 		 * Yes, I know this will truncate upper address bits for PAE, 		 * but I'm actually more interested in the lower bits 		 */
+name|printf
+argument_list|(
+literal|"pmap_enter: va %p, pte %p, origpte %p\n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|va
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|pte
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|origpte
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"pmap_enter: attempted pmap_enter on 4MB page"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Mapping has not changed, must be protection or wiring change. 	 */
 if|if
 condition|(
