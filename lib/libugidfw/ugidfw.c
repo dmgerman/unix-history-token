@@ -2799,7 +2799,7 @@ name|len
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2909,7 +2909,7 @@ name|len
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
