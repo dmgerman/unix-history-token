@@ -899,6 +899,8 @@ operator|->
 name|mly_irq
 argument_list|,
 name|INTR_TYPE_CAM
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|mly_pci_intr
 argument_list|,

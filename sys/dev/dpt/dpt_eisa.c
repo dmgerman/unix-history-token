@@ -675,6 +675,8 @@ argument_list|,
 name|irq
 argument_list|,
 name|INTR_TYPE_CAM
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|dpt_intr
 argument_list|,

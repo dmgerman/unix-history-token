@@ -1075,6 +1075,8 @@ operator|->
 name|irq_res
 argument_list|,
 name|INTR_TYPE_CAM
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|ncv_pccard_intr
 argument_list|,

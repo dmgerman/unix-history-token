@@ -1801,6 +1801,8 @@ operator|->
 name|mlx_irq
 argument_list|,
 name|INTR_TYPE_BIO
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|mlx_intr
 argument_list|,

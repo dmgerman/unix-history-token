@@ -11045,6 +11045,8 @@ operator|->
 name|ha_irq_res
 argument_list|,
 name|INTR_TYPE_CAM
+operator||
+name|INTR_ENTROPY
 argument_list|,
 operator|(
 name|driver_intr_t

@@ -908,6 +908,8 @@ operator|->
 name|amr_irq
 argument_list|,
 name|INTR_TYPE_BIO
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|amr_pci_intr
 argument_list|,

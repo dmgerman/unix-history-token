@@ -11289,6 +11289,8 @@ operator|->
 name|irq_res
 argument_list|,
 name|INTR_TYPE_CAM
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|ncr_intr
 argument_list|,

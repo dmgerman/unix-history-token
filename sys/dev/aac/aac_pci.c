@@ -843,6 +843,8 @@ operator|->
 name|aac_irq
 argument_list|,
 name|INTR_TYPE_BIO
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|aac_intr
 argument_list|,

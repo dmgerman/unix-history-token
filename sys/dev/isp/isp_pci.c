@@ -2976,6 +2976,8 @@ argument_list|,
 name|INTR_TYPE_CAM
 operator||
 name|INTR_MPSAFE
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|isp_pci_intr
 argument_list|,
@@ -3010,6 +3012,8 @@ argument_list|,
 name|irq
 argument_list|,
 name|INTR_TYPE_CAM
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|isp_pci_intr
 argument_list|,

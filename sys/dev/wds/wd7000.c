@@ -2420,6 +2420,8 @@ operator|->
 name|intr_r
 argument_list|,
 name|INTR_TYPE_CAM
+operator||
+name|INTR_ENTROPY
 argument_list|,
 operator|(
 name|driver_intr_t
