@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993, 1994 by Andrew A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1993, 1994, 1995 by Andrey A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#)Copyright (C) 1993 by Andrew A. Chernov, Moscow, Russia.\n\  All rights reserved.\n"
+literal|"@(#)Copyright (C) 1993, 1994, 1995 by Andrey A. Chernov, Moscow, Russia.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,7 +28,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Andrew A. Chernov<ache@astral.msk.su>    Dec 20 1993  *  * Fix kernel time value if machine run wall CMOS clock  * (and /etc/wall_cmos_clock file present)  * using zoneinfo rules or direct TZ environment variable set.  * Use Joerg Wunsch idea for seconds accurate offset calculation  * with Garrett Wollman and Bruce Evans fixes.  *  */
+comment|/*  * Andrey A. Chernov<ache@astral.msk.su>    Dec 20 1993  *  * Fix kernel time value if machine run wall CMOS clock  * (and /etc/wall_cmos_clock file present)  * using zoneinfo rules or direct TZ environment variable set.  * Use Joerg Wunsch idea for seconds accurate offset calculation  * with Garrett Wollman and Bruce Evans fixes.  *  */
 end_comment
 
 begin_include
@@ -186,6 +186,16 @@ name|init
 init|=
 operator|-
 literal|1
+decl_stmt|;
+name|int
+name|initial_isdst
+init|=
+operator|-
+literal|1
+decl_stmt|,
+name|final_isdst
+decl_stmt|,
+name|looping
 decl_stmt|;
 name|int
 name|disrtcset
@@ -387,6 +397,77 @@ argument_list|,
 name|fake
 argument_list|)
 expr_stmt|;
+name|diff
+operator|=
+literal|0
+expr_stmt|;
+name|stv
+operator|=
+name|NULL
+expr_stmt|;
+name|stz
+operator|=
+name|NULL
+expr_stmt|;
+name|looping
+operator|=
+literal|0
+expr_stmt|;
+name|mib
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_MACHDEP
+expr_stmt|;
+name|mib
+index|[
+literal|1
+index|]
+operator|=
+name|CPU_ADJKERNTZ
+expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|kern_offset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctl
+argument_list|(
+name|mib
+argument_list|,
+literal|2
+argument_list|,
+operator|&
+name|kern_offset
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"sysctl(get_offset): %m"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 comment|/****** Critical section, do all things as fast as possible ******/
 comment|/* get local CMOS clock and possible kernel offset */
 if|if
@@ -419,6 +500,8 @@ name|tv
 operator|.
 name|tv_sec
 expr_stmt|;
+name|recalculate
+label|:
 name|local
 operator|=
 operator|*
@@ -427,6 +510,18 @@ argument_list|(
 operator|&
 name|initial_sec
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|diff
+operator|==
+literal|0
+condition|)
+name|initial_isdst
+operator|=
+name|local
+operator|.
+name|tm_isdst
 expr_stmt|;
 name|utc
 operator|=
@@ -437,10 +532,20 @@ operator|&
 name|initial_sec
 argument_list|)
 expr_stmt|;
+name|local
+operator|.
+name|tm_isdst
+operator|=
+name|utc
+operator|.
+name|tm_isdst
+operator|=
+name|initial_isdst
+expr_stmt|;
 comment|/* calculate local CMOS diff from GMT */
 name|utcsec
 operator|=
-name|timelocal
+name|mktime
 argument_list|(
 operator|&
 name|utc
@@ -448,7 +553,7 @@ argument_list|)
 expr_stmt|;
 name|localsec
 operator|=
-name|timelocal
+name|mktime
 argument_list|(
 operator|&
 name|local
@@ -532,69 +637,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mib
-index|[
-literal|0
-index|]
-operator|=
-name|CTL_MACHDEP
-expr_stmt|;
-name|mib
-index|[
-literal|1
-index|]
-operator|=
-name|CPU_ADJKERNTZ
-expr_stmt|;
-name|len
-operator|=
-sizeof|sizeof
-argument_list|(
-name|kern_offset
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sysctl
-argument_list|(
-name|mib
-argument_list|,
-literal|2
-argument_list|,
-operator|&
-name|kern_offset
-argument_list|,
-operator|&
-name|len
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"sysctl(get_offset): %m"
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-name|stv
-operator|=
-name|NULL
-expr_stmt|;
-name|stz
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* correct the kerneltime for this diffs */
 comment|/* subtract kernel offset, if present, old offset too */
 name|diff
@@ -633,9 +675,7 @@ directive|endif
 comment|/* Yet one step for final time */
 name|final_sec
 operator|=
-name|tv
-operator|.
-name|tv_sec
+name|initial_sec
 operator|+
 name|diff
 expr_stmt|;
@@ -649,6 +689,47 @@ operator|&
 name|final_sec
 argument_list|)
 expr_stmt|;
+name|final_isdst
+operator|=
+name|diff
+operator|<
+literal|0
+condition|?
+name|initial_isdst
+else|:
+name|local
+operator|.
+name|tm_isdst
+expr_stmt|;
+if|if
+condition|(
+name|diff
+operator|>
+literal|0
+operator|&&
+name|initial_isdst
+operator|!=
+name|final_isdst
+condition|)
+block|{
+if|if
+condition|(
+name|looping
+condition|)
+goto|goto
+name|bad_final
+goto|;
+name|looping
+operator|++
+expr_stmt|;
+name|initial_isdst
+operator|=
+name|final_isdst
+expr_stmt|;
+goto|goto
+name|recalculate
+goto|;
+block|}
 name|utc
 operator|=
 operator|*
@@ -658,9 +739,19 @@ operator|&
 name|final_sec
 argument_list|)
 expr_stmt|;
+name|local
+operator|.
+name|tm_isdst
+operator|=
+name|utc
+operator|.
+name|tm_isdst
+operator|=
+name|final_isdst
+expr_stmt|;
 name|utcsec
 operator|=
-name|timelocal
+name|mktime
 argument_list|(
 operator|&
 name|utc
@@ -668,7 +759,7 @@ argument_list|)
 expr_stmt|;
 name|localsec
 operator|=
-name|timelocal
+name|mktime
 argument_list|(
 operator|&
 name|local
@@ -687,6 +778,8 @@ operator|-
 literal|1
 condition|)
 block|{
+name|bad_final
+label|:
 comment|/* 			 * XXX as above.  The user has even less control, 			 * but perhaps we never get here. 			 */
 name|syslog
 argument_list|(
