@@ -514,14 +514,7 @@ name|VREAD
 operator||
 name|VWRITE
 operator|)
-operator||
-operator|(
-name|VREAD
-operator|)
-operator|>>
-literal|3
 expr_stmt|;
-empty_stmt|;
 name|vp
 operator|->
 name|v_type
