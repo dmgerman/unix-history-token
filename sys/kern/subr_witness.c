@@ -6672,6 +6672,17 @@ name|instance
 decl_stmt|;
 if|if
 condition|(
+name|lock
+operator|->
+name|lo_witness
+operator|==
+name|NULL
+operator|||
+name|witness_dead
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|lock
 operator|->
