@@ -1638,6 +1638,13 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|src
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
 name|sc
 operator|->
 name|duplex
