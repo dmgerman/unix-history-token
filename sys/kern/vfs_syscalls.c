@@ -17,10 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* For 4.3 integer FS ID compatibility */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -788,10 +784,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|quotactl
@@ -984,10 +976,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -1262,10 +1250,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -2034,10 +2018,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|freebsd4_statfs
@@ -2262,10 +2242,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -2956,7 +2932,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Must be super user 	 */
 name|error
 operator|=
 name|suser
@@ -3493,10 +3468,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|fchdir
@@ -3807,10 +3778,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -4190,10 +4157,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -5794,10 +5757,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|mknod
@@ -6396,10 +6355,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|mkfifo
@@ -6834,10 +6789,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -7520,10 +7471,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|symlink
@@ -8014,10 +7961,6 @@ begin_comment
 comment|/*  * Delete a whiteout from the filesystem.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|undelete
@@ -8329,10 +8272,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -9797,10 +9736,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|ostat
@@ -9987,10 +9922,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -10362,10 +10293,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|stat
@@ -10570,10 +10497,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -10915,10 +10838,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|nstat
@@ -11105,10 +11024,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -11302,10 +11217,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|pathconf
@@ -11467,10 +11378,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -11998,10 +11905,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|chflags
@@ -12240,10 +12143,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -12531,10 +12430,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|chmod
@@ -12706,10 +12601,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|lchmod
@@ -12841,10 +12732,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -13148,10 +13035,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|chown
@@ -13335,10 +13218,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|lchown
@@ -13520,10 +13399,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -14104,10 +13979,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|utimes
@@ -14324,10 +14195,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|lutimes
@@ -14543,10 +14410,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|futimes
@@ -14741,10 +14604,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -15095,10 +14954,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|ftruncate
@@ -15431,10 +15286,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|otruncate
@@ -15519,10 +15370,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -15614,10 +15461,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -15885,10 +15728,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -16656,10 +16495,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|mkdir
@@ -17121,10 +16956,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -19117,10 +18948,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|revoke
@@ -19603,7 +19430,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Must be super user 	 */
 name|error
 operator|=
 name|suser
@@ -19808,7 +19634,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Must be super user 	 */
 name|error
 operator|=
 name|suser
@@ -20073,7 +19898,6 @@ decl_stmt|;
 name|int
 name|indx
 decl_stmt|;
-comment|/* 	 * Must be super user 	 */
 name|error
 operator|=
 name|suser
@@ -20990,7 +20814,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Must be super user 	 */
 name|error
 operator|=
 name|suser
@@ -21211,7 +21034,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Must be super user 	 */
 name|error
 operator|=
 name|suser
