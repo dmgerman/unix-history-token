@@ -273,17 +273,6 @@ comment|/* lock for object list and count */
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|long
-name|vm_object_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* count of all objects */
-end_comment
-
-begin_decl_stmt
 name|vm_object_t
 name|kernel_object
 decl_stmt|;
@@ -567,9 +556,6 @@ argument_list|,
 name|object_list
 argument_list|)
 expr_stmt|;
-name|vm_object_count
-operator|++
-expr_stmt|;
 name|object_hash_rand
 operator|=
 name|object
@@ -607,10 +593,6 @@ literal|"vm object_list"
 argument_list|,
 name|MTX_DEF
 argument_list|)
-expr_stmt|;
-name|vm_object_count
-operator|=
-literal|0
 expr_stmt|;
 name|kernel_object
 operator|=
@@ -4713,9 +4695,6 @@ name|backing_object
 argument_list|,
 name|object_list
 argument_list|)
-expr_stmt|;
-name|vm_object_count
-operator|--
 expr_stmt|;
 name|zfree
 argument_list|(
