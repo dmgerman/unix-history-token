@@ -7547,6 +7547,7 @@ argument_list|)
 expr_stmt|;
 name|data
 operator|&=
+operator|~
 name|HV_BUTTON_FROM_GD
 expr_stmt|;
 name|data
