@@ -1444,7 +1444,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|&
-name|T_UNIT
+name|WT_UNIT
 decl_stmt|;
 name|wtinfo_t
 modifier|*
@@ -1911,7 +1911,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|&
-name|T_UNIT
+name|WT_UNIT
 decl_stmt|;
 name|wtinfo_t
 modifier|*
@@ -1967,7 +1967,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|&
-name|T_NOREWIND
+name|WT_NOREWIND
 condition|)
 goto|goto
 name|done
@@ -2006,7 +2006,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|&
-name|T_NOREWIND
+name|WT_NOREWIND
 operator|)
 condition|)
 block|{
@@ -2124,7 +2124,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|&
-name|T_UNIT
+name|WT_UNIT
 decl_stmt|;
 name|wtinfo_t
 modifier|*
@@ -2702,7 +2702,7 @@ operator|->
 name|bio_dev
 argument_list|)
 operator|&
-name|T_UNIT
+name|WT_UNIT
 decl_stmt|;
 name|wtinfo_t
 modifier|*

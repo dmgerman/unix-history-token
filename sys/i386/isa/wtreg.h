@@ -650,5 +650,27 @@ begin_comment
 comment|/* 600 megabytes? */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WT_UNIT
+value|0003
+end_define
+
+begin_comment
+comment|/* unit selection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WT_NOREWIND
+value|0004
+end_define
+
+begin_comment
+comment|/* no rewind on close */
+end_comment
+
 end_unit
 
