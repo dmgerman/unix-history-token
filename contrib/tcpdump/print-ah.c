@@ -19,8 +19,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ah.c,v 1.15 2001/09/17 21:57:54 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ah.c,v 1.19.2.3 2003/11/19 00:35:43 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,31 +50,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -100,6 +77,12 @@ directive|include
 file|"addrtoname.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extract.h"
+end_include
+
 begin_function
 name|int
 name|ah_print
@@ -109,12 +92,6 @@ specifier|const
 name|u_char
 modifier|*
 name|bp
-parameter_list|,
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|bp2
 parameter_list|)
 block|{
 specifier|register
@@ -167,11 +144,9 @@ literal|2
 expr_stmt|;
 name|spi
 operator|=
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ah
 operator|->
 name|ah_spi
@@ -199,22 +174,11 @@ name|printf
 argument_list|(
 literal|",seq=0x%x"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
-operator|(
-specifier|const
-name|u_int32_t
-operator|*
-operator|)
-operator|(
 name|ah
 operator|+
 literal|1
-operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -265,7 +229,8 @@ name|stdout
 argument_list|)
 expr_stmt|;
 return|return
-literal|65535
+operator|-
+literal|1
 return|;
 block|}
 end_function

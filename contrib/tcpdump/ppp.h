@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ppp.h,v 1.12 2001/02/04 02:17:55 fenner Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ppp.h,v 1.14 2003/05/22 15:29:22 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -223,6 +223,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PPP_MPLS_UCAST
+value|0x0281
+end_define
+
+begin_comment
+comment|/* rfc 3032 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_MPLS_MCAST
+value|0x0283
+end_define
+
+begin_comment
+comment|/* rfc 3022 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PPP_IPCP
 value|0x8021
 end_define
@@ -333,6 +355,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PPP_MPLSCP
+value|0x8281
+end_define
+
+begin_comment
+comment|/* rfc 3022 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PPP_LCP
 value|0xc021
 end_define
@@ -362,6 +395,13 @@ end_define
 begin_comment
 comment|/* Link Quality Monitoring */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_SPAP
+value|0xc027
+end_define
 
 begin_define
 define|#
@@ -406,6 +446,20 @@ end_define
 begin_comment
 comment|/* Multi-Link */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_SPAP_OLD
+value|0xc123
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPP_EAP
+value|0xc227
+end_define
 
 begin_decl_stmt
 specifier|extern

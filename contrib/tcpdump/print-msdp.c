@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-msdp.c,v 1.2 2001/12/10 08:06:40 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-msdp.c,v 1.4.2.2 2003/11/16 08:51:34 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +46,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<tcpdump-stdinc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -52,18 +59,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
 end_include
 
 begin_include
@@ -203,7 +198,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|" [len %d]"
+literal|" [len %u]"
 argument_list|,
 name|len
 argument_list|)
@@ -272,7 +267,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %d entries"
+literal|" %u entries"
 argument_list|,
 operator|*
 name|sp
@@ -280,12 +275,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|u_int
+call|)
+argument_list|(
+operator|(
 operator|*
 name|sp
 operator|*
 literal|12
+operator|)
 operator|+
 literal|8
+argument_list|)
 operator|<
 name|len
 condition|)

@@ -23,10 +23,28 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/strlcpy.c,v 1.1 2000/01/19 05:34:19 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/strlcpy.c,v 1.3.2.2 2003/11/16 08:52:03 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
 
 begin_endif
 endif|#
@@ -36,25 +54,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<config.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"interface.h"
 end_include
 
 begin_comment
@@ -65,24 +71,18 @@ begin_function
 name|size_t
 name|strlcpy
 parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|siz
-parameter_list|)
 name|char
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|src
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|siz
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char

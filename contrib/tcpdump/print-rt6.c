@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rt6.c,v 1.18 2001/06/15 22:17:34 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rt6.c,v 1.23.2.3 2003/11/19 00:35:45 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,31 +52,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -100,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
 end_include
 
 begin_function
@@ -238,9 +221,22 @@ name|IPV6_RTHDR_TYPE_0
 value|0
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|IPV6_RTHDR_TYPE_2
+define|#
+directive|define
+name|IPV6_RTHDR_TYPE_2
+value|2
+endif|#
+directive|endif
 case|case
 name|IPV6_RTHDR_TYPE_0
 case|:
+case|case
+name|IPV6_RTHDR_TYPE_2
+case|:
+comment|/* Mobile IPv6 ID-20 */
 name|dp0
 operator|=
 operator|(
@@ -270,11 +266,9 @@ name|printf
 argument_list|(
 literal|", rsv=0x%0x"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dp0
 operator|->
 name|ip6r0_reserved
@@ -390,9 +384,9 @@ name|stdout
 argument_list|)
 expr_stmt|;
 return|return
-literal|65535
+operator|-
+literal|1
 return|;
-comment|/* XXX */
 block|}
 end_function
 

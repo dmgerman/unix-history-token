@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip6.h,v 1.3 2000/12/17 23:07:48 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip6.h,v 1.6 2002/12/11 22:29:21 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -577,26 +577,22 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* network endian */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|IP6F_OFF_MASK
-value|((u_int16_t)htons(0xfff8))
+value|0xfff8
 end_define
 
 begin_comment
-comment|/* mask out offset from _offlg */
+comment|/* mask out offset from ip6f_offlg */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP6F_RESERVED_MASK
-value|((u_int16_t)htons(0x0006))
+value|0x0006
 end_define
 
 begin_comment
@@ -607,7 +603,7 @@ begin_define
 define|#
 directive|define
 name|IP6F_MORE_FRAG
-value|((u_int16_t)htons(0x0001))
+value|0x0001
 end_define
 
 begin_comment

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000 Alfredo Andres Omella.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *    *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in  *      the documentation and/or other materials provided with the  *      distribution.  *   3. The names of the authors may not be used to endorse or promote  *      products derived from this software without specific prior  *      written permission.  *    * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (C) 2000 Alfredo Andres Omella.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in  *      the documentation and/or other materials provided with the  *      distribution.  *   3. The names of the authors may not be used to endorse or promote  *      products derived from this software without specific prior  *      written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_comment
-comment|/*  * Radius printer routines as specified on:  *  * RFC 2865:  *      "Remote Authentication Dial In User Service (RADIUS)"  *  * RFC 2866:  *      "RADIUS Accounting"  *  * RFC 2867:  *      "RADIUS Accounting Modifications for Tunnel Protocol Support"  *  * RFC 2868:  *      "RADIUS Attributes for Tunnel Protocol Support"  *  * RFC 2869:  *      "RADIUS Extensions"  *  * Alfredo Andres Omella (aandres@s21sec.com) v0.1 2000/09/15  *  * TODO: Among other things to print ok MacIntosh and Vendor values   */
+comment|/*  * Radius printer routines as specified on:  *  * RFC 2865:  *      "Remote Authentication Dial In User Service (RADIUS)"  *  * RFC 2866:  *      "RADIUS Accounting"  *  * RFC 2867:  *      "RADIUS Accounting Modifications for Tunnel Protocol Support"  *  * RFC 2868:  *      "RADIUS Attributes for Tunnel Protocol Support"  *  * RFC 2869:  *      "RADIUS Extensions"  *  * Alfredo Andres Omella (aandres@s21sec.com) v0.1 2000/09/15  *  * TODO: Among other things to print ok MacIntosh and Vendor values  */
 end_comment
 
 begin_ifndef
@@ -19,8 +19,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"$Id: print-radius.c,v 1.10.2.2 2002/07/03 16:35:04 fenner Exp $"
+literal|"$Id: print-radius.c,v 1.19.2.4 2004/02/06 14:38:51 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,19 +50,13 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<tcpdump-stdinc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
 end_include
 
 begin_include
@@ -69,23 +64,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TIME_WITH_SYS_TIME
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -103,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"oui.h"
 end_include
 
 begin_define
@@ -230,6 +214,77 @@ end_define
 begin_comment
 comment|/* Reserved            */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|tok
+name|radius_command_values
+index|[]
+init|=
+block|{
+block|{
+name|RADCMD_ACCESS_REQ
+block|,
+literal|"Access Request"
+block|}
+block|,
+block|{
+name|RADCMD_ACCESS_ACC
+block|,
+literal|"Access Accept"
+block|}
+block|,
+block|{
+name|RADCMD_ACCESS_REJ
+block|,
+literal|"Access Reject"
+block|}
+block|,
+block|{
+name|RADCMD_ACCOUN_REQ
+block|,
+literal|"Accounting Request"
+block|}
+block|,
+block|{
+name|RADCMD_ACCOUN_RES
+block|,
+literal|"Accounting Response"
+block|}
+block|,
+block|{
+name|RADCMD_ACCESS_CHA
+block|,
+literal|"Access Challenge"
+block|}
+block|,
+block|{
+name|RADCMD_STATUS_SER
+block|,
+literal|"Status Server"
+block|}
+block|,
+block|{
+name|RADCMD_STATUS_CLI
+block|,
+literal|"Status Client"
+block|}
+block|,
+block|{
+name|RADCMD_RESERVED
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/********************************/
@@ -450,6 +505,22 @@ begin_function_decl
 specifier|static
 name|void
 name|print_attr_num
+parameter_list|(
+specifier|register
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_short
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_vendor_attr
 parameter_list|(
 specifier|register
 name|u_char
@@ -1050,6 +1121,7 @@ begin_struct
 struct|struct
 name|attrtype
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1103,7 +1175,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"User"
+literal|"Username"
 block|,
 name|NULL
 block|,
@@ -1115,7 +1187,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Pass"
+literal|"Password"
 block|,
 name|NULL
 block|,
@@ -1127,7 +1199,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"CHAP-Pass"
+literal|"CHAP Password"
 block|,
 name|NULL
 block|,
@@ -1139,7 +1211,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"NAS_ipaddr"
+literal|"NAS IP Address"
 block|,
 name|NULL
 block|,
@@ -1151,7 +1223,7 @@ name|print_attr_address
 block|}
 block|,
 block|{
-literal|"NAS_port"
+literal|"NAS Port"
 block|,
 name|NULL
 block|,
@@ -1163,7 +1235,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Service_type"
+literal|"Service Type"
 block|,
 name|serv_type
 block|,
@@ -1180,7 +1252,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Framed_proto"
+literal|"Framed Protocol"
 block|,
 name|frm_proto
 block|,
@@ -1197,7 +1269,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Framed_ipaddr"
+literal|"Framed IP Address"
 block|,
 name|NULL
 block|,
@@ -1209,7 +1281,7 @@ name|print_attr_address
 block|}
 block|,
 block|{
-literal|"Framed_ipnet"
+literal|"Framed IP Network"
 block|,
 name|NULL
 block|,
@@ -1221,7 +1293,7 @@ name|print_attr_address
 block|}
 block|,
 block|{
-literal|"Framed_routing"
+literal|"Framed Routing"
 block|,
 name|frm_routing
 block|,
@@ -1236,7 +1308,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Filter_id"
+literal|"Filter ID"
 block|,
 name|NULL
 block|,
@@ -1248,7 +1320,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Framed_mtu"
+literal|"Framed MTU"
 block|,
 name|NULL
 block|,
@@ -1260,7 +1332,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Framed_compress"
+literal|"Framed Compression"
 block|,
 name|frm_comp
 block|,
@@ -1275,7 +1347,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Login_iphost"
+literal|"Login IP Host"
 block|,
 name|NULL
 block|,
@@ -1287,7 +1359,7 @@ name|print_attr_address
 block|}
 block|,
 block|{
-literal|"Login_service"
+literal|"Login Service"
 block|,
 name|login_serv
 block|,
@@ -1302,7 +1374,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Login_TCP_port"
+literal|"Login TCP Port"
 block|,
 name|NULL
 block|,
@@ -1313,7 +1385,6 @@ block|,
 name|print_attr_num
 block|}
 block|,
-comment|/*17*/
 block|{
 literal|"Unassigned"
 block|,
@@ -1326,6 +1397,7 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/*17*/
 block|{
 literal|"Reply"
 block|,
@@ -1351,7 +1423,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Callback-id"
+literal|"Callback-ID"
 block|,
 name|NULL
 block|,
@@ -1362,7 +1434,6 @@ block|,
 name|print_attr_string
 block|}
 block|,
-comment|/*21*/
 block|{
 literal|"Unassigned"
 block|,
@@ -1375,8 +1446,9 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/*21*/
 block|{
-literal|"Framed_route"
+literal|"Framed Route"
 block|,
 name|NULL
 block|,
@@ -1388,7 +1460,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Framed_ipx_net"
+literal|"Framed IPX Network"
 block|,
 name|NULL
 block|,
@@ -1424,7 +1496,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Vendor_specific"
+literal|"Vendor Specific"
 block|,
 name|NULL
 block|,
@@ -1432,23 +1504,11 @@ literal|0
 block|,
 literal|0
 block|,
-name|print_attr_string
+name|print_vendor_attr
 block|}
 block|,
 block|{
-literal|"Session_timeout"
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|print_attr_num
-block|}
-block|,
-block|{
-literal|"Idle_timeout"
+literal|"Session Timeout"
 block|,
 name|NULL
 block|,
@@ -1460,7 +1520,19 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Term_action"
+literal|"Idle Timeout"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|print_attr_num
+block|}
+block|,
+block|{
+literal|"Termination Action"
 block|,
 name|term_action
 block|,
@@ -1475,7 +1547,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Called_station"
+literal|"Called Station"
 block|,
 name|NULL
 block|,
@@ -1487,7 +1559,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Calling_station"
+literal|"Calling Station"
 block|,
 name|NULL
 block|,
@@ -1499,7 +1571,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"NAS_id"
+literal|"NAS ID"
 block|,
 name|NULL
 block|,
@@ -1511,7 +1583,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Proxy_state"
+literal|"Proxy State"
 block|,
 name|NULL
 block|,
@@ -1523,7 +1595,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Login_LAT_service"
+literal|"Login LAT Service"
 block|,
 name|NULL
 block|,
@@ -1535,7 +1607,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Login_LAT_node"
+literal|"Login LAT Node"
 block|,
 name|NULL
 block|,
@@ -1547,7 +1619,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Login_LAT_group"
+literal|"Login LAT Group"
 block|,
 name|NULL
 block|,
@@ -1559,7 +1631,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Framed_atalk_link"
+literal|"Framed Appletalk Link"
 block|,
 name|NULL
 block|,
@@ -1571,7 +1643,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Framed_atalk_net"
+literal|"Framed Appltalk Net"
 block|,
 name|NULL
 block|,
@@ -1583,7 +1655,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Framed_atalk_zone"
+literal|"Framed Appletalk Zone"
 block|,
 name|NULL
 block|,
@@ -1595,7 +1667,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Acct_status"
+literal|"Accounting Status"
 block|,
 name|acct_status
 block|,
@@ -1612,7 +1684,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_delay"
+literal|"Accounting Delay"
 block|,
 name|NULL
 block|,
@@ -1624,7 +1696,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_in_octets"
+literal|"Accounting Input Octets"
 block|,
 name|NULL
 block|,
@@ -1636,7 +1708,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_out_octets"
+literal|"Accounting Output Octets"
 block|,
 name|NULL
 block|,
@@ -1648,7 +1720,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_session_id"
+literal|"Accounting Session ID"
 block|,
 name|NULL
 block|,
@@ -1660,7 +1732,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Acct_authentic"
+literal|"Accounting Authentication"
 block|,
 name|acct_auth
 block|,
@@ -1677,7 +1749,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_session_time"
+literal|"Accounting Session Time"
 block|,
 name|NULL
 block|,
@@ -1689,7 +1761,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_in_packets"
+literal|"Accounting Input Packets"
 block|,
 name|NULL
 block|,
@@ -1701,7 +1773,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_out_packets"
+literal|"Accounting Output Packets"
 block|,
 name|NULL
 block|,
@@ -1713,7 +1785,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_term_cause"
+literal|"Accounting Termination Cause"
 block|,
 name|acct_term
 block|,
@@ -1730,7 +1802,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_multi_session_id"
+literal|"Accounting Multilink Session ID"
 block|,
 name|NULL
 block|,
@@ -1742,7 +1814,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Acct_link_count"
+literal|"Accounting Link Count"
 block|,
 name|NULL
 block|,
@@ -1754,7 +1826,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_in_giga"
+literal|"Accounting Input Giga"
 block|,
 name|NULL
 block|,
@@ -1766,7 +1838,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Acct_out_giga"
+literal|"Accounting Output Giga"
 block|,
 name|NULL
 block|,
@@ -1777,7 +1849,6 @@ block|,
 name|print_attr_num
 block|}
 block|,
-comment|/*54*/
 block|{
 literal|"Unassigned"
 block|,
@@ -1790,8 +1861,9 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/*54*/
 block|{
-literal|"Event_timestamp"
+literal|"Event Timestamp"
 block|,
 name|NULL
 block|,
@@ -1800,6 +1872,18 @@ block|,
 literal|0
 block|,
 name|print_attr_time
+block|}
+block|,
+block|{
+literal|"Unassigned"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 comment|/*56*/
@@ -1843,19 +1927,7 @@ block|}
 block|,
 comment|/*59*/
 block|{
-literal|"Unassigned"
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|"CHAP_challenge"
+literal|"CHAP challenge"
 block|,
 name|NULL
 block|,
@@ -1867,7 +1939,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"NAS_port_type"
+literal|"NAS Port Type"
 block|,
 name|nas_port_type
 block|,
@@ -1882,7 +1954,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Port_limit"
+literal|"Port Limit"
 block|,
 name|NULL
 block|,
@@ -1891,23 +1963,23 @@ block|,
 literal|0
 block|,
 name|print_attr_num
+block|}
+block|,
+block|{
+literal|"Login LAT Port"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|print_attr_string
 block|}
 block|,
 comment|/*63*/
 block|{
-literal|"Login_LAT_port"
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|print_attr_string
-block|}
-block|,
-block|{
-literal|"Tunnel_type"
+literal|"Tunnel Type"
 block|,
 name|tunnel_type
 block|,
@@ -1924,7 +1996,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Tunnel_medium"
+literal|"Tunnel Medium"
 block|,
 name|tunnel_medium
 block|,
@@ -1941,7 +2013,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Tunnel_client_end"
+literal|"Tunnel Client End"
 block|,
 name|NULL
 block|,
@@ -1953,7 +2025,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel_server_end"
+literal|"Tunnel Server End"
 block|,
 name|NULL
 block|,
@@ -1965,7 +2037,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Acct_tunnel_connect"
+literal|"Accounting Tunnel connect"
 block|,
 name|NULL
 block|,
@@ -1977,7 +2049,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel_pass"
+literal|"Tunnel Password"
 block|,
 name|NULL
 block|,
@@ -1989,7 +2061,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"ARAP_pass"
+literal|"ARAP Password"
 block|,
 name|NULL
 block|,
@@ -2001,7 +2073,7 @@ name|print_attr_strange
 block|}
 block|,
 block|{
-literal|"ARAP_feature"
+literal|"ARAP Feature"
 block|,
 name|NULL
 block|,
@@ -2010,28 +2082,28 @@ block|,
 literal|0
 block|,
 name|print_attr_strange
+block|}
+block|,
+block|{
+literal|"ARAP Zone Acces"
+block|,
+name|arap_zone
+block|,
+name|TAM_SIZE
+argument_list|(
+name|arap_zone
+argument_list|)
+operator|-
+literal|1
+block|,
+literal|1
+block|,
+name|print_attr_num
 block|}
 block|,
 comment|/*72*/
 block|{
-literal|"ARAP_zone_acces"
-block|,
-name|arap_zone
-block|,
-name|TAM_SIZE
-argument_list|(
-name|arap_zone
-argument_list|)
-operator|-
-literal|1
-block|,
-literal|1
-block|,
-name|print_attr_num
-block|}
-block|,
-block|{
-literal|"ARAP_security"
+literal|"ARAP Security"
 block|,
 name|NULL
 block|,
@@ -2043,7 +2115,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"ARAP_security_data"
+literal|"ARAP Security Data"
 block|,
 name|NULL
 block|,
@@ -2055,7 +2127,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Password_retry"
+literal|"Password Retry"
 block|,
 name|NULL
 block|,
@@ -2082,7 +2154,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Connect_info"
+literal|"Connect Info"
 block|,
 name|NULL
 block|,
@@ -2094,7 +2166,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Config_token"
+literal|"Config Token"
 block|,
 name|NULL
 block|,
@@ -2106,7 +2178,19 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"EAP_msg"
+literal|"EAP Message"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|print_attr_string
+block|}
+block|,
+block|{
+literal|"Message Authentication"
 block|,
 name|NULL
 block|,
@@ -2119,7 +2203,7 @@ block|}
 block|,
 comment|/*80*/
 block|{
-literal|"Message_auth"
+literal|"Tunnel Private Group"
 block|,
 name|NULL
 block|,
@@ -2131,7 +2215,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel_priv_group"
+literal|"Tunnel Assigned ID"
 block|,
 name|NULL
 block|,
@@ -2143,19 +2227,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel_assign_id"
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|print_attr_string
-block|}
-block|,
-block|{
-literal|"Tunnel_pref"
+literal|"Tunnel Preference"
 block|,
 name|NULL
 block|,
@@ -2167,7 +2239,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"ARAP_challenge_resp"
+literal|"ARAP Challenge Response"
 block|,
 name|NULL
 block|,
@@ -2179,7 +2251,19 @@ name|print_attr_strange
 block|}
 block|,
 block|{
-literal|"Acct_interim_interval"
+literal|"Accounting Interim Interval"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|print_attr_num
+block|}
+block|,
+block|{
+literal|"Accounting Tunnel packets lost"
 block|,
 name|NULL
 block|,
@@ -2192,19 +2276,7 @@ block|}
 block|,
 comment|/*86*/
 block|{
-literal|"Acct_tunnel_pack_lost"
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|print_attr_num
-block|}
-block|,
-block|{
-literal|"NAS_port_id"
+literal|"NAS Port ID"
 block|,
 name|NULL
 block|,
@@ -2216,7 +2288,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Framed_pool"
+literal|"Framed Pool"
 block|,
 name|NULL
 block|,
@@ -2240,7 +2312,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"Tunnel_client_auth_id"
+literal|"Tunnel Client Authentication ID"
 block|,
 name|NULL
 block|,
@@ -2252,7 +2324,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel_server_auth_id"
+literal|"Tunnel Server Authentication ID"
 block|,
 name|NULL
 block|,
@@ -2261,6 +2333,18 @@ block|,
 literal|0
 block|,
 name|print_attr_string
+block|}
+block|,
+block|{
+literal|"Unassigned"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 comment|/*92*/
@@ -2275,19 +2359,7 @@ literal|0
 block|,
 name|NULL
 block|}
-block|,
 comment|/*93*/
-block|{
-literal|"Unassigned"
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|NULL
-block|}
 block|}
 struct|;
 end_struct
@@ -2351,11 +2423,6 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"{"
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|attr_code
@@ -2378,7 +2445,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"Tag[%d] "
+literal|"Tag %u, "
 argument_list|,
 operator|*
 name|data
@@ -2389,7 +2456,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Salt[%d] "
+literal|"Salt %u "
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -2434,7 +2501,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Tag[%d] "
+literal|"Tag %u"
 argument_list|,
 operator|*
 name|data
@@ -2490,11 +2557,6 @@ operator|*
 name|data
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"}"
-argument_list|)
-expr_stmt|;
 return|return;
 name|trunc
 label|:
@@ -2503,6 +2565,178 @@ argument_list|(
 literal|"|radius"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * print vendor specific attributes  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|print_vendor_attr
+parameter_list|(
+specifier|register
+name|u_char
+modifier|*
+name|data
+parameter_list|,
+name|u_int
+name|length
+parameter_list|,
+name|u_short
+name|attr_code
+name|_U_
+parameter_list|)
+block|{
+name|u_int
+name|idx
+decl_stmt|;
+name|u_int
+name|vendor_id
+decl_stmt|;
+name|u_int
+name|vendor_type
+decl_stmt|;
+name|u_int
+name|vendor_length
+decl_stmt|;
+comment|/* FIXME: all sort of boundary checks */
+name|vendor_id
+operator|=
+name|EXTRACT_32BITS
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+name|data
+operator|+=
+literal|4
+expr_stmt|;
+name|length
+operator|-=
+literal|4
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Vendor: %s (%u)"
+argument_list|,
+name|tok2str
+argument_list|(
+name|smi_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|vendor_id
+argument_list|)
+argument_list|,
+name|vendor_id
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|length
+operator|>=
+literal|2
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+name|data
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+return|return;
+name|vendor_type
+operator|=
+operator|*
+operator|(
+name|data
+operator|)
+expr_stmt|;
+name|vendor_length
+operator|=
+operator|*
+operator|(
+name|data
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|data
+operator|+=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+name|data
+argument_list|,
+name|vendor_length
+argument_list|)
+condition|)
+return|return;
+name|printf
+argument_list|(
+literal|"\n\t    Vendor Attribute: %u, Length: %u, Value: "
+argument_list|,
+name|vendor_type
+argument_list|,
+name|vendor_length
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|idx
+operator|=
+literal|0
+init|;
+name|idx
+operator|<
+name|vendor_length
+condition|;
+name|idx
+operator|++
+operator|,
+name|data
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"%c"
+argument_list|,
+operator|(
+operator|*
+name|data
+operator|<
+literal|32
+operator|||
+operator|*
+name|data
+operator|>
+literal|128
+operator|)
+condition|?
+literal|'.'
+else|:
+operator|*
+name|data
+argument_list|)
+expr_stmt|;
+name|length
+operator|-=
+name|vendor_length
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2566,7 +2800,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"{length %u != 4}"
+literal|"ERROR: length %u != 4"
 argument_list|,
 name|length
 argument_list|)
@@ -2636,13 +2870,13 @@ name|data
 condition|)
 name|printf
 argument_list|(
-literal|"{Tag[Unused]"
+literal|"Tag[Unused]"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"{Tag[%d]"
+literal|"Tag[%d]"
 argument_list|,
 operator|*
 name|data
@@ -2673,7 +2907,10 @@ if|if
 condition|(
 name|data_value
 operator|<=
-operator|(
+call|(
+name|u_int32_t
+call|)
+argument_list|(
 name|attr_type
 index|[
 name|attr_code
@@ -2689,7 +2926,7 @@ name|attr_code
 index|]
 operator|.
 name|first_subtype
-operator|)
+argument_list|)
 operator|&&
 name|data_value
 operator|>=
@@ -2702,7 +2939,7 @@ name|first_subtype
 condition|)
 name|printf
 argument_list|(
-literal|"{%s}"
+literal|"%s"
 argument_list|,
 name|table
 index|[
@@ -2713,7 +2950,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"{#%d}"
+literal|"#%u"
 argument_list|,
 name|data_value
 argument_list|)
@@ -2741,13 +2978,13 @@ literal|0xFFFFFFFE
 condition|)
 name|printf
 argument_list|(
-literal|"{NAS_select}"
+literal|"NAS Select"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"{%d}"
+literal|"%d"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -2786,7 +3023,7 @@ literal|60
 condition|)
 name|printf
 argument_list|(
-literal|"{%02d secs}"
+literal|"%02d secs"
 argument_list|,
 name|timeout
 argument_list|)
@@ -2801,7 +3038,7 @@ literal|3600
 condition|)
 name|printf
 argument_list|(
-literal|"{%02d:%02d min}"
+literal|"%02d:%02d min"
 argument_list|,
 name|timeout
 operator|/
@@ -2815,7 +3052,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"{%02d:%02d:%02d hours}"
+literal|"%02d:%02d:%02d hours"
 argument_list|,
 name|timeout
 operator|/
@@ -2848,7 +3085,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"{%d}"
+literal|"%d"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -2859,7 +3096,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"{Unnumbered}"
+literal|"Unnumbered"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2875,7 +3112,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"{%d}"
+literal|"%d"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -2886,7 +3123,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"{NAS_assign}"
+literal|"NAS assigned"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2909,7 +3146,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"{Tag[Unused] %d}"
+literal|"Tag (Unused) %d"
 argument_list|,
 name|EXTRACT_24BITS
 argument_list|(
@@ -2920,7 +3157,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"{Tag[%d] %d}"
+literal|"Tag (%d) %d"
 argument_list|,
 name|tag
 argument_list|,
@@ -2934,7 +3171,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"{%d}"
+literal|"%d"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -3012,7 +3249,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"{length %u != 4}"
+literal|"ERROR: length %u != 4"
 argument_list|,
 name|length
 argument_list|)
@@ -3051,7 +3288,7 @@ literal|0xFFFFFFFF
 condition|)
 name|printf
 argument_list|(
-literal|"{User_select}"
+literal|"User Selected"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3066,13 +3303,13 @@ literal|0xFFFFFFFE
 condition|)
 name|printf
 argument_list|(
-literal|"{NAS_select}"
+literal|"NAS Select"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"{%s}"
+literal|"%s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -3084,7 +3321,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"{%s}"
+literal|"%s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -3099,7 +3336,7 @@ name|trunc
 label|:
 name|printf
 argument_list|(
-literal|"{|radius}"
+literal|"|radius"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3152,6 +3389,7 @@ name|length
 parameter_list|,
 name|u_short
 name|attr_code
+name|_U_
 parameter_list|)
 block|{
 name|time_t
@@ -3172,7 +3410,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"{length %u != 4}"
+literal|"ERROR: length %u != 4"
 argument_list|,
 name|length
 argument_list|)
@@ -3222,7 +3460,7 @@ literal|'\0'
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"{%.24s}"
+literal|"%.24s"
 argument_list|,
 name|string
 argument_list|)
@@ -3232,7 +3470,7 @@ name|trunc
 label|:
 name|printf
 argument_list|(
-literal|"{|radius}"
+literal|"|radius"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3303,7 +3541,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"{length %u != 16}"
+literal|"ERROR: length %u != 16"
 argument_list|,
 name|length
 argument_list|)
@@ -3312,7 +3550,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"{User_challenge["
+literal|"User_challenge ("
 argument_list|)
 expr_stmt|;
 name|TCHECK2
@@ -3338,7 +3576,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"] User_resp["
+literal|") User_resp("
 argument_list|)
 expr_stmt|;
 name|TCHECK2
@@ -3364,7 +3602,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"]}"
+literal|")"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3380,7 +3618,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"{length %u != 14}"
+literal|"ERROR: length %u != 14"
 argument_list|,
 name|length
 argument_list|)
@@ -3404,13 +3642,13 @@ name|data
 condition|)
 name|printf
 argument_list|(
-literal|"{User_can_change_pass"
+literal|"User can change password"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"{User_cant_change_pass"
+literal|"User cannot change password"
 argument_list|)
 expr_stmt|;
 name|data
@@ -3428,7 +3666,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" Min_pass_len[%d]"
+literal|", Min password length: %d"
 argument_list|,
 operator|*
 name|data
@@ -3439,7 +3677,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" Pass_created_at["
+literal|", created at: "
 argument_list|)
 expr_stmt|;
 name|TCHECK2
@@ -3465,7 +3703,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"] Pass_expired_in["
+literal|", expires in: "
 argument_list|)
 expr_stmt|;
 name|TCHECK2
@@ -3491,7 +3729,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"] Current_time["
+literal|", Current Time: "
 argument_list|)
 expr_stmt|;
 name|len_data
@@ -3513,11 +3751,6 @@ argument_list|(
 name|len_data
 argument_list|,
 name|data
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"]}"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3533,18 +3766,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"{length %u != 8}"
+literal|"ERROR: length %u != 8"
 argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"{"
-argument_list|)
-expr_stmt|;
 name|TCHECK2
 argument_list|(
 name|data
@@ -3564,11 +3792,6 @@ argument_list|(
 name|len_data
 argument_list|,
 name|data
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"}"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3626,11 +3849,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|" Attr[ "
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|length
@@ -3645,11 +3863,37 @@ operator|->
 name|len
 operator|==
 literal|0
+operator|&&
+name|rad_attr
+operator|->
+name|type
+operator|<
+operator|(
+name|TAM_SIZE
+argument_list|(
+name|attr_type
+argument_list|)
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"(zero-length attribute)"
+literal|"\n\t  %s Attribute (%u), zero-length"
+argument_list|,
+name|attr_type
+index|[
+name|rad_attr
+operator|->
+name|type
+index|]
+operator|.
+name|name
+argument_list|,
+name|rad_attr
+operator|->
+name|type
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3661,8 +3905,43 @@ operator|->
 name|len
 operator|<=
 name|length
+operator|&&
+name|rad_attr
+operator|->
+name|type
+operator|<
+operator|(
+name|TAM_SIZE
+argument_list|(
+name|attr_type
+argument_list|)
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"\n\t  %s Attribute (%u), length: %u, Value: "
+argument_list|,
+name|attr_type
+index|[
+name|rad_attr
+operator|->
+name|type
+index|]
+operator|.
+name|name
+argument_list|,
+name|rad_attr
+operator|->
+name|type
+argument_list|,
+name|rad_attr
+operator|->
+name|len
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3685,31 +3964,9 @@ literal|1
 operator|)
 operator|)
 condition|)
-name|printf
-argument_list|(
-literal|"#%d"
-argument_list|,
-name|rad_attr
-operator|->
-name|type
-argument_list|)
-expr_stmt|;
+block|{          }
 else|else
 block|{
-name|printf
-argument_list|(
-literal|" %s"
-argument_list|,
-name|attr_type
-index|[
-name|rad_attr
-operator|->
-name|type
-index|]
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rad_attr
@@ -3777,6 +4034,40 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* do we want to see an additionally hexdump ? */
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+operator|&&
+name|rad_attr
+operator|->
+name|len
+operator|>=
+literal|2
+condition|)
+name|print_unknown_data
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|rad_attr
+operator|+
+literal|2
+argument_list|,
+literal|"\n\t    "
+argument_list|,
+operator|(
+name|rad_attr
+operator|->
+name|len
+operator|)
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
 name|length
 operator|-=
 operator|(
@@ -3809,11 +4100,6 @@ name|len
 operator|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|" ]"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3838,22 +4124,43 @@ modifier|*
 name|rad
 decl_stmt|;
 specifier|register
-name|int
+name|u_int
 name|i
 decl_stmt|;
-name|int
+name|u_int
 name|len
+decl_stmt|,
+name|auth_idx
 decl_stmt|;
+if|if
+condition|(
+name|snapend
+operator|<
+name|dat
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" [|radius]"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|i
 operator|=
-name|min
-argument_list|(
-name|length
-argument_list|,
 name|snapend
 operator|-
 name|dat
-argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+name|length
+condition|)
+name|i
+operator|=
+name|length
 expr_stmt|;
 if|if
 condition|(
@@ -3880,8 +4187,9 @@ name|dat
 expr_stmt|;
 name|len
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|rad
 operator|->
 name|len
@@ -3915,135 +4223,95 @@ name|i
 operator|-=
 name|MIN_RADIUS_LEN
 expr_stmt|;
-switch|switch
+if|if
 condition|(
-name|rad
-operator|->
-name|code
+name|vflag
+operator|<
+literal|1
 condition|)
 block|{
-case|case
-name|RADCMD_ACCESS_REQ
-case|:
 name|printf
 argument_list|(
-literal|" rad-access-req %d"
+literal|"RADIUS, %s (%u), id: 0x%02x length: %u"
 argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|RADCMD_ACCESS_ACC
-case|:
-name|printf
+name|tok2str
 argument_list|(
-literal|" rad-access-accept %d"
+name|radius_command_values
 argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|RADCMD_ACCESS_REJ
-case|:
-name|printf
-argument_list|(
-literal|" rad-access-reject %d"
+literal|"Unknown Command"
 argument_list|,
-name|length
+name|rad
+operator|->
+name|code
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|RADCMD_ACCOUN_REQ
-case|:
-name|printf
-argument_list|(
-literal|" rad-account-req %d"
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|RADCMD_ACCOUN_RES
-case|:
-name|printf
-argument_list|(
-literal|" rad-account-resp %d"
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|RADCMD_ACCESS_CHA
-case|:
-name|printf
-argument_list|(
-literal|" rad-access-cha %d"
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|RADCMD_STATUS_SER
-case|:
-name|printf
-argument_list|(
-literal|" rad-status-serv %d"
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|RADCMD_STATUS_CLI
-case|:
-name|printf
-argument_list|(
-literal|" rad-status-cli %d"
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|RADCMD_RESERVED
-case|:
-name|printf
-argument_list|(
-literal|" rad-reserved %d"
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|" rad-#%d %d"
 argument_list|,
 name|rad
 operator|->
 name|code
 argument_list|,
+name|rad
+operator|->
+name|id
+argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
+else|else
+block|{
 name|printf
 argument_list|(
-literal|" [id %d]"
+literal|"RADIUS, length: %u\n\t%s (%u), id: 0x%02x, Authenticator: "
+argument_list|,
+name|length
+argument_list|,
+name|tok2str
+argument_list|(
+name|radius_command_values
+argument_list|,
+literal|"Unknown Command"
+argument_list|,
+name|rad
+operator|->
+name|code
+argument_list|)
+argument_list|,
+name|rad
+operator|->
+name|code
 argument_list|,
 name|rad
 operator|->
 name|id
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|auth_idx
+operator|=
+literal|0
+init|;
+name|auth_idx
+operator|<
+literal|16
+condition|;
+name|auth_idx
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"%02x"
+argument_list|,
+name|rad
+operator|->
+name|auth
+index|[
+name|auth_idx
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|i

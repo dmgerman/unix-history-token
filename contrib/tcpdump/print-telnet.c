@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998 The NetBSD Foundation, Inc.  * All right
 end_comment
 
 begin_comment
-comment|/*  *      @(#)Copyright (c) 1994, Simon J. Gerraty.  *        *      This is free software.  It comes with NO WARRANTY.  *      Permission to use, modify and distribute this source code   *      is granted subject to the following conditions.  *      1/ that the above copyright notice and this notice   *      are preserved in all copies.  */
+comment|/*  *      @(#)Copyright (c) 1994, Simon J. Gerraty.  *  *      This is free software.  It comes with NO WARRANTY.  *      Permission to use, modify and distribute this source code  *      is granted subject to the following conditions.  *      1/ that the above copyright notice and this notice  *      are preserved in all copies.  */
 end_comment
 
 begin_ifdef
@@ -40,8 +40,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-telnet.c,v 1.18 2001/09/10 06:40:08 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-telnet.c,v 1.21.2.3 2003/12/29 22:42:23 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,31 +54,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -90,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -364,9 +335,10 @@ block|{
 name|int
 name|i
 decl_stmt|,
-name|c
-decl_stmt|,
 name|x
+decl_stmt|;
+name|u_int
+name|c
 decl_stmt|;
 specifier|const
 name|u_char
@@ -563,11 +535,16 @@ while|while
 condition|(
 name|length
 operator|>
+call|(
+name|u_int
+call|)
+argument_list|(
 name|p
 operator|+
 literal|1
 operator|-
 name|sp
+argument_list|)
 condition|)
 block|{
 if|if
@@ -977,6 +954,8 @@ argument_list|)
 expr_stmt|;
 name|hex_print_with_offset
 argument_list|(
+literal|"\n"
+argument_list|,
 name|sp
 argument_list|,
 name|l

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/sctpConstants.h,v 1.2 2001/06/28 10:17:22 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/sctpConstants.h,v 1.4 2003/06/03 23:49:23 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
-comment|/* SCTP reference Implementation Copyright (C) 1999 Cisco And Motorola  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of Cisco nor of Motorola may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This file is part of the SCTP reference Implementation  *  *   * Please send any bug reports or fixes you make to one of the following email  * addresses:  *   * rstewar1@email.mot.com  * kmorneau@cisco.com  * qxie1@email.mot.com  *   * Any bugs reported given to us we will try to fix... any fixes shared will  * be incorperated into the next SCTP release.  */
+comment|/* SCTP reference Implementation Copyright (C) 1999 Cisco And Motorola  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of Cisco nor of Motorola may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This file is part of the SCTP reference Implementation  *  *  * Please send any bug reports or fixes you make to one of the following email  * addresses:  *  * rstewar1@email.mot.com  * kmorneau@cisco.com  * qxie1@email.mot.com  *  * Any bugs reported given to us we will try to fix... any fixes shared will  * be incorperated into the next SCTP release.  */
 end_comment
 
 begin_ifndef
@@ -28,7 +28,7 @@ comment|/*#define USE_MD5 1*/
 end_comment
 
 begin_comment
-comment|/* the SCTP protocol signature   * this includes the version number  * encoded in the last 4 bits of the  * signature.  */
+comment|/* the SCTP protocol signature  * this includes the version number  * encoded in the last 4 bits of the  * signature.  */
 end_comment
 
 begin_define
@@ -82,7 +82,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Packet transmit states in the sent   * field in the SCTP_transmitOnQueue struct  */
+comment|/* Packet transmit states in the sent  * field in the SCTP_transmitOnQueue struct  */
 end_comment
 
 begin_define
@@ -891,7 +891,7 @@ value|10000
 end_define
 
 begin_comment
-comment|/* Here we define the timer types used  * by the implementation has   * arguments in the set/get timer type calls.  */
+comment|/* Here we define the timer types used  * by the implementation has  * arguments in the set/get timer type calls.  */
 end_comment
 
 begin_define
@@ -937,7 +937,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* number of timer types in the base SCTP   * structure used in the set/get and has  * the base default.  */
+comment|/* number of timer types in the base SCTP  * structure used in the set/get and has  * the base default.  */
 end_comment
 
 begin_define
@@ -1336,7 +1336,7 @@ value|1000000000
 end_define
 
 begin_comment
-comment|/* Events that SCTP will look for, these  * are or'd together to declare what SCTP  * wants. Each select mask/poll list should be   * set for the fd, if the bit is on.  */
+comment|/* Events that SCTP will look for, these  * are or'd together to declare what SCTP  * wants. Each select mask/poll list should be  * set for the fd, if the bit is on.  */
 end_comment
 
 begin_define
@@ -1361,7 +1361,7 @@ value|0x000004
 end_define
 
 begin_comment
-comment|/* The following constant is a value for this  * particular implemenation. It is quite arbitrary and  * is used to limit how much data will be queued up to   * a sender, waiting for cwnd to be larger than flightSize.  * All implementations will need this protection is some  * way due to buffer size constraints.  */
+comment|/* The following constant is a value for this  * particular implemenation. It is quite arbitrary and  * is used to limit how much data will be queued up to  * a sender, waiting for cwnd to be larger than flightSize.  * All implementations will need this protection is some  * way due to buffer size constraints.  */
 end_comment
 
 begin_define
@@ -1372,7 +1372,7 @@ value|10000
 end_define
 
 begin_comment
-comment|/* This constant (SCTP_MAX_READBUFFER) define   * how big the read/write buffer is  * when we enter the fd event notification   * the buffer is put on the stack, so the bigger  * it is the more stack you chew up, however it  * has got to be big enough to handle the bigest  * message this O/S will send you. In solaris  * with sockets (not TLI) we end up at a value  * of 64k. In TLI we could do partial reads to  * get it all in with less hassel.. but we  * write to sockets for generality.  */
+comment|/* This constant (SCTP_MAX_READBUFFER) define  * how big the read/write buffer is  * when we enter the fd event notification  * the buffer is put on the stack, so the bigger  * it is the more stack you chew up, however it  * has got to be big enough to handle the bigest  * message this O/S will send you. In solaris  * with sockets (not TLI) we end up at a value  * of 64k. In TLI we could do partial reads to  * get it all in with less hassel.. but we  * write to sockets for generality.  */
 end_comment
 
 begin_define
@@ -1419,7 +1419,7 @@ value|1048576
 end_define
 
 begin_comment
-comment|/* biggest I can grow rwnd to  				 * My playing around suggests a 				 * value greater than 64k does not 				 * do much, I guess via the kernel 				 * limitations on the stream/socket. 				 */
+comment|/* biggest I can grow rwnd to 				 * My playing around suggests a 				 * value greater than 64k does not 				 * do much, I guess via the kernel 				 * limitations on the stream/socket. 				 */
 end_comment
 
 begin_define
@@ -1463,7 +1463,7 @@ value|1500
 end_define
 
 begin_comment
-comment|/* MTU size, this is the default                                          * to which we set the smallestMTU 					 * size to. This governs what is the 					 * largest size we will use, of course 					 * PMTU will raise this up to 					 * the largest interface MTU or the  					 * ceiling below if there is no 					 * SIOCGIFMTU. 					 */
+comment|/* MTU size, this is the default                                          * to which we set the smallestMTU 					 * size to. This governs what is the 					 * largest size we will use, of course 					 * PMTU will raise this up to 					 * the largest interface MTU or the 					 * ceiling below if there is no 					 * SIOCGIFMTU. 					 */
 end_comment
 
 begin_ifdef
@@ -1804,28 +1804,6 @@ directive|define
 name|SCTP_DEAMON_PORT
 value|9899
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPPROTO_SCTP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IPPROTO_SCTP
-value|132
-end_define
-
-begin_comment
-comment|/* the Official IANA number :-) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Deamon registration message types/responses */

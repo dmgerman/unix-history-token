@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/bootp.h,v 1.11 2001/01/09 07:39:13 fenner Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/bootp.h,v 1.15 2003/07/01 19:16:06 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ comment|/* seconds since boot began */
 name|u_int16_t
 name|bp_flags
 decl_stmt|;
-comment|/* flags: 0x8000 is broadcast */
+comment|/* flags - see bootp_flag_values[] in print-bootp.c */
 name|struct
 name|in_addr
 name|bp_ciaddr
@@ -112,14 +112,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|BOOTREPLY
+name|BOOTPREPLY
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|BOOTREQUEST
+name|BOOTPREQUEST
 value|1
 end_define
 

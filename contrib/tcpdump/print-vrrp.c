@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-vrrp.c,v 1.5 2001/07/23 22:27:30 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-vrrp.c,v 1.7.2.2 2003/11/16 08:51:55 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +46,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<tcpdump-stdinc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -52,18 +59,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
 end_include
 
 begin_include
@@ -111,7 +106,7 @@ block|{
 block|{
 name|VRRP_TYPE_ADVERTISEMENT
 block|,
-literal|"advertisement"
+literal|"Advertisement"
 block|}
 block|,
 block|{
@@ -250,20 +245,18 @@ name|tok2str
 argument_list|(
 name|type2str
 argument_list|,
-literal|"type#%d"
+literal|"unknown type (%u)"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"VRRPv%d-%s %d: "
+literal|"VRRPv%u, %s"
 argument_list|,
 name|version
 argument_list|,
 name|type_s
-argument_list|,
-name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -274,7 +267,7 @@ literal|255
 condition|)
 name|printf
 argument_list|(
-literal|"[ttl=%d!] "
+literal|", (ttl %u)"
 argument_list|,
 name|ttl
 argument_list|)
@@ -300,7 +293,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"vrid=%d prio=%d"
+literal|", vrid %u, prio %u"
 argument_list|,
 name|bp
 index|[
@@ -330,7 +323,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" authtype=%s"
+literal|", authtype %s"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -344,12 +337,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" intvl=%d"
+literal|", intvl %us, length %u"
 argument_list|,
 name|bp
 index|[
 literal|5
 index|]
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -399,7 +394,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" (bad vrrp cksum %x!)"
+literal|", (bad vrrp cksum %x)"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -413,7 +408,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" addrs"
+literal|", addrs"
 argument_list|)
 expr_stmt|;
 if|if

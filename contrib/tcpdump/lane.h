@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Marko Kiiskila carnil@cs.tut.fi   *   * Tampere University of Technology - Telecommunications Laboratory  *  * Permission to use, copy, modify and distribute this  * software and its documentation is hereby granted,  * provided that both the copyright notice and this  * permission notice appear in all copies of the software,  * derivative works or modified versions, and any portions  * thereof, that both notices appear in supporting  * documentation, and that the use of this software is  * acknowledged in any publications resulting from using  * the software.  *   * TUT ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION AND DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS  * SOFTWARE.  *   */
+comment|/*  * Marko Kiiskila carnil@cs.tut.fi  *  * Tampere University of Technology - Telecommunications Laboratory  *  * Permission to use, copy, modify and distribute this  * software and its documentation is hereby granted,  * provided that both the copyright notice and this  * permission notice appear in all copies of the software,  * derivative works or modified versions, and any portions  * thereof, that both notices appear in supporting  * documentation, and that the use of this software is  * acknowledged in any publications resulting from using  * the software.  *  * TUT ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION AND DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS  * SOFTWARE.  *  */
 end_comment
 
 begin_comment
-comment|/* $Id: lane.h,v 1.3 2000/10/03 02:54:56 itojun Exp $ */
+comment|/* $Id: lane.h,v 1.7 2002/12/11 07:13:54 guy Exp $ */
 end_comment
 
 begin_ifndef
@@ -46,6 +46,26 @@ index|]
 decl_stmt|;
 name|u_int16_t
 name|h_type
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|lane_controlhdr
+block|{
+name|u_int16_t
+name|lec_header
+decl_stmt|;
+name|u_int8_t
+name|lec_proto
+decl_stmt|;
+name|u_int8_t
+name|lec_vers
+decl_stmt|;
+name|u_int16_t
+name|lec_opcode
 decl_stmt|;
 block|}
 struct|;

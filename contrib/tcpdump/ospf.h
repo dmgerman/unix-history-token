@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.3 2000/12/17 23:07:50 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.11 2003/10/22 17:08:46 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OSPF_TYPE_DB
+name|OSPF_TYPE_DD
 value|2
 end_define
 
@@ -43,7 +43,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OSPF_TYPE_LSR
+name|OSPF_TYPE_LS_REQ
 value|3
 end_define
 
@@ -54,7 +54,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OSPF_TYPE_LSU
+name|OSPF_TYPE_LS_UPDATE
 value|4
 end_define
 
@@ -65,7 +65,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OSPF_TYPE_LSA
+name|OSPF_TYPE_LS_ACK
 value|5
 end_define
 
@@ -73,15 +73,8 @@ begin_comment
 comment|/* Link State Ack */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OSPF_TYPE_MAX
-value|6
-end_define
-
 begin_comment
-comment|/* Options *_options	*/
+comment|/* Options field  *  * +------------------------------------+  * | * | O | DC | EA | N/P | MC | E | T |  * +------------------------------------+  *  */
 end_comment
 
 begin_define
@@ -115,6 +108,50 @@ end_define
 
 begin_comment
 comment|/* MC bit: Multicast capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_OPTION_NP
+value|0x08
+end_define
+
+begin_comment
+comment|/* N/P bit: NSSA capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_OPTION_EA
+value|0x10
+end_define
+
+begin_comment
+comment|/* EA bit: External Attribute capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_OPTION_DC
+value|0x20
+end_define
+
+begin_comment
+comment|/* DC bit: Demand circuit capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_OPTION_O
+value|0x40
+end_define
+
+begin_comment
+comment|/* O bit: Opaque LSA capable */
 end_comment
 
 begin_comment
@@ -271,9 +308,255 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LS_TYPE_MAX
+name|LS_TYPE_NSSA
 value|7
 end_define
+
+begin_comment
+comment|/* rfc1587 - Not so Stubby Areas */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_TYPE_OPAQUE_LL
+value|9
+end_define
+
+begin_comment
+comment|/* rfc2370 - Opaque Link Local */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_TYPE_OPAQUE_AL
+value|10
+end_define
+
+begin_comment
+comment|/* rfc2370 - Opaque Link Local */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_TYPE_OPAQUE_DW
+value|11
+end_define
+
+begin_comment
+comment|/* rfc2370 - Opaque Domain Wide */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TYPE_TE
+value|1
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TYPE_GRACE
+value|3
+end_define
+
+begin_comment
+comment|/* draft-ietf-ospf-hitless-restart */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_TLV_ROUTER
+value|1
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_TLV_LINK
+value|2
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_TYPE
+value|1
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_ID
+value|2
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_LOCAL_IP
+value|3
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_REMOTE_IP
+value|4
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_TE_METRIC
+value|5
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_MAX_BW
+value|6
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_MAX_RES_BW
+value|7
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_UNRES_BW
+value|8
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_ADMIN_GROUP
+value|9
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_LOCAL_REMOTE_ID
+value|11
+end_define
+
+begin_comment
+comment|/* draft-ietf-ccamp-ospf-gmpls-extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_PROTECTION_TYPE
+value|14
+end_define
+
+begin_comment
+comment|/* draft-ietf-ccamp-ospf-gmpls-extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_INTF_SW_CAP_DESCR
+value|15
+end_define
+
+begin_comment
+comment|/* draft-ietf-ccamp-ospf-gmpls-extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_SHARED_RISK_GROUP
+value|16
+end_define
+
+begin_comment
+comment|/* draft-ietf-ccamp-ospf-gmpls-extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_TYPE_PTP
+value|1
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_TYPE_MA
+value|2
+end_define
+
+begin_comment
+comment|/* rfc3630 */
+end_comment
 
 begin_comment
 comment|/*************************************************  *  * is the above a bug in the documentation?  *  *************************************************/
@@ -451,10 +734,30 @@ decl_stmt|;
 name|u_int8_t
 name|ls_type
 decl_stmt|;
+union|union
+block|{
 name|struct
 name|in_addr
-name|ls_stateid
+name|lsa_id
 decl_stmt|;
+struct|struct
+block|{
+comment|/* opaque LSAs change the LSA-ID field */
+name|u_int8_t
+name|opaque_type
+decl_stmt|;
+name|u_int8_t
+name|opaque_id
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|opaque_field
+struct|;
+block|}
+name|un_lsa_id
+union|;
 name|struct
 name|in_addr
 name|ls_router
@@ -615,6 +918,42 @@ index|[
 literal|1
 index|]
 struct|;
+comment|/* Opaque TE LSA */
+struct|struct
+block|{
+name|u_int16_t
+name|type
+decl_stmt|;
+name|u_int16_t
+name|length
+decl_stmt|;
+name|u_int8_t
+name|data
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* may repeat   */
+block|}
+name|un_te_lsa_tlv
+struct|;
+comment|/* Unknown LSA */
+struct|struct
+name|unknown
+block|{
+name|u_int8_t
+name|data
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* may repeat   */
+block|}
+name|un_unknown
+index|[
+literal|1
+index|]
+struct|;
 block|}
 name|lsa_un
 union|;
@@ -760,13 +1099,36 @@ comment|/* Link State Request */
 struct|struct
 name|lsr
 block|{
-name|u_int32_t
+name|u_int8_t
 name|ls_type
+index|[
+literal|4
+index|]
 decl_stmt|;
+union|union
+block|{
 name|struct
 name|in_addr
 name|ls_stateid
 decl_stmt|;
+struct|struct
+block|{
+comment|/* opaque LSAs change the LSA-ID field */
+name|u_int8_t
+name|opaque_type
+decl_stmt|;
+name|u_int8_t
+name|opaque_id
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|opaque_field
+struct|;
+block|}
+name|un_ls_stateid
+union|;
 name|struct
 name|in_addr
 name|ls_router

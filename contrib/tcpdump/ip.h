@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip.h,v 1.7 2000/10/03 09:17:40 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip.h,v 1.10 2002/12/11 07:13:53 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -610,6 +610,23 @@ end_define
 begin_comment
 comment|/* default maximum segment size */
 end_comment
+
+begin_comment
+comment|/* in print-ip.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|u_int32_t
+name|ip_finddst
+parameter_list|(
+specifier|const
+name|struct
+name|ip
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/icmp6.h,v 1.11 2001/06/01 23:01:04 itojun Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/icmp6.h,v 1.14 2002/12/11 07:13:52 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -443,11 +443,59 @@ begin_comment
 comment|/* mtrace messages */
 end_comment
 
+begin_comment
+comment|/* Folloing numbers are defined in the mobile-ip draft. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_HADISCOV_REQUEST
+value|150
+end_define
+
+begin_comment
+comment|/* XXX To be authorized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_HADISCOV_REPLY
+value|151
+end_define
+
+begin_comment
+comment|/* XXX To be authorized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_MOBILEPREFIX_SOLICIT
+value|152
+end_define
+
+begin_comment
+comment|/* XXX To be authorized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_MOBILEPREFIX_ADVERT
+value|153
+end_define
+
+begin_comment
+comment|/* XXX To be authorized */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ICMP6_MAXTYPE
-value|142
+value|153
 end_define
 
 begin_define

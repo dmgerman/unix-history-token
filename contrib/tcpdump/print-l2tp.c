@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-l2tp.c,v 1.10.2.1 2002/05/25 09:47:07 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-l2tp.c,v 1.14.2.3 2003/12/26 23:21:42 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,31 +46,13 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<tcpdump-stdinc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -1300,7 +1283,7 @@ name|u_int
 name|length
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for
@@ -1344,7 +1327,7 @@ name|u_int
 name|length
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for

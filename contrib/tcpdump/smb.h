@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/smb.h,v 1.7 2002/01/17 04:38:29 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/smb.h,v 1.8 2002/06/11 17:09:00 itojun Exp $ (LBL) */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) Andrew Tridgell 1995-1999  *  * This software may be distributed either under the terms of the  * BSD-style license that accompanies tcpdump or the GNU GPL version 2  * or later  */
+comment|/*  * Copyright (C) Andrew Tridgell 1995-1999  *  * This software may be distributed either under the terms of the  * BSD-style license that accompanies tcpdump or the GNU GPL version 2  * or later  */
 end_comment
 
 begin_define

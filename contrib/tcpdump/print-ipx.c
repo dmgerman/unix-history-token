@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipx.c,v 1.32 2001/10/08 21:25:20 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipx.c,v 1.34.2.2 2003/11/16 08:51:28 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,25 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -211,7 +194,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s.%x> "
+literal|"%s.%04x> "
 argument_list|,
 name|ipxaddr_string
 argument_list|(
@@ -241,7 +224,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s.%x:"
+literal|"%s.%04x:"
 argument_list|,
 name|ipxaddr_string
 argument_list|(
@@ -346,7 +329,7 @@ argument_list|(
 name|line
 argument_list|)
 argument_list|,
-literal|"%x.%02x:%02x:%02x:%02x:%02x:%02x"
+literal|"%08x.%02x:%02x:%02x:%02x:%02x:%02x"
 argument_list|,
 name|net
 argument_list|,
@@ -654,8 +637,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %x"
+literal|" %s"
 argument_list|,
+name|ipxsap_string
+argument_list|(
+name|htons
+argument_list|(
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -663,6 +650,8 @@ name|ipx
 index|[
 literal|0
 index|]
+argument_list|)
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -729,8 +718,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %x '"
+literal|" %s '"
 argument_list|,
+name|ipxsap_string
+argument_list|(
+name|htons
+argument_list|(
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -738,6 +731,8 @@ name|ipx
 index|[
 literal|0
 index|]
+argument_list|)
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

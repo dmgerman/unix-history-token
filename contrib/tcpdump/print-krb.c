@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-krb.c,v 1.15 2000/09/29 04:58:42 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-krb.c,v 1.21.2.2 2003/11/16 08:51:30 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,37 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -96,7 +67,14 @@ directive|include
 file|"addrtoname.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extract.h"
+end_include
+
 begin_function_decl
+specifier|static
 specifier|const
 name|u_char
 modifier|*
@@ -116,6 +94,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|u_char
 modifier|*
@@ -129,25 +108,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|krb4_print
 parameter_list|(
 specifier|const
 name|u_char
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|krb_print
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-parameter_list|,
-name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -296,11 +263,11 @@ begin_struct
 struct|struct
 name|krb
 block|{
-name|u_char
+name|u_int8_t
 name|pvno
 decl_stmt|;
 comment|/* Protocol Version */
-name|u_char
+name|u_int8_t
 name|type
 decl_stmt|;
 comment|/* Type+B */
@@ -472,59 +439,8 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* little endian (unaligned) to host byte order */
-end_comment
-
-begin_comment
-comment|/* XXX need to look at this... */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|vtohlp
-parameter_list|(
-name|x
-parameter_list|)
-value|((( ((char *)(x))[0] )      )  | \ 			     (( ((char *)(x))[1] )<<  8)  | \ 			     (( ((char *)(x))[2] )<< 16)  | \ 			     (( ((char *)(x))[3] )<< 24))
-end_define
-
-begin_define
-define|#
-directive|define
-name|vtohsp
-parameter_list|(
-name|x
-parameter_list|)
-value|((( ((char *)(x))[0] )      )  | \ 			     (( ((char *)(x))[1] )<<  8))
-end_define
-
-begin_comment
-comment|/* network (big endian) (unaligned) to host byte order */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ntohlp
-parameter_list|(
-name|x
-parameter_list|)
-value|((( ((char *)(x))[3] )      )  | \ 			     (( ((char *)(x))[2] )<<  8)  | \ 			     (( ((char *)(x))[1] )<< 16)  | \ 			     (( ((char *)(x))[0] )<< 24))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ntohsp
-parameter_list|(
-name|x
-parameter_list|)
-value|((( ((char *)(x))[1] )      )  | \ 			     (( ((char *)(x))[0] )<<  8))
-end_define
-
 begin_function
+specifier|static
 specifier|const
 name|u_char
 modifier|*
@@ -650,6 +566,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|u_char
 modifier|*
@@ -711,6 +628,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|krb4_print
 parameter_list|(
@@ -753,7 +671,7 @@ name|kp
 parameter_list|,
 name|cp
 parameter_list|)
-value|(IS_LENDIAN(kp) ? vtohsp(cp) : ntohsp(cp))
+value|(IS_LENDIAN(kp) ? EXTRACT_LE_16BITS(cp) : EXTRACT_16BITS(cp))
 name|kp
 operator|=
 operator|(
@@ -1067,9 +985,6 @@ specifier|const
 name|u_char
 modifier|*
 name|dat
-parameter_list|,
-name|u_int
-name|length
 parameter_list|)
 block|{
 specifier|register

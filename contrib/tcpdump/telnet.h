@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/telnet.h,v 1.3 2001/09/17 21:58:06 fenner Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/telnet.h,v 1.4 2002/06/11 17:09:01 itojun Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -1408,7 +1408,7 @@ begin_define
 define|#
 directive|define
 name|SLC_NAMELIST
-value|"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR",	\  			"ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP",	\  			"LNEXT", "XON", "XOFF", "FORW1", "FORW2",	\  			"MCL", "MCR", "MCWL", "MCWR", "MCBOL",		\  			"MCEOL", "INSRT", "OVER", "ECR", "EWR",		\  			"EBOL", "EEOL",					\  			0,
+value|"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR",	\ 			"ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP",	\ 			"LNEXT", "XON", "XOFF", "FORW1", "FORW2",	\ 			"MCL", "MCR", "MCWL", "MCWR", "MCBOL",		\ 			"MCEOL", "INSRT", "OVER", "ECR", "EWR",		\ 			"EBOL", "EEOL",					\ 			0,
 end_define
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /tcpdump/master/tcpdump/ntp.h,v 1.4 2000/10/03 02:54:57 itojun Exp $ */
+comment|/* $Header: /tcpdump/master/tcpdump/ntp.h,v 1.7 2003/08/06 04:58:21 guy Exp $ */
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ begin_define
 define|#
 directive|define
 name|JAN_1970
-value|2208988800
+value|2208988800U
 end_define
 
 begin_comment

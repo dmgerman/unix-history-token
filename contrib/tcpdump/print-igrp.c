@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igrp.c,v 1.16 2001/06/15 22:17:32 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igrp.c,v 1.18.2.2 2003/11/16 08:51:26 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,35 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_comment
-comment|/* concession to AIX */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include

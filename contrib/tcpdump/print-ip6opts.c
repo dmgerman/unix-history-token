@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifdef
@@ -32,8 +32,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6opts.c,v 1.9 2001/05/09 02:47:26 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6opts.c,v 1.14.2.3 2003/11/19 00:35:44 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,31 +52,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -100,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
 end_include
 
 begin_comment
@@ -191,8 +174,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|IP6SOPT_UI
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP6SOPT_UI_MINLEN
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|IP6SOPT_ALTCOA
-value|0x4
+value|0x3
 end_define
 
 begin_define
@@ -205,15 +202,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IP6SOPT_UI
-value|0x2
+name|IP6SOPT_AUTH
+value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
-name|IP6SOPT_UI_MINLEN
-value|4
+name|IP6SOPT_AUTH_MINLEN
+value|6
 end_define
 
 begin_function_decl
@@ -360,6 +357,44 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|IP6SOPT_UI
+case|:
+if|if
+condition|(
+name|len
+operator|-
+name|i
+operator|<
+name|IP6SOPT_UI_MINLEN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|", ui: trunc"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|trunc
+goto|;
+block|}
+name|printf
+argument_list|(
+literal|", ui: 0x%04x "
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
+name|bp
+index|[
+name|i
+operator|+
+literal|2
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|IP6SOPT_ALTCOA
 case|:
 if|if
@@ -398,7 +433,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IP6SOPT_UI
+name|IP6SOPT_AUTH
 case|:
 if|if
 condition|(
@@ -406,12 +441,12 @@ name|len
 operator|-
 name|i
 operator|<
-name|IP6SOPT_UI_MINLEN
+name|IP6SOPT_AUTH_MINLEN
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|", ui: trunc"
+literal|", auth: trunc"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -420,15 +455,10 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"(ui: 0x%04x) "
+literal|", auth spi: 0x%08x"
 argument_list|,
-name|ntohs
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 operator|&
 name|bp
 index|[
@@ -513,6 +543,8 @@ name|i
 decl_stmt|;
 name|int
 name|optlen
+init|=
+literal|0
 decl_stmt|;
 for|for
 control|(
@@ -678,13 +710,8 @@ name|printf
 argument_list|(
 literal|"(rtalert: 0x%04x) "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 operator|&
 name|bp
 index|[
@@ -751,16 +778,8 @@ name|printf
 argument_list|(
 literal|"(jumbo: %u) "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
 operator|&
 name|bp
 index|[
@@ -978,7 +997,7 @@ literal|0x20
 condition|)
 name|printf
 argument_list|(
-literal|"R"
+literal|"S"
 argument_list|)
 expr_stmt|;
 if|if
@@ -999,6 +1018,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|bp
 index|[
 name|i
@@ -1007,6 +1027,21 @@ literal|2
 index|]
 operator|&
 literal|0x0f
+operator|)
+operator|||
+name|bp
+index|[
+name|i
+operator|+
+literal|3
+index|]
+operator|||
+name|bp
+index|[
+name|i
+operator|+
+literal|4
+index|]
 condition|)
 name|printf
 argument_list|(
@@ -1015,60 +1050,28 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", prefixlen: %u"
-argument_list|,
-name|bp
-index|[
-name|i
-operator|+
-literal|3
-index|]
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|", sequence: %u"
 argument_list|,
-operator|(
-name|u_int16_t
-operator|)
-name|ntohs
-argument_list|(
-operator|*
-operator|(
-name|u_int16_t
-operator|*
-operator|)
-operator|&
 name|bp
 index|[
 name|i
 operator|+
-literal|4
+literal|5
 index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|", lifetime: %u"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohs
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
 operator|&
 name|bp
 index|[
 name|i
 operator|+
-literal|8
+literal|6
 index|]
 argument_list|)
 argument_list|)
@@ -1179,50 +1182,44 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|", sequence: %u"
-argument_list|,
-operator|(
-name|u_int16_t
-operator|)
-name|ntohs
-argument_list|(
-operator|*
-operator|(
-name|u_int16_t
-operator|*
-operator|)
-operator|&
+if|if
+condition|(
 name|bp
 index|[
 name|i
 operator|+
 literal|3
 index|]
+condition|)
+name|printf
+argument_list|(
+literal|"res"
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", sequence: %u"
+argument_list|,
+name|bp
+index|[
+name|i
+operator|+
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|", lifetime: %u"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohs
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
 operator|&
 name|bp
 index|[
 name|i
 operator|+
-literal|7
+literal|5
 index|]
 argument_list|)
 argument_list|)
@@ -1231,22 +1228,14 @@ name|printf
 argument_list|(
 literal|", refresh: %u"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohs
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
 operator|&
 name|bp
 index|[
 name|i
 operator|+
-literal|11
+literal|9
 index|]
 argument_list|)
 argument_list|)
@@ -1535,7 +1524,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|hbhlen
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1664,7 +1654,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dstoptlen
+operator|-
+literal|1
 operator|)
 return|;
 block|}

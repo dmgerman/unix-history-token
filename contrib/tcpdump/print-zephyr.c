@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-zephyr.c,v 1.2.4.2 2002/07/11 07:49:19 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-zephyr.c,v 1.6.2.2 2003/11/16 08:51:56 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,13 +46,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -64,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -125,6 +120,7 @@ name|char
 modifier|*
 name|sender
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|recipient
@@ -391,6 +387,7 @@ name|char
 modifier|*
 name|inst
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|recipient

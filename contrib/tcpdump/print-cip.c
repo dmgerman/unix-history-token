@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Marko Kiiskila carnil@cs.tut.fi   *   * Tampere University of Technology - Telecommunications Laboratory  *  * Permission to use, copy, modify and distribute this  * software and its documentation is hereby granted,  * provided that both the copyright notice and this  * permission notice appear in all copies of the software,  * derivative works or modified versions, and any portions  * thereof, that both notices appear in supporting  * documentation, and that the use of this software is  * acknowledged in any publications resulting from using  * the software.  *   * TUT ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION AND DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS  * SOFTWARE.  *   */
+comment|/*  * Marko Kiiskila carnil@cs.tut.fi  *  * Tampere University of Technology - Telecommunications Laboratory  *  * Permission to use, copy, modify and distribute this  * software and its documentation is hereby granted,  * provided that both the copyright notice and this  * permission notice appear in all copies of the software,  * derivative works or modified versions, and any portions  * thereof, that both notices appear in supporting  * documentation, and that the use of this software is  * acknowledged in any publications resulting from using  * the software.  *  * TUT ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION AND DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS  * SOFTWARE.  *  */
 end_comment
 
 begin_ifndef
@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cip.c,v 1.16 2001/09/23 21:52:38 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cip.c,v 1.21.2.2 2003/11/16 08:51:15 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,31 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -154,12 +131,6 @@ specifier|inline
 name|void
 name|cip_print
 parameter_list|(
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|bp
-parameter_list|,
 name|int
 name|length
 parameter_list|)
@@ -176,17 +147,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the top level routine of the printer.  'p' is the points  * to the raw header of the packet, 'tvp' is the timestamp,  * 'length' is the length of the packet off the wire, and 'caplen'  * is the number of bytes actually captured.  */
+comment|/*  * This is the top level routine of the printer.  'p' points  * to the LLC/SNAP or raw header of the packet, 'h->ts' is the timestamp,  * 'h->length' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
 end_comment
 
 begin_function
-name|void
+name|u_int
 name|cip_if_print
 parameter_list|(
-name|u_char
-modifier|*
-name|user
-parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -216,17 +183,6 @@ decl_stmt|;
 name|u_short
 name|extracted_ethertype
 decl_stmt|;
-operator|++
-name|infodelay
-expr_stmt|;
-name|ts_print
-argument_list|(
-operator|&
-name|h
-operator|->
-name|ts
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|memcmp
@@ -253,9 +209,11 @@ argument_list|(
 literal|"[|cip]"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -263,21 +221,8 @@ name|eflag
 condition|)
 name|cip_print
 argument_list|(
-name|p
-argument_list|,
 name|length
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Some printers want to get back at the ethernet addresses, 	 * and/or check that they're not walking off the end of the packet. 	 * Rather than pass them all the way down, we set these globals. 	 */
-name|packetp
-operator|=
-name|p
-expr_stmt|;
-name|snapend
-operator|=
-name|p
-operator|+
-name|caplen
 expr_stmt|;
 if|if
 condition|(
@@ -326,8 +271,6 @@ name|eflag
 condition|)
 name|cip_print
 argument_list|(
-name|p
-argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
@@ -378,36 +321,11 @@ name|length
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|xflag
-condition|)
-name|default_print
-argument_list|(
-name|p
-argument_list|,
-name|caplen
-argument_list|)
-expr_stmt|;
-name|out
-label|:
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-operator|--
-name|infodelay
-expr_stmt|;
-if|if
-condition|(
-name|infoprint
-condition|)
-name|info
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf6.c,v 1.7 2001/05/09 01:08:03 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf6.c,v 1.11.2.2 2003/11/16 08:51:37 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,31 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -94,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
 end_include
 
 begin_include
@@ -312,6 +295,28 @@ init|=
 literal|" [|ospf]"
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|inline
+value|__inline
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WIN32 */
+end_comment
 
 begin_comment
 comment|/* Forwards */
@@ -612,6 +617,7 @@ modifier|*
 name|fmt
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|scope
@@ -900,15 +906,17 @@ argument_list|)
 expr_stmt|;
 name|ospf6_print_seqage
 argument_list|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|lshp
 operator|->
 name|ls_seq
 argument_list|)
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lshp
 operator|->
 name|ls_age
@@ -917,8 +925,9 @@ argument_list|)
 expr_stmt|;
 name|ospf6_print_ls_type
 argument_list|(
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lshp
 operator|->
 name|ls_type
@@ -965,7 +974,7 @@ modifier|*
 name|lsapp
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|k
 decl_stmt|;
 name|struct
@@ -1083,8 +1092,9 @@ name|printf
 argument_list|(
 literal|"(mbz=%x)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lsapp
 operator|->
 name|lsa_p_mbz
@@ -1186,9 +1196,11 @@ block|register const u_int32_t *lp;
 endif|#
 directive|endif
 specifier|register
-name|int
+name|u_int
 name|j
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|k
 decl_stmt|;
 name|u_int32_t
@@ -1226,8 +1238,9 @@ operator|*
 operator|)
 name|lsap
 operator|+
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|ls_hdr
@@ -1237,8 +1250,9 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|ls_hdr
@@ -1291,8 +1305,9 @@ name|ospf6_print_bits
 argument_list|(
 name|ospf6_option_bits
 argument_list|,
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|lsa_un
@@ -1457,8 +1472,9 @@ name|printf
 argument_list|(
 literal|" metric %d"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|rlp
 operator|->
 name|link_metric
@@ -1496,8 +1512,9 @@ name|ospf6_print_bits
 argument_list|(
 name|ospf6_option_bits
 argument_list|,
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|lsa_un
@@ -1575,11 +1592,9 @@ name|printf
 argument_list|(
 literal|" metric %u"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|lsa_un
@@ -1672,8 +1687,9 @@ argument_list|)
 expr_stmt|;
 name|flags32
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|lsa_un
@@ -1694,11 +1710,9 @@ name|printf
 argument_list|(
 literal|" metric %u"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|lsa_un
@@ -1899,9 +1913,9 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case LS_TYPE_SUM_ABR: 		TCHECK(lsap->lsa_un.un_sla.sla_tosmetric); 		lp = lsap->lsa_un.un_sla.sla_tosmetric; 		while ((u_char *)lp< ls_end) { 			register u_int32_t ul;  			TCHECK(*lp); 			ul = ntohl(*lp); 			printf(" tos %d metric %d", 			    (ul& SLA_MASK_TOS)>> SLA_SHIFT_TOS, 			    ul& SLA_MASK_METRIC); 			++lp; 		} 		break;  	case LS_TYPE_GROUP:
+block|case LS_TYPE_SUM_ABR: 		TCHECK(lsap->lsa_un.un_sla.sla_tosmetric); 		lp = lsap->lsa_un.un_sla.sla_tosmetric; 		while ((u_char *)lp< ls_end) { 			register u_int32_t ul;  			TCHECK(*lp); 			ul = EXTRACT_32BITS(lp); 			printf(" tos %d metric %d", 			    (ul& SLA_MASK_TOS)>> SLA_SHIFT_TOS, 			    ul& SLA_MASK_METRIC); 			++lp; 		} 		break;  	case LS_TYPE_GROUP:
 comment|/* Multicast extensions as of 23 July 1991 */
-block|mcp = lsap->lsa_un.un_mcla; 		while ((u_char *)mcp< ls_end) { 			TCHECK(mcp->mcla_vid); 			switch (ntohl(mcp->mcla_vtype)) {  			case MCLA_VERTEX_ROUTER: 				printf(" rtr rtrid %s", 				    ipaddr_string(&mcp->mcla_vid)); 				break;  			case MCLA_VERTEX_NETWORK: 				printf(" net dr %s", 				    ipaddr_string(&mcp->mcla_vid)); 				break;  			default: 				printf(" ??VertexType %u??", 				    (u_int32_t)ntohl(mcp->mcla_vtype)); 				break; 			} 		++mcp; 		}
+block|mcp = lsap->lsa_un.un_mcla; 		while ((u_char *)mcp< ls_end) { 			TCHECK(mcp->mcla_vid); 			switch (EXTRACT_32BITS(&mcp->mcla_vtype)) {  			case MCLA_VERTEX_ROUTER: 				printf(" rtr rtrid %s", 				    ipaddr_string(&mcp->mcla_vid)); 				break;  			case MCLA_VERTEX_NETWORK: 				printf(" net dr %s", 				    ipaddr_string(&mcp->mcla_vid)); 				break;  			default: 				printf(" ??VertexType %u??", 				    EXTRACT_32BITS(&mcp->mcla_vtype)); 				break; 			} 		++mcp; 		}
 endif|#
 directive|endif
 case|case
@@ -1928,8 +1942,9 @@ name|ospf6_print_bits
 argument_list|(
 name|ospf6_option_bits
 argument_list|,
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|llsap
 operator|->
 name|llsa_options
@@ -1959,11 +1974,9 @@ operator|->
 name|llsa_lladdr
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|llsap
 operator|->
 name|llsa_nprefix
@@ -1984,8 +1997,9 @@ literal|0
 init|;
 name|j
 operator|<
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|llsap
 operator|->
 name|llsa_nprefix
@@ -2049,8 +2063,9 @@ argument_list|)
 expr_stmt|;
 name|ospf6_print_ls_type
 argument_list|(
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|lsa_un
@@ -2096,8 +2111,9 @@ name|printf
 argument_list|(
 literal|" npref %d"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|lsa_un
@@ -2126,8 +2142,9 @@ literal|0
 init|;
 name|j
 operator|<
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|lsa_un
@@ -2181,8 +2198,9 @@ name|printf
 argument_list|(
 literal|" ??LinkStateType 0x%04x??"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|ls_hdr
@@ -2309,8 +2327,9 @@ name|ospf6_print_bits
 argument_list|(
 name|ospf6_option_bits
 argument_list|,
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|op
 operator|->
 name|ospf6_hello
@@ -2339,8 +2358,9 @@ name|ospf6_hello
 operator|.
 name|hello_priority
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|op
 operator|->
 name|ospf6_hello
@@ -2348,8 +2368,9 @@ operator|.
 name|hello_helloint
 argument_list|)
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|op
 operator|->
 name|ospf6_hello
@@ -2495,8 +2516,9 @@ name|ospf6_print_bits
 argument_list|(
 name|ospf6_option_bits
 argument_list|,
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|op
 operator|->
 name|ospf6_db
@@ -2600,8 +2622,9 @@ name|printf
 argument_list|(
 literal|" mtu %u S %X"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|op
 operator|->
 name|ospf6_db
@@ -2609,11 +2632,9 @@ operator|.
 name|db_mtu
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|op
 operator|->
 name|ospf6_db
@@ -2696,8 +2717,9 @@ expr_stmt|;
 comment|/* } (ctags) */
 name|ospf6_print_ls_type
 argument_list|(
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lsrp
 operator|->
 name|ls_type
@@ -2755,8 +2777,9 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|op
 operator|->
 name|ospf6_lsu
@@ -2794,8 +2817,9 @@ operator|*
 operator|)
 name|lsap
 operator|+
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|lsap
 operator|->
 name|ls_hdr
@@ -2968,8 +2992,9 @@ if|if
 condition|(
 name|length
 operator|!=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|op
 operator|->
 name|ospf6_len
@@ -2980,8 +3005,9 @@ name|printf
 argument_list|(
 literal|" [len %d]"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|op
 operator|->
 name|ospf6_len

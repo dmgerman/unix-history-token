@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-wb.c,v 1.26 2001/06/27 05:37:19 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-wb.c,v 1.30.2.3 2004/03/24 04:06:52 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,19 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -78,8 +67,18 @@ directive|include
 file|"addrtoname.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extract.h"
+end_include
+
 begin_comment
 comment|/* XXX need to add byte-swapping macros! */
+end_comment
+
+begin_comment
+comment|/* XXX - you mean like the ones in "extract.h"? */
 end_comment
 
 begin_comment
@@ -122,7 +121,7 @@ parameter_list|(
 name|d
 parameter_list|)
 define|\
-value|((struct dophdr *)((u_char *)(d) + \ 			  DOP_ROUNDUP(ntohs((d)->dh_len) + sizeof(*(d)))))
+value|((struct dophdr *)((u_char *)(d) + \ 			  DOP_ROUNDUP(EXTRACT_16BITS(&(d)->dh_len) + sizeof(*(d)))))
 end_define
 
 begin_comment
@@ -141,7 +140,7 @@ name|u_int32_t
 name|ph_ts
 decl_stmt|;
 comment|/* time stamp (for skew computation) */
-name|u_short
+name|u_int16_t
 name|ph_version
 decl_stmt|;
 comment|/* version number */
@@ -309,7 +308,7 @@ name|u_int32_t
 name|dh_ts
 decl_stmt|;
 comment|/* sender's timestamp */
-name|u_short
+name|u_int16_t
 name|dh_len
 decl_stmt|;
 comment|/* body length */
@@ -535,10 +534,10 @@ name|struct
 name|PageID
 name|page
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|nid
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|rsvd
 decl_stmt|;
 comment|/* seqptr's */
@@ -683,11 +682,9 @@ name|printf
 argument_list|(
 literal|" %u/%s:%u (max %u/%s:%u) "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|id
 operator|->
 name|pi_ps
@@ -707,11 +704,9 @@ operator|.
 name|p_sid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|id
 operator|->
 name|pi_ps
@@ -721,11 +716,9 @@ operator|.
 name|p_uid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|id
 operator|->
 name|pi_mslot
@@ -741,11 +734,9 @@ operator|.
 name|p_sid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|id
 operator|->
 name|pi_mpage
@@ -756,8 +747,9 @@ argument_list|)
 expr_stmt|;
 name|nid
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|id
 operator|->
 name|pi_ps
@@ -862,8 +854,12 @@ operator|(
 name|u_char
 operator|*
 operator|)
+operator|(
 name|io
-operator|<
+operator|+
+literal|1
+operator|)
+operator|<=
 name|snapend
 condition|;
 operator|++
@@ -887,11 +883,9 @@ operator|->
 name|id
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|io
 operator|->
 name|off
@@ -1000,11 +994,9 @@ operator|.
 name|p_sid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|rreq
 operator|->
 name|pr_page
@@ -1012,21 +1004,17 @@ operator|.
 name|p_uid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|rreq
 operator|->
 name|pr_sseq
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|rreq
 operator|->
 name|pr_eseq
@@ -1093,11 +1081,9 @@ name|printf
 argument_list|(
 literal|" need %u/%s:%u"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|preq
 operator|->
 name|pp_low
@@ -1113,11 +1099,9 @@ operator|.
 name|p_sid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|preq
 operator|->
 name|pp_page
@@ -1190,8 +1174,9 @@ return|;
 block|}
 name|n
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|prep
 operator|->
 name|pp_n
@@ -1222,8 +1207,12 @@ operator|(
 name|u_char
 operator|*
 operator|)
+operator|(
 name|ps
-operator|<
+operator|+
+literal|1
+operator|)
+operator|<=
 name|ep
 condition|)
 block|{
@@ -1245,11 +1234,9 @@ name|printf
 argument_list|(
 literal|" %u/%s:%u"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ps
 operator|->
 name|slot
@@ -1265,11 +1252,9 @@ operator|.
 name|p_sid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ps
 operator|->
 name|page
@@ -1309,8 +1294,12 @@ operator|(
 name|u_char
 operator|*
 operator|)
+operator|(
 name|io
-operator|<
+operator|+
+literal|1
+operator|)
+operator|<=
 name|ep
 condition|;
 operator|++
@@ -1331,11 +1320,9 @@ operator|->
 name|id
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|io
 operator|->
 name|off
@@ -1382,6 +1369,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|dopstr
@@ -1501,11 +1489,12 @@ operator|==
 name|DT_HOLE
 condition|)
 block|{
-name|int
+name|u_int32_t
 name|ts
 init|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dh
 operator|->
 name|dh_ts
@@ -1684,11 +1673,9 @@ operator|.
 name|p_sid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dop
 operator|->
 name|pd_page
@@ -1696,21 +1683,17 @@ operator|.
 name|p_uid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dop
 operator|->
 name|pd_sseq
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dop
 operator|->
 name|pd_eseq
@@ -1737,15 +1720,17 @@ operator|+
 literal|1
 operator|)
 argument_list|,
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dop
 operator|->
 name|pd_sseq
 argument_list|)
 argument_list|,
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dop
 operator|->
 name|pd_eseq
@@ -1831,11 +1816,9 @@ operator|.
 name|p_sid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dop
 operator|->
 name|pd_page
@@ -1843,21 +1826,17 @@ operator|.
 name|p_uid
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dop
 operator|->
 name|pd_sseq
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dop
 operator|->
 name|pd_eseq
@@ -1884,15 +1863,17 @@ operator|+
 literal|1
 operator|)
 argument_list|,
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dop
 operator|->
 name|pd_sseq
 argument_list|)
 argument_list|,
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dop
 operator|->
 name|pd_eseq
