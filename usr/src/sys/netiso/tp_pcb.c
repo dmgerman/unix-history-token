@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -134,19 +134,6 @@ include|#
 directive|include
 file|"tp_clnp.h"
 end_include
-
-begin_decl_stmt
-name|struct
-name|tp_param
-name|tp_param
-init|=
-block|{
-literal|1
-block|,
-comment|/*  configured 		*/
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* ticks are in units of:   * 500 nano-fortnights ;-) or  * 500 ms or   * 1/2 second   */
@@ -2082,26 +2069,6 @@ end_empty_stmt
 begin_macro
 name|ENDTRACE
 end_macro
-
-begin_if
-if|if
-condition|(
-operator|!
-name|tp_param
-operator|.
-name|tpp_configed
-condition|)
-block|{
-name|error
-operator|=
-name|ENOPROTOOPT
-expr_stmt|;
-comment|/* protocol not available */
-goto|goto
-name|bad2
-goto|;
-block|}
-end_if
 
 begin_if
 if|if
