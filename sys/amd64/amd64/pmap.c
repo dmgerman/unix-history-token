@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/pmap.c,v 1.1.1.1 1993/06/12 14:58:06 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/pmap.c,v 1.2 1993/07/27 10:52:19 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3203,9 +3203,9 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|pg
+name|printf
 argument_list|(
-literal|"ptdi %x"
+literal|"ptdi %x\n"
 argument_list|,
 name|pmap
 operator|->
@@ -3213,6 +3213,11 @@ name|pm_pdir
 index|[
 name|PTDPTDI
 index|]
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"Page Table Directory Invalid (ptdi)"
 argument_list|)
 expr_stmt|;
 block|}
