@@ -3446,6 +3446,9 @@ name|uba_n
 decl_stmt|,
 name|slave
 decl_stmt|;
+name|int
+name|dev_id
+decl_stmt|;
 name|FILE
 modifier|*
 name|fp
@@ -3515,13 +3518,6 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"machine/pte.h\"\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
 literal|"#include \"sys/param.h\"\n"
 argument_list|)
 expr_stmt|;
@@ -3529,21 +3525,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"sys/buf.h\"\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
 literal|"\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"#define V(s)\t__CONCAT(V,s)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3608,6 +3590,27 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"#include \"i386/isa/icu.h\"\n\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"/*\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" * XXX misplaced external declarations.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" */\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3720,16 +3723,23 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_irq
+name|d_vec
 operator|!=
-operator|-
-literal|1
+name|NULL
+operator|&&
+name|dp
+operator|->
+name|d_vec
+operator|->
+name|id
+operator|!=
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" extern void %s();"
+literal|" inthand2_t %s;"
 argument_list|,
 name|shandler
 argument_list|(
@@ -3745,11 +3755,29 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|STATCLOCK
+name|dev_id
+operator|=
+literal|2
+expr_stmt|;
+else|#
+directive|else
+name|dev_id
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|isa_devtab
 argument_list|(
 name|fp
 argument_list|,
 literal|"bio"
+argument_list|,
+operator|&
+name|dev_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -3779,6 +3807,9 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"tty"
+argument_list|,
+operator|&
+name|dev_id
 argument_list|)
 expr_stmt|;
 name|isa_devtab
@@ -3786,6 +3817,9 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"net"
+argument_list|,
+operator|&
+name|dev_id
 argument_list|)
 expr_stmt|;
 name|isa_devtab
@@ -3793,6 +3827,9 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"null"
+argument_list|,
+operator|&
+name|dev_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -3856,7 +3893,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ /*    driver    iobase    irq drq      maddr   msiz      intr unit   flags  drive*/\n"
+literal|"\ /* id     driver    iobase    irq drq      maddr   msiz      intr unit   flags  drive*/\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3913,7 +3950,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%3.3sdriver, %8.8s,"
+literal|"{ -1,&%3.3sdriver, %8.8s,"
 argument_list|,
 name|mp
 operator|->
@@ -3988,6 +4025,8 @@ argument_list|(
 argument|fp
 argument_list|,
 argument|table
+argument_list|,
+argument|dev_idp
 argument_list|)
 end_macro
 
@@ -4002,6 +4041,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|table
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|dev_idp
 decl_stmt|;
 end_decl_stmt
 
@@ -4029,7 +4075,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ /*    driver    iobase    irq drq      maddr   msiz      intr unit   flags */\n"
+literal|"\ /* id     driver    iobase    irq drq      maddr   msiz      intr unit   flags */\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4049,12 +4095,6 @@ operator|->
 name|d_next
 control|)
 block|{
-name|mp
-operator|=
-name|dp
-operator|->
-name|d_conn
-expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -4063,9 +4103,28 @@ name|d_unit
 operator|==
 name|QUES
 operator|||
+operator|!
+name|eq
+argument_list|(
+name|dp
+operator|->
+name|d_mask
+argument_list|,
+name|table
+argument_list|)
+condition|)
+continue|continue;
+name|mp
+operator|=
+name|dp
+operator|->
+name|d_conn
+expr_stmt|;
+if|if
+condition|(
 name|mp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|mp
 operator|==
@@ -4082,18 +4141,23 @@ literal|"isa"
 argument_list|)
 condition|)
 continue|continue;
-if|if
-condition|(
-name|strcmp
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
+literal|"{ %2d,&%3.3sdriver,"
+argument_list|,
+operator|(
+operator|*
+name|dev_idp
+operator|)
+operator|++
+argument_list|,
 name|dp
 operator|->
-name|d_mask
-argument_list|,
-name|table
+name|d_name
 argument_list|)
-condition|)
-continue|continue;
+expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -4104,11 +4168,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%3.3sdriver, %8.8s,"
-argument_list|,
-name|dp
-operator|->
-name|d_name
+literal|" %8.8s,"
 argument_list|,
 name|dp
 operator|->
@@ -4120,11 +4180,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%3.3sdriver,   0x%04x,"
-argument_list|,
-name|dp
-operator|->
-name|d_name
+literal|"   0x%04x,"
 argument_list|,
 name|dp
 operator|->
@@ -4205,36 +4261,40 @@ name|buf
 index|[
 literal|32
 operator|+
-literal|20
+literal|1
 index|]
 decl_stmt|;
 if|if
 condition|(
 name|dp
 operator|->
-name|d_irq
+name|d_vec
 operator|==
-operator|-
-literal|1
+name|NULL
+operator|||
+name|dp
+operator|->
+name|d_vec
+operator|->
+name|id
+operator|==
+name|NULL
 condition|)
 return|return
-operator|(
 literal|"NULL"
-operator|)
 return|;
+comment|/* 	 * This is for ISA.  We only support one interrupt handler in the 	 * devtabs.  Handlers in the config file after the first for each 	 * device  are ignored.  Special handlers may be registered at 	 * runtime. 	 */
 name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"V(%.32s%d)"
+literal|"%.32s"
 argument_list|,
 name|dp
 operator|->
-name|d_name
-argument_list|,
-name|dp
+name|d_vec
 operator|->
-name|d_unit
+name|id
 argument_list|)
 expr_stmt|;
 return|return
