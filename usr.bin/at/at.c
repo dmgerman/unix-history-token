@@ -116,6 +116,17 @@ directive|include
 file|<getopt.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -274,7 +285,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: at.c,v 1.3 1995/08/08 15:24:51 ig25 Exp $"
+literal|"$Id: at.c,v 1.6 1995/08/21 12:32:45 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -811,6 +822,21 @@ name|struct
 name|flock
 name|lock
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_TIME
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Install the signal handler for SIGINT; terminate after removing the  * spool file if necessary  */
 name|act
 operator|.
