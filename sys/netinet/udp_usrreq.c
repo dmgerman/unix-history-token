@@ -1488,9 +1488,6 @@ operator|!
 name|policyfail
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|n
 operator|=
 name|m_copy
@@ -1501,7 +1498,10 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|n
 operator|!=
 name|NULL
 condition|)
