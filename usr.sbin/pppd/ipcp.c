@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipcp.c,v 1.20 1995/08/10 06:51:04 paulus Exp $"
+literal|"$Id: ipcp.c,v 1.4 1995/10/31 21:21:06 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -742,6 +742,19 @@ expr_stmt|;
 name|ao
 operator|->
 name|cflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* allow default route and proxyarp */
+name|ao
+operator|->
+name|proxy_arp
+operator|=
+literal|1
+expr_stmt|;
+name|ao
+operator|->
+name|default_route
 operator|=
 literal|1
 expr_stmt|;
