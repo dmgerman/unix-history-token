@@ -1806,6 +1806,17 @@ directive|ifdef
 name|SMP_DEBUG
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|ISK0SEG
+parameter_list|(
+name|va
+parameter_list|)
+define|\
+value|((va>= ALPHA_K0SEG_BASE&& va<= ALPHA_K0SEG_END))
+end_define
+
 begin_decl_stmt
 name|int
 name|mtx_validate
@@ -1870,6 +1881,16 @@ argument_list|)
 expr_stmt|;
 name|ASS
 argument_list|(
+name|ISK0SEG
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|all_mtx
+operator|.
+name|mtx_next
+argument_list|)
+operator|||
 name|kernacc
 argument_list|(
 operator|(
@@ -1925,6 +1946,17 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+name|ISK0SEG
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|all_mtx
+operator|.
+name|mtx_next
+argument_list|)
+operator|&&
 name|kernacc
 argument_list|(
 operator|(
