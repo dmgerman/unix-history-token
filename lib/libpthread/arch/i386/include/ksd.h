@@ -66,21 +66,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__KSD_GET_PTR
-parameter_list|(
-name|name
-parameter_list|)
-value|({					\ 	void *__result;						\ 								\ 	u_int __i;						\ 	__asm __volatile("movl %%gs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(u_int *)(__ksd_offset(name))));		\ 	__result = (void *)__i;					\ 								\ 	__result;						\ })
-end_define
-
-begin_comment
-comment|/*  * Evaluates to the value of the per-kse variable name.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__KSD_GET32
+name|KSD_GET32
 parameter_list|(
 name|name
 parameter_list|)
@@ -94,13 +80,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__KSD_SET32
+name|KSD_SET32
 parameter_list|(
 name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|({				\ 	__ksd_type(name) __val = (val);				\ 								\ 	u_int __i;						\ 	__i = *(u_int *)&__val;					\ 	__asm __volatile("movl %1,%%gs:%0"			\ 	    : "=m" (*(u_int *)(__ksd_offset(name)))		\ 	    : "r" (__i));					\ })
+value|({					\ 	__ksd_type(name) __val = (val);				\ 								\ 	u_int __i;						\ 	__i = *(u_int *)&__val;					\ 	__asm __volatile("movl %1,%%gs:%0"			\ 	    : "=m" (*(u_int *)(__ksd_offset(name)))		\ 	    : "r" (__i));					\ })
 end_define
 
 begin_function
@@ -149,47 +135,11 @@ begin_define
 unit|}
 define|#
 directive|define
-name|__KSD_READANDCLEAR32
+name|KSD_READANDCLEAR32
 parameter_list|(
 name|name
 parameter_list|)
 value|({				\ 	__ksd_type(name) __result;				\ 								\ 	__result = (__ksd_type(name))				\ 	    __ksd_readandclear32((u_long *)__ksd_offset(name)); \ 	__result;						\ })
-end_define
-
-begin_comment
-comment|/*  * All members of struct kse are prefixed with k_.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KSD_GET_PTR
-parameter_list|(
-name|member
-parameter_list|)
-value|__KSD_GET_PTR(k_ ## member)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSD_SET_PTR
-parameter_list|(
-name|member
-parameter_list|,
-name|val
-parameter_list|)
-value|__KSD_SET32(k_ ## member, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSD_READANDCLEAR_PTR
-parameter_list|(
-name|member
-parameter_list|)
-value|__KSD_READANDCLEAR32(k_ ## member)
 end_define
 
 begin_define
@@ -197,7 +147,7 @@ define|#
 directive|define
 name|_ksd_curkse
 parameter_list|()
-value|((struct kse *)KSD_GET_PTR(mbx.km_udata))
+value|((struct kse *)KSD_GET32(k_mbx.km_udata))
 end_define
 
 begin_define
@@ -205,7 +155,15 @@ define|#
 directive|define
 name|_ksd_curthread
 parameter_list|()
-value|KSD_GET_PTR(curthread)
+value|KSD_GET32(k_curthread)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ksd_get_tmbx
+parameter_list|()
+value|KSD_GET32(k_mbx.km_curthread)
 end_define
 
 begin_define
@@ -215,15 +173,7 @@ name|_ksd_set_tmbx
 parameter_list|(
 name|value
 parameter_list|)
-value|KSD_SET_PTR(mbx.km_curthread, (void *)value)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ksd_get_tmbx
-parameter_list|()
-value|KSD_GET_PTR(mbx.km_curthread)
+value|KSD_SET32(k_mbx.km_curthread, (void *)value);
 end_define
 
 begin_define
@@ -231,7 +181,7 @@ define|#
 directive|define
 name|_ksd_readandclear_tmbx
 parameter_list|()
-value|KSD_READANDCLEAR_PTR(mbx.km_curthread)
+value|KSD_READANDCLEAR32(k_mbx.km_curthread)
 end_define
 
 begin_macro
