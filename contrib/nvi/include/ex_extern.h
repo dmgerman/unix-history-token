@@ -1513,6 +1513,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|ex_rtag_push
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|,
+name|EXCMD
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|ex_tag_push
 name|__P
 argument_list|(

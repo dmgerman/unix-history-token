@@ -128,428 +128,435 @@ end_define
 begin_define
 define|#
 directive|define
-name|O_HARDTABS
+name|O_GTAGSMODE
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_ICLOWER
+name|O_HARDTABS
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_IGNORECASE
+name|O_ICLOWER
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_KEYTIME
+name|O_IGNORECASE
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_LEFTRIGHT
+name|O_KEYTIME
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_LINES
+name|O_LEFTRIGHT
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_LISP
+name|O_LINES
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_LIST
+name|O_LISP
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_LOCKFILES
+name|O_LIST
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_MAGIC
+name|O_LOCKFILES
 value|27
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_MATCHTIME
+name|O_MAGIC
 value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_MESG
+name|O_MATCHTIME
 value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_MODELINE
+name|O_MESG
 value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_MSGCAT
+name|O_MODELINE
 value|31
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_NOPRINT
+name|O_MSGCAT
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_NUMBER
+name|O_NOPRINT
 value|33
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_OCTAL
+name|O_NUMBER
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_OPEN
+name|O_OCTAL
 value|35
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_OPTIMIZE
+name|O_OPEN
 value|36
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_PARAGRAPHS
+name|O_OPTIMIZE
 value|37
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_PATH
+name|O_PARAGRAPHS
 value|38
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_PRINT
+name|O_PATH
 value|39
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_PROMPT
+name|O_PRINT
 value|40
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_READONLY
+name|O_PROMPT
 value|41
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_RECDIR
+name|O_READONLY
 value|42
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_REDRAW
+name|O_RECDIR
 value|43
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_REMAP
+name|O_REDRAW
 value|44
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_REPORT
+name|O_REMAP
 value|45
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_RULER
+name|O_REPORT
 value|46
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SCROLL
+name|O_RULER
 value|47
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SEARCHINCR
+name|O_SCROLL
 value|48
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SECTIONS
+name|O_SEARCHINCR
 value|49
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SECURE
+name|O_SECTIONS
 value|50
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SHELL
+name|O_SECURE
 value|51
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SHELLMETA
+name|O_SHELL
 value|52
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SHIFTWIDTH
+name|O_SHELLMETA
 value|53
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SHOWMATCH
+name|O_SHIFTWIDTH
 value|54
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SHOWMODE
+name|O_SHOWMATCH
 value|55
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SIDESCROLL
+name|O_SHOWMODE
 value|56
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SLOWOPEN
+name|O_SIDESCROLL
 value|57
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_SOURCEANY
+name|O_SLOWOPEN
 value|58
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_TABSTOP
+name|O_SOURCEANY
 value|59
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_TAGLENGTH
+name|O_TABSTOP
 value|60
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_TAGS
+name|O_TAGLENGTH
 value|61
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_TERM
+name|O_TAGS
 value|62
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_TERSE
+name|O_TERM
 value|63
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_TILDEOP
+name|O_TERSE
 value|64
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_TIMEOUT
+name|O_TILDEOP
 value|65
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_TTYWERASE
+name|O_TIMEOUT
 value|66
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_VERBOSE
+name|O_TTYWERASE
 value|67
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_W1200
+name|O_VERBOSE
 value|68
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_W300
+name|O_W1200
 value|69
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_W9600
+name|O_W300
 value|70
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_WARN
+name|O_W9600
 value|71
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_WINDOW
+name|O_WARN
 value|72
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_WINDOWNAME
+name|O_WINDOW
 value|73
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_WRAPLEN
+name|O_WINDOWNAME
 value|74
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_WRAPMARGIN
+name|O_WRAPLEN
 value|75
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_WRAPSCAN
+name|O_WRAPMARGIN
 value|76
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_WRITEANY
+name|O_WRAPSCAN
 value|77
 end_define
 
 begin_define
 define|#
 directive|define
-name|O_OPTIONCOUNT
+name|O_WRITEANY
 value|78
+end_define
+
+begin_define
+define|#
+directive|define
+name|O_OPTIONCOUNT
+value|79
 end_define
 
 end_unit

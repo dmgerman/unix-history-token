@@ -345,204 +345,211 @@ end_define
 begin_define
 define|#
 directive|define
-name|C_SUBSTITUTE
+name|C_RTAG
 value|49
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_SCRIPT
+name|C_SUBSTITUTE
 value|50
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_SET
+name|C_SCRIPT
 value|51
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_SHELL
+name|C_SET
 value|52
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_SOURCE
+name|C_SHELL
 value|53
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_STOP
+name|C_SOURCE
 value|54
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_SUSPEND
+name|C_STOP
 value|55
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_T
+name|C_SUSPEND
 value|56
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_TAG
+name|C_T
 value|57
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_TAGNEXT
+name|C_TAG
 value|58
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_TAGPOP
+name|C_TAGNEXT
 value|59
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_TAGPREV
+name|C_TAGPOP
 value|60
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_TAGTOP
+name|C_TAGPREV
 value|61
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_TCLCMD
+name|C_TAGTOP
 value|62
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_UNDO
+name|C_TCLCMD
 value|63
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_UNABBREVIATE
+name|C_UNDO
 value|64
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_UNMAP
+name|C_UNABBREVIATE
 value|65
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_V
+name|C_UNMAP
 value|66
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_VERSION
+name|C_V
 value|67
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_VISUAL_EX
+name|C_VERSION
 value|68
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_VISUAL_VI
+name|C_VISUAL_EX
 value|69
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_VIUSAGE
+name|C_VISUAL_VI
 value|70
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_WRITE
+name|C_VIUSAGE
 value|71
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_WN
+name|C_WRITE
 value|72
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_WQ
+name|C_WN
 value|73
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_XIT
+name|C_WQ
 value|74
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_YANK
+name|C_XIT
 value|75
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_Z
+name|C_YANK
 value|76
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_SUBTILDE
+name|C_Z
 value|77
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_SUBTILDE
+value|78
 end_define
 
 end_unit

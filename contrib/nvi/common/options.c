@@ -390,6 +390,22 @@ block|,
 literal|0
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|GTAGS
+comment|/* O_GTAGSMODE      FreeBSD2.2 */
+block|{
+literal|"gtagsmode"
+block|,
+name|NULL
+block|,
+name|OPT_0BOOL
+block|,
+literal|0
+block|}
+block|,
+endif|#
+directive|endif
 comment|/* O_HARDTABS	    4BSD */
 block|{
 literal|"hardtabs"
@@ -1153,6 +1169,18 @@ name|O_EXRC
 block|}
 block|,
 comment|/* System V (undocumented) */
+ifdef|#
+directive|ifdef
+name|GTAGS
+block|{
+literal|"gt"
+block|,
+name|O_GTAGSMODE
+block|}
+block|,
+comment|/* FreeBSD2.2 */
+endif|#
+directive|endif
 block|{
 literal|"ht"
 block|,
