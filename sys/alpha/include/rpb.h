@@ -200,6 +200,11 @@ value|28
 comment|/* "Cortex" (?) */
 define|#
 directive|define
+name|ST_DEC_550
+value|30
+comment|/* "Miata" (PCI/ISA) */
+define|#
+directive|define
 name|ST_DEC_EV56_PBP
 value|32
 comment|/* "Takara" (?) */
@@ -622,6 +627,18 @@ comment|/* 149: TB hint block */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|LOCATE_PCS
+parameter_list|(
+name|h
+parameter_list|,
+name|cpunumber
+parameter_list|)
+value|((struct pcs *)	\ 	((char *)(h) + (h)->rpb_pcs_off + ((cpunumber) * (h)->rpb_pcs_size)))
+end_define
 
 begin_comment
 comment|/*  * PCS: Per-CPU information.  */
