@@ -4222,7 +4222,7 @@ argument_list|)
 condition|)
 name|msg_perror
 argument_list|(
-literal|"Can't change to directory %d"
+literal|"Can't change to directory %s"
 argument_list|,
 name|nlp
 operator|->
