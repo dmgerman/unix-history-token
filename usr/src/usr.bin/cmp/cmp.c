@@ -1,13 +1,56 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1987 Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
 literal|"@(#)cmp.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !lint */
+end_comment
 
 begin_include
 include|#
@@ -110,7 +153,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if silent on error */
+comment|/* if silent run */
 end_comment
 
 begin_decl_stmt
@@ -226,7 +269,7 @@ break|break;
 case|case
 literal|'s'
 case|:
-comment|/* silent return */
+comment|/* silent run */
 name|silent
 operator|=
 name|YES
@@ -858,9 +901,12 @@ name|byte
 operator|+=
 name|len2
 expr_stmt|;
-comment|/* 			 * here's the real performance problem, we've got to 			 * count the stupid lines, which means that -l is a 			 * *much* faster version, i.e., unless you really 			 * *want* to know the line number, run -sl. 			 */
+comment|/* 			 * here's the real performance problem, we've got to 			 * count the stupid lines, which means that -l is a 			 * *much* faster version, i.e., unless you really 			 * *want* to know the line number, run -s or -l. 			 */
 if|if
 condition|(
+operator|!
+name|silent
+operator|&&
 operator|!
 name|all
 condition|)
