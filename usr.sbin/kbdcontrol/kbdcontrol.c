@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.13 1998/01/12 23:53:26 yokota Exp $"
+literal|"$Id: kbdcontrol.c,v 1.14 1998/05/05 19:02:01 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4022,6 +4022,32 @@ name|duration
 decl_stmt|,
 name|pitch
 decl_stmt|;
+name|bell
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"quiet."
+argument_list|,
+literal|6
+argument_list|)
+condition|)
+block|{
+name|bell
+operator|=
+literal|2
+expr_stmt|;
+name|opt
+operator|+=
+literal|6
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -4033,16 +4059,8 @@ literal|"visual"
 argument_list|)
 condition|)
 name|bell
-operator|=
+operator||=
 literal|1
-operator|,
-name|duration
-operator|=
-literal|1
-operator|,
-name|pitch
-operator|=
-literal|800
 expr_stmt|;
 elseif|else
 if|if
@@ -4055,13 +4073,9 @@ argument_list|,
 literal|"normal"
 argument_list|)
 condition|)
-name|bell
-operator|=
-literal|0
-operator|,
 name|duration
 operator|=
-literal|1
+literal|5
 operator|,
 name|pitch
 operator|=
@@ -4156,6 +4170,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|pitch
+operator|!=
+literal|0
+condition|)
+name|pitch
+operator|=
+literal|1193182
+operator|/
+name|pitch
+expr_stmt|;
+comment|/* in Hz */
+name|duration
+operator|/=
+literal|10
+expr_stmt|;
+comment|/* in 10 m sec */
 block|}
 name|ioctl
 argument_list|(
@@ -4169,8 +4201,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
 name|bell
+operator|&
+operator|~
+literal|2
+operator|)
+operator|==
+literal|0
 condition|)
 name|fprintf
 argument_list|(
@@ -4534,7 +4572,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: kbdcontrol [-dFx] [-b  duration.pitch | belltype]"
+literal|"usage: kbdcontrol [-dFx] [-b  duration.pitch | [quiet.]belltype]"
 argument_list|,
 literal|"                  [-r delay.repeat | speed] [-l mapfile] [-f # string]"
 argument_list|,
