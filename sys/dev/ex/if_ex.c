@@ -1635,7 +1635,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|unit
+name|sc
 argument_list|,
 operator|&
 name|ih
