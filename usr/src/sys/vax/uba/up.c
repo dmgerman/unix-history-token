@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.14	%G%	*/
+comment|/*	%H%	3.15	%G%	*/
 end_comment
 
 begin_define
@@ -719,6 +719,21 @@ comment|/* Drive ready */
 end_comment
 
 begin_comment
+comment|/* Bits of upcs2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLR
+value|040
+end_define
+
+begin_comment
+comment|/* Controller clear */
+end_comment
+
+begin_comment
 comment|/* Bits of uper1 */
 end_comment
 
@@ -881,6 +896,33 @@ begin_comment
 comment|/* How many sdelay loops not needed ? */
 end_comment
 
+begin_decl_stmt
+name|int
+name|up_wticks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Ticks waiting for interrupt */
+end_comment
+
+begin_decl_stmt
+name|int
+name|upwstart
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Have started guardian */
+end_comment
+
+begin_function_decl
+name|int
+name|upwatch
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -934,6 +976,29 @@ name|sz
 decl_stmt|,
 name|bn
 decl_stmt|;
+if|if
+condition|(
+name|upwstart
+operator|==
+literal|0
+condition|)
+block|{
+name|timeout
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|upwatch
+argument_list|,
+literal|0
+argument_list|,
+name|HZ
+argument_list|)
+expr_stmt|;
+name|upwstart
+operator|++
+expr_stmt|;
+block|}
 name|xunit
 operator|=
 name|minor
@@ -2130,6 +2195,10 @@ name|void
 operator|)
 name|spl6
 argument_list|()
+expr_stmt|;
+name|up_wticks
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3378,6 +3447,18 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|UPADDR
+operator|->
+name|upcs2
+operator|=
+name|CLR
+expr_stmt|;
+comment|/* clear controller */
+name|DELAY
+argument_list|(
+name|idelay
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|unit
@@ -3416,6 +3497,106 @@ operator|)
 name|upstart
 argument_list|()
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Wake up every second and if an interrupt is pending  * but nothing has happened increment a counter.  * If nothing happens for 20 seconds, reset the controller  * and begin anew.  */
+end_comment
+
+begin_macro
+name|upwatch
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|int
+name|i
+decl_stmt|;
+name|timeout
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|upwatch
+argument_list|,
+literal|0
+argument_list|,
+name|HZ
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|uptab
+operator|.
+name|b_active
+operator|==
+literal|0
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NUP
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|uputab
+index|[
+name|i
+index|]
+operator|.
+name|b_active
+condition|)
+goto|goto
+name|active
+goto|;
+name|up_wticks
+operator|=
+literal|0
+expr_stmt|;
+comment|/* idling */
+return|return;
+block|}
+name|active
+label|:
+name|up_wticks
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|up_wticks
+operator|>=
+literal|20
+condition|)
+block|{
+name|up_wticks
+operator|=
+literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"LOST INTERRUPT RESET"
+argument_list|)
+expr_stmt|;
+name|upreset
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
