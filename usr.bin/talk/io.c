@@ -104,7 +104,16 @@ name|wait
 decl_stmt|;
 name|message
 argument_list|(
-literal|"Connection established\007\007\007"
+literal|"Connection established"
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+literal|"\007\007\007"
+argument_list|,
+literal|3
 argument_list|)
 expr_stmt|;
 name|current_line

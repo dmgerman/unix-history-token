@@ -565,10 +565,13 @@ operator|==
 literal|'\7'
 condition|)
 block|{
-name|_putchar
+name|write
 argument_list|(
-operator|*
+name|STDOUT_FILENO
+argument_list|,
 name|text
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|text
