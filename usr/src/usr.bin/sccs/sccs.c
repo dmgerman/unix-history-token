@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c 1.4 delta %G% 11:18:42 get %H% %T%"
+literal|"@(#)sccs.c 1.5 delta %G% 11:32:24 get %H% %T%"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,6 +334,19 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|SccsPath
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|SccsPath
+operator|=
+literal|"."
+expr_stmt|;
 comment|/* 	**  See if this user is an administrator. 	*/
 name|uid
 operator|=
@@ -436,6 +449,13 @@ name|fclose
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* no ADMINFILE -- take some defaults */
+name|IsAdmin
+operator|++
 expr_stmt|;
 block|}
 comment|/* 	**  Look up command. 	**	At this point, p and argv point to the command name. 	*/
