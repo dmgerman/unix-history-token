@@ -395,6 +395,12 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
+literal|"mediaSetHTTP"
+block|,
+name|mediaSetHTTP
+block|}
+block|,
+block|{
 literal|"mediaSetUFS"
 block|,
 name|mediaSetUFS

@@ -1295,6 +1295,16 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
+literal|" Media, HTTP"
+block|,
+literal|"Select FTP via HTTP proxy installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetHTTP
+block|}
+block|,
+block|{
 literal|" Network Interfaces"
 block|,
 literal|"Configure network interfaces"
@@ -4364,6 +4374,16 @@ block|,
 name|NULL
 block|,
 name|mediaSetFTPPassive
+block|}
+block|,
+block|{
+literal|"3b HTTP"
+block|,
+literal|"Install from an FTP server through a http proxy"
+block|,
+name|NULL
+block|,
+name|mediaSetHTTP
 block|}
 block|,
 block|{
