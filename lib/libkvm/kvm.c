@@ -1345,6 +1345,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|errstr
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
@@ -1355,10 +1361,6 @@ argument_list|,
 literal|"%s: %s\n"
 argument_list|,
 name|errstr
-condition|?
-name|errstr
-else|:
-literal|"kvm_open"
 argument_list|,
 name|strerror
 argument_list|(
