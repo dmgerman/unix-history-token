@@ -1623,7 +1623,7 @@ name|GID_KMEM
 argument_list|,
 literal|0640
 argument_list|,
-literal|"ptmx"
+literal|"ptmx%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -1647,7 +1647,7 @@ name|GID_KMEM
 argument_list|,
 literal|0666
 argument_list|,
-literal|"arp"
+literal|"arp%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -1671,7 +1671,7 @@ name|GID_KMEM
 argument_list|,
 literal|0600
 argument_list|,
-literal|"icmp"
+literal|"icmp%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -1695,7 +1695,7 @@ name|GID_KMEM
 argument_list|,
 literal|0600
 argument_list|,
-literal|"ip"
+literal|"ip%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -1719,7 +1719,7 @@ name|GID_KMEM
 argument_list|,
 literal|0666
 argument_list|,
-literal|"tcp"
+literal|"tcp%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -1743,7 +1743,7 @@ name|GID_KMEM
 argument_list|,
 literal|0666
 argument_list|,
-literal|"udp"
+literal|"udp%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -1767,7 +1767,7 @@ name|GID_KMEM
 argument_list|,
 literal|0600
 argument_list|,
-literal|"rawip"
+literal|"rawip%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -1791,7 +1791,7 @@ name|GID_KMEM
 argument_list|,
 literal|0666
 argument_list|,
-literal|"ticlts"
+literal|"ticlts%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -1815,7 +1815,7 @@ name|GID_KMEM
 argument_list|,
 literal|0666
 argument_list|,
-literal|"ticots"
+literal|"ticots%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -1839,7 +1839,7 @@ name|GID_KMEM
 argument_list|,
 literal|0666
 argument_list|,
-literal|"ticotsord"
+literal|"ticotsord%d"
 argument_list|,
 name|unit
 argument_list|)
