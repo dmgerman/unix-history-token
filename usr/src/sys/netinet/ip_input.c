@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.9 81/10/29 */
+comment|/* ip_input.c 1.10 81/10/31 */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"../h/mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../inet/cksum.h"
 end_include
 
 begin_include
@@ -110,15 +116,27 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
+comment|/* known to be r11 in CKSUM below */
+specifier|register
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+name|m0
+decl_stmt|;
+specifier|register
 name|int
 name|i
 decl_stmt|;
 specifier|register
 name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|,
+name|ipq
 modifier|*
 name|q
 decl_stmt|;
@@ -127,14 +145,6 @@ name|struct
 name|ipq
 modifier|*
 name|fp
-decl_stmt|;
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-init|=
-name|m0
 decl_stmt|;
 name|int
 name|hlen
@@ -185,56 +195,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|i
-operator|=
-name|ip
-operator|->
-name|ip_sum
-expr_stmt|;
-name|ip
-operator|->
-name|ip_sum
-operator|=
-literal|0
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|vax
-if|if
-condition|(
-name|hlen
-operator|==
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-condition|)
-block|{
-asm|asm("movl r10,r0; movl (r0)+,r1; addl2 (r0)+,r1");
-asm|asm("adwc (r0)+,r1; adwc (r0)+,r1; adwc (r0)+,r1");
-asm|asm("adwc $0,r1; ashl $-16,r1,r0; addw2 r0,r1");
-asm|asm("adwc $0,r1");
-comment|/* ### */
-asm|asm("mcoml r1,r1; movzwl r1,r1; subl2 r1,r11");
-block|}
-else|else
-endif|#
-directive|endif
-name|i
-operator|-=
-name|cksum
+name|CKSUM_IPCHK
 argument_list|(
 name|m
+argument_list|,
+name|ip
+argument_list|,
+name|r11
 argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|ip
+operator|->
+name|ip_sum
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"ip_sum %x\n"
+argument_list|,
+name|ip
+operator|->
+name|ip_sum
+argument_list|)
+expr_stmt|;
 name|netstat
 operator|.
 name|ip_badsum
