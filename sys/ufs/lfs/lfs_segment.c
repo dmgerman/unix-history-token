@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_segment.c	8.10 (Berkeley) 6/10/95  * $Id: lfs_segment.c,v 1.23 1997/08/02 14:33:20 bde Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_segment.c	8.10 (Berkeley) 6/10/95  * $Id: lfs_segment.c,v 1.24 1997/08/31 07:32:37 phk Exp $  */
 end_comment
 
 begin_include
@@ -1095,18 +1095,18 @@ comment|/* BEGIN HACK */
 define|#
 directive|define
 name|VN_OFFSET
-value|(((void *)&vp->v_mntvnodes.le_next) - (void *)vp)
+value|(((u_char *)&vp->v_mntvnodes.le_next) - (u_char *)vp)
 define|#
 directive|define
 name|BACK_VP
 parameter_list|(
 name|VP
 parameter_list|)
-value|((struct vnode *)(((void *)VP->v_mntvnodes.le_prev) - VN_OFFSET))
+value|((struct vnode *)(((u_char *)VP->v_mntvnodes.le_prev) - VN_OFFSET))
 define|#
 directive|define
 name|BEG_OF_VLIST
-value|((struct vnode *)(((void *)&mp->mnt_vnodelist.lh_first) - VN_OFFSET))
+value|((struct vnode *)(((u_char *)&mp->mnt_vnodelist.lh_first) - VN_OFFSET))
 comment|/* Find last vnode. */
 name|loop
 label|:
@@ -2941,18 +2941,18 @@ comment|/* BEGIN HACK */
 define|#
 directive|define
 name|BUF_OFFSET
-value|(((void *)&bp->b_vnbufs.le_next) - (void *)bp)
+value|(((u_char *)&bp->b_vnbufs.le_next) - (u_char *)bp)
 define|#
 directive|define
 name|BACK_BUF
 parameter_list|(
 name|BP
 parameter_list|)
-value|((struct buf *)(((void *)BP->b_vnbufs.le_prev) - BUF_OFFSET))
+value|((struct buf *)(((u_char *)BP->b_vnbufs.le_prev) - BUF_OFFSET))
 define|#
 directive|define
 name|BEG_OF_LIST
-value|((struct buf *)(((void *)&vp->v_dirtyblkhd.lh_first) - BUF_OFFSET))
+value|((struct buf *)(((u_char *)&vp->v_dirtyblkhd.lh_first) - BUF_OFFSET))
 comment|/*loop:	for (bp = vp->v_dirtyblkhd.lh_first; bp; bp = bp->b_vnbufs.le_next) {*/
 comment|/* Find last buffer. */
 name|loop
@@ -4314,23 +4314,6 @@ name|nblocks
 decl_stmt|,
 name|s
 decl_stmt|;
-name|int
-argument_list|(
-argument|*strategy
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_strategy_args
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-name|struct
-name|vop_strategy_args
-name|vop_strategy_a
-decl_stmt|;
 name|u_short
 name|ninos
 decl_stmt|;
@@ -4700,25 +4683,6 @@ argument_list|)
 operator|->
 name|i_dev
 expr_stmt|;
-name|strategy
-operator|=
-name|VTOI
-argument_list|(
-name|fs
-operator|->
-name|lfs_ivnode
-argument_list|)
-operator|->
-name|i_devvp
-operator|->
-name|v_op
-index|[
-name|VOFFSET
-argument_list|(
-name|vop_strategy
-argument_list|)
-index|]
-expr_stmt|;
 comment|/* 	 * When we simply write the blocks we lose a rotation for every block 	 * written.  To avoid this problem, we allocate memory in chunks, copy 	 * the buffers into the chunk and write the chunk.  MAXPHYS is the 	 * largest size I/O devices can handle. 	 * When the data is copied to the chunk, turn off the the B_LOCKED bit 	 * and brelse the buffer (which will move them to the LRU list).  Add 	 * the B_CALL flag to the buffer header so we can count I/O's for the 	 * checkpoints and so we can release the allocated memory. 	 * 	 * XXX 	 * This should be removed if the new virtual memory system allows us to 	 * easily make the buffers contiguous in kernel memory and if that's 	 * fast enough. 	 */
 for|for
 control|(
@@ -5037,27 +5001,9 @@ name|caddr_t
 operator|)
 name|fs
 expr_stmt|;
-name|vop_strategy_a
-operator|.
-name|a_desc
-operator|=
-name|VDESC
+name|VOP_STRATEGY
 argument_list|(
-name|vop_strategy
-argument_list|)
-expr_stmt|;
-name|vop_strategy_a
-operator|.
-name|a_bp
-operator|=
 name|cbp
-expr_stmt|;
-call|(
-name|strategy
-call|)
-argument_list|(
-operator|&
-name|vop_strategy_a
 argument_list|)
 expr_stmt|;
 block|}
@@ -5165,25 +5111,8 @@ name|dev_t
 name|i_dev
 decl_stmt|;
 name|int
-argument_list|(
-argument|*strategy
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_strategy_args
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-name|int
 name|s
 decl_stmt|;
-name|struct
-name|vop_strategy_args
-name|vop_strategy_a
-decl_stmt|;
 name|i_dev
 operator|=
 name|VTOI
@@ -5194,25 +5123,6 @@ name|lfs_ivnode
 argument_list|)
 operator|->
 name|i_dev
-expr_stmt|;
-name|strategy
-operator|=
-name|VTOI
-argument_list|(
-name|fs
-operator|->
-name|lfs_ivnode
-argument_list|)
-operator|->
-name|i_devvp
-operator|->
-name|v_op
-index|[
-name|VOFFSET
-argument_list|(
-name|vop_strategy
-argument_list|)
-index|]
 expr_stmt|;
 comment|/* Checksum the superblock and copy it into a buffer. */
 name|fs
@@ -5335,21 +5245,6 @@ name|b_iodone
 operator|=
 name|lfs_supercallback
 expr_stmt|;
-name|vop_strategy_a
-operator|.
-name|a_desc
-operator|=
-name|VDESC
-argument_list|(
-name|vop_strategy
-argument_list|)
-expr_stmt|;
-name|vop_strategy_a
-operator|.
-name|a_bp
-operator|=
-name|bp
-expr_stmt|;
 name|s
 operator|=
 name|splbio
@@ -5367,12 +5262,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-call|(
-name|strategy
-call|)
+name|VOP_STRATEGY
 argument_list|(
-operator|&
-name|vop_strategy_a
+name|bp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6095,7 +5987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is vrele except that we do not want to VOP_INACTIVE this vnode. We  * inline vrele here to avoid the vn_lock and VOP_INACTIVE call at the end.  */
+comment|/*  * This is vrele except that we do not want to VOP_INACTIVE this vnode. We  * inline vrele here to avoid the vn_lock and VOP_INACTIVE call at the end.  *  * XXX: this is positively disgusting and blatantly wrong, and may not  * even work these days :-(  /phk  */
 end_comment
 
 begin_function
