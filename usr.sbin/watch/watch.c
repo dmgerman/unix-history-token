@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<termios.h>
 end_include
 
 begin_include
@@ -84,7 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/snoop.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_define
@@ -253,15 +265,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|sgttyb
-name|sgo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|tchars
-name|tco
+name|termios
+name|otty
 decl_stmt|;
 end_decl_stmt
 
@@ -388,92 +393,120 @@ name|set_tty
 parameter_list|()
 block|{
 name|struct
-name|sgttyb
-name|sgn
+name|termios
+name|ntty
 decl_stmt|;
-name|struct
-name|tchars
-name|tc
-decl_stmt|;
-name|ioctl
+name|tcgetattr
 argument_list|(
 name|std_in
 argument_list|,
-name|TIOCGETP
-argument_list|,
 operator|&
-name|sgo
+name|otty
 argument_list|)
 expr_stmt|;
-name|ioctl
-argument_list|(
-name|std_in
-argument_list|,
-name|TIOCGETC
-argument_list|,
-operator|&
-name|tco
-argument_list|)
-expr_stmt|;
-name|sgn
+name|ntty
 operator|=
-name|sgo
+name|otty
 expr_stmt|;
-name|tc
-operator|=
-name|tco
-expr_stmt|;
-name|sgn
+name|ntty
 operator|.
-name|sg_flags
-operator||=
-name|CBREAK
+name|c_lflag
+operator|&=
+operator|~
+name|ICANON
 expr_stmt|;
-name|sgn
+comment|/* disable canonical operation  */
+name|ntty
 operator|.
-name|sg_flags
+name|c_lflag
 operator|&=
 operator|~
 name|ECHO
 expr_stmt|;
-name|ospeed
-operator|=
-name|sgo
+ifdef|#
+directive|ifdef
+name|FLUSHO
+name|ntty
 operator|.
-name|sg_ospeed
+name|c_lflag
+operator|&=
+operator|~
+name|FLUSHO
 expr_stmt|;
-name|tc
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PENDIN
+name|ntty
 operator|.
-name|t_intrc
+name|c_lflag
+operator|&=
+operator|~
+name|PENDIN
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|IEXTEN
+name|ntty
+operator|.
+name|c_lflag
+operator|&=
+operator|~
+name|IEXTEN
+expr_stmt|;
+endif|#
+directive|endif
+name|ntty
+operator|.
+name|c_cc
+index|[
+name|VMIN
+index|]
+operator|=
+literal|1
+expr_stmt|;
+comment|/* minimum of one character */
+name|ntty
+operator|.
+name|c_cc
+index|[
+name|VTIME
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* timeout value        */
+name|ntty
+operator|.
+name|c_cc
+index|[
+name|VINTR
+index|]
 operator|=
 literal|07
 expr_stmt|;
 comment|/* ^G */
-name|tc
+name|ntty
 operator|.
-name|t_quitc
+name|c_cc
+index|[
+name|VQUIT
+index|]
 operator|=
 literal|07
 expr_stmt|;
 comment|/* ^G */
-name|ioctl
+name|tcsetattr
 argument_list|(
 name|std_in
 argument_list|,
-name|TIOCSETP
+name|TCSANOW
 argument_list|,
 operator|&
-name|sgn
-argument_list|)
-expr_stmt|;
-name|ioctl
-argument_list|(
-name|std_in
-argument_list|,
-name|TIOCSETC
-argument_list|,
-operator|&
-name|tc
+name|ntty
 argument_list|)
 expr_stmt|;
 block|}
@@ -484,24 +517,14 @@ name|void
 name|unset_tty
 parameter_list|()
 block|{
-name|ioctl
+name|tcsetattr
 argument_list|(
 name|std_in
 argument_list|,
-name|TIOCSETP
+name|TCSANOW
 argument_list|,
 operator|&
-name|sgo
-argument_list|)
-expr_stmt|;
-name|ioctl
-argument_list|(
-name|std_in
-argument_list|,
-name|TIOCSETC
-argument_list|,
-operator|&
-name|tco
+name|otty
 argument_list|)
 expr_stmt|;
 block|}
@@ -511,8 +534,14 @@ begin_function
 name|void
 name|fatal
 parameter_list|(
+name|err
+parameter_list|,
 name|buf
 parameter_list|)
+name|unsigned
+name|int
+name|err
+decl_stmt|;
 name|char
 modifier|*
 name|buf
@@ -536,7 +565,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|err
 argument_list|)
 expr_stmt|;
 block|}
@@ -619,6 +648,8 @@ return|;
 block|}
 name|fatal
 argument_list|(
+name|EX_OSFILE
+argument_list|,
 literal|"Cannot open snoop device."
 argument_list|)
 expr_stmt|;
@@ -649,7 +680,7 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|EX_OK
 argument_list|)
 expr_stmt|;
 block|}
@@ -667,7 +698,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -792,6 +823,8 @@ argument_list|)
 return|;
 name|fatal
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"Bad tty number."
 argument_list|)
 expr_stmt|;
@@ -845,6 +878,8 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|EX_UNAVAILABLE
+argument_list|,
 literal|"Cannot attach to tty."
 argument_list|)
 expr_stmt|;
@@ -900,13 +935,20 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|strcpy
+block|{
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"%s"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -940,6 +982,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|*
+name|name
+operator|==
+literal|'\0'
+operator|||
 name|stat
 argument_list|(
 name|buf
@@ -952,7 +999,28 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"Bad device name."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sb
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|!=
+name|S_IFCHR
+condition|)
+name|fatal
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"Must be a character device."
 argument_list|)
 expr_stmt|;
 name|snp_tty
@@ -1304,6 +1372,8 @@ expr_stmt|;
 else|else
 name|fatal
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"No device name given."
 argument_list|)
 expr_stmt|;
@@ -1342,6 +1412,8 @@ operator|)
 condition|)
 name|fatal
 argument_list|(
+name|EX_UNAVAILABLE
+argument_list|,
 literal|"Cannot malloc()."
 argument_list|)
 expr_stmt|;
@@ -1427,6 +1499,8 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"ioctl() failed."
 argument_list|)
 expr_stmt|;
@@ -1455,6 +1529,8 @@ name|nread
 condition|)
 name|fatal
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"read (stdin) failed."
 argument_list|)
 expr_stmt|;
@@ -1526,6 +1602,8 @@ name|opt_no_switch
 condition|)
 name|fatal
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"Write failed."
 argument_list|)
 expr_stmt|;
@@ -1577,6 +1655,8 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"ioctl() failed."
 argument_list|)
 expr_stmt|;
@@ -1705,6 +1785,8 @@ operator|)
 condition|)
 name|fatal
 argument_list|(
+name|EX_UNAVAILABLE
+argument_list|,
 literal|"Cannot malloc()"
 argument_list|)
 expr_stmt|;
@@ -1763,6 +1845,8 @@ operator|)
 condition|)
 name|fatal
 argument_list|(
+name|EX_UNAVAILABLE
+argument_list|,
 literal|"Cannot malloc()"
 argument_list|)
 expr_stmt|;
@@ -1782,6 +1866,8 @@ name|nread
 condition|)
 name|fatal
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"read failed."
 argument_list|)
 expr_stmt|;
@@ -1800,6 +1886,8 @@ name|nread
 condition|)
 name|fatal
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"write failed."
 argument_list|)
 expr_stmt|;
