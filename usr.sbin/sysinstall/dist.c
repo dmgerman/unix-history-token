@@ -239,7 +239,7 @@ parameter_list|,
 name|subdist
 parameter_list|)
 define|\
-value|{ name, mask, DIST_ ## flag, DT_SUBDIST, { my_dist: subdist } }
+value|{ name, mask, DIST_ ## flag, DT_SUBDIST, { .my_dist = subdist } }
 end_define
 
 begin_define
