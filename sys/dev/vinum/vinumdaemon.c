@@ -16,13 +16,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"vinumhdr.h"
+file|<dev/vinum/vinumhdr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"request.h"
+file|<dev/vinum/request.h>
 end_include
 
 begin_ifdef

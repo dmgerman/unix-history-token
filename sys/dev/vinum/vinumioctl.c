@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/vinum/request.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<sys/reboot.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/vinum/request.h>
 end_include
 
 begin_endif
@@ -1280,7 +1280,6 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 name|EINVAL
 return|;
