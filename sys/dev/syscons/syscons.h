@@ -1008,6 +1008,10 @@ name|font_size
 decl_stmt|;
 comment|/* fontsize in Y direction */
 name|int
+name|font_width
+decl_stmt|;
+comment|/* fontsize in X direction */
+name|int
 name|start
 decl_stmt|;
 comment|/* modified area start */

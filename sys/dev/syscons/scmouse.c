@@ -620,7 +620,9 @@ name|xsize
 operator|+
 name|x
 operator|/
-literal|8
+name|scp
+operator|->
+name|font_width
 operator|-
 name|scp
 operator|->
@@ -664,7 +666,9 @@ name|scp
 operator|->
 name|xoff
 operator|*
-literal|8
+name|scp
+operator|->
+name|font_width
 condition|)
 name|scp
 operator|->
@@ -674,7 +678,9 @@ name|scp
 operator|->
 name|xoff
 operator|*
-literal|8
+name|scp
+operator|->
+name|font_width
 expr_stmt|;
 if|if
 condition|(
@@ -774,7 +780,9 @@ operator|->
 name|xoff
 operator|)
 operator|*
-literal|8
+name|scp
+operator|->
+name|font_width
 operator|-
 literal|1
 condition|)
@@ -792,7 +800,9 @@ operator|->
 name|xoff
 operator|)
 operator|*
-literal|8
+name|scp
+operator|->
+name|font_width
 operator|-
 literal|1
 expr_stmt|;
@@ -890,7 +900,9 @@ name|scp
 operator|->
 name|mouse_xpos
 operator|/
-literal|8
+name|scp
+operator|->
+name|font_width
 operator|-
 name|scp
 operator|->
@@ -1075,7 +1087,9 @@ operator|->
 name|xoff
 operator|)
 operator|*
-literal|8
+name|scp
+operator|->
+name|font_width
 argument_list|,
 operator|(
 name|scp
