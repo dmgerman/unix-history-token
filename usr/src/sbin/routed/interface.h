@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)interface.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)interface.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -164,6 +164,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFF_SUBNET
+value|0x1000
+end_define
+
+begin_comment
+comment|/* interface on subnetted network */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFF_PASSIVE
 value|0x2000
 end_define
@@ -199,6 +210,15 @@ name|struct
 name|interface
 modifier|*
 name|if_ifwithaddr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|interface
+modifier|*
+name|if_ifwithdstaddr
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.3 (Berkeley) %G%"
+literal|"@(#)input.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,7 +300,7 @@ name|from
 argument_list|,
 literal|0
 argument_list|,
-name|ifp
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	5.2 (Berkeley) %G%"
+literal|"@(#)if.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -475,6 +475,27 @@ operator|&
 name|ifp
 operator|->
 name|int_broadaddr
+argument_list|,
+name|addr
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|int_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+operator|&&
+name|same
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|int_dstaddr
 argument_list|,
 name|addr
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)table.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)table.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -224,6 +224,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RTS_EXTERNAL
+value|0x2
+end_define
+
+begin_comment
+comment|/* extern info, not installed or sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTS_INTERNAL
+value|0x4
+end_define
+
+begin_comment
+comment|/* internal route, not installed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RTS_PASSIVE
 value|IFF_PASSIVE
 end_define
@@ -252,6 +274,32 @@ end_define
 
 begin_comment
 comment|/* route is for ``remote'' entity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTS_SUBNET
+value|IFF_SUBNET
+end_define
+
+begin_comment
+comment|/* route is for network subnet */
+end_comment
+
+begin_comment
+comment|/*  * Flags are same as kernel, with this addition for af_rtflags:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_SUBNET
+value|0x8000
+end_define
+
+begin_comment
+comment|/* pseudo: route to subnet */
 end_comment
 
 begin_decl_stmt

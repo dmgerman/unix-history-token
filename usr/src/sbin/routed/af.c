@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	5.3 (Berkeley) %G%"
+literal|"@(#)af.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,10 @@ decl_stmt|,
 name|inet_checkhost
 argument_list|()
 decl_stmt|,
-name|inet_ishost
+name|inet_rtflags
+argument_list|()
+decl_stmt|,
+name|inet_sendsubnet
 argument_list|()
 decl_stmt|,
 name|inet_canon
@@ -83,7 +86,7 @@ define|#
 directive|define
 name|INET
 define|\
-value|{ inet_hash,		inet_netmatch,		inet_output, \ 	  inet_portmatch,	inet_portcheck,		inet_checkhost, \ 	  inet_ishost,		inet_canon, 		inet_format }
+value|{ inet_hash,		inet_netmatch,		inet_output, \ 	  inet_portmatch,	inet_portcheck,		inet_checkhost, \ 	  inet_rtflags,		inet_sendsubnet,	inet_canon, \ 	  inet_format \ 	}
 end_define
 
 begin_decl_stmt
@@ -97,10 +100,14 @@ init|=
 block|{
 name|NIL
 block|,
+comment|/* 0- unused */
 name|NIL
 block|,
+comment|/* 1- Unix domain, unused */
 name|INET
-block|, }
+block|,
+comment|/* Internet */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -555,42 +562,6 @@ return|;
 return|return
 operator|(
 literal|1
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Return 1 if the address is  * for an Internet host, 0 for a network.  */
-end_comment
-
-begin_macro
-name|inet_ishost
-argument_list|(
-argument|sin
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-name|inet_lnaof
-argument_list|(
-name|sin
-operator|->
-name|sin_addr
-argument_list|)
-operator|!=
-literal|0
 operator|)
 return|;
 block|}
