@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.33 1996/03/19 04:39:53 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.34 1996/03/19 04:49:13 nate Exp $  */
 end_comment
 
 begin_include
@@ -2208,7 +2208,41 @@ operator|->
 name|active
 condition|)
 block|{
-asm|__asm ("movw $0x5305, %ax; lcall _apm_addr");
+name|u_long
+name|eax
+decl_stmt|,
+name|ebx
+decl_stmt|,
+name|ecx
+decl_stmt|;
+name|eax
+operator|=
+operator|(
+name|APM_BIOS
+operator|<<
+literal|8
+operator|)
+operator||
+name|APM_CPUIDLE
+expr_stmt|;
+name|ecx
+operator|=
+name|ebx
+operator|=
+literal|0
+expr_stmt|;
+name|apm_int
+argument_list|(
+operator|&
+name|eax
+argument_list|,
+operator|&
+name|ebx
+argument_list|,
+operator|&
+name|ecx
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Some APM implementation halts CPU in BIOS, whenever 	 * "CPU-idle" function are invoked, but swtch() of 	 * FreeBSD halts CPU, therefore, CPU is halted twice 	 * in the sched loop. It makes the interrupt latency 	 * terribly long and be able to cause a serious problem 	 * in interrupt processing. We prevent it by removing 	 * "hlt" operation from swtch() and managed it under 	 * APM driver. 	 */
@@ -2260,7 +2294,41 @@ operator|->
 name|active
 condition|)
 block|{
-asm|__asm("movw $0x5306, %ax; lcall _apm_addr");
+name|u_long
+name|eax
+decl_stmt|,
+name|ebx
+decl_stmt|,
+name|ecx
+decl_stmt|;
+name|eax
+operator|=
+operator|(
+name|APM_BIOS
+operator|<<
+literal|8
+operator|)
+operator||
+name|APM_CPUIDLE
+expr_stmt|;
+name|ecx
+operator|=
+name|ebx
+operator|=
+literal|0
+expr_stmt|;
+name|apm_int
+argument_list|(
+operator|&
+name|eax
+argument_list|,
+operator|&
+name|ebx
+argument_list|,
+operator|&
+name|ecx
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
