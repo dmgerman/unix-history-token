@@ -1,13 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.5 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_include
 include|#
@@ -3619,7 +3631,7 @@ argument|register sz
 argument_list|,
 argument|d
 argument_list|,
-argument|s; 	register TWORD t;
+argument|s; 	register TWORD t; 	int o;
 comment|/* note: size of an individual initializer is assumed to fit into an int */
 argument|if( iclass<
 literal|0
@@ -3650,11 +3662,11 @@ argument|d = pstk->in_d; 	s = pstk->in_s; 	if( pstk->in_sz<
 literal|0
 argument|){
 comment|/* bit field */
-argument|sz = -pstk->in_sz; 		} 	else { 		sz = tsize( t, d, s ); 		}  	inforce( pstk->in_off );  	p = buildtree( ASSIGN, block( NAME, NIL,NIL, t, d, s ), p ); 	p->in.left->in.op = FREE; 	p->in.left = p->in.right; 	p->in.right = NIL; 	p->in.left = optim( p->in.left ); 	if( p->in.left->in.op == UNARY AND ){ 		p->in.left->in.op = FREE; 		p->in.left = p->in.left->in.left; 		} 	p->in.op = INIT;  	if( sz< SZINT ){
+argument|sz = -pstk->in_sz; 		} 	else { 		sz = tsize( t, d, s ); 		}  	inforce( pstk->in_off );  	p = buildtree( ASSIGN, block( NAME, NIL,NIL, t, d, s ), p ); 	p->in.left->in.op = FREE; 	p->in.left = p->in.right; 	p->in.right = NIL; 	p->in.left = optim( p->in.left ); 	o = p->in.left->in.op; 	if( o == UNARY AND ){ 		o = p->in.left->in.op = FREE; 		p->in.left = p->in.left->in.left; 		} 	p->in.op = INIT;  	if( sz< SZINT ){
 comment|/* special case: bit fields, etc. */
-argument|if( p->in.left->in.op != ICON ) uerror(
+argument|if( o != ICON ) uerror(
 literal|"illegal initialization"
-argument|); 		else incode( p->in.left, sz ); 		} 	else if( p->in.left->in.op == FCON ){ 		fincode( p->in.left->fpn.dval, sz ); 		} 	else { 		p = optim(p); 		if( p->in.left->in.op != ICON ) uerror(
+argument|); 		else incode( p->in.left, sz ); 		} 	else if( o == FCON ){ 		fincode( p->in.left->fpn.fval, sz ); 		} 	else if( o == DCON ){ 		fincode( p->in.left->dpn.dval, sz ); 		} 	else { 		p = optim(p); 		if( p->in.left->in.op != ICON ) uerror(
 literal|"illegal initialization"
 argument|); 		else cinit( p, sz ); 		}  	gotscal();  	leave: 	tfree(p); 	}  gotscal(){ 	register t
 argument_list|,

@@ -1,13 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)match.c	4.1 (Berkeley) %G%"
+literal|"@(#)match.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_include
 include|#
@@ -1650,10 +1662,15 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* generate code by interpreting table entry */
+ifdef|#
+directive|ifdef
+name|NEWZZZ
 specifier|register
 name|char
 name|c
 decl_stmt|;
+endif|#
+directive|endif
 name|CONSZ
 name|val
 decl_stmt|;

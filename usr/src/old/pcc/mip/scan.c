@@ -1,13 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	1.4 (Berkeley) %G%"
+literal|"@(#)scan.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_include
 include|#
@@ -535,12 +547,16 @@ decl_stmt|,
 name|tdebug
 decl_stmt|,
 name|edebug
-decl_stmt|,
+decl_stmt|;
+specifier|extern
+name|int
 name|ddebug
 decl_stmt|,
 name|xdebug
 decl_stmt|,
 name|gdebug
+decl_stmt|,
+name|adebug
 decl_stmt|;
 specifier|extern
 name|unsigned
@@ -679,6 +695,13 @@ literal|'g'
 case|:
 operator|++
 name|gdebug
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+operator|++
+name|adebug
 expr_stmt|;
 break|break;
 case|case
@@ -3119,11 +3142,11 @@ argument|; 		for( c=getchar(); isdigit(c); c=getchar() ){ 			val = val*
 literal|10
 argument|+ c -
 literal|'0'
-argument|; 			} 		ungetc( c, stdin ); 		lineno = val; 		lxget(
+argument|; 			} 		if( c == EOF ) 			continue; 		ungetc( c, stdin ); 		lineno = val; 		lxget(
 literal|' '
 argument|, LEXWS ); 		if( (c=getchar()) !=
 literal|'\n'
-argument|){ 			for( cp=ftitle; c!=
+argument|&& c != EOF ){ 			for( cp=ftitle; c!=EOF&& c!=
 literal|'\n'
 argument|; c=getchar(),++cp ){ 				*cp = c; 				} 			*cp =
 literal|'\0'

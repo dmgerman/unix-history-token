@@ -1,19 +1,59 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.5 (Berkeley) %G%"
+literal|"@(#)trees.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
 file|"mfile1"
 end_include
+
+begin_decl_stmt
+name|int
+name|bdebug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|adebug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern ddebug;
+end_extern
+
+begin_extern
+extern|extern eprint(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* corrections when in violation of lint */
@@ -107,21 +147,222 @@ name|NCVTR
 value|010000
 end_define
 
-begin_comment
-comment|/* node conventions:  	NAME:	rval>0 is stab index for external 		rval<0 is -inlabel number 		lval is offset in bits 	ICON:	lval has the value 		rval has the STAB index, or - label number, 			if a name whose address is in the constant 		rval = NONAME means no name 	REG:	rval is reg. identification cookie  	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BUG1
+end_ifndef
+
+begin_macro
+name|printact
+argument_list|(
+argument|t
+argument_list|,
+argument|acts
+argument_list|)
+end_macro
 
 begin_decl_stmt
-name|int
-name|bdebug
-init|=
-literal|0
+name|NODE
+modifier|*
+name|t
 decl_stmt|;
 end_decl_stmt
 
-begin_extern
-extern|extern ddebug;
-end_extern
+begin_decl_stmt
+name|int
+name|acts
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|static
+struct|struct
+name|actions
+block|{
+name|int
+name|a_bit
+decl_stmt|;
+name|char
+modifier|*
+name|a_name
+decl_stmt|;
+block|}
+name|actions
+index|[]
+init|=
+block|{
+block|{
+name|PUN
+block|,
+literal|"PUN"
+block|}
+block|,
+block|{
+name|CVTL
+block|,
+literal|"CVTL"
+block|}
+block|,
+block|{
+name|CVTR
+block|,
+literal|"CVTR"
+block|}
+block|,
+block|{
+name|TYPL
+block|,
+literal|"TYPL"
+block|}
+block|,
+block|{
+name|TYPR
+block|,
+literal|"TYPR"
+block|}
+block|,
+block|{
+name|TYMATCH
+block|,
+literal|"TYMATCH"
+block|}
+block|,
+block|{
+name|PTMATCH
+block|,
+literal|"PTMATCH"
+block|}
+block|,
+block|{
+name|LVAL
+block|,
+literal|"LVAL"
+block|}
+block|,
+block|{
+name|CVTO
+block|,
+literal|"CVTO"
+block|}
+block|,
+block|{
+name|NCVT
+block|,
+literal|"NCVT"
+block|}
+block|,
+block|{
+name|OTHER
+block|,
+literal|"OTHER"
+block|}
+block|,
+block|{
+name|NCVTR
+block|,
+literal|"NCVTR"
+block|}
+block|,
+block|{
+literal|0
+block|}
+block|}
+struct|;
+specifier|register
+name|struct
+name|actions
+modifier|*
+name|p
+decl_stmt|;
+name|char
+modifier|*
+name|sep
+init|=
+literal|" "
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"actions"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|actions
+init|;
+name|p
+operator|->
+name|a_name
+condition|;
+name|p
+operator|++
+control|)
+if|if
+condition|(
+name|p
+operator|->
+name|a_bit
+operator|&
+name|acts
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s%s"
+argument_list|,
+name|sep
+argument_list|,
+name|p
+operator|->
+name|a_name
+argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|"|"
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|bdebug
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" for:\n"
+argument_list|)
+expr_stmt|;
+name|fwalk
+argument_list|(
+name|t
+argument_list|,
+name|eprint
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* node conventions:  	NAME:	rval>0 is stab index for external 		rval<0 is -inlabel number 		lval is offset in bits 	ICON:	lval has the value 		rval has the STAB index, or - label number, 			if a name whose address is in the constant 		rval = NONAME means no name 	REG:	rval is reg. identification cookie  	*/
+end_comment
 
 begin_function
 name|NODE
@@ -174,14 +415,14 @@ decl_stmt|,
 modifier|*
 name|ll
 decl_stmt|;
+name|NODE
+modifier|*
+name|fixargs
+parameter_list|()
+function_decl|;
 name|int
 name|i
 decl_stmt|;
-specifier|extern
-name|int
-name|eprint
-parameter_list|()
-function_decl|;
 ifndef|#
 directive|ifndef
 name|BUG1
@@ -292,12 +533,48 @@ name|l
 operator|->
 name|fpn
 operator|.
-name|dval
+name|fval
 operator|=
 operator|-
 name|l
 operator|->
 name|fpn
+operator|.
+name|fval
+expr_stmt|;
+return|return
+operator|(
+name|l
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|o
+operator|==
+name|UNARY
+name|MINUS
+operator|&&
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|DCON
+condition|)
+block|{
+name|l
+operator|->
+name|dpn
+operator|.
+name|dval
+operator|=
+operator|-
+name|l
+operator|->
+name|dpn
 operator|.
 name|dval
 expr_stmt|;
@@ -567,7 +844,10 @@ condition|(
 name|opty
 operator|==
 name|BITYPE
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|l
 operator|->
@@ -604,7 +884,6 @@ operator|==
 name|ICON
 operator|)
 condition|)
-block|{
 switch|switch
 condition|(
 name|o
@@ -632,12 +911,11 @@ name|op
 operator|==
 name|ICON
 condition|)
-block|{
 name|l
 operator|->
 name|fpn
 operator|.
-name|dval
+name|fval
 operator|=
 name|l
 operator|->
@@ -645,7 +923,6 @@ name|tn
 operator|.
 name|lval
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|r
@@ -656,10 +933,242 @@ name|op
 operator|==
 name|ICON
 condition|)
-block|{
 name|r
 operator|->
 name|fpn
+operator|.
+name|fval
+operator|=
+name|r
+operator|->
+name|tn
+operator|.
+name|lval
+expr_stmt|;
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|=
+name|FCON
+expr_stmt|;
+name|l
+operator|->
+name|in
+operator|.
+name|type
+operator|=
+name|l
+operator|->
+name|fn
+operator|.
+name|csiz
+operator|=
+name|FLOAT
+expr_stmt|;
+name|r
+operator|->
+name|in
+operator|.
+name|op
+operator|=
+name|FREE
+expr_stmt|;
+switch|switch
+condition|(
+name|o
+condition|)
+block|{
+case|case
+name|PLUS
+case|:
+name|l
+operator|->
+name|fpn
+operator|.
+name|fval
+operator|+=
+name|r
+operator|->
+name|fpn
+operator|.
+name|fval
+expr_stmt|;
+return|return
+operator|(
+name|l
+operator|)
+return|;
+case|case
+name|MINUS
+case|:
+name|l
+operator|->
+name|fpn
+operator|.
+name|fval
+operator|-=
+name|r
+operator|->
+name|fpn
+operator|.
+name|fval
+expr_stmt|;
+return|return
+operator|(
+name|l
+operator|)
+return|;
+case|case
+name|MUL
+case|:
+name|l
+operator|->
+name|fpn
+operator|.
+name|fval
+operator|*=
+name|r
+operator|->
+name|fpn
+operator|.
+name|fval
+expr_stmt|;
+return|return
+operator|(
+name|l
+operator|)
+return|;
+case|case
+name|DIV
+case|:
+if|if
+condition|(
+name|r
+operator|->
+name|fpn
+operator|.
+name|fval
+operator|==
+literal|0
+condition|)
+name|uerror
+argument_list|(
+literal|"division by 0."
+argument_list|)
+expr_stmt|;
+else|else
+name|l
+operator|->
+name|fpn
+operator|.
+name|fval
+operator|/=
+name|r
+operator|->
+name|fpn
+operator|.
+name|fval
+expr_stmt|;
+return|return
+operator|(
+name|l
+operator|)
+return|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|DCON
+operator|||
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|ICON
+operator|)
+operator|&&
+operator|(
+name|r
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|DCON
+operator|||
+name|r
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|ICON
+operator|)
+condition|)
+switch|switch
+condition|(
+name|o
+condition|)
+block|{
+case|case
+name|PLUS
+case|:
+case|case
+name|MINUS
+case|:
+case|case
+name|MUL
+case|:
+case|case
+name|DIV
+case|:
+if|if
+condition|(
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|ICON
+condition|)
+name|l
+operator|->
+name|dpn
+operator|.
+name|dval
+operator|=
+name|l
+operator|->
+name|tn
+operator|.
+name|lval
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|ICON
+condition|)
+name|r
+operator|->
+name|dpn
 operator|.
 name|dval
 operator|=
@@ -669,14 +1178,13 @@ name|tn
 operator|.
 name|lval
 expr_stmt|;
-block|}
 name|l
 operator|->
 name|in
 operator|.
 name|op
 operator|=
-name|FCON
+name|DCON
 expr_stmt|;
 name|l
 operator|->
@@ -710,13 +1218,13 @@ name|PLUS
 case|:
 name|l
 operator|->
-name|fpn
+name|dpn
 operator|.
 name|dval
 operator|+=
 name|r
 operator|->
-name|fpn
+name|dpn
 operator|.
 name|dval
 expr_stmt|;
@@ -730,13 +1238,13 @@ name|MINUS
 case|:
 name|l
 operator|->
-name|fpn
+name|dpn
 operator|.
 name|dval
 operator|-=
 name|r
 operator|->
-name|fpn
+name|dpn
 operator|.
 name|dval
 expr_stmt|;
@@ -750,13 +1258,13 @@ name|MUL
 case|:
 name|l
 operator|->
-name|fpn
+name|dpn
 operator|.
 name|dval
 operator|*=
 name|r
 operator|->
-name|fpn
+name|dpn
 operator|.
 name|dval
 expr_stmt|;
@@ -772,7 +1280,7 @@ if|if
 condition|(
 name|r
 operator|->
-name|fpn
+name|dpn
 operator|.
 name|dval
 operator|==
@@ -786,13 +1294,13 @@ expr_stmt|;
 else|else
 name|l
 operator|->
-name|fpn
+name|dpn
 operator|.
 name|dval
 operator|/=
 name|r
 operator|->
-name|fpn
+name|dpn
 operator|.
 name|dval
 expr_stmt|;
@@ -829,6 +1337,22 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BUG1
+if|if
+condition|(
+name|adebug
+condition|)
+name|printact
+argument_list|(
+name|p
+argument_list|,
+name|actions
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|actions
@@ -1408,6 +1932,50 @@ name|in
 operator|.
 name|type
 operator|=
+name|FLOAT
+expr_stmt|;
+name|p
+operator|->
+name|fn
+operator|.
+name|cdim
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
+name|fn
+operator|.
+name|csiz
+operator|=
+name|FLOAT
+expr_stmt|;
+break|break;
+case|case
+name|DCON
+case|:
+name|p
+operator|->
+name|tn
+operator|.
+name|lval
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
+name|tn
+operator|.
+name|rval
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
+name|in
+operator|.
+name|type
+operator|=
 name|DOUBLE
 expr_stmt|;
 name|p
@@ -1701,7 +2269,7 @@ argument|);  				r = buildtree( UNARY AND, r, NIL ); 				t = r->in.type; 				d =
 comment|/* structure colon */
 argument|if( l->fn.csiz != r->fn.csiz ) uerror(
 literal|"type clash in conditional"
-argument|); 			break;  		case CALL: 			p->in.right = r = strargs( p->in.right ); 		case UNARY CALL: 			if( !ISPTR(l->in.type)) uerror(
+argument|); 			break;  		case CALL: 			p->in.right = r = fixargs( p->in.right ); 		case UNARY CALL: 			if( !ISPTR(l->in.type)) uerror(
 literal|"illegal function"
 argument|); 			p->in.type = DECREF(l->in.type); 			if( !ISFTN(p->in.type)) uerror(
 literal|"illegal function"
@@ -1721,9 +2289,13 @@ literal|0
 argument|);
 endif|#
 directive|endif
-argument|return(p);  	}  NODE * strargs( p ) register NODE *p;  {
-comment|/* rewrite structure flavored arguments */
-argument|if( p->in.op == CM ){ 		p->in.left = strargs( p->in.left ); 		p->in.right = strargs( p->in.right ); 		return( p ); 		}  	if( p->in.type == STRTY || p->in.type == UNIONTY ){ 		p = block( STARG, p, NIL, p->in.type, p->fn.cdim, p->fn.csiz ); 		p->in.left = buildtree( UNARY AND, p->in.left, NIL ); 		p = clocal(p); 		} 	return( p ); 	}  chkstr( i, j, type ) TWORD type; {
+argument|return(p);  	}
+comment|/*  * Rewrite arguments in a function call.  * Structure arguments are massaged, single  * precision floating point constants are  * cast to double (to eliminate convert code).  */
+argument|NODE * fixargs( p ) register NODE *p;  { 	int o = p->in.op;  	if( o == CM ){ 		p->in.left = fixargs( p->in.left ); 		p->in.right = fixargs( p->in.right ); 		return( p ); 		}  	if( p->in.type == STRTY || p->in.type == UNIONTY ){ 		p = block( STARG, p, NIL, p->in.type, p->fn.cdim, p->fn.csiz ); 		p->in.left = buildtree( UNARY AND, p->in.left, NIL ); 		p = clocal(p); 		} 	else if( o == FCON ) 		p = makety(p, DOUBLE,
+literal|0
+argument|,
+literal|0
+argument|); 	return( p ); 	}  chkstr( i, j, type ) TWORD type; {
 comment|/* is the MOS or MOU at stab[i] OK for strict reference by a ptr */
 comment|/* i has been checked to contain a MOS or MOU */
 comment|/* j is the index in dimtab of the members... */
@@ -1802,11 +2374,11 @@ argument|);  	switch( o ){  	case PLUS: 		p->tn.lval += val; 		if( p->tn.rval ==
 literal|0
 argument|) uerror(
 literal|"division by 0"
-argument|); 		else p->tn.lval /= val; 		break; 	case MOD: 		if( val ==
+argument|); 		else if ( u ) p->tn.lval = (unsigned) p->tn.lval / val; 		else p->tn.lval /= val; 		break; 	case MOD: 		if( val ==
 literal|0
 argument|) uerror(
 literal|"division by 0"
-argument|); 		else p->tn.lval %= val; 		break; 	case AND: 		p->tn.lval&= val; 		break; 	case OR: 		p->tn.lval |= val; 		break; 	case ER: 		p->tn.lval ^=  val; 		break; 	case LS: 		i = val; 		p->tn.lval = p->tn.lval<< i; 		break; 	case RS: 		i = val; 		p->tn.lval = p->tn.lval>> i; 		break;  	case UNARY MINUS: 		p->tn.lval = - p->tn.lval; 		break; 	case COMPL: 		p->tn.lval = ~p->tn.lval; 		break; 	case NOT: 		p->tn.lval = !p->tn.lval; 		break; 	case LT: 		p->tn.lval = p->tn.lval< val; 		break; 	case LE: 		p->tn.lval = p->tn.lval<= val; 		break; 	case GT: 		p->tn.lval = p->tn.lval> val; 		break; 	case GE: 		p->tn.lval = p->tn.lval>= val; 		break; 	case ULT: 		p->tn.lval = (p->tn.lval-val)<
+argument|); 		else if ( u ) p->tn.lval = (unsigned) p->tn.lval % val; 		else p->tn.lval %= val; 		break; 	case AND: 		p->tn.lval&= val; 		break; 	case OR: 		p->tn.lval |= val; 		break; 	case ER: 		p->tn.lval ^= val; 		break; 	case LS: 		i = val; 		p->tn.lval = p->tn.lval<< i; 		break; 	case RS: 		i = val; 		if ( u ) p->tn.lval = (unsigned) p->tn.lval>> i; 		else p->tn.lval = p->tn.lval>> i; 		break;  	case UNARY MINUS: 		p->tn.lval = - p->tn.lval; 		break; 	case COMPL: 		p->tn.lval = ~p->tn.lval; 		break; 	case NOT: 		p->tn.lval = !p->tn.lval; 		break; 	case LT: 		p->tn.lval = p->tn.lval< val; 		break; 	case LE: 		p->tn.lval = p->tn.lval<= val; 		break; 	case GT: 		p->tn.lval = p->tn.lval> val; 		break; 	case GE: 		p->tn.lval = p->tn.lval>= val; 		break; 	case ULT: 		p->tn.lval = (p->tn.lval-val)<
 literal|0
 argument|; 		break; 	case ULE: 		p->tn.lval = (p->tn.lval-val)<=
 literal|0
@@ -1922,7 +2494,17 @@ argument|; 	if( ISUNSIGNED(t1) ){ 		u =
 literal|1
 argument|; 		t1 = DEUNSIGN(t1); 		} 	if( ISUNSIGNED(t2) ){ 		u =
 literal|1
-argument|; 		t2 = DEUNSIGN(t2); 		}  	if( ( t1 == CHAR || t1 == SHORT )&& o!= RETURN ) t1 = INT; 	if( t2 == CHAR || t2 == SHORT ) t2 = INT;  	if( t1==DOUBLE || t1==FLOAT || t2==DOUBLE || t2==FLOAT ) t = DOUBLE; 	else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;  	if( asgop(o) ){ 		tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
+argument|; 		t2 = DEUNSIGN(t2); 		}  	if( ( t1 == CHAR || t1 == SHORT )&& o!= RETURN ) t1 = INT; 	if( t2 == CHAR || t2 == SHORT ) t2 = INT;
+ifdef|#
+directive|ifdef
+name|SPRECC
+argument|if( t1 == DOUBLE || t2 == DOUBLE ) 		t = DOUBLE; 	else if( t1 == FLOAT || t2 == FLOAT ) 		t = FLOAT;
+else|#
+directive|else
+argument|if (t1 == DOUBLE || t1 == FLOAT || t2 == DOUBLE || t2 == FLOAT) 		t = DOUBLE;
+endif|#
+directive|endif
+argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;  	if( asgop(o) ){ 		tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
 comment|/* because expressions have values that are at least as wide 	   as INT or UNSIGNED, the only conversions needed 	   are those involving FLOAT/DOUBLE, and those 	   from LONG to INT and ULONG to UNSIGNED */
 argument|if( t != t1 ) p->in.left = makety( p->in.left, tu,
 literal|0
@@ -1943,9 +2525,20 @@ argument|return(p); 	}  NODE * makety( p, t, d, s ) register NODE *p; TWORD t; {
 comment|/* make p into type t by inserting a conversion */
 argument|if( p->in.type == ENUMTY&& p->in.op == ICON ) econvert(p); 	if( t == p->in.type ){ 		p->fn.cdim = d; 		p->fn.csiz = s; 		return( p ); 		}  	if( t& TMASK ){
 comment|/* non-simple type */
-argument|return( block( PCONV, p, NIL, t, d, s ) ); 		}  	if( p->in.op == ICON ){ 		if( t==DOUBLE||t==FLOAT ){ 			p->in.op = FCON; 			if( ISUNSIGNED(p->in.type) ){ 				p->fpn.dval =
+argument|return( block( PCONV, p, NIL, t, d, s ) ); 		}  	if( p->in.op == ICON ){ 		if (t == DOUBLE) { 			p->in.op = DCON; 			if (ISUNSIGNED(p->in.type)) 				p->dpn.dval =
 comment|/* (unsigned CONSZ) */
-argument|p->tn.lval; 				} 			else { 				p->fpn.dval = p->tn.lval; 				}  			p->in.type = p->fn.csiz = t; 			return( clocal(p) ); 			} 		}  	return( clocal( block( SCONV, p, NIL, t, d, s ) ) );  	}  NODE * block( o, l, r, t, d, s ) register NODE *l, *r; TWORD t; {  	register NODE *p;  	p = talloc(); 	p->in.op = o; 	p->in.left = l; 	p->in.right = r; 	p->in.type = t; 	p->fn.cdim = d; 	p->fn.csiz = s; 	return(p); 	}  icons(p) register NODE *p; {
+argument|p->tn.lval; 			else 				p->dpn.dval = p->tn.lval; 			p->in.type = p->fn.csiz = t; 			return (clocal(p)); 		} 		if (t == FLOAT) { 			p->in.op = FCON; 			if( ISUNSIGNED(p->in.type) ){ 				p->fpn.fval =
+comment|/* (unsigned CONSZ) */
+argument|p->tn.lval; 				} 			else { 				p->fpn.fval = p->tn.lval; 				}  			p->in.type = p->fn.csiz = t; 			return( clocal(p) ); 			} 		} 	else if (p->in.op == FCON&& t == DOUBLE) { 		double db;  		p->in.op = DCON; 		db = p->fpn.fval; 		p->dpn.dval = db; 		p->in.type = p->fn.csiz = t; 		return (clocal(p)); 	} else if (p->in.op == DCON&& t == FLOAT) { 		float fl;  		p->in.op = FCON; 		fl = p->dpn.dval;
+ifdef|#
+directive|ifdef
+name|notdef
+argument|if (fl != p->dpn.dval) 			werror(
+literal|"float conversion loses precision"
+argument|);
+endif|#
+directive|endif
+argument|p->fpn.fval = fl; 		p->in.type = p->fn.csiz = t; 		return (clocal(p)); 	}  	return( clocal( block( SCONV, p, NIL, t, d, s ) ) );  	}  NODE * block( o, l, r, t, d, s ) register NODE *l, *r; TWORD t; {  	register NODE *p;  	p = talloc(); 	p->in.op = o; 	p->in.left = l; 	p->in.right = r; 	p->in.type = t; 	p->fn.cdim = d; 	p->fn.csiz = s; 	return(p); 	}  icons(p) register NODE *p; {
 comment|/* if p is an integer constant, return its value */
 argument|int val;  	if( p->in.op != ICON ){ 		uerror(
 literal|"constant expected"
@@ -1987,7 +2580,7 @@ value|040
 comment|/* enumeration variable or member */
 argument|opact( p )  NODE *p; {  	register mt12, mt1, mt2, o;  	mt12 =
 literal|0
-argument|;  	switch( optype(o=p->in.op) ){  	case BITYPE: 		mt12=mt2 = moditype( p->in.right->in.type ); 	case UTYPE: 		mt12&= (mt1 = moditype( p->in.left->in.type ));  		}  	switch( o ){  	case NAME : 	case STRING : 	case ICON : 	case FCON : 	case CALL : 	case UNARY CALL: 	case UNARY MUL: 		{  return( OTHER ); } 	case UNARY MINUS: 		if( mt1& MDBI ) return( TYPL ); 		break;  	case COMPL: 		if( mt1& MINT ) return( TYPL ); 		break;  	case UNARY AND: 		{  return( NCVT+OTHER ); } 	case INIT: 	case CM: 		return(
+argument|;  	switch( optype(o=p->in.op) ){  	case BITYPE: 		mt12=mt2 = moditype( p->in.right->in.type ); 	case UTYPE: 		mt12&= (mt1 = moditype( p->in.left->in.type ));  		}  	switch( o ){  	case NAME : 	case STRING : 	case ICON : 	case FCON : 	case DCON : 	case CALL : 	case UNARY CALL: 	case UNARY MUL: 		{  return( OTHER ); } 	case UNARY MINUS: 		if( mt1& MDBI ) return( TYPL ); 		break;  	case COMPL: 		if( mt1& MINT ) return( TYPL ); 		break;  	case UNARY AND: 		{  return( NCVT+OTHER ); } 	case INIT: 	case CM: 		return(
 literal|0
 argument|);  	case NOT: 	case CBRANCH: 		if( mt1& MSTR ) break; 		return(
 literal|0
@@ -2034,9 +2627,9 @@ literal|", %d, %d\n"
 argument|, p->fn.cdim, p->fn.csiz ); 	}
 endif|#
 directive|endif
-argument|prtdcon( p ) register NODE *p; { 	int i;  	if( p->in.op == FCON ){ 		locctr( DATA ); 		defalign( ALDOUBLE ); 		deflab( i = getlab() ); 		fincode( p->fpn.dval, SZDOUBLE ); 		p->tn.lval =
+argument|prtdcon( p ) register NODE *p; { 	int o = p->in.op, i;  	if( o == DCON || o == FCON ){ 		locctr( DATA ); 		defalign( o == DCON ? ALDOUBLE : ALFLOAT ); 		deflab( i = getlab() ); 		if( o == FCON ) 			fincode( p->fpn.fval, SZFLOAT ); 		else 			fincode( p->dpn.dval, SZDOUBLE ); 		p->tn.lval =
 literal|0
-argument|; 		p->tn.rval = -i; 		p->in.type = DOUBLE; 		p->in.op = NAME; 		} 	}   int edebug =
+argument|; 		p->tn.rval = -i; 		p->in.type = (o == DCON ? DOUBLE : FLOAT); 		p->in.op = NAME; 		} 	}   int edebug =
 literal|0
 argument|; ecomp( p ) register NODE *p; {
 ifndef|#

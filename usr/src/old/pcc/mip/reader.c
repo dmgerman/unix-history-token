@@ -1,13 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)reader.c	4.1 (Berkeley) %G%"
+literal|"@(#)reader.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_include
 include|#
@@ -92,6 +104,25 @@ name|int
 name|lflag
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FORT
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|Oflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -376,6 +407,19 @@ operator|++
 name|Wflag
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|FORT
+case|case
+literal|'O'
+case|:
+comment|/* optimizing */
+operator|++
+name|Oflag
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 default|default:
 name|cerror
 argument_list|(
@@ -1659,10 +1703,8 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|WCARD2
-name|"
-name|"
-name|WCARD2"
-name|,
+literal|"WCARD2"
+block|,
 else|#
 directive|else
 literal|"STARREG"
@@ -2568,8 +2610,6 @@ operator|->
 name|in
 operator|.
 name|left
-argument_list|,
-name|cook
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2790,8 +2830,6 @@ operator|->
 name|in
 operator|.
 name|left
-argument_list|,
-name|cook
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2806,8 +2844,6 @@ condition|(
 name|setincr
 argument_list|(
 name|p
-argument_list|,
-name|cook
 argument_list|)
 condition|)
 goto|goto
@@ -2930,8 +2966,6 @@ condition|(
 name|setstr
 argument_list|(
 name|p
-argument_list|,
-name|cook
 argument_list|)
 condition|)
 goto|goto
@@ -2950,8 +2984,6 @@ condition|(
 name|setasop
 argument_list|(
 name|p
-argument_list|,
-name|cook
 argument_list|)
 condition|)
 goto|goto
@@ -3061,8 +3093,6 @@ condition|(
 name|setasg
 argument_list|(
 name|p
-argument_list|,
-name|cook
 argument_list|)
 condition|)
 goto|goto
@@ -3079,8 +3109,6 @@ condition|(
 name|setbin
 argument_list|(
 name|p
-argument_list|,
-name|cook
 argument_list|)
 condition|)
 goto|goto
