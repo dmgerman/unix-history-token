@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.8 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,6 +444,8 @@ specifier|static
 name|int
 name|fflg
 decl_stmt|,
+name|hadfflg
+decl_stmt|,
 name|vflg
 decl_stmt|;
 end_decl_stmt
@@ -692,17 +694,36 @@ operator|++
 name|argv
 control|)
 block|{
-name|fflg
+name|hadfflg
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
 name|getfname
 argument_list|(
 operator|*
 name|argv
 argument_list|)
+condition|)
+name|fflg
+operator|=
+literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|hadfflg
+operator|&&
+operator|!
+name|fflg
+condition|)
+comment|/* file(s) specified, but none accessable */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"USER\t CMD\t      PID    FD\tDEVICE\tINODE\t  SIZE TYPE"
@@ -3008,11 +3029,11 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -3112,6 +3133,11 @@ name|name
 operator|=
 name|filename
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
