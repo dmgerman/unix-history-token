@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  *  *	@(#)eval.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  *  *	@(#)eval.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -88,6 +88,10 @@ union_decl|union
 name|node
 union_decl|;
 end_union_decl
+
+begin_comment
+comment|/* BLETCH for ansi C */
+end_comment
 
 begin_function_decl
 name|void
