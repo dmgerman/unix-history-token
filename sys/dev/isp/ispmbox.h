@@ -113,9 +113,12 @@ name|MBOX_CHECK_FIRMWARE
 value|0x000e
 end_define
 
-begin_comment
-comment|/*   f */
-end_comment
+begin_define
+define|#
+directive|define
+name|MBOX_READ_RAM_WORD_EXTENDED
+value|0x000f
+end_define
 
 begin_define
 define|#

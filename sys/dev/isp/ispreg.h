@@ -6044,6 +6044,57 @@ parameter_list|)
 value|(c)[232] | ((c)[233]<< 8)
 end_define
 
+begin_comment
+comment|/*  * Firmware Crash Dump  *  * QLogic needs specific information format when they look at firmware crashes.  *  * This is incredibly kernel memory consumptive (to say the least), so this  * code is only compiled in when needed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QLA2200_RISC_IMAGE_DUMP_SIZE
+define|\
+value|(1 * sizeof (u_int16_t)) +
+comment|/* 'used' flag (also HBA type) */
+value|\ 	(352 * sizeof (u_int16_t)) +
+comment|/* RISC registers */
+value|\  	(61440 * sizeof (u_int16_t))
+end_define
+
+begin_comment
+comment|/* RISC SRAM (offset 0x1000..0xffff) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QLA2300_RISC_IMAGE_DUMP_SIZE
+define|\
+value|(1 * sizeof (u_int16_t)) +
+comment|/* 'used' flag (also HBA type) */
+value|\ 	(464 * sizeof (u_int16_t)) +
+comment|/* RISC registers */
+value|\  	(63488 * sizeof (u_int16_t)) +
+comment|/* RISC SRAM (0x0800..0xffff) */
+value|\ 	(4096 * sizeof (u_int16_t)) +
+comment|/* RISC SRAM (0x10000..0x10FFF) */
+value|\ 	(61440 * sizeof (u_int16_t))
+end_define
+
+begin_comment
+comment|/* RISC SRAM (0x11000..0x1FFFF) */
+end_comment
+
+begin_comment
+comment|/* the larger of the two */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CRASH_IMAGE_SIZE
+value|QLA2300_RISC_IMAGE_DUMP_SIZE
+end_define
+
 begin_endif
 endif|#
 directive|endif

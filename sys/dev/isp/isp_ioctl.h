@@ -193,5 +193,23 @@ name|ISP_CLR_STATS
 value|_IO(ISP_IOC, 7)
 end_define
 
+begin_comment
+comment|/*  * Get F/W crash dump  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_GET_FW_CRASH_DUMP
+value|_IOR(ISP_IOC, 10, void *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FORCE_CRASH_DUMP
+value|_IO(ISP_IOC, 11)
+end_define
+
 end_unit
 
