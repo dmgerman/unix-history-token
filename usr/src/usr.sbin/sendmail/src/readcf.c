@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.56 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4715,7 +4715,7 @@ literal|'R'
 block|,
 name|FALSE
 block|,
-literal|"Timeouts"
+literal|"Timeout"
 block|,
 literal|'r'
 block|,
@@ -4828,16 +4828,6 @@ value|0x81
 literal|"QueueSortOrder"
 block|,
 name|O_QUEUESORTORD
-block|,
-name|TRUE
-block|,
-define|#
-directive|define
-name|O_DNICE
-value|0x82
-literal|"DeliveryNiceness"
-block|,
-name|O_DNICE
 block|,
 name|TRUE
 block|,
@@ -7039,18 +7029,6 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
-name|O_DNICE
-case|:
-comment|/* delivery nice value */
-name|DeliveryNiceness
-operator|=
-name|atoi
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|O_MQA
