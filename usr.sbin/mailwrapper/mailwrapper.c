@@ -225,7 +225,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"mailwrapper"
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -327,7 +327,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"mailwrapper"
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -371,7 +371,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"mailwrapper"
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -619,7 +619,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"mailwrapper: execing %s"
+literal|"execing %s"
 argument_list|,
 name|_PATH_DEFAULTMTA
 argument_list|)
@@ -667,7 +667,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"mailwrapper: no mapping in %s"
+literal|"no mapping in %s"
 argument_list|,
 name|_PATH_MAILERCONF
 argument_list|)
@@ -676,7 +676,12 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"mailwrapper"
+literal|"can't parse line %lu"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|lineno
 argument_list|)
 expr_stmt|;
 block|}
@@ -869,7 +874,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"mailwrapper: execing %s"
+literal|"execing %s"
 argument_list|,
 name|to
 argument_list|)
@@ -894,7 +899,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"mailwrapper: parse error in %s at line %lu"
+literal|"parse error in %s at line %lu"
 argument_list|,
 name|_PATH_MAILERCONF
 argument_list|,
