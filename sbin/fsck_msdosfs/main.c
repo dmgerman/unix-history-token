@@ -138,6 +138,16 @@ comment|/* device is opened read only (supersedes above) */
 end_comment
 
 begin_decl_stmt
+name|int
+name|force
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* force check even the fs is clean */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
@@ -185,6 +195,10 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|force
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -212,7 +226,10 @@ block|{
 case|case
 literal|'f'
 case|:
-comment|/* 			 * We are always forced, since we don't 			 * have a clean flag 			 */
+name|force
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'F'

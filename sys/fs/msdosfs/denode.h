@@ -247,6 +247,12 @@ name|u_quad_t
 name|de_modrev
 decl_stmt|;
 comment|/* Revision level for lease. */
+name|struct
+name|lockf
+modifier|*
+name|de_lockf
+decl_stmt|;
+comment|/* lockf */
 block|}
 struct|;
 end_struct

@@ -394,6 +394,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|markvoldirty
+parameter_list|(
+name|struct
+name|msdosfsmount
+modifier|*
+name|pmp
+parameter_list|,
+name|int
+name|dirty
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
