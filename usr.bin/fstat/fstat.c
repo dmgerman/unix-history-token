@@ -3234,15 +3234,15 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"* pipe %8x<-> %8x"
+literal|"* pipe %8lx<-> %8lx"
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|pi
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|pip
 operator|.
@@ -3710,10 +3710,10 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|" %x"
+literal|" %lx"
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|inpcb
 operator|.
@@ -3731,10 +3731,10 @@ name|so_pcb
 condition|)
 name|printf
 argument_list|(
-literal|" %x"
+literal|" %lx"
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|so
 operator|.
@@ -3755,10 +3755,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %x"
+literal|" %lx"
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|so
 operator|.
@@ -3885,12 +3885,12 @@ literal|'\0'
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %s %x"
+literal|" %s %lx"
 argument_list|,
 name|shoconn
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|unpcb
 operator|.
@@ -3904,14 +3904,14 @@ default|default:
 comment|/* print protocol number and socket address */
 name|printf
 argument_list|(
-literal|" %d %x"
+literal|" %d %lx"
 argument_list|,
 name|proto
 operator|.
 name|pr_protocol
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|sock
 argument_list|)
@@ -3977,12 +3977,8 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't convert dev_t %p to a udev_t\n"
+literal|"can't convert dev_t %x to a udev_t\n"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|dev
 argument_list|)
 expr_stmt|;
