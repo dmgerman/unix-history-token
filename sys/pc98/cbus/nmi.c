@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mca.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -47,56 +41,30 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_MCA
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/epsonio.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/bios/mca_machdep.h>
+file|<pc98/pc98/pc98_machdep.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
 name|NMI_PARITY
-value|(1<< 7)
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|NMI_IOCHAN
-value|(1<< 6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENMI_WATCHDOG
-value|(1<< 7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENMI_BUSTIMER
-value|(1<< 6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENMI_IOSTATUS
-value|(1<< 5)
+name|NMI_EPARITY
+value|0x02
 end_define
 
 begin_comment
@@ -117,52 +85,43 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|isa_port
+name|port
 init|=
 name|inb
 argument_list|(
-literal|0x61
-argument_list|)
-decl_stmt|;
-name|int
-name|eisa_port
-init|=
-name|inb
-argument_list|(
-literal|0x461
+literal|0x33
 argument_list|)
 decl_stmt|;
 name|log
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"NMI ISA %x, EISA %x\n"
+literal|"NMI PC98 port = %x\n"
 argument_list|,
-name|isa_port
-argument_list|,
-name|eisa_port
+name|port
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_MCA
 if|if
 condition|(
-name|MCA_system
-operator|&&
-name|mca_bus_nmi
-argument_list|()
+name|epson_machine_id
+operator|==
+literal|0x20
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
+name|epson_outb
+argument_list|(
+literal|0xc16
+argument_list|,
+name|epson_inb
+argument_list|(
+literal|0xc16
+argument_list|)
+operator||
+literal|0x1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|isa_port
+name|port
 operator|&
 name|NMI_PARITY
 condition|)
@@ -171,7 +130,7 @@ name|log
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"RAM parity error, likely hardware failure."
+literal|"BASE RAM parity error, likely hardware failure."
 argument_list|)
 expr_stmt|;
 name|retval
@@ -179,18 +138,19 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
-name|isa_port
+name|port
 operator|&
-name|NMI_IOCHAN
+name|NMI_EPARITY
 condition|)
 block|{
 name|log
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"I/O channel check, likely hardware failure."
+literal|"EXTENDED RAM parity error, likely hardware failure."
 argument_list|)
 expr_stmt|;
 name|retval
@@ -198,73 +158,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * On a real EISA machine, this will never happen.  However it can 	 * happen on ISA machines which implement XT style floating point 	 * error handling (very rare).  Save them from a meaningless panic. 	 */
-if|if
-condition|(
-name|eisa_port
-operator|==
-literal|0xff
-condition|)
-return|return
-operator|(
-name|retval
-operator|)
-return|;
-if|if
-condition|(
-name|eisa_port
-operator|&
-name|ENMI_WATCHDOG
-condition|)
+else|else
 block|{
 name|log
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"EISA watchdog timer expired, likely hardware failure."
+literal|"\nNMI Resume ??\n"
 argument_list|)
-expr_stmt|;
-name|retval
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|eisa_port
-operator|&
-name|ENMI_BUSTIMER
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_CRIT
-argument_list|,
-literal|"EISA bus timeout, likely hardware failure."
-argument_list|)
-expr_stmt|;
-name|retval
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|eisa_port
-operator|&
-name|ENMI_IOSTATUS
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_CRIT
-argument_list|,
-literal|"EISA I/O port status error."
-argument_list|)
-expr_stmt|;
-name|retval
-operator|=
-literal|1
 expr_stmt|;
 block|}
 return|return
