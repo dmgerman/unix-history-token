@@ -2566,11 +2566,12 @@ name|kgetstr
 argument_list|(
 name|code
 argument_list|,
-operator|&
 operator|(
 name|char
 operator|*
+operator|*
 operator|)
+operator|&
 name|ap
 argument_list|)
 condition|)

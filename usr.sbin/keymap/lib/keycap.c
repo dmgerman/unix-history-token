@@ -199,6 +199,7 @@ comment|/* detect infinite loops in keycap, init 0 */
 end_comment
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|tskip
@@ -215,6 +216,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|tdecode

@@ -168,7 +168,7 @@ end_define
 begin_decl_stmt
 name|struct
 name|sockaddr_in
-name|sin
+name|s_in
 decl_stmt|;
 end_decl_stmt
 
@@ -641,13 +641,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|sin
+name|s_in
 operator|.
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_port
 operator|=
@@ -667,11 +667,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|s_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s_in
 argument_list|)
 argument_list|)
 operator|<
@@ -2112,7 +2112,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|s_in
 decl_stmt|;
 specifier|register
 name|struct
@@ -2655,7 +2655,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* gag, wish we could get rid of Internet dependencies */
-name|sin
+name|s_in
 operator|=
 operator|(
 expr|struct
@@ -2666,7 +2666,7 @@ name|np
 operator|->
 name|n_addr
 expr_stmt|;
-name|sin
+name|s_in
 operator|->
 name|sin_port
 operator|=
@@ -2774,7 +2774,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|s_in
 init|=
 operator|(
 expr|struct
@@ -2794,14 +2794,14 @@ literal|"sendto %x.%d\n"
 argument_list|,
 name|ntohl
 argument_list|(
-name|sin
+name|s_in
 operator|->
 name|sin_addr
 argument_list|)
 argument_list|,
 name|ntohs
 argument_list|(
-name|sin
+name|s_in
 operator|->
 name|sin_port
 argument_list|)

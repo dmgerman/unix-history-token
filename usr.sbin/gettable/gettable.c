@@ -143,7 +143,7 @@ end_define
 begin_decl_stmt
 name|struct
 name|sockaddr_in
-name|sin
+name|s_in
 decl_stmt|;
 end_decl_stmt
 
@@ -399,7 +399,7 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_family
 operator|=
@@ -450,11 +450,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|s_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s_in
 argument_list|)
 argument_list|)
 operator|<
@@ -479,7 +479,7 @@ operator|->
 name|h_addr
 argument_list|,
 operator|&
-name|sin
+name|s_in
 operator|.
 name|sin_addr
 argument_list|,
@@ -488,7 +488,7 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_port
 operator|=
@@ -508,11 +508,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|s_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s_in
 argument_list|)
 argument_list|)
 operator|<
