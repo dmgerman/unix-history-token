@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	6.9	85/03/18	*/
+comment|/*	ip_icmp.c	6.10	85/04/16	*/
 end_comment
 
 begin_include
@@ -1284,6 +1284,16 @@ comment|/* since ip_input deducts this */
 name|icmpstat
 operator|.
 name|icps_reflect
+operator|++
+expr_stmt|;
+name|icmpstat
+operator|.
+name|icps_outhist
+index|[
+name|icp
+operator|->
+name|icmp_type
+index|]
 operator|++
 expr_stmt|;
 name|icmp_reflect
