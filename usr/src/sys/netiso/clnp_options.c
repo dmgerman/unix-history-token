@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_options.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_options.c	7.6 (Berkeley) %G% */
+comment|/*	@(#)clnp_options.c	7.7 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -639,7 +639,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 *	Insure that the options are reasonable. 		 * 		 *	Also, we do not support security, priority, or QOS 		 *	nor do we allow one to send an ER option 		 */
+comment|/* 		 *	Insure that the options are reasonable. 		 * 		 *	Also, we do not support security, priority, 		 *	nor do we allow one to send an ER option 		 * 		 *	The QOS parameter is checked for the DECBIT. 		 */
 if|if
 condition|(
 operator|(
@@ -680,12 +680,6 @@ operator|(
 name|dummy
 operator|.
 name|cni_priorp
-operator|)
-operator|||
-operator|(
-name|dummy
-operator|.
-name|cni_qos_formatp
 operator|)
 operator|||
 operator|(
