@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.3 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.4 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.3 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.4 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,12 +291,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|mci
-operator|->
-name|mci_state
-operator|=
-name|MCIS_OPEN
-expr_stmt|;
+comment|/* fall through */
 case|case
 name|MCIS_OPEN
 case|:
@@ -317,6 +312,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+comment|/* fall through */
 case|case
 name|MCIS_CLOSED
 case|:
@@ -1559,7 +1555,10 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-name|ReadTimeout
+operator|(
+name|time_t
+operator|)
+literal|300
 argument_list|)
 expr_stmt|;
 if|if
@@ -1567,17 +1566,13 @@ condition|(
 name|r
 operator|<
 literal|0
-operator|||
-name|REPLYTYPE
-argument_list|(
-name|r
-argument_list|)
-operator|==
-literal|4
 condition|)
-return|return
-name|EX_TEMPFAIL
-return|;
+name|mci
+operator|->
+name|mci_state
+operator|=
+name|MCIS_ERROR
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -1588,13 +1583,24 @@ argument_list|)
 operator|==
 literal|2
 condition|)
-return|return
-name|EX_OK
-return|;
-else|else
-return|return
-name|EX_PROTOCOL
-return|;
+block|{
+name|mci
+operator|->
+name|mci_state
+operator|=
+name|MCIS_OPEN
+expr_stmt|;
+return|return;
+block|}
+name|smtpquit
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
