@@ -379,8 +379,9 @@ name|ofp
 decl_stmt|;
 comment|/* output file */
 specifier|register
+name|int
 name|rv
-expr_stmt|;
+decl_stmt|;
 comment|/* 1 if got card in output file, 0 otherwise */
 specifier|register
 name|char
