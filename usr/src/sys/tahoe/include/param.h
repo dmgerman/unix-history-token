@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	1.5	87/01/16	*/
+comment|/*	param.h	1.6	87/01/16	*/
 end_comment
 
 begin_comment
@@ -185,6 +185,42 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NPTEPG
+value|(NBPG/(sizeof (struct pte)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_BSIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_BSHIFT
+value|10
+end_define
+
+begin_comment
+comment|/* log2(DEV_BSIZE) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLKDEV_IOSIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* NBPG for physical controllers */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CLSIZE
 value|1
 end_define
@@ -361,6 +397,44 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((((unsigned)(x)+NBPG-1)>> PGSHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|btodb
+parameter_list|(
+name|bytes
+parameter_list|)
+comment|/* calculates (bytes / DEV_BSIZE) */
+define|\
+value|((unsigned)(bytes)>> DEV_BSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dbtob
+parameter_list|(
+name|db
+parameter_list|)
+comment|/* calculates (db * DEV_BSIZE) */
+define|\
+value|((unsigned)(db)<< DEV_BSHIFT)
+end_define
+
+begin_comment
+comment|/*  * Map a ``block device block'' to a file system block.  * This should be device dependent, and will be if we  * add an entry to cdevsw/bdevsw for that purpose.  * For now though just use DEV_BSIZE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bdbtofsb
+parameter_list|(
+name|bn
+parameter_list|)
+value|((bn) / (BLKDEV_IOSIZE/DEV_BSIZE))
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -185,6 +185,38 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NPTEPG
+value|(NBPG/(sizeof (struct pte)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_BSIZE
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_BSHIFT
+value|9
+end_define
+
+begin_comment
+comment|/* log2(DEV_BSIZE) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLKDEV_IOSIZE
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLSIZE
 value|2
 end_define
@@ -317,6 +349,44 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((((unsigned)(x)+511)>>9))
+end_define
+
+begin_define
+define|#
+directive|define
+name|btodb
+parameter_list|(
+name|bytes
+parameter_list|)
+comment|/* calculates (bytes / DEV_BSIZE) */
+define|\
+value|((unsigned)(bytes)>> DEV_BSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dbtob
+parameter_list|(
+name|db
+parameter_list|)
+comment|/* calculates (db * DEV_BSIZE) */
+define|\
+value|((unsigned)(db)<< DEV_BSHIFT)
+end_define
+
+begin_comment
+comment|/*  * Map a ``block device block'' to a file system block.  * This should be device dependent, and will be if we  * add an entry to cdevsw/bdevsw for that purpose.  * For now though just use DEV_BSIZE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bdbtofsb
+parameter_list|(
+name|bn
+parameter_list|)
+value|((bn) / (BLKDEV_IOSIZE/DEV_BSIZE))
 end_define
 
 begin_comment

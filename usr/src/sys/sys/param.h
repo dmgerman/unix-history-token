@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -19,45 +19,6 @@ define|#
 directive|define
 name|BSD4_3
 value|1
-end_define
-
-begin_comment
-comment|/*  * Machine type dependent parameters.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../machine/machparam.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<machine/machparam.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|NPTEPG
-value|(NBPG/(sizeof (struct pte)))
 end_define
 
 begin_comment
@@ -143,6 +104,17 @@ end_define
 
 begin_comment
 comment|/* max number groups */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXHOSTNAMELEN
+value|64
+end_define
+
+begin_comment
+comment|/* maximum hostname size */
 end_comment
 
 begin_define
@@ -237,6 +209,45 @@ name|NZERO
 value|0
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"types.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Signals  */
 end_comment
@@ -280,6 +291,38 @@ define|\
 value|((p)->p_sig&& ((p)->p_flag&STRC || \ 	 ((p)->p_sig&~ ((p)->p_sigignore | (p)->p_sigmask)))&& issig())
 end_define
 
+begin_comment
+comment|/*  * Machine type dependent parameters.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../machine/machparam.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/machparam.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -317,7 +360,7 @@ value|(dev_t)(-1)
 end_define
 
 begin_comment
-comment|/*  * Clustering of hardware pages on machines with ridiculously small  * page sizes is done here.  The paging subsystem deals with units of  * CLSIZE pte's describing NBPG (from vm.h) pages each.  *  * NOTE: SSIZE, SINCR and UPAGES must be multiples of CLSIZE  */
+comment|/*  * Clustering of hardware pages on machines with ridiculously small  * page sizes is done here.  The paging subsystem deals with units of  * CLSIZE pte's describing NBPG (from machine/machparam.h) pages each.  *  * NOTE: SSIZE, SINCR and UPAGES must be multiples of CLSIZE  */
 end_comment
 
 begin_define
@@ -461,45 +504,6 @@ begin_comment
 comment|/* clist rounding */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * File system parameters and macros.  *  * The file system is made out of blocks of at most MAXBSIZE units,  * with smaller units (fragments) only in the last direct block.  * MAXBSIZE primarily determines the size of buffers in the buffer  * pool. It may be made larger without any effect on existing  * file systems; however making it smaller make make some file  * systems unmountable.  *  * Note that the blocked devices are assumed to have DEV_BSIZE  * "sectors" and that fragments must be some multiple of this size.  * Block devices are read in BLKDEV_IOSIZE units. This number must  * be a power of two and in the range of  *	DEV_BSIZE<= BLKDEV_IOSIZE<= MAXBSIZE  * This size has no effect upon the file system, but is usually set  * to the block size of the root file system, so as to maximize the  * speed of ``fsck''.  */
 end_comment
@@ -511,136 +515,11 @@ name|MAXBSIZE
 value|8192
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|DEV_BSIZE
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEV_BSHIFT
-value|9
-end_define
-
-begin_comment
-comment|/* log2(DEV_BSIZE) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLKDEV_IOSIZE
-value|2048
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|DEV_BSIZE
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEV_BSHIFT
-value|10
-end_define
-
-begin_comment
-comment|/* log2(DEV_BSIZE) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLKDEV_IOSIZE
-value|1024
-end_define
-
-begin_comment
-comment|/* NBPG for physical controllers */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|MAXFRAG
 value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|btodb
-parameter_list|(
-name|bytes
-parameter_list|)
-comment|/* calculates (bytes / DEV_BSIZE) */
-define|\
-value|((unsigned)(bytes)>> DEV_BSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dbtob
-parameter_list|(
-name|db
-parameter_list|)
-comment|/* calculates (db * DEV_BSIZE) */
-define|\
-value|((unsigned)(db)<< DEV_BSHIFT)
-end_define
-
-begin_comment
-comment|/*  * Map a ``block device block'' to a file system block.  * This should be device dependent, and will be after we  * add an entry to cdevsw for that purpose.  For now though  * just use DEV_BSIZE.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bdbtofsb
-parameter_list|(
-name|bn
-parameter_list|)
-value|((bn) / (BLKDEV_IOSIZE/DEV_BSIZE))
 end_define
 
 begin_comment
@@ -778,17 +657,6 @@ parameter_list|,
 name|y
 parameter_list|)
 value|((((x)+((y)-1))/(y))*(y))
-end_define
-
-begin_comment
-comment|/*  * Maximum size of hostname recognized and stored in the kernel.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXHOSTNAMELEN
-value|64
 end_define
 
 end_unit
