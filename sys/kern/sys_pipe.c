@@ -4062,7 +4062,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|PIPE_GET_GIANT
+name|PIPE_UNLOCK
 argument_list|(
 name|wpipe
 argument_list|)
@@ -4086,7 +4086,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|PIPE_DROP_GIANT
+name|PIPE_LOCK
 argument_list|(
 name|wpipe
 argument_list|)
