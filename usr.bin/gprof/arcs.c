@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: arcs.c,v 1.2.6.1 1997/07/11 06:20:54 charnier Exp $"
+literal|"$Id: arcs.c,v 1.2.6.2 1997/07/15 08:16:36 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1510,7 +1510,7 @@ argument_list|(
 literal|"no room for %d bytes of cycle headers"
 argument_list|,
 operator|(
-name|cycle
+name|ncycle
 operator|+
 literal|1
 operator|)

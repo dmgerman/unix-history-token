@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gcore.c,v 1.4.2.1 1997/07/10 06:37:10 charnier Exp $"
+literal|"$Id: gcore.c,v 1.4.2.2 1997/08/29 05:29:15 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 

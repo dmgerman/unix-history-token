@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)hexsyntax.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)hexsyntax.c	8.2 (Berkeley) 5/4/95";
 endif|#
 directive|endif
 end_endif
@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: hexsyntax.c,v 1.4.2.1 1997/07/11 06:25:55 charnier Exp $"
+literal|"$Id: hexsyntax.c,v 1.4.2.2 1997/08/29 05:29:21 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
