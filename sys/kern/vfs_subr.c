@@ -28,6 +28,36 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/domain.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -35,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -64,13 +88,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -82,19 +112,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/domain.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dirent.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -106,7 +124,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -167,12 +185,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
 end_include
 
 begin_expr_stmt
@@ -4785,6 +4797,17 @@ name|p
 init|=
 name|updateproc
 decl_stmt|;
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|shutdown_pre_sync
+argument_list|,
+name|shutdown_kproc
+argument_list|,
+name|p
+argument_list|,
+name|SHUTDOWN_PRI_LAST
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_flag
@@ -4797,6 +4820,11 @@ init|;
 condition|;
 control|)
 block|{
+name|kproc_suspend_loop
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|starttime
 operator|=
 name|time_second
