@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.5 %G%"
+literal|"@(#)main.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +134,7 @@ name|char
 modifier|*
 name|pcname
 init|=
-literal|"pc.pc1"
+literal|"pc.pc0"
 decl_stmt|;
 end_decl_stmt
 
