@@ -3080,6 +3080,10 @@ name|ICBXOPT_PTP_2_LOOP
 value|(3<< 4)
 end_define
 
+begin_comment
+comment|/*  * The lower 4 bits of the xfwoptions field are the OPERATION MODE bits.  * RIO is not defined for the 23XX cards  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3309,6 +3313,19 @@ name|wwn
 parameter_list|)
 define|\
 value|array[ICB_NNM0] = (u_int8_t) ((wwn>>  0)& 0xff), \ 	array[ICB_NNM1] = (u_int8_t) ((wwn>>  8)& 0xff), \ 	array[ICB_NNM2] = (u_int8_t) ((wwn>> 16)& 0xff), \ 	array[ICB_NNM3] = (u_int8_t) ((wwn>> 24)& 0xff), \ 	array[ICB_NNM4] = (u_int8_t) ((wwn>> 32)& 0xff), \ 	array[ICB_NNM5] = (u_int8_t) ((wwn>> 40)& 0xff), \ 	array[ICB_NNM6] = (u_int8_t) ((wwn>> 48)& 0xff), \ 	array[ICB_NNM7] = (u_int8_t) ((wwn>> 56)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKE_WWN_FROM_NODE_NAME
+parameter_list|(
+name|wwn
+parameter_list|,
+name|array
+parameter_list|)
+define|\
+value|wwn =	((u_int64_t) array[ICB_NNM0]) | \ 		((u_int64_t) array[ICB_NNM1]<<  8) | \ 		((u_int64_t) array[ICB_NNM2]<< 16) | \ 		((u_int64_t) array[ICB_NNM3]<< 24) | \ 		((u_int64_t) array[ICB_NNM4]<< 32) | \ 		((u_int64_t) array[ICB_NNM5]<< 40) | \ 		((u_int64_t) array[ICB_NNM6]<< 48) | \ 		((u_int64_t) array[ICB_NNM7]<< 56)
 end_define
 
 begin_comment
