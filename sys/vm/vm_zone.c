@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1097,6 +1103,11 @@ name|zpagecount
 operator|++
 expr_stmt|;
 name|zone_kmem_pages
+operator|++
+expr_stmt|;
+name|cnt
+operator|.
+name|v_wire_count
 operator|++
 expr_stmt|;
 block|}
