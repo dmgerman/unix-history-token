@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/kern/tty.c,v 1.2 1993/09/08 01:49:20 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/kern/tty.c,v 1.3 1993/10/11 03:12:59 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1468,8 +1468,13 @@ operator|->
 name|t_state
 operator|&=
 operator|~
+operator|(
 name|TS_LOCAL
+operator||
+name|TS_TBLOCK
+operator|)
 expr_stmt|;
+comment|/* XXX - should be TS_RTSBLOCK */
 name|ttwakeup
 argument_list|(
 name|tp
@@ -1641,13 +1646,6 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_state
-operator|&=
-operator|~
-name|TS_TBLOCK
-expr_stmt|;
 block|}
 comment|/* 	 * Block further input iff: 	 * Current input> threshold AND input is available to user program 	 */
 if|if
@@ -1685,7 +1683,10 @@ name|cancc
 operator|>
 literal|0
 operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|tp
 operator|->
 name|t_cc
@@ -1696,8 +1697,6 @@ operator|!=
 name|_POSIX_VDISABLE
 condition|)
 block|{
-if|if
-condition|(
 name|putc
 argument_list|(
 name|tp
@@ -1712,22 +1711,20 @@ name|tp
 operator|->
 name|t_out
 argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
+expr_stmt|;
+block|}
 name|tp
 operator|->
 name|t_state
 operator||=
 name|TS_TBLOCK
 expr_stmt|;
+comment|/* XXX - should be TS_RTSBLOCK? */
 name|ttstart
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
