@@ -2412,6 +2412,9 @@ decl_stmt|;
 name|bus_dmamap_t
 name|xl_rx_dmamap
 decl_stmt|;
+name|u_int32_t
+name|xl_tx_dmaaddr
+decl_stmt|;
 name|bus_dma_tag_t
 name|xl_tx_tag
 decl_stmt|;
