@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_exit.c	7.35 (Berkeley) 6/27/91  *	$Id: kern_exit.c,v 1.12 1994/01/21 09:56:24 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_exit.c	7.35 (Berkeley) 6/27/91  *	$Id: kern_exit.c,v 1.13 1994/01/26 19:47:41 chmr Exp $  */
 end_comment
 
 begin_include
@@ -478,8 +478,6 @@ operator|->
 name|s_ttyvp
 argument_list|,
 name|FREAD
-operator||
-name|FWRITE
 argument_list|,
 name|p
 operator|->
@@ -554,45 +552,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* current process does not exist, as far as other parts of the 	 * system (clock) is concerned, since parts of it might not be 	 * there anymore */
-name|curproc
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-operator|--
-name|p
-operator|->
-name|p_limit
-operator|->
-name|p_refcnt
-operator|==
-literal|0
-condition|)
-block|{
-name|FREE
-argument_list|(
-name|p
-operator|->
-name|p_limit
-argument_list|,
-name|M_SUBPROC
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_limit
-operator|=
-operator|(
-expr|struct
-name|plimit
-operator|*
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-block|}
 comment|/* 	 * Remove proc from allproc queue and pidhash chain. 	 * Place onto zombproc.  Unlink from parent's child list. 	 */
 if|if
 condition|(
@@ -924,6 +883,45 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * current process does not exist, as far as other parts of the 	 * system (clock) is concerned, since parts of it might not be 	 * there anymore 	 */
+name|curproc
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|--
+name|p
+operator|->
+name|p_limit
+operator|->
+name|p_refcnt
+operator|==
+literal|0
+condition|)
+block|{
+name|FREE
+argument_list|(
+name|p
+operator|->
+name|p_limit
+argument_list|,
+name|M_SUBPROC
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_limit
+operator|=
+operator|(
+expr|struct
+name|plimit
+operator|*
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
 comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space, the kernel stack and pcb. 	 * The address space is released by "vmspace_free(p->p_vmspace)"; 	 * This is machine-dependent, as we may have to change stacks 	 * or ensure that the current one isn't reallocated before we 	 * finish.  cpu_exit will end with a call to swtch(), finishing 	 * our execution (pun intended). 	 */
 name|cpu_exit
 argument_list|(
