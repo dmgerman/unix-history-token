@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	5.3 (Berkeley) %G%"
+literal|"@(#)touch.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,13 +255,11 @@ name|p
 decl_stmt|;
 name|aflag
 operator|=
-name|mflag
-operator|=
-literal|1
-expr_stmt|;
 name|cflag
 operator|=
 name|fflag
+operator|=
+name|mflag
 operator|=
 name|timeset
 operator|=
@@ -316,10 +314,6 @@ name|aflag
 operator|=
 literal|1
 expr_stmt|;
-name|mflag
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 literal|'c'
@@ -340,10 +334,6 @@ break|break;
 case|case
 literal|'m'
 case|:
-name|aflag
-operator|=
-literal|0
-expr_stmt|;
 name|mflag
 operator|=
 literal|1
@@ -394,6 +384,23 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+comment|/* Default is both -a and -m. */
+if|if
+condition|(
+name|aflag
+operator|==
+literal|0
+operator|&&
+name|mflag
+operator|==
+literal|0
+condition|)
+name|aflag
+operator|=
+name|mflag
+operator|=
+literal|1
 expr_stmt|;
 comment|/* 	 * If no -r or -t flag, at least two operands, the first of which 	 * is an 8 or 10 digit number, use the obsolete time specification. 	 */
 if|if
