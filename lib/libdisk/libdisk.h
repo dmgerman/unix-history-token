@@ -154,7 +154,7 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-comment|/* the alpha only has one boot program */
+comment|/* the i386 needs extra help... */
 name|u_char
 modifier|*
 name|boot2

@@ -842,6 +842,7 @@ name|sum
 expr_stmt|;
 endif|#
 directive|endif
+comment|/*__alpha__*/
 for|for
 control|(
 name|i
@@ -916,11 +917,20 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|PC98
-end_ifndef
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -1000,11 +1010,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Special install-time configuration for the i386 boot0 boot manager.  */
@@ -1070,11 +1094,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|Write_Disk
@@ -1089,9 +1108,15 @@ name|int
 name|fd
 decl_stmt|,
 name|i
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
+name|int
 name|j
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|disk
 modifier|*
@@ -1151,9 +1176,9 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__alpha__
+ifdef|#
+directive|ifdef
+name|__i386__
 name|int
 name|need_edd
 init|=
@@ -1401,9 +1426,9 @@ literal|"X"
 argument_list|)
 condition|)
 continue|continue;
-ifndef|#
-directive|ifndef
-name|__alpha__
+ifdef|#
+directive|ifdef
+name|__i386__
 name|j
 operator|=
 name|c1
@@ -1516,9 +1541,9 @@ argument_list|,
 name|c1
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__alpha__
+ifdef|#
+directive|ifdef
+name|__i386__
 ifndef|#
 directive|ifndef
 name|PC98
@@ -1788,6 +1813,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* PC98 */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2181,9 +2207,9 @@ directive|endif
 endif|#
 directive|endif
 block|}
-ifndef|#
-directive|ifndef
-name|__alpha__
+ifdef|#
+directive|ifdef
+name|__i386__
 name|j
 operator|=
 literal|0

@@ -101,9 +101,11 @@ parameter_list|)
 block|{
 name|int
 name|sane
-init|=
-literal|1
 decl_stmt|;
+name|sane
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|disk
