@@ -8056,6 +8056,9 @@ block|,
 literal|"apm_enable=YES"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PCCARD_ARCH
 block|{
 literal|" pccard"
 block|,
@@ -8098,6 +8101,8 @@ block|,
 literal|"pccard_ifconfig"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|" usbd"
 block|,

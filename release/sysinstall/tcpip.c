@@ -3188,6 +3188,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|PCCARD_ARCH
 name|pccard
 operator|=
 name|variable_get
@@ -3221,6 +3224,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|use_rtsol

@@ -305,6 +305,9 @@ name|moduleInitialize
 argument_list|()
 expr_stmt|;
 comment|/* Initialize PC-card */
+ifdef|#
+directive|ifdef
+name|PCCARD_ARCH
 if|if
 condition|(
 operator|!
@@ -313,6 +316,8 @@ condition|)
 name|pccardInitialize
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Initialize USB */
 if|if
 condition|(
