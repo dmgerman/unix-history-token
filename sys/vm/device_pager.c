@@ -953,6 +953,13 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
+name|m
+index|[
+name|reqpage
+index|]
+operator|=
+name|page
+expr_stmt|;
 return|return
 operator|(
 name|VM_PAGER_OK
