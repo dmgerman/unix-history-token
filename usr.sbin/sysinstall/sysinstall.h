@@ -1352,6 +1352,9 @@ index|[
 name|NEWFS_CMD_MAX
 index|]
 decl_stmt|;
+name|int
+name|soft
+decl_stmt|;
 block|}
 name|PartInfo
 typedef|;

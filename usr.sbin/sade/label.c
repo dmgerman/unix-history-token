@@ -1400,6 +1400,12 @@ name|newfs
 operator|=
 name|newfs
 expr_stmt|;
+name|ret
+operator|->
+name|soft
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2458,8 +2464,10 @@ decl_stmt|,
 modifier|*
 name|mountpoint
 decl_stmt|,
-modifier|*
 name|newfs
+index|[
+literal|10
+index|]
 decl_stmt|;
 comment|/* 	     * We copy this into a blank-padded string so that it looks like 	     * a solid bar in reverse-video 	     */
 name|memset
@@ -2653,9 +2661,12 @@ name|type
 operator|==
 name|PART_FAT
 condition|)
+name|strcpy
+argument_list|(
 name|newfs
-operator|=
+argument_list|,
 literal|"DOS"
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -2678,8 +2689,44 @@ name|type
 operator|==
 name|PART_FILESYSTEM
 condition|)
+block|{
+name|strcpy
+argument_list|(
 name|newfs
-operator|=
+argument_list|,
+literal|"UFS"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|PartInfo
+operator|*
+operator|)
+name|label_chunk_info
+index|[
+name|i
+index|]
+operator|.
+name|c
+operator|->
+name|private_data
+operator|)
+operator|->
+name|soft
+condition|)
+name|strcat
+argument_list|(
+name|newfs
+argument_list|,
+literal|"+S"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|newfs
+argument_list|,
 operator|(
 operator|(
 name|PartInfo
@@ -2697,10 +2744,12 @@ operator|)
 operator|->
 name|newfs
 condition|?
-literal|"UFS Y"
+literal|" Y"
 else|:
-literal|"UFS N"
+literal|" N"
+argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2713,14 +2762,20 @@ name|type
 operator|==
 name|PART_SWAP
 condition|)
+name|strcpy
+argument_list|(
 name|newfs
-operator|=
+argument_list|,
 literal|"SWAP"
+argument_list|)
 expr_stmt|;
 else|else
+name|strcpy
+argument_list|(
 name|newfs
-operator|=
+argument_list|,
 literal|"*"
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2856,7 +2911,7 @@ argument_list|,
 name|ATTR_SELECTED
 argument_list|)
 expr_stmt|;
-comment|/*** lazy man's way of padding this string ***/
+comment|/*** lazy man's way of expensively padding this string ***/
 while|while
 condition|(
 name|strlen
@@ -3032,7 +3087,7 @@ literal|18
 argument_list|,
 literal|0
 argument_list|,
-literal|"C = Create      D = Delete         M = Mount pt."
+literal|"C = Create        D = Delete   M = Mount pt."
 argument_list|)
 expr_stmt|;
 if|if
@@ -3044,7 +3099,7 @@ name|mvprintw
 argument_list|(
 literal|18
 argument_list|,
-literal|49
+literal|47
 argument_list|,
 literal|"W = Write"
 argument_list|)
@@ -3055,7 +3110,7 @@ literal|19
 argument_list|,
 literal|0
 argument_list|,
-literal|"N = Newfs Opts  T = Newfs Toggle   U = Undo      Q = Finish"
+literal|"N = Newfs Opts    Q = Finish   S = Toggle SoftUpdates"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -3064,7 +3119,7 @@ literal|20
 argument_list|,
 literal|0
 argument_list|,
-literal|"A = Auto Defaults for all!"
+literal|"T = Toggle Newfs  U = Undo     A = Auto Defaults"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -5133,6 +5188,61 @@ expr_stmt|;
 name|clear_wins
 argument_list|()
 expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* Toggle soft updates flag */
+if|if
+condition|(
+name|label_chunk_info
+index|[
+name|here
+index|]
+operator|.
+name|type
+operator|==
+name|PART_FILESYSTEM
+condition|)
+block|{
+name|PartInfo
+modifier|*
+name|pi
+init|=
+operator|(
+operator|(
+name|PartInfo
+operator|*
+operator|)
+name|label_chunk_info
+index|[
+name|here
+index|]
+operator|.
+name|c
+operator|->
+name|private_data
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|pi
+condition|)
+name|pi
+operator|->
+name|soft
+operator|=
+operator|!
+name|pi
+operator|->
+name|soft
+expr_stmt|;
+else|else
+name|msg
+operator|=
+name|MSG_NOT_APPLICABLE
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'T'

@@ -3860,6 +3860,34 @@ name|dname
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|root
+operator|->
+name|soft
+condition|)
+block|{
+name|i
+operator|=
+name|vsystem
+argument_list|(
+literal|"tunefs -n enable %s"
+argument_list|,
+name|dname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Warning:  Unable to enable softupdates for root filesystem on %s"
+argument_list|,
+name|dname
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Switch to block device */
 name|sprintf
 argument_list|(
@@ -4153,6 +4181,31 @@ operator|->
 name|mountpoint
 argument_list|,
 literal|"fsck -y %s/dev/%s"
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/mnt"
+else|:
+literal|""
+argument_list|,
+name|c2
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|->
+name|soft
+condition|)
+name|command_shell_add
+argument_list|(
+name|tmp
+operator|->
+name|mountpoint
+argument_list|,
+literal|"tunefs -n enable %s/dev/%s"
 argument_list|,
 name|RunningAsInit
 condition|?
