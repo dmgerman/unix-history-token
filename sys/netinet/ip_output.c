@@ -1490,14 +1490,51 @@ block|}
 endif|#
 directive|endif
 comment|/* notdef */
+comment|/* 	 * Verify that we have any chance at all of being able to queue the 	 * packet or packet fragments, unless ALTQ is enabled on the given 	 * interface in which case packetdrop should be done by queueing. 	 */
 ifdef|#
 directive|ifdef
 name|ALTQ
-comment|/* 	 * disable packet drop hack. 	 * packetdrop should be done by queueing. 	 */
+if|if
+condition|(
+operator|(
+operator|!
+name|ALTQ_IS_ENABLED
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+operator|)
+operator|&&
+operator|(
+operator|(
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_len
+operator|+
+name|ip
+operator|->
+name|ip_len
+operator|/
+name|ifp
+operator|->
+name|if_mtu
+operator|+
+literal|1
+operator|)
+operator|>=
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|)
+condition|)
 else|#
 directive|else
-comment|/* !ALTQ */
-comment|/* 	 * Verify that we have any chance at all of being able to queue 	 *      the packet or packet fragments 	 */
 if|if
 condition|(
 operator|(
@@ -1524,6 +1561,9 @@ name|if_snd
 operator|.
 name|ifq_maxlen
 condition|)
+endif|#
+directive|endif
+comment|/* ALTQ */
 block|{
 name|error
 operator|=
@@ -1538,9 +1578,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* !ALTQ */
 comment|/* 	 * Look for broadcast address and 	 * verify user is allowed to send 	 * such a packet. 	 */
 if|if
 condition|(
