@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.17	%G%"
+literal|"@(#)savemail.c	3.18	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -649,6 +649,9 @@ operator|=
 name|mailfile
 argument_list|(
 name|buf
+argument_list|,
+operator|&
+name|From
 argument_list|)
 expr_stmt|;
 name|giveresponse

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.41	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.42	%G% */
 end_comment
 
 begin_ifdef
@@ -243,6 +243,10 @@ name|short
 name|q_uid
 decl_stmt|;
 comment|/* user-id of receiver (if known) */
+name|short
+name|q_gid
+decl_stmt|;
+comment|/* group-id of receiver (if known) */
 name|char
 modifier|*
 name|q_home
@@ -254,6 +258,12 @@ modifier|*
 name|q_next
 decl_stmt|;
 comment|/* chain */
+name|struct
+name|address
+modifier|*
+name|q_alias
+decl_stmt|;
+comment|/* address this results from */
 block|}
 struct|;
 end_struct

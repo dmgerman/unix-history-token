@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.38	%G%"
+literal|"@(#)deliver.c	3.39	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,22 @@ name|MAXNAME
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|ADDRESS
+modifier|*
+name|ctladdr
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|ADDRESS
+modifier|*
+name|getctladdr
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_if
 if|if
@@ -553,6 +569,13 @@ name|tobuf
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ctladdr
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
+
 begin_for
 for|for
 control|(
@@ -618,6 +641,22 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+comment|/* compute effective uid/gid when sending */
+if|if
+condition|(
+name|to
+operator|->
+name|q_mailer
+operator|==
+name|MN_PROG
+condition|)
+name|ctladdr
+operator|=
+name|getctladdr
+argument_list|(
+name|to
+argument_list|)
+expr_stmt|;
 name|user
 operator|=
 name|to
@@ -785,6 +824,11 @@ operator|=
 name|mailfile
 argument_list|(
 name|user
+argument_list|,
+name|getctladdr
+argument_list|(
+name|to
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|giveresponse
@@ -1023,6 +1067,20 @@ name|putmessage
 expr_stmt|;
 end_if
 
+begin_if
+if|if
+condition|(
+name|ctladdr
+operator|==
+name|NULL
+condition|)
+name|ctladdr
+operator|=
+operator|&
+name|From
+expr_stmt|;
+end_if
+
 begin_expr_stmt
 name|i
 operator|=
@@ -1033,6 +1091,8 @@ argument_list|,
 name|pv
 argument_list|,
 name|editfcn
+argument_list|,
+name|ctladdr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1107,7 +1167,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SENDOFF -- send off call to mailer& collect response. ** **	Parameters: **		m -- mailer descriptor. **		pvp -- parameter vector to send to it. **		editfcn -- function to pipe it through. ** **	Returns: **		exit status of mailer. ** **	Side Effects: **		none. */
+comment|/* **  SENDOFF -- send off call to mailer& collect response. ** **	Parameters: **		m -- mailer descriptor. **		pvp -- parameter vector to send to it. **		editfcn -- function to pipe it through. **		ctladdr -- an address pointer controlling the **			user/groupid etc. of the mailer. ** **	Returns: **		exit status of mailer. ** **	Side Effects: **		none. */
 end_comment
 
 begin_expr_stmt
@@ -1118,6 +1178,8 @@ operator|,
 name|pvp
 operator|,
 name|editfcn
+operator|,
+name|ctladdr
 operator|)
 expr|struct
 name|mailer
@@ -1143,6 +1205,13 @@ function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|ADDRESS
+modifier|*
+name|ctladdr
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1426,8 +1495,9 @@ name|void
 operator|)
 name|setuid
 argument_list|(
-name|getuid
-argument_list|()
+name|ctladdr
+operator|->
+name|q_uid
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1435,8 +1505,9 @@ name|void
 operator|)
 name|setgid
 argument_list|(
-name|getgid
-argument_list|()
+name|ctladdr
+operator|->
+name|q_gid
 argument_list|)
 expr_stmt|;
 block|}
@@ -2470,13 +2541,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAILFILE -- Send a message to a file. ** **	If the file has the setuid/setgid bits set, but NO execute **	bits, sendmail will try to become the owner of that file **	rather than the real user.  Obviously, this only works if **	sendmail runs as root. ** **	Parameters: **		filename -- the name of the file to send to. ** **	Returns: **		The exit code associated with the operation. ** **	Side Effects: **		none. */
+comment|/* **  MAILFILE -- Send a message to a file. ** **	If the file has the setuid/setgid bits set, but NO execute **	bits, sendmail will try to become the owner of that file **	rather than the real user.  Obviously, this only works if **	sendmail runs as root. ** **	Parameters: **		filename -- the name of the file to send to. **		ctladdr -- the controlling address header -- includes **			the userid/groupid to be when sending. ** **	Returns: **		The exit code associated with the operation. ** **	Side Effects: **		none. */
 end_comment
 
 begin_macro
 name|mailfile
 argument_list|(
 argument|filename
+argument_list|,
+argument|ctladdr
 argument_list|)
 end_macro
 
@@ -2484,6 +2557,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|filename
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ADDRESS
+modifier|*
+name|ctladdr
 decl_stmt|;
 end_decl_stmt
 
@@ -2623,8 +2703,9 @@ name|void
 operator|)
 name|setgid
 argument_list|(
-name|getgid
-argument_list|()
+name|ctladdr
+operator|->
+name|q_gid
 argument_list|)
 expr_stmt|;
 if|if
@@ -2653,8 +2734,9 @@ name|void
 operator|)
 name|setuid
 argument_list|(
-name|getuid
-argument_list|()
+name|ctladdr
+operator|->
+name|q_uid
 argument_list|)
 expr_stmt|;
 name|f

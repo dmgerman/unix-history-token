@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.21	%G%	(with DBM)"
+literal|"@(#)alias.c	3.22	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.21	%G%	(without DBM)"
+literal|"@(#)alias.c	3.22	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,6 +316,8 @@ argument_list|(
 name|p
 argument_list|,
 literal|1
+argument_list|,
+name|a
 argument_list|)
 expr_stmt|;
 name|AliasLevel
@@ -1463,6 +1465,8 @@ argument_list|(
 name|buf
 argument_list|,
 literal|"forwarding"
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
 block|}

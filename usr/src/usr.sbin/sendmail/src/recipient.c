@@ -29,12 +29,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.16	%G%"
+literal|"@(#)recipient.c	3.17	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  SENDTO -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	Parameters: **		list -- the send list. **		copyf -- the copy flag; passed to parse. ** **	Returns: **		none ** **	Side Effects: **		none. */
+comment|/* **  SENDTO -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	Parameters: **		list -- the send list. **		copyf -- the copy flag; passed to parse. **		ctladdr -- the address template for the person to **			send to -- effective uid/gid are important. ** **	Returns: **		none ** **	Side Effects: **		none. */
 end_comment
 
 begin_define
@@ -50,6 +50,8 @@ argument_list|(
 argument|list
 argument_list|,
 argument|copyf
+argument_list|,
+argument|ctladdr
 argument_list|)
 end_macro
 
@@ -63,6 +65,13 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|copyf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ADDRESS
+modifier|*
+name|ctladdr
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +239,12 @@ name|q_next
 operator|=
 name|al
 expr_stmt|;
+name|a
+operator|->
+name|q_alias
+operator|=
+name|ctladdr
+expr_stmt|;
 name|al
 operator|=
 name|a
@@ -306,6 +321,12 @@ name|mailer
 modifier|*
 name|m
 decl_stmt|;
+specifier|extern
+name|ADDRESS
+modifier|*
+name|getctladdr
+parameter_list|()
+function_decl|;
 name|To
 operator|=
 name|a
@@ -397,13 +418,18 @@ operator|->
 name|q_user
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PARANOID
 if|if
 condition|(
-name|AliasLevel
-operator|<=
+name|getctladdr
+argument_list|(
+name|a
+argument_list|)
+operator|==
+operator|&
+name|From
+operator|&&
+name|Debug
+operator|==
 literal|0
 condition|)
 block|{
@@ -419,9 +445,6 @@ operator||=
 name|QDONTSEND
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|PARANOID
 block|}
 block|}
 comment|/* 	**  Look up this person in the recipient list.  If they 	**  are there already, return, otherwise continue. 	**  If the list is empty, just add it. 	*/
@@ -565,6 +588,27 @@ name|QDONTSEND
 expr_stmt|;
 if|if
 condition|(
+name|getctladdr
+argument_list|(
+name|a
+argument_list|)
+operator|==
+operator|&
+name|From
+operator|&&
+name|Debug
+operator|==
+literal|0
+condition|)
+name|usrerr
+argument_list|(
+literal|"Cannot mail directly to :include:s"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 name|Verbose
 condition|)
 name|message
@@ -593,8 +637,11 @@ literal|9
 index|]
 argument_list|,
 literal|" sending"
+argument_list|,
+name|a
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|alias
@@ -643,6 +690,11 @@ name|bool
 name|writable
 parameter_list|()
 function_decl|;
+name|bool
+name|quoted
+init|=
+name|FALSE
+decl_stmt|;
 name|strcpy
 argument_list|(
 name|buf
@@ -652,6 +704,38 @@ operator|->
 name|q_user
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|buf
+init|;
+operator|*
+name|p
+operator|!=
+literal|'\0'
+operator|&&
+operator|!
+name|quoted
+condition|;
+name|p
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|quoted
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|stripquotes
 argument_list|(
 name|buf
@@ -677,6 +761,34 @@ name|NULL
 condition|)
 block|{
 comment|/* check if writable or creatable */
+if|if
+condition|(
+name|getctladdr
+argument_list|(
+name|a
+argument_list|)
+operator|==
+operator|&
+name|From
+operator|&&
+name|Debug
+operator|==
+literal|0
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"Cannot mail directly to files"
+argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -837,18 +949,18 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|buf
-argument_list|,
 name|a
 operator|->
-name|q_user
-argument_list|)
-operator|==
-literal|0
+name|q_gid
+operator|=
+name|pw
+operator|->
+name|pw_gid
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quoted
 condition|)
 name|forward
 argument_list|(
@@ -1197,7 +1309,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		msg -- message to print in verbose mode. ** **	Returns: **		none. ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. */
+comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		msg -- message to print in verbose mode. **		ctladdr -- address template to use to fill in these **			addresses -- effective user/group id are **			the important things. ** **	Returns: **		none. ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. */
 end_comment
 
 begin_macro
@@ -1206,6 +1318,8 @@ argument_list|(
 argument|fname
 argument_list|,
 argument|msg
+argument_list|,
+argument|ctladdr
 argument_list|)
 end_macro
 
@@ -1220,6 +1334,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|msg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ADDRESS
+modifier|*
+name|ctladdr
 decl_stmt|;
 end_decl_stmt
 
@@ -1343,6 +1464,8 @@ argument_list|(
 name|buf
 argument_list|,
 literal|1
+argument_list|,
+name|ctladdr
 argument_list|)
 expr_stmt|;
 name|AliasLevel
@@ -1516,11 +1639,72 @@ argument_list|(
 name|p
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|From
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  GETCTLADDR -- get controlling address from an address header. ** **	If none, get one corresponding to the effective userid. ** **	Parameters: **		a -- the address to find the controller of. ** **	Returns: **		the controlling address. ** **	Side Effects: **		none. */
+end_comment
+
+begin_function
+name|ADDRESS
+modifier|*
+name|getctladdr
+parameter_list|(
+name|a
+parameter_list|)
+specifier|register
+name|ADDRESS
+modifier|*
+name|a
+decl_stmt|;
+block|{
+while|while
+condition|(
+name|a
+operator|!=
+name|NULL
+operator|&&
+name|a
+operator|->
+name|q_home
+operator|==
+name|NULL
+condition|)
+name|a
+operator|=
+name|a
+operator|->
+name|q_alias
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|&
+name|From
+operator|)
+return|;
+return|return
+operator|(
+name|a
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

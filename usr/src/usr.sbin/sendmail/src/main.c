@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.36	%G%"
+literal|"@(#)main.c	3.37	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1912,6 +1912,35 @@ name|SuprErrs
 operator|=
 name|FALSE
 expr_stmt|;
+name|From
+operator|.
+name|q_uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+name|From
+operator|.
+name|q_gid
+operator|=
+name|getgid
+argument_list|()
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|V6
+name|From
+operator|.
+name|q_home
+operator|=
+name|getenv
+argument_list|(
+literal|"HOME"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|V6
 comment|/* 	**  Rewrite the from person to dispose of possible implicit 	**	links in the net. 	*/
 name|pvp
 operator|=
