@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.16.2.3 1995/06/02 11:03:15 davidg Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.17 1995/06/11 19:31:37 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -3735,7 +3735,7 @@ name|VOP_ABORTOP
 argument_list|(
 name|ap
 operator|->
-name|a_vp
+name|a_tdvp
 argument_list|,
 name|ap
 operator|->
@@ -3746,7 +3746,7 @@ name|vput
 argument_list|(
 name|ap
 operator|->
-name|a_vp
+name|a_tdvp
 argument_list|)
 expr_stmt|;
 return|return
