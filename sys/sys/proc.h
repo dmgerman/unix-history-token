@@ -1939,7 +1939,7 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* For p_oncpu when we aren't on a CPU. */
+comment|/* For when we aren't on a CPU. (SMP) */
 end_comment
 
 begin_comment
