@@ -54,16 +54,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libc_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|spinlock_t
-modifier|*
-name|__malloc_lock
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * For a while, allow libpthread to work with a libc that doesn't  * export the malloc lock.  */
+end_comment
 
 begin_pragma
 pragma|#
