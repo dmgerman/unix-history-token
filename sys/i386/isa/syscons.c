@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.231 1997/09/04 23:01:03 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.232 1997/09/14 03:19:27 peter Exp $  */
 end_comment
 
 begin_include
@@ -10841,6 +10841,7 @@ operator|==
 literal|1
 condition|)
 block|{
+comment|/* seen ESC */
 switch|switch
 condition|(
 name|c
@@ -11061,7 +11062,7 @@ name|esc
 operator|=
 literal|4
 expr_stmt|;
-break|break;
+return|return;
 endif|#
 directive|endif
 case|case
@@ -11074,6 +11075,19 @@ name|scp
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'('
+case|:
+comment|/* iso-2022: designate 94 character set to G0 */
+name|scp
+operator|->
+name|term
+operator|.
+name|esc
+operator|=
+literal|5
+expr_stmt|;
+return|return;
 block|}
 block|}
 elseif|else
@@ -11088,6 +11102,7 @@ operator|==
 literal|2
 condition|)
 block|{
+comment|/* seen ESC [ */
 if|if
 condition|(
 name|c
@@ -14064,6 +14079,7 @@ operator|==
 literal|3
 condition|)
 block|{
+comment|/* seen ESC [0-9]+ = */
 if|if
 condition|(
 name|c
@@ -14723,6 +14739,54 @@ name|term
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+block|}
+block|}
+if|#
+directive|if
+name|notyet
+elseif|else
+if|if
+condition|(
+name|scp
+operator|->
+name|term
+operator|.
+name|esc
+operator|==
+literal|4
+condition|)
+block|{
+comment|/* seen ESC Q */
+comment|/* to be filled */
+block|}
+endif|#
+directive|endif
+elseif|else
+if|if
+condition|(
+name|scp
+operator|->
+name|term
+operator|.
+name|esc
+operator|==
+literal|5
+condition|)
+block|{
+comment|/* seen ESC ( */
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|'B'
+case|:
+comment|/* iso-2022: desginate ASCII into G0 */
+break|break;
+comment|/* other items to be filled */
+default|default:
 break|break;
 block|}
 block|}
