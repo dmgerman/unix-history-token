@@ -165,6 +165,9 @@ case|:
 case|case
 literal|0x17
 case|:
+case|case
+literal|0x22
+case|:
 name|manus
 operator|=
 literal|"Sun Microsystems"
