@@ -22,11 +22,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|columns
+name|Columns
 decl_stmt|,
 name|isreset
 decl_stmt|,
-name|lines
+name|Lines
 decl_stmt|;
 end_decl_stmt
 

@@ -1359,7 +1359,7 @@ modifier|*
 name|set_pos
 decl_stmt|,
 modifier|*
-name|set_tab
+name|Set_tab
 decl_stmt|,
 modifier|*
 name|tg_out
@@ -1374,7 +1374,7 @@ name|capsp
 operator|=
 name|caps
 expr_stmt|;
-name|set_tab
+name|Set_tab
 operator|=
 name|tgetstr
 argument_list|(
@@ -1386,7 +1386,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|set_tab
+name|Set_tab
 operator|&&
 operator|(
 name|clear_tabs
@@ -1448,7 +1448,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|set_tab
+name|Set_tab
 condition|)
 block|{
 for|for
@@ -1459,7 +1459,7 @@ literal|8
 init|;
 name|c
 operator|<
-name|columns
+name|Columns
 condition|;
 name|c
 operator|+=
@@ -1503,7 +1503,7 @@ name|set_pos
 argument_list|,
 name|c
 argument_list|,
-name|lines
+name|Lines
 operator|-
 literal|1
 argument_list|)
@@ -1540,7 +1540,7 @@ expr_stmt|;
 comment|/* Set the tab. */
 name|tputs
 argument_list|(
-name|set_tab
+name|Set_tab
 argument_list|,
 literal|0
 argument_list|,

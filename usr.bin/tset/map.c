@@ -86,7 +86,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|speed_t
-name|baudrate
+name|tset_baudrate
 name|__P
 argument_list|(
 operator|(
@@ -502,7 +502,7 @@ name|mapp
 operator|->
 name|speed
 operator|=
-name|baudrate
+name|tset_baudrate
 argument_list|(
 name|p
 argument_list|)
@@ -931,7 +931,7 @@ end_decl_stmt
 
 begin_function
 name|speed_t
-name|baudrate
+name|tset_baudrate
 parameter_list|(
 name|rate
 parameter_list|)
