@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1992-1994 by Joerg Wunsch, Dresden  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1992-1994 by Joerg Wunsch, Dresden  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -1100,6 +1100,14 @@ literal|".360"
 expr_stmt|;
 break|break;
 case|case
+literal|640
+case|:
+name|suffix
+operator|=
+literal|".640"
+expr_stmt|;
+break|break;
+case|case
 literal|720
 case|:
 name|suffix
@@ -1129,6 +1137,14 @@ case|:
 name|suffix
 operator|=
 literal|".1200"
+expr_stmt|;
+break|break;
+case|case
+literal|1232
+case|:
+name|suffix
+operator|=
+literal|".1232"
 expr_stmt|;
 break|break;
 case|case
@@ -1383,8 +1399,10 @@ operator|)
 operator|*
 literal|128
 expr_stmt|;
+comment|/* XXX  20/40 = 0.5 */
 name|tracks_per_dot
 operator|=
+operator|(
 name|fdt
 operator|.
 name|tracks
@@ -1392,6 +1410,9 @@ operator|*
 name|fdt
 operator|.
 name|heads
+operator|+
+literal|20
+operator|)
 operator|/
 literal|40
 expr_stmt|;
@@ -1475,14 +1496,45 @@ operator|!
 name|quiet
 condition|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"Processing ----------------------------------------\r"
+literal|"Processing "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+name|fdt
+operator|.
+name|tracks
+operator|*
+name|fdt
+operator|.
+name|heads
+operator|)
+operator|/
+name|tracks_per_dot
+condition|;
+name|i
+operator|++
+control|)
+name|putchar
+argument_list|(
+literal|'-'
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Processing "
+literal|"\rProcessing "
 argument_list|)
 expr_stmt|;
 name|fflush
