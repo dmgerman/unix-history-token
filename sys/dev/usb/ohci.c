@@ -8325,7 +8325,10 @@ name|ed_tailp
 argument_list|)
 operator|,
 operator|(
-name|u_long
+name|int
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|LE
 argument_list|(
