@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_tune.h	7.4	%G%  */
+comment|/*	ex_tune.h	7.5	83/07/02	*/
 end_comment
 
 begin_comment
@@ -15,11 +15,59 @@ begin_comment
 comment|/*  * Pathnames.  *  * Only exstrings is looked at "+4", i.e. if you give  * "/usr/lib/..." here, "/lib" will be tried only for strings.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"local/uparm.h"
-end_include
+begin_define
+define|#
+directive|define
+name|libpath
+parameter_list|(
+name|file
+parameter_list|)
+value|"/usr/lib/file"
+end_define
+
+begin_define
+define|#
+directive|define
+name|loclibpath
+parameter_list|(
+name|file
+parameter_list|)
+value|"/usr/local/lib/file"
+end_define
+
+begin_define
+define|#
+directive|define
+name|binpath
+parameter_list|(
+name|file
+parameter_list|)
+value|"/usr/ucb/file"
+end_define
+
+begin_define
+define|#
+directive|define
+name|usrpath
+parameter_list|(
+name|file
+parameter_list|)
+value|"/usr/file"
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_TERMCAP
+value|"/etc/termcap"
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_CSH
+value|"/bin/csh"
+end_define
 
 begin_define
 define|#
