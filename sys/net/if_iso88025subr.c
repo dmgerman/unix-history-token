@@ -623,7 +623,14 @@ name|struct
 name|ipx_addr
 modifier|*
 name|ina
-init|=
+decl_stmt|;
+name|struct
+name|arpcom
+modifier|*
+name|ac
+decl_stmt|;
+name|ina
+operator|=
 operator|&
 operator|(
 name|IA_SIPX
@@ -633,17 +640,14 @@ argument_list|)
 operator|->
 name|sipx_addr
 operator|)
-decl_stmt|;
-name|struct
-name|arpcom
-modifier|*
+expr_stmt|;
 name|ac
-init|=
+operator|=
 name|IFP2AC
 argument_list|(
 name|ifp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ipx_nullhost
@@ -667,7 +671,6 @@ operator|->
 name|ac_enaddr
 expr_stmt|;
 else|else
-block|{
 name|bcopy
 argument_list|(
 operator|(
@@ -689,8 +692,7 @@ argument_list|,
 name|ISO88025_ADDR_LEN
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*                          * Set new address                          */
+comment|/* 				 * Set new address 				 */
 name|ifp
 operator|->
 name|if_init
@@ -700,8 +702,8 @@ operator|->
 name|if_softc
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+break|break;
 endif|#
 directive|endif
 comment|/* IPX */
