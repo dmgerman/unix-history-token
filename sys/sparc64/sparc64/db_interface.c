@@ -381,5 +381,22 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|DB_COMMAND
+argument_list|(
+argument|halt
+argument_list|,
+argument|db_halt
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|cpu_halt
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
 end_unit
 
