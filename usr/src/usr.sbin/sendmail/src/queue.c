@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.42 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.43 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.42 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.43 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2034,6 +2034,8 @@ literal|2
 argument_list|,
 name|ForkQueueRuns
 argument_list|,
+name|FALSE
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -3154,7 +3156,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DOWORK -- do a work request. ** **	Parameters: **		id -- the ID of the job to run. **		forkflag -- if set, run this in background. **		e - the envelope in which to run it. ** **	Returns: **		none. ** **	Side Effects: **		The work request is satisfied if possible. */
+comment|/* **  DOWORK -- do a work request. ** **	Parameters: **		id -- the ID of the job to run. **		forkflag -- if set, run this in background. **		requeueflag -- if set, reinstantiate the queue quickly. **			This is used when expanding aliases in the queue. **		e - the envelope in which to run it. ** **	Returns: **		none. ** **	Side Effects: **		The work request is satisfied if possible. */
 end_comment
 
 begin_macro
@@ -3163,6 +3165,8 @@ argument_list|(
 argument|id
 argument_list|,
 argument|forkflag
+argument_list|,
+argument|requeueflag
 argument_list|,
 argument|e
 argument_list|)
@@ -3178,6 +3182,12 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|forkflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|requeueflag
 decl_stmt|;
 end_decl_stmt
 
@@ -3373,6 +3383,19 @@ expr_stmt|;
 name|eatheader
 argument_list|(
 name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|requeueflag
+condition|)
+name|queueup
+argument_list|(
+name|e
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* do the delivery */
