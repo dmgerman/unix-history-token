@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.52	82/02/03	*/
+comment|/*	tcp_input.c	1.53	82/02/19	*/
 end_comment
 
 begin_include
@@ -2123,12 +2123,28 @@ if|if
 condition|(
 name|ourfinisacked
 condition|)
+block|{
+comment|/* 				 * If we can't receive any more 				 * data, then closing user can proceed. 				 */
+if|if
+condition|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_CANTRCVMORE
+condition|)
+name|soisdisconnected
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_state
 operator|=
 name|TCPS_FIN_WAIT_2
 expr_stmt|;
+block|}
 break|break;
 comment|/* 		 * In CLOSING STATE in addition to the processing for 		 * the ESTABLISHED state if the ACK acknowledges our FIN 		 * then enter the TIME-WAIT state, otherwise ignore 		 * the segment. 		 */
 case|case
