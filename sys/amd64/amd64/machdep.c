@@ -5011,7 +5011,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-name|IDT_BPT
+name|IDT_BP
 argument_list|,
 operator|&
 name|IDTVEC
