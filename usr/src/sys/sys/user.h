@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.10	82/02/15	*/
+comment|/*	user.h	4.11	82/03/27	*/
 end_comment
 
 begin_ifdef
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|"../h/vtimes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"assym.s"
 end_include
 
 begin_else
