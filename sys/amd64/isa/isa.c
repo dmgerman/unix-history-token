@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_compat_oldisa.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -67,16 +61,7 @@ name|isa_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|COMPAT_OLDISA
-name|isa_wrap_old_drivers
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-block|}
+block|{ }
 end_function
 
 begin_comment
