@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	8.1 (Berkeley) %G%"
+literal|"@(#)tape.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3089,6 +3089,14 @@ literal|"The ENTIRE dump is aborted.\n"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RDUMP
+name|rmtclose
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|Exit
 argument_list|(
 name|X_ABORT
