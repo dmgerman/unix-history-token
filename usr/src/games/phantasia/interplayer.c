@@ -2688,7 +2688,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: throneroom() / / FUNCTION: king stuff upon entering throne / / AUTHOR: E. A. Estes, 12/16/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), fread(), fseek(), fopen(), wmove(), fclose(),  /	fwrite(), altercoordinates(), waddstr(), fprintf() / / GLOBAL INPUTS: *Energyvoidfp, Other, Player, *stdscr, Voidfile[],  /	Messfile[], Enrgyvoid, *Playersfp / / GLOBAL OUTPUTS: Other, Player, Changed / / DESCRIPTION: /	If player is not already king, make him/her so if the old king /	is not playing. /	Clear energy voids with new king. /	Print 'decree' prompt. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: throneroom() / / FUNCTION: king stuff upon entering throne / / AUTHOR: E. A. Estes, 12/16/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), fread(), fseek(), fopen(), wmove(), fclose(),  /	fwrite(), altercoordinates(), waddstr(), fprintf() / / GLOBAL INPUTS: *Energyvoidfp, Other, Player, *stdscr, /	Enrgyvoid, *Playersfp / / GLOBAL OUTPUTS: Other, Player, Changed / / DESCRIPTION: /	If player is not already king, make him/her so if the old king /	is not playing. /	Clear energy voids with new king. /	Print 'decree' prompt. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -2862,7 +2862,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Messfile
+name|_PATH_MESS
 argument_list|,
 literal|"w"
 argument_list|)
@@ -2909,7 +2909,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Voidfile
+name|_PATH_VOID
 argument_list|,
 literal|"w"
 argument_list|)
@@ -2954,7 +2954,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: dotampered() / / FUNCTION: king and valar special options / / AUTHOR: E. A. Estes, 2/28/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), truncstring(), fread(), fseek(), fopen(),  /	floor(), wmove(), drandom(), fclose(), fwrite(), sscanf(), strcmp(),  /	infloat(), waddstr(), findname(), distance(), userlist(), mvprintw(),  /	allocvoid(), getanswer(), getstring(), wclrtoeol(), writevoid() / / GLOBAL INPUTS: *Energyvoidfp, Other, Illcmd[], Wizard, Player, *stdscr,  /	Databuf[], Goldfile[], Enrgyvoid / / GLOBAL OUTPUTS: Other, Player, Enrgyvoid / / DESCRIPTION: /	Tamper with other players.  Handle king/valar specific options. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: dotampered() / / FUNCTION: king and valar special options / / AUTHOR: E. A. Estes, 2/28/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), truncstring(), fread(), fseek(), fopen(),  /	floor(), wmove(), drandom(), fclose(), fwrite(), sscanf(), strcmp(),  /	infloat(), waddstr(), findname(), distance(), userlist(), mvprintw(),  /	allocvoid(), getanswer(), getstring(), wclrtoeol(), writevoid() / / GLOBAL INPUTS: *Energyvoidfp, Other, Illcmd[], Wizard, Player, *stdscr,  /	Databuf[], Enrgyvoid / / GLOBAL OUTPUTS: Other, Player, Enrgyvoid / / DESCRIPTION: /	Tamper with other players.  Handle king/valar specific options. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -3237,7 +3237,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Goldfile
+name|_PATH_GOLD
 argument_list|,
 literal|"r+"
 argument_list|)

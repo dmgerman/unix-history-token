@@ -2054,7 +2054,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: scorelist() / / FUNCTION: print player score board / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fopen(), printf(), fclose() / / GLOBAL INPUTS: Scorefile[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read the scoreboard file and print the contents. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: scorelist() / / FUNCTION: print player score board / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fopen(), printf(), fclose() / / GLOBAL INPUTS:  / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read the scoreboard file and print the contents. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -2082,7 +2082,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Scorefile
+name|_PATH_SCORE
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2366,7 +2366,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: enterscore() / / FUNCTION: enter player into scoreboard / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), error(), strcmp(), fclose(),  /	strcpy(), fwrite(), descrtype() / / GLOBAL INPUTS: Player, Scorefile[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	The scoreboard keeps track of the highest character on a /	per-login basis. /	Search the scoreboard for an entry for the current login, /	if an entry is found, and it is lower than the current player, /	replace it, otherwise create an entry. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: enterscore() / / FUNCTION: enter player into scoreboard / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), error(), strcmp(), fclose(),  /	strcpy(), fwrite(), descrtype() / / GLOBAL INPUTS: Player / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	The scoreboard keeps track of the highest character on a /	per-login basis. /	Search the scoreboard for an entry for the current login, /	if an entry is found, and it is lower than the current player, /	replace it, otherwise create an entry. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -2405,7 +2405,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Scorefile
+name|_PATH_SCORE
 argument_list|,
 literal|"r+"
 argument_list|)
@@ -2466,7 +2466,7 @@ else|else
 block|{
 name|error
 argument_list|(
-name|Scorefile
+name|_PATH_SCORE
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/

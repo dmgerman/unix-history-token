@@ -55,7 +55,7 @@ file|"include.h"
 end_include
 
 begin_comment
-comment|/*************************************************************************** / FUNCTION NAME: main() / / FUNCTION: initialize state, and call main process / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	int	argc - argument count /	char	**argv - argument vector / / RETURN VALUE: none / / MODULES CALLED: monstlist(), checkenemy(), ok_to_play(), activelist(),  /	throneroom(), checkbattle(), readmessage(), changestats(), writerecord(),  /	tradingpost(), adjuststats(), recallplayer(), displaystats(), checktampered(),  /	fabs(), rollnewplayer(), time(), exit(), sqrt(), floor(), wmove(),  /	signal(), strcat(), purgeoldplayers(), getuid(), isatty(), wclear(),  /	strcpy(), system(), altercoordinates(), cleanup(), waddstr(), procmain(),  /	playinit(), leavegame(), localtime(), getanswer(), neatstuff(), initialstate(),  /	scorelist(), titlelist() / / GLOBAL INPUTS: *Login, Throne, Wizard, Player, *stdscr, Changed, Databuf[],  /	Fileloc, Helpfile[], Stattable[] / / GLOBAL OUTPUTS: Wizard, Player, Changed, Fileloc, Timeout, *Statptr / / DESCRIPTION: /	Process arguments, initialize program, and loop forever processing /	player input. / /***************************************************************************/
+comment|/*************************************************************************** / FUNCTION NAME: main() / / FUNCTION: initialize state, and call main process / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	int	argc - argument count /	char	**argv - argument vector / / RETURN VALUE: none / / MODULES CALLED: monstlist(), checkenemy(), ok_to_play(), activelist(),  /	throneroom(), checkbattle(), readmessage(), changestats(), writerecord(),  /	tradingpost(), adjuststats(), recallplayer(), displaystats(), checktampered(),  /	fabs(), rollnewplayer(), time(), exit(), sqrt(), floor(), wmove(),  /	signal(), strcat(), purgeoldplayers(), getuid(), isatty(), wclear(),  /	strcpy(), system(), altercoordinates(), cleanup(), waddstr(), procmain(),  /	playinit(), leavegame(), localtime(), getanswer(), neatstuff(), initialstate(),  /	scorelist(), titlelist() / / GLOBAL INPUTS: *Login, Throne, Wizard, Player, *stdscr, Changed, Databuf[],  /	Fileloc, Stattable[] / / GLOBAL OUTPUTS: Wizard, Player, Changed, Fileloc, Timeout, *Statptr / / DESCRIPTION: /	Process arguments, initialize program, and loop forever processing /	player input. / /***************************************************************************/
 end_comment
 
 begin_function
@@ -256,7 +256,7 @@ name|strcat
 argument_list|(
 name|Databuf
 argument_list|,
-name|Helpfile
+name|_PATH_HELP
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -824,7 +824,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: initialstate() / / FUNCTION: initialize some important global variable / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: time(), fopen(), srandom(), error(), getuid(), getlogin(),  /	getpwuid() / / GLOBAL INPUTS: Peoplefile[], Voidfile[], Messfile[], Monstfile[] / / GLOBAL OUTPUTS: *Energyvoidfp, Echo, Marsh, *Login, Users, Beyond,  /	Throne, Wizard, Changed, Okcount, Timeout, Windows, *Monstfp, *Messagefp,  /	*Playersfp / / DESCRIPTION: /	Set global flags, and open files which remain open. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: initialstate() / / FUNCTION: initialize some important global variable / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: time(), fopen(), srandom(), error(), getuid(), getlogin(),  /	getpwuid() / / GLOBAL INPUTS:  / / GLOBAL OUTPUTS: *Energyvoidfp, Echo, Marsh, *Login, Users, Beyond,  /	Throne, Wizard, Changed, Okcount, Timeout, Windows, *Monstfp, *Messagefp,  /	*Playersfp / / DESCRIPTION: /	Set global flags, and open files which remain open. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -900,7 +900,7 @@ name|Playersfp
 operator|=
 name|fopen
 argument_list|(
-name|Peoplefile
+name|_PATH_PEOPLE
 argument_list|,
 literal|"r+"
 argument_list|)
@@ -910,7 +910,7 @@ name|NULL
 condition|)
 name|error
 argument_list|(
-name|Peoplefile
+name|_PATH_PEOPLE
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -921,7 +921,7 @@ name|Monstfp
 operator|=
 name|fopen
 argument_list|(
-name|Monstfile
+name|_PATH_MONST
 argument_list|,
 literal|"r+"
 argument_list|)
@@ -931,7 +931,7 @@ name|NULL
 condition|)
 name|error
 argument_list|(
-name|Monstfile
+name|_PATH_MONST
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -942,7 +942,7 @@ name|Messagefp
 operator|=
 name|fopen
 argument_list|(
-name|Messfile
+name|_PATH_MESS
 argument_list|,
 literal|"r"
 argument_list|)
@@ -952,7 +952,7 @@ name|NULL
 condition|)
 name|error
 argument_list|(
-name|Messfile
+name|_PATH_MESS
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -963,7 +963,7 @@ name|Energyvoidfp
 operator|=
 name|fopen
 argument_list|(
-name|Voidfile
+name|_PATH_VOID
 argument_list|,
 literal|"r+"
 argument_list|)
@@ -973,7 +973,7 @@ name|NULL
 condition|)
 name|error
 argument_list|(
-name|Voidfile
+name|_PATH_VOID
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1428,7 +1428,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: procmain() / / FUNCTION: process input from player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: dotampered(), changestats(), inputoption(), allstatslist(),  /	fopen(), wmove(), drandom(), sscanf(), fclose(), altercoordinates(),  /	waddstr(), fprintf(), distance(), userlist(), leavegame(), encounter(),  /	getstring(), wclrtobot() / / GLOBAL INPUTS: Circle, Illcmd[], Throne, Wizard, Player, *stdscr,  /	Databuf[], Illmove[], Messfile[] / / GLOBAL OUTPUTS: Player, Changed / / DESCRIPTION: /	Process main menu options. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: procmain() / / FUNCTION: process input from player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: dotampered(), changestats(), inputoption(), allstatslist(),  /	fopen(), wmove(), drandom(), sscanf(), fclose(), altercoordinates(),  /	waddstr(), fprintf(), distance(), userlist(), leavegame(), encounter(),  /	getstring(), wclrtobot() / / GLOBAL INPUTS: Circle, Illcmd[], Throne, Wizard, Player, *stdscr,  /	Databuf[], Illmove[] / / GLOBAL OUTPUTS: Player, Changed / / DESCRIPTION: /	Process main menu options. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -1863,7 +1863,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Messfile
+name|_PATH_MESS
 argument_list|,
 literal|"w"
 argument_list|)
@@ -2308,7 +2308,7 @@ name|ENEMY
 end_ifdef
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: checkenemy() / / FUNCTION: check login name against enemy list / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fopen(), fgets(), strcmp(), fclose(), printf(), cleanup() / / GLOBAL INPUTS: *Login, Databuf[], Enemyfile[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	The enemy file has a list of login names which are denied /	access to Phantasia. /	We scan this list and exit if the current login name is /	found in the list. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: checkenemy() / / FUNCTION: check login name against enemy list / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fopen(), fgets(), strcmp(), fclose(), printf(), cleanup() / / GLOBAL INPUTS: *Login, Databuf[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	The enemy file has a list of login names which are denied /	access to Phantasia. /	We scan this list and exit if the current login name is /	found in the list. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -2331,7 +2331,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Enemyfile
+name|_PATH_ENEMY
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2411,7 +2411,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: titlelist() / / FUNCTION: print title page / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), fgets(), wmove(), strcpy(),  /	fclose(), strlen(), waddstr(), sprintf(), wrefresh() / / GLOBAL INPUTS: Lines, Other, *stdscr, Databuf[], Lastdead[], Motdfile[],  /	*Playersfp / / GLOBAL OUTPUTS: Lines / / DESCRIPTION: /	Print important information about game, players, etc. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: titlelist() / / FUNCTION: print title page / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), fgets(), wmove(), strcpy(),  /	fclose(), strlen(), waddstr(), sprintf(), wrefresh() / / GLOBAL INPUTS: Lines, Other, *stdscr, Databuf[], *Playersfp / / GLOBAL OUTPUTS: Lines / / DESCRIPTION: /	Print important information about game, players, etc. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -2480,7 +2480,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Motdfile
+name|_PATH_MOTD
 argument_list|,
 literal|"r"
 argument_list|)
@@ -3006,7 +3006,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Lastdead
+name|_PATH_LASTDEAD
 argument_list|,
 literal|"r"
 argument_list|)

@@ -2865,7 +2865,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: death() / / FUNCTION: death routine / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *how - pointer to string describing cause of death / / RETURN VALUE: none / / MODULES CALLED: freerecord(), enterscore(), more(), exit(), fread(),  /	fseek(), execl(), fopen(), floor(), wmove(), drandom(), wclear(), strcmp(),  /	fwrite(), fflush(), printw(), strcpy(), fclose(), waddstr(), cleanup(),  /	fprintf(), wrefresh(), getanswer(), descrtype() / / GLOBAL INPUTS: Curmonster, Wizard, Player, *stdscr, Fileloc, *Monstfp,  /	Lastdead[], Gameprog[], Messfile[] / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Kill off current player. /	Handle rings, and multiple lives. /	Print an appropriate message. /	Update scoreboard, lastdead, and let other players know about /	the demise of their comrade. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: death() / / FUNCTION: death routine / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *how - pointer to string describing cause of death / / RETURN VALUE: none / / MODULES CALLED: freerecord(), enterscore(), more(), exit(), fread(),  /	fseek(), execl(), fopen(), floor(), wmove(), drandom(), wclear(), strcmp(),  /	fwrite(), fflush(), printw(), strcpy(), fclose(), waddstr(), cleanup(),  /	fprintf(), wrefresh(), getanswer(), descrtype() / / GLOBAL INPUTS: Curmonster, Wizard, Player, *stdscr, Fileloc, *Monstfp / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Kill off current player. /	Handle rings, and multiple lives. /	Print an appropriate message. /	Update scoreboard, lastdead, and let other players know about /	the demise of their comrade. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -3234,7 +3234,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Lastdead
+name|_PATH_LASTDEAD
 argument_list|,
 literal|"w"
 argument_list|)
@@ -3278,7 +3278,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Messfile
+name|_PATH_MESS
 argument_list|,
 literal|"w"
 argument_list|)
@@ -3375,7 +3375,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-name|Gameprog
+name|_PATH_GAMEPROG
 argument_list|,
 literal|"phantasia"
 argument_list|,
@@ -5214,7 +5214,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: collecttaxes() / / FUNCTION: collect taxes from current player / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: /	double gold - amount of gold to tax /	double gems - amount of gems to tax / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), floor(), fwrite(), fclose() / / GLOBAL INPUTS: Player, Goldfile[] / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Pay taxes on gold and gems.  If the player does not have enough /	gold to pay taxes on the added gems, convert some gems to gold. /	Add taxes to tax data base; add remaining gold and gems to /	player's cache. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: collecttaxes() / / FUNCTION: collect taxes from current player / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: /	double gold - amount of gold to tax /	double gems - amount of gems to tax / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), floor(), fwrite(), fclose() / / GLOBAL INPUTS: Player / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Pay taxes on gold and gems.  If the player does not have enough /	gold to pay taxes on the added gems, convert some gems to gold. /	Add taxes to tax data base; add remaining gold and gems to /	player's cache. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -5368,7 +5368,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|Goldfile
+name|_PATH_GOLD
 argument_list|,
 literal|"r+"
 argument_list|)

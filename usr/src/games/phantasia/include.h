@@ -63,5 +63,11 @@ directive|include
 file|"phantglobs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 end_unit
 

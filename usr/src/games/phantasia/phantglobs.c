@@ -726,131 +726,62 @@ comment|/* a place to read data into		*/
 end_comment
 
 begin_comment
-comment|/* edit these path definitions to let files reside elsewhere */
+comment|/* some canned strings for messages */
 end_comment
 
 begin_decl_stmt
 name|char
-name|Monstfile
+name|Illcmd
 index|[]
 init|=
-name|DEST
-operator|/
-name|monsters
-literal|";	/* monster database		*/ char	Peoplefile[] = DEST/characs"
+literal|"Illegal command.\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* player database		*/
-end_comment
-
 begin_decl_stmt
 name|char
-name|Gameprog
+name|Illmove
 index|[]
 init|=
-name|DESTR
-operator|/
-name|phantasia
-literal|";	/* game binary			*/ char	Messfile[] = DEST/mess"
+literal|"Too far.\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* player to player messages	*/
-end_comment
-
 begin_decl_stmt
 name|char
-name|Lastdead
+name|Illspell
 index|[]
 init|=
-name|DEST
-operator|/
-name|lastdead
-literal|";	/* data on last player killed	*/ char	Helpfile[] = DEST/phant.help"
+literal|"Illegal spell.\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* manual pages			*/
-end_comment
-
 begin_decl_stmt
 name|char
-name|Motdfile
+name|Nomana
 index|[]
 init|=
-name|DEST
-operator|/
-name|motd
-literal|";	/* message from 'wizard'	*/ char	Goldfile[] = DEST/gold"
+literal|"Not enought mana for that spell.\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* gold collected in taxes	*/
-end_comment
-
 begin_decl_stmt
 name|char
-name|Voidfile
+name|Somebetter
 index|[]
 init|=
-name|DEST
-operator|/
-name|void
-literal|";	/* energy void database		*/ char	Scorefile[] = DEST/scoreboard"
+literal|"But you already have something better.\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* hi score database		*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENEMY
-end_ifdef
-
 begin_decl_stmt
 name|char
-name|Enemyfile
+name|Nobetter
 index|[]
 init|=
-name|DEST
-operator|/
-name|enemy
-literal|";	/* restricted account database	*/ #endif  /* some canned strings for messages */ char	Illcmd[] = "
-name|Illegal
-name|command
-operator|.
-expr|\
-name|n
-literal|"; char	Illmove[] = "
-name|Too
-name|far
-operator|.
-expr|\
-name|n
-literal|"; char	Illspell[] = "
-name|Illegal
-name|spell
-operator|.
-expr|\
-name|n
-literal|"; char	Nomana[] = "
-name|Not
-name|enought
-name|mana
+literal|"That's no better than what you already have.\n"
+decl_stmt|;
 end_decl_stmt
 
-begin_for
-for|for that spell.\n"; char	Somebetter[] = "But you already have something better.\n"; char	Nobetter[] = "That'
-end_for
-
-unit|s no better than what you already have.\n";
 end_unit
 
