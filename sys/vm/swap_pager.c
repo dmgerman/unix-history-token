@@ -328,6 +328,46 @@ begin_comment
 comment|/* swap offset */
 end_comment
 
+begin_comment
+comment|/*  * Swap device table  */
+end_comment
+
+begin_struct
+struct|struct
+name|swdevt
+block|{
+name|udev_t
+name|sw_dev
+decl_stmt|;
+comment|/* For quasibogus swapdev reporting */
+name|int
+name|sw_flags
+decl_stmt|;
+name|int
+name|sw_nblks
+decl_stmt|;
+name|int
+name|sw_used
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|sw_vp
+decl_stmt|;
+name|dev_t
+name|sw_device
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SW_CLOSING
+value|0x04
+end_define
+
 begin_struct
 struct|struct
 name|swblock
@@ -8116,7 +8156,7 @@ name|sp
 operator|->
 name|sw_flags
 operator|=
-name|SW_FREED
+literal|0
 expr_stmt|;
 name|sp
 operator|->
