@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.1 (Berkeley) 6/9/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) 6/9/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -918,17 +932,13 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"Usage: rdist [-nqbhirvwyD] [-P /path/to/rsh ] [-f distfile] [-d var=value]\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"             [-m host] [file ...]\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"or:    rdist [-nqbhirvwyD] [-P /path/to/rsh ] -c source [...] machine[:dest]\n"
+literal|"%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: rdist [-nqbhirvwyD] [-P /path/to/rsh ] [-f distfile] [-d var=value]"
+argument_list|,
+literal|"             [-m host] [file ...]"
+argument_list|,
+literal|"       rdist [-nqbhirvwyD] [-P /path/to/rsh ] -c source [...] machine[:dest]"
 argument_list|)
 expr_stmt|;
 name|exit
