@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.53 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3623,7 +3623,7 @@ argument_list|,
 literal|"[TCP]"
 argument_list|)
 operator|==
-name|NULL
+literal|0
 operator|)
 condition|)
 name|m
