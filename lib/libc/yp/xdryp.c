@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdryp.c,v 1.3 1995/04/02 19:58:29 wpaul Exp $"
+literal|"$Id: xdryp.c,v 1.5 1996/02/04 05:05:43 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,18 @@ begin_include
 include|#
 directive|include
 file|<rpcsvc/yp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_function_decl
