@@ -169,33 +169,21 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * KERN_PROC subtype ops return arrays of selected proc structure entries:  *  * When adding new fields to this structure, ALWAYS add them at the end  * and decrease the size of the spare field by the amount of space that  * you are adding.  Byte aligned data should be added to the ki_sparestring  * space; other entries should be added to the ki_spare space. Always  * verify that sizeof(struct kinfo_proc) == KINFO_PROC_SIZE when you are  * done. If you change the size of this structure, many programs will stop  * working! Once you have added the new field, you will need to add code  * to initialize it in two places: kern/kern_proc.c in the function  * fill_kinfo_proc and in lib/libkvm/kvm_proc.c in the function kvm_proclist.  */
+comment|/*  * KERN_PROC subtype ops return arrays of selected proc structure entries:  *  * When adding new fields to this structure, ALWAYS add them at the end  * and decrease the size of the spare field by the amount of space that  * you are adding.  Byte aligned data should be added to the ki_sparestring  * space; other entries should be added to the ki_spare space. Always  * verify that sizeof(struct kinfo_proc) == KINFO_PROC_SIZE when you are  * done. If you change the size of this structure, many programs will stop  * working! Once you have added the new field, you will need to add code  * to initialize it in two places: kern/kern_proc.c in the function  * fill_kinfo_proc and in lib/libkvm/kvm_proc.c in the function kvm_proclist.  *  * KI_NSPARE is the number of spare-longs to define in the array at the  * end of kinfo_proc.  It may need to be overridden on a platform-specific  * basis as new fields are added.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_define
+define|#
+directive|define
+name|KI_NSPARE
+value|17
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -204,8 +192,43 @@ name|KINFO_PROC_SIZE
 value|912
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KINFO_PROC_SIZE
+value|912
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__arm__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|KI_NSPARE
+end_undef
+
 begin_comment
-comment|/* the correct size for kinfo_proc */
+comment|/* Fewer spare longs on this arch */
 end_comment
 
 begin_define
@@ -215,29 +238,6 @@ name|KI_NSPARE
 value|16
 end_define
 
-begin_comment
-comment|/* number of spare longs to define */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__arm__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -245,15 +245,57 @@ name|KINFO_PROC_SIZE
 value|648
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ia64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KINFO_PROC_SIZE
+value|912
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|KI_NSPARE
+end_undef
+
 begin_comment
-comment|/* the correct size for kinfo_proc */
+comment|/* Fewer spare longs on this arch */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|KI_NSPARE
-value|15
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|KINFO_PROC_SIZE
+value|648
 end_define
 
 begin_endif
@@ -274,11 +316,22 @@ name|KINFO_PROC_SIZE
 value|656
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|KI_NSPARE
-value|16
+name|KINFO_PROC_SIZE
+value|912
 end_define
 
 begin_endif
@@ -725,18 +778,14 @@ name|timeval
 name|ki_childutime
 decl_stmt|;
 comment|/* user time used by children */
-name|segsz_t
-name|ki_ps_segsz1
+name|pid_t
+name|ki_tid
 decl_stmt|;
-comment|/* used by `ps', for its processing */
-name|float
-name|ki_ps_float1
-decl_stmt|;
-comment|/* used by `ps', for its processing */
+comment|/* XXXKSE thread id */
 name|int
-name|ki_spare_int1
+name|ki_numthreads
 decl_stmt|;
-comment|/* unused (just here for alignment) */
+comment|/* XXXKSE number of threads in total */
 name|long
 name|ki_spare
 index|[
