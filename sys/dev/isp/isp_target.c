@@ -2750,9 +2750,7 @@ name|inp
 operator|->
 name|in_iid
 argument_list|,
-name|msg
-operator|.
-name|nt_lun
+name|lun
 argument_list|,
 name|inp
 operator|->
@@ -2793,9 +2791,7 @@ name|inp
 operator|->
 name|in_iid
 argument_list|,
-name|msg
-operator|.
-name|nt_lun
+name|lun
 argument_list|,
 name|inp
 operator|->
@@ -2836,9 +2832,7 @@ name|inp
 operator|->
 name|in_iid
 argument_list|,
-name|msg
-operator|.
-name|nt_lun
+name|lun
 argument_list|,
 name|inp
 operator|->
@@ -2879,9 +2873,7 @@ name|inp
 operator|->
 name|in_iid
 argument_list|,
-name|msg
-operator|.
-name|nt_lun
+name|lun
 argument_list|,
 name|inp
 operator|->
@@ -2923,9 +2915,7 @@ name|inp
 operator|->
 name|in_iid
 argument_list|,
-name|msg
-operator|.
-name|nt_lun
+name|lun
 argument_list|,
 name|inp
 operator|->
@@ -2958,9 +2948,7 @@ name|inp
 operator|->
 name|in_status
 argument_list|,
-name|msg
-operator|.
-name|nt_lun
+name|lun
 argument_list|,
 name|inp
 operator|->
