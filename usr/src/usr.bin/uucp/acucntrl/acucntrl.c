@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.2 (Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"/sys/vaxuba/ubavar.h"
+file|<vaxuba/ubavar.h>
 end_include
 
 begin_else
@@ -1562,7 +1562,7 @@ operator|.
 name|ut_time
 argument_list|)
 expr_stmt|;
-name|strcpyn
+name|strncpy
 argument_list|(
 name|utmp
 operator|.
@@ -1573,7 +1573,7 @@ argument_list|,
 name|LINSIZ
 argument_list|)
 expr_stmt|;
-name|strcpyn
+name|strncpy
 argument_list|(
 name|utmp
 operator|.
