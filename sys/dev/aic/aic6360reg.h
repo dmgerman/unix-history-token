@@ -423,8 +423,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IDSTRING
+name|IDSTRING_AIC6360
 value|"(C)1991ADAPTECAIC6360           "
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDSTRING_AIC6370
+value|"(C)1994ADAPTECAIC6370"
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDSTRING_GM82C700
+value|"(C)1993 GoldStarGM82C700        "
 end_define
 
 begin_comment

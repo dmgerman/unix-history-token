@@ -158,6 +158,20 @@ name|SCB_SENSE
 value|0x08
 end_define
 
+begin_enum
+enum|enum
+block|{
+name|AIC6260
+block|,
+name|AIC6360
+block|,
+name|AIC6370
+block|,
+name|GM82C700
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|aic_softc
@@ -250,6 +264,9 @@ name|min_period
 decl_stmt|;
 name|int
 name|max_period
+decl_stmt|;
+name|int
+name|chip_type
 decl_stmt|;
 block|}
 struct|;
