@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sa.c	4.12 (Berkeley) %G%"
+literal|"@(#)sa.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -894,7 +894,7 @@ name|pgtok
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) / pgdiv)
+value|((x) * pgdiv)
 end_define
 
 begin_extern
