@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_3.c	2.5 84/01/19"
+literal|"@(#)dr_3.c	2.6 84/04/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -1260,6 +1260,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|windspeed
+operator|!=
+literal|0
+operator|&&
 operator|++
 name|sp
 operator|->

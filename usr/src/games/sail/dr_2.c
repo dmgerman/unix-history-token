@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_2.c	2.5 84/01/19"
+literal|"@(#)dr_2.c	2.6 84/04/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -1203,21 +1203,15 @@ block|}
 if|if
 condition|(
 operator|!
-name|windspeed
-condition|)
-operator|*
-name|drift
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|!
 name|moved
 condition|)
 block|{
 if|if
 condition|(
+name|windspeed
+operator|!=
+literal|0
+operator|&&
 operator|++
 operator|*
 name|drift
