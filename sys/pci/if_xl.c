@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.69 1999/03/31 15:36:30 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.74 1999/04/11 17:37:48 wpaul Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * 3Com 3c90x Etherlink XL PCI NIC driver  *  * Supports the 3Com "boomerang" and "cyclone" PCI  * bus-master chips (3c90x cards and embedded controllers) including  * the following:  *  * 3Com 3c900-TPO	10Mbps/RJ-45  * 3Com 3c900-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905-TX	10/100Mbps/RJ-45  * 3Com 3c905-T4	10/100Mbps/RJ-45  * 3Com 3c900B-TPO	10Mbps/RJ-45  * 3Com 3c900B-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905B-TX	10/100Mbps/RJ-45  * 3Com 3c905B-FL/FX	10/100Mbps/Fiber-optic  * 3Com 3c980-TX	10/100Mbps server adapter  * Dell Optiplex GX1 on-board 3c918 10/100Mbps/RJ-45  * Dell Precision on-board 3c905B 10/100Mbps/RJ-45  * Dell Latitude laptop docking station embedded 3c905-TX  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * 3Com 3c90x Etherlink XL PCI NIC driver  *  * Supports the 3Com "boomerang" and "cyclone" PCI  * bus-master chips (3c90x cards and embedded controllers) including  * the following:  *  * 3Com 3c900-TPO	10Mbps/RJ-45  * 3Com 3c900-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905-TX	10/100Mbps/RJ-45  * 3Com 3c905-T4	10/100Mbps/RJ-45  * 3Com 3c900B-TPO	10Mbps/RJ-45  * 3Com 3c900B-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905B-COMBO	10/100Mbps/RJ-45,AUI,BNC  * 3Com 3c905B-TX	10/100Mbps/RJ-45  * 3Com 3c905B-FL/FX	10/100Mbps/Fiber-optic  * 3Com 3c980-TX	10/100Mbps server adapter  * Dell Optiplex GX1 on-board 3c918 10/100Mbps/RJ-45  * Dell Precision on-board 3c905B 10/100Mbps/RJ-45  * Dell Latitude laptop docking station embedded 3c905-TX  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -209,7 +209,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_xl.c,v 1.69 1999/03/31 15:36:30 wpaul Exp $"
+literal|"$Id: if_xl.c,v 1.74 1999/04/11 17:37:48 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,6 +300,14 @@ block|,
 name|TC_DEVICEID_CYCLONE_10_100FX
 block|,
 literal|"3Com 3c905B-FX/SC Fast Etherlink XL"
+block|}
+block|,
+block|{
+name|TC_VENDORID
+block|,
+name|TC_DEVICEID_CYCLONE_10_100_COMBO
+block|,
+literal|"3Com 3c905B-COMBO Fast Etherlink XL"
 block|}
 block|,
 block|{
@@ -1101,9 +1109,6 @@ operator|)
 condition|)
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|i
@@ -1119,8 +1124,6 @@ operator|->
 name|xl_unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 end_function
@@ -4977,6 +4980,10 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 name|XL_SEL_WIN
 argument_list|(
 literal|0
@@ -4991,9 +4998,54 @@ argument_list|,
 name|XL_CMD_RESET
 argument_list|)
 expr_stmt|;
-name|xl_wait
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|XL_TIMEOUT
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|CSR_READ_2
 argument_list|(
 name|sc
+argument_list|,
+name|XL_STATUS
+argument_list|)
+operator|&
+name|XL_STAT_CMDBUSY
+operator|)
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|i
+operator|==
+name|XL_TIMEOUT
+condition|)
+name|printf
+argument_list|(
+literal|"xl%d: reset didn't complete\n"
+argument_list|,
+name|sc
+operator|->
+name|xl_unit
 argument_list|)
 expr_stmt|;
 comment|/* Wait a little while for the chip to get its brains in order. */
@@ -5347,6 +5399,10 @@ name|TC_DEVICEID_CYCLONE_10_100BT
 case|:
 comment|/* 3c905B-TX */
 case|case
+name|TC_DEVICEID_CYCLONE_10_100_COMBO
+case|:
+comment|/* 3c905B-COMBO */
+case|case
 name|TC_DEVICEID_CYCLONE_10_100BT_SERV
 case|:
 comment|/* 3c980-TX */
@@ -5513,7 +5569,9 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|fail
+goto|;
 block|}
 name|bzero
 argument_list|(
@@ -5750,9 +5808,35 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
+name|printf
+argument_list|(
+literal|"xl%d: WARNING: this shouldn't happen! "
+literal|"Possible PCI support code bug!"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"xl%d: attempting to map iobase manually"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|xl_bhandle
+operator|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|XL_PCI_LOIO
+argument_list|)
+operator|&
+literal|0xFFFFFFE0
+expr_stmt|;
+comment|/*goto fail;*/
 block|}
 ifdef|#
 directive|ifdef
@@ -6018,7 +6102,9 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|fail
+goto|;
 block|}
 name|sc
 operator|->
