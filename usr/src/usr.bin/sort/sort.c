@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.6 (Berkeley) %G%"
+literal|"@(#)sort.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5770,7 +5770,7 @@ condition|(
 name|tabchar
 operator|==
 literal|0
-operator|&&
+operator|||
 name|fp
 operator|->
 name|bflg
