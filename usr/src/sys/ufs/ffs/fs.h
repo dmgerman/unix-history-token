@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.15	%G%	*/
+comment|/*	fs.h	1.16	%G%	*/
 end_comment
 
 begin_comment
@@ -175,7 +175,7 @@ comment|/* maximum fs_cpg */
 end_comment
 
 begin_comment
-comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.  */
+comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.  * The limit on the amount of summary information per file system  * is defined by MAXCSBUFS. It is currently parameterized for 1Meg  * cylinders maximum.  */
 end_comment
 
 begin_define
@@ -183,6 +183,13 @@ define|#
 directive|define
 name|MAXMNTLEN
 value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXCSBUFS
+value|16
 end_define
 
 begin_comment
@@ -384,9 +391,7 @@ name|csum
 modifier|*
 name|fs_csp
 index|[
-name|NBUF
-operator|/
-literal|2
+name|MAXCSBUFS
 index|]
 decl_stmt|;
 comment|/* list of fs_cs info buffers */
