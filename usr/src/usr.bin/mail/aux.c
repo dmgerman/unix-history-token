@@ -37,7 +37,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)aux.c	1.6 %G%"
+literal|"@(#)aux.c	1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1608,6 +1608,29 @@ name|FILE
 modifier|*
 name|fi
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|expand
+argument_list|(
+name|name
+argument_list|)
+operator|)
+operator|==
+name|NOSTR
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -1615,7 +1638,7 @@ name|fi
 operator|=
 name|fopen
 argument_list|(
-name|name
+name|cp
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1626,7 +1649,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|name
+name|cp
 argument_list|)
 expr_stmt|;
 return|return
