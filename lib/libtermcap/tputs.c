@@ -80,6 +80,12 @@ block|,
 literal|10
 block|,
 literal|5
+block|,
+literal|3
+block|,
+literal|2
+block|,
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
