@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clrtoeol.c	5.8 (Berkeley) %G%"
+literal|"@(#)clrtoeol.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,7 +227,7 @@ directive|endif
 comment|/* Update firstch and lastch for the line. */
 return|return
 operator|(
-name|touchline
+name|__touchline
 argument_list|(
 name|win
 argument_list|,
@@ -242,6 +242,8 @@ operator|->
 name|maxx
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)insch.c	5.8 (Berkeley) %G%"
+literal|"@(#)insch.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ operator|&=
 operator|~
 name|__STANDOUT
 expr_stmt|;
-name|touchline
+name|__touchline
 argument_list|(
 name|win
 argument_list|,
@@ -168,6 +168,8 @@ operator|->
 name|maxx
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

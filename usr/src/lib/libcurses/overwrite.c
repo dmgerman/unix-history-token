@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)overwrite.c	5.9 (Berkeley) %G%"
+literal|"@(#)overwrite.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -268,7 +268,7 @@ operator|*
 name|__LDATASIZE
 argument_list|)
 expr_stmt|;
-name|touchline
+name|__touchline
 argument_list|(
 name|win2
 argument_list|,
@@ -285,6 +285,8 @@ operator|-
 name|win2
 operator|->
 name|begx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)toucholap.c	5.7 (Berkeley) %G%"
+literal|"@(#)toucholap.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,7 +283,7 @@ condition|;
 name|y
 operator|++
 control|)
-name|touchline
+name|__touchline
 argument_list|(
 name|win2
 argument_list|,
@@ -292,6 +292,8 @@ argument_list|,
 name|startx
 argument_list|,
 name|endx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return

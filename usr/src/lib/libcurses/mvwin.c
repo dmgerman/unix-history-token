@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mvwin.c	5.6 (Berkeley) %G%"
+literal|"@(#)mvwin.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,7 +234,7 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
-name|touchwin
+name|__touchwin
 argument_list|(
 name|win
 argument_list|)

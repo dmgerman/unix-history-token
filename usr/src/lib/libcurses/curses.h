@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.18 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -259,6 +259,11 @@ directive|define
 name|__ISPASTEOL
 value|0x02
 comment|/* Cursor is past end of line */
+define|#
+directive|define
+name|__FORCEPAINT
+value|0x04
+comment|/* Force a repaint of the line */
 name|u_int
 name|flags
 decl_stmt|;
@@ -2185,6 +2190,22 @@ end_comment
 
 begin_decl_stmt
 name|void
+name|__TRACE
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|__id_subwins
 name|__P
 argument_list|(
@@ -2226,8 +2247,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|__TRACE
+name|int
+name|__touchline
+name|__P
+argument_list|(
+operator|(
+name|WINDOW
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__touchwin
+name|__P
+argument_list|(
+operator|(
+name|WINDOW
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tscroll
 name|__P
 argument_list|(
 operator|(
@@ -2235,7 +2291,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-operator|...
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2250,23 +2306,6 @@ operator|(
 name|WINDOW
 operator|*
 operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|tscroll
-name|__P
-argument_list|(
-operator|(
-specifier|const
 name|char
 operator|*
 operator|,

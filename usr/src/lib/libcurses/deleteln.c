@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deleteln.c	5.12 (Berkeley) %G%"
+literal|"@(#)deleteln.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,7 +190,7 @@ operator|*
 name|__LDATASIZE
 argument_list|)
 expr_stmt|;
-name|touchline
+name|__touchline
 argument_list|(
 name|win
 argument_list|,
@@ -203,6 +203,8 @@ operator|->
 name|maxx
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -272,7 +274,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|touchline
+name|__touchline
 argument_list|(
 name|win
 argument_list|,
@@ -285,6 +287,8 @@ operator|->
 name|maxx
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

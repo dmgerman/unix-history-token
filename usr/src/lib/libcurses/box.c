@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)box.c	5.8 (Berkeley) %G%"
+literal|"@(#)box.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,7 +337,7 @@ operator|~
 name|__STANDOUT
 expr_stmt|;
 block|}
-name|touchwin
+name|__touchwin
 argument_list|(
 name|win
 argument_list|)
