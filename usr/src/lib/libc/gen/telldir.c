@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telldir.c	5.6 (Berkeley) %G%"
+literal|"@(#)telldir.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -380,6 +380,14 @@ name|loc_seek
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|dirp
+operator|->
+name|dd_seek
+operator|=
+name|lp
+operator|->
+name|loc_seek
 expr_stmt|;
 name|dirp
 operator|->
