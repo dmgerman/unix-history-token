@@ -8830,7 +8830,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|P_STOPPED
+name|P_STOPPED_SIG
 expr_stmt|;
 goto|goto
 name|runfast
