@@ -3120,6 +3120,10 @@ condition|(
 operator|(
 name|var
 operator|=
+operator|(
+name|Variable
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -3403,6 +3407,10 @@ condition|(
 operator|(
 name|h
 operator|=
+operator|(
+name|Snmp_Header
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -5360,6 +5368,10 @@ name|var
 decl_stmt|;
 name|hdr
 operator|=
+operator|(
+name|Snmp_Header
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -5585,6 +5597,10 @@ name|hdr
 decl_stmt|;
 name|hdr
 operator|=
+operator|(
+name|Snmp_Header
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -7313,6 +7329,10 @@ name|PDU_Header
 operator|->
 name|head
 operator|=
+operator|(
+name|Variable
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -8383,6 +8403,10 @@ name|PDU_Header
 operator|->
 name|head
 operator|=
+operator|(
+name|Variable
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
