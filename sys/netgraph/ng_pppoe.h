@@ -120,6 +120,7 @@ end_comment
 
 begin_enum
 enum|enum
+name|cmd
 block|{
 name|NGM_PPPOE_SET_FLAG
 init|=
@@ -222,7 +223,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|ngPPPoE_req
+name|ngPPPoE_sts
 block|{
 name|char
 name|hook

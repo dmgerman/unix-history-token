@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ttycom.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -606,16 +612,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ngt_ldisc
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Netgraph node type descriptor */
 end_comment
@@ -769,7 +765,7 @@ name|tp
 operator|->
 name|t_line
 operator|==
-name|ngt_ldisc
+name|NETGRAPHDISC
 condition|)
 block|{
 name|sc
@@ -2901,7 +2897,7 @@ name|ngt_ldisc
 operator|=
 name|ldisc_register
 argument_list|(
-name|LDISC_LOAD
+name|NETGRAPHDISC
 argument_list|,
 operator|&
 name|ngt_disc
@@ -2934,21 +2930,6 @@ block|}
 name|splx
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-comment|/* OK */
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"line discipline #%d registered to"
-literal|" netgraph node type \"%s\"\n"
-argument_list|,
-name|ngt_ldisc
-argument_list|,
-name|type
-operator|->
-name|name
 argument_list|)
 expr_stmt|;
 break|break;

@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|MAXLDISC
-value|8
+value|9
 end_define
 
 begin_endif
@@ -189,10 +189,16 @@ argument_list|(
 literal|6
 argument_list|)
 block|,
-comment|/* loadable */
+comment|/* NETGRAPHDISC */
 name|NODISC
 argument_list|(
 literal|7
+argument_list|)
+block|,
+comment|/* loadable */
+name|NODISC
+argument_list|(
+literal|8
 argument_list|)
 block|,
 comment|/* loadable */
@@ -236,7 +242,7 @@ begin_define
 define|#
 directive|define
 name|LOADABLE_LDISC
-value|6
+value|7
 end_define
 
 begin_comment
@@ -356,7 +362,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ldisc_deregister: Deregister a line discipline obtained with  * ldisc_register.  Can only deregister "loadable" ones now.  *  * discipline: Index for discipline to unload.  */
+comment|/*  * ldisc_deregister: Deregister a line discipline obtained with  * ldisc_register.  *  * discipline: Index for discipline to unload.  */
 end_comment
 
 begin_function
@@ -371,10 +377,6 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|discipline
-operator|>=
-name|LOADABLE_LDISC
-operator|&&
 name|discipline
 operator|<
 name|MAXLDISC
