@@ -385,9 +385,13 @@ name|P_KSES
 condition|)
 name|db_printf
 argument_list|(
-literal|"       thread %p "
+literal|"   thread %p ksegrp %p "
 argument_list|,
 name|td
+argument_list|,
+name|td
+operator|->
+name|td_ksegrp
 argument_list|)
 expr_stmt|;
 if|if
@@ -527,6 +531,20 @@ literal|"[IWAIT]"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|TD_LENT
+argument_list|(
+name|td
+argument_list|)
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"[LOAN]"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|TDS_CAN_RUN
@@ -576,11 +594,28 @@ name|p_flag
 operator|&
 name|P_KSES
 condition|)
+block|{
+if|if
+condition|(
+name|td
+operator|->
+name|td_kse
+condition|)
+name|db_printf
+argument_list|(
+literal|"[kse %p]"
+argument_list|,
+name|td
+operator|->
+name|td_kse
+argument_list|)
+expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|db_printf
 argument_list|(

@@ -1141,7 +1141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall.  */
+comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Pu t enough state in the new thread's PCB to get it to go back   * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
 end_comment
 
 begin_function
@@ -1310,7 +1310,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the machine state for performing an upcall that had to  * wait until we selected a KSE to perform the upcall on.  */
+comment|/*  * Set that machine state for performing an upcall that has to  * be done in thread_userret() so that those upcalls generated  * in thread_userret() itself can be done as well.  */
 end_comment
 
 begin_function

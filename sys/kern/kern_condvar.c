@@ -317,23 +317,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * If we have no queued work to do, 		 * upcall to the UTS to see if it has more work. 		 * We don't need to upcall now, just queue it. 		 */
-if|if
-condition|(
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|td
-operator|->
-name|td_ksegrp
-operator|->
-name|kg_runq
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* Don't recurse here! */
+comment|/* 		 * We don't need to upcall now, just queue it. 		 * The upcall will happen when other n-kernel work 		 * in this SKEGRP has completed. 		 * Don't recurse here! 		 */
 name|td
 operator|->
 name|td_flags
@@ -356,7 +340,6 @@ operator|&=
 operator|~
 name|TDF_INMSLEEP
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function

@@ -2047,23 +2047,6 @@ undef|#
 directive|undef
 name|RANGEOF
 comment|/* Set up the thread as an active thread (as if runnable). */
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|kg2
-operator|->
-name|kg_iq
-argument_list|,
-name|ke2
-argument_list|,
-name|ke_kgrlist
-argument_list|)
-expr_stmt|;
-name|kg2
-operator|->
-name|kg_idle_kses
-operator|--
-expr_stmt|;
 name|ke2
 operator|->
 name|ke_state

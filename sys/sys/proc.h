@@ -570,6 +570,12 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* (k) Switchin special func. */
+name|struct
+name|thread
+modifier|*
+name|td_standin
+decl_stmt|;
+comment|/* (?) use this for an upcall */
 name|u_int
 name|td_critnest
 decl_stmt|;
@@ -913,6 +919,16 @@ parameter_list|(
 name|td
 parameter_list|)
 value|((td)->td_inhibitors& TDI_LOCK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_LENT
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_inhibitors& TDI_LOAN)
 end_define
 
 begin_define
@@ -4601,6 +4617,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
