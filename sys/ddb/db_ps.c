@@ -128,7 +128,7 @@ name|proc0
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"  pid   proc     addr    uid  ppid  pgrp  flag  stat wmesg   wchan   cmd\n"
+literal|"  pid   proc     addr    uid  ppid  pgrp  flag   stat  wmesg    wchan  cmd\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -250,12 +250,12 @@ argument_list|)
 condition|)
 name|state
 operator|=
-literal|"stopped"
+literal|"stop"
 expr_stmt|;
 else|else
 name|state
 operator|=
-literal|"Normal"
+literal|"norm"
 expr_stmt|;
 break|break;
 case|case
@@ -263,7 +263,7 @@ name|PRS_NEW
 case|:
 name|state
 operator|=
-literal|"New"
+literal|"new "
 expr_stmt|;
 break|break;
 case|case
@@ -271,7 +271,7 @@ name|PRS_WAIT
 case|:
 name|state
 operator|=
-literal|"Wait"
+literal|"wait"
 expr_stmt|;
 break|break;
 case|case
@@ -279,19 +279,19 @@ name|PRS_ZOMBIE
 case|:
 name|state
 operator|=
-literal|"Zombie"
+literal|"zomp"
 expr_stmt|;
 break|break;
 default|default:
 name|state
 operator|=
-literal|"Unknown"
+literal|"Unkn"
 expr_stmt|;
 break|break;
 block|}
 name|db_printf
 argument_list|(
-literal|"%5d %8p %8p %4d %5d %5d %07x  %s"
+literal|"%5d %8p %8p %4d %5d %5d %07x %-4s"
 argument_list|,
 name|p
 operator|->
@@ -461,7 +461,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"  %6s %8p"
+literal|"  %-6s %8p"
 argument_list|,
 name|td
 operator|->
