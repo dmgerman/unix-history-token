@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.2	82/02/02	*/
+comment|/*	raw_pup.c	4.3	82/02/15	*/
 end_comment
 
 begin_include
@@ -108,7 +108,7 @@ comment|/*  * Setup generic address and protocol structures  * for raw_input rou
 end_comment
 
 begin_macro
-name|rawpup_input
+name|rpup_input
 argument_list|(
 argument|m
 argument_list|)
@@ -190,7 +190,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|rawpup_ctlinput
+name|rpup_ctlinput
 argument_list|(
 argument|m
 argument_list|)
@@ -208,7 +208,7 @@ begin_block
 block|{
 name|COUNT
 argument_list|(
-name|RAWPUP_CTLINPUT
+name|RPUP_CTLINPUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -219,7 +219,7 @@ comment|/*  * Encapsulate packet in PUP header which is supplied by the  * user.
 end_comment
 
 begin_macro
-name|rawpup_output
+name|rpup_output
 argument_list|(
 argument|m0
 argument_list|,
@@ -277,7 +277,7 @@ name|spup
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|RAWPUP_OUTPUT
+name|RPUP_OUTPUT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Verify user has supplied necessary space 	 * for the header and check parameters in it. 	 */
@@ -481,7 +481,7 @@ operator|)
 return|;
 block|}
 comment|/*  * Intercept connects and sends to verify interface  * exists for destination address.  Disconnects are  * also looked at to insure pointer is invalidated.  */
-name|rawpup_usrreq
+name|rpup_usrreq
 argument_list|(
 argument|so
 argument_list|,
@@ -521,7 +521,7 @@ argument_list|)
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|RAWPUP_USRREQ
+name|RPUP_USRREQ
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_imp.c	4.3	82/02/12	*/
+comment|/*	raw_imp.c	4.4	82/02/15	*/
 end_comment
 
 begin_include
@@ -78,7 +78,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|imp_ctlinput
+name|rimp_ctlinput
 argument_list|(
 argument|m
 argument_list|)
@@ -96,7 +96,7 @@ begin_block
 block|{
 name|COUNT
 argument_list|(
-name|IMP_CTLINPUT
+name|RIMP_CTLINPUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -107,13 +107,12 @@ comment|/*  * Generate IMP leader and pass packet to impoutput.  * The user must
 end_comment
 
 begin_expr_stmt
-name|imp_output
+name|rimp_output
 argument_list|(
 name|m
 argument_list|,
 name|so
 argument_list|)
-comment|/* too close to impoutput */
 specifier|register
 expr|struct
 name|mbuf
@@ -175,7 +174,7 @@ name|cp
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|IMP_OUTPUT
+name|RIMP_OUTPUT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Verify user has supplied necessary space 	 * for the leader and check parameters in it. 	 */
@@ -483,7 +482,7 @@ comment|/*  * Intercept operations required to  * maintain interface pointer use
 end_comment
 
 begin_macro
-name|imp_usrreq
+name|rimp_usrreq
 argument_list|(
 argument|so
 argument_list|,
@@ -550,7 +549,7 @@ name|ifp
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|IMP_USRREQ
+name|RIMP_USRREQ
 argument_list|)
 expr_stmt|;
 if|if
