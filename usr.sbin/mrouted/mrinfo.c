@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: mrinfo.c,v 3.6 1995/06/25 19:05:34 fenner Exp $"
+literal|"@(#) $Id: mrinfo.c,v 1.6 1995/06/28 17:58:36 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2057,6 +2057,20 @@ name|ask2
 argument_list|(
 name|target_addr
 argument_list|)
+expr_stmt|;
+name|gettimeofday
+argument_list|(
+operator|&
+name|et
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|et
+operator|.
+name|tv_sec
+operator|+=
+name|timeout
 expr_stmt|;
 continue|continue;
 block|}

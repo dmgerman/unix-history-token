@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 3.6 1995/06/25 19:18:43 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 1.8 1995/06/28 17:58:42 wollman Exp $  */
 end_comment
 
 begin_include
@@ -10574,7 +10574,8 @@ name|resp
 operator|->
 name|tr_qarr
 operator|=
-operator|(
+name|htonl
+argument_list|(
 operator|(
 name|tp
 operator|.
@@ -10584,7 +10585,7 @@ name|JAN_1970
 operator|)
 operator|<<
 literal|16
-operator|)
+argument_list|)
 operator|+
 operator|(
 operator|(
@@ -10683,9 +10684,12 @@ name|resp
 operator|->
 name|tr_vifout
 operator|=
+name|htonl
+argument_list|(
 name|v_req
 operator|.
 name|ocount
+argument_list|)
 expr_stmt|;
 comment|/*      * fill in scoping& pruning information      */
 if|if
@@ -10775,9 +10779,12 @@ name|resp
 operator|->
 name|tr_pktcnt
 operator|=
+name|htonl
+argument_list|(
 name|sg_req
 operator|.
 name|pktcnt
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10961,9 +10968,12 @@ name|resp
 operator|->
 name|tr_vifin
 operator|=
+name|htonl
+argument_list|(
 name|v_req
 operator|.
 name|icount
+argument_list|)
 expr_stmt|;
 name|MASK_TO_VAL
 argument_list|(
