@@ -118,6 +118,49 @@ value|LINUX_BLKSSZGET
 end_define
 
 begin_comment
+comment|/*  * hdio  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_HDIO_GET_GEO
+value|0x0301
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_HDIO_GET_IDENTITY
+value|0x030D
+end_define
+
+begin_comment
+comment|/* not yet implemented */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_HDIO_GET_GEO_BIG
+value|0x0330
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_HDIO_MIN
+value|LINUX_HDIO_GET_GEO
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_HDIO_MAX
+value|LINUX_HDIO_GET_GEO_BIG
+end_define
+
+begin_comment
 comment|/*  * cdrom  */
 end_comment
 
