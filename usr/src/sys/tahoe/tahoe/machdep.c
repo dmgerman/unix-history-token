@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	1.10	87/02/16	*/
+comment|/*	machdep.c	1.11	87/02/21	*/
 end_comment
 
 begin_include
@@ -2336,6 +2336,12 @@ argument_list|(
 literal|"done\n"
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+comment|/* wait for printf to finish */
 block|}
 name|mtpr
 argument_list|(
