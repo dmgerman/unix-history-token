@@ -625,7 +625,11 @@ operator|!
 operator|(
 name|cmd
 operator|&
+operator|(
 name|PCIM_CMD_PORTEN
+operator||
+name|PCIM_CMD_MEMEN
+operator|)
 operator|)
 condition|)
 block|{
