@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Massbus driver, arbitrates a massbus among attached devices.  *  * OPTION:  *	MTRDREV - Enable mag tape read backwards error recovery  */
+comment|/*  * Massbus driver, arbitrates a massbus among attached devices.  */
 end_comment
 
 begin_include
@@ -104,6 +104,20 @@ include|#
 directive|include
 file|"mbavar.h"
 end_include
+
+begin_comment
+comment|/* mbunit should be the same as hpunit, etc.! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mbunit
+parameter_list|(
+name|dev
+parameter_list|)
+value|(minor(dev)>> 3)
+end_define
 
 begin_decl_stmt
 name|char
@@ -191,9 +205,11 @@ name|mi_driver
 operator|->
 name|md_dname
 argument_list|,
-name|dkunit
+name|mbunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -579,9 +595,11 @@ name|mi_driver
 operator|->
 name|md_dname
 argument_list|,
-name|dkunit
+name|mbunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -597,9 +615,11 @@ name|mi_driver
 operator|->
 name|md_dname
 argument_list|,
-name|dkunit
+name|mbunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -733,9 +753,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* conservative */
-ifdef|#
-directive|ifdef
-name|MTRDREV
 if|if
 condition|(
 name|bp
@@ -790,28 +807,6 @@ operator|->
 name|b_bcount
 expr_stmt|;
 block|}
-else|#
-directive|else
-name|mbp
-operator|->
-name|mba_var
-operator|=
-name|mbasetup
-argument_list|(
-name|mi
-argument_list|)
-expr_stmt|;
-name|mbp
-operator|->
-name|mba_bcr
-operator|=
-operator|-
-name|bp
-operator|->
-name|b_bcount
-expr_stmt|;
-endif|#
-directive|endif
 name|mi
 operator|->
 name|mi_drv
@@ -845,9 +840,6 @@ name|mi_dk
 index|]
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MTRDREV
 if|if
 condition|(
 name|bp
@@ -886,23 +878,6 @@ operator|)
 operator|>>
 literal|6
 expr_stmt|;
-else|#
-directive|else
-name|dk_wds
-index|[
-name|mi
-operator|->
-name|mi_dk
-index|]
-operator|+=
-name|bp
-operator|->
-name|b_bcount
-operator|>>
-literal|6
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_block
@@ -1690,9 +1665,6 @@ name|b_addr
 operator|&
 name|PGOFSET
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MTRDREV
 if|if
 condition|(
 name|bp
@@ -1727,21 +1699,6 @@ operator|+
 name|o
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|npf
-operator|=
-name|btoc
-argument_list|(
-name|bp
-operator|->
-name|b_bcount
-operator|+
-name|o
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|rp
 operator|=
 name|bp
