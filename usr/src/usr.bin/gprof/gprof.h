@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.16 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.17 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -39,6 +39,40 @@ directive|include
 file|"gcrt0.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|vax
+end_if
+
+begin_include
+include|#
+directive|include
+file|"vax.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|sun
+end_if
+
+begin_include
+include|#
+directive|include
+file|"sun.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*      *	who am i, for error messages.      */
 end_comment
@@ -73,17 +107,6 @@ define|#
 directive|define
 name|TRUE
 value|1
-end_define
-
-begin_comment
-comment|/*      *	opcode of the `calls' instruction      */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CALLS
-value|0xfb
 end_define
 
 begin_comment
@@ -234,6 +257,11 @@ name|long
 name|value
 decl_stmt|;
 comment|/* the pc entry point */
+name|unsigned
+name|long
+name|svalue
+decl_stmt|;
+comment|/* entry point aligned to histograms */
 name|double
 name|time
 decl_stmt|;
@@ -729,94 +757,6 @@ modifier|*
 name|Flist
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*      *	register for pc relative addressing      */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PC
-value|0xf
-end_define
-
-begin_enum
-enum|enum
-name|opermodes
-block|{
-name|literal
-block|,
-name|indexed
-block|,
-name|reg
-block|,
-name|regdef
-block|,
-name|autodec
-block|,
-name|autoinc
-block|,
-name|autoincdef
-block|,
-name|bytedisp
-block|,
-name|bytedispdef
-block|,
-name|worddisp
-block|,
-name|worddispdef
-block|,
-name|longdisp
-block|,
-name|longdispdef
-block|,
-name|immediate
-block|,
-name|absolute
-block|,
-name|byterel
-block|,
-name|bytereldef
-block|,
-name|wordrel
-block|,
-name|wordreldef
-block|,
-name|longrel
-block|,
-name|longreldef
-block|}
-enum|;
-end_enum
-
-begin_typedef
-typedef|typedef
-name|enum
-name|opermodes
-name|operandenum
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
-name|modebyte
-block|{
-name|unsigned
-name|int
-name|regfield
-range|:
-literal|4
-decl_stmt|;
-name|unsigned
-name|int
-name|modefield
-range|:
-literal|4
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*      *	function declarations      */
