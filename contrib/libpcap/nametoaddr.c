@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: nametoaddr.c,v 1.43 96/07/17 00:11:41 leres Exp $ (LBL)"
+literal|"@(#) $Header: nametoaddr.c,v 1.45 96/10/17 23:26:53 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,12 +695,6 @@ block|{
 literal|"moprc"
 block|,
 name|ETHERTYPE_MOPRC
-block|}
-block|,
-block|{
-literal|"atalk"
-block|,
-name|ETHERTYPE_ATALK
 block|}
 block|,
 block|{

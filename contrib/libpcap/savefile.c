@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * savefile.c - supports offline use of tcpdump  *	Extraction/creation by Jeffrey Mogul, DECWRL  *	Modified by Steve McCanne, LBL.  *  * Used to save the received packet headers, after filtering, to  * a file, and then read them later.  * The first record in the file contains saved values for the machine  * dependent values so we can print the dump file on any architecture.  */
 end_comment
 
 begin_ifndef
@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: savefile.c,v 1.30 96/07/15 00:48:52 leres Exp $ (LBL)"
+literal|"@(#) $Header: savefile.c,v 1.36 96/12/10 23:15:02 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,10 +24,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * savefile.c - supports offline use of tcpdump  *	Extraction/creation by Jeffrey Mogul, DECWRL  *	Modified by Steve McCanne, LBL.  *  * Used to save the received packet headers, after filtering, to  * a file, and then read them later.  * The first record in the file contains saved values for the machine  * dependent values so we can print the dump file on any architecture.  */
-end_comment
 
 begin_include
 include|#
@@ -129,7 +126,7 @@ parameter_list|(
 name|y
 parameter_list|)
 define|\
-value|( (((y)&0xff)<<8) | (((y)&0xff00)>>8) )
+value|( (((y)&0xff)<<8) | ((u_short)((y)&0xff00)>>8) )
 end_define
 
 begin_define
@@ -974,6 +971,31 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|hdr
+operator|->
+name|caplen
+operator|>
+literal|65535
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|,
+literal|"bogus savefile header"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|tsize
 operator|<
 name|hdr
@@ -1030,6 +1052,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|tsize
+operator|=
+literal|0
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|p
@@ -1085,6 +1111,13 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 		 * We can only keep up to buflen bytes.  Since caplen> buflen 		 * is exactly how we got here, we know we can only keep the 		 * first buflen bytes and must drop the remainder.  Adjust 		 * caplen accordingly, so we don't get confused later as 		 * to how many bytes we have to play with. 		 */
+name|hdr
+operator|->
+name|caplen
+operator|=
+name|buflen
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|(

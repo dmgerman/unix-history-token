@@ -1,27 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: os-sunos4.h,v 1.31 96/06/24 02:39:07 leres Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1989, 1990, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: os-sunos4.h,v 1.32 96/11/29 15:18:18 leres Exp $ (LBL)  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGRET
-value|void
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIGRETVAL
-end_define
-
-begin_define
-define|#
-directive|define
-name|WAITSTATUS
-value|int
-end_define
 
 begin_comment
 comment|/* Prototypes missing in SunOS 4 */
@@ -1952,50 +1932,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|opterr
-decl_stmt|,
-name|optind
-decl_stmt|,
-name|optopt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Map protocol types */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHERPUP_IPTYPE
-value|ETHERTYPE_IP
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHERPUP_REVARPTYPE
-value|ETHERTYPE_REVARP
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHERPUP_ARPTYPE
-value|ETHERTYPE_ARP
-end_define
-
 begin_comment
 comment|/* Ugly signal hacking */
 end_comment
@@ -2081,68 +2017,6 @@ directive|define
 name|SIG_HOLD
 value|(void (*)(int))3
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|S_ISTXT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|S_ISTXT
-value|S_ISVTX
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|S_IRWXU
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|S_IRWXU
-value|0000700
-end_define
-
-begin_comment
-comment|/* RWX mask for owner */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_IRWXG
-value|0000070
-end_define
-
-begin_comment
-comment|/* RWX mask for group */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_IRWXO
-value|0000007
-end_define
-
-begin_comment
-comment|/* RWX mask for other */
-end_comment
 
 begin_endif
 endif|#

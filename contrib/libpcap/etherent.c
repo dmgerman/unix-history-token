@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: etherent.c,v 1.19 96/07/15 00:48:47 leres Exp $ (LBL)"
+literal|"@(#) $Header: etherent.c,v 1.20 96/09/26 23:28:00 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
