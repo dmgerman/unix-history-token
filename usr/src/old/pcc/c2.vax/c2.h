@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*static	char sccsid[] = "@(#)c2.h 4.5 %G%";*/
+comment|/*static	char sccsid[] = "@(#)c2.h 4.6 %G%";*/
 end_comment
 
 begin_comment
@@ -589,56 +589,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|GFLOAT
+name|QUAD
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|HFLOAT
+name|OP2
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|QUAD
+name|OP3
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|OCTA
+name|OPB
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|OP2
+name|OPX
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|OP3
+name|GFLOAT
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPB
+name|HFLOAT
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPX
+name|OCTA
 value|13
 end_define
 
