@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1394,6 +1394,31 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+operator|(
+name|ndp
+operator|->
+name|ni_nameiop
+operator|&
+operator|(
+name|HASBUF
+operator||
+name|SAVESTART
+operator|)
+operator|)
+operator|==
+name|HASBUF
+condition|)
+name|FREE
+argument_list|(
+name|ndp
+operator|->
+name|ni_pnbuf
+argument_list|,
+name|M_NAMEI
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
