@@ -717,7 +717,7 @@ begin_struct
 struct|struct
 name|swdevt
 block|{
-name|udev_t
+name|dev_t
 name|sw_dev
 decl_stmt|;
 name|int

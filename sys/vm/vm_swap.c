@@ -1134,10 +1134,7 @@ name|sp
 operator|->
 name|sw_dev
 operator|=
-name|dev2udev
-argument_list|(
 name|dev
-argument_list|)
 expr_stmt|;
 name|sp
 operator|->
