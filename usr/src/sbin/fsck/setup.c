@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.26 (Berkeley) %G%"
+literal|"@(#)setup.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1567,6 +1567,13 @@ operator|.
 name|fs_cstotal
 operator|.
 name|cs_ndir
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|inplast
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
 
