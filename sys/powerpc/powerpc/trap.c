@@ -2391,15 +2391,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_if
 if|if
 condition|(
@@ -2480,15 +2471,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
-
-begin_expr_stmt
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_if
 if|if
