@@ -51,7 +51,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Kernel per-process accounting / statistics  * (not necessarily resident except when running).  */
+comment|/*  * Kernel per-process accounting / statistics  * (not necessarily resident except when running).  *  * Locking key:  *      b - created at fork, never changes  *      c - locked by proc mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  */
 end_comment
 
 begin_struct
@@ -66,12 +66,12 @@ name|struct
 name|rusage
 name|p_ru
 decl_stmt|;
-comment|/* stats for this proc */
+comment|/* Stats for this process. */
 name|struct
 name|rusage
 name|p_cru
 decl_stmt|;
-comment|/* sum of stats for reaped children */
+comment|/* Stats for reaped children. */
 name|struct
 name|itimerval
 name|p_timer
@@ -79,7 +79,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* virtual-time timers */
+comment|/* (j) Virtual-time timers. */
 define|#
 directive|define
 name|pstat_endzero
@@ -91,31 +91,31 @@ value|p_prof
 struct|struct
 name|uprof
 block|{
-comment|/* profile arguments */
+comment|/* Profile arguments. */
 name|caddr_t
 name|pr_base
 decl_stmt|;
-comment|/* buffer base */
+comment|/* (c + j) Buffer base. */
 name|u_long
 name|pr_size
 decl_stmt|;
-comment|/* buffer size */
+comment|/* (c + j) Buffer size. */
 name|u_long
 name|pr_off
 decl_stmt|;
-comment|/* pc offset */
+comment|/* (c + j) PC offset. */
 name|u_long
 name|pr_scale
 decl_stmt|;
-comment|/* pc scaling */
+comment|/* (c + j) PC scaling. */
 name|u_long
 name|pr_addr
 decl_stmt|;
-comment|/* temp storage for addr until AST */
+comment|/* (k) Temporary addr until AST. */
 name|u_int
 name|pr_ticks
 decl_stmt|;
-comment|/* temp storage for ticks until AST */
+comment|/* (k) Temporary ticks until AST. */
 block|}
 name|p_prof
 struct|;
@@ -127,7 +127,7 @@ name|struct
 name|timeval
 name|p_start
 decl_stmt|;
-comment|/* starting time */
+comment|/* (b) Starting time. */
 block|}
 struct|;
 end_struct
