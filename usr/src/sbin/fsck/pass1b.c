@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1b.c	5.1 (Berkeley) %G%"
+literal|"@(#)pass1b.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,15 +216,7 @@ block|}
 block|}
 name|out1b
 label|:
-name|flush
-argument_list|(
-operator|&
-name|dfile
-argument_list|,
-operator|&
-name|inoblk
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 block|}
 end_block
 
