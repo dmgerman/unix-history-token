@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.16	81/03/17	*/
+comment|/*	subr_prf.c	4.17	81/05/11	*/
 end_comment
 
 begin_include
@@ -521,6 +521,17 @@ condition|)
 name|putchar
 argument_list|(
 name|c
+argument_list|,
+name|touser
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'%'
+case|:
+name|putchar
+argument_list|(
+literal|'%'
 argument_list|,
 name|touser
 argument_list|)
