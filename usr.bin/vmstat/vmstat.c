@@ -2912,7 +2912,7 @@ name|vmstat_pgtok
 parameter_list|(
 name|a
 parameter_list|)
-value|((a) * sum.v_page_size>> 10)
+value|((a) * (sum.v_page_size>> 10))
 define|#
 directive|define
 name|rate

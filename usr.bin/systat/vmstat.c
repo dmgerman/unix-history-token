@@ -2828,7 +2828,7 @@ name|pgtokb
 parameter_list|(
 name|pg
 parameter_list|)
-value|((pg) * s.v_page_size / 1024)
+value|((pg) * (s.v_page_size / 1024))
 name|putint
 argument_list|(
 name|pgtokb
