@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)init.c	4.4 (Berkeley) %G%"
+literal|"@(#)init.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1415,9 +1415,9 @@ literal|"PROF"
 block|,
 literal|"Profiling timer expired"
 block|,
-literal|0
+literal|"WINCH"
 block|,
-literal|"Signal 28"
+literal|"Window size changed"
 block|,
 literal|0
 block|,
