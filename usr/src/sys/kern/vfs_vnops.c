@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.23	82/04/19	*/
+comment|/*	vfs_vnops.c	4.24	82/07/15	*/
 end_comment
 
 begin_comment
@@ -90,6 +90,29 @@ include|#
 directive|include
 file|"../h/proc.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EFS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../net/in.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/efs.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Convert a user supplied file descriptor into a pointer  * to a file structure.  Only task is to check range of the descriptor.  * Critical paths should use the GETF macro, defined in inline.h.  */
@@ -342,6 +365,38 @@ index|]
 operator|.
 name|d_close
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EFS
+comment|/* 		 * Every close() must call the driver if the 		 * extended file system is being used -- not 		 * just the last close.  Pass along the file 		 * pointer for reference later. 		 */
+if|if
+condition|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|efs_major
+condition|)
+block|{
+call|(
+modifier|*
+name|cfunc
+call|)
+argument_list|(
+name|dev
+argument_list|,
+name|flag
+argument_list|,
+name|fp
+argument_list|,
+name|nouser
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 break|break;
 case|case
 name|IFBLK
@@ -488,6 +543,28 @@ begin_comment
 comment|/*  * Openi called to allow handler  * of special files to initialize and  * validate before actual IO.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EFS
+end_ifdef
+
+begin_macro
+name|openi
+argument_list|(
+argument|ip
+argument_list|,
+argument|rw
+argument_list|,
+argument|trf
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 name|openi
 argument_list|(
@@ -495,6 +572,8 @@ name|ip
 argument_list|,
 name|rw
 argument_list|)
+endif|#
+directive|endif
 specifier|register
 expr|struct
 name|inode
@@ -550,6 +629,28 @@ condition|)
 goto|goto
 name|bad
 goto|;
+ifdef|#
+directive|ifdef
+name|EFS
+operator|(
+operator|*
+name|cdevsw
+index|[
+name|maj
+index|]
+operator|.
+name|d_open
+operator|)
+operator|(
+name|dev
+operator|,
+name|rw
+operator|,
+name|trf
+operator|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 operator|*
 name|cdevsw
@@ -565,6 +666,8 @@ operator|,
 name|rw
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|IFBLK
@@ -861,6 +964,24 @@ operator|(
 name|NULL
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|EFS
+comment|/* 	 * References to extended file system are 	 * returned to the caller. 	 */
+if|if
+condition|(
+name|efsinode
+argument_list|(
+name|ip
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ip
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|u
