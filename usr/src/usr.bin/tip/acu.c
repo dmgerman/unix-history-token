@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acu.c	4.5	81/11/29	*/
+comment|/*	acu.c	4.6	82/02/02	*/
 end_comment
 
 begin_include
@@ -273,6 +273,11 @@ name|cp
 operator|++
 control|)
 empty_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+condition|)
 operator|*
 name|cp
 operator|++
