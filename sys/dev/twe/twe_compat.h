@@ -785,7 +785,7 @@ name|TWE_BIO_SOFTC
 parameter_list|(
 name|bp
 parameter_list|)
-value|(bp)->bio_dev->si_drv1
+value|(bp)->bio_disk->d_drv1
 end_define
 
 begin_define
@@ -795,7 +795,7 @@ name|TWE_BIO_UNIT
 parameter_list|(
 name|bp
 parameter_list|)
-value|*(int *)((bp)->bio_dev->si_drv2)
+value|(bp)->bio_disk->d_unit
 end_define
 
 begin_define
