@@ -5036,6 +5036,17 @@ name|NULL
 block|}
 block|,
 comment|/* SUP2480 */
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+literal|0x0100e4a5
+block|,
+literal|"RSA-98III"
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|}
@@ -5054,6 +5065,14 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+name|int
+name|logical_id
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Check isapnp ids */
 if|if
 condition|(
@@ -5076,6 +5095,34 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|logical_id
+operator|=
+name|isa_get_logicalid
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|logical_id
+operator|==
+literal|0x0100e4a5
+condition|)
+comment|/* RSA-98III */
+name|device_set_flags
+argument_list|(
+name|dev
+argument_list|,
+name|COM_IF_RSA98III
+operator|<<
+literal|24
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|sioprobe
