@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -13989,9 +13995,13 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"\rFormatting:  %qd.%02qd %% "
+literal|"\rFormatting:  %ju.%02u %% "
 literal|"(%d/%d) done"
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|percentage
 operator|/
 operator|(
@@ -13999,7 +14009,12 @@ literal|0x10000
 operator|*
 literal|100
 operator|)
+argument_list|)
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 operator|(
 name|percentage
 operator|/
@@ -14007,6 +14022,7 @@ literal|0x10000
 operator|)
 operator|%
 literal|100
+argument_list|)
 argument_list|,
 name|val
 argument_list|,

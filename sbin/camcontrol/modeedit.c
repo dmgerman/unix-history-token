@@ -2871,7 +2871,7 @@ modifier|*
 name|value
 decl_stmt|;
 comment|/* Value portion of line buffer.    */
-name|int
+name|size_t
 name|length
 decl_stmt|;
 comment|/* Length of static fgetln buffer.  */

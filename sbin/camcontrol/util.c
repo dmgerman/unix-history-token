@@ -36,6 +36,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -49,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -339,8 +345,11 @@ literal|'b'
 case|:
 name|printf
 argument_list|(
-literal|"%d "
+literal|"%jd "
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 operator|(
 name|intptr_t
 operator|)
