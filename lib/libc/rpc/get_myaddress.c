@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: get_myaddress.c,v 1.2 1995/05/30 05:41:20 rgrimes Exp $"
+literal|"$Id: get_myaddress.c,v 1.3 1995/10/22 14:51:23 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,22 +109,17 @@ begin_comment
 comment|/*  * don't use gethostbyname, which would invoke yellow pages  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|get_myaddress
-argument_list|(
-argument|addr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|addr
+parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|s
@@ -382,7 +377,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

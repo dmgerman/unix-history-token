@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_tcp.c,v 1.3 1995/10/22 14:51:38 phk Exp $"
+literal|"$Id: svc_tcp.c,v 1.4 1995/12/07 12:50:56 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,29 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_function_decl
+name|int
+name|bindresvport
+parameter_list|(
+name|int
+name|sd
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_rpc_dtablesize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Ops vector for TCP/IP based rpc service handle  */

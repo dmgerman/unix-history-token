@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_udp.c,v 1.3 1995/05/30 05:41:39 rgrimes Exp $"
+literal|"$Id: svc_udp.c,v 1.4 1995/10/22 14:51:39 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,20 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_function_decl
+name|int
+name|bindresvport
+parameter_list|(
+name|int
+name|sd
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -177,13 +191,6 @@ name|svcudp_freeargs
 block|,
 name|svcudp_destroy
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 end_decl_stmt
 
@@ -1500,29 +1507,21 @@ begin_comment
 comment|/*  * Enable use of the cache.  * Note: there is no disable.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|svcudp_enablecache
-argument_list|(
-argument|transp
-argument_list|,
-argument|size
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|transp
+parameter_list|,
+name|size
+parameter_list|)
 name|SVCXPRT
 modifier|*
 name|transp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|svcudp_data
@@ -1703,7 +1702,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set an entry in the cache  */
@@ -2052,48 +2051,37 @@ begin_comment
 comment|/*  * Try to get an entry from the cache  * return 1 if found, 0 if not found  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|cache_get
-argument_list|(
-argument|xprt
-argument_list|,
-argument|msg
-argument_list|,
-argument|replyp
-argument_list|,
-argument|replylenp
-argument_list|)
-name|SVCXPRT
-operator|*
+parameter_list|(
 name|xprt
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|msg
+parameter_list|,
+name|replyp
+parameter_list|,
+name|replylenp
+parameter_list|)
+name|SVCXPRT
+modifier|*
+name|xprt
+decl_stmt|;
 name|struct
 name|rpc_msg
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|replyp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 modifier|*
 name|replylenp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|u_int
 name|loc
@@ -2282,7 +2270,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

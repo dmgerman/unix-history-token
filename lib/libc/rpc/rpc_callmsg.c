@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rpc_callmsg.c,v 1.2 1995/05/30 05:41:28 rgrimes Exp $"
+literal|"$Id: rpc_callmsg.c,v 1.3 1995/10/22 14:51:33 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,22 @@ include|#
 directive|include
 file|<rpc/rpc.h>
 end_include
+
+begin_function_decl
+name|bool_t
+name|xdr_opaque_auth
+parameter_list|(
+name|XDR
+modifier|*
+name|xdrs
+parameter_list|,
+name|struct
+name|opaque_auth
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * XDR a call message  */

@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: getrpcport.c,v 1.2 1995/05/30 05:41:22 rgrimes Exp $"
+literal|"$Id: getrpcport.c,v 1.3 1995/10/22 14:51:26 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,27 +75,46 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_macro
-name|getrpcport
-argument_list|(
-argument|host
-argument_list|,
-argument|prognum
-argument_list|,
-argument|versnum
-argument_list|,
-argument|proto
-argument_list|)
-end_macro
+begin_function_decl
+name|u_short
+name|pmap_getport
+parameter_list|(
+name|struct
+name|sockaddr_in
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function
+name|int
+name|getrpcport
+parameter_list|(
+name|host
+parameter_list|,
+name|prognum
+parameter_list|,
+name|versnum
+parameter_list|,
+name|proto
+parameter_list|)
 name|char
 modifier|*
 name|host
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|prognum
+decl_stmt|,
+name|versnum
+decl_stmt|,
+name|proto
+decl_stmt|;
 block|{
 name|struct
 name|sockaddr_in
@@ -172,7 +191,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
