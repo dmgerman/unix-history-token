@@ -837,7 +837,7 @@ condition|)
 block|{
 name|setproctitle
 argument_list|(
-literal|"%s p5 %d%%\n"
+literal|"%s p5 %d%%"
 argument_list|,
 name|cdevname
 argument_list|,
