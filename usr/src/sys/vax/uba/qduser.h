@@ -20,7 +20,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../vaxuba/qevent.h"
+file|"qevent.h"
 end_include
 
 begin_comment

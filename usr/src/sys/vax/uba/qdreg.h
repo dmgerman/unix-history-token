@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)qdreg.h	1.5	(ULTRIX)	5/21/86  */
+comment|/*  *		@(#)qdreg.h	1.2  Berkeley  %G%  *	@(#)qdreg.h	1.5	(ULTRIX)	5/21/86  */
 end_comment
 
 begin_comment
@@ -1483,6 +1483,17 @@ end_struct
 
 begin_comment
 comment|/* Driver and data specific structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEV_SIZE
+value|8
+end_define
+
+begin_comment
+comment|/* from ultrix - i don't see where its used ! - marc */
 end_comment
 
 begin_struct
