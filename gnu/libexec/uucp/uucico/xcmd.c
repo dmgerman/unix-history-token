@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* xcmd.c    Routines to handle work requests.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* xcmd.c    Routines to handle work requests.     Copyright (C) 1991, 1992, 1993, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|xcmd_rcsid
 index|[]
 init|=
-literal|"$Id: xcmd.c,v 1.14 1994/04/04 03:25:12 ian Rel $"
+literal|"$Id: xcmd.c,v 1.19 1995/06/21 20:20:42 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,16 +387,7 @@ argument_list|(
 name|zsend
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|fret
-condition|)
-name|utransfree
-argument_list|(
-name|qtrans
-argument_list|)
-expr_stmt|;
+comment|/* If fret is FALSE, we should free qtrans here, but see the comment      at the end of flocal_rec_send_request.  */
 return|return
 name|fret
 return|;
@@ -1449,6 +1440,8 @@ operator|==
 name|NULL
 argument_list|,
 name|fmkdirs
+argument_list|,
+name|FALSE
 argument_list|)
 condition|)
 block|{

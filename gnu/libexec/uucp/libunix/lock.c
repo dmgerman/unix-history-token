@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lock.c    Lock and unlock a file name.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* lock.c    Lock and unlock a file name.     Copyright (C) 1991, 1992, 1993, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|lock_rcsid
 index|[]
 init|=
-literal|"$Id: lock.c,v 1.2 1994/05/07 18:10:40 ache Exp $"
+literal|"$Id: lock.c,v 1.20 1995/06/21 19:19:38 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_if
@@ -657,7 +663,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|inid
+name|inme
 argument_list|)
 expr_stmt|;
 name|cwrote
@@ -1040,6 +1046,78 @@ break|break;
 block|}
 if|#
 directive|if
+name|DEBUG
+operator|>
+literal|0
+if|#
+directive|if
+name|HAVE_V2_LOCKFILES
+block|{
+name|char
+name|ab
+index|[
+literal|10
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|read
+argument_list|(
+name|o
+argument_list|,
+name|ab
+argument_list|,
+sizeof|sizeof
+name|ab
+argument_list|)
+operator|>
+literal|4
+operator|&&
+name|isdigit
+argument_list|(
+name|BUCHAR
+argument_list|(
+name|ab
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+condition|)
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+literal|"Lock file %s may be HDB format; check LOCKFILES in policy.h"
+argument_list|,
+name|zpath
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+if|if
+condition|(
+name|cgot
+operator|==
+literal|4
+condition|)
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+literal|"Lock file %s may be V2 format; check LOCKFILES in policy.h"
+argument_list|,
+name|zpath
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* DEBUG> 0 */
+if|#
+directive|if
 name|HAVE_QNX_LOCKFILES
 name|ab
 index|[
@@ -1153,6 +1231,14 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* If the lock file is empty (cgot == 0), we assume that it is          stale.  This can happen if the system crashed after the lock          file was created but before the process ID was written out.  */
+if|if
+condition|(
+name|cgot
+operator|>
+literal|0
+condition|)
+block|{
 if|#
 directive|if
 name|HAVE_QNX_LOCKFILES
@@ -1185,7 +1271,7 @@ condition|)
 break|break;
 else|#
 directive|else
-comment|/* If the process still exists, we will get EPERM rather than 	 ESRCH.  We then return FALSE to indicate that we cannot make 	 the lock.  */
+comment|/* If the process still exists, we will get EPERM rather 	     than ESRCH.  We then return FALSE to indicate that we 	     cannot make the lock.  */
 if|if
 condition|(
 name|kill
@@ -1204,6 +1290,7 @@ condition|)
 break|break;
 endif|#
 directive|endif
+block|}
 if|if
 condition|(
 name|fstat
@@ -1403,7 +1490,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|inid
+name|inme
 argument_list|)
 expr_stmt|;
 name|cwrote

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* cu.c    Call up a remote system.     Copyright (C) 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* cu.c    Call up a remote system.     Copyright (C) 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|cu_rcsid
 index|[]
 init|=
-literal|"$Id: cu.c,v 1.3 1994/10/02 23:10:39 ache Exp $"
+literal|"$Id: cu.c,v 1.42 1995/08/02 01:19:50 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1007,6 +1007,16 @@ literal|'c'
 block|}
 block|,
 block|{
+literal|"escape"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'E'
+block|}
+block|,
+block|{
 literal|"parity"
 block|,
 name|required_argument
@@ -1084,6 +1094,16 @@ block|,
 name|NULL
 block|,
 literal|'t'
+block|}
+block|,
+block|{
+literal|"nostop"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|3
 block|}
 block|,
 block|{
@@ -1225,6 +1245,13 @@ modifier|*
 name|zsystem
 init|=
 name|NULL
+decl_stmt|;
+comment|/* --nostop: turn off XON/XOFF.  */
+name|enum
+name|txonxoffsetting
+name|txonxoff
+init|=
+name|XONXOFF_ON
 decl_stmt|;
 comment|/* -I: configuration file name.  */
 specifier|const
@@ -1418,7 +1445,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:c:dehnI:l:op:s:tvx:z:"
+literal|"a:c:deE:hnI:l:op:s:tvx:z:"
 argument_list|,
 name|asCulongopts
 argument_list|,
@@ -1470,6 +1497,15 @@ comment|/* Even parity.  */
 name|feven
 operator|=
 name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+comment|/* Escape character.  */
+name|zCuvar_escape
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -1602,7 +1638,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+literal|"%s: Taylor UUCP %s, copyright (C) 1991, 92, 93, 94, 1995 Ian Lance Taylor\n"
 argument_list|,
 name|zProgram
 argument_list|,
@@ -1702,6 +1738,15 @@ name|ucuusage
 argument_list|()
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|3
+case|:
+comment|/* --nostop.  */
+name|txonxoff
+operator|=
+name|XONXOFF_OFF
+expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -2193,6 +2238,9 @@ name|enum
 name|tstripsetting
 name|tstrip
 decl_stmt|;
+name|long
+name|iusebaud
+decl_stmt|;
 comment|/* The uuconf_find_port function only selects directly on a port 	 name and a speed.  To select based on the line name, we use a 	 function.  If we can't find any defined port, and the user 	 specified a line name but did not specify a port name or a 	 system or a phone number, then we fake a direct port with 	 that line name (we don't fake a port if a system or phone 	 number were given because if we fake a port we have no way to 	 place a call; perhaps we should automatically look up a 	 particular dialer).  This permits users to say cu -lttyd0 	 without having to put ttyd0 in the ports file, provided they 	 have read and write access to the port.  */
 name|sinfo
 operator|.
@@ -2470,6 +2518,10 @@ name|zline
 argument_list|)
 expr_stmt|;
 block|}
+name|iusebaud
+operator|=
+name|ibaud
+expr_stmt|;
 name|ihighbaud
 operator|=
 literal|0L
@@ -2704,7 +2756,7 @@ name|zrem
 argument_list|)
 expr_stmt|;
 block|}
-name|ibaud
+name|iusebaud
 operator|=
 name|qsys
 operator|->
@@ -2726,7 +2778,7 @@ argument_list|(
 operator|&
 name|sconn
 argument_list|,
-name|ibaud
+name|iusebaud
 argument_list|,
 name|ihighbaud
 argument_list|,
@@ -2818,7 +2870,7 @@ name|tparity
 argument_list|,
 name|tstrip
 argument_list|,
-name|XONXOFF_ON
+name|txonxoff
 argument_list|)
 condition|)
 name|ucuabort
@@ -3233,7 +3285,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+literal|"Taylor UUCP %s, copyright (C) 1991, 92, 93, 94, 1995 Ian Lance Taylor\n"
 argument_list|,
 name|VERSION
 argument_list|)
@@ -3307,7 +3359,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|" -E,--escape char: Set escape character\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|" -h,--halfduplex: Echo locally\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" --nostop: Turn off XON/XOFF handling\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3863,12 +3929,11 @@ name|abescape
 argument_list|,
 literal|"\\%03o"
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
+name|BUCHAR
+argument_list|(
 operator|*
 name|zCuvar_escape
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -4274,12 +4339,11 @@ name|abescape
 argument_list|,
 literal|"\\%03o"
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
+name|BUCHAR
+argument_list|(
 operator|*
 name|zCuvar_escape
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -4579,12 +4643,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|char
-name|azbool
-index|[
-literal|2
-index|]
-decl_stmt|;
 name|int
 name|iuuconf
 decl_stmt|;
@@ -4652,12 +4710,15 @@ index|]
 operator|!=
 literal|'!'
 condition|)
-name|azbool
+name|azargs
 index|[
-literal|0
+literal|1
 index|]
 operator|=
-literal|'t'
+name|zbufcpy
+argument_list|(
+literal|"t"
+argument_list|)
 expr_stmt|;
 else|else
 block|{
@@ -4667,28 +4728,17 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|azbool
-index|[
-literal|0
-index|]
-operator|=
-literal|'f'
-expr_stmt|;
-block|}
-name|azbool
-index|[
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|azargs
 index|[
 literal|1
 index|]
 operator|=
-name|azbool
+name|zbufcpy
+argument_list|(
+literal|"f"
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -4704,7 +4754,10 @@ index|[
 literal|1
 index|]
 operator|=
+name|zbufcpy
+argument_list|(
 name|zval
+argument_list|)
 expr_stmt|;
 block|}
 name|iuuconf
@@ -4736,7 +4789,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|iuuconf
+operator|&
+name|UUCONF_CMDTABRET_KEEP
+operator|)
+operator|==
+literal|0
+condition|)
+name|ubuffree
+argument_list|(
+name|azargs
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|iuuconf
+operator|&
+operator|~
+name|UUCONF_CMDTABRET_KEEP
+operator|)
 operator|!=
 name|UUCONF_SUCCESS
 condition|)
@@ -4817,12 +4893,11 @@ name|abescape
 argument_list|,
 literal|"\\%03o"
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
+name|BUCHAR
+argument_list|(
 operator|*
 name|zCuvar_escape
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -5099,12 +5174,11 @@ name|abchar
 argument_list|,
 literal|"\\%03o"
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
+name|BUCHAR
+argument_list|(
 operator|*
 name|z
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cchar
@@ -5755,12 +5829,11 @@ name|abescape
 argument_list|,
 literal|"\\%03o"
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
+name|BUCHAR
+argument_list|(
 operator|*
 name|zCuvar_escape
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -6679,7 +6752,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ffilereaderror
+name|ffileioerror
 argument_list|(
 name|e
 argument_list|,
@@ -7391,11 +7464,6 @@ return|return
 name|UUCONF_CMDTABRET_CONTINUE
 return|;
 block|}
-name|ubuffree
-argument_list|(
-name|zto
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7519,6 +7587,11 @@ expr_stmt|;
 name|ucuputs
 argument_list|(
 name|abCuconnected
+argument_list|)
+expr_stmt|;
+name|ubuffree
+argument_list|(
+name|zto
 argument_list|)
 expr_stmt|;
 return|return
@@ -7654,6 +7727,9 @@ condition|(
 name|b
 operator|==
 literal|'\r'
+operator|&&
+operator|!
+name|fCuvar_binary
 condition|)
 continue|continue;
 if|if
@@ -7802,6 +7878,32 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|fsysdep_sync
+argument_list|(
+name|e
+argument_list|,
+name|zto
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|ffileclose
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+name|ferr
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
 name|ffileclose
 argument_list|(
 name|e
@@ -7811,6 +7913,7 @@ name|ferr
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ferr
@@ -7840,6 +7943,11 @@ expr_stmt|;
 name|ucuputs
 argument_list|(
 name|abCuconnected
+argument_list|)
+expr_stmt|;
+name|ubuffree
+argument_list|(
+name|zto
 argument_list|)
 expr_stmt|;
 return|return

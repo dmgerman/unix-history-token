@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* cusub.c    System dependent routines for cu.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* cusub.c    System dependent routines for cu.     Copyright (C) 1992, 1993, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|cusub_rcsid
 index|[]
 init|=
-literal|"$Id: cusub.c,v 1.2 1994/05/07 18:10:14 ache Exp $"
+literal|"$Id: cusub.c,v 1.24 1995/06/21 19:18:53 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1288,6 +1288,10 @@ name|b
 operator|==
 operator|*
 name|zCuvar_escape
+operator|&&
+name|b
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|c
@@ -4192,6 +4196,12 @@ decl_stmt|;
 name|pid_t
 name|ipid
 decl_stmt|;
+if|if
+condition|(
+name|tcmd
+operator|!=
+name|SHELL_NORMAL
+condition|)
 name|azargs
 index|[
 literal|0
@@ -4199,6 +4209,35 @@ index|]
 operator|=
 literal|"/bin/sh"
 expr_stmt|;
+else|else
+block|{
+name|azargs
+index|[
+literal|0
+index|]
+operator|=
+name|getenv
+argument_list|(
+literal|"SHELL"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|azargs
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+name|azargs
+index|[
+literal|0
+index|]
+operator|=
+literal|"/bin/sh"
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|zcmd

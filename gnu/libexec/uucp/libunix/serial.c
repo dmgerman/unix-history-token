@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* serial.c    The serial port communication routines for Unix.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* serial.c    The serial port communication routines for Unix.     Copyright (C) 1991, 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|serial_rcsid
 index|[]
 init|=
-literal|"$Id: serial.c,v 1.4 1994/05/07 18:11:09 ache Exp $"
+literal|"$Id: serial.c,v 1.65 1995/08/10 00:53:54 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,7 +301,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|HAVE_BSD_TTY
+name|HAVE_SELECT
 end_if
 
 begin_if
@@ -356,7 +356,7 @@ operator|!
 name|HAVE_SYS_TIME_H
 operator|||
 operator|!
-name|HAVE_BSD_TTY
+name|HAVE_SELECT
 operator|||
 name|TIME_WITH_SYS_TIME
 end_if
@@ -2394,6 +2394,19 @@ modifier|*
 name|qconn
 decl_stmt|;
 block|{
+comment|/* chmod /dev/tty to prevent other users from writing messages to      it.  This is essentially `mesg n'.  */
+operator|(
+name|void
+operator|)
+name|chmod
+argument_list|(
+literal|"/dev/tty"
+argument_list|,
+name|S_IRUSR
+operator||
+name|S_IWUSR
+argument_list|)
+expr_stmt|;
 return|return
 name|fsserial_init
 argument_list|(
@@ -3011,7 +3024,7 @@ operator|=
 name|zbufalc
 argument_list|(
 sizeof|sizeof
-expr|"LK.123.123.123"
+expr|"LK.1234567890.1234567890.1234567890"
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -7942,7 +7955,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Tell the port to use hardware flow control.  There is no standard    mechanism for controlling this.  This implementation supports    CRTSCTS on SunOS, RTS/CTSFLOW on 386(ish) unix, CTSCD on the 3b1,    and TXADDCD/TXDELCD on AIX.  If you know how to do it on other    systems, please implement it and send me the patches.  */
+comment|/* Tell the port to use hardware flow control.  There is no standard    mechanism for controlling this.  This implementation supports    CRTSCTS on SunOS, RTS/CTSFLOW on 386(ish) unix, CTSCD on the 3b1,    CCTS_OFLOW/CRTS_IFLOW on BSDI, TXADDCD/TXDELCD on AIX, and IRTS on    NCR Tower.  If you know how to do it on other systems, please    implement it and send me the patches.  */
 end_comment
 
 begin_function
@@ -8018,10 +8031,20 @@ name|CRTSCTS
 ifndef|#
 directive|ifndef
 name|CTSCD
+ifndef|#
+directive|ifndef
+name|CCTS_OFLOW
+ifndef|#
+directive|ifndef
+name|IRTS
 define|#
 directive|define
 name|HAVE_HARDFLOW
 value|0
+endif|#
+directive|endif
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
@@ -8130,6 +8153,34 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined (CTSCD) */
+ifdef|#
+directive|ifdef
+name|CCTS_OFLOW
+name|q
+operator|->
+name|snew
+operator|.
+name|c_cflag
+operator||=
+name|CCTS_OFLOW
+operator||
+name|CRTS_IFLOW
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|IRTS
+name|q
+operator|->
+name|snew
+operator|.
+name|c_iflag
+operator||=
+name|IRTS
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* HAVE_SYSV_TERMIO || HAVE_POSIX_TERMIOS */
@@ -8255,6 +8306,38 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined (CTSCD) */
+ifdef|#
+directive|ifdef
+name|CCTS_OFLOW
+name|q
+operator|->
+name|snew
+operator|.
+name|c_cflag
+operator|&=
+operator|~
+operator|(
+name|CCTS_OFLOW
+operator||
+name|CRTS_IFLOW
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|IRTS
+name|q
+operator|->
+name|snew
+operator|.
+name|c_iflag
+operator|&=
+operator|~
+name|IRTS
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* HAVE_SYSV_TERMIO || HAVE_POSIX_TERMIOS */
@@ -10143,7 +10226,7 @@ decl_stmt|;
 name|size_t
 name|cdo
 decl_stmt|;
-comment|/* This used to always use nonblocking writes, but it turns out 	 that some systems don't support them on terminals.  	 The current algorithm is: 	     loop: 	       unblocked read 	       if read buffer full, return 	       if nothing to write, return 	       if HAVE_UNBLOCKED_WRITES 	         write all data 	       else 	         write up to SINGLE_WRITE bytes 	       if all data written, return 	       if no data written 	         blocked write of up to SINGLE_WRITE bytes  	 This algorithm should work whether the system supports 	 unblocked writes on terminals or not.  If the system supports 	 unblocked writes but HAVE_UNBLOCKED_WRITES is 0, then it will 	 call write more often than it needs to.  If the system does 	 not support unblocked writes but HAVE_UNBLOCKED_WRITES is 1, 	 then the write may hang so long that incoming data is lost. 	 This is actually possible at high baud rates on any system 	 when a blocking write is done; there is no solution, except 	 hardware handshaking.  */
+comment|/* This used to always use nonblocking writes, but it turns out 	 that some systems don't support them on terminals.  	 The current algorithm is: 	     loop: 	       unblocked read 	       if read buffer full, return 	       if nothing to write, return 	       if HAVE_UNBLOCKED_WRITES 	         write all data 	       else 	         write up to SINGLE_WRITE bytes 	       if all data written, return 	       if no data written 	         if select works 		   select on the write descriptor with a ten second timeout 		 else 		   blocked write of one byte with a ten second alarm  	 This algorithm should work whether the system supports 	 unblocked writes on terminals or not.  If the system supports 	 unblocked writes but HAVE_UNBLOCKED_WRITES is 0, then it will 	 call write more often than it needs to.  If the system does 	 not support unblocked writes but HAVE_UNBLOCKED_WRITES is 1, 	 then the write may hang so long that incoming data is lost. 	 This is actually possible at high baud rates on any system 	 when a blocking write is done; there is no solution, except 	 hardware handshaking.  	 If we were not able to write any data, then we need to block 	 until we can write something.  The code used to simply do a 	 blocking write.  However, that fails when a bidirectional 	 protocol is permitted to push out enough bytes to fill the 	 entire pipe between the two communicating uucico processes. 	 They can both block on writing, because neither is reading.  	 In this case, we use select.  We could select on both the 	 read and write descriptor, but on some systems that would 	 lead to calling read on each byte, which would be very 	 inefficient.  Instead, we select only on the write 	 descriptor.  After the select succeeds or times out, we retry 	 the read.  	 Of course, some systems don't have select, and on some 	 systems that have it it doesn't work on terminal devices.  If 	 we can't use select, then we do a blocked write of a single 	 byte after setting an alarm.  We only write a single byte to 	 avoid any confusion as to whether or not the byte was 	 actually written.  */
 comment|/* If we are running on standard input, we switch the file 	 descriptors by hand.  */
 if|if
 condition|(
@@ -10652,7 +10735,187 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We didn't write any data.  Do a blocking write.  */
+if|#
+directive|if
+name|HAVE_SELECT
+name|struct
+name|timeval
+name|stime
+decl_stmt|;
+name|int
+name|imask
+decl_stmt|;
+name|int
+name|c
+decl_stmt|;
+comment|/* We didn't write any data.  Call select.  We use a timeout              long enough for 1024 bytes to be sent. 	       secs/kbyte == (1024 bytes/kbyte * 10 bits/byte) / baud bits/sec 	       usecs/kbyte == (((1024 bytes/kbyte * 1000000 usecs/sec) 	                        / baud bits/sec) 			       * 10 bits/byte) 	     */
+name|stime
+operator|.
+name|tv_sec
+operator|=
+operator|(
+name|long
+operator|)
+literal|10240
+operator|/
+name|q
+operator|->
+name|ibaud
+expr_stmt|;
+name|stime
+operator|.
+name|tv_usec
+operator|=
+operator|(
+operator|(
+operator|(
+operator|(
+name|long
+operator|)
+literal|1024000000
+operator|/
+name|q
+operator|->
+name|ibaud
+operator|)
+operator|*
+operator|(
+name|long
+operator|)
+literal|10
+operator|)
+operator|%
+operator|(
+name|long
+operator|)
+literal|1000000
+operator|)
+expr_stmt|;
+name|imask
+operator|=
+literal|1
+operator|<<
+name|q
+operator|->
+name|o
+expr_stmt|;
+if|if
+condition|(
+name|imask
+operator|==
+literal|0
+condition|)
+name|ulog
+argument_list|(
+name|LOG_FATAL
+argument_list|,
+literal|"fsysdep_conn_io: File descriptors too large"
+argument_list|)
+expr_stmt|;
+comment|/* If we've received a signal, don't continue.  */
+if|if
+condition|(
+name|FGOT_QUIT_SIGNAL
+argument_list|()
+condition|)
+return|return
+name|FALSE
+return|;
+name|DEBUG_MESSAGE0
+argument_list|(
+name|DEBUG_PORT
+argument_list|,
+literal|"fsysdep_conn_io: Calling select"
+argument_list|)
+expr_stmt|;
+comment|/* We don't bother to loop on EINTR.  If we get a signal, we              just loop around and try the read and write again.  */
+name|c
+operator|=
+name|select
+argument_list|(
+name|q
+operator|->
+name|o
+operator|+
+literal|1
+argument_list|,
+operator|(
+name|pointer
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|pointer
+operator|)
+operator|&
+name|imask
+argument_list|,
+operator|(
+name|pointer
+operator|)
+name|NULL
+argument_list|,
+operator|&
+name|stime
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+block|{
+comment|/* We got interrupted by a signal.  Log it.  */
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* The select either discovered that we could write                  something, or it timed out.  Either way, we go around                  the main read/write loop again.  */
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* HAVE_SELECT */
+block|{
+name|int
+name|ierr
+decl_stmt|;
+comment|/* Either the select failed for some reason other than 	      	 EINTR, or the system does not support select at all. 	      	 Fall back on a timed write.  We don't worry about why 	      	 the select might have failed, we just assume that it 	      	 will not succeed on this descriptor.  */
+if|#
+directive|if
+name|HAVE_RESTARTABLE_SYSCALLS
+comment|/* If HAVE_RESTARTABLE_SYSCALLS, then receiving an alarm                  signal in the middle of a write will not cause the                  write to return EINTR, and the only way to interrupt                  the write is to longjmp out of it (see sysh.unx).                  That is unreliable, because it means that we won't                  know whether the byte was actually written or not.                  However, I believe that the only system on which we                  need to do this longjmp is BSD 4.2, and that system                  supports select, so we should never execute this                  case.  */
+name|ulog
+argument_list|(
+name|LOG_FATAL
+argument_list|,
+literal|"fsysdep_conn_io: Unsupported case; see code"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|q
@@ -10682,31 +10945,11 @@ condition|)
 return|return
 name|FALSE
 return|;
-name|cdo
-operator|=
-name|cwrite
-expr_stmt|;
-if|if
-condition|(
-name|cdo
-operator|>
-name|SINGLE_WRITE
-condition|)
-name|cdo
-operator|=
-name|SINGLE_WRITE
-expr_stmt|;
-name|DEBUG_MESSAGE1
+name|DEBUG_MESSAGE0
 argument_list|(
 name|DEBUG_PORT
 argument_list|,
-literal|"fsysdep_conn_io: Blocking write of %lu"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|cdo
+literal|"fsysdep_conn_io: Blocking write"
 argument_list|)
 expr_stmt|;
 if|if
@@ -10725,12 +10968,6 @@ name|q
 operator|->
 name|owr
 expr_stmt|;
-comment|/* Loop until we get something besides EINTR.  */
-while|while
-condition|(
-name|TRUE
-condition|)
-block|{
 comment|/* If we've received a signal, don't continue.  */
 if|if
 condition|(
@@ -10740,6 +10977,42 @@ condition|)
 return|return
 name|FALSE
 return|;
+comment|/* Start up an alarm to interrupt the write.  Note that                  we don't need to use the catch stuff, since we know                  that HAVE_RESTARTABLE_SYSCALLS is 0.  */
+name|usset_signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|usalarm
+argument_list|,
+name|TRUE
+argument_list|,
+operator|(
+name|boolean
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
+name|long
+operator|)
+literal|10240
+operator|/
+name|q
+operator|->
+name|ibaud
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* There is a race condition here: on a severely loaded                  system, we could get the alarm before we start the                  write call.  This would not be a disaster; often the                  write will succeed anyhow.  */
 if|#
 directive|if
 name|HAVE_TLI
@@ -10764,7 +11037,7 @@ operator|*
 operator|)
 name|zwrite
 argument_list|,
-name|cdo
+literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -10780,6 +11053,26 @@ operator|!=
 name|TSYSERR
 condition|)
 block|{
+name|usset_signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_IGN
+argument_list|,
+name|TRUE
+argument_list|,
+operator|(
+name|boolean
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|ulog
 argument_list|(
 name|LOG_ERROR
@@ -10822,23 +11115,48 @@ name|o
 argument_list|,
 name|zwrite
 argument_list|,
-name|cdo
+literal|1
+argument_list|)
+expr_stmt|;
+name|ierr
+operator|=
+name|errno
+expr_stmt|;
+comment|/* Note that we don't really care whether the write                  finished because the byte was written out or whether                  it finished because the alarm was triggered.  Either                  way, we are going to loop around and try another                  read.  */
+name|usset_signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_IGN
+argument_list|,
+name|TRUE
+argument_list|,
+operator|(
+name|boolean
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|cdid
-operator|>=
+operator|<
 literal|0
 condition|)
-break|break;
+block|{
 if|if
 condition|(
-name|errno
-operator|!=
+name|ierr
+operator|==
 name|EINTR
 condition|)
-break|break;
+block|{
 comment|/* We got interrupted by a signal.  Log it.  */
 name|ulog
 argument_list|(
@@ -10853,12 +11171,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|cdid
-operator|<
-literal|0
-condition|)
+else|else
 block|{
 name|ulog
 argument_list|(
@@ -10868,7 +11181,7 @@ literal|"write: %s"
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|ierr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10876,6 +11189,8 @@ return|return
 name|FALSE
 return|;
 block|}
+block|}
+elseif|else
 if|if
 condition|(
 name|cdid
@@ -10883,7 +11198,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* On some systems write will return 0 if carrier is 		 lost.  If we fail to write anything ten times in a 		 row, we assume that this has happened.  This is 		 hacked in like this because there seems to be no 		 reliable way to tell exactly why the write returned 		 0.  */
+comment|/* On some systems write will return 0 if carrier is 		     lost.  If we fail to write anything ten times in 		     a row, we assume that this has happened.  This is 		     hacked in like this because there seems to be no 		     reliable way to tell exactly why the write 		     returned 0.  */
 operator|++
 name|czero
 expr_stmt|;
@@ -10925,6 +11240,7 @@ name|czero
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}

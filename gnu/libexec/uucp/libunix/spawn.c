@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* spawn.c    Spawn a program securely.     Copyright (C) 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* spawn.c    Spawn a program securely.     Copyright (C) 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -1454,7 +1454,36 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Try to force the UUCP uid to be both real and effective user 	 ID, in order to present a consistent environment regardless 	 of the invoking user.  This won't work on System V based 	 systems, but it will do no harm.  It would be possible to use 	 a setuid root program to force the UID setting, but I don't 	 think the efficiency loss is worth it.  */
+comment|/* Try to force the UUCP uid to be both real and effective user 	 ID, in order to present a consistent environment regardless 	 of the invoking user.  This won't work on older System V 	 based systems, where it can cause trouble if ordinary users 	 wind up executing uuxqt, perhaps via uucico; any program 	 which uuxqt executes will have an arbitrary real user ID, so 	 if the program is itself a setuid program, any security 	 checks it does based on the real user ID will be incorrect. 	 Fixing this problem would seem to require a special setuid 	 root program; I have not used this approach because 	 modern systems should not suffer from it.  */
+if|#
+directive|if
+name|HAVE_SETREUID
+operator|(
+name|void
+operator|)
+name|setreuid
+argument_list|(
+name|geteuid
+argument_list|()
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setregid
+argument_list|(
+name|getegid
+argument_list|()
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 name|void
 operator|)
@@ -1473,6 +1502,8 @@ name|getegid
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(

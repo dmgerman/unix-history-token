@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uuconv.c    Convert one type of UUCP configuration file to another.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* uuconv.c    Convert one type of UUCP configuration file to another.     Copyright (C) 1991, 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|uuconv_rcsid
 index|[]
 init|=
-literal|"$Id: uuconv.c,v 1.2 1994/05/07 18:14:06 ache Exp $"
+literal|"$Id: uuconv.c,v 1.27 1995/06/29 19:36:27 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -965,7 +965,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+literal|"%s: Taylor UUCP %s, copyright (C) 1991, 92, 93, 94, 1995 Ian Lance Taylor\n"
 argument_list|,
 name|zProgram
 argument_list|,
@@ -2418,7 +2418,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+literal|"Taylor UUCP %s, copyright (C) 1991, 92, 93, 94, 1995 Ian Lance Taylor\n"
 argument_list|,
 name|VERSION
 argument_list|)
@@ -4053,6 +4053,77 @@ argument_list|(
 name|e
 argument_list|,
 literal|"call-timegrade %c "
+argument_list|,
+operator|(
+name|char
+operator|)
+name|qtime
+operator|->
+name|uuconf_ival
+argument_list|)
+expr_stmt|;
+name|uvwrite_time
+argument_list|(
+name|e
+argument_list|,
+name|qtime
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|e
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|CHANGED
+argument_list|(
+name|uuconf_qcalledtimegrade
+argument_list|)
+operator|&&
+operator|(
+name|q
+operator|->
+name|uuconf_qcalledtimegrade
+operator|!=
+operator|(
+expr|struct
+name|uuconf_timespan
+operator|*
+operator|)
+operator|&
+name|_uuconf_unset
+operator|)
+condition|)
+block|{
+for|for
+control|(
+name|qtime
+operator|=
+name|q
+operator|->
+name|uuconf_qcalledtimegrade
+init|;
+name|qtime
+operator|!=
+name|NULL
+condition|;
+name|qtime
+operator|=
+name|qtime
+operator|->
+name|uuconf_qnext
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|e
+argument_list|,
+literal|"called-timegrade %c "
 argument_list|,
 operator|(
 name|char
@@ -8850,7 +8921,7 @@ name|qm
 operator|->
 name|uuconf_pzdialer
 argument_list|,
-name|zprefix
+name|ab
 argument_list|)
 expr_stmt|;
 block|}

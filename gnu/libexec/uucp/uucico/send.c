@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* send.c    Routines to send a file.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* send.c    Routines to send a file.     Copyright (C) 1991, 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|send_rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 1.3 1994/11/06 10:17:13 davidg Exp $"
+literal|"$Id: send.c,v 1.51 1995/06/21 19:15:49 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,14 +99,23 @@ comment|/* TRUE if this is a spool directory file.  */
 name|boolean
 name|fspool
 decl_stmt|;
-comment|/* TRUE if the file has been completely sent.  Also used in      flocal_send_cancelled to mean that the file send will never      succeed.  */
+comment|/* TRUE if the file has been completely sent.  */
 name|boolean
 name|fsent
+decl_stmt|;
+comment|/* TRUE if the file send will never succeed; used by      flocal_send_cancelled.  */
+name|boolean
+name|fnever
 decl_stmt|;
 comment|/* Execution file for sending an unsupported E request.  */
 name|char
 modifier|*
 name|zexec
+decl_stmt|;
+comment|/* Confirmation command received in fsend_await_confirm.  */
+name|char
+modifier|*
+name|zconfirm
 decl_stmt|;
 block|}
 struct|;
@@ -142,11 +151,6 @@ name|flocal_send_fail
 name|P
 argument_list|(
 operator|(
-expr|struct
-name|stransfer
-operator|*
-name|qtrans
-operator|,
 expr|struct
 name|scmd
 operator|*
@@ -514,6 +518,13 @@ operator|->
 name|zexec
 argument_list|)
 expr_stmt|;
+name|ubuffree
+argument_list|(
+name|qinfo
+operator|->
+name|zconfirm
+argument_list|)
+expr_stmt|;
 name|xfree
 argument_list|(
 name|qtrans
@@ -621,13 +632,6 @@ condition|)
 return|return
 name|flocal_send_fail
 argument_list|(
-operator|(
-expr|struct
-name|stransfer
-operator|*
-operator|)
-name|NULL
-argument_list|,
 name|qcmd
 argument_list|,
 name|qdaemon
@@ -696,13 +700,6 @@ condition|)
 return|return
 name|flocal_send_fail
 argument_list|(
-operator|(
-expr|struct
-name|stransfer
-operator|*
-operator|)
-name|NULL
-argument_list|,
 name|qcmd
 argument_list|,
 name|qdaemon
@@ -781,13 +778,6 @@ condition|)
 return|return
 name|flocal_send_fail
 argument_list|(
-operator|(
-expr|struct
-name|stransfer
-operator|*
-operator|)
-name|NULL
-argument_list|,
 name|qcmd
 argument_list|,
 name|qdaemon
@@ -804,13 +794,6 @@ condition|)
 return|return
 name|flocal_send_fail
 argument_list|(
-operator|(
-expr|struct
-name|stransfer
-operator|*
-operator|)
-name|NULL
-argument_list|,
 name|qcmd
 argument_list|,
 name|qdaemon
@@ -926,13 +909,6 @@ condition|)
 return|return
 name|flocal_send_fail
 argument_list|(
-operator|(
-expr|struct
-name|stransfer
-operator|*
-operator|)
-name|NULL
-argument_list|,
 name|qcmd
 argument_list|,
 name|qdaemon
@@ -1037,6 +1013,12 @@ name|zexec
 operator|=
 name|NULL
 expr_stmt|;
+name|qinfo
+operator|->
+name|zconfirm
+operator|=
+name|NULL
+expr_stmt|;
 name|qtrans
 operator|=
 name|qtransalc
@@ -1079,19 +1061,12 @@ specifier|static
 name|boolean
 name|flocal_send_fail
 parameter_list|(
-name|qtrans
-parameter_list|,
 name|qcmd
 parameter_list|,
 name|qdaemon
 parameter_list|,
 name|zwhy
 parameter_list|)
-name|struct
-name|stransfer
-modifier|*
-name|qtrans
-decl_stmt|;
 name|struct
 name|scmd
 modifier|*
@@ -1375,8 +1350,6 @@ name|fret
 operator|=
 name|flocal_send_fail
 argument_list|(
-name|qtrans
-argument_list|,
 operator|&
 name|qtrans
 operator|->
@@ -1959,16 +1932,7 @@ argument_list|(
 name|zsend
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|fret
-condition|)
-name|usfree_send
-argument_list|(
-name|qtrans
-argument_list|)
-expr_stmt|;
+comment|/* If fret is FALSE, we should free qtrans here, but see the comment      at the end of flocal_rec_send_request.  */
 return|return
 name|fret
 return|;
@@ -2345,13 +2309,6 @@ condition|(
 operator|!
 name|flocal_send_fail
 argument_list|(
-operator|(
-expr|struct
-name|stransfer
-operator|*
-operator|)
-name|NULL
-argument_list|,
 operator|&
 name|qtrans
 operator|->
@@ -2362,16 +2319,9 @@ argument_list|,
 name|zerr
 argument_list|)
 condition|)
-block|{
-name|usfree_send
-argument_list|(
-name|qtrans
-argument_list|)
-expr_stmt|;
 return|return
 name|FALSE
 return|;
-block|}
 block|}
 comment|/* If the protocol does not support multiple channels, we can 	 simply remove the transaction.  Otherwise we must make sure 	 the remote side knows that we have finished sending the file 	 data.  If we have already sent the entire file, there will be 	 no confusion.  */
 if|if
@@ -2480,10 +2430,9 @@ name|precfn
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Reuse fsent to pass fnever to flocal_send_cancelled.  */
 name|qinfo
 operator|->
-name|fsent
+name|fnever
 operator|=
 name|fnever
 expr_stmt|;
@@ -2604,6 +2553,12 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Now queue up to send the file or to wait for the confirmation.      We already set psendfn at the end of flocal_send_request.  If the      protocol supports multiple channels, we have already called      fqueue_send; calling it again would move the request in the      queue, which would make the log file a bit confusing.  */
+name|qtrans
+operator|->
+name|fcmd
+operator|=
+name|TRUE
+expr_stmt|;
 name|qtrans
 operator|->
 name|precfn
@@ -3241,12 +3196,12 @@ name|qtrans
 operator|->
 name|pinfo
 decl_stmt|;
-comment|/* If we are breaking a 'E' command into two 'S' commands, and that      was for the first 'S' command, and the first 'S' command will      never be sent (passed as qinfo->fsent), we still have to send the      second one.  */
+comment|/* If we are breaking a 'E' command into two 'S' commands, and that      was for the first 'S' command, and the first 'S' command will      never be sent, we still have to send the second one.  */
 if|if
 condition|(
 name|qinfo
 operator|->
-name|fsent
+name|fnever
 operator|&&
 name|qtrans
 operator|->
@@ -3812,6 +3767,12 @@ name|zexec
 operator|=
 name|NULL
 expr_stmt|;
+name|qinfo
+operator|->
+name|zconfirm
+operator|=
+name|NULL
+expr_stmt|;
 name|qtrans
 operator|=
 name|qtransalc
@@ -3931,6 +3892,12 @@ name|fsend_file_end
 expr_stmt|;
 name|qtrans
 operator|->
+name|fcmd
+operator|=
+name|TRUE
+expr_stmt|;
+name|qtrans
+operator|->
 name|precfn
 operator|=
 name|fsend_await_confirm
@@ -3948,6 +3915,46 @@ condition|)
 return|return
 name|FALSE
 return|;
+name|qtrans
+operator|->
+name|zlog
+operator|=
+name|zbufalc
+argument_list|(
+sizeof|sizeof
+expr|"Sending ( bytes) "
+operator|+
+name|strlen
+argument_list|(
+name|qtrans
+operator|->
+name|s
+operator|.
+name|zfrom
+argument_list|)
+operator|+
+literal|25
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|qtrans
+operator|->
+name|zlog
+argument_list|,
+literal|"Sending %s (%ld bytes)"
+argument_list|,
+name|qtrans
+operator|->
+name|s
+operator|.
+name|zfrom
+argument_list|,
+name|qinfo
+operator|->
+name|cbytes
+argument_list|)
+expr_stmt|;
 comment|/* We send the file size because SVR4 UUCP does.  We don't look for      it.  We send a trailing M if we want to request a hangup.  We      send it both after the mode and at the end of the entire string;      I don't know where programs look for it.  */
 if|if
 condition|(
@@ -4035,55 +4042,11 @@ operator|->
 name|e
 argument_list|)
 expr_stmt|;
-name|usfree_send
-argument_list|(
-name|qtrans
-argument_list|)
-expr_stmt|;
+comment|/* Should probably free qtrans here, but see the comment at the          end of flocal_rec_send_request.  */
 return|return
 name|FALSE
 return|;
 block|}
-name|qtrans
-operator|->
-name|zlog
-operator|=
-name|zbufalc
-argument_list|(
-sizeof|sizeof
-expr|"Sending ( bytes) "
-operator|+
-name|strlen
-argument_list|(
-name|qtrans
-operator|->
-name|s
-operator|.
-name|zfrom
-argument_list|)
-operator|+
-literal|25
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|qtrans
-operator|->
-name|zlog
-argument_list|,
-literal|"Sending %s (%ld bytes)"
-argument_list|,
-name|qtrans
-operator|->
-name|s
-operator|.
-name|zfrom
-argument_list|,
-name|qinfo
-operator|->
-name|cbytes
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|qdaemon
@@ -4289,21 +4252,9 @@ name|char
 modifier|*
 name|z
 decl_stmt|;
-name|boolean
-name|fret
-decl_stmt|;
 name|int
 name|ilocal
-init|=
-name|qtrans
-operator|->
-name|ilocal
-decl_stmt|;
-name|int
-name|iremote
-init|=
-name|qtrans
-operator|->
+decl_stmt|,
 name|iremote
 decl_stmt|;
 switch|switch
@@ -4338,6 +4289,18 @@ literal|"RN"
 expr_stmt|;
 break|break;
 block|}
+name|ilocal
+operator|=
+name|qtrans
+operator|->
+name|ilocal
+expr_stmt|;
+name|iremote
+operator|=
+name|qtrans
+operator|->
+name|iremote
+expr_stmt|;
 name|xfree
 argument_list|(
 name|qtrans
@@ -4350,8 +4313,7 @@ argument_list|(
 name|qtrans
 argument_list|)
 expr_stmt|;
-name|fret
-operator|=
+return|return
 call|(
 modifier|*
 name|qdaemon
@@ -4369,9 +4331,6 @@ name|ilocal
 argument_list|,
 name|iremote
 argument_list|)
-expr_stmt|;
-return|return
-name|fret
 return|;
 block|}
 end_function
@@ -4485,13 +4444,37 @@ name|fsent
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* qtrans->precfn should have been set by a previous function.  */
-name|qtrans
+comment|/* If zconfirm is set, then we have already received the      confirmation, and should call fsend_await_confirm directly.  */
+if|if
+condition|(
+name|qinfo
 operator|->
-name|fcmd
-operator|=
-name|TRUE
-expr_stmt|;
+name|zconfirm
+operator|!=
+name|NULL
+condition|)
+return|return
+name|fsend_await_confirm
+argument_list|(
+name|qtrans
+argument_list|,
+name|qdaemon
+argument_list|,
+name|qinfo
+operator|->
+name|zconfirm
+argument_list|,
+name|strlen
+argument_list|(
+name|qinfo
+operator|->
+name|zconfirm
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+return|;
+comment|/* qtrans->precfn should have been set by a previous function.  */
 return|return
 name|fqueue_receive
 argument_list|(
@@ -4565,6 +4548,28 @@ name|char
 modifier|*
 name|zerr
 decl_stmt|;
+comment|/* If fsent is FALSE, it means that we have received the      confirmation before fsend_file_end got called.  To avoid      confusion, we save away the confirmation message, and let      fsend_file_end call us directly.  If we did not do this, we would      have to fix a thorny race condition in floop, which wants to      refer to the qtrans structure after sending the end of the file.  */
+if|if
+condition|(
+operator|!
+name|qinfo
+operator|->
+name|fsent
+condition|)
+block|{
+name|qinfo
+operator|->
+name|zconfirm
+operator|=
+name|zbufcpy
+argument_list|(
+name|zdata
+argument_list|)
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
 if|if
 condition|(
 name|qinfo
@@ -4775,7 +4780,7 @@ name|imicros
 argument_list|,
 name|qdaemon
 operator|->
-name|fmaster
+name|fcaller
 argument_list|)
 expr_stmt|;
 name|qdaemon
@@ -5516,6 +5521,19 @@ operator|->
 name|fsent
 operator|=
 name|FALSE
+expr_stmt|;
+name|ubuffree
+argument_list|(
+name|qinfo
+operator|->
+name|zconfirm
+argument_list|)
+expr_stmt|;
+name|qinfo
+operator|->
+name|zconfirm
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 name|fqueue_send

@@ -176,6 +176,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HAVE_TERMIOS_H
+value|1
+end_define
+
+begin_comment
+comment|/*<termios.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HAVE_SYS_PARAM_H
 value|1
 end_define
@@ -358,6 +369,94 @@ end_define
 
 begin_comment
 comment|/*<sys/types.tcp.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_MOUNT_H
+value|1
+end_define
+
+begin_comment
+comment|/*<sys/mount.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_VFS_H
+value|0
+end_define
+
+begin_comment
+comment|/*<sys/vfs.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_FILSYS_H
+value|0
+end_define
+
+begin_comment
+comment|/*<sys/filsys.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_STATFS_H
+value|0
+end_define
+
+begin_comment
+comment|/*<sys/statfs.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_DUSTAT_H
+value|0
+end_define
+
+begin_comment
+comment|/*<sys/dustat.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_FS_TYPES_H
+value|0
+end_define
+
+begin_comment
+comment|/*<sys/fs_types.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_USTAT_H
+value|0
+end_define
+
+begin_comment
+comment|/*<ustat.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_STATVFS_H
+value|0
+end_define
+
+begin_comment
+comment|/*<sys/statvfs.h> */
 end_comment
 
 begin_comment
@@ -571,13 +670,20 @@ value|1
 end_define
 
 begin_comment
-comment|/* When Taylor UUCP is talking to another instance of itself, it will    tell the other side the size of a file before it is transferred.    If the package can determine how much disk space is available, it    will use this information to avoid filling up the disk.  Define one    of the following macros to tell the code how to determine the    amount of available disk space.  It is possible that none of these    are appropriate; it will do no harm to use none of them, but, of    course, nothing will then prevent the package from filling up the    disk.  Note that this space check is only useful when talking to    another instance of Taylor UUCP.     STAT_STATVFS          statvfs function    STAT_STATFS2_BSIZE    two argument statfs function with f_bsize field    STAT_STATFS2_FSIZE    two argument statfs function with f_fsize field    STAT_STATFS2_FS_DATA  two argument statfs function with fd_req field    STAT_STATFS4          four argument statfs function    STAT_DUSTAT		 dustat function (AIX PS/2)    STAT_DISK_SPACE	 disk_space function (QNX)    STAT_USTAT            the ustat function with 512 byte blocks.  */
+comment|/* When Taylor UUCP is talking to another instance of itself, it will    tell the other side the size of a file before it is transferred.    If the package can determine how much disk space is available, it    will use this information to avoid filling up the disk.  Define one    of the following macros to tell the code how to determine the    amount of available disk space.  It is possible that none of these    are appropriate; it will do no harm to use none of them, but, of    course, nothing will then prevent the package from filling up the    disk.  Note that this space check is only useful when talking to    another instance of Taylor UUCP.     STAT_STATVFS          statvfs function    STAT_STATFS3_OSF1	 three argument statfs function (OSF/1)    STAT_STATFS2_BSIZE    two argument statfs function with f_bsize field    STAT_STATFS2_FSIZE    two argument statfs function with f_fsize field    STAT_STATFS2_FS_DATA  two argument statfs function with fd_req field    STAT_STATFS4          four argument statfs function    STAT_DISK_SPACE	 disk_space function (QNX)    STAT_USTAT            the ustat function with 512 byte blocks.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|STAT_STATVFS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|STAT_STATFS3_OSF1
 value|0
 end_define
 
@@ -606,13 +712,6 @@ begin_define
 define|#
 directive|define
 name|STAT_STATFS4
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|STAT_DUSTAT
 value|0
 end_define
 
@@ -1171,7 +1270,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYSCONF
-value|0
+value|1
 end_define
 
 begin_comment

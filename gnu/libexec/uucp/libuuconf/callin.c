@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* callin.c    Check a login name and password against the UUCP password file.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* callin.c    Check a login name and password against the UUCP password file.     Copyright (C) 1992, 1993, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|_uuconf_callin_rcsid
 index|[]
 init|=
-literal|"$Id: callin.c,v 1.2 1994/05/07 18:11:58 ache Exp $"
+literal|"$Id: callin.c,v 1.11 1995/06/21 19:21:42 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,15 +421,18 @@ condition|)
 block|{
 name|char
 modifier|*
-name|zcolon
+name|z0
+decl_stmt|,
+modifier|*
+name|z1
 decl_stmt|;
 operator|++
 name|qglobal
 operator|->
 name|ilineno
 expr_stmt|;
-comment|/* Turn the first two colon characters into spaces.  This is 	     a hack to make Unix style passwd files work.  */
-name|zcolon
+comment|/* We have a few hacks to make Unix style passwd files work. 	     1) We turn the first two colon characters into spaces. 	     2) If the colon characters are adjacent, we assume there 	        is no password, and we skip the entry. 	     3) If the password between colon characters contains a 	        space, we assume that it has been disabled, and we 		skip the entry.  */
+name|z0
 operator|=
 name|strchr
 argument_list|(
@@ -440,36 +443,61 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zcolon
+name|z0
 operator|!=
 name|NULL
 condition|)
 block|{
 operator|*
-name|zcolon
+name|z0
 operator|=
 literal|' '
 expr_stmt|;
-name|zcolon
+name|z1
 operator|=
 name|strchr
 argument_list|(
-name|zcolon
+name|z0
 argument_list|,
 literal|':'
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zcolon
+name|z1
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|z1
+operator|-
+name|z0
+operator|==
+literal|1
+condition|)
+continue|continue;
 operator|*
-name|zcolon
+name|z1
 operator|=
-literal|' '
+literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|z0
+operator|+
+literal|1
+argument_list|,
+literal|' '
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+continue|continue;
+block|}
 block|}
 name|iret
 operator|=

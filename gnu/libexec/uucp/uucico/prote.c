@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* prote.c    The 'e' protocol.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* prote.c    The 'e' protocol.     Copyright (C) 1991, 1992, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|prote_rcsid
 index|[]
 init|=
-literal|"$Id: prote.c,v 1.2 1994/05/07 18:13:43 ache Exp $"
+literal|"$Id: prote.c,v 1.20 1995/08/02 00:24:28 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -918,6 +918,68 @@ name|cinbuf
 operator|+=
 name|CRECBUFLEN
 expr_stmt|;
+if|if
+condition|(
+name|cEbytes
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|fgot_data
+argument_list|(
+name|qdaemon
+argument_list|,
+name|abPrecbuf
+argument_list|,
+operator|(
+name|size_t
+operator|)
+literal|0
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|size_t
+operator|)
+literal|0
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|(
+name|long
+operator|)
+operator|-
+literal|1
+argument_list|,
+name|TRUE
+argument_list|,
+name|pfexit
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+if|if
+condition|(
+operator|*
+name|pfexit
+condition|)
+return|return
+name|TRUE
+return|;
+block|}
 block|}
 comment|/* Here we can read real data for the file.  */
 while|while

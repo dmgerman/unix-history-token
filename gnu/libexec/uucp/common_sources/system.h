@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* system.h    Header file for system dependent stuff in the Taylor UUCP package.    This file is not itself system dependent.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* system.h    Header file for system dependent stuff in the Taylor UUCP package.    This file is not itself system dependent.     Copyright (C) 1991, 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_ifndef
@@ -924,6 +924,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Save a file in a location used to hold failed execution files.    This is called if a uuxqt execution fails.  This should return the    new name of the file (allocated by zbufalc), or NULL if the move    failed (in which case the original file should remain).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|zsysdep_save_failed_file
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|zfile
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Cleanup anything left over by fsysdep_get_work_init and    fsysdep_get_work.  This may be called even though    fsysdep_get_work_init has not been.  */
 end_comment
 
@@ -1277,6 +1298,29 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Sync a file to disk.  If this fails it should log an error using    the zmsg parameter, and return FALSE.  This is controlled by the    FSYNC_ON_CLOSE macro in policy.h.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|fsysdep_sync
+name|P
+argument_list|(
+operator|(
+name|openfile_t
+name|e
+operator|,
+specifier|const
+name|char
+operator|*
+name|zmsg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -1545,7 +1589,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Beginning getting execute files.  To get a list of execute files,    first fsysdep_get_xqt_init is called, then zsysdep_get_xqt is    called several times until it returns NULL, then finally    usysdep_get_xqt_free is called.  */
+comment|/* Beginning getting execute files.  To get a list of execute files,    first fsysdep_get_xqt_init is called, then zsysdep_get_xqt is    called several times until it returns NULL, then finally    usysdep_get_xqt_free is called.  If the zsystem argument is not    NULL, it is the name of a system for which execution files are    desired.  */
 end_comment
 
 begin_decl_stmt
@@ -1555,14 +1599,17 @@ name|fsysdep_get_xqt_init
 name|P
 argument_list|(
 operator|(
-name|void
+specifier|const
+name|char
+operator|*
+name|zsystem
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Get the next execute file.  This should return NULL when finished    (with *pferr set to FALSE).  On an error this should return NULL    with *pferr set to TRUE.  This should set *pzsystem to the name of    the system for which the execute file was created.  Both the return    value and *pzsystem should be freed using ubuffree.  */
+comment|/* Get the next execute file.  This should return NULL when finished    (with *pferr set to FALSE).  The zsystem argument should be the    same string as that passed to fsysdep_get_xqt_init.  On an error    this should return NULL with *pferr set to TRUE.  This should set    *pzsystem to the name of the system for which the execute file was    created; this is not guaranteed to match the zsystem argument--that    must be double checked by the caller.  Both the return value and    *pzsystem should be freed using ubuffree.  */
 end_comment
 
 begin_decl_stmt
@@ -1573,6 +1620,11 @@ name|zsysdep_get_xqt
 name|P
 argument_list|(
 operator|(
+specifier|const
+name|char
+operator|*
+name|zsystem
+operator|,
 name|char
 operator|*
 operator|*
@@ -1587,7 +1639,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Clean up after getting execute files.  */
+comment|/* Clean up after getting execute files.  The zsystem argument should    be the same string as that passed to fsysdep_get_xqt_init.  */
 end_comment
 
 begin_decl_stmt
@@ -1597,7 +1649,10 @@ name|usysdep_get_xqt_free
 name|P
 argument_list|(
 operator|(
-name|void
+specifier|const
+name|char
+operator|*
+name|zsystem
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uuconf.h    Header file for UUCP configuration routines.     Copyright (C) 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The use of an object file which uses material from this header    file, and from no other portion of the uuconf library, is    unrestricted, as described in paragraph 4 of section 5 of version 2    of the GNU Library General Public License (this sentence is merely    informative, and does not modify the License in any way).     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* uuconf.h    Header file for UUCP configuration routines.     Copyright (C) 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The use of an object file which uses material from this header    file, and from no other portion of the uuconf library, is    unrestricted, as described in paragraph 4 of section 5 of version 2    of the GNU Library General Public License (this sentence is merely    informative, and does not modify the License in any way).     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_ifndef
@@ -328,6 +328,12 @@ name|struct
 name|uuconf_timespan
 modifier|*
 name|uuconf_qcalltimegrade
+decl_stmt|;
+comment|/* The times at which to allow a particular grade of work to be      transferred to the system, when it calls in.  The ival field of      each uuconf_timespan structure is the lowest grade which should      be transferred at that time.  May be NULL, in which case there      are no grade restrictions.  */
+name|struct
+name|uuconf_timespan
+modifier|*
+name|uuconf_qcalledtimegrade
 decl_stmt|;
 comment|/* The maximum number of times to retry calling this system.  If      this is 0, there is no limit.  */
 name|int
@@ -1008,6 +1014,27 @@ parameter_list|,
 name|b2
 parameter_list|)
 value|(uuconf_grade_cmp ((b1), (b2)))
+end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Definitions for bits returned by uuconf_strip.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UUCONF_STRIP_LOGIN
+value|(01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UUCONF_STRIP_PROTO
+value|(02)
 end_define
 
 begin_escape
@@ -1781,6 +1808,26 @@ name|char
 modifier|*
 modifier|*
 name|uuconf_pzdebug
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Get a combination of UUCONF_STRIP bits indicating what types of    global information should be stripped on input.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|uuconf_strip
+parameter_list|(
+name|void
+modifier|*
+name|uuconf_pglobal
+parameter_list|,
+name|int
+modifier|*
+name|uuconf_pistrip
 parameter_list|)
 function_decl|;
 end_function_decl

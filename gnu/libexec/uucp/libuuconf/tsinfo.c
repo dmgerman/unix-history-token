@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tsinfo.c    Get information about a system from the Taylor UUCP configuration files.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* tsinfo.c    Get information about a system from the Taylor UUCP configuration files.     Copyright (C) 1992, 1993, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|_uuconf_tsinfo_rcsid
 index|[]
 init|=
-literal|"$Id: tsinfo.c,v 1.11 1994/01/30 21:14:29 ian Rel $"
+literal|"$Id: tsinfo.c,v 1.17 1995/08/11 03:34:37 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -448,6 +448,24 @@ expr|struct
 name|uuconf_system
 argument_list|,
 name|uuconf_qcalltimegrade
+argument_list|)
+block|,
+name|iitimegrade
+block|}
+block|,
+block|{
+literal|"called-timegrade"
+block|,
+name|UUCONF_CMDTABTYPE_FN
+operator||
+literal|3
+block|,
+name|offsetof
+argument_list|(
+expr|struct
+name|uuconf_system
+argument_list|,
+name|uuconf_qcalledtimegrade
 argument_list|)
 block|,
 name|iitimegrade
@@ -1672,19 +1690,69 @@ operator|.
 name|fdefault_alternates
 argument_list|)
 expr_stmt|;
-comment|/* The first alternate is always available for calling in.  */
+comment|/* The first alternate is always available for calling in.  It is      always available for calling out if it has some way to choose a      port (this would normally be set by uiset_call anyhow, but it      won't be if all the port information comes from the defaults).  */
 if|if
 condition|(
 name|iret
 operator|==
 name|UUCONF_SUCCESS
 condition|)
+block|{
 name|qsys
 operator|->
 name|uuconf_fcalled
 operator|=
 name|TRUE
 expr_stmt|;
+if|if
+condition|(
+name|qsys
+operator|->
+name|uuconf_zport
+operator|!=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|_uuconf_unset
+operator|||
+name|qsys
+operator|->
+name|uuconf_qport
+operator|!=
+operator|(
+expr|struct
+name|uuconf_port
+operator|*
+operator|)
+operator|&
+name|_uuconf_unset
+operator|||
+name|qsys
+operator|->
+name|uuconf_ibaud
+operator|>=
+literal|0
+operator|||
+name|qsys
+operator|->
+name|uuconf_zphone
+operator|!=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|_uuconf_unset
+condition|)
+name|qsys
+operator|->
+name|uuconf_fcall
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|iret

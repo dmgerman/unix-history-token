@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uupick.c    Get files stored in the public directory by uucp -t.     Copyright (C) 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* uupick.c    Get files stored in the public directory by uucp -t.     Copyright (C) 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|uupick_rcsid
 index|[]
 init|=
-literal|"$Id: uupick.c,v 1.10 1994/01/30 20:59:40 ian Rel $"
+literal|"$Id: uupick.c,v 1.16 1995/06/29 19:38:55 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,10 +263,6 @@ decl_stmt|;
 name|int
 name|iuuconf
 decl_stmt|;
-name|struct
-name|uuconf_system
-name|ssys
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -382,7 +378,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+literal|"%s: Taylor UUCP %s, copyright (C) 1991, 92, 93, 94, 1995 Ian Lance Taylor\n"
 argument_list|,
 name|zProgram
 argument_list|,
@@ -481,6 +477,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|struct
+name|uuconf_system
+name|ssys
+decl_stmt|;
+comment|/* Get the public directory for the system.  If we can't find          the system information, just use the standard public          directory, since uupick is not setuid.  */
 name|iuuconf
 operator|=
 name|uuconf_system_info
@@ -521,25 +522,6 @@ name|ssys
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|iuuconf
-operator|!=
-name|UUCONF_NOT_FOUND
-condition|)
-operator|(
-name|void
-operator|)
-name|ulog_uuconf
-argument_list|(
-name|LOG_FATAL
-argument_list|,
-name|puuconf
-argument_list|,
-name|iuuconf
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1094,6 +1076,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"d: delete file\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"! command: shell escape\n"
 argument_list|)
 expr_stmt|;
@@ -1197,7 +1184,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+literal|"Taylor UUCP %s, copyright (C) 1991, 92, 93, 94, 1995 Ian Lance Taylor\n"
 argument_list|,
 name|VERSION
 argument_list|)

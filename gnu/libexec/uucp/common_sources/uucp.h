@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uucp.h    Header file for the UUCP package.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* uucp.h    Header file for the UUCP package.     Copyright (C) 1991, 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_comment
@@ -289,7 +289,7 @@ comment|/* ! HAVE_SIG_ATOMIC_T_IN_SIGNAL_H&& ! HAVE_SIG_ATOMIC_T_IN_TYPES_H */
 end_comment
 
 begin_comment
-comment|/* Make sure we have size_t.  We use int as the default because the    main use of this type is to provide an argument to malloc and    realloc.  On a system which does not define size_t, int is    certainly the correct type to use.  */
+comment|/* Make sure we have size_t.  */
 end_comment
 
 begin_if
@@ -1094,18 +1094,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ffilereaderror
-parameter_list|(
-name|e
-parameter_list|,
-name|c
-parameter_list|)
-value|ferror (e)
-end_define
-
-begin_define
-define|#
-directive|define
 name|cfilewrite
 parameter_list|(
 name|e
@@ -1115,6 +1103,18 @@ parameter_list|,
 name|c
 parameter_list|)
 value|fwrite ((z), 1, (c), (e))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffileioerror
+parameter_list|(
+name|e
+parameter_list|,
+name|c
+parameter_list|)
+value|ferror (e)
 end_define
 
 begin_ifdef
@@ -1223,6 +1223,18 @@ parameter_list|)
 value|(fclose (e) == 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|fstdiosync
+parameter_list|(
+name|e
+parameter_list|,
+name|z
+parameter_list|)
+value|(fsysdep_sync (e, z))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1235,6 +1247,37 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|!
+name|USE_TYPES_H
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|USE_TYPES_H
+end_undef
+
+begin_define
+define|#
+directive|define
+name|USE_TYPES_H
+value|1
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|HAVE_UNISTD_H
 end_if
 
@@ -1243,6 +1286,30 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OFF_T
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|OFF_T
+name|off_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|OFF_T
+end_undef
 
 begin_endif
 endif|#
@@ -1300,18 +1367,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ffilereaderror
-parameter_list|(
-name|e
-parameter_list|,
-name|c
-parameter_list|)
-value|((c)< 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|cfilewrite
 parameter_list|(
 name|e
@@ -1321,6 +1376,18 @@ parameter_list|,
 name|c
 parameter_list|)
 value|write ((e), (z), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffileioerror
+parameter_list|(
+name|e
+parameter_list|,
+name|c
+parameter_list|)
+value|((c)< 0)
 end_define
 
 begin_ifdef
@@ -1338,7 +1405,7 @@ name|e
 parameter_list|,
 name|i
 parameter_list|)
-value|(lseek ((e), (long) i, SEEK_SET)>= 0)
+value|(lseek ((e), (off_t) i, SEEK_SET)>= 0)
 end_define
 
 begin_define
@@ -1348,7 +1415,7 @@ name|ffilerewind
 parameter_list|(
 name|e
 parameter_list|)
-value|(lseek ((e), (long) 0, SEEK_SET)>= 0)
+value|(lseek ((e), (off_t) 0, SEEK_SET)>= 0)
 end_define
 
 begin_else
@@ -1365,7 +1432,7 @@ name|e
 parameter_list|,
 name|i
 parameter_list|)
-value|(lseek ((e), (long) i, 0)>= 0)
+value|(lseek ((e), (off_t) i, 0)>= 0)
 end_define
 
 begin_define
@@ -1375,7 +1442,7 @@ name|ffilerewind
 parameter_list|(
 name|e
 parameter_list|)
-value|(lseek ((e), (long) 0, 0)>= 0)
+value|(lseek ((e), (off_t) 0, 0)>= 0)
 end_define
 
 begin_endif
@@ -1396,7 +1463,7 @@ name|ffileseekend
 parameter_list|(
 name|e
 parameter_list|)
-value|(lseek ((e), (long) 0, SEEK_END)>= 0)
+value|(lseek ((e), (off_t) 0, SEEK_END)>= 0)
 end_define
 
 begin_else
@@ -1411,7 +1478,7 @@ name|ffileseekend
 parameter_list|(
 name|e
 parameter_list|)
-value|(lseek ((e), (long) 0, 2)>= 0)
+value|(lseek ((e), (off_t) 0, 2)>= 0)
 end_define
 
 begin_endif
@@ -1427,6 +1494,18 @@ parameter_list|(
 name|e
 parameter_list|)
 value|(close (e)>= 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fstdiosync
+parameter_list|(
+name|e
+parameter_list|,
+name|z
+parameter_list|)
+value|(fsysdep_sync (fileno (e), z))
 end_define
 
 begin_endif

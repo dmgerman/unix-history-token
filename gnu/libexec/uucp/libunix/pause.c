@@ -22,7 +22,7 @@ file|"system.h"
 end_include
 
 begin_comment
-comment|/* Pick a timing routine to use.  I somewhat arbitrarily picked usleep    above nap above napms above poll above select.  */
+comment|/* Pick a timing routine to use.  I somewhat arbitrarily picked usleep    above napms above poll above select above nap.  The nap function is    last because on different systems the argument has different    meanings.  */
 end_comment
 
 begin_if
@@ -30,7 +30,35 @@ if|#
 directive|if
 name|HAVE_USLEEP
 operator|||
+name|HAVE_NAPMS
+operator|||
+name|HAVE_POLL
+operator|||
+name|HAVE_SELECT
+end_if
+
+begin_undef
+undef|#
+directive|undef
 name|HAVE_NAP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|HAVE_NAP
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAVE_USLEEP
 operator|||
 name|HAVE_NAPMS
 operator|||
@@ -60,8 +88,6 @@ if|#
 directive|if
 name|HAVE_USLEEP
 operator|||
-name|HAVE_NAP
-operator|||
 name|HAVE_NAPMS
 end_if
 
@@ -87,8 +113,6 @@ begin_if
 if|#
 directive|if
 name|HAVE_USLEEP
-operator|||
-name|HAVE_NAP
 end_if
 
 begin_undef
@@ -101,30 +125,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_NAPMS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|HAVE_USLEEP
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_NAP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|HAVE_NAP
 value|0
 end_define
 
@@ -359,6 +359,17 @@ name|pollfd
 name|sdummy
 decl_stmt|;
 comment|/* We need to pass an unused pollfd structure because poll checks      the address before checking the number of elements.  */
+name|memset
+argument_list|(
+operator|&
+name|sdummy
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|sdummy
+argument_list|)
+expr_stmt|;
 name|poll
 argument_list|(
 operator|&
