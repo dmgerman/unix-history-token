@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getNAME.c	8.1 (Berkeley) %G%"
+literal|"@(#)getNAME.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -873,7 +873,12 @@ for|for
 control|(
 name|loc
 operator|=
+name|strchr
+argument_list|(
 name|headbuf
+argument_list|,
+literal|' '
+argument_list|)
 init|;
 name|loc
 condition|;
@@ -930,6 +935,107 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 			 * Get rid of quotes in macros. 			 */
+for|for
+control|(
+name|loc
+operator|=
+name|strchr
+argument_list|(
+operator|&
+name|headbuf
+index|[
+literal|4
+index|]
+argument_list|,
+literal|'"'
+argument_list|)
+init|;
+name|loc
+condition|;
+control|)
+block|{
+name|strcpy
+argument_list|(
+name|loc
+argument_list|,
+operator|&
+name|loc
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|loc
+operator|=
+name|strchr
+argument_list|(
+name|loc
+argument_list|,
+literal|'"'
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 			 * Handle cross references 			 */
+if|if
+condition|(
+name|headbuf
+index|[
+literal|1
+index|]
+operator|==
+literal|'X'
+operator|&&
+name|headbuf
+index|[
+literal|2
+index|]
+operator|==
+literal|'r'
+condition|)
+block|{
+for|for
+control|(
+name|loc
+operator|=
+operator|&
+name|headbuf
+index|[
+literal|4
+index|]
+init|;
+operator|*
+name|loc
+operator|!=
+literal|' '
+condition|;
+name|loc
+operator|++
+control|)
+continue|continue;
+name|loc
+index|[
+literal|0
+index|]
+operator|=
+literal|'('
+expr_stmt|;
+name|loc
+index|[
+literal|2
+index|]
+operator|=
+literal|')'
+expr_stmt|;
+name|loc
+index|[
+literal|3
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+comment|/* 			 * Put dash between names and description. 			 */
 if|if
 condition|(
 name|headbuf
@@ -953,6 +1059,7 @@ argument_list|,
 literal|"\\- "
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Skip over macro names. 			 */
 name|strcat
 argument_list|(
 name|linbuf
