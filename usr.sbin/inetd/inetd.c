@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.68 1999/07/22 16:29:48 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.69 1999/07/23 14:45:21 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5287,7 +5287,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Out of memory."
+literal|"malloc: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6911,7 +6911,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Out of memory."
+literal|"malloc: %m"
 argument_list|)
 expr_stmt|;
 name|exit
