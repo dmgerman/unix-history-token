@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hys.c	4.6 (Berkeley) %G%"
+literal|"@(#)hys.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAYES
-end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -646,6 +640,7 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|(
 name|strncmp
 argument_list|(
 name|cbuf
@@ -656,6 +651,18 @@ literal|4
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|cbuf
+argument_list|,
+literal|"RRING"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+operator|)
 operator|&&
 name|nrings
 operator|++
@@ -702,6 +709,12 @@ return|return
 name|CF_DIAL
 return|;
 block|}
+undef|#
+directive|undef
+name|DONTRESETBAUDRATE
+ifndef|#
+directive|ifndef
+name|DONTRESETBAUDRATE
 name|i
 operator|=
 name|atoi
@@ -743,6 +756,9 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* DONTRESETBAUDRATE */
 block|}
 if|if
 condition|(
@@ -947,34 +963,22 @@ name|write
 argument_list|(
 name|fd
 argument_list|,
-literal|"ATZ\r"
+literal|"ATH\r"
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|expect
+comment|/* 		if (expect("OK",fd) != 0) 			logent(devSel, "HSM did not respond to ATZ"); */
+name|sleep
 argument_list|(
-literal|"OK"
-argument_list|,
-name|fd
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|logent
-argument_list|(
-name|devSel
-argument_list|,
-literal|"HSM did not respond to ATZ"
+literal|1
 argument_list|)
 expr_stmt|;
 name|write
 argument_list|(
 name|fd
 argument_list|,
-literal|"ATH\r"
+literal|"ATZ\r"
 argument_list|,
 literal|4
 argument_list|)
@@ -997,12 +1001,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|HAYES
-end_endif
 
 end_unit
 
