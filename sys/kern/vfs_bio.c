@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.38 1995/03/27 00:11:45 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.39 1995/04/09 06:02:43 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1779,9 +1779,52 @@ operator|==
 name|bogus_page
 condition|)
 block|{
+name|m
+operator|=
+name|vm_page_lookup
+argument_list|(
+name|obj
+argument_list|,
+name|foff
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|m
+condition|)
+block|{
 name|panic
 argument_list|(
-literal|"brelse: bogus page found"
+literal|"brelse: page missing\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|bp
+operator|->
+name|b_pages
+index|[
+name|i
+index|]
+operator|=
+name|m
+expr_stmt|;
+name|pmap_qenter
+argument_list|(
+name|trunc_page
+argument_list|(
+name|bp
+operator|->
+name|b_data
+argument_list|)
+argument_list|,
+name|bp
+operator|->
+name|b_pages
+argument_list|,
+name|bp
+operator|->
+name|b_npages
 argument_list|)
 expr_stmt|;
 block|}
@@ -1834,6 +1877,21 @@ argument_list|,
 name|foff
 argument_list|,
 name|resid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|valid
+operator|==
+literal|0
+condition|)
+name|vm_page_protect
+argument_list|(
+name|m
+argument_list|,
+name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3546,7 +3604,7 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-name|B_INVAL
+name|B_NOCACHE
 expr_stmt|;
 operator|(
 name|void
