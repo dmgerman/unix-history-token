@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.2 1995/03/21 00:48:55 wpaul Exp $"
+literal|"$Id: yplib.c,v 1.4 1995/03/24 21:21:37 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -795,6 +795,10 @@ literal|0
 decl_stmt|,
 name|r
 decl_stmt|;
+name|char
+modifier|*
+name|_defaultdom
+decl_stmt|;
 name|gpid
 operator|=
 name|getpid
@@ -1235,6 +1239,7 @@ block|}
 else|else
 block|{
 comment|/* no lock on binding file, YP is dead. */
+comment|/* 			 * XXX Not necessarily: the caller might be asking 			 * for a domain that we simply aren't bound to yet. 			 * Check that the binding file for the default domain 			 * is also unlocked before giving up. 			 */
 name|close
 argument_list|(
 name|fd
@@ -1244,6 +1249,79 @@ if|if
 condition|(
 name|new
 condition|)
+block|{
+if|if
+condition|(
+name|yp_get_default_domain
+argument_list|(
+operator|&
+name|_defaultdom
+argument_list|)
+condition|)
+return|return
+name|YPERR_NODOM
+return|;
+name|sprintf
+argument_list|(
+name|path
+argument_list|,
+literal|"%s/%s.%d"
+argument_list|,
+name|BINDINGDIR
+argument_list|,
+name|_defaultdom
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|path
+argument_list|,
+name|O_RDONLY
+argument_list|)
+operator|)
+operator|>
+literal|0
+operator|&&
+operator|(
+name|flock
+argument_list|(
+name|fd
+argument_list|,
+name|LOCK_EX
+operator||
+name|LOCK_NB
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EWOULDBLOCK
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+comment|/* for paranoia's sake */
 name|free
 argument_list|(
 name|ysd
@@ -1252,6 +1330,8 @@ expr_stmt|;
 return|return
 name|YPERR_YPBIND
 return|;
+block|}
+block|}
 block|}
 block|}
 endif|#
@@ -1393,7 +1473,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"YP: server for domain %s not responding, still trying\n"
+literal|"YP: server for domain %s not responding, retrying\n"
 argument_list|,
 name|dom
 argument_list|)
