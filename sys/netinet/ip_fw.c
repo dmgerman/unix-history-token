@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.107 1999/04/20 13:32:04 peter Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.108 1999/04/20 14:29:59 peter Exp $  */
 end_comment
 
 begin_comment
@@ -3185,7 +3185,7 @@ name|PULLUP_TO
 parameter_list|(
 name|l
 parameter_list|)
-value|do {                                            \ 			    int len = (pip ? l : l + 14 ) ;             \ 			    if ((*m)->m_len< (len) ) {                 \ 				if ( (*m = m_pullup(*m, (len))) == 0)   \ 				    goto bogusfrag;                     \ 				ip = mtod(*m, struct ip *);             \ 				if (pip)                                \ 				    *pip = ip ;                         \ 				else                                    \ 				    ip = (struct ip *)((int)ip + 14);   \ 				offset = (ip->ip_off& IP_OFFMASK);     \ 			    }                                           \ 			} while (0)
+value|do {                                            \ 			    int len = (pip ? l : l + 14 ) ;             \ 			    if ((*m)->m_len< (len) ) {                 \ 				if ( (*m = m_pullup(*m, (len))) == 0)   \ 				    goto bogusfrag;                     \ 				ip = mtod(*m, struct ip *);             \ 				if (pip)                                \ 				    *pip = ip ;                         \ 				else                                    \ 				    ip = (struct ip *)((char *)ip + 14);\ 				offset = (ip->ip_off& IP_OFFMASK);     \ 			    }                                           \ 			} while (0)
 comment|/* Protocol specific checks */
 switch|switch
 condition|(
