@@ -97,6 +97,12 @@ directive|include
 file|<pthread_np.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LIBTHREAD_DB
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -108,6 +114,11 @@ include|#
 directive|include
 file|"pthread_md.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Evaluate the storage class specifier.  */
