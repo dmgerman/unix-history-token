@@ -3,6 +3,10 @@ begin_comment
 comment|/* keymaps.h -- Manipulation of readline keymaps. */
 end_comment
 
+begin_comment
+comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -21,11 +25,21 @@ directive|include
 file|<readline/chardefs.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__FUNCTION_DEF
-end_ifndef
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__FUNCTION_DEF
+end_define
 
 begin_typedef
 typedef|typedef
@@ -35,11 +49,32 @@ parameter_list|()
 function_decl|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|__FUNCTION_DEF
-end_define
+begin_typedef
+typedef|typedef
+name|void
+name|VFunction
+parameter_list|()
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|CPFunction
+parameter_list|()
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+modifier|*
+name|CPPFunction
+parameter_list|()
+function_decl|;
+end_typedef
 
 begin_endif
 endif|#
@@ -68,6 +103,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* This must be large enough to hold bindings for all of the characters    in a desired character set (e.g, 128 for ASCII, 256 for ISO Latin-x,    and so on). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYMAP_SIZE
+value|256
+end_define
+
+begin_comment
 comment|/* I wanted to make the above structure contain a union of:    union { Function *function; struct _keymap_entry *keymap; } value;    but this made it impossible for me to create a static array.    Maybe I need C lessons. */
 end_comment
 
@@ -76,7 +122,7 @@ typedef|typedef
 name|KEYMAP_ENTRY
 name|KEYMAP_ENTRY_ARRAY
 index|[
-literal|128
+name|KEYMAP_SIZE
 index|]
 typedef|;
 end_typedef
@@ -163,6 +209,39 @@ end_comment
 begin_function_decl
 name|Keymap
 name|rl_make_keymap
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return the keymap corresponding to a given name.  Names look like    `emacs' or `emacs-meta' or `vi-insert'. */
+end_comment
+
+begin_function_decl
+name|Keymap
+name|rl_get_keymap_by_name
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return the current keymap. */
+end_comment
+
+begin_function_decl
+name|Keymap
+name|rl_get_keymap
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Set the current keymap to MAP. */
+end_comment
+
+begin_function_decl
+name|void
+name|rl_set_keymap
 parameter_list|()
 function_decl|;
 end_function_decl

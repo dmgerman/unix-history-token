@@ -4,26 +4,43 @@ comment|/* keymaps.c -- Functions and keymaps for the GNU Readline library. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1988, 1989, 1991 Free Software Foundation, Inc.     This file is part of GNU Readline, a library for reading lines    of text with interactive input and history editing.     Readline is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     Readline is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Copyright (C) 1988,1989 Free Software Foundation, Inc.     This file is part of GNU Readline, a library for reading lines    of text with interactive input and history editing.     Readline is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 1, or (at your option) any    later version.     Readline is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with Readline; see the file COPYING.  If not, write to the Free    Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"sysdep.h"
-end_include
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STDLIB_H
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stdlib.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
-file|"readline.h"
+file|"ansi_stdlib.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_STDLIB_H */
+end_comment
 
 begin_include
 include|#
@@ -54,18 +71,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Remove these declarations when we have a complete libgnu.a. */
-end_comment
-
-begin_comment
-comment|/* #define STATIC_MALLOC */
-end_comment
-
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|STATIC_MALLOC
@@ -73,7 +81,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|char
 modifier|*
 name|xmalloc
@@ -91,7 +99,7 @@ directive|else
 end_else
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|char
 modifier|*
 name|xmalloc
@@ -153,7 +161,7 @@ name|Keymap
 operator|)
 name|xmalloc
 argument_list|(
-literal|128
+name|KEYMAP_SIZE
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -169,7 +177,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|128
+name|KEYMAP_SIZE
 condition|;
 name|i
 operator|++
@@ -275,7 +283,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|128
+name|KEYMAP_SIZE
 condition|;
 name|i
 operator|++
@@ -327,40 +335,27 @@ name|Keymap
 name|rl_make_keymap
 parameter_list|()
 block|{
-extern|extern rl_insert (
-block|)
-operator|,
-function|rl_rubout
-parameter_list|()
-function|;
-end_function
-
-begin_decl_stmt
+specifier|extern
+name|int
+name|rl_insert
+argument_list|()
+decl_stmt|,
+name|rl_rubout
+argument_list|()
+decl_stmt|;
 specifier|register
 name|int
 name|i
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|Keymap
 name|newmap
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|newmap
 operator|=
 name|rl_make_bare_keymap
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* All printing characters are self-inserting. */
-end_comment
-
-begin_for
+comment|/* All ASCII printing characters are self-inserting. */
 for|for
 control|(
 name|i
@@ -383,9 +378,6 @@ name|function
 operator|=
 name|rl_insert
 expr_stmt|;
-end_for
-
-begin_expr_stmt
 name|newmap
 index|[
 name|TAB
@@ -395,9 +387,6 @@ name|function
 operator|=
 name|rl_insert
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|newmap
 index|[
 name|RUBOUT
@@ -407,9 +396,6 @@ name|function
 operator|=
 name|rl_rubout
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|newmap
 index|[
 name|CTRL
@@ -422,26 +408,80 @@ name|function
 operator|=
 name|rl_rubout
 expr_stmt|;
-end_expr_stmt
-
-begin_return
+if|#
+directive|if
+name|KEYMAP_SIZE
+operator|>
+literal|128
+comment|/* Printing characters in some 8-bit character sets. */
+for|for
+control|(
+name|i
+operator|=
+literal|128
+init|;
+name|i
+operator|<
+literal|160
+condition|;
+name|i
+operator|++
+control|)
+name|newmap
+index|[
+name|i
+index|]
+operator|.
+name|function
+operator|=
+name|rl_insert
+expr_stmt|;
+comment|/* ISO Latin-1 printing characters should self-insert. */
+for|for
+control|(
+name|i
+operator|=
+literal|160
+init|;
+name|i
+operator|<
+literal|256
+condition|;
+name|i
+operator|++
+control|)
+name|newmap
+index|[
+name|i
+index|]
+operator|.
+name|function
+operator|=
+name|rl_insert
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* KEYMAP_SIZE> 128 */
 return|return
 operator|(
 name|newmap
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/* Free the storage associated with MAP. */
 end_comment
 
+begin_macro
+name|rl_discard_keymap
+argument_list|(
+argument|map
+argument_list|)
+end_macro
+
 begin_expr_stmt
-unit|rl_discard_keymap
-operator|(
-name|map
-operator|)
 name|Keymap
 argument_list|(
 name|map
@@ -468,7 +508,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|128
+name|KEYMAP_SIZE
 condition|;
 name|i
 operator|++
@@ -528,11 +568,14 @@ block|}
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|STATIC_MALLOC
-end_ifdef
+argument_list|)
+end_if
 
 begin_escape
 end_escape

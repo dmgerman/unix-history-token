@@ -9,11 +9,95 @@ directive|ifndef
 name|_CHARDEFS_
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|_CHARDEFS_
+end_define
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRING_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRING_H
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STRING_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_STRING_H */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|savestring
 end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STATIC_MALLOC
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|xmalloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -22,7 +106,7 @@ name|savestring
 parameter_list|(
 name|x
 parameter_list|)
-value|(char *)strcpy (xmalloc (1 + strlen (x)), (x))
+value|strcpy (xmalloc (1 + strlen (x)), (x))
 end_define
 
 begin_endif
@@ -80,7 +164,7 @@ value|0x020
 end_define
 
 begin_comment
-comment|/* smaller than this is control */
+comment|/* Smaller than this is control. */
 end_comment
 
 begin_define
@@ -91,7 +175,7 @@ value|0x07f
 end_define
 
 begin_comment
-comment|/* larger than this is Meta. */
+comment|/* Larger than this is Meta. */
 end_comment
 
 begin_define
@@ -115,6 +199,27 @@ end_define
 begin_comment
 comment|/* x0000000, must be on. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|largest_char
+value|255
+end_define
+
+begin_comment
+comment|/* Largest character value. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|META_CHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)> meta_character_threshold&& (c)<= largest_char)
+end_define
 
 begin_define
 define|#
@@ -237,12 +342,29 @@ parameter_list|)
 value|((c)> meta_character_threshold)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWLINE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|NEWLINE
 value|'\n'
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RETURN
+end_ifndef
 
 begin_define
 define|#
@@ -251,12 +373,34 @@ name|RETURN
 value|CTRL('M')
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RUBOUT
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|RUBOUT
 value|0x07f
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TAB
+end_ifndef
 
 begin_define
 define|#
@@ -265,12 +409,51 @@ name|TAB
 value|'\t'
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ABORT_CHAR
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ABORT_CHAR
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|ABORT_CHAR
 value|CTRL('G')
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAGE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|PAGE
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -279,12 +462,46 @@ name|PAGE
 value|CTRL('L')
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPACE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|SPACE
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|SPACE
 value|0x020
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ESC
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ESC
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
