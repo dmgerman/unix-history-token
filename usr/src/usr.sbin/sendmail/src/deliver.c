@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.144 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.145 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -308,7 +308,7 @@ name|EF_CLRQUEUE
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"554 too many hops %d (%d max): from %s via %s, to %s"
+literal|"554 Too many hops %d (%d max): from %s via %s, to %s"
 argument_list|,
 name|e
 operator|->
@@ -336,6 +336,14 @@ name|e_sendqueue
 operator|->
 name|q_paddr
 argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_sendqueue
+operator|->
+name|q_status
+operator|=
+literal|"5.4.6"
 expr_stmt|;
 return|return;
 block|}
@@ -3366,6 +3374,12 @@ operator|->
 name|q_flags
 operator||=
 name|QREPORT
+expr_stmt|;
+name|to
+operator|->
+name|q_status
+operator|=
+literal|"2.1.5"
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -6520,6 +6534,12 @@ name|q_flags
 operator||=
 name|QREPORT
 expr_stmt|;
+name|to
+operator|->
+name|q_status
+operator|=
+literal|"2.1.5"
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|e
@@ -6855,12 +6875,6 @@ if|if
 condition|(
 name|stat
 operator|!=
-name|NULL
-operator|&&
-name|q
-operator|->
-name|q_status
-operator|==
 name|NULL
 condition|)
 name|q
@@ -9106,7 +9120,7 @@ name|buf
 argument_list|,
 name|mci
 argument_list|,
-name|FALSE
+name|PXLF_NOTHINGSPECIAL
 argument_list|)
 expr_stmt|;
 block|}
