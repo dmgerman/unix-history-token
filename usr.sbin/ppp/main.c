@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.67 1997/06/25 19:30:01 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.68 1997/06/29 13:54:31 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -904,7 +904,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|Hangup
+name|CloseConnection
 parameter_list|(
 name|signo
 parameter_list|)
@@ -917,7 +917,7 @@ name|LogPrintf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Hangup: Caught signal %d, abort connection\n"
+literal|"Caught signal %d, abort connection\n"
 argument_list|,
 name|signo
 argument_list|)
@@ -1734,7 +1734,7 @@ name|pending_signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|Hangup
+name|CloseSession
 argument_list|)
 expr_stmt|;
 name|pending_signal
@@ -1748,7 +1748,7 @@ name|pending_signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|CloseSession
+name|CloseConnection
 argument_list|)
 expr_stmt|;
 name|pending_signal
