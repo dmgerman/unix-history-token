@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lsvfs - list loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  * $Id: lsvfs.c,v 1.9 1997/07/23 06:48:01 charnier Exp $  */
+comment|/*  * lsvfs - list loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  * $Id: lsvfs.c,v 1.10 1998/01/17 16:24:27 bde Exp $  */
 end_comment
 
 begin_define
@@ -43,21 +43,21 @@ begin_define
 define|#
 directive|define
 name|FMT
-value|"%-32.32s %5d %5d %s\n"
+value|"%-32.32s %5d %s\n"
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDRFMT
-value|"%-32.32s %5.5s %5.5s %s\n"
+value|"%-32.32s %5.5s %s\n"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DASHES
-value|"-------------------------------- ----- ----- ---------------\n"
+value|"-------------------------------- ----- ---------------\n"
 end_define
 
 begin_function_decl
@@ -116,8 +116,6 @@ name|HDRFMT
 argument_list|,
 literal|"Filesystem"
 argument_list|,
-literal|"Index"
-argument_list|,
 literal|"Refs"
 argument_list|,
 literal|"Flags"
@@ -171,10 +169,6 @@ name|vfc_name
 argument_list|,
 name|vfc
 operator|.
-name|vfc_typenum
-argument_list|,
-name|vfc
-operator|.
 name|vfc_refcount
 argument_list|,
 name|fmt_flags
@@ -219,10 +213,6 @@ argument_list|,
 name|ovfcp
 operator|->
 name|vfc_name
-argument_list|,
-name|ovfcp
-operator|->
-name|vfc_index
 argument_list|,
 name|ovfcp
 operator|->
