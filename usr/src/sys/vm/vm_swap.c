@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -82,6 +82,14 @@ end_include
 begin_comment
 comment|/*  * Indirect driver for multi-controller paging.  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|nswap
+decl_stmt|,
+name|nswdev
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Set up swap devices.  * Initialize linked list of free swap  * headers. These do not actually point  * to buffers, but rather to pages that  * are being swapped in and out.  */
