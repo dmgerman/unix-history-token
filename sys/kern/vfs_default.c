@@ -1093,8 +1093,6 @@ decl_stmt|;
 name|vm_ooffset_t
 name|size
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1355,8 +1353,6 @@ name|vp
 operator|->
 name|v_object
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|obj
