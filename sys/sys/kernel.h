@@ -709,6 +709,12 @@ name|sysinit
 operator|*
 operator|*
 name|set
+operator|,
+expr|struct
+name|sysinit
+operator|*
+operator|*
+name|set_end
 operator|)
 argument_list|)
 decl_stmt|;

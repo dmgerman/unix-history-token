@@ -112,14 +112,6 @@ begin_comment
 comment|/* next unique id for VC */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|linker_set
-name|sysctl_net_smb
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(

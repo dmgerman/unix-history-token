@@ -211,14 +211,6 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|linker_set
-name|cons_set
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|cons_unavail
 decl_stmt|;

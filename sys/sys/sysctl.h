@@ -2640,12 +2640,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_struct_decl
-struct_decl|struct
-name|linker_set
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/* Dynamic oid handling */
 end_comment
@@ -2799,34 +2793,6 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|oidp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Linker set based oid handling */
-end_comment
-
-begin_function_decl
-name|void
-name|sysctl_register_set
-parameter_list|(
-name|struct
-name|linker_set
-modifier|*
-name|lsp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sysctl_unregister_set
-parameter_list|(
-name|struct
-name|linker_set
-modifier|*
-name|lsp
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1457,14 +1457,6 @@ name|sc_term_sw_t
 typedef|;
 end_typedef
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|linker_set
-name|scterm_set
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1701,14 +1693,6 @@ name|sc_renderer_t
 typedef|;
 end_typedef
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|linker_set
-name|scrndr_set
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1736,7 +1720,7 @@ parameter_list|,
 name|set
 parameter_list|)
 define|\
-value|static int						\ 	scrndr_##name##_event(module_t mod, int type, void *data) \ 	{							\ 		sc_renderer_t **list;				\ 		sc_renderer_t *p;				\ 		int error = 0;					\ 		switch (type) {					\ 		case MOD_LOAD:					\ 			list = (sc_renderer_t **)set.ls_items;	\ 			while ((p = *list++) != NULL) {		\ 				error = sc_render_add(p);	\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		case MOD_UNLOAD:				\ 			list = (sc_renderer_t **)set.ls_items;	\ 			while ((p = *list++) != NULL) {		\ 				error = sc_render_remove(p);	\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		default:					\ 			break;					\ 		}						\ 		return error;					\ 	}							\ 	static moduledata_t scrndr_##name##_mod = {		\ 		"scrndr-" #name,				\ 		scrndr_##name##_event,				\ 		NULL,						\ 	};							\ 	DECLARE_MODULE(scrndr_##name##, scrndr_##name##_mod, 	\ 		       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+value|SET_DECLARE(set, sc_renderer_t);			\ 	static int						\ 	scrndr_##name##_event(module_t mod, int type, void *data) \ 	{							\ 		sc_renderer_t **list;				\ 		int error = 0;					\ 		switch (type) {					\ 		case MOD_LOAD:					\ 			SET_FOREACH(list, set) {		\ 				error = sc_render_add(*list);	\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		case MOD_UNLOAD:				\ 			SET_FOREACH(list, set) {		\ 				error = sc_render_remove(*list);\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		default:					\ 			break;					\ 		}						\ 		return error;					\ 	}							\ 	static moduledata_t scrndr_##name##_mod = {		\ 		"scrndr-" #name,				\ 		scrndr_##name##_event,				\ 		NULL,						\ 	};							\ 	DECLARE_MODULE(scrndr_##name##, scrndr_##name##_mod, 	\ 		       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
 end_define
 
 begin_typedef

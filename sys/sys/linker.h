@@ -415,6 +415,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Lookup a linker set in a file.  Return pointers to the first entry,  * last + 1, and count of entries.  Use: for (p = start; p< stop; p++) {}  * void *start is really: "struct yoursetmember ***start;"  */
+end_comment
+
+begin_function_decl
+name|int
+name|linker_file_lookup_set
+parameter_list|(
+name|linker_file_t
+name|_file
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_name
+parameter_list|,
+name|void
+modifier|*
+name|_start
+parameter_list|,
+name|void
+modifier|*
+name|_stop
+parameter_list|,
+name|int
+modifier|*
+name|_count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * This routine is responsible for finding dependencies of userland  * initiated kldload(2)'s of files.  */
 end_comment
 

@@ -1027,14 +1027,6 @@ name|vidsw
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|linker_set
-name|videodriver_set
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* functions for the video card driver */
 end_comment

@@ -210,7 +210,6 @@ literal|0
 end_if
 
 begin_ifdef
-unit|extern struct linker_set sysctl_vfs_smbfs;
 ifdef|#
 directive|ifdef
 name|SYSCTL_DECL

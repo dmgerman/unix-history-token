@@ -168,14 +168,6 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|linker_set
-name|gdc_set
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|sc_rndr_sw_t
 name|txtrndrsw
 init|=
