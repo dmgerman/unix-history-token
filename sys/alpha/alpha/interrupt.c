@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: interrupt.c,v 1.7 1998/11/18 23:51:40 dfr Exp $ */
+comment|/* $Id: interrupt.c,v 1.8 1998/11/28 09:55:15 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -142,6 +142,48 @@ decl_stmt|,
 name|mc_received
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|dummy_perf
+parameter_list|(
+name|unsigned
+name|long
+name|vector
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+name|framep
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"performance interrupt!\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|perf_irq
+function_decl|)
+parameter_list|(
+name|unsigned
+name|long
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+init|=
+name|dummy_perf
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -371,9 +413,11 @@ case|case
 name|ALPHA_INTR_PERF
 case|:
 comment|/* interprocessor interrupt */
-name|printf
+name|perf_irq
 argument_list|(
-literal|"performance interrupt!\n"
+name|a1
+argument_list|,
+name|framep
 argument_list|)
 expr_stmt|;
 break|break;

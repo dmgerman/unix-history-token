@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: alpha_cpu.h,v 1.3 1998/06/14 13:45:10 dfr Exp $ */
+comment|/* $Id: alpha_cpu.h,v 1.4 1998/12/23 11:50:50 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -1558,6 +1558,23 @@ name|alpha_pal_wrval
 name|__P
 argument_list|(
 operator|(
+name|unsigned
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|alpha_pal_wrperfmon
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|,
 name|unsigned
 name|long
 operator|)
