@@ -1159,7 +1159,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: Final close of geom_dev(%s) %s %s"
+literal|"WARNING: Final close of geom_dev(%s) %s %s\n"
 argument_list|,
 name|gp
 operator|->
