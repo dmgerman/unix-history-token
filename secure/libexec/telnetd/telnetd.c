@@ -3450,6 +3450,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|level
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|user_name
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Get a pty, scan input lines.  */
 end_comment
@@ -3488,16 +3503,7 @@ modifier|*
 name|hp
 decl_stmt|;
 name|int
-name|level
-decl_stmt|;
-name|int
 name|ptynum
-decl_stmt|;
-name|char
-name|user_name
-index|[
-literal|256
-index|]
 decl_stmt|;
 comment|/* 	 * Find an available pty to use. 	 */
 ifndef|#
@@ -4803,6 +4809,10 @@ comment|/* 	 * Startup the login process on the slave side of the terminal 	 * n
 name|startslave
 argument_list|(
 name|host
+argument_list|,
+name|level
+argument_list|,
+name|user_name
 argument_list|)
 expr_stmt|;
 name|nfd

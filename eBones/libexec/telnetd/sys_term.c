@@ -8093,12 +8093,6 @@ directive|endif
 name|closelog
 argument_list|()
 expr_stmt|;
-comment|/* 	 * This sleep(1) is in here so that telnetd can 	 * finish up with the tty.  There's a race condition 	 * the login banner message gets lost... 	 */
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|execv
 argument_list|(
 name|_PATH_LOGIN
