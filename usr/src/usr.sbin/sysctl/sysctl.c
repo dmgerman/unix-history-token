@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysctl.c	8.2 (Berkeley) %G%"
+literal|"@(#)sysctl.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -598,13 +598,17 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-while|while
-condition|(
-name|argc
-operator|--
-operator|>
-literal|0
-condition|)
+for|for
+control|(
+init|;
+operator|*
+name|argv
+operator|!=
+name|NULL
+condition|;
+operator|++
+name|argv
+control|)
 name|parse
 argument_list|(
 operator|*
