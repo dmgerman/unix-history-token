@@ -521,9 +521,6 @@ name|zero
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* PERIPH_1284 */
 name|struct
 name|ppi_data
 modifier|*
@@ -534,9 +531,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PERIPH_1284
 comment|/* retrive the irq */
 name|BUS_READ_IVAR
 argument_list|(
