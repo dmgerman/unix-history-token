@@ -1247,6 +1247,15 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+name|bkgrdcheck
+condition|)
+name|exit
+argument_list|(
+name|EEXIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|preen
 operator|==
 literal|0
@@ -3242,7 +3251,7 @@ name|void
 operator|)
 name|vfprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 name|fmt
 argument_list|,
@@ -3263,7 +3272,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 literal|"\nUNEXPECTED SOFT UPDATE INCONSISTENCY\n"
 argument_list|)
@@ -3313,7 +3322,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 literal|"CANNOT RUN IN BACKGROUND\n"
 argument_list|)
@@ -3346,7 +3355,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 literal|"%s: "
 argument_list|,
@@ -3358,7 +3367,7 @@ name|void
 operator|)
 name|vfprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 name|fmt
 argument_list|,
@@ -3370,7 +3379,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 literal|"\n%s: UNEXPECTED%sINCONSISTENCY; RUN fsck MANUALLY.\n"
 argument_list|,
@@ -3505,7 +3514,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 literal|"%s: "
 argument_list|,
@@ -3517,7 +3526,7 @@ name|void
 operator|)
 name|vfprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 name|fmt
 argument_list|,
@@ -3598,7 +3607,7 @@ name|void
 operator|)
 name|vfprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 name|fmt
 argument_list|,

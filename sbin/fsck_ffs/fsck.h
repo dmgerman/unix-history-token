@@ -880,6 +880,16 @@ comment|/* filesystem has new inode format */
 end_comment
 
 begin_decl_stmt
+name|int
+name|bkgrdcheck
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* determine if background check is possible */
+end_comment
+
+begin_decl_stmt
 name|char
 name|usedsoftdep
 decl_stmt|;
