@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<setjmp.h>
 end_include
 
@@ -2683,7 +2689,9 @@ name|sprintf
 argument_list|(
 name|enamelist
 argument_list|,
-literal|"/dev/%s%d"
+literal|"%s%s%d"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|stat
 operator|->
@@ -6713,7 +6721,9 @@ literal|"          List information about volumes\n"
 literal|"printconfig [file]\n"
 literal|"          Write a copy of the current configuration to file.\n"
 literal|"makedev\n"
-literal|"          Remake the device nodes in /dev/vinum.\n"
+literal|"          Remake the device nodes in "
+name|_PATH_DEV
+literal|"vinum.\n"
 literal|"move drive [subdisk | plex | drive]\n"
 literal|"          Move the subdisks of the specified object(s) to drive.\n"
 literal|"quit\n"

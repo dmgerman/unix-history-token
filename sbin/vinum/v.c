@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<setjmp.h>
 end_include
 
@@ -2513,7 +2519,7 @@ name|devfs_is_active
 operator|&&
 name|access
 argument_list|(
-literal|"/dev"
+name|_PATH_DEV
 argument_list|,
 name|W_OK
 argument_list|)
@@ -2534,16 +2540,19 @@ argument_list|(
 name|stderr
 argument_list|,
 name|VINUMMOD
-literal|": /dev is mounted read-only, not rebuilding "
+literal|": %s is mounted read-only, not rebuilding %s\n"
+argument_list|,
+name|_PATH_DEV
+argument_list|,
 name|VINUM_DIR
-literal|"\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|vinum_perror
 argument_list|(
 name|VINUMMOD
-literal|": Can't write to /dev"
+literal|": Can't write to "
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 return|return;
