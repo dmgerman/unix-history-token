@@ -1,25 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Machine and OS Independent (well, as best as possible)  * code for the Qlogic ISP SCSI adapters.  *  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  * Feral Software  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
 comment|/*  * Inspiration and ideas about this driver are from Erik Moe's Linux driver  * (qlogicisp.c) and Dave Miller's SBus version of same (qlogicisp.c). Some  * ideas dredged from the Solaris driver.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Include header file appropriate for platform we're building on.  */
@@ -1786,7 +1776,7 @@ name|isp_ultramode
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 			 * If we're in Ultra Mode, we have to be 60Mhz clock- 			 * even for the SBus version. 			 */
+comment|/* 			 * If we're in Ultra Mode, we have to be 60MHz clock- 			 * even for the SBus version. 			 */
 name|isp
 operator|->
 name|isp_clock
@@ -5565,12 +5555,32 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * QLogic recommends that FAST Posting be turned 			 * off for 23XX cards and instead allow the HBA 			 * to write response queue entries and interrupt 			 * after a delay (ZIO). 			 * 			 * If we set ZIO, it will disable fast posting, 			 * so we don't need to clear it in fwoptions. 			 */
+ifndef|#
+directive|ifndef
+name|ISP_NO_ZIO
 name|icbp
 operator|->
 name|icb_xfwoptions
 operator||=
 name|ICBXOPT_ZIO
 expr_stmt|;
+else|#
+directive|else
+name|icbp
+operator|->
+name|icb_fwoptions
+operator||=
+name|ICBOPT_FAST_POST
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+comment|/* 			 * Values, in 100us increments. The default 			 * is 2 (200us) if a value 0 (default) is 			 * selected. 			 */
+block|icbp->icb_idelaytimer = 2;
+endif|#
+directive|endif
 if|if
 condition|(
 name|isp
@@ -20646,15 +20656,9 @@ literal|1
 operator|)
 return|;
 block|}
-else|#
-directive|else
-name|optrp
-operator|=
-name|optrp
-expr_stmt|;
-comment|/* FALLTHROUGH */
 endif|#
 directive|endif
+comment|/* FALLTHROUGH */
 case|case
 name|RQSTYPE_REQUEST
 case|:
@@ -23124,6 +23128,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_int16_t
 name|mbpscsi
 index|[]
@@ -24096,6 +24101,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_int16_t
 name|mbpfc
 index|[]
@@ -25428,6 +25434,7 @@ name|box
 decl_stmt|,
 name|opcode
 decl_stmt|;
+specifier|const
 name|u_int16_t
 modifier|*
 name|mcp
@@ -25656,6 +25663,7 @@ name|box
 decl_stmt|,
 name|opcode
 decl_stmt|;
+specifier|const
 name|u_int16_t
 modifier|*
 name|mcp
@@ -28120,6 +28128,20 @@ decl_stmt|;
 name|u_int16_t
 name|handle
 decl_stmt|;
+if|if
+condition|(
+name|IS_FC
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+name|isp_mark_getpdb_all
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
+block|}
 name|isp_reset
 argument_list|(
 name|isp
@@ -32331,7 +32353,7 @@ name|isp
 argument_list|,
 name|ISP_LOGALL
 argument_list|,
-literal|"isp_fw_dump: SRAM dumped succesfully"
+literal|"isp_fw_dump: SRAM dumped successfully"
 argument_list|)
 expr_stmt|;
 name|FCPARAM
@@ -33231,7 +33253,7 @@ name|isp
 argument_list|,
 name|ISP_LOGALL
 argument_list|,
-literal|"isp_fw_dump: SRAM dumped succesfully"
+literal|"isp_fw_dump: SRAM dumped successfully"
 argument_list|)
 expr_stmt|;
 name|FCPARAM
