@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calendar.c	4.11 (Berkeley) %G%"
+literal|"@(#)calendar.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -840,6 +840,8 @@ operator|=
 name|tp
 operator|->
 name|tm_mon
+operator|+
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -927,6 +929,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+comment|/* ASSUME THIS SHIT WORKS... %^&%&^%^& */
 name|day
 operator|=
 name|cumdays
@@ -1024,6 +1027,32 @@ name|start
 decl_stmt|,
 name|savech
 decl_stmt|;
+for|for
+control|(
+init|;
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+operator|!
+name|isalpha
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'*'
+condition|;
+operator|++
+name|p
+control|)
+empty_stmt|;
 if|if
 condition|(
 operator|*
@@ -1038,11 +1067,20 @@ name|flags
 operator||=
 name|F_ISMONTH
 expr_stmt|;
+operator|*
+name|endp
+operator|=
+name|p
+operator|+
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|tp
 operator|->
 name|tm_mon
+operator|+
+literal|1
 operator|)
 return|;
 block|}
@@ -1084,6 +1122,11 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'*'
 condition|;
 operator|++
 name|p
@@ -1180,6 +1223,11 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'*'
 condition|;
 operator|++
 name|p
