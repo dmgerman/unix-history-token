@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.1 (Berkeley) %G%"
+literal|"@(#)create.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,7 +179,7 @@ literal|1
 operator|||
 name|xflag
 operator|&&
-name|stat
+name|lstat
 argument_list|(
 literal|"."
 argument_list|,
@@ -296,7 +296,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|dp
 operator|->
