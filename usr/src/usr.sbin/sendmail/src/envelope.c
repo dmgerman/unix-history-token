@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.11 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1981,6 +1981,23 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_xfp
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"!Can't create transcript stream %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

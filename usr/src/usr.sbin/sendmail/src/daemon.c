@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.15 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.16 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.15 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.16 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1637,6 +1637,9 @@ return|;
 block|}
 block|}
 comment|/* connection ok, put it into canonical form */
+if|if
+condition|(
+operator|(
 name|mci
 operator|->
 name|mci_out
@@ -1647,7 +1650,22 @@ name|s
 argument_list|,
 literal|"w"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+operator|||
+operator|(
+name|s
+operator|=
+name|dup
+argument_list|(
+name|s
+argument_list|)
+operator|)
+operator|<
+literal|0
+operator|||
+operator|(
 name|mci
 operator|->
 name|mci_in
@@ -1661,7 +1679,22 @@ argument_list|)
 argument_list|,
 literal|"r"
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"cannot open SMTP client channel, fd=%d"
+argument_list|,
+name|s
+argument_list|)
 expr_stmt|;
+return|return
+name|EX_TEMPFAIL
+return|;
+block|}
 return|return
 operator|(
 name|EX_OK
