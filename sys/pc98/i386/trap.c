@@ -3024,8 +3024,6 @@ name|p
 decl_stmt|;
 name|vm_offset_t
 name|va
-decl_stmt|,
-name|v
 decl_stmt|;
 name|struct
 name|vmspace
@@ -3117,16 +3115,6 @@ operator|)
 return|;
 block|}
 block|}
-name|v
-operator|=
-name|trunc_page
-argument_list|(
-name|vtopte
-argument_list|(
-name|va
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * fault the data page 	 */
 name|rv
 operator|=
