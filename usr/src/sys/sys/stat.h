@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -398,6 +398,17 @@ begin_comment
 comment|/* X for other */
 end_comment
 
+begin_comment
+comment|/* 0666 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFFILEMODE
+value|(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -514,114 +525,6 @@ begin_comment
 comment|/* block size used in the stat struct */
 end_comment
 
-begin_comment
-comment|/* 0666 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFFILEMODE
-value|(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
-end_define
-
-begin_comment
-comment|/*  * Definitions of flags stored in file flags word.  *  * Low 16-bits owner setable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NODUMP
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* do not dump file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USR_IMMUTABLE
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* file may not be changed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USR_APPEND
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* writes to file may only append */
-end_comment
-
-begin_comment
-comment|/*  * High 16-bits only super-user setable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARCHIVED
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* file is archived */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYS_IMMUTABLE
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* file may not be changed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYS_APPEND
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* writes to file may only append */
-end_comment
-
-begin_comment
-comment|/*  * Shorthand abbreviations of above.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IMMUTABLE
-value|(USR_IMMUTABLE | SYS_IMMUTABLE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|APPEND
-value|(USR_APPEND | SYS_APPEND)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -731,6 +634,103 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Definitions of flags stored in file flags word.  *  * Low 16-bits: super-user and owner settable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NODUMP
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* do not dump file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USR_IMMUTABLE
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* file may not be changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USR_APPEND
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* writes to file may only append */
+end_comment
+
+begin_comment
+comment|/*  * High 16-bits: super-user settable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCHIVED
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* file is archived */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS_IMMUTABLE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* file may not be changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS_APPEND
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* writes to file may only append */
+end_comment
+
+begin_comment
+comment|/*  * Shorthand abbreviations of above.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMMUTABLE
+value|(USR_IMMUTABLE | SYS_IMMUTABLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APPEND
+value|(USR_APPEND | SYS_APPEND)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -745,18 +745,6 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-name|mode_t
-name|umask
-name|__P
-argument_list|(
-operator|(
-name|mode_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|chmod
 name|__P
@@ -838,11 +826,53 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|mode_t
+name|umask
+name|__P
+argument_list|(
+operator|(
+name|mode_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_POSIX_SOURCE
 end_ifndef
+
+begin_decl_stmt
+name|int
+name|chflags
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fchflags
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -880,10 +910,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not POSIX */
-end_comment
 
 begin_macro
 name|__END_DECLS
