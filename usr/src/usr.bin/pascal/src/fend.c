@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.15 %G%"
+literal|"@(#)fend.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -449,6 +449,29 @@ operator|==
 name|PROG
 condition|)
 block|{
+comment|/* 		 *	If there is a label declaration in the main routine 		 *	then there may be a non-local goto to it that does 		 *	not appear in this module. We have to assume that 		 *	such a reference may occur and generate code to 		 *	prepare for it. 		 */
+if|if
+condition|(
+name|parts
+index|[
+name|cbn
+index|]
+operator|&
+name|LPRT
+condition|)
+block|{
+name|parts
+index|[
+name|cbn
+index|]
+operator||=
+operator|(
+name|NONLOCALVAR
+operator||
+name|NONLOCALGOTO
+operator|)
+expr_stmt|;
+block|}
 name|putprintf
 argument_list|(
 literal|"	.text"
@@ -1016,7 +1039,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     *	if there are nested procedures we must save the display. 	     */
+comment|/* 	     *	if there are nested procedures that access our variables 	     *	we must save the display. 	     */
 if|if
 condition|(
 name|parts
@@ -1205,34 +1228,15 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     *  set up goto vector if potential non-local goto to this frame 	     */
+comment|/* 	     *  set up goto vector if non-local goto to this frame 	     */
 if|if
 condition|(
-operator|(
-name|cbn
-operator|<
-literal|2
-operator|&&
-operator|(
-name|parts
-index|[
-name|cbn
-index|]
-operator|&
-name|LPRT
-operator|)
-operator|)
-operator|||
-operator|(
 name|parts
 index|[
 name|cbn
 index|]
 operator|&
 name|NONLOCALGOTO
-operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|putleaf
