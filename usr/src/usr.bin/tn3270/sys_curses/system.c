@@ -238,40 +238,6 @@ name|sd
 decl_stmt|;
 if|if
 condition|(
-name|api_exch_incommand
-argument_list|(
-name|EXCH_HEREIS
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bad data from other side.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"(Encountered at %s, %s.)\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-if|if
-condition|(
 name|api_exch_intype
 argument_list|(
 name|EXCH_TYPE_STORE_DESC
@@ -346,6 +312,13 @@ return|;
 block|}
 if|if
 condition|(
+name|storage_length
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|api_exch_intype
 argument_list|(
 name|EXCH_TYPE_BYTES
@@ -372,6 +345,10 @@ operator|-
 literal|1
 return|;
 block|}
+block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -892,6 +869,12 @@ operator|-
 literal|1
 return|;
 block|}
+else|else
+block|{
+return|return
+literal|1
+return|;
+block|}
 block|}
 else|else
 block|{
@@ -906,10 +889,10 @@ literal|10
 argument_list|)
 expr_stmt|;
 comment|/* Don't let us do too many of these */
-block|}
 return|return
 literal|0
 return|;
+block|}
 block|}
 end_function
 
@@ -1030,6 +1013,13 @@ return|return;
 block|}
 if|if
 condition|(
+name|storage_length
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|api_exch_outtype
 argument_list|(
 name|EXCH_TYPE_BYTES
@@ -1051,6 +1041,7 @@ name|kill_connection
 argument_list|()
 expr_stmt|;
 return|return;
+block|}
 block|}
 block|}
 end_function
@@ -1105,15 +1096,6 @@ name|quit
 argument_list|()
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|storage_must_send
-operator|==
-literal|0
-condition|)
-block|{
-return|return;
-block|}
 name|storage_must_send
 operator|=
 literal|0
@@ -1137,6 +1119,14 @@ operator|-
 literal|1
 return|;
 block|}
+name|storage_location
+operator|=
+name|address
+expr_stmt|;
+name|storage_length
+operator|=
+name|length
+expr_stmt|;
 name|sd
 operator|.
 name|location
@@ -1178,6 +1168,40 @@ condition|)
 block|{
 name|kill_connection
 argument_list|()
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|api_exch_incommand
+argument_list|(
+name|EXCH_HEREIS
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Bad data from other side.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"(Encountered at %s, %s.)\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
 expr_stmt|;
 return|return
 operator|-
@@ -1853,7 +1877,7 @@ if|if
 condition|(
 name|api_exch_intype
 argument_list|(
-name|EXCH_TYPE_BYTES
+name|EXCH_TYPE_REGS
 argument_list|,
 sizeof|sizeof
 name|inputRegs
@@ -1879,7 +1903,7 @@ if|if
 condition|(
 name|api_exch_intype
 argument_list|(
-name|EXCH_TYPE_BYTES
+name|EXCH_TYPE_SREGS
 argument_list|,
 sizeof|sizeof
 name|inputSregs
@@ -1949,7 +1973,7 @@ if|if
 condition|(
 name|api_exch_outtype
 argument_list|(
-name|EXCH_TYPE_BYTES
+name|EXCH_TYPE_REGS
 argument_list|,
 sizeof|sizeof
 name|inputRegs
@@ -1975,7 +1999,7 @@ if|if
 condition|(
 name|api_exch_outtype
 argument_list|(
-name|EXCH_TYPE_BYTES
+name|EXCH_TYPE_SREGS
 argument_list|,
 sizeof|sizeof
 name|inputSregs
@@ -2077,6 +2101,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"[Hit return to continue]"
@@ -2095,7 +2120,6 @@ argument_list|(
 name|inputbuffer
 argument_list|)
 expr_stmt|;
-block|}
 name|setconnmode
 argument_list|()
 expr_stmt|;
