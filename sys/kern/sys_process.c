@@ -1035,22 +1035,16 @@ case|:
 case|case
 name|PT_DETACH
 case|:
+comment|/* Zero means do not send any signal */
 if|if
 condition|(
-operator|(
-name|req
-operator|!=
-name|PT_STEP
-operator|)
-operator|&&
-operator|(
-operator|(
-name|unsigned
-operator|)
+name|data
+operator|<
+literal|0
+operator|||
 name|data
 operator|>
 name|_SIG_MAXSIG
-operator|)
 condition|)
 return|return
 name|EINVAL
