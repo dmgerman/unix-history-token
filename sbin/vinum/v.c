@@ -4,7 +4,7 @@ comment|/* vinum.c: vinum interface program */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: v.c,v 1.30 2000/09/03 01:29:29 grog Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: v.c,v 1.31 2000/09/03 01:29:26 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -89,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/vinum/vinumhdr.h>
 end_include
 
 begin_include
@@ -377,12 +371,12 @@ comment|/* name to be passed for -n flag */
 end_comment
 
 begin_comment
-comment|/* Structures to read kernel data into */
+comment|/*  * Structures to read kernel data into.  These are shortened versions  * of the kernel data structures, without the bits and pieces we  * shouldn't be using.  */
 end_comment
 
 begin_decl_stmt
 name|struct
-name|_vinum_conf
+name|__vinum_conf
 name|vinum_conf
 decl_stmt|;
 end_decl_stmt
@@ -393,28 +387,28 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|volume
+name|_volume
 name|vol
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|plex
+name|_plex
 name|plex
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|sd
+name|_sd
 name|sd
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|drive
+name|_drive
 name|drive
 decl_stmt|;
 end_decl_stmt
@@ -437,6 +431,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* vinum super device */
+end_comment
+
+begin_decl_stmt
+name|int
+name|no_devfs
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if we have no devfs active */
 end_comment
 
 begin_function_decl
@@ -536,7 +542,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 name|VINUMMOD
 literal|": Kernel module not available"
@@ -699,6 +705,27 @@ argument_list|)
 expr_stmt|;
 comment|/* before we start the daemon */
 block|}
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"vfs.devfs.generation"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|no_devfs
+operator|=
+literal|0
+expr_stmt|;
 name|superdev
 operator|=
 name|open
@@ -798,9 +825,13 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|errno
 operator|==
 name|ENOENT
+operator|)
+operator|&&
+name|no_devfs
 condition|)
 comment|/* we don't have our node, */
 name|make_devices
@@ -814,7 +845,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't open "
 name|VINUM_SUPERDEV_NAME
@@ -824,6 +855,98 @@ return|return
 literal|1
 return|;
 block|}
+block|}
+comment|/*      * Check that we match the kernel version.  There are a number of      * possibilities here:      *      * 0: The versions are OK.      * 1: The kernel module could be a pre-version 1 module, which      *    doesn't include this check.  In that case, vinum_conf will be too      *    short, and so we'll get an EINVAL back when trying to get it.  In      *    this case we'll fake a 0 in the version.      * 2: The module versions are different.  Print appropriate messages      *    and die.      */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_GETCONFIG
+argument_list|,
+operator|&
+name|vinum_conf
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINVAL
+condition|)
+comment|/* wrong length, */
+name|vinum_conf
+operator|.
+name|version
+operator|=
+literal|0
+expr_stmt|;
+comment|/* must be the old version */
+else|else
+block|{
+name|perror
+argument_list|(
+literal|"Can't get vinum config"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+block|}
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|version
+operator|!=
+name|VINUMVERSION
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Version mismatch.  The kernel module is version %d of Vinum,\n"
+literal|"but this program is designed for version %d\n"
+argument_list|,
+name|vinum_conf
+operator|.
+name|version
+argument_list|,
+name|VINUMVERSION
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|version
+operator|<
+name|VINUMVERSION
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Please upgrade your kernel module.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Please upgrade vinum(8).\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 comment|/* Check if the dæmon is running.  If not, start it in the      * background */
 name|start_daemon
@@ -1030,6 +1153,8 @@ argument_list|(
 name|buffer
 argument_list|,
 name|token
+argument_list|,
+name|MAXARGS
 argument_list|)
 expr_stmt|;
 comment|/* got something potentially worth parsing */
@@ -2019,7 +2144,7 @@ name|void
 name|get_drive_info
 parameter_list|(
 name|struct
-name|drive
+name|_drive
 modifier|*
 name|drive
 parameter_list|,
@@ -2082,7 +2207,7 @@ name|void
 name|get_sd_info
 parameter_list|(
 name|struct
-name|sd
+name|_sd
 modifier|*
 name|sd
 parameter_list|,
@@ -2149,7 +2274,7 @@ name|void
 name|get_plex_sd_info
 parameter_list|(
 name|struct
-name|sd
+name|_sd
 modifier|*
 name|sd
 parameter_list|,
@@ -2234,7 +2359,7 @@ name|void
 name|get_plex_info
 parameter_list|(
 name|struct
-name|plex
+name|_plex
 modifier|*
 name|plex
 parameter_list|,
@@ -2297,7 +2422,7 @@ name|void
 name|get_volume_info
 parameter_list|(
 name|struct
-name|volume
+name|_volume
 modifier|*
 name|volume
 parameter_list|,
@@ -2357,7 +2482,7 @@ end_function
 
 begin_function
 name|struct
-name|drive
+name|_drive
 modifier|*
 name|find_drive_by_devname
 parameter_list|(
@@ -2384,7 +2509,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -2454,15 +2579,6 @@ comment|/* no drive of that name */
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|int
-name|devfs_is_active
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Create the device nodes for vinum objects */
 end_comment
@@ -2488,35 +2604,6 @@ name|driveno
 decl_stmt|;
 if|if
 condition|(
-name|sysctlbyname
-argument_list|(
-literal|"vfs.devfs.generation"
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|devfs_is_active
-operator|=
-literal|1
-expr_stmt|;
-else|else
-name|devfs_is_active
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|devfs_is_active
-operator|&&
 name|access
 argument_list|(
 name|_PATH_DEV
@@ -2540,15 +2627,15 @@ argument_list|(
 name|stderr
 argument_list|,
 name|VINUMMOD
-literal|": %s is mounted read-only, not rebuilding %s\n"
-argument_list|,
+literal|": "
 name|_PATH_DEV
-argument_list|,
+literal|" is mounted read-only, not rebuilding "
 name|VINUM_DIR
+literal|"\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|vinum_perror
+name|perror
 argument_list|(
 name|VINUMMOD
 literal|": Can't write to "
@@ -2585,12 +2672,6 @@ argument_list|(
 name|superdev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|devfs_is_active
-condition|)
-block|{
 name|system
 argument_list|(
 literal|"rm -rf "
@@ -2612,12 +2693,8 @@ name|VINUM_DIR
 literal|"/vol"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
-operator|!
-name|devfs_is_active
-operator|&&
 name|mknod
 argument_list|(
 name|VINUM_SUPERDEV_NAME
@@ -2655,9 +2732,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|devfs_is_active
-operator|&&
 name|mknod
 argument_list|(
 name|VINUM_WRONGSUPERDEV_NAME
@@ -2719,9 +2793,6 @@ return|return;
 block|}
 if|if
 condition|(
-operator|!
-name|devfs_is_active
-operator|&&
 name|mknod
 argument_list|(
 name|VINUM_DAEMON_DEV_NAME
@@ -2773,7 +2844,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -2878,9 +2949,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|devfs_is_active
-operator|&&
 name|drive
 operator|.
 name|state
@@ -2977,12 +3045,6 @@ name|VINUM_VOLUME_TYPE
 argument_list|)
 expr_stmt|;
 comment|/* create a device number */
-if|if
-condition|(
-operator|!
-name|devfs_is_active
-condition|)
-block|{
 comment|/* Create /dev/vinum/<myvol> */
 name|sprintf
 argument_list|(
@@ -3129,7 +3191,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|recurse
@@ -3230,9 +3291,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|devfs_is_active
-operator|&&
 name|mknod
 argument_list|(
 name|filename
@@ -3317,9 +3375,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|devfs_is_active
-operator|&&
 name|mknod
 argument_list|(
 name|filename
@@ -3370,9 +3425,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|devfs_is_active
-operator|&&
 name|mkdir
 argument_list|(
 name|filename
@@ -3511,9 +3563,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|devfs_is_active
-operator|&&
 name|mknod
 argument_list|(
 name|filename
@@ -3571,8 +3620,20 @@ name|arg0
 index|[]
 parameter_list|)
 block|{
+if|if
+condition|(
+name|no_devfs
+condition|)
 name|make_devices
 argument_list|()
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"makedev is not needed for a DEVFS-based system\n"
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3614,7 +3675,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -3853,7 +3914,7 @@ name|sdno
 parameter_list|)
 block|{
 name|struct
-name|sd
+name|_sd
 name|sd
 decl_stmt|;
 name|pid_t
@@ -4227,7 +4288,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't open "
 name|VINUM_DAEMON_DEV_NAME
