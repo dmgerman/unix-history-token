@@ -348,6 +348,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dcphy_service
 name|__P
@@ -368,8 +369,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|dcphy_status
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mii_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|dcphy_reset
 name|__P
 argument_list|(
 operator|(
@@ -393,21 +410,6 @@ name|mii_softc
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|dcphy_reset
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mii_softc
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -860,6 +862,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|dcphy_service
 parameter_list|(
@@ -1259,23 +1262,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Only used for autonegotiation. 		 */
-if|if
-condition|(
-name|IFM_SUBTYPE
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|IFM_AUTO
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 		 * Is the interface even up? 		 */
 if|if
 condition|(
@@ -1296,6 +1282,19 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 		 * Only used for autonegotiation. 		 */
+if|if
+condition|(
+name|IFM_SUBTYPE
+argument_list|(
+name|ife
+operator|->
+name|ifm_media
+argument_list|)
+operator|!=
+name|IFM_AUTO
+condition|)
+break|break;
 name|reg
 operator|=
 name|CSR_READ_4
@@ -1327,11 +1326,7 @@ operator|&
 name|DC_TSTAT_LS100
 operator|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 comment|/*                  * Only retry autonegotiation every 5 seconds.                  */
 if|if
 condition|(
@@ -1377,37 +1372,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Callback if something changed. */
-if|if
-condition|(
-name|sc
-operator|->
-name|mii_active
-operator|!=
-name|mii
-operator|->
-name|mii_media_active
-operator|||
-name|cmd
-operator|==
-name|MII_MEDIACHG
-condition|)
-block|{
-name|MIIBUS_STATCHG
+name|mii_phy_update
 argument_list|(
 name|sc
-operator|->
-name|mii_dev
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|mii_active
-operator|=
-name|mii
-operator|->
-name|mii_media_active
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -1417,6 +1388,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dcphy_status
 parameter_list|(

@@ -282,6 +282,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tlphy_service
 name|__P
@@ -302,6 +303,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tlphy_auto
 name|__P
@@ -318,6 +320,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|tlphy_acomp
 name|__P
@@ -332,6 +335,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|tlphy_status
 name|__P
@@ -923,6 +927,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|tlphy_service
 parameter_list|(
@@ -1229,23 +1234,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Only used for autonegotiation. 		 */
-if|if
-condition|(
-name|IFM_SUBTYPE
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|IFM_AUTO
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 		 * Is the interface even up? 		 */
 if|if
 condition|(
@@ -1266,6 +1254,19 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 		 * Only used for autonegotiation. 		 */
+if|if
+condition|(
+name|IFM_SUBTYPE
+argument_list|(
+name|ife
+operator|->
+name|ifm_media
+argument_list|)
+operator|!=
+name|IFM_AUTO
+condition|)
+break|break;
 comment|/* 		 * Check to see if we have link.  If we do, we don't 		 * need to restart the autonegotiation process.  Read 		 * the BMSR twice in case it's latched. 		 * 		 * XXX WHAT ABOUT CHECKING LINK ON THE BNC/AUI?! 		 */
 name|reg
 operator|=
@@ -1295,11 +1296,7 @@ name|reg
 operator|&
 name|BMSR_LINK
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 */
 if|if
 condition|(
@@ -1358,43 +1355,16 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Callback if something changed. */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_mii
-operator|.
-name|mii_active
-operator|!=
-name|mii
-operator|->
-name|mii_media_active
-operator|||
-name|cmd
-operator|==
-name|MII_MEDIACHG
-condition|)
-block|{
-name|MIIBUS_STATCHG
+name|mii_phy_update
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|sc_mii
-operator|.
-name|mii_dev
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_mii
-operator|.
-name|mii_active
-operator|=
-name|mii
-operator|->
-name|mii_media_active
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -1404,6 +1374,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|tlphy_status
 parameter_list|(
@@ -1586,6 +1557,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|tlphy_auto
 parameter_list|(
@@ -1666,6 +1638,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|tlphy_acomp
 parameter_list|(

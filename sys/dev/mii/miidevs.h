@@ -195,6 +195,17 @@ begin_comment
 comment|/* Marvell Semiconductor */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MII_OUI_xxMARVELL
+value|0x000ac2
+end_define
+
+begin_comment
+comment|/* Marvell Semiconductor */
+end_comment
+
 begin_comment
 comment|/* in the 79c873, AMD uses another OUI (which matches Davicom!) */
 end_comment
@@ -821,7 +832,21 @@ begin_define
 define|#
 directive|define
 name|MII_STR_MARVELL_E1000
-value|"Marvell Semiconductor 88E1000* gigabit PHY"
+value|"Marvell 88E1000 Gigabit PHY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_xxMARVELL_E1000
+value|0x0005
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_xxMARVELL_E1000
+value|"Marvell 88E1000 Gigabit PHY"
 end_define
 
 end_unit

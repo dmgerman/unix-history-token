@@ -222,6 +222,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rlphy_service
 name|__P
@@ -242,6 +243,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|rlphy_reset
 name|__P
@@ -670,6 +672,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|rlphy_service
 parameter_list|(
@@ -833,23 +836,6 @@ break|break;
 case|case
 name|MII_TICK
 case|:
-comment|/* 		 * Only used for autonegotiation. 		 */
-if|if
-condition|(
-name|IFM_SUBTYPE
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|IFM_AUTO
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 		 * Is the interface even up? 		 */
 if|if
 condition|(
@@ -870,27 +856,19 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 */
+comment|/* 		 * Only used for autonegotiation. 		 */
 if|if
 condition|(
-operator|++
-name|sc
+name|IFM_SUBTYPE
+argument_list|(
+name|ife
 operator|->
-name|mii_ticks
+name|ifm_media
+argument_list|)
 operator|!=
-literal|5
+name|IFM_AUTO
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|sc
-operator|->
-name|mii_ticks
-operator|=
-literal|0
-expr_stmt|;
+break|break;
 comment|/* 		 * The RealTek PHY's autonegotiation doesn't need to be 		 * kicked; it continues in the background. 		 */
 break|break;
 block|}
@@ -901,37 +879,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Callback if something changed. */
-if|if
-condition|(
-name|sc
-operator|->
-name|mii_active
-operator|!=
-name|mii
-operator|->
-name|mii_media_active
-operator|||
-name|cmd
-operator|==
-name|MII_MEDIACHG
-condition|)
-block|{
-name|MIIBUS_STATCHG
+name|mii_phy_update
 argument_list|(
 name|sc
-operator|->
-name|mii_dev
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|mii_active
-operator|=
-name|mii
-operator|->
-name|mii_media_active
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -941,6 +895,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rlphy_reset
 parameter_list|(

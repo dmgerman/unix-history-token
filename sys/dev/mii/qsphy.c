@@ -258,6 +258,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|qsphy_service
 name|__P
@@ -278,6 +279,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|qsphy_reset
 name|__P
@@ -292,6 +294,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|qsphy_status
 name|__P
@@ -612,6 +615,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|qsphy_service
 parameter_list|(
@@ -829,23 +833,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Only used for autonegotiation. 		 */
-if|if
-condition|(
-name|IFM_SUBTYPE
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|IFM_AUTO
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 		 * Is the interface even up? 		 */
 if|if
 condition|(
@@ -866,7 +853,20 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Check to see if we have link.  If we do, we don't 		 * need to restart the autonegotiation process.  Read 		 * the BMSR twice in case it's latched. 		 */
+comment|/* 		 * Only used for autonegotiation. 		 */
+if|if
+condition|(
+name|IFM_SUBTYPE
+argument_list|(
+name|ife
+operator|->
+name|ifm_media
+argument_list|)
+operator|!=
+name|IFM_AUTO
+condition|)
+break|break;
+comment|/* 		 * check for link. 		 * Read the status register twice; BMSR_LINK is latch-low. 		 */
 name|reg
 operator|=
 name|PHY_READ
@@ -889,11 +889,7 @@ name|reg
 operator|&
 name|BMSR_LINK
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 */
 if|if
 condition|(
@@ -915,7 +911,7 @@ name|mii_ticks
 operator|=
 literal|0
 expr_stmt|;
-name|mii_phy_reset
+name|qsphy_reset
 argument_list|(
 name|sc
 argument_list|)
@@ -945,37 +941,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Callback if something changed. */
-if|if
-condition|(
-name|sc
-operator|->
-name|mii_active
-operator|!=
-name|mii
-operator|->
-name|mii_media_active
-operator|||
-name|cmd
-operator|==
-name|MII_MEDIACHG
-condition|)
-block|{
-name|MIIBUS_STATCHG
+name|mii_phy_update
 argument_list|(
 name|sc
-operator|->
-name|mii_dev
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|mii_active
-operator|=
-name|mii
-operator|->
-name|mii_media_active
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -985,6 +957,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|qsphy_status
 parameter_list|(
@@ -1233,6 +1206,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|qsphy_reset
 parameter_list|(
