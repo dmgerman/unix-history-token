@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -244,6 +244,23 @@ include|#
 directive|include
 file|<hp300/dev/if_lereg.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USELEDS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<hp300/hp300/led.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -2637,6 +2654,26 @@ name|gotone
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USELEDS
+if|if
+condition|(
+name|inledcontrol
+operator|==
+literal|0
+condition|)
+name|ledcontrol
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|LED_LANXMT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 do|do
 block|{
 if|if
@@ -2942,6 +2979,26 @@ index|[
 name|bix
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USELEDS
+if|if
+condition|(
+name|inledcontrol
+operator|==
+literal|0
+condition|)
+name|ledcontrol
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|LED_LANRCV
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Out of sync with hardware, should never happen? 	 */
 if|if
 condition|(
