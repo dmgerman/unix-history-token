@@ -704,8 +704,11 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"0.0.0.0.%d.%d"
@@ -1271,8 +1274,11 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|serveuaddr
+argument_list|,
+sizeof|sizeof
 name|serveuaddr
 argument_list|,
 literal|"%d.%d.%d.%d.%d.%d"
