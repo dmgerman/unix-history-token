@@ -62,6 +62,9 @@ name|struct
 name|stte
 name|pm_stte
 decl_stmt|;
+name|vm_object_t
+name|pm_object
+decl_stmt|;
 name|u_int
 name|pm_active
 decl_stmt|;
@@ -70,6 +73,9 @@ name|pm_context
 decl_stmt|;
 name|u_int
 name|pm_count
+decl_stmt|;
+name|u_int
+name|pm_pages
 decl_stmt|;
 name|struct
 name|pmap_statistics
