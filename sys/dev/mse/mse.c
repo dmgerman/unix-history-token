@@ -1289,11 +1289,11 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-name|ENXIO
+operator|!=
+name|ENOENT
 condition|)
 return|return
-name|ENXIO
+name|error
 return|;
 name|sc
 operator|=

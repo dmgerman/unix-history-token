@@ -2180,8 +2180,8 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Check isapnp ids */
-name|error
-operator|=
+return|return
+operator|(
 name|ISA_PNP_PROBE
 argument_list|(
 name|device_get_parent
@@ -2193,18 +2193,7 @@ name|dev
 argument_list|,
 name|pca_ids
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-name|ENXIO
-condition|)
-return|return
-name|ENXIO
-return|;
-return|return
-literal|0
+operator|)
 return|;
 block|}
 end_function
