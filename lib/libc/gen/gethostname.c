@@ -50,7 +50,7 @@ file|<sys/sysctl.h>
 end_include
 
 begin_function
-name|long
+name|int
 name|gethostname
 parameter_list|(
 name|name
