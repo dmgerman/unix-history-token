@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.4		%G%"
+literal|"@(#)sendmail.h	4.4.1.1		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1311,6 +1311,28 @@ end_define
 
 begin_comment
 comment|/* replacement on RHS for above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCHLOOKUP
+value|'\035'
+end_define
+
+begin_comment
+comment|/* look up and replace a sequence */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCHELOOKUP
+value|'\036'
+end_define
+
+begin_comment
+comment|/* end of the sequence */
 end_comment
 
 begin_comment

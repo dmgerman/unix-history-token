@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.9
+literal|4.9.1.1
 operator|%
 name|G
 operator|%
@@ -2773,6 +2773,14 @@ block|,
 literal|'>'
 block|,
 name|CALLSUBR
+block|,
+literal|'{'
+block|,
+name|MATCHLOOKUP
+block|,
+literal|'}'
+block|,
+name|MATCHELOOKUP
 block|,
 comment|/* and finally the conditional operations */
 literal|'?'
