@@ -659,7 +659,22 @@ name|EADDRNOTAVAIL
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Notify the responsible ARP service 		 */
+comment|/* 		 * Notify the responsible ARP service 		 * 		 * XXX: if there is one.  No idea how this happens, but at 		 * least don't panic on a NULL pointer if it does. 		 */
+if|if
+condition|(
+name|inp
+operator|->
+name|inf_serv
+operator|==
+name|NULL
+condition|)
+block|{
+name|err
+operator|=
+name|ENXIO
+expr_stmt|;
+break|break;
+block|}
 name|err
 operator|=
 call|(
