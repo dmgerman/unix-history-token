@@ -1367,14 +1367,14 @@ begin_define
 define|#
 directive|define
 name|PCIS_INPUTDEV_SCANNER
-value|0x02
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCIS_INPUTDEV_GAMEPORT
-value|0x02
+value|0x04
 end_define
 
 begin_define
