@@ -123,10 +123,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|t
-decl_stmt|,
-modifier|*
-name|ttyname
-argument_list|()
 decl_stmt|;
 name|sflag
 operator|=
