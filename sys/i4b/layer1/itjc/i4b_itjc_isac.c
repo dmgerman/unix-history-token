@@ -9,12 +9,6 @@ directive|include
 file|"itjc.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pci.h"
-end_include
-
 begin_if
 if|#
 directive|if

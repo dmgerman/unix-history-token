@@ -15,23 +15,11 @@ directive|include
 file|"opt_i4b.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pci.h"
-end_include
-
 begin_if
 if|#
 directive|if
 operator|(
 name|NIWIC
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-name|NPCI
 operator|>
 literal|0
 operator|)

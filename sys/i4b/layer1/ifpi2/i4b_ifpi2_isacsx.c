@@ -9,23 +9,11 @@ directive|include
 file|"ifpi2.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pci.h"
-end_include
-
 begin_if
 if|#
 directive|if
 operator|(
 name|NIFPI2
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-name|NPCI
 operator|>
 literal|0
 operator|)

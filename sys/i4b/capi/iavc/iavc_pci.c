@@ -15,12 +15,6 @@ directive|include
 file|"i4bcapi.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pci.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -32,12 +26,6 @@ operator|)
 operator|&&
 operator|(
 name|NI4BCAPI
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-name|NPCI
 operator|>
 literal|0
 operator|)
