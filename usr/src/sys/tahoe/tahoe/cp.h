@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cp.h	1.2	86/12/06	*/
+comment|/*	cp.h	1.3	87/02/16	*/
 end_comment
 
 begin_comment
@@ -216,6 +216,76 @@ end_define
 
 begin_comment
 comment|/* reboot system */
+end_comment
+
+begin_comment
+comment|/*  *	CP specific locations  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPBFLG
+value|0xc0000500
+end_define
+
+begin_comment
+comment|/* System bootflag flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPYFLG
+value|0xc0000504
+end_define
+
+begin_comment
+comment|/* Copy of the Y flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPOPTS
+value|0xc0000508
+end_define
+
+begin_comment
+comment|/* copy of CP options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPRSRV
+value|0xc000050c
+end_define
+
+begin_comment
+comment|/* reserved for CP usage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPBDEV
+value|0xc0000510
+end_define
+
+begin_comment
+comment|/* Bootstrap device, saved on boot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPEDEV
+value|0xc000052f
+end_define
+
+begin_comment
+comment|/* End of device name */
 end_comment
 
 begin_if
