@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * var.c --  *	Variable-handling functions  *  * Interface:  *	Var_Set	  	    Set the value of a variable in the given  *	    	  	    context. The variable is created if it doesn't  *	    	  	    yet exist. The value and variable name need not  *	    	  	    be preserved.  *  *	Var_Append	    Append more characters to an existing variable  *	    	  	    in the given context. The variable needn't  *	    	  	    exist already -- it will be created if it doesn't.  *	    	  	    A space is placed between the old value and the  *	    	  	    new one.  *  *	Var_Exists	    See if a variable exists.  *  *	Var_Value 	    Return the value of a variable in a context or  *	    	  	    NULL if the variable is undefined.  *  *	Var_Subst 	    Substitute named variable, or all variables if  *			    NULL in a string using  *	    	  	    the given context as the top-most one. If the  *	    	  	    third argument is non-zero, Parse_Error is  *	    	  	    called if any variables are undefined.  *  *	Var_Parse 	    Parse a variable expansion from a string and  *	    	  	    return the result and the number of characters  *	    	  	    consumed.  *  *	Var_Delete	    Delete a variable in a context.  *  *	Var_Init  	    Initialize this module.  *  * Debugging:  *	Var_Dump  	    Print out all variables defined in the given  *	    	  	    context.  *  * XXX: There's a lot of duplication in these functions.  */
+comment|/*-  * var.c --  *	Variable-handling functions  *  * Interface:  *	Var_Set		Set the value of a variable in the given  *			context. The variable is created if it doesn't  *			yet exist. The value and variable name need not  *			be preserved.  *  *	Var_Append	Append more characters to an existing variable  *			in the given context. The variable needn't  *			exist already -- it will be created if it doesn't.  *			A space is placed between the old value and the  *			new one.  *  *	Var_Exists	See if a variable exists.  *  *	Var_Value	Return the value of a variable in a context or  *			NULL if the variable is undefined.  *  *	Var_Subst	Substitute named variable, or all variables if  *			NULL in a string using  *			the given context as the top-most one. If the  *			third argument is non-zero, Parse_Error is  *			called if any variables are undefined.  *  *	Var_Parse	Parse a variable expansion from a string and  *			return the result and the number of characters  *			consumed.  *  *	Var_Delete	Delete a variable in a context.  *  *	Var_Init	Initialize this module.  *  * Debugging:  *	Var_Dump	Print out all variables defined in the given  *			context.  *  * XXX: There's a lot of duplication in these functions.  */
 end_comment
 
 begin_include
@@ -189,7 +189,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Internally, variables are contained in four different contexts.  *	1) the environment. They may not be changed. If an environment  *	    variable is appended-to, the result is placed in the global  *	    context.  *	2) the global context. Variables set in the Makefile are located in  *	    the global context. It is the penultimate context searched when  *	    substituting.  *	3) the command-line context. All variables set on the command line  *	   are placed in this context. They are UNALTERABLE once placed here.  *	4) the local context. Each target has associated with it a context  *	   list. On this list are located the structures describing such  *	   local variables as $(@) and $(*)  * The four contexts are searched in the reverse order from which they are  * listed.  */
+comment|/*  * Internally, variables are contained in four different contexts.  *	1) the environment. They may not be changed. If an environment  *	   variable is appended-to, the result is placed in the global  *	   context.  *	2) the global context. Variables set in the Makefile are located in  *	   the global context. It is the penultimate context searched when  *	   substituting.  *	3) the command-line context. All variables set on the command line  *	   are placed in this context. They are UNALTERABLE once placed here.  *	4) the local context. Each target has associated with it a context  *	   list. On this list are located the structures describing such  *	   local variables as $(@) and $(*)  * The four contexts are searched in the reverse order from which they are  * listed.  */
 end_comment
 
 begin_decl_stmt
@@ -1164,7 +1164,7 @@ name|char
 modifier|*
 name|n
 decl_stmt|;
-comment|/*      * We only look for a variable in the given context since anything set      * here will override anything in a lower context, so there's not much      * point in searching them all just to save a bit of memory...      */
+comment|/* 	 * We only look for a variable in the given context since anything 	 * set here will override anything in a lower context, so there's not 	 * much point in searching them all just to save a bit of memory... 	 */
 name|n
 operator|=
 name|VarPossiblyExpand
@@ -1238,7 +1238,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Any variables given on the command line are automatically exported      * to the environment (as per POSIX standard)      */
+comment|/* 	 * Any variables given on the command line are automatically exported 	 * to the environment (as per POSIX standard) 	 */
 if|if
 condition|(
 name|ctxt
@@ -1404,7 +1404,7 @@ operator|&
 name|VAR_FROM_ENV
 condition|)
 block|{
-comment|/* 	     * If the original variable came from the environment, we 	     * have to install it in the global context (we could place 	     * it in the environment, but then we should provide a way to 	     * export other variables...) 	     */
+comment|/* 			 * If the original variable came from the 			 * environment, we have to install it in the global 			 * context (we could place it in the environment, but 			 * then we should provide a way to export other 			 * variables...) 			 */
 name|v
 operator|->
 name|flags
@@ -1796,7 +1796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarSortWords --  *	Sort the words in the string.  *  * Input:  *	str		String whose words should be sorted  *	cmp		A comparison function to control the ordering  *  * Results:  *	A string containing the words sorted  *  * Side Effects:  *      Uses brk_string() so it invalidates any previous call to  *	brk_string().  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarSortWords --  *	Sort the words in the string.  *  * Input:  *	str		String whose words should be sorted  *	cmp		A comparison function to control the ordering  *  * Results:  *	A string containing the words sorted  *  * Side Effects:  *	Uses brk_string() so it invalidates any previous call to  *	brk_string().  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2081,7 +2081,7 @@ name|delim
 parameter_list|)
 define|\
 value|((cp[0] == '\\')&& ((cp[1] == delim) ||  \      (cp[1] == '\\') || (cp[1] == '$') || (pattern&& (cp[1] == '&'))))
-comment|/*      * Skim through until the matching delimiter is found;      * pick up variable substitutions on the way. Also allow      * backslashes to quote the delimiter, $, and \, but don't      * touch other backslashes.      */
+comment|/* 	 * Skim through until the matching delimiter is found; pick up 	 * variable substitutions on the way. Also allow backslashes to quote 	 * the delimiter, $, and \, but don't touch other backslashes. 	 */
 for|for
 control|(
 name|cp
@@ -2167,7 +2167,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* 		     * Unescaped $ at end of pattern => anchor 		     * pattern at end. 		     */
+comment|/* 					 * Unescaped $ at end of pattern => 					 * anchor pattern at end. 					 */
 operator|*
 name|flags
 operator||=
@@ -2202,7 +2202,7 @@ decl_stmt|;
 name|Boolean
 name|freeIt
 decl_stmt|;
-comment|/* 		     * If unescaped dollar sign not before the 		     * delimiter, assume it's a variable 		     * substitution and recurse. 		     */
+comment|/* 					 * If unescaped dollar sign not 					 * before the delimiter, assume it's 					 * a variable substitution and 					 * recurse. 					 */
 name|len
 operator|=
 literal|0
@@ -2277,7 +2277,7 @@ operator|==
 name|OPEN_BRACE
 condition|)
 block|{
-comment|/* 			 * Find the end of this variable reference 			 * and suck it in without further ado. 			 * It will be interperated later. 			 */
+comment|/* 						 * Find the end of this 						 * variable reference and 						 * suck it in without further 						 * ado. It will be 						 * interperated later. 						 */
 name|int
 name|have
 init|=
@@ -4578,7 +4578,7 @@ name|cp
 expr_stmt|;
 break|break;
 block|}
-comment|/*FALLTHRU*/
+comment|/* FALLTHRU */
 case|case
 literal|'T'
 case|:
@@ -4627,7 +4627,7 @@ name|cp
 expr_stmt|;
 break|break;
 block|}
-comment|/*FALLTHRU*/
+comment|/* FALLTHRU */
 case|case
 literal|'U'
 case|:
@@ -4781,7 +4781,7 @@ name|cp
 expr_stmt|;
 break|break;
 block|}
-comment|/*FALLTHRU*/
+comment|/* FALLTHRU */
 case|case
 literal|'E'
 case|:
@@ -4830,7 +4830,7 @@ name|cp
 expr_stmt|;
 break|break;
 block|}
-comment|/*FALLTHRU*/
+comment|/* FALLTHRU */
 case|case
 literal|'R'
 case|:
@@ -4879,7 +4879,7 @@ name|cp
 expr_stmt|;
 break|break;
 block|}
-comment|/*FALLTHRU*/
+comment|/* FALLTHRU */
 ifdef|#
 directive|ifdef
 name|SUNSHCMD
@@ -4971,7 +4971,7 @@ name|cp
 expr_stmt|;
 break|break;
 block|}
-comment|/*FALLTHRU*/
+comment|/* FALLTHRU */
 endif|#
 directive|endif
 default|default:
@@ -4979,7 +4979,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SYSVVARSUB
-comment|/* 		     * This can either be a bogus modifier or a System-V 		     * substitution command. 		     */
+comment|/* 			 * This can either be a bogus modifier or a 			 * System-V substitution command. 			 */
 name|VarPattern
 name|pattern
 decl_stmt|;
@@ -4999,7 +4999,7 @@ name|eqFound
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 		     * First we make a pass through the string trying 		     * to verify it is a SYSV-make-style translation: 		     * it must be:<string1>=<string2>) 		     */
+comment|/* 			 * First we make a pass through the string 			 * trying to verify it is a SYSV-make-style 			 * translation: it must be: 			 *<string1>=<string2>) 			 */
 name|cp
 operator|=
 name|tstr
@@ -5075,7 +5075,7 @@ block|{
 name|int
 name|delim
 decl_stmt|;
-comment|/* 			 * Now we break this sucker into the lhs and 			 * rhs. We must null terminate them of course. 			 */
+comment|/* 				 * Now we break this sucker into the 				 * lhs and rhs. We must null 				 * terminate them of course. 				 */
 name|cp
 operator|=
 name|tstr
@@ -5117,7 +5117,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* was: goto cleanup */
 operator|*
 name|lengthPtr
 operator|=
@@ -5164,9 +5163,6 @@ name|delim
 operator|=
 name|endc
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|pattern
 operator|.
 name|rhs
@@ -5190,12 +5186,16 @@ argument_list|,
 operator|&
 name|pattern
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pattern
+operator|.
+name|rhs
 operator|==
 name|NULL
 condition|)
 block|{
-comment|/* was: goto cleanup */
 operator|*
 name|lengthPtr
 operator|=
@@ -5238,7 +5238,7 @@ name|var_Error
 operator|)
 return|;
 block|}
-comment|/* 			 * SYSV modifications happen through the whole 			 * string. Note the pattern is anchored at the end. 			 */
+comment|/* 				 * SYSV modifications happen through 				 * the whole string. Note the pattern 				 * is anchored at the end. 				 */
 name|termc
 operator|=
 operator|*
@@ -5416,7 +5416,7 @@ operator|++
 expr_stmt|;
 block|}
 else|else
-block|{ 		    }
+block|{ 			}
 name|tstr
 operator|=
 name|cp
@@ -5511,7 +5511,7 @@ operator|&
 name|VAR_JUNK
 condition|)
 block|{
-comment|/* 		 * Perform any free'ing needed and set *freePtr to 		 * FALSE so the caller doesn't try to free a static 		 * pointer. 		 */
+comment|/* 		 * Perform any free'ing needed and set *freePtr to FALSE so 		 * the caller doesn't try to free a static pointer. 		 */
 if|if
 condition|(
 operator|*
@@ -7421,7 +7421,7 @@ modifier|*
 name|buf
 decl_stmt|;
 comment|/* Buffer for forming things */
-comment|/*      * Set TRUE if an error has already been reported to prevent a      * plethora of messages when recursing.      * XXXHB this comment sounds wrong.      */
+comment|/* 	 * Set TRUE if an error has already been reported to prevent a 	 * plethora of messages when recursing. XXXHB this comment sounds 	 * wrong. 	 */
 name|errorReported
 operator|=
 name|FALSE
@@ -7464,7 +7464,7 @@ literal|'$'
 operator|)
 condition|)
 block|{
-comment|/* 	     * A dollar sign may be escaped either with another dollar sign. 	     * In such a case, we skip over the escape character and store the 	     * dollar sign into the buffer directly. 	     */
+comment|/* 			 * A dollar sign may be escaped either with another 			 * dollar sign. In such a case, we skip over the 			 * escape character and store the dollar sign into 			 * the buffer directly. 			 */
 name|Buf_AddByte
 argument_list|(
 name|buf
@@ -7507,7 +7507,7 @@ name|Boolean
 name|doFree
 decl_stmt|;
 comment|/* Set true if val should be freed */
-comment|/* 	     * Variable invocation. 	     */
+comment|/* 			 * Variable invocation. 			 */
 if|if
 condition|(
 name|var
@@ -7553,7 +7553,7 @@ name|str
 operator|+
 literal|2
 decl_stmt|;
-comment|/* 			 * Scan up to the end of the variable name. 			 */
+comment|/* 						 * Scan up to the end of the 						 * variable name. 						 */
 while|while
 condition|(
 operator|*
@@ -7586,7 +7586,7 @@ operator|++
 name|p
 expr_stmt|;
 block|}
-comment|/* 			 * A variable inside the variable. We cannot expand 			 * the external variable yet, so we try again with 			 * the nested one 			 */
+comment|/* 						 * A variable inside the 						 * variable. We cannot expand 						 * the external variable yet, 						 * so we try again with the 						 * nested one 						 */
 if|if
 condition|(
 operator|*
@@ -7650,7 +7650,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			     * Not the variable we want to expand, scan 			     * until the next variable 			     */
+comment|/* 							 * Not the variable 							 * we want to expand, 							 * scan until the 							 * next variable 							 */
 while|while
 condition|(
 operator|*
@@ -7687,7 +7687,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * Single letter variable name 			 */
+comment|/* 						 * Single letter variable 						 * name 						 */
 if|if
 condition|(
 name|var
@@ -7769,7 +7769,7 @@ operator|&
 name|doFree
 argument_list|)
 expr_stmt|;
-comment|/* 	     * When we come down here, val should either point to the 	     * value of this variable, suitably modified, or be NULL. 	     * Length should be the total length of the potential 	     * variable invocation (from $ to end character...) 	     */
+comment|/* 			 * When we come down here, val should either point to 			 * the value of this variable, suitably modified, or 			 * be NULL. Length should be the total length of the 			 * potential variable invocation (from $ to end 			 * character...) 			 */
 if|if
 condition|(
 name|val
@@ -7781,7 +7781,7 @@ operator|==
 name|varNoError
 condition|)
 block|{
-comment|/* 		 * If performing old-time variable substitution, skip over 		 * the variable and continue with the substitution. Otherwise, 		 * store the dollar sign and advance str so we continue with 		 * the string... 		 */
+comment|/* 				 * If performing old-time variable 				 * substitution, skip over the variable and 				 * continue with the substitution. Otherwise, 				 * store the dollar sign and advance str so 				 * we continue with the string... 				 */
 if|if
 condition|(
 name|oldVars
@@ -7798,7 +7798,7 @@ condition|(
 name|undefErr
 condition|)
 block|{
-comment|/* 		     * If variable is undefined, complain and skip the 		     * variable. The complaint will stop us from doing anything 		     * when the file is parsed. 		     */
+comment|/* 					 * If variable is undefined, complain 					 * and skip the variable. The 					 * complaint will stop us from doing 					 * anything when the file is parsed. 					 */
 if|if
 condition|(
 operator|!
@@ -7847,12 +7847,12 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * We've now got a variable structure to store in. But first, 		 * advance the string pointer. 		 */
+comment|/* 				 * We've now got a variable structure to 				 * store in. But first, advance the string 				 * pointer. 				 */
 name|str
 operator|+=
 name|length
 expr_stmt|;
-comment|/* 		 * Copy all the characters from the variable value straight 		 * into the new string. 		 */
+comment|/* 				 * Copy all the characters from the variable 				 * value straight into the new string. 				 */
 name|Buf_Append
 argument_list|(
 name|buf
@@ -7875,7 +7875,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * Skip as many characters as possible -- either to the end of 	     * the string or to the next dollar sign (variable invocation). 	     */
+comment|/* 			 * Skip as many characters as possible -- either to 			 * the end of the string or to the next dollar sign 			 * (variable invocation). 			 */
 specifier|const
 name|char
 modifier|*
