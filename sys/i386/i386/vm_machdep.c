@@ -1292,7 +1292,19 @@ block|{
 comment|/* 		 * Do the vm_fault if needed; do the copy-on-write thing 		 * when reading stuff off device into memory. 		 */
 name|vm_fault_quick
 argument_list|(
+operator|(
 name|addr
+operator|>=
+name|bp
+operator|->
+name|b_data
+operator|)
+condition|?
+name|addr
+else|:
+name|bp
+operator|->
+name|b_data
 argument_list|,
 operator|(
 name|bp
