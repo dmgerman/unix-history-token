@@ -571,6 +571,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"%s: WARNING!! Password database mangled, recreating it from scratch\n"
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 endif|#

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: local_passwd.c,v 1.4 1994/01/11 19:01:13 nate Exp $"
+literal|"$Id: local_passwd.c,v 1.5 1994/05/14 19:40:57 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"%s: WARNING!! Password database mangled, recreating it from scratch\n"
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 endif|#
