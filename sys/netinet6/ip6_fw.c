@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip6_fw.c,v 1.7 1999/08/31 12:25:57 shin Exp $  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: ip6_fw.c,v 1.15 2000/07/02 14:17:37 itojun Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  */
 end_comment
 
 begin_comment
@@ -12,6 +20,52 @@ include|#
 directive|include
 file|"opt_ip6fw.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IP6DIVERT
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"NOT SUPPORTED IPV6 DIVERT"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IP6FW_DIVERT_RESTART
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"NOT SUPPORTED IPV6 DIVERT"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -100,7 +154,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
+file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ip6_var.h>
 end_include
 
 begin_include
@@ -112,13 +172,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6.h>
+file|<netinet/icmp6.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet6/icmp6.h>
+file|<netinet/in_pcb.h>
 end_include
 
 begin_include

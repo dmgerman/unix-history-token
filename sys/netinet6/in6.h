@@ -1,11 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: in6.h,v 1.48 2000/06/26 15:55:32 itojun Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in.h	8.3 (Berkeley) 1/3/94  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in.h	8.3 (Berkeley) 1/3/94  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__KAME_NETINET_IN_H_INCLUDED_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"do not include netinet6/in6.h directly, include netinet/in.h"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -19,42 +44,11 @@ directive|define
 name|_NETINET6_IN6_H_
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__KAME_NETINET_IN_H_INCLUDED_
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"do not include netinet6/in6.h directly, include netinet/in.h"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_XOPEN_SOURCE
-argument_list|)
-end_if
+end_ifndef
 
 begin_include
 include|#
@@ -81,11 +75,11 @@ begin_define
 define|#
 directive|define
 name|__KAME_VERSION
-value|"SNAP 19991101"
+value|"20000701/FreeBSD-current"
 end_define
 
 begin_comment
-comment|/*  * Local port number conventions:  *  * Ports< IPPORT_RESERVED are reserved for privileged processes (e.g. root),  * unless a kernel is compiled with IPNOPRIVPORTS defined.  *  * When a user does a bind(2) or connect(2) with a port number of zero,  * a non-conflicting local port address is chosen.  *  * The default range is IPPORT_ANONMIX to IPPORT_ANONMAX, although  * that is settable by sysctl(3); net.inet.ip.anonportmin and  * net.inet.ip.anonportmax respectively.  *  * A user may set the IPPROTO_IP option IP_PORTRANGE to change this  * default assignment range.  *  * The value IP_PORTRANGE_DEFAULT causes the default behavior.  *  * The value IP_PORTRANGE_HIGH is the same as IP_PORTRANGE_DEFAULT,  * and exists only for FreeBSD compatibility purposes.  *  * The value IP_PORTRANGE_LOW changes the range to the "low" are  * that is (by convention) restricted to privileged processes.  * This convention is based on "vouchsafe" principles only.  * It is only secure if you trust the remote host to restrict these ports.  * The range is IPPORT_RESERVEDMIN to IPPORT_RESERVEDMAX.  */
+comment|/*  * Local port number conventions:  *  * Ports< IPPORT_RESERVED are reserved for privileged processes (e.g. root),  * unless a kernel is compiled with IPNOPRIVPORTS defined.  *  * When a user does a bind(2) or connect(2) with a port number of zero,  * a non-conflicting local port address is chosen.  *  * The default range is IPPORT_ANONMIN to IPPORT_ANONMAX, although  * that is settable by sysctl(3); net.inet.ip.anonportmin and  * net.inet.ip.anonportmax respectively.  *  * A user may set the IPPROTO_IP option IP_PORTRANGE to change this  * default assignment range.  *  * The value IP_PORTRANGE_DEFAULT causes the default behavior.  *  * The value IP_PORTRANGE_HIGH is the same as IP_PORTRANGE_DEFAULT,  * and exists only for FreeBSD compatibility purposes.  *  * The value IP_PORTRANGE_LOW changes the range to the "low" are  * that is (by convention) restricted to privileged processes.  * This convention is based on "vouchsafe" principles only.  * It is only secure if you trust the remote host to restrict these ports.  * The range is IPPORT_RESERVEDMIN to IPPORT_RESERVEDMAX.  */
 end_comment
 
 begin_define
@@ -213,15 +207,11 @@ begin_comment
 comment|/*  * Socket address for IPv6  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_XOPEN_SOURCE
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
@@ -238,11 +228,11 @@ begin_struct
 struct|struct
 name|sockaddr_in6
 block|{
-name|u_char
+name|u_int8_t
 name|sin6_len
 decl_stmt|;
 comment|/* length of this struct(sa_family_t)*/
-name|u_char
+name|u_int8_t
 name|sin6_family
 decl_stmt|;
 comment|/* AF_INET6 (sa_family_t) */
@@ -642,7 +632,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|(bcmp((a), (b), sizeof(struct in6_addr)) == 0)
+value|(bcmp(&(a)->s6_addr[0],&(b)->s6_addr[0], sizeof(struct in6_addr)) == 0)
 end_define
 
 begin_else
@@ -660,7 +650,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|(memcmp((a), (b), sizeof(struct in6_addr)) == 0)
+value|(memcmp(&(a)->s6_addr[0],&(b)->s6_addr[0], sizeof(struct in6_addr)) == 0)
 end_define
 
 begin_endif
@@ -1078,15 +1068,11 @@ begin_comment
 comment|/*  * IP6 route structure  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_XOPEN_SOURCE
-argument_list|)
-end_if
+end_ifndef
 
 begin_struct
 struct|struct
@@ -1114,6 +1100,20 @@ begin_comment
 comment|/*  * Options for use with [gs]etsockopt at the IPV6 level.  * First word of comment is data type; bool is stored in int.  */
 end_comment
 
+begin_comment
+comment|/* no hdrincl */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* the followings are relic in IPv4 and hence are disabled */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1123,32 +1123,6 @@ end_define
 
 begin_comment
 comment|/* buf/ip6_opts; set/get IP6 options */
-end_comment
-
-begin_comment
-comment|/* no hdrincl */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_SOCKOPT_RESERVED1
-value|3
-end_define
-
-begin_comment
-comment|/* reserved for future use */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_UNICAST_HOPS
-value|4
-end_define
-
-begin_comment
-comment|/* int; IP6 hops */
 end_comment
 
 begin_define
@@ -1193,6 +1167,33 @@ end_define
 
 begin_comment
 comment|/* ip6_opts; set/get IP6 options */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IPV6_SOCKOPT_RESERVED1
+value|3
+end_define
+
+begin_comment
+comment|/* reserved for future use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_UNICAST_HOPS
+value|4
+end_define
+
+begin_comment
+comment|/* int; IP6 hops */
 end_comment
 
 begin_define
@@ -1527,7 +1528,8 @@ name|struct
 name|in6_addr
 name|ipv6mr_multiaddr
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|ipv6mr_interface
 decl_stmt|;
 block|}
@@ -1547,7 +1549,8 @@ name|in6_addr
 name|ipi6_addr
 decl_stmt|;
 comment|/* src/dst IPv6 address */
-name|u_int
+name|unsigned
+name|int
 name|ipi6_ifindex
 decl_stmt|;
 comment|/* send/recv interface index */
@@ -1592,15 +1595,11 @@ begin_comment
 comment|/* "low" - vouchsafe security */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_XOPEN_SOURCE
-argument_list|)
-end_if
+end_ifndef
 
 begin_comment
 comment|/*  * Definitions for inet6 sysctl operations.  *  * Third level is protocol number.  * Fourth level is desired variable within that protocol.  */
@@ -1941,24 +1940,6 @@ end_struct_decl
 
 begin_decl_stmt
 name|int
-name|in6_canforward
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|in6_addr
-operator|*
-operator|,
-expr|struct
-name|in6_addr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|in6_cksum
 name|__P
 argument_list|(
@@ -1969,9 +1950,9 @@ operator|*
 operator|,
 name|u_int8_t
 operator|,
-name|int
+name|u_int32_t
 operator|,
-name|int
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;

@@ -884,6 +884,18 @@ operator|+
 name|iphlen
 operator|)
 expr_stmt|;
+comment|/* destination port of 0 is illegal, based on RFC768. */
+if|if
+condition|(
+name|uh
+operator|->
+name|uh_dport
+operator|==
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
 comment|/* 	 * Make mbuf data length reflect UDP length. 	 * If not enough data to reflect UDP length, drop. 	 */
 name|len
 operator|=
@@ -1854,14 +1866,11 @@ return|return;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -3539,20 +3548,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
+name|ipsec_setsocket
+argument_list|(
 name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|)
+argument_list|,
 name|inp
 operator|->
 name|inp_socket
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -3585,8 +3588,6 @@ operator||
 name|SO_BROADCAST
 operator|)
 operator|)
-operator||
-name|IP_SOCKINMRCVIF
 argument_list|,
 name|inp
 operator|->

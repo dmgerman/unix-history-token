@@ -1,18 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: esp_core.c,v 1.15 2000/06/14 10:41:18 itojun Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"opt_inet6.h"
+file|"opt_inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
+file|"opt_inet6.h"
 end_include
 
 begin_include
@@ -66,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -96,7 +110,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6.h>
+file|<netinet/ip6.h>
 end_include
 
 begin_include
@@ -108,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/icmp6.h>
+file|<netinet/icmp6.h>
 end_include
 
 begin_endif
@@ -121,6 +135,23 @@ include|#
 directive|include
 file|<netinet6/ipsec.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ipsec6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -137,12 +168,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet6/ipsec6.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/ah6.h>
 end_include
 
@@ -150,12 +175,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC_ESP
-end_ifdef
 
 begin_include
 include|#
@@ -180,21 +199,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<net/pfkeyv2.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netkey/key_var.h>
 end_include
 
 begin_include
@@ -774,6 +782,8 @@ literal|64
 block|,
 literal|64
 block|,
+literal|"des-cbc"
+block|,
 name|esp_descbc_ivlen
 block|,
 name|esp_descbc_decrypt
@@ -789,6 +799,8 @@ block|,
 literal|192
 block|,
 literal|192
+block|,
+literal|"3des-cbc"
 block|,
 name|esp_3descbc_ivlen
 block|,
@@ -806,6 +818,8 @@ literal|0
 block|,
 literal|2048
 block|,
+literal|"null"
+block|,
 name|esp_null_ivlen
 block|,
 name|esp_null_decrypt
@@ -821,6 +835,8 @@ block|,
 literal|40
 block|,
 literal|448
+block|,
+literal|"blowfish-cbc"
 block|,
 name|esp_blowfish_cbc_ivlen
 block|,
@@ -838,6 +854,8 @@ literal|40
 block|,
 literal|128
 block|,
+literal|"cast128-cbc"
+block|,
 name|esp_cast128cbc_ivlen
 block|,
 name|esp_cast128cbc_decrypt
@@ -853,6 +871,8 @@ block|,
 literal|40
 block|,
 literal|2040
+block|,
+literal|"rc5-cbc"
 block|,
 name|esp_rc5cbc_ivlen
 block|,
@@ -1041,9 +1061,14 @@ name|SADB_X_EXT_IV4B
 operator|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"esp_cbc_mature: algorithm incompatible with 4 octets IV length\n"
+operator|(
+name|LOG_ERR
+operator|,
+literal|"esp_cbc_mature: "
+literal|"algorithm incompatible with 4 octets IV length\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1058,9 +1083,13 @@ operator|->
 name|key_enc
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_mature: no key is given.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1102,16 +1131,20 @@ name|key_enc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_mature: invalid key length %d.\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1136,9 +1169,13 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_mature: weak key was passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1282,6 +1319,9 @@ decl_stmt|;
 name|int
 name|derived
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|derived
 operator|=
 literal|0
@@ -1296,15 +1336,19 @@ operator|->
 name|ivlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_decrypt: bad ivlen %d/%d\n"
-argument_list|,
+operator|,
 name|ivlen
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1336,16 +1380,20 @@ name|key_enc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_decrypt: bad keylen %d\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1577,11 +1625,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_decrypt: unsupported ivlen %d\n"
-argument_list|,
+operator|,
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1623,10 +1675,14 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_decrypt: "
 literal|"payload length must be multiple of 8\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1665,17 +1721,23 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_decrypt: key error %d\n"
-argument_list|,
+operator|,
 name|deserr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
 name|EINVAL
 return|;
 block|}
+name|error
+operator|=
 name|des_cbc_encrypt
 argument_list|(
 name|m
@@ -1724,7 +1786,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
@@ -1796,6 +1858,9 @@ decl_stmt|;
 name|int
 name|derived
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|derived
 operator|=
 literal|0
@@ -1808,10 +1873,14 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_encrypt: "
 literal|"payload length must be multiple of 8\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1827,15 +1896,19 @@ operator|!=
 name|ivlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_encrypt: bad ivlen %d/%d\n"
-argument_list|,
+operator|,
 name|ivlen
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1867,16 +1940,20 @@ name|key_enc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_encrypt: bad keylen %d\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2222,11 +2299,15 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_encrypt: unsupported ivlen %d\n"
-argument_list|,
+operator|,
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2265,17 +2346,23 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_descbc_encrypt: key error %d\n"
-argument_list|,
+operator|,
 name|deserr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
 name|EINVAL
 return|;
 block|}
+name|error
+operator|=
 name|des_cbc_encrypt
 argument_list|(
 name|m
@@ -2329,7 +2416,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
@@ -2364,9 +2451,13 @@ operator|&
 name|SADB_X_EXT_OLD
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cbc_mature: algorithm incompatible with esp-old\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2382,9 +2473,13 @@ operator|&
 name|SADB_X_EXT_DERIV
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cbc_mature: algorithm incompatible with derived\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2399,9 +2494,13 @@ operator|->
 name|key_enc
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cbc_mature: no key is given.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2441,15 +2540,19 @@ operator|<
 name|keylen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cbc_mature: invalid key length %d.\n"
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|key_enc
 operator|->
 name|sadb_key_bits
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2520,9 +2623,13 @@ operator|)
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cbc_mature: weak key was passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2612,6 +2719,9 @@ comment|/* made static to avoid kernel stack overflow */
 name|int
 name|s
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -2622,15 +2732,19 @@ operator|!=
 name|ivlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_blowfish_cbc_decrypt: bad ivlen %d/%d\n"
-argument_list|,
+operator|,
 name|ivlen
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2662,25 +2776,29 @@ name|key_enc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_blowfish_cbc_decrypt: unsupported key length %d: "
 literal|"need %d to %d bits\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymin
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymax
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2696,9 +2814,13 @@ operator|&
 name|SADB_X_EXT_OLD
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_blowfish_cbc_decrypt: unsupported ESP version\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2712,12 +2834,15 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"esp_blowfish_cbc_decrypt: unsupported ivlen %d "
-literal|"(this should never happen)\n"
-argument_list|,
+operator|(
+name|LOG_ERR
+operator|,
+literal|"esp_blowfish_cbc_decrypt: unsupported ivlen %d\n"
+operator|,
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2804,22 +2929,39 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_blowfish_cbc_decrypt: "
 literal|"payload length must be multiple of 8\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
 name|EINVAL
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|s
+operator|=
+name|splsoftnet
+argument_list|()
+expr_stmt|;
+comment|/* XXX correct? */
+else|#
+directive|else
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
 comment|/* XXX correct? */
+endif|#
+directive|endif
 name|BF_set_key
 argument_list|(
 operator|&
@@ -2842,6 +2984,8 @@ name|key_enc
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|BF_cbc_encrypt_m
 argument_list|(
 name|m
@@ -2891,7 +3035,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
@@ -2958,6 +3102,9 @@ comment|/* made static to avoid kernel stack overflow */
 name|int
 name|s
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -2966,10 +3113,14 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_blowfish_cbc_encrypt: "
 literal|"payload length must be multiple of 8\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2985,15 +3136,19 @@ operator|!=
 name|ivlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_blowfish_cbc_encrypt: bad ivlen %d/%d\n"
-argument_list|,
+operator|,
 name|ivlen
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3025,25 +3180,29 @@ name|key_enc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_blowfish_cbc_encrypt: unsupported key length %d: "
 literal|"need %d to %d bits\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymin
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymax
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3059,9 +3218,13 @@ operator|&
 name|SADB_X_EXT_OLD
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_blowfish_cbc_encrypt: unsupported ESP version\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3075,12 +3238,15 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"esp_blowfish_cbc_encrypt: unsupported ivlen %d "
-literal|"(this should never happen)\n"
-argument_list|,
+operator|(
+name|LOG_ERR
+operator|,
+literal|"esp_blowfish_cbc_encrypt: unsupported ivlen %d\n"
+operator|,
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3162,12 +3328,25 @@ argument_list|,
 name|ivlen
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|s
+operator|=
+name|splsoftnet
+argument_list|()
+expr_stmt|;
+comment|/* XXX correct? */
+else|#
+directive|else
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
 comment|/* XXX correct? */
+endif|#
+directive|endif
 name|BF_set_key
 argument_list|(
 operator|&
@@ -3190,6 +3369,8 @@ name|key_enc
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|BF_cbc_encrypt_m
 argument_list|(
 name|m
@@ -3229,7 +3410,7 @@ name|sav
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
@@ -3324,6 +3505,9 @@ decl_stmt|;
 name|size_t
 name|plen
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -3334,15 +3518,19 @@ operator|->
 name|ivlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cast128cbc_decrypt: bad ivlen %d/%d\n"
-argument_list|,
+operator|,
 name|ivlen
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3374,25 +3562,29 @@ operator|->
 name|keymax
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cast128cbc_decrypt: unsupported key length %d: "
 literal|"need %d to %d bits\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymin
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymax
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3408,9 +3600,13 @@ operator|&
 name|SADB_X_EXT_OLD
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cast128cbc_decrypt: unsupported ESP version\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3424,12 +3620,15 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"esp_cast128cbc_decrypt: unsupported ivlen %d "
-literal|"(this should never happen)\n"
-argument_list|,
+operator|(
+name|LOG_ERR
+operator|,
+literal|"esp_cast128cbc_decrypt: unsupported ivlen %d\n"
+operator|,
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3507,10 +3706,14 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cast128cbc_decrypt: "
 literal|"payload length must be multiple of 8\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3567,6 +3770,8 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|cast128_cbc_process
 argument_list|(
 name|m
@@ -3614,7 +3819,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
@@ -3671,6 +3876,9 @@ name|u_int8_t
 modifier|*
 name|iv
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -3679,10 +3887,14 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cast128cbc_encrypt: "
 literal|"payload length must be multiple of 8\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3698,15 +3910,19 @@ operator|!=
 name|ivlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cast128cbc_encrypt: bad ivlen %d/%d\n"
-argument_list|,
+operator|,
 name|ivlen
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3738,25 +3954,29 @@ operator|->
 name|keymax
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cast128cbc_encrypt: unsupported key length %d: "
 literal|"needs %d to %d bits\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymin
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymax
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3772,9 +3992,13 @@ operator|&
 name|SADB_X_EXT_OLD
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_cast128cbc_encrypt: unsupported ESP version\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3788,12 +4012,15 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"esp_cast128cbc_encrypt: unsupported ivlen %d "
-literal|"(this should never happen)\n"
-argument_list|,
+operator|(
+name|LOG_ERR
+operator|,
+literal|"esp_cast128cbc_encrypt: unsupported ivlen %d\n"
+operator|,
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3919,6 +4146,8 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|cast128_cbc_process
 argument_list|(
 name|m
@@ -3971,7 +4200,7 @@ name|sav
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
@@ -4061,15 +4290,19 @@ operator|->
 name|ivlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_3descbc_decrypt: bad ivlen %d/%d\n"
-argument_list|,
+operator|,
 name|ivlen
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4101,16 +4334,20 @@ name|key_enc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_3descbc_decrypt: bad keylen %d\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4126,9 +4363,13 @@ operator|&
 name|SADB_X_EXT_OLD
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_3descbc_decrypt: unsupported ESP version\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4142,12 +4383,15 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"esp_3descbc_decrypt: unsupported ivlen %d "
-literal|"(this should never happen)\n"
-argument_list|,
+operator|(
+name|LOG_ERR
+operator|,
+literal|"esp_3descbc_decrypt: unsupported ivlen %d\n"
+operator|,
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4234,10 +4478,14 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_3descbc_decrypt: "
 literal|"payload length must be multiple of 8\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4368,24 +4616,28 @@ literal|0
 operator|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_3descbc_decrypt: key error %d/%d/%d\n"
-argument_list|,
+operator|,
 name|deserr
 index|[
 literal|0
 index|]
-argument_list|,
+operator|,
 name|deserr
 index|[
 literal|1
 index|]
-argument_list|,
+operator|,
 name|deserr
 index|[
 literal|2
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4509,10 +4761,14 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_3descbc_encrypt: "
 literal|"payload length must be multiple of 8\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4528,15 +4784,19 @@ operator|!=
 name|ivlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_3descbc_encrypt: bad ivlen %d/%d\n"
-argument_list|,
+operator|,
 name|ivlen
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4568,16 +4828,20 @@ name|key_enc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_3descbc_encrypt: bad keylen %d\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4593,9 +4857,13 @@ operator|&
 name|SADB_X_EXT_OLD
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_3descbc_encrypt: unsupported ESP version\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4609,12 +4877,15 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"esp_3descbc_encrypt: unsupported ivlen %d "
-literal|"(this should never happen)\n"
-argument_list|,
+operator|(
+name|LOG_ERR
+operator|,
+literal|"esp_3descbc_encrypt: unsupported ivlen %d\n"
+operator|,
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4820,24 +5091,28 @@ literal|0
 operator|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_3descbc_encrypt: key error %d/%d/%d\n"
-argument_list|,
+operator|,
 name|deserr
 index|[
 literal|0
 index|]
-argument_list|,
+operator|,
 name|deserr
 index|[
 literal|1
 index|]
-argument_list|,
+operator|,
 name|deserr
 index|[
 literal|2
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4962,6 +5237,9 @@ decl_stmt|;
 name|size_t
 name|plen
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -4972,15 +5250,19 @@ operator|!=
 name|ivlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_rc5cbc_decrypt: bad ivlen %d/%d\n"
-argument_list|,
+operator|,
 name|ivlen
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5012,17 +5294,21 @@ literal|2040
 operator|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_rc5cbc_decrypt: unsupported key length %d: "
 literal|"need 40 to 2040 bit\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5038,9 +5324,13 @@ operator|&
 name|SADB_X_EXT_OLD
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_rc5cbc_decrypt: unsupported ESP version\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5054,12 +5344,15 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"esp_rc5cbc_decrypt: unsupported ivlen %d "
-literal|"(this should never happen)\n"
-argument_list|,
+operator|(
+name|LOG_ERR
+operator|,
+literal|"esp_rc5cbc_decrypt: unsupported ivlen %d\n"
+operator|,
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5137,10 +5430,14 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_rc5cbc_decrypt: "
 literal|"payload length must be multiple of 8\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5178,6 +5475,8 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|rc5_cbc_process
 argument_list|(
 name|m
@@ -5206,7 +5505,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
@@ -5263,6 +5562,9 @@ name|u_int8_t
 modifier|*
 name|iv
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -5271,10 +5573,14 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_rc5cbc_encrypt: "
 literal|"payload length must be multiple of 8\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5290,15 +5596,19 @@ operator|!=
 name|ivlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_rc5cbc_encrypt: bad ivlen %d/%d\n"
-argument_list|,
+operator|,
 name|ivlen
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5330,25 +5640,29 @@ operator|->
 name|keymax
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_rc5cbc_encrypt: unsupported key length %d: "
 literal|"need %d to %d bits\n"
-argument_list|,
+operator|,
 name|_KEYBITS
 argument_list|(
 name|sav
 operator|->
 name|key_enc
 argument_list|)
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymin
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymax
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5364,9 +5678,13 @@ operator|&
 name|SADB_X_EXT_OLD
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_rc5cbc_encrypt: unsupported ESP version\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5380,12 +5698,15 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"esp_rc5cbc_encrypt: unsupported ivlen %d "
-literal|"(this should never happen)\n"
-argument_list|,
+operator|(
+name|LOG_ERR
+operator|,
+literal|"esp_rc5cbc_encrypt: unsupported ivlen %d\n"
+operator|,
 name|ivlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5492,6 +5813,8 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|rc5_cbc_process
 argument_list|(
 name|m
@@ -5525,7 +5848,7 @@ name|sav
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
@@ -5557,12 +5880,37 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
+operator|)
+name|y
+operator|=
+name|time
+operator|.
+name|tv_sec
+operator|&
+literal|0xff
+expr_stmt|;
+else|#
+directive|else
 name|y
 operator|=
 name|time_second
 operator|&
 literal|0xff
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -5776,6 +6124,10 @@ begin_comment
 comment|/*------------------------------------------------------------*/
 end_comment
 
+begin_comment
+comment|/* does not free m0 on error */
+end_comment
+
 begin_function
 name|int
 name|esp_auth
@@ -5839,6 +6191,9 @@ decl_stmt|;
 name|size_t
 name|siz
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* sanity checks */
 if|if
 condition|(
@@ -5851,9 +6206,13 @@ operator|<
 name|skip
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"esp_auth: mbuf length< skip\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5873,9 +6232,13 @@ operator|+
 name|length
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"esp_auth: mbuf length< skip + length\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5890,9 +6253,13 @@ operator|%
 literal|4
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_auth: length is not multiple of 4\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5905,9 +6272,13 @@ operator|!
 name|sav
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"esp_auth: NULL SA passed\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5922,13 +6293,17 @@ operator|->
 name|alg_auth
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"esp_auth: bad ESP auth algorithm passed: %d\n"
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|alg_auth
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5988,14 +6363,18 @@ operator|<
 name|siz
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"esp_auth: AH_MAXSUMSIZE is too small: siz=%lu\n"
-argument_list|,
+operator|,
 operator|(
 name|u_long
 operator|)
 name|siz
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6056,6 +6435,8 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|error
+operator|=
 call|(
 modifier|*
 name|algo
@@ -6069,6 +6450,13 @@ argument_list|,
 name|sav
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+name|error
+return|;
 while|while
 condition|(
 literal|0

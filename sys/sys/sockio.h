@@ -523,6 +523,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCDIFPHYADDR
+value|_IOW('i', 73, struct ifreq)
+end_define
+
+begin_comment
+comment|/* delete gif addrs */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCSIFGENERIC
 value|_IOW('i', 57, struct ifreq)
 end_define

@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: in6_prefix.c,v 1.30 2000/06/12 14:53:17 jinmei Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -82,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6.h>
+file|<netinet/ip6.h>
 end_include
 
 begin_include
@@ -795,7 +803,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"in6_prefix.c: search_matched_prefix: addr %s"
-literal|"has no pointer to prefix %s"
+literal|"has no pointer to prefix %s\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -1093,7 +1101,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"in6_prefix.c: mark_matched_prefixes:"
 literal|"no back pointer to ifprefix for %s. "
-literal|"ND autoconfigured addr?"
+literal|"ND autoconfigured addr?\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -1559,6 +1567,7 @@ argument|&rpp->rp_addrhead
 argument_list|,
 argument|ra_entry
 argument_list|)
+block|{
 if|if
 condition|(
 name|rr_are_ifid_equal
@@ -1586,6 +1595,7 @@ name|rp_plen
 argument_list|)
 condition|)
 break|break;
+block|}
 return|return
 name|rap
 return|;
@@ -1595,7 +1605,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|assigne_ra_entry
+name|assign_ra_entry
 parameter_list|(
 name|struct
 name|rr_prefix
@@ -1694,7 +1704,22 @@ name|ra_addr
 operator|=
 name|ia
 expr_stmt|;
-comment|/* 	 * Can't point rp2ifpr(rpp) from ia->ia6_ifpr now, 	 * because rpp may be on th stack. should fix it? 	 */
+name|rap
+operator|->
+name|ra_addr
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_refcnt
+operator|++
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Can't do this now, because rpp may be on th stack. should fix it? */
+block|ia->ia6_ifpr = rp2ifpr(rpp);
+endif|#
+directive|endif
 name|s
 operator|=
 name|splnet
@@ -1722,6 +1747,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * add a link-local address to an interface.  we will add new interface address  * (prefix database + new interface id).  */
+end_comment
 
 begin_function
 specifier|static
@@ -1852,6 +1881,18 @@ argument_list|,
 argument|rp_entry
 argument_list|)
 block|{
+comment|/* 		 * do not attempt to add an address, if ifp does not match 		 */
+if|if
+condition|(
+name|rpp
+operator|->
+name|rp_ifp
+operator|!=
+name|ia
+operator|->
+name|ia_ifp
+condition|)
+continue|continue;
 name|s
 operator|=
 name|splnet
@@ -1890,6 +1931,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * add an address to an interface.  if the interface id portion is new,  * we will add new interface address (prefix database + new interface id).  */
+end_comment
 
 begin_function
 name|int
@@ -2268,12 +2313,23 @@ name|ra_addr
 operator|==
 name|NULL
 condition|)
+block|{
 name|rap
 operator|->
 name|ra_addr
 operator|=
 name|ia
 expr_stmt|;
+name|rap
+operator|->
+name|ra_addr
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_refcnt
+operator|++
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2290,7 +2346,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"ip6_prefix.c: addr %s/%d matched prefix"
-literal|"has already another ia %p(%s) on its ifid list"
+literal|"has already another ia %p(%s) on its ifid list\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -2334,7 +2390,7 @@ return|;
 block|}
 name|error
 operator|=
-name|assigne_ra_entry
+name|assign_ra_entry
 argument_list|(
 name|ifpr2rp
 argument_list|(
@@ -2435,6 +2491,22 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rap
+operator|->
+name|ra_addr
+condition|)
+name|IFAFREE
+argument_list|(
+operator|&
+name|rap
+operator|->
+name|ra_addr
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|rap
@@ -2468,6 +2540,89 @@ name|ia6_ifpr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|in6_purgeprefix
+parameter_list|(
+name|ifp
+parameter_list|)
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+block|{
+name|struct
+name|ifprefix
+modifier|*
+name|ifpr
+decl_stmt|,
+modifier|*
+name|nextifpr
+decl_stmt|;
+comment|/* delete prefixes before ifnet goes away */
+for|for
+control|(
+name|ifpr
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_prefixhead
+argument_list|)
+init|;
+name|ifpr
+condition|;
+name|ifpr
+operator|=
+name|nextifpr
+control|)
+block|{
+name|nextifpr
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|ifpr
+argument_list|,
+name|ifpr_list
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifpr
+operator|->
+name|ifpr_prefix
+operator|->
+name|sa_family
+operator|!=
+name|AF_INET6
+operator|||
+name|ifpr
+operator|->
+name|ifpr_type
+operator|!=
+name|IN6_PREFIX_RR
+condition|)
+continue|continue;
+operator|(
+name|void
+operator|)
+name|delete_each_prefix
+argument_list|(
+name|ifpr2rp
+argument_list|(
+name|ifpr
+argument_list|)
+argument_list|,
+name|PR_ORIG_KERNEL
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2733,11 +2888,30 @@ name|NULL
 condition|)
 block|{
 comment|/* link this addr and the prefix each other */
+name|IFAFREE
+argument_list|(
+operator|&
+name|rap
+operator|->
+name|ra_addr
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|rap
 operator|->
 name|ra_addr
 operator|=
 name|ia6
+expr_stmt|;
+name|rap
+operator|->
+name|ra_addr
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_refcnt
+operator|++
 expr_stmt|;
 name|ia6
 operator|->
@@ -2762,11 +2936,30 @@ name|rpp
 argument_list|)
 condition|)
 block|{
+name|IFAFREE
+argument_list|(
+operator|&
+name|rap
+operator|->
+name|ra_addr
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|rap
 operator|->
 name|ra_addr
 operator|=
 name|ia6
+expr_stmt|;
+name|rap
+operator|->
+name|ra_addr
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_refcnt
+operator|++
 expr_stmt|;
 return|return;
 block|}
@@ -2776,7 +2969,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"in6_prefix.c: add_each_addr: addition of an addr"
-literal|"%s/%d failed because there is already another addr %s/%d"
+literal|"%s/%d failed because there is already another addr %s/%d\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -2862,7 +3055,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"in6_prefix.c: add_each_addr: addition of an addr"
-literal|"%s/%d failed because in6_control failed for error %d"
+literal|"%s/%d failed because in6_control failed for error %d\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -3141,6 +3334,22 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|rap
+operator|->
+name|ra_addr
+condition|)
+name|IFAFREE
+argument_list|(
+operator|&
+name|rap
+operator|->
+name|ra_addr
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|rap
@@ -3210,7 +3419,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"in6_prefix.c: rrpr_update:%d"
-literal|": ENOBUFS for rr_prefix"
+literal|": ENOBUFS for rr_prefix\n"
 argument_list|,
 name|__LINE__
 argument_list|)
@@ -3296,7 +3505,7 @@ name|rpp
 operator|->
 name|rp_prefix
 expr_stmt|;
-comment|/* link rr_prefix entry to if_prefixhead */
+comment|/* link rr_prefix entry to if_prefixlist */
 block|{
 name|struct
 name|ifnet
@@ -3529,7 +3738,7 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-comment|/* unlink rp_entry from if_prefixhead */
+comment|/* unlink rp_entry from if_prefixlist */
 block|{
 name|struct
 name|ifnet
@@ -3718,7 +3927,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"in6_prefix.c: init_newprefix:%d: ENOBUFS"
-literal|"for rp_addr"
+literal|"for rp_addr\n"
 argument_list|,
 name|__LINE__
 argument_list|)
@@ -4163,6 +4372,22 @@ argument_list|,
 name|ra_entry
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rap
+operator|->
+name|ra_addr
+condition|)
+name|IFAFREE
+argument_list|(
+operator|&
+name|rap
+operator|->
+name|ra_addr
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|rap
@@ -4328,14 +4553,28 @@ name|rp_addr
 modifier|*
 name|rap
 decl_stmt|;
-name|LIST_FOREACH
-argument_list|(
-argument|rap
-argument_list|,
-argument|&rpp->rp_addrhead
-argument_list|,
-argument|ra_entry
-argument_list|)
+for|for
+control|(
+name|rap
+operator|=
+name|rpp
+operator|->
+name|rp_addrhead
+operator|.
+name|lh_first
+init|;
+name|rap
+operator|!=
+name|NULL
+condition|;
+name|rap
+operator|=
+name|rap
+operator|->
+name|ra_entry
+operator|.
+name|le_next
+control|)
 block|{
 if|if
 condition|(
@@ -4375,11 +4614,6 @@ name|int
 name|delete_each_prefix
 parameter_list|(
 name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|,
-name|struct
 name|rr_prefix
 modifier|*
 name|rpp
@@ -4388,10 +4622,6 @@ name|u_char
 name|origin
 parameter_list|)
 block|{
-name|struct
-name|in6_aliasreq
-name|ifra
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -4412,14 +4642,13 @@ operator|)
 return|;
 while|while
 condition|(
-operator|!
-name|LIST_EMPTY
-argument_list|(
-operator|&
 name|rpp
 operator|->
 name|rp_addrhead
-argument_list|)
+operator|.
+name|lh_first
+operator|!=
+name|NULL
 condition|)
 block|{
 name|struct
@@ -4490,118 +4719,28 @@ name|ia6_ifpr
 operator|=
 name|NULL
 expr_stmt|;
-name|bzero
+name|in6_purgeaddr
 argument_list|(
 operator|&
-name|ifra
+name|rap
+operator|->
+name|ra_addr
+operator|->
+name|ia_ifa
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ifra
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|ifra
-operator|.
-name|ifra_name
-argument_list|,
-name|if_name
-argument_list|(
 name|rpp
 operator|->
 name|rp_ifp
 argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ifra
-operator|.
-name|ifra_name
-argument_list|)
-argument_list|)
 expr_stmt|;
-name|ifra
-operator|.
-name|ifra_addr
-operator|=
-name|rap
-operator|->
-name|ra_addr
-operator|->
-name|ia_addr
-expr_stmt|;
-name|ifra
-operator|.
-name|ifra_dstaddr
-operator|=
-name|rap
-operator|->
-name|ra_addr
-operator|->
-name|ia_dstaddr
-expr_stmt|;
-name|ifra
-operator|.
-name|ifra_prefixmask
-operator|=
-name|rap
-operator|->
-name|ra_addr
-operator|->
-name|ia_prefixmask
-expr_stmt|;
-name|error
-operator|=
-name|in6_control
-argument_list|(
-name|so
-argument_list|,
-name|SIOCDIFADDR_IN6
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ifra
-argument_list|,
-name|rpp
-operator|->
-name|rp_ifp
-argument_list|,
-name|curproc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"in6_prefix.c: delete_each_prefix:"
-literal|"deletion of an addr %s/%d failed because"
-literal|"in6_control failed for error %d"
-argument_list|,
-name|ip6_sprintf
+name|IFAFREE
 argument_list|(
 operator|&
-name|ifra
-operator|.
-name|ifra_addr
-operator|.
-name|sin6_addr
-argument_list|)
-argument_list|,
-name|rpp
+name|rap
 operator|->
-name|rp_plen
-argument_list|,
-name|error
+name|ra_addr
+operator|->
+name|ia_ifa
 argument_list|)
 expr_stmt|;
 name|free
@@ -4628,11 +4767,6 @@ specifier|static
 name|void
 name|delete_prefixes
 parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|,
 name|struct
 name|ifnet
 modifier|*
@@ -4710,8 +4844,6 @@ name|void
 operator|)
 name|delete_each_prefix
 argument_list|(
-name|so
-argument_list|,
 name|ifpr2rp
 argument_list|(
 name|ifpr
@@ -4740,14 +4872,28 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|ifa
-argument_list|,
-argument|&rpp->rp_ifp->if_addrlist
-argument_list|,
-argument|ifa_list
-argument_list|)
+for|for
+control|(
+name|ifa
+operator|=
+name|rpp
+operator|->
+name|rp_ifp
+operator|->
+name|if_addrlist
+operator|.
+name|tqh_first
+init|;
+name|ifa
+condition|;
+name|ifa
+operator|=
+name|ifa
+operator|->
+name|ifa_list
+operator|.
+name|tqe_next
+control|)
 block|{
 name|struct
 name|rp_addr
@@ -4844,7 +4990,7 @@ name|LOG_ERR
 argument_list|,
 literal|"in6_prefix.c: link_stray_ia6s:"
 literal|"addr %s/%d already linked to a prefix"
-literal|"and it matches also %s/%d"
+literal|"and it matches also %s/%d\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -4878,7 +5024,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|assigne_ra_entry
+name|assign_ra_entry
 argument_list|(
 name|rpp
 argument_list|,
@@ -4917,6 +5063,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* XXX assumes that permission is already checked by the caller */
+end_comment
 
 begin_function
 name|int
@@ -5039,7 +5189,7 @@ argument_list|(
 name|LOG_NOTICE
 argument_list|,
 literal|"in6_prefix_ioctl: preferred lifetime"
-literal|"(%ld) is greater than valid lifetime(%ld)"
+literal|"(%ld) is greater than valid lifetime(%ld)\n"
 argument_list|,
 operator|(
 name|u_long
@@ -5110,8 +5260,6 @@ name|SIOCAIFPREFIX_IN6
 condition|)
 name|delete_prefixes
 argument_list|(
-name|so
-argument_list|,
 name|ifp
 argument_list|,
 name|irr
@@ -5232,7 +5380,7 @@ argument_list|(
 name|LOG_NOTICE
 argument_list|,
 literal|"in6_prefix_ioctl: preferred lifetime"
-literal|"(%ld) is greater than valid lifetime(%ld)"
+literal|"(%ld) is greater than valid lifetime(%ld)\n"
 argument_list|,
 operator|(
 name|u_long
@@ -5348,14 +5496,26 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|TAILQ_FOREACH
-argument_list|(
-argument|ifa
-argument_list|,
-argument|&ifp->if_addrlist
-argument_list|,
-argument|ifa_list
-argument_list|)
+for|for
+control|(
+name|ifa
+operator|=
+name|ifp
+operator|->
+name|if_addrlist
+operator|.
+name|tqh_first
+init|;
+name|ifa
+condition|;
+name|ifa
+operator|=
+name|ifa
+operator|->
+name|ifa_list
+operator|.
+name|tqe_next
+control|)
 block|{
 if|if
 condition|(
@@ -5540,8 +5700,6 @@ name|error
 operator|=
 name|delete_each_prefix
 argument_list|(
-name|so
-argument_list|,
 name|rpp
 argument_list|,
 name|ipr
@@ -5627,22 +5785,6 @@ name|rr_prefix
 modifier|*
 name|next_rpp
 decl_stmt|;
-name|struct
-name|socket
-name|so
-decl_stmt|;
-comment|/* XXX: init dummy so */
-name|bzero
-argument_list|(
-operator|&
-name|so
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|so
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|next_rpp
 operator|=
 name|LIST_NEXT
@@ -5654,9 +5796,6 @@ argument_list|)
 expr_stmt|;
 name|delete_each_prefix
 argument_list|(
-operator|&
-name|so
-argument_list|,
 name|rpp
 argument_list|,
 name|PR_ORIG_KERNEL

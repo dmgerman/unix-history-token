@@ -184,12 +184,6 @@ directive|include
 file|<netinet6/nd6.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet6/in6_ifattach.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -3310,16 +3304,6 @@ operator|->
 name|if_addrlen
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
-name|in6_ifattach_getifid
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ng_ether_attach_p

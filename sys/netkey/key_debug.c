@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/* KAME @(#)$Id: key_debug.c,v 1.1.6.2.4.3 1999/07/06 12:05:13 itojun Exp $ */
+comment|/*	$KAME: key_debug.c,v 1.23 2000/07/04 04:08:15 itojun Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifdef
@@ -16,13 +20,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"opt_inet6.h"
+file|"opt_inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
+file|"opt_inet6.h"
 end_include
 
 begin_endif
@@ -83,22 +87,43 @@ directive|include
 file|<netkey/key_var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSEC_DEBUG
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netkey/key_debug.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KEYDEBUG
+parameter_list|(
+name|lev
+parameter_list|,
+name|arg
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
-file|<netinet6/in6.h>
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -135,6 +160,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_if
 if|#
@@ -263,6 +292,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|kdebug_sadb_x_sa2
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sadb_ext
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -375,15 +419,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  len=%u mode=%u reserved=%u seq=%u pid=%u }\n"
+literal|"  len=%u reserved=%u seq=%u pid=%u\n"
 argument_list|,
 name|base
 operator|->
 name|sadb_msg_len
-argument_list|,
-name|base
-operator|->
-name|sadb_msg_mode
 argument_list|,
 name|base
 operator|->
@@ -465,6 +505,22 @@ block|{
 name|printf
 argument_list|(
 literal|"kdebug_sadb: invalid ext_len=0 was passed.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|ext
+operator|->
+name|sadb_ext_len
+operator|>
+name|tlen
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"kdebug_sadb: ext_len exceeds end of buffer.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -575,6 +631,15 @@ case|case
 name|SADB_X_EXT_POLICY
 case|:
 name|kdebug_sadb_x_policy
+argument_list|(
+name|ext
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SADB_X_EXT_SA2
+case|:
+name|kdebug_sadb_x_sa2
 argument_list|(
 name|ext
 argument_list|)
@@ -917,6 +982,14 @@ else|:
 literal|"dst"
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|id
+operator|->
+name|sadb_ident_type
+condition|)
+block|{
+default|default:
 name|printf
 argument_list|(
 literal|" type=%d id=%lu"
@@ -1040,6 +1113,8 @@ argument_list|(
 literal|"\""
 argument_list|)
 expr_stmt|;
+block|}
+break|break;
 block|}
 name|printf
 argument_list|(
@@ -1576,6 +1651,77 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|kdebug_sadb_x_sa2
+parameter_list|(
+name|ext
+parameter_list|)
+name|struct
+name|sadb_ext
+modifier|*
+name|ext
+decl_stmt|;
+block|{
+name|struct
+name|sadb_x_sa2
+modifier|*
+name|sa2
+init|=
+operator|(
+expr|struct
+name|sadb_x_sa2
+operator|*
+operator|)
+name|ext
+decl_stmt|;
+comment|/* sanity check */
+if|if
+condition|(
+name|ext
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"kdebug_sadb_x_sa2: NULL pointer was passed.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sadb_x_sa2{ mode=%u reqid=%u\n"
+argument_list|,
+name|sa2
+operator|->
+name|sadb_x_sa2_mode
+argument_list|,
+name|sa2
+operator|->
+name|sadb_x_sa2_reqid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  reserved1=%u reserved2=%u reserved3=%u }\n"
+argument_list|,
+name|sa2
+operator|->
+name|sadb_x_sa2_reserved1
+argument_list|,
+name|sa2
+operator|->
+name|sadb_x_sa2_reserved1
+argument_list|,
+name|sa2
+operator|->
+name|sadb_x_sa2_reserved1
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_function
 name|void
 name|kdebug_sadb_x_policy
 parameter_list|(
@@ -1618,7 +1764,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sadb_x_policy{ type=%u dir=%u reserved=%x }\n"
+literal|"sadb_x_policy{ type=%u dir=%u id=%x }\n"
 argument_list|,
 name|xpl
 operator|->
@@ -1630,7 +1776,7 @@ name|sadb_x_policy_dir
 argument_list|,
 name|xpl
 operator|->
-name|sadb_x_policy_reserved
+name|sadb_x_policy_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -1687,7 +1833,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" { len=%u proto=%u mode=%u level=%u\n"
+literal|" { len=%u proto=%u mode=%u level=%u reqid=%u\n"
 argument_list|,
 name|xisr
 operator|->
@@ -1704,8 +1850,25 @@ argument_list|,
 name|xisr
 operator|->
 name|sadb_x_ipsecrequest_level
+argument_list|,
+name|xisr
+operator|->
+name|sadb_x_ipsecrequest_reqid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xisr
+operator|->
+name|sadb_x_ipsecrequest_len
+operator|>
+sizeof|sizeof
+argument_list|(
+operator|*
+name|xisr
+argument_list|)
+condition|)
+block|{
 name|addr
 operator|=
 operator|(
@@ -1747,6 +1910,7 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|" }\n"
@@ -1761,11 +1925,31 @@ name|sadb_x_ipsecrequest_len
 operator|<=
 literal|0
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"kdebug_sadb_x_policy: wrong policy struct.\n"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+comment|/* prevent overflow */
+if|if
+condition|(
+name|xisr
+operator|->
+name|sadb_x_ipsecrequest_len
+operator|>
+name|tlen
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"invalid ipsec policy length\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|tlen
 operator|-=
 name|xisr
@@ -2048,11 +2232,19 @@ name|spidx
 operator|->
 name|src
 argument_list|,
+operator|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
 name|spidx
 operator|->
 name|src
-operator|.
-name|ss_len
+operator|)
+operator|->
+name|sa_len
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2070,11 +2262,19 @@ name|spidx
 operator|->
 name|dst
 argument_list|,
+operator|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
 name|spidx
 operator|->
 name|dst
-operator|.
-name|ss_len
+operator|)
+operator|->
+name|sa_len
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2133,11 +2333,19 @@ name|saidx
 operator|->
 name|src
 argument_list|,
+operator|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
 name|saidx
 operator|->
 name|src
-operator|.
-name|ss_len
+operator|)
+operator|->
+name|sa_len
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2155,11 +2363,19 @@ name|saidx
 operator|->
 name|dst
 argument_list|,
+operator|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
 name|saidx
 operator|->
 name|dst
-operator|.
-name|ss_len
+operator|)
+operator|->
+name|sa_len
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2402,6 +2618,12 @@ operator|->
 name|lft_s
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|notyet
+comment|/* XXX: misc[123] ? */
+endif|#
+directive|endif
 return|return;
 block|}
 end_function
@@ -2562,11 +2784,7 @@ name|m
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"debug_mbufhdr: NULL pointer was passed.\n"
-argument_list|)
-expr_stmt|;
+return|return;
 name|printf
 argument_list|(
 literal|"mbuf(%p){ m_next:%p m_nextpkt:%p m_data:%p "
@@ -2694,16 +2912,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|kdebug_mbufhdr
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  m_data=\n"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -2719,6 +2927,16 @@ operator|->
 name|m_next
 control|)
 block|{
+name|kdebug_mbufhdr
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  m_data:\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2738,8 +2956,6 @@ block|{
 if|if
 condition|(
 name|i
-operator|!=
-literal|0
 operator|&&
 name|i
 operator|%
@@ -2785,12 +3001,12 @@ name|j
 operator|++
 expr_stmt|;
 block|}
-block|}
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -2816,6 +3032,21 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
+name|struct
+name|sockaddr_in
+modifier|*
+name|sin
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|struct
+name|sockaddr_in6
+modifier|*
+name|sin6
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* sanity check */
 if|if
 condition|(
@@ -2831,7 +3062,7 @@ expr_stmt|;
 comment|/* NOTE: We deal with port number as host byte order. */
 name|printf
 argument_list|(
-literal|"sockaddr{ len=%u family=%u port=%u\n"
+literal|"sockaddr{ len=%u family=%u"
 argument_list|,
 name|addr
 operator|->
@@ -2840,71 +3071,120 @@ argument_list|,
 name|addr
 operator|->
 name|sa_family
-argument_list|,
-name|ntohs
-argument_list|(
-name|_INPORTBYSA
-argument_list|(
-name|addr
-argument_list|)
-argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
-if|if
+switch|switch
 condition|(
 name|addr
 operator|->
 name|sa_family
-operator|==
-name|PF_INET6
 condition|)
 block|{
-name|struct
-name|sockaddr_in6
-modifier|*
-name|in6
-init|=
+case|case
+name|AF_INET
+case|:
+name|sin
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|addr
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" port=%u\n"
+argument_list|,
+name|ntohs
+argument_list|(
+name|sin
+operator|->
+name|sin_port
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ipsec_hexdump
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sin
+operator|->
+name|sin_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
+name|sin6
+operator|=
 operator|(
 expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
 name|addr
-decl_stmt|;
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" port=%u\n"
+argument_list|,
+name|ntohs
+argument_list|(
+name|sin6
+operator|->
+name|sin6_port
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"  flowinfo=0x%08x, scope_id=0x%08x\n"
 argument_list|,
-name|in6
+name|sin6
 operator|->
 name|sin6_flowinfo
 argument_list|,
-name|in6
+name|sin6
 operator|->
 name|sin6_scope_id
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|ipsec_hexdump
 argument_list|(
-name|_INADDRBYSA
-argument_list|(
-name|addr
-argument_list|)
-argument_list|,
-name|_INALENBYAF
-argument_list|(
-name|addr
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sin6
 operator|->
-name|sa_family
+name|sin6_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin6
+operator|->
+name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+endif|#
+directive|endif
+block|}
 name|printf
 argument_list|(
 literal|"  }\n"
@@ -2913,15 +3193,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined(_KERNEL) || (defined(_KERNEL)&& defined(IPSEC_DEBUG)) */
-end_comment
 
 begin_function
 name|void
@@ -3049,9 +3320,24 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+block|if (i % 32 != 0) printf("\n");
+endif|#
+directive|endif
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(_KERNEL) || (defined(_KERNEL)&& defined(IPSEC_DEBUG)) */
+end_comment
 
 end_unit
 

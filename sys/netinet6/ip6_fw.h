@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip6_fw.h,v 1.1 1999/08/06 14:10:09 itojun Exp $  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: ip6_fw.h,v 1.3 2000/04/06 08:30:44 sumikawa Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  */
 end_comment
 
 begin_ifndef
@@ -79,13 +87,13 @@ decl_stmt|,
 name|fw_dst
 decl_stmt|;
 comment|/* Source and destination IPv6 addr */
-comment|/* Mask for src and dest IPv6 addr */
 name|struct
 name|in6_addr
 name|fw_smsk
 decl_stmt|,
 name|fw_dmsk
 decl_stmt|;
+comment|/* Mask for src and dest IPv6 addr */
 name|u_short
 name|fw_number
 decl_stmt|;
@@ -99,13 +107,13 @@ directive|define
 name|IPV6_FW_MAX_PORTS
 value|10
 comment|/* A reasonable maximum */
-comment|/* Array of port numbers to match */
 name|u_short
 name|fw_pts
 index|[
 name|IPV6_FW_MAX_PORTS
 index|]
 decl_stmt|;
+comment|/* Array of port numbers to match */
 name|u_char
 name|fw_ip6opt
 decl_stmt|,
@@ -122,24 +130,24 @@ define|#
 directive|define
 name|IPV6_FW_ICMPTYPES_DIM
 value|(32 / (sizeof(unsigned) * 8))
-comment|/* ICMP types bitmap */
 name|unsigned
 name|fw_icmp6types
 index|[
 name|IPV6_FW_ICMPTYPES_DIM
 index|]
 decl_stmt|;
+comment|/* ICMP types bitmap */
 name|long
 name|timestamp
 decl_stmt|;
 comment|/* timestamp (tv_sec) of last match */
-comment|/* Incoming and outgoing interfaces */
 name|union
 name|ip6_fw_if
 name|fw_in_if
 decl_stmt|,
 name|fw_out_if
 decl_stmt|;
+comment|/* Incoming and outgoing interfaces */
 union|union
 block|{
 name|u_short
@@ -191,7 +199,7 @@ name|rule
 parameter_list|,
 name|n
 parameter_list|)
-value|do {			\ 					  (rule)->fw_nports&= ~0x0f;	\ 					  (rule)->fw_nports |= (n);	\ 					} while (0)
+value|do {				\ 					  (rule)->fw_nports&= ~0x0f;	\ 					  (rule)->fw_nports |= (n);	\ 					} while (0)
 end_define
 
 begin_define
@@ -213,7 +221,7 @@ name|rule
 parameter_list|,
 name|n
 parameter_list|)
-value|do {			\ 					  (rule)->fw_nports&= ~0xf0;	\ 					  (rule)->fw_nports |= (n)<< 4;\ 					} while (0)
+value|do {				\ 					  (rule)->fw_nports&= ~0xf0;	\ 					  (rule)->fw_nports |= (n)<< 4;\ 					} while (0)
 end_define
 
 begin_define
@@ -268,7 +276,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* Check inbound packets	*/
+comment|/* Check inbound packets		*/
 end_comment
 
 begin_define
@@ -279,7 +287,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* Check outbound packets	*/
+comment|/* Check outbound packets		*/
 end_comment
 
 begin_define
@@ -290,7 +298,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* Apply inbound interface test	*/
+comment|/* Apply inbound interface test		*/
 end_comment
 
 begin_define
@@ -301,7 +309,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* Apply outbound interface test */
+comment|/* Apply outbound interface test	*/
 end_comment
 
 begin_define
@@ -312,7 +320,7 @@ value|0x0070
 end_define
 
 begin_comment
-comment|/* Mask for type of chain entry: */
+comment|/* Mask for type of chain entry:	*/
 end_comment
 
 begin_define
@@ -323,7 +331,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* This is a deny rule		*/
+comment|/* This is a deny rule			*/
 end_comment
 
 begin_define
@@ -334,7 +342,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* Deny and send a response packet */
+comment|/* Deny and send a response packet	*/
 end_comment
 
 begin_define
@@ -345,7 +353,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* This is an accept rule	*/
+comment|/* This is an accept rule		*/
 end_comment
 
 begin_define
@@ -356,7 +364,7 @@ value|0x0030
 end_define
 
 begin_comment
-comment|/* This is a count rule		*/
+comment|/* This is a count rule			*/
 end_comment
 
 begin_define
@@ -367,7 +375,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* This is a divert rule	*/
+comment|/* This is a divert rule		*/
 end_comment
 
 begin_define
@@ -378,7 +386,7 @@ value|0x0050
 end_define
 
 begin_comment
-comment|/* This is a tee rule		*/
+comment|/* This is a tee rule			*/
 end_comment
 
 begin_define
@@ -389,7 +397,7 @@ value|0x0060
 end_define
 
 begin_comment
-comment|/* This is a skipto rule	*/
+comment|/* This is a skipto rule		*/
 end_comment
 
 begin_define
@@ -400,7 +408,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* Print if this rule matches	*/
+comment|/* Print if this rule matches		*/
 end_comment
 
 begin_define
@@ -411,7 +419,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* The first two src ports are a min  * 					 * and max range (stored in host byte * 					 * order). */
+comment|/* The first two src ports are a min	* 				 * and max range (stored in host byte	* 				 * order).				*/
 end_comment
 
 begin_define
@@ -425,10 +433,6 @@ begin_comment
 comment|/* The first two dst ports are a min	* 				 * and max range (stored in host byte	* 				 * order).				*/
 end_comment
 
-begin_comment
-comment|/* In interface by name/unit (not IP)	*/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -437,7 +441,7 @@ value|0x0400
 end_define
 
 begin_comment
-comment|/* Out interface by name/unit (not IP)	*/
+comment|/* In interface by name/unit (not IP)	*/
 end_comment
 
 begin_define
@@ -447,6 +451,10 @@ name|IPV6_FW_F_OIFNAME
 value|0x0800
 end_define
 
+begin_comment
+comment|/* Out interface by name/unit (not IP)	*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -455,7 +463,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* Invert sense of src check	*/
+comment|/* Invert sense of src check		*/
 end_comment
 
 begin_define
@@ -466,7 +474,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* Invert sense of dst check	*/
+comment|/* Invert sense of dst check		*/
 end_comment
 
 begin_define
@@ -477,7 +485,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* Fragment			*/
+comment|/* Fragment				*/
 end_comment
 
 begin_define
@@ -488,7 +496,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* ICMP type bitmap is valid	*/
+comment|/* ICMP type bitmap is valid		*/
 end_comment
 
 begin_define
@@ -499,7 +507,7 @@ value|0xFFFF
 end_define
 
 begin_comment
-comment|/* All possible flag bits mask	*/
+comment|/* All possible flag bits mask		*/
 end_comment
 
 begin_comment
@@ -510,7 +518,7 @@ begin_define
 define|#
 directive|define
 name|IF6_FW_F_VIAHACK
-value|(IPV6_FW_F_IN|IPV6_FW_F_OUT|IPV6_FW_F_IIFACE|\ 				 IPV6_FW_F_OIFACE)
+value|(IPV6_FW_F_IN|IPV6_FW_F_OUT|IPV6_FW_F_IIFACE|IPV6_FW_F_OIFACE)
 end_define
 
 begin_comment

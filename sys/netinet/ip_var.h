@@ -357,17 +357,6 @@ begin_comment
 comment|/* can send broadcast packets */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IP_SOCKINMRCVIF
-value|0x100
-end_define
-
-begin_comment
-comment|/* IPSEC hack; 						 * socket pointer in sending 						 * packet's m_pkthdr.rcvif */
-end_comment
-
 begin_struct_decl
 struct_decl|struct
 name|ip

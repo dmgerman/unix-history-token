@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: ah_input.c,v 1.29 2000/05/29 08:33:53 itojun Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -17,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|"opt_inet6.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ipsec.h"
 end_include
 
 begin_include
@@ -171,7 +173,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6.h>
+file|<netinet/ip6.h>
 end_include
 
 begin_include
@@ -183,7 +185,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/icmp6.h>
+file|<netinet/icmp6.h>
 end_include
 
 begin_endif
@@ -197,12 +199,6 @@ directive|include
 file|<netinet6/ipsec.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet6/ah.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -214,6 +210,23 @@ include|#
 directive|include
 file|<netinet6/ipsec6.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ah.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_include
 include|#
@@ -274,12 +287,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<netinet/ipprotosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -289,11 +296,23 @@ directive|include
 file|<net/net_osdep.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|IPLEN_FLIPPED
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|INET
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ipprotosw.h>
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -306,24 +325,34 @@ end_decl_stmt
 
 begin_function
 name|void
+if|#
+directive|if
+name|__STDC__
 name|ah4_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+modifier|...
+parameter_list|)
+else|#
+directive|else
+function|ah4_input
 parameter_list|(
 name|m
 parameter_list|,
-name|off
-parameter_list|,
-name|proto
+name|va_alist
 parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|int
-name|off
-decl_stmt|,
-name|proto
-decl_stmt|;
+function|va_dcl
+endif|#
+directive|endif
 block|{
 name|struct
 name|ip
@@ -369,6 +398,47 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|off
+decl_stmt|,
+name|proto
+decl_stmt|;
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|off
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|int
+argument_list|)
+expr_stmt|;
+name|proto
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|int
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PULLDOWN_TEST
 if|if
 condition|(
 name|m
@@ -405,10 +475,14 @@ operator|!
 name|m
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"IPv4 AH input: can't pullup;"
 literal|"dropping the packet for simplicity\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -450,6 +524,66 @@ operator|+
 name|off
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
+name|IP6_EXTHDR_GET
+argument_list|(
+name|ah
+argument_list|,
+expr|struct
+name|ah
+operator|*
+argument_list|,
+name|m
+argument_list|,
+name|off
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|newah
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ah
+operator|==
+name|NULL
+condition|)
+block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"IPv4 AH input: can't pullup;"
+literal|"dropping the packet for simplicity\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsecstat
+operator|.
+name|in_inval
+operator|++
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+endif|#
+directive|endif
 name|nxt
 operator|=
 name|ah
@@ -523,11 +657,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"IPv4 AH input: no key association found for spi %u;"
-literal|"dropping the packet for simplicity\n"
-argument_list|,
+operator|(
+name|LOG_WARNING
+operator|,
+literal|"IPv4 AH input: no key association found for spi %u\n"
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -535,6 +671,7 @@ name|ntohl
 argument_list|(
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -573,11 +710,13 @@ operator|!=
 name|SADB_SASTATE_DYING
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"IPv4 AH input: non-mature/dying SA found for spi %u; "
-literal|"dropping the packet for simplicity\n"
-argument_list|,
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"IPv4 AH input: non-mature/dying SA found for spi %u\n"
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -585,6 +724,7 @@ name|ntohl
 argument_list|(
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -605,12 +745,14 @@ operator|==
 name|SADB_AALG_NONE
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"IPv4 AH input: unspecified authentication algorithm "
-literal|"for spi %u;"
-literal|"dropping the packet for simplicity\n"
-argument_list|,
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"IPv4 AH input: "
+literal|"unspecified authentication algorithm for spi %u\n"
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -618,6 +760,7 @@ name|ntohl
 argument_list|(
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -687,6 +830,50 @@ literal|0
 else|:
 literal|4
 expr_stmt|;
+comment|/* 	 * Here, we do not do "siz1 == siz".  This is because the way 	 * RFC240[34] section 2 is written.  They do not require truncation 	 * to 96 bits. 	 * For example, Microsoft IPsec stack attaches 160 bits of 	 * authentication data for both hmac-md5 and hmac-sha1.  For hmac-sha1, 	 * 32 bits of padding is attached. 	 * 	 * There are two downsides to this specification. 	 * They have no real harm, however, they leave us fuzzy feeling. 	 * - if we attach more than 96 bits of authentication data onto AH, 	 *   we will never notice about possible modification by rogue 	 *   intermediate nodes. 	 *   Since extra bits in AH checksum is never used, this constitutes 	 *   no real issue, however, it is wacky. 	 * - even if the peer attaches big authentication data, we will never 	 *   notice the difference, since longer authentication data will just 	 *   work. 	 * 	 * We may need some clarification in the spec. 	 */
+if|if
+condition|(
+name|siz1
+operator|<
+name|siz
+condition|)
+block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_NOTICE
+operator|,
+literal|"sum length too short in IPv4 AH input "
+literal|"(%lu, should be at least %lu): %s\n"
+operator|,
+operator|(
+name|u_long
+operator|)
+name|siz1
+operator|,
+operator|(
+name|u_long
+operator|)
+name|siz
+operator|,
+name|ipsec4_logpacketstr
+argument_list|(
+name|ip
+argument_list|,
+name|spi
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsecstat
+operator|.
+name|in_inval
+operator|++
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -702,13 +889,14 @@ operator|!=
 name|siz1
 condition|)
 block|{
-name|log
+name|ipseclog
 argument_list|(
+operator|(
 name|LOG_NOTICE
-argument_list|,
+operator|,
 literal|"sum length mismatch in IPv4 AH input "
-literal|"(%d should be %u): %s\n"
-argument_list|,
+literal|"(%d should be %lu): %s\n"
+operator|,
 operator|(
 name|ah
 operator|->
@@ -718,19 +906,19 @@ literal|2
 operator|)
 operator|-
 name|sizoff
-argument_list|,
+operator|,
 operator|(
-name|unsigned
-name|int
+name|u_long
 operator|)
 name|siz1
-argument_list|,
+operator|,
 name|ipsec4_logpacketstr
 argument_list|(
 name|ip
 argument_list|,
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -742,6 +930,9 @@ goto|goto
 name|fail
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|PULLDOWN_TEST
 if|if
 condition|(
 name|m
@@ -786,10 +977,13 @@ operator|!
 name|m
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"IPv4 AH input: can't pullup;"
-literal|"dropping the packet for simplicity\n"
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"IPv4 AH input: can't pullup\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -831,6 +1025,58 @@ name|off
 operator|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|IP6_EXTHDR_GET
+argument_list|(
+name|ah
+argument_list|,
+expr|struct
+name|ah
+operator|*
+argument_list|,
+name|m
+argument_list|,
+name|off
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ah
+argument_list|)
+operator|+
+name|sizoff
+operator|+
+name|siz1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ah
+operator|==
+name|NULL
+condition|)
+block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"IPv4 AH input: can't pullup\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsecstat
+operator|.
+name|in_inval
+operator|++
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+endif|#
+directive|endif
 block|}
 comment|/* 	 * check for sequence number. 	 */
 if|if
@@ -880,23 +1126,25 @@ operator|.
 name|in_ahreplay
 operator|++
 expr_stmt|;
-name|log
+name|ipseclog
 argument_list|(
-name|LOG_AUTH
-argument_list|,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"replay packet in IPv4 AH input: %s %s\n"
-argument_list|,
+operator|,
 name|ipsec4_logpacketstr
 argument_list|(
 name|ip
 argument_list|,
 name|spi
 argument_list|)
-argument_list|,
+operator|,
 name|ipsec_logsastr
 argument_list|(
 name|sav
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -922,9 +1170,14 @@ operator|!
 name|cksum
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"IPv4 AH input: couldn't alloc temporary region for cksum\n"
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"IPv4 AH input: "
+literal|"couldn't alloc temporary region for cksum\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -937,6 +1190,9 @@ name|fail
 goto|;
 block|}
 block|{
+if|#
+directive|if
+literal|1
 comment|/* 	 * some of IP header fields are flipped to the host endian. 	 * convert them back to network endian.  VERY stupid. 	 */
 name|ip
 operator|->
@@ -973,6 +1229,8 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ah4_calccksum
@@ -983,6 +1241,8 @@ operator|(
 name|caddr_t
 operator|)
 name|cksum
+argument_list|,
+name|siz1
 argument_list|,
 name|algo
 argument_list|,
@@ -1016,6 +1276,9 @@ name|alg_auth
 index|]
 operator|++
 expr_stmt|;
+if|#
+directive|if
+literal|1
 comment|/* 	 * flip them back. 	 */
 name|ip
 operator|->
@@ -1052,6 +1315,8 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|{
 name|caddr_t
@@ -1117,23 +1382,25 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|ipseclog
 argument_list|(
-name|LOG_AUTH
-argument_list|,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"checksum mismatch in IPv4 AH input: %s %s\n"
-argument_list|,
+operator|,
 name|ipsec4_logpacketstr
 argument_list|(
 name|ip
 argument_list|,
 name|spi
 argument_list|)
-argument_list|,
+operator|,
 name|ipsec_logsastr
 argument_list|(
 name|sav
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -1172,7 +1439,21 @@ name|m_flags
 operator||=
 name|M_AUTHIPDGM
 expr_stmt|;
-comment|/* M_AUTH related flags might be cleared here in the future */
+if|#
+directive|if
+literal|0
+comment|/* 	 * looks okey, but we need more sanity check. 	 * XXX should elaborate. 	 */
+block|if (ah->ah_nxt == IPPROTO_IPIP || ah->ah_nxt == IPPROTO_IP) { 		struct ip *nip; 		size_t sizoff;  		sizoff = (sav->flags& SADB_X_EXT_OLD) ? 0 : 4;  		if (m->m_len< off + sizeof(struct ah) + sizoff + siz1 + hlen) { 			m = m_pullup(m, off + sizeof(struct ah) 					+ sizoff + siz1 + hlen); 			if (!m) { 				ipseclog((LOG_DEBUG, 				    "IPv4 AH input: can't pullup\n")); 				ipsecstat.in_inval++; 				goto fail; 			} 		}  		nip = (struct ip *)((u_char *)(ah + 1) + sizoff + siz1); 		if (nip->ip_src.s_addr != ip->ip_src.s_addr 		 || nip->ip_dst.s_addr != ip->ip_dst.s_addr) { 			m->m_flags&= ~M_AUTHIPHDR; 			m->m_flags&= ~M_AUTHIPDGM; 		} 	}
+ifdef|#
+directive|ifdef
+name|INET6
+block|else if (ah->ah_nxt == IPPROTO_IPV6) { 		m->m_flags&= ~M_AUTHIPHDR; 		m->m_flags&= ~M_AUTHIPDGM; 	}
+endif|#
+directive|endif
+comment|/*INET6*/
+endif|#
+directive|endif
+comment|/*0*/
 if|if
 condition|(
 name|m
@@ -1188,6 +1469,12 @@ operator|&
 name|M_AUTHIPDGM
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|ipseclog((LOG_DEBUG, 		    "IPv4 AH input: authentication succeess\n"));
+endif|#
+directive|endif
 name|ipsecstat
 operator|.
 name|in_ahauthsucc
@@ -1196,23 +1483,25 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|ipseclog
 argument_list|(
-name|LOG_AUTH
-argument_list|,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"authentication failed in IPv4 AH input: %s %s\n"
-argument_list|,
+operator|,
 name|ipsec4_logpacketstr
 argument_list|(
 name|ip
 argument_list|,
 name|spi
 argument_list|)
-argument_list|,
+operator|,
 name|ipsec_logsastr
 argument_list|(
 name|sav
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -1220,6 +1509,9 @@ operator|.
 name|in_ahauthfail
 operator|++
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* 	 * update sequence number. 	 */
 if|if
@@ -1239,9 +1531,8 @@ operator|->
 name|replay
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|ipsec_updatereplay
 argument_list|(
 name|ntohl
@@ -1260,7 +1551,17 @@ argument_list|)
 argument_list|,
 name|sav
 argument_list|)
+condition|)
+block|{
+name|ipsecstat
+operator|.
+name|in_ahreplay
+operator|++
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 block|}
 comment|/* was it transmitted over the IPsec tunnel SA? */
 if|if
@@ -1432,23 +1733,26 @@ name|ip_dst
 argument_list|)
 condition|)
 block|{
-name|log
+name|ipseclog
 argument_list|(
+operator|(
 name|LOG_NOTICE
-argument_list|,
-literal|"ipsec tunnel address mismatch in IPv4 AH input: %s %s\n"
-argument_list|,
+operator|,
+literal|"ipsec tunnel address mismatch "
+literal|"in IPv4 AH input: %s %s\n"
+operator|,
 name|ipsec4_logpacketstr
 argument_list|(
 name|ip
 argument_list|,
 name|spi
 argument_list|)
-argument_list|,
+operator|,
 name|ipsec_logsastr
 argument_list|(
 name|sav
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -1460,6 +1764,17 @@ goto|goto
 name|fail
 goto|;
 block|}
+if|#
+directive|if
+literal|0
+comment|/* XXX should we call ipfw rather than ipsec_in_reject? */
+comment|/* drop it if it does not match the default policy */
+block|if (ipsec4_in_reject(m, NULL)) { 			ipsecstat.in_polvio++; 			goto fail; 		}
+endif|#
+directive|endif
+if|#
+directive|if
+literal|1
 comment|/* 		 * Should the inner packet be considered authentic? 		 * My current answer is: NO. 		 * 		 * host1 -- gw1 === gw2 -- host2 		 *	In this case, gw2 can trust the	authenticity of the 		 *	outer packet, but NOT inner.  Packet may be altered 		 *	between host1 and gw1. 		 * 		 * host1 -- gw1 === host2 		 *	This case falls into the same scenario as above. 		 * 		 * host1 === host2 		 *	This case is the only case when we may be able to leave 		 *	M_AUTHIPHDR and M_AUTHIPDGM set. 		 *	However, if host1 is wrongly configured, and allows 		 *	attacker to inject some packet with src=host1 and 		 *	dst=host2, you are in risk. 		 */
 name|m
 operator|->
@@ -1475,6 +1790,8 @@ operator|&=
 operator|~
 name|M_AUTHIPDGM
 expr_stmt|;
+endif|#
+directive|endif
 name|key_sa_recordxfer
 argument_list|(
 name|sav
@@ -1535,7 +1852,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * strip off AH. 		 * We do deep-copy since KAME requires that 		 * the packet is placed in a single external mbuf. 		 */
+comment|/* 		 * strip off AH. 		 */
 name|size_t
 name|stripsiz
 init|=
@@ -1587,6 +1904,10 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PULLDOWN_TEST
+comment|/* 		 * We do deep-copy since KAME requires that 		 * the packet is placed in a single external mbuf. 		 */
 name|ovbcopy
 argument_list|(
 operator|(
@@ -1632,6 +1953,164 @@ name|len
 operator|-=
 name|stripsiz
 expr_stmt|;
+else|#
+directive|else
+comment|/* 		 * even in m_pulldown case, we need to strip off AH so that 		 * we can compute checksum for multiple AH correctly. 		 */
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|>=
+name|stripsiz
+operator|+
+name|off
+condition|)
+block|{
+name|ovbcopy
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|ip
+argument_list|,
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|ip
+operator|)
+operator|+
+name|stripsiz
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_data
+operator|+=
+name|stripsiz
+expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|-=
+name|stripsiz
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|-=
+name|stripsiz
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * this comes with no copy if the boundary is on 			 * cluster 			 */
+name|struct
+name|mbuf
+modifier|*
+name|n
+decl_stmt|;
+name|n
+operator|=
+name|m_split
+argument_list|(
+name|m
+argument_list|,
+name|off
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* m is retained by m_split */
+goto|goto
+name|fail
+goto|;
+block|}
+name|m_adj
+argument_list|(
+name|n
+argument_list|,
+name|stripsiz
+argument_list|)
+expr_stmt|;
+name|m_cat
+argument_list|(
+name|m
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+comment|/* m_cat does not update m_pkthdr.len */
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|+=
+name|n
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ip
+argument_list|)
+condition|)
+block|{
+name|m
+operator|=
+name|m_pullup
+argument_list|(
+name|m
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ip
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|ipsecstat
+operator|.
+name|in_inval
+operator|++
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+block|}
 name|ip
 operator|=
 name|mtod
@@ -1643,7 +2122,9 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*ip_len is in host endian*/
+ifdef|#
+directive|ifdef
+name|IPLEN_FLIPPED
 name|ip
 operator|->
 name|ip_len
@@ -1654,6 +2135,26 @@ name|ip_len
 operator|-
 name|stripsiz
 expr_stmt|;
+else|#
+directive|else
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|htons
+argument_list|(
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+operator|-
+name|stripsiz
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ip
 operator|->
 name|ip_p
@@ -1661,6 +2162,13 @@ operator|=
 name|nxt
 expr_stmt|;
 comment|/* forget about IP hdr checksum, the check has already been passed */
+name|key_sa_recordxfer
+argument_list|(
+name|sav
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nxt
@@ -1858,6 +2366,9 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|PULLDOWN_TEST
 name|IP6_EXTHDR_CHECK
 argument_list|(
 name|m
@@ -1873,6 +2384,72 @@ argument_list|,
 name|IPPROTO_DONE
 argument_list|)
 expr_stmt|;
+name|ah
+operator|=
+operator|(
+expr|struct
+name|ah
+operator|*
+operator|)
+operator|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|caddr_t
+argument_list|)
+operator|+
+name|off
+operator|)
+expr_stmt|;
+else|#
+directive|else
+name|IP6_EXTHDR_GET
+argument_list|(
+name|ah
+argument_list|,
+expr|struct
+name|ah
+operator|*
+argument_list|,
+name|m
+argument_list|,
+name|off
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|newah
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ah
+operator|==
+name|NULL
+condition|)
+block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"IPv6 AH input: can't pullup\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsecstat
+operator|.
+name|in_inval
+operator|++
+expr_stmt|;
+return|return
+name|IPPROTO_DONE
+return|;
+block|}
+endif|#
+directive|endif
 name|ip6
 operator|=
 name|mtod
@@ -1883,24 +2460,6 @@ expr|struct
 name|ip6_hdr
 operator|*
 argument_list|)
-expr_stmt|;
-name|ah
-operator|=
-operator|(
-expr|struct
-name|ah
-operator|*
-operator|)
-operator|(
-operator|(
-operator|(
-name|caddr_t
-operator|)
-name|ip6
-operator|)
-operator|+
-name|off
-operator|)
 expr_stmt|;
 name|nxt
 operator|=
@@ -1927,9 +2486,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"IPv6 AH input: AH with IPv6 jumbogram is not supported.\n"
+operator|(
+name|LOG_ERR
+operator|,
+literal|"IPv6 AH input: "
+literal|"AH with IPv6 jumbogram is not supported.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsec6stat
@@ -1975,11 +2539,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"IPv6 AH input: no key association found for spi %u;"
-literal|"dropping the packet for simplicity\n"
-argument_list|,
+operator|(
+name|LOG_WARNING
+operator|,
+literal|"IPv6 AH input: no key association found for spi %u\n"
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -1987,6 +2553,7 @@ name|ntohl
 argument_list|(
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsec6stat
@@ -2025,11 +2592,13 @@ operator|!=
 name|SADB_SASTATE_DYING
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"IPv6 AH input: non-mature/dying SA found for spi %u; "
-literal|"dropping the packet for simplicity\n"
-argument_list|,
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -2037,6 +2606,7 @@ name|ntohl
 argument_list|(
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsec6stat
@@ -2057,12 +2627,14 @@ operator|==
 name|SADB_AALG_NONE
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"IPv6 AH input: unspecified authentication algorithm "
-literal|"for spi %u;"
-literal|"dropping the packet for simplicity\n"
-argument_list|,
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"IPv6 AH input: "
+literal|"unspecified authentication algorithm for spi %u\n"
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -2070,6 +2642,7 @@ name|ntohl
 argument_list|(
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsec6stat
@@ -2139,6 +2712,50 @@ literal|0
 else|:
 literal|4
 expr_stmt|;
+comment|/* 	 * Here, we do not do "siz1 == siz".  See ah4_input() for complete 	 * description. 	 */
+if|if
+condition|(
+name|siz1
+operator|<
+name|siz
+condition|)
+block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_NOTICE
+operator|,
+literal|"sum length too short in IPv6 AH input "
+literal|"(%lu, should be at least %lu): %s\n"
+operator|,
+operator|(
+name|u_long
+operator|)
+name|siz1
+operator|,
+operator|(
+name|u_long
+operator|)
+name|siz
+operator|,
+name|ipsec6_logpacketstr
+argument_list|(
+name|ip6
+argument_list|,
+name|spi
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsec6stat
+operator|.
+name|in_inval
+operator|++
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2154,13 +2771,14 @@ operator|!=
 name|siz1
 condition|)
 block|{
-name|log
+name|ipseclog
 argument_list|(
+operator|(
 name|LOG_NOTICE
-argument_list|,
+operator|,
 literal|"sum length mismatch in IPv6 AH input "
-literal|"(%d should be %u): %s\n"
-argument_list|,
+literal|"(%d should be %lu): %s\n"
+operator|,
 operator|(
 name|ah
 operator|->
@@ -2170,19 +2788,19 @@ literal|2
 operator|)
 operator|-
 name|sizoff
-argument_list|,
+operator|,
 operator|(
-name|unsigned
-name|int
+name|u_long
 operator|)
 name|siz1
-argument_list|,
+operator|,
 name|ipsec6_logpacketstr
 argument_list|(
 name|ip6
 argument_list|,
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsec6stat
@@ -2194,6 +2812,9 @@ goto|goto
 name|fail
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|PULLDOWN_TEST
 name|IP6_EXTHDR_CHECK
 argument_list|(
 name|m
@@ -2213,6 +2834,62 @@ argument_list|,
 name|IPPROTO_DONE
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|IP6_EXTHDR_GET
+argument_list|(
+name|ah
+argument_list|,
+expr|struct
+name|ah
+operator|*
+argument_list|,
+name|m
+argument_list|,
+name|off
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ah
+argument_list|)
+operator|+
+name|sizoff
+operator|+
+name|siz1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ah
+operator|==
+name|NULL
+condition|)
+block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_NOTICE
+operator|,
+literal|"couldn't pullup gather IPv6 AH checksum part"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsecstat
+operator|.
+name|in_inval
+operator|++
+expr_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+endif|#
+directive|endif
 block|}
 comment|/* 	 * check for sequence number. 	 */
 if|if
@@ -2262,23 +2939,25 @@ operator|.
 name|in_ahreplay
 operator|++
 expr_stmt|;
-name|log
+name|ipseclog
 argument_list|(
-name|LOG_AUTH
-argument_list|,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"replay packet in IPv6 AH input: %s %s\n"
-argument_list|,
+operator|,
 name|ipsec6_logpacketstr
 argument_list|(
 name|ip6
 argument_list|,
 name|spi
 argument_list|)
-argument_list|,
+operator|,
 name|ipsec_logsastr
 argument_list|(
 name|sav
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2304,9 +2983,14 @@ operator|!
 name|cksum
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
-literal|"IPv6 AH input: couldn't alloc temporary region for cksum\n"
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"IPv6 AH input: "
+literal|"couldn't alloc temporary region for cksum\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsec6stat
@@ -2328,6 +3012,8 @@ operator|(
 name|caddr_t
 operator|)
 name|cksum
+argument_list|,
+name|siz1
 argument_list|,
 name|algo
 argument_list|,
@@ -2425,23 +3111,25 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|ipseclog
 argument_list|(
-name|LOG_AUTH
-argument_list|,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"checksum mismatch in IPv6 AH input: %s %s\n"
-argument_list|,
+operator|,
 name|ipsec6_logpacketstr
 argument_list|(
 name|ip6
 argument_list|,
 name|spi
 argument_list|)
-argument_list|,
+operator|,
 name|ipsec_logsastr
 argument_list|(
 name|sav
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -2480,7 +3168,13 @@ name|m_flags
 operator||=
 name|M_AUTHIPDGM
 expr_stmt|;
-comment|/* M_AUTH related flags might be cleared here in the future */
+if|#
+directive|if
+literal|0
+comment|/* 	 * looks okey, but we need more sanity check. 	 * XXX should elaborate. 	 */
+block|if (ah->ah_nxt == IPPROTO_IPV6) { 		struct ip6_hdr *nip6; 		size_t sizoff;  		sizoff = (sav->flags& SADB_X_EXT_OLD) ? 0 : 4;  		IP6_EXTHDR_CHECK(m, off, sizeof(struct ah) + sizoff + siz1 				+ sizeof(struct ip6_hdr), IPPROTO_DONE);  		nip6 = (struct ip6_hdr *)((u_char *)(ah + 1) + sizoff + siz1); 		if (!IN6_ARE_ADDR_EQUAL(&nip6->ip6_src,&ip6->ip6_src) 		 || !IN6_ARE_ADDR_EQUAL(&nip6->ip6_dst,&ip6->ip6_dst)) { 			m->m_flags&= ~M_AUTHIPHDR; 			m->m_flags&= ~M_AUTHIPDGM; 		} 	} else if (ah->ah_nxt == IPPROTO_IPIP) { 		m->m_flags&= ~M_AUTHIPHDR; 		m->m_flags&= ~M_AUTHIPDGM; 	} else if (ah->ah_nxt == IPPROTO_IP) { 		m->m_flags&= ~M_AUTHIPHDR; 		m->m_flags&= ~M_AUTHIPDGM; 	}
+endif|#
+directive|endif
 if|if
 condition|(
 name|m
@@ -2496,6 +3190,12 @@ operator|&
 name|M_AUTHIPDGM
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|ipseclog((LOG_DEBUG, 		    "IPv6 AH input: authentication succeess\n"));
+endif|#
+directive|endif
 name|ipsec6stat
 operator|.
 name|in_ahauthsucc
@@ -2504,23 +3204,25 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|ipseclog
 argument_list|(
-name|LOG_AUTH
-argument_list|,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"authentication failed in IPv6 AH input: %s %s\n"
-argument_list|,
+operator|,
 name|ipsec6_logpacketstr
 argument_list|(
 name|ip6
 argument_list|,
 name|spi
 argument_list|)
-argument_list|,
+operator|,
 name|ipsec_logsastr
 argument_list|(
 name|sav
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsec6stat
@@ -2528,6 +3230,9 @@ operator|.
 name|in_ahauthfail
 operator|++
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* 	 * update sequence number. 	 */
 if|if
@@ -2547,9 +3252,8 @@ operator|->
 name|replay
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|ipsec_updatereplay
 argument_list|(
 name|ntohl
@@ -2568,7 +3272,17 @@ argument_list|)
 argument_list|,
 name|sav
 argument_list|)
+condition|)
+block|{
+name|ipsec6stat
+operator|.
+name|in_ahreplay
+operator|++
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 block|}
 comment|/* was it transmitted over the IPsec tunnel SA? */
 if|if
@@ -2742,23 +3456,26 @@ name|ip6_dst
 argument_list|)
 condition|)
 block|{
-name|log
+name|ipseclog
 argument_list|(
+operator|(
 name|LOG_NOTICE
-argument_list|,
-literal|"ipsec tunnel address mismatch in IPv6 AH input: %s %s\n"
-argument_list|,
+operator|,
+literal|"ipsec tunnel address mismatch "
+literal|"in IPv6 AH input: %s %s\n"
+operator|,
 name|ipsec6_logpacketstr
 argument_list|(
 name|ip6
 argument_list|,
 name|spi
 argument_list|)
-argument_list|,
+operator|,
 name|ipsec_logsastr
 argument_list|(
 name|sav
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsec6stat
@@ -2770,6 +3487,17 @@ goto|goto
 name|fail
 goto|;
 block|}
+if|#
+directive|if
+literal|0
+comment|/* XXX should we call ipfw rather than ipsec_in_reject? */
+comment|/* drop it if it does not match the default policy */
+block|if (ipsec6_in_reject(m, NULL)) { 			ipsec6stat.in_polvio++; 			goto fail; 		}
+endif|#
+directive|endif
+if|#
+directive|if
+literal|1
 comment|/* 		 * should the inner packet be considered authentic? 		 * see comment in ah4_input(). 		 */
 name|m
 operator|->
@@ -2785,6 +3513,8 @@ operator|&=
 operator|~
 name|M_AUTHIPDGM
 expr_stmt|;
+endif|#
+directive|endif
 name|key_sa_recordxfer
 argument_list|(
 name|sav
@@ -2845,7 +3575,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * strip off AH. 		 * We do deep-copy since KAME requires that 		 * the packet is placed in a single mbuf. 		 */
+comment|/* 		 * strip off AH. 		 */
 name|size_t
 name|stripsiz
 init|=
@@ -2917,6 +3647,10 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PULLDOWN_TEST
+comment|/* 		 * We do deep-copy since KAME requires that 		 * the packet is placed in a single mbuf. 		 */
 name|ovbcopy
 argument_list|(
 operator|(
@@ -2924,20 +3658,14 @@ name|caddr_t
 operator|)
 name|ip6
 argument_list|,
-call|(
+operator|(
+operator|(
 name|caddr_t
-call|)
-argument_list|(
-operator|(
-operator|(
-name|u_char
-operator|*
 operator|)
 name|ip6
 operator|)
 operator|+
 name|stripsiz
-argument_list|)
 argument_list|,
 name|off
 argument_list|)
@@ -2962,6 +3690,121 @@ name|len
 operator|-=
 name|stripsiz
 expr_stmt|;
+else|#
+directive|else
+comment|/* 		 * even in m_pulldown case, we need to strip off AH so that 		 * we can compute checksum for multiple AH correctly. 		 */
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|>=
+name|stripsiz
+operator|+
+name|off
+condition|)
+block|{
+name|ovbcopy
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|ip6
+argument_list|,
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|ip6
+operator|)
+operator|+
+name|stripsiz
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_data
+operator|+=
+name|stripsiz
+expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|-=
+name|stripsiz
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|-=
+name|stripsiz
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * this comes with no copy if the boundary is on 			 * cluster 			 */
+name|struct
+name|mbuf
+modifier|*
+name|n
+decl_stmt|;
+name|n
+operator|=
+name|m_split
+argument_list|(
+name|m
+argument_list|,
+name|off
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* m is retained by m_split */
+goto|goto
+name|fail
+goto|;
+block|}
+name|m_adj
+argument_list|(
+name|n
+argument_list|,
+name|stripsiz
+argument_list|)
+expr_stmt|;
+name|m_cat
+argument_list|(
+name|m
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+comment|/* m_cat does not update m_pkthdr.len */
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|+=
+name|n
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|ip6
 operator|=
 name|mtod
@@ -2973,6 +3816,7 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
+comment|/* XXX jumbogram */
 name|ip6
 operator|->
 name|ip6_plen

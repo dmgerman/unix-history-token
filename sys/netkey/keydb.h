@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: keydb.h,v 1.11 2000/06/15 12:20:50 sakane Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -21,12 +29,18 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<netkey/key_var.h>
+end_include
+
 begin_comment
 comment|/* Security Assocciation Index */
 end_comment
 
 begin_comment
-comment|/* NOTE: Encure to be same address family */
+comment|/* NOTE: Ensure to be same address family */
 end_comment
 
 begin_struct
@@ -51,6 +65,11 @@ name|u_int8_t
 name|mode
 decl_stmt|;
 comment|/* mode of protocol, see ipsec.h */
+name|u_int32_t
+name|reqid
+decl_stmt|;
+comment|/* reqid id who owned this SA */
+comment|/* see IPSEC_MANUAL_REQID_MAX. */
 block|}
 struct|;
 end_struct
@@ -74,12 +93,18 @@ name|secasindex
 name|saidx
 decl_stmt|;
 name|struct
-name|secpolicyindex
+name|sadb_ident
 modifier|*
-name|owner
+name|idents
 decl_stmt|;
-comment|/* Indicate it who owned its SA. */
-comment|/* If NULL then it's shared SA */
+comment|/* source identity */
+name|struct
+name|sadb_ident
+modifier|*
+name|identd
+decl_stmt|;
+comment|/* destination identity */
+comment|/* XXX I don't know how to use them. */
 name|u_int8_t
 name|state
 decl_stmt|;
@@ -103,7 +128,7 @@ name|struct
 name|route
 name|sa_route
 decl_stmt|;
-comment|/* XXX */
+comment|/* route cache */
 block|}
 struct|;
 end_struct
@@ -152,14 +177,12 @@ modifier|*
 name|key_auth
 decl_stmt|;
 comment|/* Key for Authentication */
-comment|/* length has been shifted up to 3. */
 name|struct
 name|sadb_key
 modifier|*
 name|key_enc
 decl_stmt|;
 comment|/* Key for Encryption */
-comment|/* length has been shifted up to 3. */
 name|caddr_t
 name|iv
 decl_stmt|;
@@ -168,6 +191,12 @@ name|u_int
 name|ivlen
 decl_stmt|;
 comment|/* length of IV */
+if|#
+directive|if
+literal|0
+block|caddr_t misc1; 	caddr_t misc2; 	caddr_t misc3;
+endif|#
+directive|endif
 name|struct
 name|secreplay
 modifier|*
@@ -241,6 +270,10 @@ name|caddr_t
 name|bitmap
 decl_stmt|;
 comment|/* used by receiver */
+name|int
+name|overflow
+decl_stmt|;
+comment|/* overflow flag */
 block|}
 struct|;
 end_struct
@@ -345,6 +378,191 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* secpolicy */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|secpolicy
+modifier|*
+name|keydb_newsecpolicy
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|keydb_delsecpolicy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|secpolicy
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* secashead */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|secashead
+modifier|*
+name|keydb_newsecashead
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|keydb_delsecashead
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|secashead
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* secasvar */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|secasvar
+modifier|*
+name|keydb_newsecasvar
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|keydb_refsecasvar
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|secasvar
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|keydb_freesecasvar
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|secasvar
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* secreplay */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|secreplay
+modifier|*
+name|keydb_newsecreplay
+name|__P
+argument_list|(
+operator|(
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|keydb_delsecreplay
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|secreplay
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* secreg */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|secreg
+modifier|*
+name|keydb_newsecreg
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|keydb_delsecreg
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|secreg
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

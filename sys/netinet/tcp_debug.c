@@ -128,7 +128,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6.h>
+file|<netinet/ip6.h>
 end_include
 
 begin_endif

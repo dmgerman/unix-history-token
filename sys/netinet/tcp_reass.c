@@ -153,17 +153,9 @@ directive|include
 file|<netinet/ip_icmp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip6.h>
-end_include
+begin_comment
+comment|/* for ICMP_BANDLIM		*/
+end_comment
 
 begin_include
 include|#
@@ -174,42 +166,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/nd6.h>
+file|<netinet/icmp_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/icmp6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* for ICMP_BANDLIM		*/
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/in6_pcb.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -226,19 +194,37 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/icmp6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/nd6.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/ip6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_pcb.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet/icmp_var.h>
-end_include
 
 begin_include
 include|#
@@ -774,7 +760,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|do { \ 	if ((tp)&& (tp)->t_inpcb&& \ 	    ((tp)->t_inpcb->inp_vflag& INP_IPV6) != 0&& \ 	    (tp)->t_inpcb->in6p_route.ro_rt) \ 		nd6_nud_hint((tp)->t_inpcb->in6p_route.ro_rt, NULL); \ } while (0)
+value|do { \ 	if ((tp)&& (tp)->t_inpcb&& \ 	    ((tp)->t_inpcb->inp_vflag& INP_IPV6) != 0&& \ 	    (tp)->t_inpcb->in6p_route.ro_rt) \ 		nd6_nud_hint((tp)->t_inpcb->in6p_route.ro_rt, NULL, 0); \ } while (0)
 end_define
 
 begin_else

@@ -2079,7 +2079,7 @@ begin_define
 define|#
 directive|define
 name|IPPROTO_MAXID
-value|(IPPROTO_ESP + 1)
+value|(IPPROTO_AH + 1)
 end_define
 
 begin_comment
@@ -2090,7 +2090,7 @@ begin_define
 define|#
 directive|define
 name|CTL_IPPROTO_NAMES
-value|{ \ 	{ "ip", CTLTYPE_NODE }, \ 	{ "icmp", CTLTYPE_NODE }, \ 	{ "igmp", CTLTYPE_NODE }, \ 	{ "ggp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "tcp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ "egp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "pup", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "udp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "idp", CTLTYPE_NODE }, \ }
+value|{ \ 	{ "ip", CTLTYPE_NODE }, \ 	{ "icmp", CTLTYPE_NODE }, \ 	{ "igmp", CTLTYPE_NODE }, \ 	{ "ggp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "tcp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ "egp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "pup", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "udp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "idp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "ipsec", CTLTYPE_NODE }, \ }
 end_define
 
 begin_comment

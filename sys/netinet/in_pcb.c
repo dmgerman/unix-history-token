@@ -192,12 +192,6 @@ directive|include
 file|<netkey/key.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netkey/key_debug.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -2599,14 +2593,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
-if|if
-condition|(
-name|inp
-operator|->
-name|inp_sp
-operator|!=
-name|NULL
-condition|)
 name|ipsec4_delete_pcbpolicy
 argument_list|(
 name|inp

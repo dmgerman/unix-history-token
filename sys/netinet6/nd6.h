@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: nd6.h,v 1.23 2000/06/04 12:54:57 itojun Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +22,28 @@ define|#
 directive|define
 name|_NETINET6_ND6_H_
 end_define
+
+begin_comment
+comment|/* see net/route.h, or net/if_inarp.h */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RTF_ANNOUNCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RTF_ANNOUNCE
+value|RTF_PROTO2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -62,6 +92,10 @@ name|short
 name|ln_router
 decl_stmt|;
 comment|/* 2^0: ND6 router bit */
+name|int
+name|ln_byhint
+decl_stmt|;
+comment|/* # of times we made it reachable by UL hint */
 block|}
 struct|;
 end_struct
@@ -115,6 +149,16 @@ name|ND6_LLINFO_PROBE
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|ND6_IS_LLINFO_PROBREACH
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)->ln_state> ND6_LLINFO_INCOMPLETE)
+end_define
+
 begin_struct
 struct|struct
 name|nd_ifinfo
@@ -139,6 +183,10 @@ name|u_int32_t
 name|retrans
 decl_stmt|;
 comment|/* Retrans Timer */
+name|u_int32_t
+name|flags
+decl_stmt|;
+comment|/* Flags */
 name|int
 name|recalctm
 decl_stmt|;
@@ -153,6 +201,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ND6_IFF_PERFORMNUD
+value|0x1
+end_define
 
 begin_struct
 struct|struct
@@ -265,6 +320,9 @@ decl_stmt|;
 name|u_char
 name|prefixlen
 decl_stmt|;
+name|u_char
+name|origin
+decl_stmt|;
 name|u_long
 name|vltime
 decl_stmt|;
@@ -312,6 +370,23 @@ decl_stmt|;
 name|struct
 name|nd_ifinfo
 name|ndi
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|in6_ndifreq
+block|{
+name|char
+name|ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+name|u_long
+name|ifindex
 decl_stmt|;
 block|}
 struct|;
@@ -433,11 +508,21 @@ define|\
 value|(((MIN_RANDOM_FACTOR * (x>> 10)) + (random()& \ 		((MAX_RANDOM_FACTOR - MIN_RANDOM_FACTOR) * (x>> 10)))) /1000)
 end_define
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|nd_drhead
+argument_list|,
+name|nd_defrouter
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|nd_defrouter
 block|{
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|nd_defrouter
 argument_list|)
@@ -456,6 +541,18 @@ decl_stmt|;
 name|u_long
 name|expire
 decl_stmt|;
+name|u_long
+name|advint
+decl_stmt|;
+comment|/* Mobile IPv6 addition (milliseconds) */
+name|u_long
+name|advint_expire
+decl_stmt|;
+comment|/* Mobile IPv6 addition */
+name|int
+name|advints_lost
+decl_stmt|;
+comment|/* Mobile IPv6 addition */
 name|struct
 name|ifnet
 modifier|*
@@ -542,6 +639,13 @@ struct|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ndpr_next
+value|ndpr_entry.le_next
+end_define
 
 begin_define
 define|#
@@ -706,6 +810,10 @@ argument|nd_pfxrouter
 argument_list|)
 name|pfr_entry
 expr_stmt|;
+define|#
+directive|define
+name|pfr_next
+value|pfr_entry.le_next
 name|struct
 name|nd_defrouter
 modifier|*
@@ -714,16 +822,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_expr_stmt
-name|LIST_HEAD
-argument_list|(
-name|nd_drhead
-argument_list|,
-name|nd_defrouter
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|LIST_HEAD
@@ -777,7 +875,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|nd6_proxyall
+name|nd6_maxnudhint
 decl_stmt|;
 end_decl_stmt
 
@@ -814,6 +912,17 @@ name|nd_prefix
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* nd6_rtr.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nd6_defifindex
+decl_stmt|;
+end_decl_stmt
+
 begin_union
 union|union
 name|nd_opts
@@ -826,6 +935,7 @@ index|[
 literal|9
 index|]
 decl_stmt|;
+comment|/*max = home agent info*/
 struct|struct
 block|{
 name|struct
@@ -858,6 +968,21 @@ name|struct
 name|nd_opt_mtu
 modifier|*
 name|mtu
+decl_stmt|;
+name|struct
+name|nd_opt_hdr
+modifier|*
+name|six
+decl_stmt|;
+name|struct
+name|nd_opt_advint
+modifier|*
+name|adv
+decl_stmt|;
+name|struct
+name|nd_opt_hai
+modifier|*
+name|hai
 decl_stmt|;
 name|struct
 name|nd_opt_hdr
@@ -932,6 +1057,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|nd_opts_adv
+value|nd_opt_each.adv
+end_define
+
+begin_define
+define|#
+directive|define
+name|nd_opts_hai
+value|nd_opt_each.hai
+end_define
+
+begin_define
+define|#
+directive|define
 name|nd_opts_search
 value|nd_opt_each.search
 end_define
@@ -991,7 +1130,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|in6_addr
+name|sockaddr_in6
 operator|*
 operator|,
 expr|struct
@@ -1102,6 +1241,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|nd6_purge
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|nd6_free
 name|__P
 argument_list|(
@@ -1127,6 +1280,8 @@ operator|,
 expr|struct
 name|in6_addr
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1263,6 +1418,10 @@ name|ifnet
 operator|*
 operator|,
 expr|struct
+name|ifnet
+operator|*
+operator|,
+expr|struct
 name|mbuf
 operator|*
 operator|,
@@ -1350,6 +1509,10 @@ operator|,
 name|u_long
 operator|,
 name|int
+operator|,
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1532,6 +1695,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|defrouter_select
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|defrtrlist_del
 name|__P
 argument_list|(
@@ -1575,6 +1750,18 @@ operator|,
 expr|struct
 name|mbuf
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pfxlist_onlink_check
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1646,6 +1833,18 @@ operator|,
 expr|struct
 name|ifnet
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nd6_setdefaultiface
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
