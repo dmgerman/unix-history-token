@@ -3860,6 +3860,27 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* Record statistics for this interface address. */
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|if_opackets
+operator|++
+expr_stmt|;
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|if_obytes
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -3885,6 +3906,7 @@ operator|->
 name|ro_rt
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|m_freem
 argument_list|(
