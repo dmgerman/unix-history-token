@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: file.c,v 1.12 1997/10/06 11:36:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -363,7 +363,7 @@ name|config
 operator|==
 literal|0
 condition|)
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"warning: card %s(%s) has no valid configuration\n"
 argument_list|,
@@ -1737,7 +1737,7 @@ name|pusht
 operator|=
 literal|1
 expr_stmt|;
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"%s: %s at line %d, near %s\n"
 argument_list|,

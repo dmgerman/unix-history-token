@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.19 1997/10/26 04:36:24 nate Exp $"
+literal|"$Id: cardd.c,v 1.20 1997/10/28 17:51:25 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,7 +405,7 @@ argument_list|(
 literal|"no PC-CARD slots"
 argument_list|)
 expr_stmt|;
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"pccardd started"
 argument_list|,
@@ -823,7 +823,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"mem=0x%x\n"
 argument_list|,
@@ -1168,7 +1168,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Error reading CIS on %s\n"
 argument_list|,
@@ -1251,7 +1251,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"No card in database for \"%s\"(\"%s\")"
 argument_list|,
@@ -1316,7 +1316,7 @@ name|sp
 argument_list|)
 condition|)
 block|{
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Resource allocation failure for %s"
 argument_list|,
@@ -1494,7 +1494,7 @@ index|[
 literal|10
 index|]
 expr_stmt|;
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Ether=%02x:%02x:%02x:%02x:%02x:%02x\n"
 argument_list|,
@@ -1615,7 +1615,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Found existing driver (%s) for %s\n"
 argument_list|,
@@ -1679,7 +1679,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"No free configuration for card %s"
 argument_list|,
@@ -1709,7 +1709,7 @@ operator|->
 name|inuse
 condition|)
 block|{
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Driver already being used for %s"
 argument_list|,
@@ -1782,7 +1782,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Failed to allocate IRQ for %s\n"
 argument_list|,
@@ -1802,7 +1802,7 @@ if|#
 directive|if
 literal|0
 comment|/* Allocate I/O and memory resources. */
-block|for (ap = drvp->io; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			int     i = bit_fns(io_avail, IOPORTS, ap->size);  			if (i< 0) { 				log_1s("Failed to allocate I/O ports for %s\n", 				    cp->manuf); 				return (0); 			} 			ap->addr = i; 			bit_nclear(io_avail, i, ap->size); 		} 	} 	for (ap = drvp->mem; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			ap->addr = alloc_memory(ap->size); 			if (ap->addr == 0) { 				log_1s("Failed to allocate memory for %s\n", 				    cp->manuf); 				return (0); 			} 		} 	}
+block|for (ap = drvp->io; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			int     i = bit_fns(io_avail, IOPORTS, ap->size);  			if (i< 0) { 				logmsg("Failed to allocate I/O ports for %s\n", 				    cp->manuf); 				return (0); 			} 			ap->addr = i; 			bit_nclear(io_avail, i, ap->size); 		} 	} 	for (ap = drvp->mem; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			ap->addr = alloc_memory(ap->size); 			if (ap->addr == 0) { 				logmsg("Failed to allocate memory for %s\n", 				    cp->manuf); 				return (0); 			} 		} 	}
 endif|#
 directive|endif
 comment|/* 0 */
@@ -2073,7 +2073,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Using mem addr 0x%x, size %d, card addr 0x%x\n"
 argument_list|,
@@ -2330,7 +2330,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Using I/O addr 0x%x, size %d\n"
 argument_list|,
@@ -2584,7 +2584,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Setting config reg at offs 0x%lx to 0x%x, Reset time = %d ms\n"
 argument_list|,
@@ -2862,7 +2862,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Assigning I/O window %d, start 0x%x, size 0x%x flags 0x%x\n"
 argument_list|,
@@ -3026,7 +3026,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"Assign %s%d, io 0x%x, mem 0x%lx, %d bytes, irq %d, flags %x\n"
 argument_list|,
@@ -3090,7 +3090,7 @@ name|drv
 argument_list|)
 condition|)
 block|{
-name|log_1s
+name|logmsg
 argument_list|(
 literal|"driver allocation failed for %s"
 argument_list|,
