@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	3.1	%H%	*/
+comment|/*	kern_synch.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -1434,7 +1434,7 @@ expr_stmt|;
 name|spl0
 argument_list|()
 expr_stmt|;
-comment|/* THE SSWAP BIT IS REPLACED BY u.u_pcb.pcb_sswap SEE procdup */
+comment|/* SSWAP NOT NEEDED IN THIS CASE AS u.u_pcb.pcb_sswap SUFFICES */
 comment|/* rpp->p_flag |= SSWAP; */
 name|rip
 operator|->
