@@ -123,13 +123,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|CDEV_MAJOR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|NULL_MINOR
 value|2
 end_define
@@ -176,11 +169,6 @@ operator|.
 name|d_name
 operator|=
 literal|"null"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -211,11 +199,6 @@ operator|.
 name|d_name
 operator|=
 literal|"zero"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|,
 operator|.
 name|d_flags
