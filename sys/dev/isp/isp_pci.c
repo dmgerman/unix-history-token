@@ -5467,10 +5467,14 @@ name|cto
 operator|->
 name|ct_scsi_status
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|sflags |= CT_NODATA;
 comment|/* 		 * We can't do a status at the same time as a data CTIO, so 		 * we need to synthesize an extra CTIO at this level. 		 */
-name|nctios
-operator|++
-expr_stmt|;
+block|nctios++;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -5733,10 +5737,7 @@ operator|->
 name|ct_flags
 operator||=
 name|sflags
-operator||
-name|CT_NO_DATA
 expr_stmt|;
-empty_stmt|;
 name|cto
 operator|->
 name|ct_resid
