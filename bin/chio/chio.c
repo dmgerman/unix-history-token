@@ -142,7 +142,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int16_t
 name|parse_element_type
 parameter_list|(
 name|char
@@ -153,7 +153,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int16_t
 name|parse_element_unit
 parameter_list|(
 name|char
@@ -2360,10 +2360,11 @@ name|cesr
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|u_int16_t
+name|base
 decl_stmt|,
 name|count
-decl_stmt|,
-name|base
 decl_stmt|,
 name|chet
 decl_stmt|,
@@ -2621,6 +2622,9 @@ condition|)
 block|{
 name|base
 operator|=
+operator|(
+name|u_int16_t
+operator|)
 name|atol
 argument_list|(
 name|argv
@@ -2642,6 +2646,9 @@ literal|2
 condition|)
 name|count
 operator|=
+operator|(
+name|u_int16_t
+operator|)
 name|atol
 argument_list|(
 name|argv
@@ -2653,23 +2660,6 @@ operator|-
 name|base
 operator|+
 literal|1
-expr_stmt|;
-if|if
-condition|(
-name|base
-operator|<
-literal|0
-operator|||
-name|count
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"bad arguments"
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -3534,6 +3524,9 @@ name|csvr
 operator|.
 name|csvr_addr
 operator|=
+operator|(
+name|u_int16_t
+operator|)
 name|atol
 argument_list|(
 name|argv
@@ -3658,6 +3651,9 @@ name|csvr_voltag
 operator|.
 name|cv_serial
 operator|=
+operator|(
+name|u_int16_t
+operator|)
 name|atol
 argument_list|(
 name|argv
@@ -3755,7 +3751,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int16_t
 name|parse_element_type
 parameter_list|(
 name|char
@@ -3802,6 +3798,9 @@ literal|0
 condition|)
 return|return
 operator|(
+operator|(
+name|u_int16_t
+operator|)
 name|elements
 index|[
 name|i
@@ -3882,7 +3881,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int16_t
 name|parse_element_unit
 parameter_list|(
 name|char
@@ -3938,6 +3937,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|u_int16_t
+operator|)
 name|i
 operator|)
 return|;
@@ -4145,6 +4147,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
+name|int
+operator|)
 name|v
 operator|&
 operator|(
@@ -4173,7 +4178,10 @@ argument_list|(
 name|buf
 argument_list|)
 operator|-
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|bp
 operator|-
 operator|&
@@ -4181,7 +4189,7 @@ name|buf
 index|[
 literal|0
 index|]
-operator|)
+argument_list|)
 argument_list|,
 literal|"%c%.*s"
 argument_list|,
