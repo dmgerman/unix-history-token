@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)stats.c	8.22 (Berkeley) 5/19/1998"
+literal|"@(#)$Id: stats.c,v 8.36.14.2 2000/05/25 23:33:34 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,22 +25,23 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mailstats.h"
+file|<sendmail/mailstats.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|statistics
 name|Stat
@@ -48,6 +49,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|GotStats
 init|=
@@ -57,6 +59,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* set when we have stats to merge */
+end_comment
+
+begin_comment
+comment|/* See http://physics.nist.gov/cuu/Units/binary.html */
 end_comment
 
 begin_define
@@ -84,7 +90,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MARKSTATS -- mark statistics */
+comment|/* **  MARKSTATS -- mark statistics ** **	Parameters: **		e -- the envelope. **		to -- to address. **		reject -- whether this is a rejection. ** **	Returns: **		none. ** **	Side Effects: **		changes static Stat structure */
 end_comment
 
 begin_function
@@ -114,8 +120,6 @@ block|{
 if|if
 condition|(
 name|reject
-operator|==
-name|TRUE
 condition|)
 block|{
 if|if
@@ -170,6 +174,11 @@ index|]
 operator|++
 expr_stmt|;
 block|}
+name|Stat
+operator|.
+name|stat_cr
+operator|++
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -179,6 +188,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|Stat
+operator|.
+name|stat_cf
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|e
@@ -230,6 +244,11 @@ else|else
 block|{
 name|Stat
 operator|.
+name|stat_ct
+operator|++
+expr_stmt|;
+name|Stat
+operator|.
 name|stat_nt
 index|[
 name|to
@@ -270,6 +289,37 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  CLEARSTATS -- clear statistics structure ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		clears the Stat structure. */
+end_comment
+
+begin_function
+name|void
+name|clearstats
+parameter_list|()
+block|{
+comment|/* clear the structure to avoid future disappointment */
+name|memset
+argument_list|(
+operator|&
+name|Stat
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|Stat
+argument_list|)
+expr_stmt|;
+name|GotStats
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  POSTSTATS -- post statistics in the statistics file ** **	Parameters: **		sfile -- the name of the statistics file. ** **	Returns: **		none. ** **	Side Effects: **		merges the Stat structure with the sfile file. */
 end_comment
 
@@ -288,7 +338,7 @@ specifier|register
 name|int
 name|fd
 decl_stmt|;
-name|int
+name|long
 name|sff
 init|=
 name|SFF_REGONLY
@@ -297,7 +347,7 @@ name|SFF_OPENASROOT
 decl_stmt|;
 name|struct
 name|statistics
-name|stat
+name|stats
 decl_stmt|;
 specifier|extern
 name|off_t
@@ -347,7 +397,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|bitset
+name|bitnset
 argument_list|(
 name|DBS_WRITESTATSTOSYMLINK
 argument_list|,
@@ -361,7 +411,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|bitset
+name|bitnset
 argument_list|(
 name|DBS_WRITESTATSTOHARDLINK
 argument_list|,
@@ -431,23 +481,23 @@ name|char
 operator|*
 operator|)
 operator|&
-name|stat
+name|stats
 argument_list|,
 sizeof|sizeof
-name|stat
+name|stats
 argument_list|)
 operator|==
 sizeof|sizeof
-name|stat
+name|stats
 operator|&&
-name|stat
+name|stats
 operator|.
 name|stat_size
 operator|==
 sizeof|sizeof
-name|stat
+name|stats
 operator|&&
-name|stat
+name|stats
 operator|.
 name|stat_magic
 operator|==
@@ -455,7 +505,7 @@ name|Stat
 operator|.
 name|stat_magic
 operator|&&
-name|stat
+name|stats
 operator|.
 name|stat_version
 operator|==
@@ -483,7 +533,7 @@ name|i
 operator|++
 control|)
 block|{
-name|stat
+name|stats
 operator|.
 name|stat_nf
 index|[
@@ -497,7 +547,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|stat
+name|stats
 operator|.
 name|stat_bf
 index|[
@@ -511,7 +561,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|stat
+name|stats
 operator|.
 name|stat_nt
 index|[
@@ -525,7 +575,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|stat
+name|stats
 operator|.
 name|stat_bt
 index|[
@@ -539,7 +589,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|stat
+name|stats
 operator|.
 name|stat_nr
 index|[
@@ -553,7 +603,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|stat
+name|stats
 operator|.
 name|stat_nd
 index|[
@@ -568,26 +618,50 @@ name|i
 index|]
 expr_stmt|;
 block|}
+name|stats
+operator|.
+name|stat_cr
+operator|+=
+name|Stat
+operator|.
+name|stat_cr
+expr_stmt|;
+name|stats
+operator|.
+name|stat_ct
+operator|+=
+name|Stat
+operator|.
+name|stat_ct
+expr_stmt|;
+name|stats
+operator|.
+name|stat_cf
+operator|+=
+name|Stat
+operator|.
+name|stat_cf
+expr_stmt|;
 block|}
 else|else
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|Stat
+name|stats
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|stat
+name|Stat
 argument_list|,
 sizeof|sizeof
-name|stat
+name|stats
 argument_list|)
 expr_stmt|;
 comment|/* write out results */
@@ -618,10 +692,10 @@ name|char
 operator|*
 operator|)
 operator|&
-name|stat
+name|stats
 argument_list|,
 sizeof|sizeof
-name|stat
+name|stats
 argument_list|)
 expr_stmt|;
 operator|(
@@ -633,18 +707,8 @@ name|fd
 argument_list|)
 expr_stmt|;
 comment|/* clear the structure to avoid future disappointment */
-name|bzero
-argument_list|(
-operator|&
-name|Stat
-argument_list|,
-sizeof|sizeof
-name|stat
-argument_list|)
-expr_stmt|;
-name|GotStats
-operator|=
-name|FALSE
+name|clearstats
+argument_list|()
 expr_stmt|;
 block|}
 end_function

@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_ifndef
@@ -24,10 +24,10 @@ end_if
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)udb.c	8.71 (Berkeley) 1/17/1999 (with USERDB)"
+literal|"@(#)$Id: udb.c,v 8.111 1999/11/16 02:04:04 gshapiro Exp $ (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,13 +36,17 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* USERDB */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)udb.c	8.71 (Berkeley) 1/17/1999 (without USERDB)"
+literal|"@(#)$Id: udb.c,v 8.111 1999/11/16 02:04:04 gshapiro Exp $ (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,22 +55,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* USERDB */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! lint */
+end_comment
 
 begin_if
 if|#
 directive|if
 name|USERDB
 end_if
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -98,10 +104,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! DB_VERSION_MAJOR */
+end_comment
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* NEWDB */
+end_comment
 
 begin_define
 define|#
@@ -138,6 +152,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* NEWDB */
+end_comment
+
+begin_comment
 comment|/* **  UDB.C -- interface between sendmail and Berkeley User Data Base. ** **	This depends on the 4.4BSD db package. */
 end_comment
 
@@ -165,11 +183,15 @@ decl_stmt|;
 comment|/* default host for outgoing mail */
 union|union
 block|{
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETINET6
 comment|/* type UE_REMOTE -- do remote call for lookup */
 struct|struct
 block|{
-name|struct
-name|sockaddr_in
+name|SOCKADDR
 name|_udb_addr
 decl_stmt|;
 comment|/* address */
@@ -188,6 +210,9 @@ define|#
 directive|define
 name|udb_timeout
 value|udb_u.udb_remote._udb_timeout
+endif|#
+directive|endif
+comment|/* NETINET || NETINET6 */
 comment|/* type UE_FORWARD -- forward message to remote */
 struct|struct
 block|{
@@ -232,6 +257,7 @@ name|udb_dbp
 value|udb_u.udb_lookup._udb_dbp
 endif|#
 directive|endif
+comment|/* NEWDB */
 block|}
 name|udb_u
 union|;
@@ -322,11 +348,11 @@ name|udb_option
 block|{
 name|char
 modifier|*
-name|name
+name|udbo_name
 decl_stmt|;
 name|char
 modifier|*
-name|val
+name|udbo_val
 decl_stmt|;
 block|}
 struct|;
@@ -339,7 +365,7 @@ name|HESIOD
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|hes_udb_get
 name|__P
@@ -360,8 +386,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* HESIOD */
+end_comment
+
 begin_decl_stmt
-specifier|extern
+specifier|static
+name|char
+modifier|*
+name|udbmatch
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|_udbx_init
 name|__P
@@ -374,30 +422,32 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
+begin_decl_stmt
+specifier|static
+name|int
+name|_udb_parsespec
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+expr|struct
+name|udb_option
+index|[]
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  UDBEXPAND -- look up user in database and expand ** **	Parameters: **		a -- address to expand. **		sendq -- pointer to head of sendq to put the expansions in. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		EX_TEMPFAIL -- if something "odd" happened -- probably due **			to accessing a file on an NFS server that is down. **		EX_OK -- otherwise. ** **	Side Effects: **		Modifies sendq. */
 end_comment
 
 begin_decl_stmt
-name|int
-name|UdbPort
-init|=
-literal|1616
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|UdbTimeout
-init|=
-literal|10
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|udbent
 name|UdbEnts
@@ -410,15 +460,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|UdbSock
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|bool
 name|UdbInitialized
 init|=
@@ -491,19 +533,23 @@ index|[
 name|MAXKEY
 index|]
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|key
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|key
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|info
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|info
@@ -518,7 +564,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbexpand(%s)\n"
 argument_list|,
@@ -530,15 +576,12 @@ expr_stmt|;
 comment|/* make certain we are supposed to send to this address */
 if|if
 condition|(
-name|bitset
+operator|!
+name|QS_IS_SENDABLE
 argument_list|(
-name|QDONTSEND
-operator||
-name|QVERIFIED
-argument_list|,
 name|a
 operator|->
-name|q_flags
+name|q_state
 argument_list|)
 condition|)
 return|return
@@ -646,21 +689,27 @@ comment|/* build actual database key */
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|keybuf
 argument_list|,
 name|user
+argument_list|,
+sizeof|sizeof
+name|keybuf
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcat
+name|strlcat
 argument_list|(
 name|keybuf
 argument_list|,
 literal|":maildrop"
+argument_list|,
+sizeof|sizeof
+name|keybuf
 argument_list|)
 expr_stmt|;
 name|keylen
@@ -687,10 +736,6 @@ name|up
 operator|++
 control|)
 block|{
-name|char
-modifier|*
-name|user
-decl_stmt|;
 name|int
 name|usersize
 decl_stmt|;
@@ -722,6 +767,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* defined(HESIOD)&& defined(HES_GETMAILHOST) */
 if|#
 directive|if
 name|defined
@@ -740,6 +786,7 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* defined(NEWDB)&& DB_VERSION_MAJOR> 1 */
 name|user
 operator|=
 name|userbuf
@@ -798,7 +845,7 @@ argument_list|,
 literal|80
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbexpand: trying %s (%d) via db\n"
 argument_list|,
@@ -838,6 +885,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR< 2 */
 name|i
 operator|=
 literal|0
@@ -886,6 +934,7 @@ literal|0
 condition|)
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR> 2 || DB_VERSION_MINOR>= 6 */
 operator|(
 name|errno
 operator|=
@@ -913,6 +962,7 @@ literal|0
 block|)
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR> 2 || DB_VERSION_MINOR>= 6 */
 name|i
 operator|=
 operator|-
@@ -955,6 +1005,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR< 2 */
 if|if
 condition|(
 name|i
@@ -977,7 +1028,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbexpand: no match on %s (%d)\n"
 argument_list|,
@@ -1015,6 +1066,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR> 1 */
 break|break;
 block|}
 if|if
@@ -1026,7 +1078,7 @@ argument_list|,
 literal|80
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbexpand: match %.*s: %.*s\n"
 argument_list|,
@@ -1080,7 +1132,7 @@ name|size
 operator|==
 name|keylen
 operator|&&
-name|bcmp
+name|memcmp
 argument_list|(
 name|key
 operator|.
@@ -1112,9 +1164,9 @@ condition|)
 block|{
 name|a
 operator|->
-name|q_flags
-operator||=
-name|QVERIFIED
+name|q_state
+operator|=
+name|QS_VERIFIED
 expr_stmt|;
 if|#
 directive|if
@@ -1145,6 +1197,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR> 1 */
 return|return
 name|EX_OK
 return|;
@@ -1196,11 +1249,11 @@ operator|+
 name|size
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|user
-argument_list|,
 name|nuser
+argument_list|,
+name|user
 argument_list|,
 name|usersize
 argument_list|)
@@ -1257,13 +1310,13 @@ name|userleft
 operator|--
 expr_stmt|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
+name|p
+argument_list|,
 name|info
 operator|.
 name|data
-argument_list|,
-name|p
 argument_list|,
 name|info
 operator|.
@@ -1317,6 +1370,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR< 2 */
 name|i
 operator|=
 literal|0
@@ -1350,6 +1404,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR< 2 */
 block|}
 if|#
 directive|if
@@ -1380,6 +1435,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR> 1 */
 comment|/* if nothing ever matched, try next database */
 if|if
 condition|(
@@ -1397,7 +1453,7 @@ expr_stmt|;
 if|if
 condition|(
 name|LogLevel
-operator|>=
+operator|>
 literal|10
 condition|)
 name|sm_syslog
@@ -1466,9 +1522,9 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
-literal|"udbexpand: QDONTSEND "
+literal|"udbexpand: QS_EXPANDED "
 argument_list|)
 expr_stmt|;
 name|printaddr
@@ -1481,9 +1537,9 @@ expr_stmt|;
 block|}
 name|a
 operator|->
-name|q_flags
-operator||=
-name|QDONTSEND
+name|q_state
+operator|=
+name|QS_EXPANDED
 expr_stmt|;
 block|}
 if|if
@@ -1520,19 +1576,23 @@ name|EX_TEMPFAIL
 return|;
 block|}
 comment|/* 			**  If this address has a -request address, reflect 			**  it into the envelope. 			*/
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|key
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|key
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|info
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|info
@@ -1541,23 +1601,29 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|keybuf
 argument_list|,
 name|a
 operator|->
 name|q_user
+argument_list|,
+sizeof|sizeof
+name|keybuf
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcat
+name|strlcat
 argument_list|(
 name|keybuf
 argument_list|,
 literal|":mailsender"
+argument_list|,
+sizeof|sizeof
+name|keybuf
 argument_list|)
 expr_stmt|;
 name|keylen
@@ -1610,6 +1676,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR< 2 */
 name|i
 operator|=
 name|errno
@@ -1640,6 +1707,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR< 2 */
 if|if
 condition|(
 name|i
@@ -1666,15 +1734,15 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|info
-operator|.
-name|data
-argument_list|,
 name|a
 operator|->
 name|q_owner
+argument_list|,
+name|info
+operator|.
+name|data
 argument_list|,
 name|info
 operator|.
@@ -1733,6 +1801,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* NEWDB */
 ifdef|#
 directive|ifdef
 name|HESIOD
@@ -1760,7 +1829,7 @@ argument_list|,
 literal|80
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbexpand: trying %s (%d) via hesiod\n"
 argument_list|,
@@ -1838,6 +1907,7 @@ name|hp
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* HES_GETMAILHOST */
 if|if
 condition|(
 name|tTd
@@ -1847,7 +1917,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbexpand: no match on %s (%d)\n"
 argument_list|,
@@ -1875,7 +1945,7 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ... trying hes_getmailhost(%s)\n"
 argument_list|,
@@ -1933,7 +2003,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"hes_getmailhost(%s): %d\n"
 argument_list|,
@@ -1978,7 +2048,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"hes_getmailhost(%s): expansion too long: %.30s@%.30s\n"
 argument_list|,
@@ -2034,9 +2104,11 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* HES_GETMAILHOST */
 break|break;
 endif|#
 directive|endif
+comment|/* HES_GETMAILHOST */
 block|}
 if|if
 condition|(
@@ -2047,7 +2119,7 @@ argument_list|,
 literal|80
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbexpand: match %.*s: %.*s\n"
 argument_list|,
@@ -2103,9 +2175,9 @@ condition|)
 block|{
 name|a
 operator|->
-name|q_flags
-operator||=
-name|QVERIFIED
+name|q_state
+operator|=
+name|QS_VERIFIED
 expr_stmt|;
 return|return
 name|EX_OK
@@ -2134,13 +2206,13 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|user
+argument_list|,
 name|info
 operator|.
 name|data
-argument_list|,
-name|user
 argument_list|,
 name|info
 operator|.
@@ -2166,7 +2238,7 @@ expr_stmt|;
 if|if
 condition|(
 name|LogLevel
-operator|>=
+operator|>
 literal|10
 condition|)
 name|sm_syslog
@@ -2235,9 +2307,9 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
-literal|"udbexpand: QDONTSEND "
+literal|"udbexpand: QS_EXPANDED "
 argument_list|)
 expr_stmt|;
 name|printaddr
@@ -2250,32 +2322,38 @@ expr_stmt|;
 block|}
 name|a
 operator|->
-name|q_flags
-operator||=
-name|QDONTSEND
+name|q_state
+operator|=
+name|QS_EXPANDED
 expr_stmt|;
 block|}
 comment|/* 			**  If this address has a -request address, reflect 			**  it into the envelope. 			*/
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|keybuf
 argument_list|,
 name|a
 operator|->
 name|q_user
+argument_list|,
+sizeof|sizeof
+name|keybuf
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcat
+name|strlcat
 argument_list|(
 name|keybuf
 argument_list|,
 literal|":mailsender"
+argument_list|,
+sizeof|sizeof
+name|keybuf
 argument_list|)
 expr_stmt|;
 name|keylen
@@ -2334,15 +2412,15 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|info
-operator|.
-name|data
-argument_list|,
 name|a
 operator|->
 name|q_owner
+argument_list|,
+name|info
+operator|.
+name|data
 argument_list|,
 name|info
 operator|.
@@ -2383,9 +2461,17 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
+block|{
+name|a
+operator|->
+name|q_state
+operator|=
+name|QS_VERIFIED
+expr_stmt|;
 return|return
 name|EX_OK
 return|;
+block|}
 name|i
 operator|=
 name|strlen
@@ -2503,9 +2589,9 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
-literal|"udbexpand: QDONTSEND "
+literal|"udbexpand: QS_EXPANDED "
 argument_list|)
 expr_stmt|;
 name|printaddr
@@ -2518,9 +2604,9 @@ expr_stmt|;
 block|}
 name|a
 operator|->
-name|q_flags
-operator||=
-name|QDONTSEND
+name|q_state
+operator|=
+name|QS_EXPANDED
 expr_stmt|;
 block|}
 name|breakout
@@ -2583,21 +2669,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|extern
-name|char
-modifier|*
-name|udbmatch
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
 return|return
 name|udbmatch
 argument_list|(
@@ -2609,7 +2680,15 @@ return|;
 block|}
 end_block
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  UDBMATCH -- match user in field, return result of lookup. ** **	Parameters: **		user -- the name of the user. **		field -- the field to lookup. ** **	Returns: **		The external name for this sender, if derivable from the **			database. **		NULL -- if nothing is changed from the database. ** **	Side Effects: **		none. */
+end_comment
+
 begin_function
+specifier|static
 name|char
 modifier|*
 name|udbmatch
@@ -2664,7 +2743,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbmatch(%s, %s)\n"
 argument_list|,
@@ -2778,29 +2857,16 @@ comment|/* build database key */
 operator|(
 name|void
 operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|keybuf
+argument_list|,
+sizeof|sizeof
+name|keybuf
+argument_list|,
+literal|"%s:%s"
 argument_list|,
 name|user
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|keybuf
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|keybuf
 argument_list|,
 name|field
 argument_list|)
@@ -2842,19 +2908,23 @@ name|NEWDB
 case|case
 name|UDB_DBFETCH
 case|:
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|key
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|key
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|info
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|info
@@ -2903,6 +2973,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR< 2 */
 name|i
 operator|=
 name|errno
@@ -2933,6 +3004,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR< 2 */
 if|if
 condition|(
 name|i
@@ -2955,7 +3027,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbmatch: no match on %s (%d) via db\n"
 argument_list|,
@@ -2977,13 +3049,13 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|p
+argument_list|,
 name|info
 operator|.
 name|data
-argument_list|,
-name|p
 argument_list|,
 name|info
 operator|.
@@ -3008,7 +3080,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbmatch ==> %s\n"
 argument_list|,
@@ -3020,6 +3092,7 @@ name|p
 return|;
 endif|#
 directive|endif
+comment|/* NEWDB */
 ifdef|#
 directive|ifdef
 name|HESIOD
@@ -3071,7 +3144,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbmatch: no match on %s (%d) via hesiod\n"
 argument_list|,
@@ -3093,13 +3166,13 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|p
+argument_list|,
 name|info
 operator|.
 name|data
-argument_list|,
-name|p
 argument_list|,
 name|info
 operator|.
@@ -3124,7 +3197,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbmatch ==> %s\n"
 argument_list|,
@@ -3158,21 +3231,27 @@ comment|/* build database key */
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|keybuf
 argument_list|,
 name|user
+argument_list|,
+sizeof|sizeof
+name|keybuf
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcat
+name|strlcat
 argument_list|(
 name|keybuf
 argument_list|,
 literal|":maildrop"
+argument_list|,
+sizeof|sizeof
+name|keybuf
 argument_list|)
 expr_stmt|;
 name|keylen
@@ -3221,19 +3300,23 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|key
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|key
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|info
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|info
@@ -3287,6 +3370,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR< 2 */
 name|i
 operator|=
 name|errno
@@ -3317,6 +3401,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR< 2 */
 if|if
 condition|(
 name|i
@@ -3353,15 +3438,15 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|info
-operator|.
-name|data
-argument_list|,
 name|up
 operator|->
 name|udb_default
+argument_list|,
+name|info
+operator|.
+name|data
 argument_list|,
 name|info
 operator|.
@@ -3394,19 +3479,23 @@ literal|'\0'
 condition|)
 continue|continue;
 comment|/* we have a default case -- verify user:maildrop */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|key
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|key
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|info
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|info
@@ -3455,6 +3544,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR< 2 */
 name|i
 operator|=
 name|errno
@@ -3485,6 +3575,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR< 2 */
 if|if
 condition|(
 name|i
@@ -3502,10 +3593,8 @@ comment|/* nope -- no aliasing for this user */
 continue|continue;
 block|}
 comment|/* they exist -- build the actual address */
-name|p
+name|i
 operator|=
-name|xalloc
-argument_list|(
 name|strlen
 argument_list|(
 name|user
@@ -3519,34 +3608,26 @@ name|udb_default
 argument_list|)
 operator|+
 literal|2
+expr_stmt|;
+name|p
+operator|=
+name|xalloc
+argument_list|(
+name|i
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|i
+argument_list|,
+literal|"%s@%s"
 argument_list|,
 name|user
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|p
-argument_list|,
-literal|"@"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|p
 argument_list|,
 name|up
 operator|->
@@ -3562,7 +3643,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbmatch ==> %s\n"
 argument_list|,
@@ -3574,6 +3655,7 @@ name|p
 return|;
 endif|#
 directive|endif
+comment|/* NEWDB */
 ifdef|#
 directive|ifdef
 name|HESIOD
@@ -3654,15 +3736,15 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|info
-operator|.
-name|data
-argument_list|,
 name|up
 operator|->
 name|udb_default
+argument_list|,
+name|info
+operator|.
+name|data
 argument_list|,
 name|info
 operator|.
@@ -3735,10 +3817,8 @@ comment|/* nope -- no aliasing for this user */
 continue|continue;
 block|}
 comment|/* they exist -- build the actual address */
-name|p
+name|i
 operator|=
-name|xalloc
-argument_list|(
 name|strlen
 argument_list|(
 name|user
@@ -3752,34 +3832,26 @@ name|udb_default
 argument_list|)
 operator|+
 literal|2
+expr_stmt|;
+name|p
+operator|=
+name|xalloc
+argument_list|(
+name|i
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|i
+argument_list|,
+literal|"%s@%s"
 argument_list|,
 name|user
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|p
-argument_list|,
-literal|"@"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|p
 argument_list|,
 name|up
 operator|->
@@ -3795,7 +3867,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udbmatch ==> %s\n"
 argument_list|,
@@ -3892,7 +3964,7 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"udb_map_lookup(%s, %s)\n"
 argument_list|,
@@ -3946,11 +4018,11 @@ name|keybuf
 operator|-
 literal|1
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|name
-argument_list|,
 name|keybuf
+argument_list|,
+name|name
 argument_list|,
 name|keysize
 argument_list|)
@@ -4052,6 +4124,7 @@ value|27
 end_define
 
 begin_function
+specifier|static
 name|int
 name|_udbx_init
 parameter_list|(
@@ -4100,6 +4173,7 @@ name|UDB_DEFAULT_SPEC
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* UDB_DEFAULT_SPEC */
 name|p
 operator|=
 name|UdbSpec
@@ -4122,12 +4196,6 @@ decl_stmt|;
 name|int
 name|l
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|auto int rcode; 		int nmx; 		int i; 		register struct hostent *h; 		char *mxhosts[MAXMXHOSTS + 1];
-endif|#
-directive|endif
 name|struct
 name|udb_option
 name|opts
@@ -4136,23 +4204,6 @@ name|MAXUDBOPTS
 operator|+
 literal|1
 index|]
-decl_stmt|;
-specifier|extern
-name|int
-name|_udb_parsespec
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-expr|struct
-name|udb_option
-index|[]
-operator|,
-name|int
-operator|)
-argument_list|)
 decl_stmt|;
 while|while
 condition|(
@@ -4234,35 +4285,13 @@ argument_list|,
 name|MAXUDBOPTS
 argument_list|)
 expr_stmt|;
-comment|/* 		**  Decode database specification. 		** 		**	In the sendmail tradition, the leading character 		**	defines the semantics of the rest of the entry. 		** 		**	+hostname --	send a datagram to the udb server 		**			on host "hostname" asking for the 		**			home mail server for this user. 		**	*hostname --	similar to +hostname, except that the 		**			hostname is searched as an MX record; 		**			resulting hosts are searched as for 		**			+mxhostname.  If no MX host is found, 		**			this is the same as +hostname. 		**	@hostname --	forward email to the indicated host. 		**			This should be the last in the list, 		**			since it always matches the input. 		**	/dbname	 --	search the named database on the local 		**			host using the Berkeley db package. 		**	Hesiod --	search the named database with BIND 		**			using the MIT Hesiod package. 		*/
+comment|/* 		**  Decode database specification. 		** 		**	In the sendmail tradition, the leading character 		**	defines the semantics of the rest of the entry. 		** 		**	@hostname --	forward email to the indicated host. 		**			This should be the last in the list, 		**			since it always matches the input. 		**	/dbname	 --	search the named database on the local 		**			host using the Berkeley db package. 		**	Hesiod --	search the named database with BIND 		**			using the MIT Hesiod package. 		*/
 switch|switch
 condition|(
 operator|*
 name|spec
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|case '+':
-comment|/* search remote database */
-block|case '*':
-comment|/* search remote database (expand MX) */
-block|if (*spec == '*') 			{
-if|#
-directive|if
-name|NAMED_BIND
-block|nmx = getmxrr(spec + 1, mxhosts, FALSE,&rcode);
-else|#
-directive|else
-block|mxhosts[0] = spec + 1; 				nmx = 1; 				rcode = 0;
-endif|#
-directive|endif
-block|if (tTd(28, 16)) 				{ 					int i;  					printf("getmxrr(%s): %d", spec + 1, nmx); 					for (i = 0; i<= nmx; i++) 						printf(" %s", mxhosts[i]); 					printf("\n"); 				} 			} 			else 			{ 				nmx = 1; 				mxhosts[0] = spec + 1; 			}  			for (i = 0; i< nmx; i++) 			{ 				h = sm_gethostbyname(mxhosts[i]); 				if (h == NULL) 					continue; 				up->udb_type = UDB_REMOTE; 				up->udb_pid = getpid(); 				up->udb_addr.sin_family = h->h_addrtype; 				bcopy(h->h_addr_list[0], 				      (char *)&up->udb_addr.sin_addr, 				      INADDRSZ); 				up->udb_addr.sin_port = UdbPort; 				up->udb_timeout = UdbTimeout; 				ents++; 				up++; 			}
-comment|/* set up a datagram socket */
-block|if (UdbSock< 0) 			{ 				UdbSock = socket(AF_INET, SOCK_DGRAM, 0); 				(void) fcntl(UdbSock, F_SETFD, 1); 			} 			break;
-endif|#
-directive|endif
 case|case
 literal|'@'
 case|:
@@ -4398,22 +4427,36 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|up
 operator|->
 name|udb_dbname
 argument_list|,
 name|spec
+argument_list|,
+name|l
+operator|+
+literal|4
 argument_list|)
 expr_stmt|;
-name|strcat
+operator|(
+name|void
+operator|)
+name|strlcat
 argument_list|(
 name|up
 operator|->
 name|udb_dbname
 argument_list|,
 literal|".db"
+argument_list|,
+name|l
+operator|+
+literal|4
 argument_list|)
 expr_stmt|;
 block|}
@@ -4447,12 +4490,160 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR< 2 */
+block|{
+name|int
+name|flags
+init|=
+name|DB_RDONLY
+decl_stmt|;
+if|#
+directive|if
+name|DB_VERSION_MAJOR
+operator|>
+literal|2
+name|int
+name|ret
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DB_VERSION_MAJOR> 2 */
+if|#
+directive|if
+operator|!
+name|HASFLOCK
+operator|&&
+name|defined
+argument_list|(
+name|DB_FCNTL_LOCKING
+argument_list|)
+name|flags
+operator||=
+name|DB_FCNTL_LOCKING
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !HASFLOCK&& defined(DB_FCNTL_LOCKING) */
 name|up
 operator|->
 name|udb_dbp
 operator|=
 name|NULL
 expr_stmt|;
+if|#
+directive|if
+name|DB_VERSION_MAJOR
+operator|>
+literal|2
+name|ret
+operator|=
+name|db_create
+argument_list|(
+operator|&
+name|up
+operator|->
+name|udb_dbp
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|up
+operator|->
+name|udb_dbp
+operator|->
+name|close
+argument_list|(
+name|up
+operator|->
+name|udb_dbp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|up
+operator|->
+name|udb_dbp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ret
+operator|=
+name|up
+operator|->
+name|udb_dbp
+operator|->
+name|open
+argument_list|(
+name|up
+operator|->
+name|udb_dbp
+argument_list|,
+name|up
+operator|->
+name|udb_dbname
+argument_list|,
+name|NULL
+argument_list|,
+name|DB_BTREE
+argument_list|,
+name|flags
+argument_list|,
+literal|0644
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|up
+operator|->
+name|udb_dbp
+operator|->
+name|close
+argument_list|(
+name|up
+operator|->
+name|udb_dbp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|up
+operator|->
+name|udb_dbp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+name|errno
+operator|=
+name|ret
+expr_stmt|;
+else|#
+directive|else
+comment|/* DB_VERSION_MAJOR> 2 */
 name|errno
 operator|=
 name|db_open
@@ -4463,7 +4654,7 @@ name|udb_dbname
 argument_list|,
 name|DB_BTREE
 argument_list|,
-name|DB_RDONLY
+name|flags
 argument_list|,
 literal|0644
 argument_list|,
@@ -4479,6 +4670,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR> 2 */
+block|}
+endif|#
+directive|endif
+comment|/* DB_VERSION_MAJOR< 2 */
 if|if
 condition|(
 name|up
@@ -4499,7 +4695,7 @@ argument_list|)
 condition|)
 block|{
 name|int
-name|saveerrno
+name|save_errno
 init|=
 name|errno
 decl_stmt|;
@@ -4508,18 +4704,20 @@ directive|if
 name|DB_VERSION_MAJOR
 operator|<
 literal|2
-name|printf
+name|dprintf
 argument_list|(
 literal|"dbopen(%s): %s\n"
 argument_list|,
 else|#
 directive|else
-argument|printf(
+comment|/* DB_VERSION_MAJOR< 2 */
+argument|dprintf(
 literal|"db_open(%s): %s\n"
 argument|,
 endif|#
 directive|endif
-argument|up->udb_dbname, 						errstring(errno)); 					errno = saveerrno; 				} 				if (errno != ENOENT&& errno != EACCES) 				{ 					if (LogLevel>
+comment|/* DB_VERSION_MAJOR< 2 */
+argument|up->udb_dbname, 						errstring(errno)); 					errno = save_errno; 				} 				if (errno != ENOENT&& errno != EACCES) 				{ 					if (LogLevel>
 literal|2
 argument|) 						sm_syslog(LOG_ERR, e->e_id,
 if|#
@@ -4531,11 +4729,13 @@ literal|"dbopen(%s): %s"
 argument|,
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR< 2 */
 literal|"db_open(%s): %s"
 argument|,
 endif|#
 directive|endif
-argument|up->udb_dbname, 							errstring(errno)); 					up->udb_type = UDB_EOLIST; 					if (up->udb_dbname != spec) 						free(up->udb_dbname); 					goto tempfail; 				} 				if (up->udb_dbname != spec) 					free(up->udb_dbname); 				break; 			} 			if (tTd(
+comment|/* DB_VERSION_MAJOR< 2 */
+argument|up->udb_dbname, 							  errstring(errno)); 					up->udb_type = UDB_EOLIST; 					if (up->udb_dbname != spec) 						free(up->udb_dbname); 					goto tempfail; 				} 				if (up->udb_dbname != spec) 					free(up->udb_dbname); 				break; 			} 			if (tTd(
 literal|28
 argument|,
 literal|1
@@ -4545,20 +4745,31 @@ directive|if
 name|DB_VERSION_MAJOR
 operator|<
 literal|2
-argument|printf(
+argument|dprintf(
 literal|"_udbx_init: dbopen(%s)\n"
 argument|,
 else|#
 directive|else
-argument|printf(
+comment|/* DB_VERSION_MAJOR< 2 */
+argument|dprintf(
 literal|"_udbx_init: db_open(%s)\n"
 argument|,
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR< 2 */
 argument|up->udb_dbname); 			} 			up->udb_type = UDB_DBFETCH; 			up->udb_pid = getpid(); 			ents++; 			up++; 			break;
 endif|#
 directive|endif
-argument|default: badspec: 			syserr(
+comment|/* NEWDB */
+argument|default:
+ifdef|#
+directive|ifdef
+name|HESIOD
+argument|badspec:
+endif|#
+directive|endif
+comment|/* HESIOD */
+argument|syserr(
 literal|"Unknown UDB spec %s"
 argument|, spec); 			break; 		} 	} 	up->udb_type = UDB_EOLIST;  	if (tTd(
 literal|28
@@ -4568,30 +4779,33 @@ argument|)) 	{ 		for (up = UdbEnts; up->udb_type != UDB_EOLIST; up++) 		{ 			swi
 if|#
 directive|if
 name|DAEMON
-argument|case UDB_REMOTE: 				printf(
+argument|case UDB_REMOTE: 				dprintf(
 literal|"REMOTE: addr %s, timeo %d\n"
 argument|, 					anynet_ntoa((SOCKADDR *)&up->udb_addr), 					up->udb_timeout); 				break;
 endif|#
 directive|endif
+comment|/* DAEMON */
 argument|case UDB_DBFETCH:
 ifdef|#
 directive|ifdef
 name|NEWDB
-argument|printf(
+argument|dprintf(
 literal|"FETCH: file %s\n"
 argument|, 					up->udb_dbname);
 else|#
 directive|else
-argument|printf(
+comment|/* NEWDB */
+argument|dprintf(
 literal|"FETCH\n"
 argument|);
 endif|#
 directive|endif
-argument|break;  			  case UDB_FORWARD: 				printf(
+comment|/* NEWDB */
+argument|break;  			  case UDB_FORWARD: 				dprintf(
 literal|"FORWARD: host %s\n"
-argument|, 					up->udb_fwdhost); 				break;  			  case UDB_HESIOD: 				printf(
+argument|, 					up->udb_fwdhost); 				break;  			  case UDB_HESIOD: 				dprintf(
 literal|"HESIOD\n"
-argument|); 				break;  			  default: 				printf(
+argument|); 				break;  			  default: 				dprintf(
 literal|"UNKNOWN\n"
 argument|); 				break; 			} 		} 	}  	UdbInitialized = TRUE; 	errno =
 literal|0
@@ -4610,21 +4824,24 @@ literal|2
 argument|(*up->udb_dbp->close)(up->udb_dbp);
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR< 2 */
 argument|errno = (*up->udb_dbp->close)(up->udb_dbp,
 literal|0
 argument|);
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR< 2 */
 argument|if (tTd(
 literal|28
 argument|,
 literal|1
-argument|)) 			{ 				printf(
+argument|)) 				dprintf(
 literal|"_udbx_init: db->close(%s)\n"
-argument|, 					up->udb_dbname); 			} 		} 	}
+argument|, 					up->udb_dbname); 		} 	}
 endif|#
 directive|endif
-argument|return EX_TEMPFAIL; }  int _udb_parsespec(udbspec, opt, maxopts) 	char *udbspec; 	struct udb_option opt[]; 	int maxopts; { 	register char *spec; 	register char *spec_end; 	register int optnum;  	spec_end = strchr(udbspec,
+comment|/* NEWDB */
+argument|return EX_TEMPFAIL; }  static int _udb_parsespec(udbspec, opt, maxopts) 	char *udbspec; 	struct udb_option opt[]; 	int maxopts; { 	register char *spec; 	register char *spec_end; 	register int optnum;  	spec_end = strchr(udbspec,
 literal|':'
 argument|); 	for (optnum =
 literal|0
@@ -4632,9 +4849,9 @@ argument|; optnum< maxopts&& (spec = spec_end) != NULL; optnum++) 	{ 		register 
 literal|':'
 argument|); 		if (spec_end != NULL) 			*spec_end++ =
 literal|'\0'
-argument|;  		opt[optnum].name = spec; 		opt[optnum].val = NULL; 		p = strchr(spec,
+argument|;  		opt[optnum].udbo_name = spec; 		opt[optnum].udbo_val = NULL; 		p = strchr(spec,
 literal|'='
-argument|); 		if (p != NULL) 			opt[optnum].val = ++p; 	} 	return optnum; }
+argument|); 		if (p != NULL) 			opt[optnum].udbo_val = ++p; 	} 	return optnum; }
 comment|/* **  _UDBX_CLOSE -- close all file based UDB entries. ** **	Parameters: **		none ** **	Returns: **		none */
 argument|void _udbx_close() { 	pid_t pid; 	struct udbent *up;  	if (!UdbInitialized) 		return;  	pid = getpid();  	for (up = UdbEnts; up->udb_type != UDB_EOLIST; up++) 	{ 		if (up->udb_pid != pid) 			continue;
 ifdef|#
@@ -4649,29 +4866,32 @@ literal|2
 argument|(*up->udb_dbp->close)(up->udb_dbp);
 else|#
 directive|else
+comment|/* DB_VERSION_MAJOR< 2 */
 argument|errno = (*up->udb_dbp->close)(up->udb_dbp,
 literal|0
 argument|);
 endif|#
 directive|endif
+comment|/* DB_VERSION_MAJOR< 2 */
 argument|} 		if (tTd(
 literal|28
 argument|,
 literal|1
-argument|)) 		{ 			printf(
+argument|)) 			dprintf(
 literal|"_udbx_init: db->close(%s)\n"
-argument|, 				up->udb_dbname); 		}
+argument|, 				up->udb_dbname);
 endif|#
 directive|endif
+comment|/* NEWDB */
 argument|} }
 ifdef|#
 directive|ifdef
 name|HESIOD
-argument|int hes_udb_get(key, info) 	DBT *key; 	DBT *info; { 	char *name, *type; 	char **hp; 	char kbuf[MAXKEY +
+argument|static int hes_udb_get(key, info) 	DBT *key; 	DBT *info; { 	char *name, *type; 	char **hp; 	char kbuf[MAXKEY +
 literal|1
-argument|];  	if (strlen(key->data)>= (SIZE_T) sizeof kbuf) 		return
+argument|];  	if (strlcpy(kbuf, key->data, sizeof kbuf)>= (SIZE_T) sizeof kbuf) 		return
 literal|0
-argument|; 	strcpy(kbuf, key->data); 	name = kbuf; 	type = strrchr(name,
+argument|; 	name = kbuf; 	type = strrchr(name,
 literal|':'
 argument|); 	if (type == NULL) 		return
 literal|1
@@ -4685,7 +4905,7 @@ argument|;  	if (tTd(
 literal|28
 argument|,
 literal|1
-argument|)) 		printf(
+argument|)) 		dprintf(
 literal|"hes_udb_get(%s, %s)\n"
 argument|, name, type);
 comment|/* make the hesiod query */
@@ -4699,6 +4919,7 @@ literal|1
 argument|; 	hp = hesiod_resolve(HesiodContext, name, type);
 else|#
 directive|else
+comment|/* HESIOD_INIT */
 argument|hp = hes_resolve(name, type);
 endif|#
 directive|endif
@@ -4718,6 +4939,7 @@ literal|1
 argument|; 	}
 else|#
 directive|else
+comment|/* HESIOD_INIT */
 argument|if (hp == NULL || hp[
 literal|0
 argument|] == NULL) 	{
@@ -4738,7 +4960,7 @@ argument|]; 		info->size = (size_t) strlen(info->data); 	}  	if (tTd(
 literal|28
 argument|,
 literal|80
-argument|)) 		printf(
+argument|)) 		dprintf(
 literal|"hes_udb_get => %s\n"
 argument|, *hp);  	return
 literal|0
@@ -4748,7 +4970,7 @@ directive|endif
 comment|/* HESIOD */
 else|#
 directive|else
-comment|/* not USERDB */
+comment|/* USERDB */
 argument|int udbexpand(a, sendq, aliaslevel, e) 	ADDRESS *a; 	ADDRESS **sendq; 	int aliaslevel; 	ENVELOPE *e; { 	return EX_OK; }
 end_function
 

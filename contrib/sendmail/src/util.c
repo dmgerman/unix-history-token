@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)util.c	8.168 (Berkeley) 1/21/1999"
+literal|"@(#)$Id: util.c,v 8.225.2.1.2.8 2000/07/03 18:28:56 geir Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,13 +25,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_include
@@ -40,11 +40,24 @@ directive|include
 file|<sysexits.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|readtimeout
+name|__P
+argument_list|(
+operator|(
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
 begin_comment
-comment|/* **  STRIPQUOTES -- Strip quotes& quote bits from a string. ** **	Runs through a string and strips off unquoted quote **	characters and quote bits.  This is done in place. ** **	Parameters: **		s -- the string to strip. ** **	Returns: **		none. ** **	Side Effects: **		none. ** **	Called By: **		deliver */
+comment|/* **  STRIPQUOTES -- Strip quotes& quote bits from a string. ** **	Runs through a string and strips off unquoted quote **	characters and quote bits.  This is done in place. ** **	Parameters: **		s -- the string to strip. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -465,7 +478,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SHORTEN_RFC822_STRING -- Truncate and rebalance an RFC822 string ** **	Arbitratily shorten (in place) an RFC822 string and rebalance **	comments and quotes. ** **	Parameters: **		string -- the string to shorten **		length -- the maximum size, 0 if no maximum ** **	Returns: **		TRUE if string is changed, FALSE otherwise ** **	Side Effects: **		Changes string in place, possibly resulting **		in a shorter string. */
+comment|/* **  SHORTEN_RFC822_STRING -- Truncate and rebalance an RFC822 string ** **	Arbitrarily shorten (in place) an RFC822 string and rebalance **	comments and quotes. ** **	Parameters: **		string -- the string to shorten **		length -- the maximum size, 0 if no maximum ** **	Returns: **		TRUE if string is changed, FALSE otherwise ** **	Side Effects: **		Changes string in place, possibly resulting **		in a shorter string. */
 end_comment
 
 begin_function
@@ -636,7 +649,10 @@ operator|-
 name|string
 operator|)
 operator|<=
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 operator|(
 name|backslash
 condition|?
@@ -654,7 +670,7 @@ literal|1
 else|:
 literal|0
 operator|)
-operator|)
+argument_list|)
 condition|)
 block|{
 comment|/* Not enough, backtrack */
@@ -807,7 +823,7 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-name|char
+name|int
 name|character
 decl_stmt|;
 block|{
@@ -1017,9 +1033,7 @@ expr_stmt|;
 comment|/* exit(EX_UNAVAILABLE); */
 block|}
 return|return
-operator|(
 name|p
-operator|)
 return|;
 block|}
 end_function
@@ -1103,19 +1117,19 @@ expr|*
 name|vp
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
-name|list
+name|newvp
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-name|newvp
+name|list
 argument_list|,
 call|(
 name|int
@@ -1161,9 +1175,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|newvp
-operator|)
 return|;
 block|}
 end_function
@@ -1172,7 +1184,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  COPYQUEUE -- copy address queue. ** **	This routine is the equivalent of newstr for address queues **	addresses marked with QDONTSEND aren't copied ** **	Parameters: **		addr -- list of address structures to copy. ** **	Returns: **		a copy of 'addr'. ** **	Side Effects: **		none. */
+comment|/* **  COPYQUEUE -- copy address queue. ** **	This routine is the equivalent of newstr for address queues **	addresses marked as QS_IS_DEAD() aren't copied ** **	Parameters: **		addr -- list of address structures to copy. ** **	Returns: **		a copy of 'addr'. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -1215,13 +1227,11 @@ block|{
 if|if
 condition|(
 operator|!
-name|bitset
+name|QS_IS_DEAD
 argument_list|(
-name|QDONTSEND
-argument_list|,
 name|addr
 operator|->
-name|q_flags
+name|q_state
 argument_list|)
 condition|)
 block|{
@@ -1234,9 +1244,8 @@ operator|)
 name|xalloc
 argument_list|(
 sizeof|sizeof
-argument_list|(
-name|ADDRESS
-argument_list|)
+expr|*
+name|newaddr
 argument_list|)
 expr_stmt|;
 name|STRUCTCOPY
@@ -1283,6 +1292,229 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  LOG_SENDMAIL_PID -- record sendmail pid and command line. ** **	Parameters: **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		writes pidfile. */
+end_comment
+
+begin_function
+name|void
+name|log_sendmail_pid
+parameter_list|(
+name|e
+parameter_list|)
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+block|{
+name|long
+name|sff
+decl_stmt|;
+name|FILE
+modifier|*
+name|pidf
+decl_stmt|;
+name|char
+name|pidpath
+index|[
+name|MAXPATHLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* write the pid to the log file for posterity */
+name|sff
+operator|=
+name|SFF_NOLINK
+operator||
+name|SFF_ROOTOK
+operator||
+name|SFF_REGONLY
+operator||
+name|SFF_CREAT
+expr_stmt|;
+if|if
+condition|(
+name|TrustedUid
+operator|!=
+literal|0
+operator|&&
+name|RealUid
+operator|==
+name|TrustedUid
+condition|)
+name|sff
+operator||=
+name|SFF_OPENASROOT
+expr_stmt|;
+name|expand
+argument_list|(
+name|PidFile
+argument_list|,
+name|pidpath
+argument_list|,
+sizeof|sizeof
+name|pidpath
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|pidf
+operator|=
+name|safefopen
+argument_list|(
+name|pidpath
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_TRUNC
+argument_list|,
+literal|0644
+argument_list|,
+name|sff
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pidf
+operator|==
+name|NULL
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"unable to write %s"
+argument_list|,
+name|pidpath
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+specifier|extern
+name|char
+modifier|*
+name|CommandLineArgs
+decl_stmt|;
+comment|/* write the process id on line 1 */
+name|fprintf
+argument_list|(
+name|pidf
+argument_list|,
+literal|"%ld\n"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* line 2 contains all command line flags */
+name|fprintf
+argument_list|(
+name|pidf
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|CommandLineArgs
+argument_list|)
+expr_stmt|;
+comment|/* flush and close */
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|pidf
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SET_DELIVERY_MODE -- set and record the delivery mode ** **	Parameters: **		mode -- delivery mode **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		sets $&{deliveryMode} macro */
+end_comment
+
+begin_function
+name|void
+name|set_delivery_mode
+parameter_list|(
+name|mode
+parameter_list|,
+name|e
+parameter_list|)
+name|int
+name|mode
+decl_stmt|;
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+block|{
+name|char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|e
+operator|->
+name|e_sendmode
+operator|=
+operator|(
+name|char
+operator|)
+name|mode
+expr_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|char
+operator|)
+name|mode
+expr_stmt|;
+name|buf
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|define
+argument_list|(
+name|macid
+argument_list|(
+literal|"{deliveryMode}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+name|newstr
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  PRINTAV -- print argument vector. ** **	Parameters: **		av -- argument vector. ** **	Returns: **		none. ** **	Side Effects: **		prints av. */
 end_comment
 
@@ -1316,7 +1548,7 @@ argument_list|,
 literal|44
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"\n\t%08lx="
 argument_list|,
@@ -1369,7 +1601,7 @@ parameter_list|(
 name|c
 parameter_list|)
 specifier|register
-name|char
+name|int
 name|c
 decl_stmt|;
 block|{
@@ -1572,6 +1804,9 @@ name|c
 operator|==
 name|MACRODEXPAND
 condition|)
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'&'
@@ -1601,6 +1836,9 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 operator|*
@@ -1784,6 +2022,9 @@ name|c
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 name|c
@@ -1917,7 +2158,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKELOWER -- Translate a line into lower case ** **	Parameters: **		p -- the string to translate.  If NULL, return is **			immediate. ** **	Returns: **		none. ** **	Side Effects: **		String pointed to by p is translated to lower case. ** **	Called By: **		parse */
+comment|/* **  MAKELOWER -- Translate a line into lower case ** **	Parameters: **		p -- the string to translate.  If NULL, return is **			immediate. ** **	Returns: **		none. ** **	Side Effects: **		String pointed to by p is translated to lower case. */
 end_comment
 
 begin_function
@@ -1985,7 +2226,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  BUILDFNAME -- build full name from gecos style entry. ** **	This routine interprets the strange entry that would appear **	in the GECOS field of the password file. ** **	Parameters: **		p -- name to build. **		login -- the login name of this user (for&). **		buf -- place to put the result. **		buflen -- length of buf. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  BUILDFNAME -- build full name from gecos style entry. ** **	This routine interprets the strange entry that would appear **	in the GECOS field of the password file. ** **	Parameters: **		p -- name to build. **		user -- the login name of this user (for&). **		buf -- place to put the result. **		buflen -- length of buf. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -1994,7 +2235,7 @@ name|buildfname
 parameter_list|(
 name|gecos
 parameter_list|,
-name|login
+name|user
 parameter_list|,
 name|buf
 parameter_list|,
@@ -2007,7 +2248,7 @@ name|gecos
 decl_stmt|;
 name|char
 modifier|*
-name|login
+name|user
 decl_stmt|;
 name|char
 modifier|*
@@ -2092,7 +2333,7 @@ name|buflen
 argument_list|,
 literal|"%s"
 argument_list|,
-name|login
+name|user
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2120,7 +2361,7 @@ operator|)
 argument_list|,
 literal|"%s"
 argument_list|,
-name|login
+name|user
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2316,6 +2557,11 @@ name|int
 name|pxflags
 decl_stmt|;
 block|{
+name|bool
+name|dead
+init|=
+name|FALSE
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -2328,18 +2574,6 @@ name|int
 name|slop
 init|=
 literal|0
-decl_stmt|;
-name|size_t
-name|eol_len
-init|=
-name|strlen
-argument_list|(
-name|mci
-operator|->
-name|mci_mailer
-operator|->
-name|m_eol
-argument_list|)
 decl_stmt|;
 comment|/* strip out 0200 bits -- these can look like TELNET protocol */
 if|if
@@ -2528,9 +2762,8 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|putc
 argument_list|(
 literal|'.'
@@ -2539,23 +2772,12 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
+operator|==
+name|EOF
 condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|++
+name|dead
+operator|=
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -2618,9 +2840,8 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|putc
 argument_list|(
 literal|'>'
@@ -2629,23 +2850,12 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
+operator|==
+name|EOF
 condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|++
+name|dead
+operator|=
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -2664,6 +2874,11 @@ name|TrafficLogFile
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dead
+condition|)
+break|break;
 while|while
 condition|(
 name|l
@@ -2671,11 +2886,14 @@ operator|<
 name|q
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|putc
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|l
 operator|++
@@ -2684,28 +2902,29 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
+operator|==
+name|EOF
 condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|++
+block|{
+name|dead
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|dead
+condition|)
+break|break;
+if|if
+condition|(
 name|putc
 argument_list|(
 literal|'!'
@@ -2714,24 +2933,9 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
-condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|++
-expr_stmt|;
+operator|==
+name|EOF
+operator|||
 name|fputs
 argument_list|(
 name|mci
@@ -2744,28 +2948,9 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
-condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|+=
-name|eol_len
-expr_stmt|;
-operator|(
-name|void
-operator|)
+operator|==
+name|EOF
+operator|||
 name|putc
 argument_list|(
 literal|' '
@@ -2774,23 +2959,20 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
+operator|==
+name|EOF
 condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|++
+block|{
+name|dead
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -2817,6 +2999,10 @@ name|void
 operator|)
 name|putc
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|l
 argument_list|,
@@ -2842,6 +3028,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dead
+condition|)
+break|break;
 comment|/* output last part */
 if|if
 condition|(
@@ -2868,9 +3059,8 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|putc
 argument_list|(
 literal|'.'
@@ -2879,24 +3069,10 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
+operator|==
+name|EOF
 condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|++
-expr_stmt|;
+break|break;
 if|if
 condition|(
 name|TrafficLogFile
@@ -2958,9 +3134,8 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|putc
 argument_list|(
 literal|'>'
@@ -2969,24 +3144,10 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
+operator|==
+name|EOF
 condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|++
-expr_stmt|;
+break|break;
 if|if
 condition|(
 name|TrafficLogFile
@@ -3026,17 +3187,24 @@ name|void
 operator|)
 name|putc
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|l
 argument_list|,
 name|TrafficLogFile
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|putc
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|l
 argument_list|,
@@ -3044,25 +3212,27 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
+operator|==
+name|EOF
 condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|++
+block|{
+name|dead
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dead
+condition|)
+break|break;
 if|if
 condition|(
 name|TrafficLogFile
@@ -3079,6 +3249,8 @@ argument_list|,
 name|TrafficLogFile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fputs
 argument_list|(
 name|mci
@@ -3091,25 +3263,10 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
+operator|==
+name|EOF
 condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|+=
-name|eol_len
-expr_stmt|;
+break|break;
 if|if
 condition|(
 name|l
@@ -3148,9 +3305,8 @@ name|pxflags
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|putc
 argument_list|(
 literal|' '
@@ -3159,24 +3315,10 @@ name|mci
 operator|->
 name|mci_out
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MCIF_INHEADER
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
+operator|==
+name|EOF
 condition|)
-name|mci
-operator|->
-name|mci_contentlen
-operator|++
-expr_stmt|;
+break|break;
 if|if
 condition|(
 name|TrafficLogFile
@@ -3195,6 +3337,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 do|while
 condition|(
@@ -3286,113 +3433,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  XFCLOSE -- close a file, doing logging as appropriate. ** **	Parameters: **		fp -- file pointer for the file to close **		a, b -- miscellaneous crud to print for debugging ** **	Returns: **		none. ** **	Side Effects: **		fp is closed. */
-end_comment
-
-begin_function
-name|void
-name|xfclose
-parameter_list|(
-name|fp
-parameter_list|,
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-name|char
-modifier|*
-name|a
-decl_stmt|,
-decl|*
-name|b
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|53
-argument_list|,
-literal|99
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"xfclose(%lx) %s %s\n"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|fp
-argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|XDEBUG
-if|if
-condition|(
-name|fileno
-argument_list|(
-name|fp
-argument_list|)
-operator|==
-literal|1
-condition|)
-name|syserr
-argument_list|(
-literal|"xfclose(%s %s): fd = 1"
-argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-operator|<
-literal|0
-operator|&&
-name|tTd
-argument_list|(
-literal|53
-argument_list|,
-literal|99
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"xfclose FAILURE: %s\n"
-argument_list|,
-name|errstring
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  SFGETS -- "safe" fgets -- times out and ignores random interrupts. ** **	Parameters: **		buf -- place to put the input line. **		siz -- size of buf. **		fp -- file to read from. **		timeout -- the timeout before error occurs. **		during -- what we are trying to read (for error messages). ** **	Returns: **		NULL on error (including timeout).  This will also leave **			buf containing a null string. **		buf otherwise. ** **	Side Effects: **		none. */
 end_comment
 
@@ -3400,19 +3440,6 @@ begin_decl_stmt
 specifier|static
 name|jmp_buf
 name|CtxReadTimeout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|readtimeout
-name|__P
-argument_list|(
-operator|(
-name|time_t
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -3543,6 +3570,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* XDEBUG */
 if|if
 condition|(
 name|TrafficLogFile
@@ -3567,9 +3595,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 name|ev
@@ -3692,9 +3718,7 @@ operator|=
 name|save_errno
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 if|if
@@ -3786,9 +3810,7 @@ block|}
 block|}
 block|}
 return|return
-operator|(
 name|buf
-operator|)
 return|;
 block|}
 end_function
@@ -3972,11 +3994,11 @@ argument_list|(
 name|nn
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|bp
-argument_list|,
 name|nbp
+argument_list|,
+name|bp
 argument_list|,
 name|p
 operator|-
@@ -4078,9 +4100,7 @@ operator|==
 name|bp
 condition|)
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 if|if
 condition|(
@@ -4101,9 +4121,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|bp
-operator|)
 return|;
 block|}
 end_function
@@ -4134,9 +4152,7 @@ name|t
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|t
-operator|)
 return|;
 block|}
 end_function
@@ -4182,14 +4198,10 @@ operator|!=
 name|NULL
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 return|return
-operator|(
 name|FALSE
-operator|)
 return|;
 block|}
 end_function
@@ -4248,9 +4260,7 @@ literal|'0'
 operator|)
 expr_stmt|;
 return|return
-operator|(
 name|i
-operator|)
 return|;
 block|}
 end_function
@@ -4270,10 +4280,10 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-name|BITMAP
+name|BITMAP256
 name|a
 decl_stmt|;
-name|BITMAP
+name|BITMAP256
 name|b
 decl_stmt|;
 block|{
@@ -4314,14 +4324,10 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 return|return
-operator|(
 name|FALSE
-operator|)
 return|;
 block|}
 end_function
@@ -4339,7 +4345,7 @@ name|bitzerop
 parameter_list|(
 name|map
 parameter_list|)
-name|BITMAP
+name|BITMAP256
 name|map
 decl_stmt|;
 block|{
@@ -4373,14 +4379,10 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|(
 name|FALSE
-operator|)
 return|;
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 block|}
 end_function
@@ -4636,6 +4638,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* XDEBUG */
 block|}
 end_function
 
@@ -4675,7 +4678,7 @@ init|=
 name|errno
 decl_stmt|;
 specifier|static
-name|BITMAP
+name|BITMAP256
 name|baseline
 decl_stmt|;
 specifier|extern
@@ -4837,11 +4840,28 @@ begin_comment
 comment|/* **  PRINTOPENFDS -- print the open file descriptors (for debugging) ** **	Parameters: **		logit -- if set, send output to syslog; otherwise **			print for debugging. ** **	Returns: **		none. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETINET6
+end_if
+
 begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET || NETINET6 */
+end_comment
 
 begin_function
 name|void
@@ -4930,6 +4950,7 @@ name|sa
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* S_IFSOCK */
 specifier|auto
 name|SOCKADDR_LEN_T
 name|slen
@@ -4948,12 +4969,14 @@ name|st
 decl_stmt|;
 else|#
 directive|else
+comment|/* STAT64> 0 */
 name|struct
 name|stat
 name|st
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* STAT64> 0 */
 name|char
 name|buf
 index|[
@@ -5002,6 +5025,7 @@ argument|&st
 argument_list|)
 else|#
 directive|else
+comment|/* STAT64> 0 */
 name|fstat
 argument_list|(
 name|fd
@@ -5011,6 +5035,7 @@ name|st
 argument_list|)
 endif|#
 directive|endif
+comment|/* STAT64> 0 */
 operator|<
 literal|0
 condition|)
@@ -5127,6 +5152,9 @@ argument_list|)
 argument_list|,
 literal|"mode=%o: "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|st
 operator|.
 name|st_mode
@@ -5173,6 +5201,17 @@ operator|+=
 name|strlen
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|sa
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|sa
 argument_list|)
 expr_stmt|;
 name|slen
@@ -5228,6 +5267,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|hp
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* EMPTY */
+comment|/* do nothing */
+block|}
+if|#
+directive|if
+name|NETINET
+elseif|else
+if|if
+condition|(
 name|sa
 operator|.
 name|sa
@@ -5261,6 +5314,51 @@ name|sin_port
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET */
+if|#
+directive|if
+name|NETINET6
+elseif|else
+if|if
+condition|(
+name|sa
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|==
+name|AF_INET6
+condition|)
+name|snprintf
+argument_list|(
+name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
+argument_list|,
+literal|"%s/%d"
+argument_list|,
+name|hp
+argument_list|,
+name|ntohs
+argument_list|(
+name|sa
+operator|.
+name|sin6
+operator|.
+name|sin6_port
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 else|else
 name|snprintf
 argument_list|(
@@ -5360,6 +5458,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|hp
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* EMPTY */
+comment|/* do nothing */
+block|}
+if|#
+directive|if
+name|NETINET
+elseif|else
+if|if
+condition|(
 name|sa
 operator|.
 name|sa
@@ -5393,6 +5505,51 @@ name|sin_port
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET */
+if|#
+directive|if
+name|NETINET6
+elseif|else
+if|if
+condition|(
+name|sa
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|==
+name|AF_INET6
+condition|)
+name|snprintf
+argument_list|(
+name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
+argument_list|,
+literal|"%s/%d"
+argument_list|,
+name|hp
+argument_list|,
+name|ntohs
+argument_list|(
+name|sa
+operator|.
+name|sin6
+operator|.
+name|sin6_port
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 else|else
 name|snprintf
 argument_list|(
@@ -5414,6 +5571,7 @@ block|}
 break|break;
 endif|#
 directive|endif
+comment|/* S_IFSOCK */
 case|case
 name|S_IFCHR
 case|:
@@ -5515,6 +5673,7 @@ name|defprint
 goto|;
 endif|#
 directive|endif
+comment|/* defined(S_IFIFO)&& (!defined(S_IFSOCK) || S_IFIFO != S_IFSOCK) */
 ifdef|#
 directive|ifdef
 name|S_IFDIR
@@ -5547,6 +5706,7 @@ name|defprint
 goto|;
 endif|#
 directive|endif
+comment|/* S_IFDIR */
 ifdef|#
 directive|ifdef
 name|S_IFLNK
@@ -5579,9 +5739,11 @@ name|defprint
 goto|;
 endif|#
 directive|endif
+comment|/* S_IFLNK */
 default|default:
 name|defprint
 label|:
+comment|/*CONSTCOND*/
 if|if
 condition|(
 sizeof|sizeof
@@ -5628,14 +5790,23 @@ operator|.
 name|st_ino
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|st
 operator|.
 name|st_nlink
 argument_list|,
+operator|(
+name|int
+operator|)
 name|st
 operator|.
 name|st_uid
 argument_list|,
+operator|(
+name|int
+operator|)
 name|st
 operator|.
 name|st_gid
@@ -5677,19 +5848,29 @@ name|st
 operator|.
 name|st_ino
 argument_list|,
+operator|(
+name|int
+operator|)
 name|st
 operator|.
 name|st_nlink
 argument_list|,
+operator|(
+name|int
+operator|)
 name|st
 operator|.
 name|st_uid
 argument_list|,
+operator|(
+name|int
+operator|)
 name|st
 operator|.
 name|st_gid
 argument_list|)
 expr_stmt|;
+comment|/*CONSTCOND*/
 if|if
 condition|(
 sizeof|sizeof
@@ -5981,7 +6162,7 @@ name|int
 name|i
 decl_stmt|;
 name|int
-name|saveerrno
+name|save_errno
 decl_stmt|;
 name|int
 name|fdv
@@ -6055,6 +6236,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fdv
@@ -6063,6 +6247,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fdv
@@ -6084,6 +6271,9 @@ literal|0
 condition|)
 block|{
 comment|/* parent */
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fdv
@@ -6105,12 +6295,18 @@ name|pid
 return|;
 block|}
 comment|/* child -- close stdin */
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 comment|/* stdout goes back to parent */
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fdv
@@ -6150,6 +6346,9 @@ name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fdv
@@ -6168,16 +6367,27 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|dup2
-argument_list|(
+name|int
+name|xfd
+decl_stmt|;
+name|xfd
+operator|=
 name|fileno
 argument_list|(
 name|e
 operator|->
 name|e_xfp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xfd
+operator|>=
+literal|0
+operator|&&
+name|dup2
+argument_list|(
+name|xfd
 argument_list|,
 literal|2
 argument_list|)
@@ -6211,6 +6421,9 @@ name|e_lockfp
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fileno
@@ -6221,6 +6434,79 @@ name|e_lockfp
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* chroot to the program mailer directory, if defined */
+if|if
+condition|(
+name|ProgMailer
+operator|!=
+name|NULL
+operator|&&
+name|ProgMailer
+operator|->
+name|m_rootdir
+operator|!=
+name|NULL
+condition|)
+block|{
+name|expand
+argument_list|(
+name|ProgMailer
+operator|->
+name|m_rootdir
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chroot
+argument_list|(
+name|buf
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"prog_open: cannot chroot(%s)"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|chdir
+argument_list|(
+literal|"/"
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"prog_open: cannot chdir(/)"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* run as default user */
 name|endpwent
 argument_list|()
@@ -6239,6 +6525,7 @@ argument_list|()
 operator|==
 literal|0
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"prog_open: setgid(%ld) failed"
@@ -6249,6 +6536,12 @@ operator|)
 name|DefGid
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|setuid
@@ -6263,6 +6556,7 @@ argument_list|()
 operator|==
 literal|0
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"prog_open: setuid(%ld) failed"
@@ -6273,6 +6567,12 @@ operator|)
 name|DefUid
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* run in some directory */
 if|if
 condition|(
@@ -6439,11 +6739,14 @@ name|F_SETFD
 argument_list|,
 name|j
 operator||
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* now exec the process */
+operator|(
+name|void
+operator|)
 name|execve
 argument_list|(
 name|argv
@@ -6463,7 +6766,7 @@ name|UserEnviron
 argument_list|)
 expr_stmt|;
 comment|/* woops!  failed */
-name|saveerrno
+name|save_errno
 operator|=
 name|errno
 expr_stmt|;
@@ -6481,7 +6784,7 @@ if|if
 condition|(
 name|transienterror
 argument_list|(
-name|saveerrno
+name|save_errno
 argument_list|)
 condition|)
 name|_exit
@@ -6506,7 +6809,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GET_COLUMN  -- look up a Column in a line buffer ** **	Parameters: **		line -- the raw text line to search. **		col -- the column number to fetch. **		delim -- the delimiter between columns.  If null, **			use white space. **		buf -- the output buffer. **		buflen -- the length of buf. ** **	Returns: **		buf if successful. **		NULL otherwise. */
+comment|/* **  GET_COLUMN -- look up a Column in a line buffer ** **	Parameters: **		line -- the raw text line to search. **		col -- the column number to fetch. **		delim -- the delimiter between columns.  If null, **			use white space. **		buf -- the output buffer. **		buflen -- the length of buf. ** **	Returns: **		buf if successful. **		NULL otherwise. */
 end_comment
 
 begin_function
@@ -6531,7 +6834,7 @@ decl_stmt|;
 name|int
 name|col
 decl_stmt|;
-name|char
+name|int
 name|delim
 decl_stmt|;
 name|char
@@ -6564,15 +6867,24 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|char
+operator|)
 name|delim
 operator|==
 literal|'\0'
 condition|)
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|delimbuf
 argument_list|,
 literal|"\n\t "
+argument_list|,
+sizeof|sizeof
+name|delimbuf
 argument_list|)
 expr_stmt|;
 else|else
@@ -6582,6 +6894,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|delim
 expr_stmt|;
 name|delimbuf
@@ -6612,6 +6927,9 @@ condition|(
 operator|*
 name|p
 operator|==
+operator|(
+name|char
+operator|)
 name|delim
 operator|&&
 name|col
@@ -6632,6 +6950,9 @@ name|col
 operator|==
 literal|0
 operator|&&
+operator|(
+name|char
+operator|)
 name|delim
 operator|==
 literal|'\0'
@@ -6698,6 +7019,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|char
+operator|)
 name|delim
 operator|==
 literal|'\0'
@@ -6768,21 +7092,19 @@ name|buflen
 operator|-
 literal|1
 expr_stmt|;
-name|strncpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 name|begin
 argument_list|,
 name|i
+operator|+
+literal|1
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-name|i
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 return|return
 name|buf
@@ -6832,6 +7154,17 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|<=
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"!cleanstrcpy: length == 0"
 argument_list|)
 expr_stmt|;
 name|l
@@ -7035,11 +7368,16 @@ operator|=
 name|l
 expr_stmt|;
 block|}
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|bp
 argument_list|,
 name|s
+argument_list|,
+name|l
 argument_list|)
 expr_stmt|;
 for|for
@@ -7150,6 +7488,7 @@ literal|0
 condition|)
 else|#
 directive|else
+comment|/* HASLSTAT */
 if|if
 condition|(
 name|stat
@@ -7164,6 +7503,7 @@ literal|0
 condition|)
 endif|#
 directive|endif
+comment|/* HASLSTAT */
 block|{
 if|if
 condition|(
@@ -7247,23 +7587,8 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PROC_LIST_ADD -- add process id to list of our children ** **	Parameters: **		pid -- pid to add to list. ** **	Returns: **		none */
+comment|/* **  PROC_LIST_ADD -- add process id to list of our children ** **	Parameters: **		pid -- pid to add to list. **		task -- task of pid. **		type -- type of process. ** **	Returns: **		none */
 end_comment
-
-begin_struct
-struct|struct
-name|procs
-block|{
-name|pid_t
-name|proc_pid
-decl_stmt|;
-name|char
-modifier|*
-name|proc_task
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_decl_stmt
 specifier|static
@@ -7285,35 +7610,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|NO_PID
-value|((pid_t) 0)
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PROC_LIST_SEG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PROC_LIST_SEG
-value|32
-end_define
-
-begin_comment
-comment|/* number of pids to alloc at a time */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|proc_list_add
@@ -7321,6 +7617,8 @@ parameter_list|(
 name|pid
 parameter_list|,
 name|task
+parameter_list|,
+name|type
 parameter_list|)
 name|pid_t
 name|pid
@@ -7328,6 +7626,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|task
+decl_stmt|;
+name|int
+name|type
 decl_stmt|;
 block|{
 name|int
@@ -7422,11 +7723,11 @@ operator|*
 operator|)
 name|xalloc
 argument_list|(
+operator|(
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|procs
-argument_list|)
+expr|*
+name|npv
+operator|)
 operator|*
 operator|(
 name|ProcListSize
@@ -7442,11 +7743,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|ProcListVec
-argument_list|,
 name|npv
+argument_list|,
+name|ProcListVec
 argument_list|,
 name|ProcListSize
 operator|*
@@ -7497,6 +7798,15 @@ name|proc_task
 operator|=
 name|NULL
 expr_stmt|;
+name|npv
+index|[
+name|i
+index|]
+operator|.
+name|proc_type
+operator|=
+name|PROC_NONE
+expr_stmt|;
 block|}
 name|i
 operator|=
@@ -7520,6 +7830,27 @@ name|proc_pid
 operator|=
 name|pid
 expr_stmt|;
+if|if
+condition|(
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_task
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_task
+argument_list|)
+expr_stmt|;
 name|ProcListVec
 index|[
 name|i
@@ -7531,6 +7862,15 @@ name|newstr
 argument_list|(
 name|task
 argument_list|)
+expr_stmt|;
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_type
+operator|=
+name|type
 expr_stmt|;
 comment|/* if process adding itself, it's not a child */
 if|if
@@ -7641,11 +7981,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PROC_LIST_DROP -- drop pid from process list ** **	Parameters: **		pid -- pid to drop ** **	Returns: **		none. */
+comment|/* **  PROC_LIST_DROP -- drop pid from process list ** **	Parameters: **		pid -- pid to drop ** **	Returns: **		type of process */
 end_comment
 
 begin_function
-name|void
+name|int
 name|proc_list_drop
 parameter_list|(
 name|pid
@@ -7656,6 +7996,11 @@ decl_stmt|;
 block|{
 name|int
 name|i
+decl_stmt|;
+name|int
+name|type
+init|=
+name|PROC_NONE
 decl_stmt|;
 for|for
 control|(
@@ -7692,38 +8037,15 @@ name|proc_pid
 operator|=
 name|NO_PID
 expr_stmt|;
-if|if
-condition|(
-name|ProcListVec
-index|[
-name|i
-index|]
-operator|.
-name|proc_task
-operator|!=
-name|NULL
-condition|)
-block|{
-name|free
-argument_list|(
-name|ProcListVec
-index|[
-name|i
-index|]
-operator|.
-name|proc_task
-argument_list|)
-expr_stmt|;
-name|ProcListVec
-index|[
-name|i
-index|]
-operator|.
-name|proc_task
+name|type
 operator|=
-name|NULL
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_type
 expr_stmt|;
-block|}
 break|break;
 block|}
 block|}
@@ -7736,6 +8058,9 @@ condition|)
 name|CurChildren
 operator|--
 expr_stmt|;
+return|return
+name|type
+return|;
 block|}
 end_function
 
@@ -7778,38 +8103,6 @@ name|proc_pid
 operator|=
 name|NO_PID
 expr_stmt|;
-if|if
-condition|(
-name|ProcListVec
-index|[
-name|i
-index|]
-operator|.
-name|proc_task
-operator|!=
-name|NULL
-condition|)
-block|{
-name|free
-argument_list|(
-name|ProcListVec
-index|[
-name|i
-index|]
-operator|.
-name|proc_task
-argument_list|)
-expr_stmt|;
-name|ProcListVec
-index|[
-name|i
-index|]
-operator|.
-name|proc_task
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 block|}
 name|CurChildren
 operator|=
@@ -7913,38 +8206,6 @@ name|proc_pid
 operator|=
 name|NO_PID
 expr_stmt|;
-if|if
-condition|(
-name|ProcListVec
-index|[
-name|i
-index|]
-operator|.
-name|proc_task
-operator|!=
-name|NULL
-condition|)
-block|{
-name|free
-argument_list|(
-name|ProcListVec
-index|[
-name|i
-index|]
-operator|.
-name|proc_task
-argument_list|)
-expr_stmt|;
-name|ProcListVec
-index|[
-name|i
-index|]
-operator|.
-name|proc_task
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|CurChildren
 operator|--
 expr_stmt|;
@@ -8109,7 +8370,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LIBC_SCCS and not lint */
+comment|/* defined(LIBC_SCCS)&& !defined(lint) */
 end_comment
 
 begin_comment
@@ -8711,9 +8972,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 return|return
 operator|(
@@ -8851,9 +9110,7 @@ condition|)
 do|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)envelope.c	8.122 (Berkeley) 1/25/1999"
+literal|"@(#)$Id: envelope.c,v 8.180.14.3 2000/06/29 05:30:23 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,13 +25,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_comment
@@ -89,15 +89,8 @@ name|e
 operator|==
 name|CurEnv
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|NullAddress
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -106,6 +99,13 @@ operator|&
 name|e
 operator|->
 name|e_from
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|NullAddress
 argument_list|,
 sizeof|sizeof
 name|e
@@ -114,14 +114,14 @@ name|e_from
 argument_list|)
 expr_stmt|;
 else|else
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|CurEnv
+name|e
 operator|->
 name|e_from
 argument_list|,
@@ -130,7 +130,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|e
+name|CurEnv
 operator|->
 name|e_from
 argument_list|,
@@ -145,6 +145,11 @@ operator|->
 name|e_parent
 operator|=
 name|parent
+expr_stmt|;
+name|assign_queueid
+argument_list|(
+name|e
+argument_list|)
 expr_stmt|;
 name|e
 operator|->
@@ -198,9 +203,7 @@ name|e_xfp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|e
-operator|)
 return|;
 block|}
 end_function
@@ -254,6 +257,23 @@ name|success_return
 init|=
 name|FALSE
 decl_stmt|;
+name|bool
+name|pmnotify
+init|=
+name|bitset
+argument_list|(
+name|EF_PM_NOTIFY
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+decl_stmt|;
+name|bool
+name|done
+init|=
+name|FALSE
+decl_stmt|;
 specifier|register
 name|ADDRESS
 modifier|*
@@ -283,18 +303,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-specifier|extern
-name|void
-name|printenvflags
-name|__P
-argument_list|(
-operator|(
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"dropenvelope %lx: id="
 argument_list|,
@@ -311,7 +320,7 @@ operator|->
 name|e_id
 argument_list|)
 expr_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|", flags="
 argument_list|)
@@ -331,7 +340,7 @@ literal|10
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"sendq="
 argument_list|)
@@ -359,7 +368,7 @@ name|LOG_DEBUG
 argument_list|,
 name|id
 argument_list|,
-literal|"dropenvelope, e_flags=0x%x, OpMode=%c, pid=%d"
+literal|"dropenvelope, e_flags=0x%lx, OpMode=%c, pid=%d"
 argument_list|,
 name|e
 operator|->
@@ -447,6 +456,43 @@ name|message_timeout
 operator|=
 name|TRUE
 expr_stmt|;
+if|if
+condition|(
+name|TimeOuts
+operator|.
+name|to_q_return
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
+operator|==
+name|NOW
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+name|message_timeout
+operator|=
+name|TRUE
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_FATALERRS
+operator||
+name|EF_CLRQUEUE
+expr_stmt|;
+block|}
 name|e
 operator|->
 name|e_flags
@@ -475,113 +521,17 @@ control|)
 block|{
 if|if
 condition|(
-name|bitset
+name|QS_IS_UNDELIVERED
 argument_list|(
-name|QQUEUEUP
-argument_list|,
 name|q
 operator|->
-name|q_flags
-argument_list|)
-operator|&&
-name|bitset
-argument_list|(
-name|QDONTSEND
-argument_list|,
-name|q
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-block|{
-comment|/* I'm not sure how this happens..... */
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|50
-argument_list|,
-literal|2
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Bogus flags: "
-argument_list|)
-expr_stmt|;
-name|printaddr
-argument_list|(
-name|q
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-block|}
-name|q
-operator|->
-name|q_flags
-operator|&=
-operator|~
-name|QDONTSEND
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|QBADADDR
-operator||
-name|QDONTSEND
-operator||
-name|QSENT
-argument_list|,
-name|q
-operator|->
-name|q_flags
+name|q_state
 argument_list|)
 condition|)
 name|queueit
 operator|=
 name|TRUE
 expr_stmt|;
-if|#
-directive|if
-name|XDEBUG
-elseif|else
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|QQUEUEUP
-argument_list|,
-name|q
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-name|sm_syslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-literal|"dropenvelope: q_flags = %x, paddr = %s"
-argument_list|,
-name|q
-operator|->
-name|q_flags
-argument_list|,
-name|q
-operator|->
-name|q_paddr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* see if a notification is needed */
 if|if
 condition|(
@@ -598,24 +548,43 @@ operator|(
 operator|(
 name|message_timeout
 operator|&&
-name|bitset
+name|QS_IS_QUEUEUP
 argument_list|(
-name|QQUEUEUP
-argument_list|,
 name|q
 operator|->
-name|q_flags
+name|q_state
 argument_list|)
 operator|)
 operator|||
-name|bitset
+name|QS_IS_BADADDR
 argument_list|(
-name|QBADADDR
-argument_list|,
 name|q
 operator|->
-name|q_flags
+name|q_state
 argument_list|)
+operator|||
+operator|(
+name|TimeOuts
+operator|.
+name|to_q_return
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
+operator|==
+name|NOW
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
@@ -625,6 +594,9 @@ name|TRUE
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|done
+operator|&&
 name|q
 operator|->
 name|q_owner
@@ -640,6 +612,7 @@ operator|->
 name|e_from
 argument_list|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -663,6 +636,11 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+name|done
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -678,13 +656,11 @@ argument_list|)
 operator|&&
 operator|(
 operator|(
-name|bitset
+name|QS_IS_SENT
 argument_list|(
-name|QSENT
-argument_list|,
 name|q
 operator|->
-name|q_flags
+name|q_state
 argument_list|)
 operator|&&
 name|bitnset
@@ -740,6 +716,7 @@ condition|(
 operator|!
 name|queueit
 condition|)
+comment|/* EMPTY */
 comment|/* nothing to do */
 empty_stmt|;
 elseif|else
@@ -763,7 +740,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"Cannot send message within %s"
+literal|"Cannot send message for %s"
 argument_list|,
 name|pintvl
 argument_list|(
@@ -869,26 +846,19 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-name|bitset
+name|QS_IS_UNDELIVERED
 argument_list|(
-name|QBADADDR
-operator||
-name|QDONTSEND
-operator||
-name|QSENT
-argument_list|,
 name|q
 operator|->
-name|q_flags
+name|q_state
 argument_list|)
 condition|)
 block|{
 name|q
 operator|->
-name|q_flags
-operator||=
-name|QBADADDR
+name|q_state
+operator|=
+name|QS_BADADDR
 expr_stmt|;
 name|q
 operator|->
@@ -1050,15 +1020,31 @@ control|)
 block|{
 if|if
 condition|(
-name|bitset
+name|QS_IS_QUEUEUP
 argument_list|(
-name|QQUEUEUP
+name|q
+operator|->
+name|q_state
+argument_list|)
+operator|&&
+if|#
+directive|if
+name|_FFR_NODELAYDSN_ON_HOLD
+operator|!
+name|bitnset
+argument_list|(
+name|M_HOLD
 argument_list|,
 name|q
 operator|->
-name|q_flags
+name|q_mailer
+operator|->
+name|m_flags
 argument_list|)
 operator|&&
+endif|#
+directive|endif
+comment|/* _FFR_NODELAYDSN_ON_HOLD */
 name|bitset
 argument_list|(
 name|QPINGONDELAY
@@ -1206,7 +1192,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"failure_return=%d delay_return=%d success_return=%d queueit=%d\n"
 argument_list|,
@@ -1256,15 +1242,21 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-name|bitset
+operator|(
+name|QS_IS_OK
 argument_list|(
-name|QDONTSEND
-argument_list|,
 name|q
 operator|->
-name|q_flags
+name|q_state
 argument_list|)
+operator|||
+name|QS_IS_VERIFIED
+argument_list|(
+name|q
+operator|->
+name|q_state
+argument_list|)
+operator|)
 operator|&&
 name|bitset
 argument_list|(
@@ -1282,9 +1274,9 @@ name|TRUE
 expr_stmt|;
 name|q
 operator|->
-name|q_flags
-operator||=
-name|QBADADDR
+name|q_state
+operator|=
+name|QS_BADADDR
 expr_stmt|;
 block|}
 block|}
@@ -1340,7 +1332,7 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"dropenvelope(%s): sending return receipt\n"
 argument_list|,
@@ -1412,19 +1404,6 @@ operator|!=
 name|EM_QUIET
 condition|)
 block|{
-specifier|extern
-name|void
-name|savemail
-name|__P
-argument_list|(
-operator|(
-name|ENVELOPE
-operator|*
-operator|,
-name|bool
-operator|)
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1434,7 +1413,7 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"dropenvelope(%s): saving mail\n"
 argument_list|,
@@ -1463,14 +1442,7 @@ condition|(
 operator|(
 name|failure_return
 operator|||
-name|bitset
-argument_list|(
-name|EF_PM_NOTIFY
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
+name|pmnotify
 operator|)
 operator|&&
 name|PostMasterCopy
@@ -1501,6 +1473,29 @@ name|rlist
 init|=
 name|NULL
 decl_stmt|;
+name|char
+name|pcopy
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|failure_return
+condition|)
+block|{
+name|expand
+argument_list|(
+name|PostMasterCopy
+argument_list|,
+name|pcopy
+argument_list|,
+sizeof|sizeof
+name|pcopy
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1510,11 +1505,13 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|"dropenvelope(%s): sending postmaster copy\n"
+literal|"dropenvelope(%s): sending postmaster copy to %s\n"
 argument_list|,
 name|id
+argument_list|,
+name|pcopy
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1522,7 +1519,29 @@ name|void
 operator|)
 name|sendtolist
 argument_list|(
-name|PostMasterCopy
+name|pcopy
+argument_list|,
+name|NULLADDR
+argument_list|,
+operator|&
+name|rlist
+argument_list|,
+literal|0
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pmnotify
+condition|)
+operator|(
+name|void
+operator|)
+name|sendtolist
+argument_list|(
+literal|"postmaster"
 argument_list|,
 name|NULLADDR
 argument_list|,
@@ -1546,6 +1565,8 @@ argument_list|,
 name|rlist
 argument_list|,
 name|RTSF_PM_BOUNCE
+operator||
+name|RTSF_NO_BODY
 argument_list|,
 name|e
 argument_list|)
@@ -1563,7 +1584,7 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"dropenvelope(%s): at simpledrop, queueit=%d\n"
 argument_list|,
@@ -1597,18 +1618,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-specifier|extern
-name|void
-name|printenvflags
-name|__P
-argument_list|(
-operator|(
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"\n===== Dropping [dq]f%s... queueit=%d, e_flags="
 argument_list|,
@@ -1647,9 +1657,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|e
+operator|->
+name|e_ntries
+operator|>
+literal|0
+operator|&&
 name|LogLevel
 operator|>
-literal|10
+literal|9
 condition|)
 name|sm_syslog
 argument_list|(
@@ -1657,7 +1673,23 @@ name|LOG_INFO
 argument_list|,
 name|id
 argument_list|,
-literal|"done"
+literal|"done; delay=%s, ntries=%d"
+argument_list|,
+name|pintvl
+argument_list|(
+name|curtime
+argument_list|()
+operator|-
+name|e
+operator|->
+name|e_ctime
+argument_list|,
+name|TRUE
+argument_list|)
+argument_list|,
+name|e
+operator|->
+name|e_ntries
 argument_list|)
 expr_stmt|;
 block|}
@@ -1692,7 +1724,7 @@ directive|else
 comment|/* QUEUE */
 name|syserr
 argument_list|(
-literal|"554 dropenvelope: queueup"
+literal|"554 5.3.0 dropenvelope: queueup"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1709,7 +1741,7 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"dropenvelope(%s): unlocking job\n"
 argument_list|,
@@ -1738,17 +1770,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|xfclose
+name|bfclose
 argument_list|(
 name|e
 operator|->
 name|e_dfp
-argument_list|,
-literal|"dropenvelope df"
-argument_list|,
-name|e
-operator|->
-name|e_id
 argument_list|)
 expr_stmt|;
 name|e
@@ -1830,17 +1856,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|xfclose
+name|bfclose
 argument_list|(
 name|e
 operator|->
 name|e_xfp
-argument_list|,
-literal|"clearenvelope xfp"
-argument_list|,
-name|e
-operator|->
-name|e_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -1854,17 +1874,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|xfclose
+name|bfclose
 argument_list|(
 name|e
 operator|->
 name|e_dfp
-argument_list|,
-literal|"clearenvelope dfp"
-argument_list|,
-name|e
-operator|->
-name|e_id
 argument_list|)
 expr_stmt|;
 name|e
@@ -1897,11 +1911,12 @@ if|if
 condition|(
 name|Verbose
 condition|)
-name|e
-operator|->
-name|e_sendmode
-operator|=
+name|set_delivery_mode
+argument_list|(
 name|SM_DELIVER
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 name|bh
 operator|=
@@ -1937,20 +1952,20 @@ expr|*
 name|bh
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|bh
-argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|*
 name|nhp
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|bh
 argument_list|,
 sizeof|sizeof
 expr|*
@@ -1981,7 +1996,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  INITSYS -- initialize instantiation of system ** **	In Daemon mode, this is done in the child. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Initializes the system macros, some global variables, **		etc.  In particular, the current time in various **		forms is set. */
+comment|/* **  INITSYS -- initialize instantiation of system ** **	In Daemon mode, this is done in the child. ** **	Parameters: **		e -- the envelope to use. ** **	Returns: **		none. ** **	Side Effects: **		Initializes the system macros, some global variables, **		etc.  In particular, the current time in various **		forms is set. */
 end_comment
 
 begin_function
@@ -2035,18 +2050,12 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* TTYNAME */
-specifier|extern
-name|void
-name|settime
-name|__P
-argument_list|(
-operator|(
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
 comment|/* 	**  Give this envelope a reality. 	**	I.e., an id, a transcript, and a creation time. 	*/
+name|setnewqueue
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 name|openxscript
 argument_list|(
 name|e
@@ -2059,6 +2068,24 @@ operator|=
 name|curtime
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_QUEUEDELAY
+name|e
+operator|->
+name|e_queuealg
+operator|=
+name|QueueAlg
+expr_stmt|;
+name|e
+operator|->
+name|e_queuedelay
+operator|=
+name|QueueInitDelay
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUEUEDELAY */
 comment|/* 	**  Set OutChannel to something useful if stdout isn't it. 	**	This arranges that any extra stuff the mailer produces 	**	gets sent back to the user on error (because it is 	**	tucked away in the transcript). 	*/
 if|if
 condition|(
@@ -2101,6 +2128,9 @@ name|pbuf
 argument_list|,
 literal|"%d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -2149,6 +2179,15 @@ argument_list|)
 expr_stmt|;
 comment|/* time as integer, unix time, arpa time */
 name|settime
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+comment|/* Load average */
+operator|(
+name|void
+operator|)
+name|sm_getla
 argument_list|(
 name|e
 argument_list|)
@@ -2238,7 +2277,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETTIME -- set the current time. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Sets the various time macros -- $a, $b, $d, $t. */
+comment|/* **  SETTIME -- set the current time. ** **	Parameters: **		e -- the envelope in which the macros should be set. ** **	Returns: **		none. ** **	Side Effects: **		Sets the various time macros -- $a, $b, $d, $t. */
 end_comment
 
 begin_function
@@ -2282,13 +2321,6 @@ name|tm
 modifier|*
 name|tm
 decl_stmt|;
-specifier|extern
-name|struct
-name|tm
-modifier|*
-name|gmtime
-parameter_list|()
-function_decl|;
 name|now
 operator|=
 name|curtime
@@ -2354,7 +2386,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|dbuf
 argument_list|,
@@ -2363,6 +2395,9 @@ argument_list|(
 operator|&
 name|now
 argument_list|)
+argument_list|,
+sizeof|sizeof
+name|dbuf
 argument_list|)
 expr_stmt|;
 name|p
@@ -2468,6 +2503,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! O_APPEND */
+end_comment
+
 begin_function
 name|void
 name|openxscript
@@ -2485,9 +2524,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
 if|if
 condition|(
 name|e
@@ -2497,6 +2533,13 @@ operator|!=
 name|NULL
 condition|)
 return|return;
+if|#
+directive|if
+literal|0
+block|if (e->e_lockfp == NULL&& bitset(EF_INQUEUE, e->e_flags)) 		syserr("openxscript: job not locked");
+endif|#
+directive|endif
+comment|/* 0 */
 name|p
 operator|=
 name|queuename
@@ -2506,26 +2549,30 @@ argument_list|,
 literal|'x'
 argument_list|)
 expr_stmt|;
-name|fd
+name|e
+operator|->
+name|e_xfp
 operator|=
-name|open
+name|bfopen
 argument_list|(
 name|p
 argument_list|,
-name|O_WRONLY
-operator||
-name|O_CREAT
-operator||
-name|O_APPEND
-argument_list|,
 name|FileMode
+argument_list|,
+name|XscriptFileBufferSize
+argument_list|,
+name|SFF_NOTEXCL
+operator||
+name|SFF_OPENASROOT
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fd
-operator|<
-literal|0
+name|e
+operator|->
+name|e_xfp
+operator|==
+name|NULL
 condition|)
 block|{
 name|syserr
@@ -2535,38 +2582,15 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|fd
-operator|=
-name|open
-argument_list|(
-literal|"/dev/null"
-argument_list|,
-name|O_WRONLY
-argument_list|,
-literal|0644
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|<
-literal|0
-condition|)
-name|syserr
-argument_list|(
-literal|"!Can't open /dev/null"
-argument_list|)
-expr_stmt|;
-block|}
 name|e
 operator|->
 name|e_xfp
 operator|=
-name|fdopen
+name|fopen
 argument_list|(
-name|fd
+literal|"/dev/null"
 argument_list|,
-literal|"a"
+literal|"r+"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2579,14 +2603,16 @@ name|NULL
 condition|)
 name|syserr
 argument_list|(
-literal|"!Can't create transcript stream %s"
-argument_list|,
-name|p
+literal|"!Can't open /dev/null"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+block|}
+if|#
+directive|if
 name|HASSETVBUF
+operator|(
+name|void
+operator|)
 name|setvbuf
 argument_list|(
 name|e
@@ -2602,6 +2628,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* HASSETVBUF */
+operator|(
+name|void
+operator|)
 name|setlinebuf
 argument_list|(
 name|e
@@ -2611,6 +2641,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* HASSETVBUF */
 if|if
 condition|(
 name|tTd
@@ -2621,7 +2652,7 @@ literal|9
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"openxscript(%s):\n  "
 argument_list|,
@@ -2674,20 +2705,21 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|#
+directive|if
+literal|0
+block|if (e->e_lockfp == NULL) 		syserr("closexscript: job not locked");
+endif|#
+directive|endif
+comment|/* 0 */
 operator|(
 name|void
 operator|)
-name|xfclose
+name|bfclose
 argument_list|(
 name|e
 operator|->
 name|e_xfp
-argument_list|,
-literal|"closexscript"
-argument_list|,
-name|e
-operator|->
-name|e_id
 argument_list|)
 expr_stmt|;
 name|e
@@ -2791,7 +2823,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"setsender(%s)\n"
 argument_list|,
@@ -2860,13 +2892,42 @@ name|SuprErrs
 operator|=
 name|TRUE
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_ADDR_TYPE
+name|define
+argument_list|(
+name|macid
+argument_list|(
+literal|"{addr_type}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|"e s"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_ADDR_TYPE */
+comment|/* preset state for then clause in case from == NULL */
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_state
+operator|=
+name|QS_BADADDR
+expr_stmt|;
 name|e
 operator|->
 name|e_from
 operator|.
 name|q_flags
 operator|=
-name|QBADADDR
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2896,15 +2957,13 @@ argument_list|)
 operator|==
 name|NULL
 operator|||
-name|bitset
+name|QS_IS_BADADDR
 argument_list|(
-name|QBADADDR
-argument_list|,
 name|e
 operator|->
 name|e_from
 operator|.
-name|q_flags
+name|q_state
 argument_list|)
 operator|||
 name|e
@@ -3024,7 +3083,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"setsender: %s: invalid or unparseable, received from %s"
+literal|"setsender: %s: invalid or unparsable, received from %s"
 argument_list|,
 name|shortenstring
 argument_list|(
@@ -3047,15 +3106,13 @@ block|{
 if|if
 condition|(
 operator|!
-name|bitset
+name|QS_IS_BADADDR
 argument_list|(
-name|QBADADDR
-argument_list|,
 name|e
 operator|->
 name|e_from
 operator|.
-name|q_flags
+name|q_state
 argument_list|)
 condition|)
 block|{
@@ -3066,8 +3123,12 @@ name|e_status
 operator|=
 literal|"5.1.7"
 expr_stmt|;
-name|usrerr
+name|usrerrenh
 argument_list|(
+name|e
+operator|->
+name|e_status
+argument_list|,
 literal|"553 Invalid sender address"
 argument_list|)
 expr_stmt|;
@@ -3184,7 +3245,7 @@ name|NULL
 condition|)
 name|syserr
 argument_list|(
-literal|"553 setsender: can't even parse postmaster!"
+literal|"553 5.3.0 setsender: can't even parse postmaster!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3198,9 +3259,9 @@ name|e
 operator|->
 name|e_from
 operator|.
-name|q_flags
-operator||=
-name|QDONTSEND
+name|q_state
+operator|=
+name|QS_SENDER
 expr_stmt|;
 if|if
 condition|(
@@ -3212,9 +3273,9 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
-literal|"setsender: QDONTSEND "
+literal|"setsender: QS_SENDER "
 argument_list|)
 expr_stmt|;
 name|printaddr
@@ -3255,18 +3316,6 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|udbsender
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 name|p
 operator|=
@@ -3536,7 +3585,7 @@ name|e_from
 operator|.
 name|q_home
 operator|=
-literal|"/no/such/directory"
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -3752,6 +3801,26 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_ADDR_TYPE
+name|define
+argument_list|(
+name|macid
+argument_list|(
+literal|"{addr_type}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_ADDR_TYPE */
 name|bp
 operator|=
 name|buf
@@ -3797,11 +3866,19 @@ argument_list|)
 condition|)
 block|{
 comment|/* heuristic: route-addr: add angle brackets */
-name|strcat
+operator|(
+name|void
+operator|)
+name|strlcat
 argument_list|(
 name|bp
 argument_list|,
 literal|">"
+argument_list|,
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3861,23 +3938,27 @@ modifier|*
 modifier|*
 name|lastat
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|copyplist
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|,
-name|bool
-operator|)
-argument_list|)
-decl_stmt|;
 comment|/* get rid of any pesky angle brackets */
+if|#
+directive|if
+name|_FFR_ADDR_TYPE
+name|define
+argument_list|(
+name|macid
+argument_list|(
+literal|"{addr_type}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|"e s"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_ADDR_TYPE */
 operator|(
 name|void
 operator|)
@@ -3920,6 +4001,26 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_ADDR_TYPE
+name|define
+argument_list|(
+name|macid
+argument_list|(
+literal|"{addr_type}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_ADDR_TYPE */
 comment|/* strip off to the last "@" sign */
 for|for
 control|(
@@ -3979,7 +4080,7 @@ literal|3
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"Saving from domain: "
 argument_list|)
@@ -4020,6 +4121,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|eflags
 name|EnvelopeFlags

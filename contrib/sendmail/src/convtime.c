@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)convtime.c	8.14 (Berkeley) 5/19/1998"
+literal|"@(#)$Id: convtime.c,v 8.25 1999/06/16 21:11:26 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,13 +25,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_comment
@@ -50,7 +50,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|char
+name|int
 name|units
 decl_stmt|;
 block|{
@@ -68,6 +68,20 @@ name|r
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|p
+argument_list|,
+literal|"now"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|NOW
+return|;
 while|while
 condition|(
 operator|*
@@ -167,15 +181,18 @@ name|t
 operator|*=
 literal|7
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'d'
 case|:
 comment|/* days */
+comment|/* FALLTHROUGH */
 default|default:
 name|t
 operator|*=
 literal|24
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'h'
 case|:
@@ -184,6 +201,7 @@ name|t
 operator|*=
 literal|60
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'m'
 case|:
@@ -192,6 +210,7 @@ name|t
 operator|*=
 literal|60
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'s'
 case|:
@@ -204,9 +223,7 @@ name|t
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|r
-operator|)
 return|;
 block|}
 end_function
@@ -277,9 +294,16 @@ operator|!
 name|brief
 condition|)
 return|return
-operator|(
 literal|"zero seconds"
-operator|)
+return|;
+if|if
+condition|(
+name|intvl
+operator|==
+name|NOW
+condition|)
+return|return
+literal|"too long"
 return|;
 comment|/* decode the interval into weeks, days, hours, minutes, seconds */
 name|se
@@ -411,9 +435,7 @@ name|se
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|buf
-operator|)
 return|;
 block|}
 comment|/* use the verbose form */
