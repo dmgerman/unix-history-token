@@ -35,38 +35,6 @@ begin_comment
 comment|/*  * Kernel signal definitions and data structures,  * not exported to user programs.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|__sigisempty
-name|__P
-argument_list|(
-operator|(
-name|sigset_t
-operator|*
-name|set
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|__sigseteq
-name|__P
-argument_list|(
-operator|(
-name|sigset_t
-operator|*
-name|set1
-operator|,
-name|sigset_t
-operator|*
-name|set2
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Process signal actions and state, needed only within the process  * (not necessarily resident).  */
 end_comment
