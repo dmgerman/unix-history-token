@@ -330,6 +330,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* proxy not active */
+name|passivemode
+operator|=
+literal|0
+expr_stmt|;
+comment|/* passive mode not active */
 name|crflag
 operator|=
 literal|1

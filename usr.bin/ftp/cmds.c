@@ -10005,7 +10005,44 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Start up passive mode interaction  */
+end_comment
+
+begin_macro
+name|setpassive
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|passivemode
+operator|=
+operator|!
+name|passivemode
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Passive mode %s.\n"
+argument_list|,
+name|onoff
+argument_list|(
+name|passivemode
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+name|passivemode
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * get size of file on remote machine  */
+end_comment
+
+begin_comment
+comment|/*VARARGS*/
 end_comment
 
 begin_function

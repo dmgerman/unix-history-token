@@ -243,6 +243,16 @@ comment|/* passive port for proxy data connection */
 end_comment
 
 begin_decl_stmt
+name|int
+name|passivemode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* passive mode enabled */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|altarg

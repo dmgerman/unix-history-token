@@ -370,6 +370,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|passivehelp
+index|[]
+init|=
+literal|"enter passive transfer mode"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|porthelp
 index|[]
 init|=
@@ -1222,6 +1231,20 @@ block|,
 literal|0
 block|,
 name|setprompt
+block|}
+block|,
+block|{
+literal|"passive"
+block|,
+name|passivehelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|setpassive
 block|}
 block|,
 block|{
