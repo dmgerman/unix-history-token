@@ -700,9 +700,10 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
+modifier|*
 name|spec
-index|[]
 init|=
 literal|".#-+ 0123456789"
 decl_stmt|;
