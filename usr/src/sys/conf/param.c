@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -167,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|NPROC
-value|(20 + 8 * MAXUSERS)
+value|(20 + 16 * MAXUSERS)
 end_define
 
 begin_decl_stmt
@@ -182,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|NTEXT
-value|100
+value|(80 + NPROC / 8)
 end_define
 
 begin_comment
@@ -193,7 +193,7 @@ begin_define
 define|#
 directive|define
 name|NVNODE
-value|(NPROC + NTEXT + 300)
+value|(NPROC + NTEXT + 100)
 end_define
 
 begin_decl_stmt
@@ -213,12 +213,10 @@ operator|*
 operator|(
 name|NPROC
 operator|+
-literal|16
-operator|+
 name|MAXUSERS
 operator|)
 operator|+
-literal|32
+literal|80
 decl_stmt|;
 end_decl_stmt
 
@@ -265,7 +263,7 @@ comment|/* kernel uses `FSCALE', user uses `fscale' */
 end_comment
 
 begin_comment
-comment|/*  * Values in support of System V compatible shared memory.  */
+comment|/*  * Values in support of System V compatible shared memory.	XXX  */
 end_comment
 
 begin_ifdef
@@ -352,17 +350,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * These have to be allocated somewhere; allocating  * them here forces loader errors if this file is omitted  * (if they've been externed everywhere else; hah!).  */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|file
-modifier|*
-name|file
-decl_stmt|,
-modifier|*
-name|fileNFILE
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
