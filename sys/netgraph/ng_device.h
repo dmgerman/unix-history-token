@@ -30,24 +30,43 @@ begin_define
 define|#
 directive|define
 name|NGM_DEVICE_COOKIE
-value|1009920473
+value|1091129178
 end_define
+
+begin_define
+define|#
+directive|define
+name|NG_DEVICE_DEVNAME
+value|"ngd"
+end_define
+
+begin_comment
+comment|/* Netgraph control messages */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NGM_DEVICE_GET_DEVNAME
+block|, }
+enum|;
+end_enum
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
 comment|/* passing ioctl params */
 end_comment
 
-begin_struct
-struct|struct
-name|ngd_param_s
-block|{
-name|void
-modifier|*
-name|p
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_endif
+unit|struct ngd_param_s { 	        void * p; };
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
