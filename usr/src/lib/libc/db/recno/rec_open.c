@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.13 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -515,6 +515,9 @@ name|sb
 operator|.
 name|st_size
 operator|>
+operator|(
+name|off_t
+operator|)
 name|SIZE_T_MAX
 condition|)
 block|{
