@@ -4976,7 +4976,15 @@ literal|0x70071022
 case|:
 return|return
 operator|(
-literal|"AMD-751 PCI-PCI (AGP) bridge"
+literal|"AMD-751 PCI-PCI (1x/2x AGP) bridge"
+operator|)
+return|;
+case|case
+literal|0x700f1022
+case|:
+return|return
+operator|(
+literal|"AMD-761 PCI-PCI (4x AGP) bridge"
 operator|)
 return|;
 comment|/* DEC -- vendor 0x1011 */
@@ -6932,6 +6940,14 @@ operator|(
 literal|"AMD-751 host to PCI bridge"
 operator|)
 return|;
+case|case
+literal|0x700e1022
+case|:
+return|return
+operator|(
+literal|"AMD-761 host to PCI bridge"
+operator|)
+return|;
 comment|/* NEC -- vendor 0x1033 */
 case|case
 literal|0x00021033
@@ -7553,6 +7569,14 @@ case|:
 name|chip
 operator|=
 literal|"MGA G100 AGP"
+expr_stmt|;
+break|break;
+case|case
+literal|0x2527
+case|:
+name|chip
+operator|=
+literal|"MGA G550 AGP"
 expr_stmt|;
 break|break;
 block|}

@@ -379,6 +379,14 @@ operator|=
 literal|"AMD-751 host to PCI bridge"
 expr_stmt|;
 break|break;
+case|case
+literal|0x700e1022
+case|:
+name|s
+operator|=
+literal|"AMD-761 host to PCI bridge"
+expr_stmt|;
+break|break;
 comment|/* SiS -- vendor 0x1039 */
 case|case
 literal|0x04961039
