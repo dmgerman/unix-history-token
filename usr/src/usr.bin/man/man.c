@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	5.8 (Berkeley) %G%"
+literal|"@(#)man.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -611,6 +611,21 @@ case|case
 literal|'?'
 case|:
 default|default:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"man: illegal option -- %c\n"
+argument_list|,
+operator|(
+operator|*
+name|argv
+operator|)
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
