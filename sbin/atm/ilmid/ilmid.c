@@ -4482,7 +4482,7 @@ operator|++
 operator|=
 name|erridx
 expr_stmt|;
-comment|/* index - 0 if no error */
+comment|/* index == 0 if no error */
 block|}
 else|else
 block|{
