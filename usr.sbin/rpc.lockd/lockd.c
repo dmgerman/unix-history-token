@@ -746,6 +746,8 @@ name|daemon
 argument_list|(
 literal|0
 argument_list|,
+name|debug_level
+operator|>
 literal|0
 argument_list|)
 condition|)
