@@ -9302,7 +9302,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|ENOSYS
 operator|)
 return|;
 block|}
