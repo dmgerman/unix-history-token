@@ -5,12 +5,12 @@ name|char
 name|nic39_id
 index|[]
 init|=
-literal|"@(#)$Id: nic3009.c,v 1.1 1995/01/25 14:06:18 jkr Exp jkr $"
+literal|"@(#)$Id: nic3009.c,v 1.1 1995/02/14 15:00:14 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3009.c,v $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3009.c,v $  * Revision 1.1  1995/02/14  15:00:14  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -58,25 +58,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa_device.h"
+file|"gnu/i386/isa/isa_device.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/nic3009.h"
+file|"gnu/i386/isa/nic3009.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/niccyreg.h"
+file|"gnu/i386/isa/niccyreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"isdn/isdn_ioctl.h"
+file|"gnu/isdn/isdn_ioctl.h"
 end_include
 
 begin_define

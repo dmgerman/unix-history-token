@@ -5,12 +5,12 @@ name|char
 name|_ittyid
 index|[]
 init|=
-literal|"@(#)$Id: iitty.c,v 1.1 1995/01/25 14:06:18 jkr Exp jkr $"
+literal|"@(#)$Id: iitty.c,v 1.1 1995/02/14 15:00:32 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iitty.c,v $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iitty.c,v $  * Revision 1.1  1995/02/14  15:00:32  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_include
@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"isdn/isdn_ioctl.h"
+file|"gnu/isdn/isdn_ioctl.h"
 end_include
 
 begin_decl_stmt
@@ -116,13 +116,17 @@ name|int
 name|ityattach
 argument_list|()
 decl_stmt|,
-name|itystart
-argument_list|()
-decl_stmt|,
 name|ityparam
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|itystart
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -238,20 +242,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ityopen
-argument_list|(
-argument|dev_t dev
-argument_list|,
-argument|int flag
-argument_list|,
-argument|int mode
-argument_list|,
-argument|struct proc * p
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -538,48 +546,37 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ityclose
-argument_list|(
-argument|dev
-argument_list|,
-argument|flag
-argument_list|,
-argument|mode
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|flag
+parameter_list|,
+name|mode
+parameter_list|,
+name|p
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|,
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -656,34 +653,29 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ityread
-argument_list|(
-argument|dev
-argument_list|,
-argument|uio
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|uio
+parameter_list|,
+name|flag
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|flag
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -723,34 +715,29 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|itywrite
-argument_list|(
-argument|dev
-argument_list|,
-argument|uio
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|uio
+parameter_list|,
+name|flag
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|flag
+decl_stmt|;
 block|{
 name|int
 name|unit
@@ -795,20 +782,22 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ity_input
-argument_list|(
-argument|int no
-argument_list|,
-argument|int len
-argument_list|,
-argument|char *buf
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|no
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -877,16 +866,17 @@ name|len
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|itystart
-argument_list|(
-argument|struct tty *tp
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
 block|{
 name|int
 name|s
@@ -1045,20 +1035,22 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ity_out
-argument_list|(
-argument|int no
-argument_list|,
-argument|char *buf
-argument_list|,
-argument|int len
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|no
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|len
+parameter_list|)
 block|{
 name|struct
 name|tty
@@ -1176,16 +1168,15 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|ity_connect
-argument_list|(
-argument|int no
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|no
+parameter_list|)
 block|{
 name|struct
 name|tty
@@ -1283,16 +1274,15 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|ity_disconnect
-argument_list|(
-argument|int no
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|no
+parameter_list|)
 block|{
 name|struct
 name|tty
@@ -1327,56 +1317,39 @@ literal|0
 operator|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ityioctl
-argument_list|(
-argument|dev
-argument_list|,
-argument|cmd
-argument_list|,
-argument|data
-argument_list|,
-argument|flag
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|cmd
+parameter_list|,
+name|data
+parameter_list|,
+name|flag
+parameter_list|,
+name|p
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1483,33 +1456,28 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|ityparam
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|,
+parameter_list|,
 name|t
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|termios
 modifier|*
 name|t
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|ity
@@ -1619,7 +1587,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Stop output on a line.  */
@@ -1629,16 +1597,18 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|itystop
-argument_list|(
-argument|struct tty *tp
-argument_list|,
-argument|int flag
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1683,7 +1653,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
