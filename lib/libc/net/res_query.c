@@ -935,21 +935,10 @@ break|break;
 case|case
 name|TRY_AGAIN
 case|:
-if|if
-condition|(
-name|hp
-operator|->
-name|rcode
-operator|==
-name|SERVFAIL
-condition|)
-block|{
-comment|/* try next search element, if any */
-name|got_servfail
+comment|/* 				 * This can occur due to a server failure 				 * (that is, all listed servers have failed), 				 * or all listed servers have timed out. 				 * hp->rcode may not be set to SERVFAIL in the 				 * case of a timeout. 				 * 				 * Either way we must terminate the search 				 * and return TRY_AGAIN in order to avoid 				 * non-deterministic return codes.  For 				 * example, loaded name servers or races 				 * against network startup/validation (dhcp, 				 * ppp, etc) can cause the search to timeout 				 * on one search element, e.g. 'fu.bar.com', 				 * and return a definitive failure on the 				 * next search element, e.g. 'fu.'. 				 */
 operator|++
+name|got_servfail
 expr_stmt|;
-break|break;
-block|}
 comment|/* FALLTHROUGH */
 default|default:
 comment|/* anything else implies that we're done */
