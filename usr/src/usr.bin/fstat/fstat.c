@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.14 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3419,7 +3419,7 @@ argument_list|()
 block|{
 name|fputs
 argument_list|(
-literal|"usage: fstat [-v] [-u user] [-p pid] [filename ...]\n"
+literal|"usage: fstat [-u user] [-p pid] [filename ...]\n"
 argument_list|,
 name|stderr
 argument_list|)
