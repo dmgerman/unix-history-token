@@ -435,7 +435,7 @@ end_function
 
 begin_function
 name|void
-name|AcpiOsSleepUsec
+name|AcpiOsStall
 parameter_list|(
 name|UINT32
 name|Microseconds

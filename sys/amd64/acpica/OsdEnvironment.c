@@ -70,5 +70,30 @@ return|;
 block|}
 end_function
 
+begin_function
+name|ACPI_STATUS
+name|AcpiOsGetRootPointer
+parameter_list|(
+name|UINT32
+name|Flags
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+modifier|*
+name|RsdpPhysicalAddress
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AcpiFindRootPointer
+argument_list|(
+name|Flags
+argument_list|,
+name|RsdpPhysicalAddress
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
