@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_unix.c	7.8 (Berkeley) %G%"
+literal|"@(#)ex_unix.c	7.8 (Berkeley) 7/28/88"
 decl_stmt|;
 end_decl_stmt
 
@@ -726,6 +726,30 @@ condition|)
 block|{
 if|if
 condition|(
+name|up
+condition|)
+block|{
+specifier|register
+name|char
+modifier|*
+name|cp
+init|=
+name|up
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|cp
+condition|)
+operator|*
+name|cp
+operator|++
+operator|&=
+name|TRIM
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|mode
 operator|&
 literal|2
@@ -1434,7 +1458,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-name|EXRECOVER
+name|_PATH_EXRECOVER
 argument_list|,
 literal|"exrecover"
 argument_list|,
