@@ -639,6 +639,12 @@ directive|ifdef
 name|KRB4
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|OPENSSL_DES_LIBDES_COMPATIBILITY
+end_define
+
 begin_include
 include|#
 directive|include

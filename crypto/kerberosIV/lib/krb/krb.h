@@ -207,6 +207,9 @@ directive|define
 name|NOPROTO
 endif|#
 directive|endif
+define|#
+directive|define
+name|OPENSSL_DES_LIBDES_COMPATIBILITY
 include|#
 directive|include
 file|<openssl/des.h>

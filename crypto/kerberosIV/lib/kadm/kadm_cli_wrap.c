@@ -584,9 +584,7 @@ name|s_k
 argument_list|)
 argument_list|,
 comment|/* session key */
-expr|struct
-name|des_ks_struct
-operator|*
+name|des_key_schedule
 name|s_s
 argument_list|)
 comment|/* session key schedule */

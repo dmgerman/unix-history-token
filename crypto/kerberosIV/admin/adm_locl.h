@@ -221,6 +221,12 @@ directive|include
 file|<roken.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|OPENSSL_DES_LIBDES_COMPATIBILITY
+end_define
+
 begin_include
 include|#
 directive|include

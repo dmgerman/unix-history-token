@@ -7,6 +7,10 @@ begin_comment
 comment|/* $Id: krb-protos.h,v 1.24.2.1 2000/06/23 03:32:04 assar Exp $ */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -640,9 +644,7 @@ name|des_cblock
 operator|*
 name|session
 operator|,
-expr|struct
-name|des_ks_struct
-operator|*
+name|des_key_schedule
 name|schedule
 operator|,
 expr|struct
@@ -1735,9 +1737,7 @@ operator|,
 name|u_int32_t
 name|length
 operator|,
-expr|struct
-name|des_ks_struct
-operator|*
+name|des_key_schedule
 name|schedule
 operator|,
 name|des_cblock
@@ -2027,9 +2027,7 @@ operator|,
 name|u_int32_t
 name|in_length
 operator|,
-expr|struct
-name|des_ks_struct
-operator|*
+name|des_key_schedule
 name|schedule
 operator|,
 name|des_cblock
@@ -2200,9 +2198,7 @@ name|char
 operator|*
 name|filename
 operator|,
-expr|struct
-name|des_ks_struct
-operator|*
+name|des_key_schedule
 name|schedule
 operator|,
 name|char
@@ -2252,9 +2248,7 @@ name|CREDENTIALS
 operator|*
 name|cred
 operator|,
-expr|struct
-name|des_ks_struct
-operator|*
+name|des_key_schedule
 name|schedule
 operator|,
 expr|struct
