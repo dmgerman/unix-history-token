@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	1.6 %G%"
+literal|"@(#)cmd1.c	1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,13 +1202,6 @@ name|obuf
 argument_list|)
 expr_stmt|;
 block|}
-name|signal
-argument_list|(
-name|SIGPIPE
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|obuf
@@ -1226,6 +1219,13 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
