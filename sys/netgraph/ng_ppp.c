@@ -2764,6 +2764,22 @@ comment|/* FALLTHROUGH */
 case|case
 name|HOOK_INDEX_ENCRYPT
 case|:
+return|return
+name|ng_ppp_output
+argument_list|(
+name|node
+argument_list|,
+literal|0
+argument_list|,
+name|proto
+argument_list|,
+name|NG_PPP_BUNDLE_LINKNUM
+argument_list|,
+name|m
+argument_list|,
+name|meta
+argument_list|)
+return|;
 case|case
 name|HOOK_INDEX_BYPASS
 case|:
@@ -2772,13 +2788,11 @@ name|ng_ppp_output
 argument_list|(
 name|node
 argument_list|,
-name|index
-operator|==
-name|HOOK_INDEX_BYPASS
+literal|1
 argument_list|,
 name|proto
 argument_list|,
-name|NG_PPP_BUNDLE_LINKNUM
+name|linkNum
 argument_list|,
 name|m
 argument_list|,
@@ -3252,12 +3266,6 @@ name|conf
 operator|.
 name|enableMultilink
 condition|)
-block|{
-name|NG_FREE_META
-argument_list|(
-name|meta
-argument_list|)
-expr_stmt|;
 return|return
 name|ng_ppp_mp_input
 argument_list|(
@@ -3270,7 +3278,6 @@ argument_list|,
 name|meta
 argument_list|)
 return|;
-block|}
 break|break;
 case|case
 name|PROT_APPLETALK
@@ -3429,7 +3436,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Deliver a frame out a link, either a real one or NG_PPP_BUNDLE_LINKNUM  */
+comment|/*  * Deliver a frame out a link, either a real one or NG_PPP_BUNDLE_LINKNUM  * If the link is not enabled then ENXIO is returned, unless "bypass" is != 0.  */
 end_comment
 
 begin_function
@@ -3500,7 +3507,10 @@ condition|(
 name|linkNum
 operator|!=
 name|NG_PPP_BUNDLE_LINKNUM
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|bypass
 operator|&&
@@ -3545,6 +3555,7 @@ operator|(
 name|ENETDOWN
 operator|)
 return|;
+block|}
 block|}
 comment|/* Prepend protocol number, possibly compressed */
 if|if
@@ -6756,8 +6767,13 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
+name|struct
+name|ng_ppp_link_config
+modifier|*
+specifier|const
+name|lc
+init|=
+operator|&
 name|priv
 operator|->
 name|conf
@@ -6766,7 +6782,11 @@ name|links
 index|[
 name|i
 index|]
-operator|.
+decl_stmt|;
+if|if
+condition|(
+name|lc
+operator|->
 name|enableLink
 operator|&&
 name|priv
@@ -6793,15 +6813,8 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-name|priv
+name|lc
 operator|->
-name|conf
-operator|.
-name|links
-index|[
-name|i
-index|]
-operator|.
 name|latency
 operator|!=
 name|priv
@@ -6810,20 +6823,18 @@ name|conf
 operator|.
 name|links
 index|[
+name|priv
+operator|->
+name|activeLinks
+index|[
 literal|0
+index|]
 index|]
 operator|.
 name|latency
 operator|||
-name|priv
+name|lc
 operator|->
-name|conf
-operator|.
-name|links
-index|[
-name|i
-index|]
-operator|.
 name|bandwidth
 operator|!=
 name|priv
@@ -6832,7 +6843,12 @@ name|conf
 operator|.
 name|links
 index|[
+name|priv
+operator|->
+name|activeLinks
+index|[
 literal|0
+index|]
 index|]
 operator|.
 name|bandwidth
@@ -6845,7 +6861,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* Reset MP state if no longer active */
+comment|/* Reset MP state if multi-link is no longer active */
 if|if
 condition|(
 operator|!
