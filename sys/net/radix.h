@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)radix.h	8.1 (Berkeley) 6/10/93  * $Id: radix.h,v 1.6 1995/03/16 18:14:29 bde Exp $  */
+comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)radix.h	8.2 (Berkeley) 10/31/94  *	$Id$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NET_RADIX_H_
+name|_RADIX_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NET_RADIX_H_
+name|_RADIX_H_
 end_define
 
 begin_comment
@@ -199,10 +199,21 @@ modifier|*
 name|rm_mklist
 decl_stmt|;
 comment|/* more masks to try */
+union|union
+block|{
 name|caddr_t
-name|rm_mask
+name|rmu_mask
 decl_stmt|;
 comment|/* the mask */
+name|struct
+name|radix_node
+modifier|*
+name|rmu_leaf
+decl_stmt|;
+comment|/* for normal routes */
+block|}
+name|rm_rmu
+union|;
 name|int
 name|rm_refs
 decl_stmt|;
@@ -212,6 +223,24 @@ modifier|*
 name|rn_mkfreelist
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|rm_mask
+value|rm_rmu.rmu_mask
+end_define
+
+begin_define
+define|#
+directive|define
+name|rm_leaf
+value|rm_rmu.rmu_leaf
+end_define
+
+begin_comment
+comment|/* extra field would make 32 bytes */
+end_comment
 
 begin_define
 define|#
@@ -232,7 +261,6 @@ typedef|((struct
 name|radix_node
 modifier|*
 typedef|,
-comment|/*struct walkarg*/
 name|void
 modifier|*
 typedef|));
@@ -396,6 +424,32 @@ name|radix_node
 modifier|*
 argument_list|(
 operator|*
+name|rnh_lookup
+argument_list|)
+comment|/* locate based on sockaddr */
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|v
+operator|,
+name|void
+operator|*
+name|mask
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+name|head
+operator|)
+argument_list|)
+decl_stmt|;
+name|struct
+name|radix_node
+modifier|*
+argument_list|(
+operator|*
 name|rnh_matchpkt
 argument_list|)
 comment|/* locate based on packet hdr */
@@ -522,6 +576,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|Bcopy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|n
+parameter_list|)
+value|bcopy(((char *)(a)), ((char *)(b)), (unsigned)(n))
+end_define
+
+begin_define
+define|#
+directive|define
 name|Bzero
 parameter_list|(
 name|p
@@ -623,6 +691,15 @@ name|p
 parameter_list|)
 value|free((caddr_t)p, M_RTABLE);
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*KERNEL*/
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -848,16 +925,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*KERNEL*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_NET_RADIX_H_ */
+comment|/* _RADIX_H_ */
 end_comment
 
 end_unit
