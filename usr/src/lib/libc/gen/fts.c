@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.38 (Berkeley) %G%"
+literal|"@(#)fts.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,7 +186,7 @@ operator|(
 name|FTS
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -468,6 +468,24 @@ argument_list|(
 name|FTS_NOCHDIR
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Start out with more than 1K of path space, and enough, in any 	 * case, to hold the user's paths. 	 */
+if|if
+condition|(
+name|fts_palloc
+argument_list|(
+name|sp
+argument_list|,
+name|MAX
+argument_list|(
+name|maxlen
+argument_list|,
+name|MAXPATHLEN
+argument_list|)
+argument_list|)
+condition|)
+goto|goto
+name|mem1
+goto|;
 comment|/* Allocate/initialize root's parent. */
 if|if
 condition|(
@@ -487,7 +505,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|mem1
+name|mem2
 goto|;
 name|parent
 operator|->
@@ -539,7 +557,7 @@ operator|=
 name|ENOENT
 expr_stmt|;
 goto|goto
-name|mem2
+name|mem3
 goto|;
 block|}
 if|if
@@ -707,7 +725,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|mem2
+name|mem3
 goto|;
 name|sp
 operator|->
@@ -725,24 +743,6 @@ name|fts_info
 operator|=
 name|FTS_INIT
 expr_stmt|;
-comment|/* 	 * Start out with more than 1K of path space, and enough, in any 	 * case, to hold the user's paths. 	 */
-if|if
-condition|(
-name|fts_palloc
-argument_list|(
-name|sp
-argument_list|,
-name|MAX
-argument_list|(
-name|maxlen
-argument_list|,
-name|MAXPATHLEN
-argument_list|)
-argument_list|)
-condition|)
-goto|goto
-name|mem3
-goto|;
 comment|/* 	 * If using chdir(2), grab a file descriptor pointing to dot to insure 	 * that we can get back here; this could be avoided for some paths, 	 * but almost certainly not worth the effort.  Slashes, symbolic links, 	 * and ".." are all fairly nasty problems.  Note, if we can't get the 	 * descriptor we run anyway, just more slowly. 	 */
 if|if
 condition|(
@@ -781,15 +781,6 @@ operator|)
 return|;
 name|mem3
 label|:
-name|free
-argument_list|(
-name|sp
-operator|->
-name|fts_cur
-argument_list|)
-expr_stmt|;
-name|mem2
-label|:
 name|fts_lfree
 argument_list|(
 name|root
@@ -798,6 +789,15 @@ expr_stmt|;
 name|free
 argument_list|(
 name|parent
+argument_list|)
+expr_stmt|;
+name|mem2
+label|:
+name|free
+argument_list|(
+name|sp
+operator|->
+name|fts_path
 argument_list|)
 expr_stmt|;
 name|mem1
@@ -2702,7 +2702,7 @@ argument_list|(
 name|sp
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|dp
 operator|->
@@ -3650,7 +3650,7 @@ name|sp
 parameter_list|,
 name|name
 parameter_list|,
-name|len
+name|namelen
 parameter_list|)
 name|FTS
 modifier|*
@@ -3662,7 +3662,7 @@ name|name
 decl_stmt|;
 specifier|register
 name|int
-name|len
+name|namelen
 decl_stmt|;
 block|{
 specifier|register
@@ -3670,27 +3670,36 @@ name|FTSENT
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|needstat
+name|size_t
+name|len
 decl_stmt|;
-comment|/* 	 * Variable sized structures.  The stat structure isn't necessary 	 * if the user doesn't need it, and the name is variable length. 	 * Allocate enough extra space after the structure to store them. 	 */
-name|needstat
+comment|/* 	 * The file name is a variable length array and no stat structure is 	 * necessary if the user has set the nostat bit.  Allocate the FTSENT 	 * structure, the file name and the stat structure in one chunk, but 	 * be careful that the stat structure is reasonably aligned.  Since the 	 * fts_name field is declared to be of size 1, the fts_name pointer is 	 * namelen + 2 before the first possible address of the stat structure. 	 */
+name|len
 operator|=
+sizeof|sizeof
+argument_list|(
+name|FTSENT
+argument_list|)
+operator|+
+name|namelen
+expr_stmt|;
+if|if
+condition|(
+operator|!
 name|ISSET
 argument_list|(
 name|FTS_NOSTAT
 argument_list|)
-condition|?
-literal|0
-else|:
-name|ALIGN
-argument_list|(
+condition|)
+name|len
+operator|+=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|stat
 argument_list|)
-argument_list|)
+operator|+
+name|ALIGNBYTES
 expr_stmt|;
 if|if
 condition|(
@@ -3699,21 +3708,7 @@ name|p
 operator|=
 name|malloc
 argument_list|(
-call|(
-name|size_t
-call|)
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|FTSENT
-argument_list|)
-operator|+
 name|len
-operator|+
-literal|1
-operator|+
-name|needstat
-argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -3724,6 +3719,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* Copy the name plus the trailing NULL. */
 name|bcopy
 argument_list|(
 name|name
@@ -3732,14 +3728,18 @@ name|p
 operator|->
 name|fts_name
 argument_list|,
-name|len
+name|namelen
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|needstat
+operator|!
+name|ISSET
+argument_list|(
+name|FTS_NOSTAT
+argument_list|)
 condition|)
 name|p
 operator|->
@@ -3756,16 +3756,16 @@ name|p
 operator|->
 name|fts_name
 operator|+
-name|len
+name|namelen
 operator|+
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|p
 operator|->
 name|fts_namelen
 operator|=
-name|len
+name|namelen
 expr_stmt|;
 name|p
 operator|->
@@ -3871,7 +3871,7 @@ name|FTS
 modifier|*
 name|sp
 decl_stmt|;
-name|int
+name|size_t
 name|more
 decl_stmt|;
 block|{
