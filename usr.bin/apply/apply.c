@@ -579,9 +579,6 @@ name|offset
 operator|<
 literal|0
 operator|||
-operator|(
-name|size_t
-operator|)
 name|offset
 operator|>=
 name|cmdsize
@@ -636,9 +633,6 @@ name|offset
 operator|<
 literal|0
 operator|||
-operator|(
-name|size_t
-operator|)
 name|offset
 operator|>=
 name|cmdsize
@@ -696,9 +690,6 @@ name|offset
 operator|<
 literal|0
 operator|||
-operator|(
-name|size_t
-operator|)
 name|offset
 operator|>=
 name|cmdsize
@@ -893,9 +884,6 @@ name|offset
 operator|<
 literal|0
 operator|||
-operator|(
-name|size_t
-operator|)
 name|offset
 operator|>=
 name|l
