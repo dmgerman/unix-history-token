@@ -3978,7 +3978,7 @@ name|nbp
 operator|->
 name|b_xflags
 operator|&
-name|B_VNCLEAN
+name|BX_VNCLEAN
 operator|)
 operator|==
 literal|0
@@ -4115,7 +4115,7 @@ name|nbp
 operator|->
 name|b_xflags
 operator|&
-name|B_VNDIRTY
+name|BX_VNDIRTY
 operator|)
 operator|==
 literal|0
@@ -4399,14 +4399,14 @@ name|bp
 operator|->
 name|b_xflags
 operator||=
-name|B_VNCLEAN
+name|BX_VNCLEAN
 expr_stmt|;
 name|bp
 operator|->
 name|b_xflags
 operator|&=
 operator|~
-name|B_VNDIRTY
+name|BX_VNDIRTY
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -4490,9 +4490,9 @@ operator|->
 name|b_xflags
 operator|&
 operator|(
-name|B_VNDIRTY
+name|BX_VNDIRTY
 operator||
-name|B_VNCLEAN
+name|BX_VNCLEAN
 operator|)
 condition|)
 block|{
@@ -4502,7 +4502,7 @@ name|bp
 operator|->
 name|b_xflags
 operator|&
-name|B_VNDIRTY
+name|BX_VNDIRTY
 condition|)
 name|listheadp
 operator|=
@@ -4534,9 +4534,9 @@ name|b_xflags
 operator|&=
 operator|~
 operator|(
-name|B_VNDIRTY
+name|BX_VNDIRTY
 operator||
-name|B_VNCLEAN
+name|BX_VNCLEAN
 operator|)
 expr_stmt|;
 block|}
@@ -5372,9 +5372,9 @@ operator|->
 name|b_xflags
 operator|&
 operator|(
-name|B_VNDIRTY
+name|BX_VNDIRTY
 operator||
-name|B_VNCLEAN
+name|BX_VNCLEAN
 operator|)
 condition|)
 block|{
@@ -5384,7 +5384,7 @@ name|bp
 operator|->
 name|b_xflags
 operator|&
-name|B_VNDIRTY
+name|BX_VNDIRTY
 condition|)
 name|listheadp
 operator|=
@@ -5420,9 +5420,9 @@ name|b_xflags
 operator|&=
 operator|~
 operator|(
-name|B_VNDIRTY
+name|BX_VNDIRTY
 operator||
-name|B_VNCLEAN
+name|BX_VNCLEAN
 operator|)
 expr_stmt|;
 if|if
@@ -5540,7 +5540,7 @@ name|bp
 operator|->
 name|b_xflags
 operator||=
-name|B_VNDIRTY
+name|BX_VNDIRTY
 expr_stmt|;
 name|tbp
 operator|=
@@ -5647,7 +5647,7 @@ name|tbp
 operator|->
 name|b_xflags
 operator|&
-name|B_VNDIRTY
+name|BX_VNDIRTY
 operator|)
 condition|)
 block|{
@@ -5741,7 +5741,7 @@ name|bp
 operator|->
 name|b_xflags
 operator||=
-name|B_VNCLEAN
+name|BX_VNCLEAN
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(

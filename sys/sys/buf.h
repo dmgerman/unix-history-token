@@ -814,8 +814,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_VNDIRTY
-value|0x01
+name|BX_VNDIRTY
+value|0x00000001
 end_define
 
 begin_comment
@@ -825,8 +825,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_VNCLEAN
-value|0x02
+name|BX_VNCLEAN
+value|0x00000002
 end_define
 
 begin_comment
