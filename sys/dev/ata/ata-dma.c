@@ -3179,7 +3179,7 @@ argument_list|,
 literal|0x00
 argument_list|)
 operator|||
-comment|/* SiS 635 */
+comment|/* SiS 645 */
 name|ata_find_dev
 argument_list|(
 name|parent
