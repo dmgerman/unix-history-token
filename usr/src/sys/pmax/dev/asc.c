@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -466,6 +466,7 @@ comment|/* forward decls of script actions */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|script_nop
 parameter_list|()
@@ -477,6 +478,7 @@ comment|/* when nothing needed */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_end
 parameter_list|()
@@ -488,6 +490,7 @@ comment|/* all come to an end */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_get_status
 parameter_list|()
@@ -499,6 +502,7 @@ comment|/* get status from target */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_dma_in
 parameter_list|()
@@ -510,6 +514,7 @@ comment|/* start reading data from target */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_last_dma_in
 parameter_list|()
@@ -521,6 +526,7 @@ comment|/* cleanup after all data is read */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_resume_in
 parameter_list|()
@@ -532,6 +538,7 @@ comment|/* resume data in after a message */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_resume_dma_in
 parameter_list|()
@@ -543,6 +550,7 @@ comment|/* resume DMA after a disconnect */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_dma_out
 parameter_list|()
@@ -554,6 +562,7 @@ comment|/* send data to target via dma */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_last_dma_out
 parameter_list|()
@@ -565,6 +574,7 @@ comment|/* cleanup after all data is written */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_resume_out
 parameter_list|()
@@ -576,6 +586,7 @@ comment|/* resume data out after a message */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_resume_dma_out
 parameter_list|()
@@ -587,6 +598,7 @@ comment|/* resume DMA after a disconnect */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_sendsync
 parameter_list|()
@@ -598,6 +610,7 @@ comment|/* negotiate sync xfer */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_replysync
 parameter_list|()
@@ -609,6 +622,7 @@ comment|/* negotiate sync xfer */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_msg_in
 parameter_list|()
@@ -620,6 +634,7 @@ comment|/* process a message byte */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|asc_disconnect
 parameter_list|()
@@ -1445,7 +1460,6 @@ modifier|*
 name|dmar
 decl_stmt|;
 comment|/* DMA address register address */
-specifier|volatile
 name|u_char
 modifier|*
 name|buff
@@ -1711,7 +1725,6 @@ operator|->
 name|buff
 operator|=
 operator|(
-specifier|volatile
 name|u_char
 operator|*
 operator|)
