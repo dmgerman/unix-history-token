@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	2.7 %G%"
+literal|"@(#)cmdtab.c	2.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,13 +193,19 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|folders
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|igfield
+argument_list|()
+decl_stmt|,
+name|Type
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -243,6 +249,26 @@ block|,
 literal|"type"
 block|,
 name|type
+block|,
+name|MSGLIST
+block|,
+literal|0
+block|,
+name|MMNDEL
+block|,
+literal|"Type"
+block|,
+name|Type
+block|,
+name|MSGLIST
+block|,
+literal|0
+block|,
+name|MMNDEL
+block|,
+literal|"Print"
+block|,
+name|Type
 block|,
 name|MSGLIST
 block|,
@@ -815,6 +841,30 @@ block|,
 literal|"alternates"
 block|,
 name|alternates
+block|,
+name|M
+operator||
+name|RAWLIST
+block|,
+literal|0
+block|,
+literal|1000
+block|,
+literal|"ignore"
+block|,
+name|igfield
+block|,
+name|M
+operator||
+name|RAWLIST
+block|,
+literal|0
+block|,
+literal|1000
+block|,
+literal|"discard"
+block|,
+name|igfield
 block|,
 name|M
 operator||
