@@ -949,6 +949,8 @@ operator|(
 name|rstart
 operator|+
 name|count
+operator|-
+literal|1
 operator|)
 operator|)
 operator|&
