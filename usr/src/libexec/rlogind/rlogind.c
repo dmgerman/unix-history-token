@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.11 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -925,6 +925,13 @@ argument_list|(
 name|f
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|cleanup
