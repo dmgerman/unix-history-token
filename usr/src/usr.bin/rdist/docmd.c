@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.6 (Berkeley) 83/10/26"
+literal|"@(#)docmd.c	4.7 (Berkeley) 83/10/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,7 +291,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|f
 operator|->
 name|b_next
@@ -308,13 +307,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|f
+operator|->
+name|b_next
+operator|!=
+name|NULL
+condition|)
 name|f
 operator|=
 name|f
 operator|->
 name|b_next
 expr_stmt|;
-block|}
 block|}
 block|}
 for|for
