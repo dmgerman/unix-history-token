@@ -957,7 +957,9 @@ name|c
 decl_stmt|;
 name|printf
 argument_list|(
-literal|" %d:<"
+literal|"wd%d: unit %d type "
+argument_list|,
+name|unit
 argument_list|,
 name|unit
 argument_list|)
@@ -1049,7 +1051,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|">"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|du
@@ -1064,7 +1066,9 @@ block|{
 comment|/* old ST506 controller */
 name|printf
 argument_list|(
-literal|" %d:<wdgetctlr failed, assuming OK>"
+literal|"wd%d: unit %d type old ST506\n"
+argument_list|,
+name|unit
 argument_list|,
 name|unit
 argument_list|)

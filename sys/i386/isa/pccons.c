@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/i386/isa/RCS/pccons.c,v 1.2 92/01/21 14:35:28 william Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/pccons.c,v 1.1.1.1 1993/06/12 14:58:00 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -927,13 +927,21 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"<mono>"
+literal|"pc%d: type monochrome\n"
+argument_list|,
+name|dev
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"<color>"
+literal|"pc%d: type color\n"
+argument_list|,
+name|dev
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 name|cursor
@@ -6955,6 +6963,7 @@ argument_list|)
 operator|&
 name|KBS_DIB
 condition|)
+block|{
 name|dt
 operator|=
 name|inb
@@ -6962,6 +6971,54 @@ argument_list|(
 name|KBDATAP
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|REVERSE_CAPS_CTRL
+comment|/* switch the caps lock and control keys */
+if|if
+condition|(
+operator|(
+name|dt
+operator|&
+literal|0x7f
+operator|)
+operator|==
+literal|29
+condition|)
+name|dt
+operator|=
+operator|(
+name|dt
+operator|&
+literal|0x80
+operator|)
+operator||
+literal|58
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|dt
+operator|&
+literal|0x7f
+operator|)
+operator|==
+literal|58
+condition|)
+name|dt
+operator|=
+operator|(
+name|dt
+operator|&
+literal|0x80
+operator|)
+operator||
+literal|29
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 endif|#
 directive|endif
 comment|/* !XSERVER*/

@@ -8,7 +8,7 @@ comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sep
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: aha1542.c,v $  * Revision 1.6  1992/08/24  21:01:58  jason  * many changes and bugfixes for osf1  *  * Revision 1.5  1992/07/31  01:22:03  julian  * support improved scsi.h layout  *  * Revision 1.4  1992/07/25  03:11:26  julian  * check each request fro sane flags.  *  * Revision 1.3  1992/07/24  00:52:45  julian  * improved timeout handling.  * added support for two arguments to the sd_done (or equiv) call so that  * they can pre-queue several arguments.  * slightly clean up error handling  *  * Revision 1.2  1992/07/17  22:03:54  julian  * upgraded the timeout code.  * added support for UIO-based i/o (as used for pmem operations)  *  * Revision 1.1  1992/05/27  00:51:12  balsup  * machkern/cor merge  */
+comment|/*  * HISTORY  * $Log: aha1542.c,v $  * Revision 1.1.1.1  1993/06/12  14:57:59  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.6  1992/08/24  21:01:58  jason  * many changes and bugfixes for osf1  *  * Revision 1.5  1992/07/31  01:22:03  julian  * support improved scsi.h layout  *  * Revision 1.4  1992/07/25  03:11:26  julian  * check each request fro sane flags.  *  * Revision 1.3  1992/07/24  00:52:45  julian  * improved timeout handling.  * added support for two arguments to the sd_done (or equiv) call so that  * they can pre-queue several arguments.  * slightly clean up error handling  *  * Revision 1.2  1992/07/17  22:03:54  julian  * upgraded the timeout code.  * added support for UIO-based i/o (as used for pmem operations)  *  * Revision 1.1  1992/05/27  00:51:12  balsup  * machkern/cor merge  */
 end_comment
 
 begin_comment
@@ -2681,11 +2681,6 @@ comment|/* !defined(OSF) */
 ifdef|#
 directive|ifdef
 name|__386BSD__
-name|printf
-argument_list|(
-literal|"\n  **"
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
 else|__386BSD__
@@ -2749,7 +2744,7 @@ directive|ifdef
 name|__386BSD__
 name|printf
 argument_list|(
-literal|" probing for scsi devices**\n"
+literal|"**probing for scsi devices**\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2798,19 +2793,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|__386BSD__
-name|printf
-argument_list|(
-literal|"aha%d"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|__386BSD__
 return|return;
 block|}
 end_block
@@ -3905,13 +3887,6 @@ comment|/***********************************************\ 	* Assume we have a bo
 ifdef|#
 directive|ifdef
 name|__386BSD__
-name|printf
-argument_list|(
-literal|"aha%d reading board settings, "
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|PRNT
@@ -5846,13 +5821,7 @@ name|speed
 operator|++
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"%d nSEC ok, use "
-argument_list|,
-name|retval
-argument_list|)
-expr_stmt|;
+comment|/* XXX			printf("%d nSEC ok, use ",retval); */
 name|retval2
 operator|=
 name|aha_bus_speed_check
@@ -5870,11 +5839,7 @@ name|HAD_ERROR
 condition|)
 comment|/* retval is slowest already */
 block|{
-name|printf
-argument_list|(
-literal|"marginal "
-argument_list|)
-expr_stmt|;
+comment|/* XXX				printf("marginal "); */
 name|retval2
 operator|=
 name|retval
@@ -5885,13 +5850,7 @@ condition|(
 name|retval2
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%d nSEC "
-argument_list|,
-name|retval2
-argument_list|)
-expr_stmt|;
+comment|/* XXX				printf("%d nSEC ",retval2); */
 return|return
 operator|(
 name|retval2
@@ -5900,13 +5859,7 @@ return|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|".. slower failed, abort.\n"
-argument_list|,
-name|retval
-argument_list|)
-expr_stmt|;
+comment|/* XXX				printf(".. slower failed, abort.\n",retval); */
 return|return
 operator|(
 literal|0

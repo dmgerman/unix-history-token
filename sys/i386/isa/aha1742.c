@@ -2548,11 +2548,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* use EISA dma */
-name|printf
-argument_list|(
-literal|"\n  **"
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 endif|__386BSD__
@@ -2600,7 +2595,7 @@ directive|ifdef
 name|__386BSD__
 name|printf
 argument_list|(
-literal|" probing for scsi devices**\n"
+literal|"**probing for scsi devices**\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2651,19 +2646,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|__386BSD__
-name|printf
-argument_list|(
-literal|"ahb%d"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|__386BSD__
 return|return;
 block|}
 end_block
@@ -3896,13 +3878,6 @@ comment|/***********************************************\ 	* Assume we have a bo
 ifdef|#
 directive|ifdef
 name|__386BSD__
-name|printf
-argument_list|(
-literal|"ahb%d reading board settings, "
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|PRNT
