@@ -1,4 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * This is part of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman.  *  * bktr_mem : This kernel module allows us to keep our allocated  *            contiguous memory for the video buffer, DMA programs and VBI data  *            while the main bktr driver is unloaded and reloaded.  *            This avoids the problem of trying to allocate contiguous each  *            time the bktr driver is loaded.  */
+end_comment
+
+begin_comment
+comment|/*  * 1. Redistributions of source code must retain the  * Copyright (c) 2000 Roger Hardiman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Roger Hardiman  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -12,14 +20,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * This is part of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman.  *  * bktr_mem : This kernel module allows us to keep our allocated  *            contiguous memory for the video buffer, DMA programs and VBI data  *            while the main bktr driver is unloaded and reloaded.  *            This avoids the problem of trying to allocate contiguous each  *            time the bktr driver is loaded.  */
-end_comment
-
-begin_comment
-comment|/*  * 1. Redistributions of source code must retain the  * Copyright (c) 2000 Roger Hardiman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Roger Hardiman  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
 
 begin_include
 include|#
@@ -117,13 +117,12 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-block|{
 name|printf
 argument_list|(
 literal|"bktr_mem: memory holder loaded\n"
 argument_list|)
 expr_stmt|;
-comment|/*  * bzero causes a panic. 		bzero((caddr_t)memory_list, sizeof(memory_list));  * So use a simple for loop for now. */
+comment|/* 		 * bzero((caddr_t)memory_list, sizeof(memory_list)); 		 * causes a panic. So use a simple for loop for now. 		 */
 block|{
 name|int
 name|x
@@ -132,14 +131,16 @@ name|unsigned
 name|char
 modifier|*
 name|d
-init|=
+decl_stmt|;
+name|d
+operator|=
 operator|(
 name|unsigned
 name|char
 operator|*
 operator|)
 name|memory_list
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|x
@@ -156,7 +157,6 @@ condition|;
 name|x
 operator|++
 control|)
-block|{
 name|d
 index|[
 name|x
@@ -165,15 +165,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-block|}
 return|return
 literal|0
 return|;
-block|}
 case|case
 name|MOD_UNLOAD
 case|:
-block|{
 name|printf
 argument_list|(
 literal|"bktr_mem: memory holder cannot be unloaded\n"
@@ -182,12 +179,13 @@ expr_stmt|;
 return|return
 name|EBUSY
 return|;
-block|}
 default|default:
 break|break;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -206,17 +204,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|unit
 operator|<
 literal|0
-operator|)
 operator|||
-operator|(
 name|unit
 operator|>=
 name|BKTR_MEM_MAX_DEVICES
-operator|)
 condition|)
 block|{
 name|printf
@@ -261,17 +255,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|unit
 operator|<
 literal|0
-operator|)
 operator|||
-operator|(
 name|unit
 operator|>=
 name|BKTR_MEM_MAX_DEVICES
-operator|)
 condition|)
 block|{
 name|printf
@@ -436,17 +426,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|unit
 operator|<
 literal|0
-operator|)
 operator|||
-operator|(
 name|unit
 operator|>=
 name|BKTR_MEM_MAX_DEVICES
-operator|)
 condition|)
 block|{
 name|printf
@@ -459,7 +445,9 @@ name|type
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 switch|switch
@@ -533,7 +521,9 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -559,7 +549,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The load order is First and module type is Driver to make sure bktr_mem    loads (and initialises) before bktr when both are loaded together */
+comment|/*  * The load order is First and module type is Driver to make sure bktr_mem  * loads (and initialises) before bktr when both are loaded together.  */
 end_comment
 
 begin_expr_stmt
