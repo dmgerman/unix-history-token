@@ -1044,19 +1044,19 @@ end_if
 begin_define
 define|#
 directive|define
-name|fpsetround
+name|fpgetround
 parameter_list|()
-value|__fpsetround()
+value|__fpgetround()
 end_define
 
 begin_define
 define|#
 directive|define
-name|fpgetround
+name|fpsetround
 parameter_list|(
 name|_m
 parameter_list|)
-value|__fpgetround(_m)
+value|__fpsetround(_m)
 end_define
 
 begin_define
