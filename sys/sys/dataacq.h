@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* Header for general data acquisition definitions.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -16,10 +20,6 @@ include|#
 directive|include
 file|<sys/ioccom.h>
 end_include
-
-begin_comment
-comment|/* Header for general data acquisition definitions.  */
-end_comment
 
 begin_comment
 comment|/* Period in microseconds between analog I/O samples.  */
@@ -84,7 +84,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SYS_DATAACQ_H_ */
+comment|/* !_SYS_DATAACQ_H_ */
 end_comment
 
 end_unit

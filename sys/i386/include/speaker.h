@@ -1,24 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * speaker.h -- interface definitions for speaker ioctl()  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  *      modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  * $Id$  */
+comment|/*  * speaker.h -- interface definitions for speaker ioctl()  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  *      modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  * $Id: speaker.h,v 1.2 1994/08/02 07:39:05 davidg Exp $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SPEAKER_H_
+name|_MACHINE_SPEAKER_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SPEAKER_H_
+name|_MACHINE_SPEAKER_H_
 end_define
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/ioccom.h>
 end_include
 
 begin_define
@@ -70,11 +70,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SPEAKER_H_ */
-end_comment
-
-begin_comment
-comment|/* speaker.h ends here */
+comment|/* !_MACHINE_SPEAKER_H_ */
 end_comment
 
 end_unit

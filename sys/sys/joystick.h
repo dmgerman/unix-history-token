@@ -2,25 +2,19 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_JOY_IOCTL_H_
+name|_MACHINE_JOYSTICK_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_JOY_IOCTL_H_
+name|_MACHINE_JOYSTICK_H_
 end_define
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
+file|<sys/ioccom.h>
 end_include
 
 begin_struct
@@ -115,7 +109,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _JOY_IOCTL_H_ */
+comment|/* !_MACHINE_JOYSTICK_H_ */
 end_comment
 
 end_unit

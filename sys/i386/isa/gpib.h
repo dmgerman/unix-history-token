@@ -1,4 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_I386_ISA_GPIB_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_I386_ISA_GPIB_H_
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
 begin_comment
 comment|/* gpib data structures */
 end_comment
@@ -98,6 +116,15 @@ directive|define
 name|GPIBSPOLL
 value|_IOW('g',10,struct gpibdata)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_I386_ISA_GPIB_H_ */
+end_comment
 
 end_unit
 

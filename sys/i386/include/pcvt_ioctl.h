@@ -86,7 +86,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/ioccom.h>
 end_include
 
 begin_comment
@@ -2818,7 +2818,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! _MACHINE_PCVT_IOCTL_H_ */
+comment|/* !_MACHINE_PCVT_IOCTL_H_ */
 end_comment
 
 end_unit

@@ -1,30 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (C) 1994 Geoffrey M. Rehmet  *  *  This program is free software; you may redistribute it and/or  *  modify it, provided that it retain the above copyright notice  *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  *	Geoff Rehmet, Rhodes University, South Africa<csgr@cs.ru.ac.za>  *  * $Id: lpt.h,v 1.2 1994/08/02 07:38:52 davidg Exp $  */
+comment|/*  *  Copyright (C) 1994 Geoffrey M. Rehmet  *  *  This program is free software; you may redistribute it and/or  *  modify it, provided that it retain the above copyright notice  *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  *	Geoff Rehmet, Rhodes University, South Africa<csgr@cs.ru.ac.za>  *  * $Id: lpt.h,v 1.3 1995/05/30 08:00:41 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LPT_PRINTER_H_
+name|_MACHINE_LPT_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LPT_PRINTER_H_
+name|_MACHINE_LPT_H_
 end_define
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
+file|<sys/ioccom.h>
 end_include
 
 begin_define
@@ -42,6 +36,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_MACHINE_LPT_H_ */
+end_comment
 
 end_unit
 

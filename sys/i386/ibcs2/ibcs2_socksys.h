@@ -6,14 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_IBCS2_SOCKSYS_H
+name|_I386_IBCS2_IBCS2_SOCKSYS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_IBCS2_SOCKSYS_H
-value|1
+name|_I386_IBCS2_IBCS2_SOCKSYS_H_
 end_define
 
 begin_include
@@ -592,7 +591,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _IBCS2_SOCKSYS_H */
+comment|/* !_I386_IBCS2_IBCS2_SOCKSYS_H_ */
 end_comment
 
 end_unit

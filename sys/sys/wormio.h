@@ -15,6 +15,12 @@ directive|define
 name|_SYS_WORMIO_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
 begin_comment
 comment|/***************************************************************\ * Ioctls for the WORM drive					* \***************************************************************/
 end_comment
@@ -137,7 +143,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SYS_WORMIO_H_ */
+comment|/* !_SYS_WORMIO_H_ */
 end_comment
 
 end_unit

@@ -6,31 +6,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_FTAPE_H_
+name|_SYS_FTAPE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_FTAPE_H_
+name|_SYS_FTAPE_H_
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IOCTL_H_
-end_ifndef
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/ioccom.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Miscellaneous constant values */
@@ -1221,7 +1210,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FTAPE_H_ */
+comment|/* !_SYS_FTAPE_H_ */
 end_comment
 
 end_unit

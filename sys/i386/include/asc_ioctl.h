@@ -6,25 +6,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I386_ASC_IOCTL_H_
+name|_MACHINE_ASC_IOCTL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I386_ASC_IOCTL_H_
+name|_MACHINE_ASC_IOCTL_H_
 end_define
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
+file|<sys/ioccom.h>
 end_include
 
 begin_define
@@ -152,6 +146,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_MACHINE_ASC_IOCTL_H_ */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *  *	$Id: chio.h,v 1.5 1995/05/30 08:14:13 rgrimes Exp $  */
+comment|/*  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *  *	$Id: chio.h,v 1.6 1996/01/30 23:00:27 mpp Exp $  */
 end_comment
 
 begin_comment
@@ -22,6 +22,29 @@ define|#
 directive|define
 name|_SYS_CHIO_H_
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
 
 begin_define
 define|#
@@ -306,7 +329,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_SYS_CHIO_H*/
+comment|/* !_SYS_CHIO_H_ */
 end_comment
 
 end_unit

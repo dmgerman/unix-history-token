@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.12 1996/02/02 20:41:11 ache Exp $  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.13 1996/02/03 14:19:13 ache Exp $  */
 end_comment
 
 begin_comment
@@ -22,6 +22,29 @@ define|#
 directive|define
 name|_SYS_CDIO_H_
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
 
 begin_union
 union|union
@@ -863,7 +886,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SYS_CDIO_H_ */
+comment|/* !_SYS_CDIO_H_ */
 end_comment
 
 end_unit

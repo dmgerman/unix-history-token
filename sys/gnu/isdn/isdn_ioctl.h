@@ -1,7 +1,42 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)$Id: isdn_ioctl.h,v 1.3 1995/11/16 10:44:48 bde Exp $  *******************************************************************************  *  II - Version 0.1 $Revision: 1.3 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: isdn_ioctl.h,v $  * Revision 1.3  1995/11/16 10:44:48  bde  * Completed function declarations.  *  * Added prototypes.  *  * Revision 1.2  1995/03/28  07:54:45  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.1  1995/02/14  15:00:35  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/* @(#)$Id: isdn_ioctl.h,v 1.4 1996/06/12 05:02:22 gpalmer Exp $  *******************************************************************************  *  II - Version 0.1 $Revision: 1.4 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: isdn_ioctl.h,v $  * Revision 1.4  1996/06/12 05:02:22  gpalmer  * Clean up -Wunused warnings.  *  * Reviewed by:		bde  *  * Revision 1.3  1995/11/16 10:44:48  bde  * Completed function declarations.  *  * Added prototypes.  *  * Revision 1.2  1995/03/28  07:54:45  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.1  1995/02/14  15:00:35  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GNU_ISDN_ISDN_IOCTL_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_GNU_ISDN_ISDN_IOCTL_H_
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
 
 begin_pragma
 pragma|#
@@ -1082,6 +1117,15 @@ end_endif
 
 begin_comment
 comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_GNU_ISDN_ISDN_IOCTL_H_ */
 end_comment
 
 end_unit

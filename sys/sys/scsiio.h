@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: scsiio.h,v 1.4 1995/04/28 19:26:02 dufault Exp $  */
+comment|/*  * $Id: scsiio.h,v 1.5 1996/01/30 23:01:14 mpp Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,16 +15,27 @@ directive|define
 name|_SYS_SCSIIO_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/ioccom.h>
 end_include
 
 begin_define
@@ -376,7 +387,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SYS_SCSIIO_H_ */
+comment|/* !_SYS_SCSIIO_H_ */
 end_comment
 
 end_unit
