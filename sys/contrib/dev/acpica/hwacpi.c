@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 60 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -125,6 +125,59 @@ argument_list|(
 literal|"HwSetMode"
 argument_list|)
 expr_stmt|;
+comment|/*      * ACPI 2.0 clarified that if SMI_CMD in FADT is zero,      * system does not support mode transition.      */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_FADT
+operator|->
+name|SmiCmd
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"No SMI_CMD in FADT, mode transition failed.\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_HARDWARE_RESPONSE
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * ACPI 2.0 clarified the meaning of ACPI_ENABLE and ACPI_DISABLE      * in FADT: If it is zero, enabling or disabling is not supported.      * As old systems may have used zero for mode transition,      * we make sure both the numbers are zero to determine these      * transitions are not supported.      */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_FADT
+operator|->
+name|AcpiEnable
+operator|&&
+operator|!
+name|AcpiGbl_FADT
+operator|->
+name|AcpiDisable
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"No mode transition supported in this system.\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|Mode

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 156 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 161 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -247,6 +247,62 @@ operator|->
 name|Type
 condition|)
 block|{
+case|case
+name|ACPI_TYPE_METHOD
+case|:
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|ParamCount
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|ACPI_STRTOUL
+argument_list|(
+name|InitVal
+operator|->
+name|Val
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator||=
+name|AOPOBJ_DATA_VALID
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_NO_METHOD_EXECUTION
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_CONSTANT_EVAL_ONLY
+argument_list|)
+comment|/* Compiler cheats by putting parameter count in the OwnerID */
+name|NewNode
+operator|->
+name|OwnerId
+operator|=
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|ParamCount
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
@@ -518,6 +574,12 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|Path
+init|=
+name|Pathname
+decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|PrefixNode
@@ -547,12 +609,21 @@ name|ACPI_OBJECT_TYPE
 name|ThisSearchType
 decl_stmt|;
 name|UINT32
+name|SearchParentFlag
+init|=
+name|ACPI_NS_SEARCH_PARENT
+decl_stmt|;
+name|UINT32
 name|LocalFlags
 init|=
 name|Flags
 operator|&
 operator|~
+operator|(
 name|ACPI_NS_ERROR_IF_FOUND
+operator||
+name|ACPI_NS_SEARCH_PARENT
+operator|)
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -635,6 +706,59 @@ name|Scope
 operator|.
 name|Node
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|PrefixNode
+argument_list|)
+operator|!=
+name|ACPI_DESC_TYPE_NAMED
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"[%p] Not a namespace node\n"
+operator|,
+name|PrefixNode
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INTERNAL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*          * This node might not be a actual "scope" node (such as a           * Device/Method, etc.)  It could be a Package or other object node.            * Backup up the tree to find the containing scope node.          */
+while|while
+condition|(
+operator|!
+name|AcpiNsOpensScope
+argument_list|(
+name|PrefixNode
+operator|->
+name|Type
+argument_list|)
+operator|&&
+name|PrefixNode
+operator|->
+name|Type
+operator|!=
+name|ACPI_TYPE_ANY
+condition|)
+block|{
+name|PrefixNode
+operator|=
+name|AcpiNsGetParentNode
+argument_list|(
+name|PrefixNode
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/*      * This check is explicitly split to relax the TypeToCheckFor      * conditions for BankFieldDefn.  Originally, both BankFieldDefn and      * DefFieldDefn caused TypeToCheckFor to be set to ACPI_TYPE_REGION,      * but the BankFieldDefn may also check for a Field definition as well      * as an OperationRegion.      */
 if|if
@@ -687,7 +811,7 @@ name|ThisNode
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
-name|Pathname
+name|Path
 operator|=
 literal|""
 expr_stmt|;
@@ -709,7 +833,7 @@ comment|/*          * Name pointer is valid (and must be in internal name format
 if|if
 condition|(
 operator|*
-name|Pathname
+name|Path
 operator|==
 operator|(
 name|UINT8
@@ -722,8 +846,12 @@ name|ThisNode
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
+name|SearchParentFlag
+operator|=
+name|ACPI_NS_NO_UPSEARCH
+expr_stmt|;
 comment|/* Point to name segment part */
-name|Pathname
+name|Path
 operator|++
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -731,7 +859,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Searching from root [%p]\n"
+literal|"Path is absolute from root [%p]\n"
 operator|,
 name|ThisNode
 operator|)
@@ -746,7 +874,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Searching relative to pfx scope [%p]\n"
+literal|"Searching relative to prefix scope [%p]\n"
 operator|,
 name|PrefixNode
 operator|)
@@ -760,7 +888,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|*
-name|Pathname
+name|Path
 operator|==
 operator|(
 name|UINT8
@@ -768,8 +896,13 @@ operator|)
 name|AML_PARENT_PREFIX
 condition|)
 block|{
+comment|/* Name is fully qualified, no search rules apply */
+name|SearchParentFlag
+operator|=
+name|ACPI_NS_NO_UPSEARCH
+expr_stmt|;
 comment|/*                  * Point past this prefix to the name segment                  * part or the next Parent Prefix                  */
-name|Pathname
+name|Path
 operator|++
 expr_stmt|;
 comment|/* Backup to the parent node */
@@ -801,12 +934,29 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|SearchParentFlag
+operator|==
+name|ACPI_NS_NO_UPSEARCH
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_NAMES
+operator|,
+literal|"Path is absolute with one or more carats\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/*          * Determine the number of ACPI name segments in this pathname.          *          * The segment part consists of either:          *  - A Null name segment (0)          *  - A DualNamePrefix followed by two 4-byte name segments          *  - A MultiNamePrefix followed by a byte indicating the          *      number of segments and the segments themselves.          *  - A single 4-byte name segment          *          * Examine the name prefix opcode, if any, to determine the number of          * segments.          */
 switch|switch
 condition|(
 operator|*
-name|Pathname
+name|Path
 condition|)
 block|{
 case|case
@@ -832,12 +982,17 @@ break|break;
 case|case
 name|AML_DUAL_NAME_PREFIX
 case|:
+comment|/* More than one NameSeg, search rules do not apply */
+name|SearchParentFlag
+operator|=
+name|ACPI_NS_NO_UPSEARCH
+expr_stmt|;
 comment|/* Two segments, point to first name segment */
 name|NumSegments
 operator|=
 literal|2
 expr_stmt|;
-name|Pathname
+name|Path
 operator|++
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -855,8 +1010,13 @@ break|break;
 case|case
 name|AML_MULTI_NAME_PREFIX_OP
 case|:
+comment|/* More than one NameSeg, search rules do not apply */
+name|SearchParentFlag
+operator|=
+name|ACPI_NS_NO_UPSEARCH
+expr_stmt|;
 comment|/* Extract segment count, point to first name segment */
-name|Pathname
+name|Path
 operator|++
 expr_stmt|;
 name|NumSegments
@@ -868,9 +1028,9 @@ argument_list|(
 name|UINT8
 argument_list|)
 operator|*
-name|Pathname
+name|Path
 expr_stmt|;
-name|Pathname
+name|Path
 operator|++
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -912,12 +1072,16 @@ name|AcpiNsPrintPathname
 argument_list|(
 name|NumSegments
 argument_list|,
-name|Pathname
+name|Path
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Search namespace for each segment of the name.  Loop through and      * verify/add each name segment.      */
+comment|/*      * Search namespace for each segment of the name.  Loop through and      * verify (or add to the namespace) each name segment.      *      * The object type is significant only at the last name      * segment.  (We don't care about the types along the path, only      * the type of the final target object.)      */
+name|ThisSearchType
+operator|=
+name|ACPI_TYPE_ANY
+expr_stmt|;
 name|CurrentNode
 operator|=
 name|ThisNode
@@ -929,11 +1093,6 @@ operator|&&
 name|CurrentNode
 condition|)
 block|{
-comment|/*          * Search for the current name segment under the current          * named object.  The Type is significant only at the last name          * segment.  (We don't care about the types along the path, only          * the type of the final target object.)          */
-name|ThisSearchType
-operator|=
-name|ACPI_TYPE_ANY
-expr_stmt|;
 name|NumSegments
 operator|--
 expr_stmt|;
@@ -943,14 +1102,45 @@ operator|!
 name|NumSegments
 condition|)
 block|{
+comment|/*              * This is the last segment, enable typechecking              */
 name|ThisSearchType
 operator|=
 name|Type
 expr_stmt|;
-name|LocalFlags
-operator|=
+comment|/*              * Only allow automatic parent search (search rules) if the caller              * requested it AND we have a single, non-fully-qualified NameSeg              */
+if|if
+condition|(
+operator|(
+name|SearchParentFlag
+operator|!=
+name|ACPI_NS_NO_UPSEARCH
+operator|)
+operator|&&
+operator|(
 name|Flags
+operator|&
+name|ACPI_NS_SEARCH_PARENT
+operator|)
+condition|)
+block|{
+name|LocalFlags
+operator||=
+name|ACPI_NS_SEARCH_PARENT
 expr_stmt|;
+block|}
+comment|/* Set error flag according to caller */
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_NS_ERROR_IF_FOUND
+condition|)
+block|{
+name|LocalFlags
+operator||=
+name|ACPI_NS_ERROR_IF_FOUND
+expr_stmt|;
+block|}
 block|}
 comment|/* Extract one ACPI name from the front of the pathname */
 name|ACPI_MOVE_UNALIGNED32_TO_32
@@ -958,10 +1148,10 @@ argument_list|(
 operator|&
 name|SimpleName
 argument_list|,
-name|Pathname
+name|Path
 argument_list|)
 expr_stmt|;
-comment|/* Try to find the ACPI name */
+comment|/* Try to find the single (4 character) ACPI name */
 name|Status
 operator|=
 name|AcpiNsSearchAndEnter
@@ -1134,7 +1324,7 @@ name|Type
 expr_stmt|;
 block|}
 comment|/* Point to next name segment and make this node current */
-name|Pathname
+name|Path
 operator|+=
 name|ACPI_NAME_SIZE
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 78 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTableHeader  *  * PARAMETERS:  Address             - Address of table to retrieve.  Can be  *                                    Logical or Physical  *              ReturnHeader        - Where the table header is returned  *  * RETURN:      Status  *  * DESCRIPTION: Get an ACPI table header.  Works in both physical or virtual  *              addressing mode.  Works with both physical or logical pointers.  *              Table is either copied or mapped, depending on the pointer   *              type and mode of the processor.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTableHeader  *  * PARAMETERS:  Address             - Address of table to retrieve.  Can be  *                                    Logical or Physical  *              ReturnHeader        - Where the table header is returned  *  * RETURN:      Status  *  * DESCRIPTION: Get an ACPI table header.  Works in both physical or virtual  *              addressing mode.  Works with both physical or logical pointers.  *              Table is either copied or mapped, depending on the pointer  *              type and mode of the processor.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -319,7 +319,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTableBody  *  * PARAMETERS:  Address             - Address of table to retrieve.  Can be  *                                    Logical or Physical  *              Header              - Header of the table to retrieve  *              TableInfo           - Where the table info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Get an entire ACPI table with support to allow the host OS to  *              replace the table with a newer version (table override.)    *              Works in both physical or virtual  *              addressing mode.  Works with both physical or logical pointers.  *              Table is either copied or mapped, depending on the pointer   *              type and mode of the processor.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTableBody  *  * PARAMETERS:  Address             - Address of table to retrieve.  Can be  *                                    Logical or Physical  *              Header              - Header of the table to retrieve  *              TableInfo           - Where the table info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Get an entire ACPI table with support to allow the host OS to  *              replace the table with a newer version (table override.)  *              Works in both physical or virtual  *              addressing mode.  Works with both physical or logical pointers.  *              Table is either copied or mapped, depending on the pointer  *              type and mode of the processor.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -439,7 +439,7 @@ argument_list|(
 literal|"TbTableOverride"
 argument_list|)
 expr_stmt|;
-comment|/*      * The OSL will examine the header and decide whether to override this      * table.  If it decides to override, a table will be returned in NewTable,       * which we will then copy.      */
+comment|/*      * The OSL will examine the header and decide whether to override this      * table.  If it decides to override, a table will be returned in NewTable,      * which we will then copy.      */
 name|Status
 operator|=
 name|AcpiOsTableOverride
@@ -490,7 +490,7 @@ name|AE_NO_ACPI_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * We have a new table to override the old one.  Get a copy of       * the new one.  We know that the new table has a logical pointer.      */
+comment|/*      * We have a new table to override the old one.  Get a copy of      * the new one.  We know that the new table has a logical pointer.      */
 name|Address
 operator|.
 name|PointerType
@@ -568,7 +568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetThisTable  *  * PARAMETERS:  Address             - Address of table to retrieve.  Can be  *                                    Logical or Physical  *              Header              - Header of the table to retrieve  *              TableInfo           - Where the table info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Get an entire ACPI table.  Works in both physical or virtual  *              addressing mode.  Works with both physical or logical pointers.  *              Table is either copied or mapped, depending on the pointer   *              type and mode of the processor.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetThisTable  *  * PARAMETERS:  Address             - Address of table to retrieve.  Can be  *                                    Logical or Physical  *              Header              - Header of the table to retrieve  *              TableInfo           - Where the table info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Get an entire ACPI table.  Works in both physical or virtual  *              addressing mode.  Works with both physical or logical pointers.  *              Table is either copied or mapped, depending on the pointer  *              type and mode of the processor.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 54 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -178,7 +178,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveOperands  *  * PARAMETERS:  Opcode              - Opcode being interpreted  *              StackPtr            - Pointer to the operand stack to be  *                                    resolved  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Convert multiple input operands to the types required by the  *              target operator.  *  *      Each 5-bit group in ArgTypes represents one required  *      operand and indicates the required Type. The corresponding operand   *      will be converted to the required type if possible, otherwise we   *      abort with an exception.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveOperands  *  * PARAMETERS:  Opcode              - Opcode being interpreted  *              StackPtr            - Pointer to the operand stack to be  *                                    resolved  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Convert multiple input operands to the types required by the  *              target operator.  *  *      Each 5-bit group in ArgTypes represents one required  *      operand and indicates the required Type. The corresponding operand  *      will be converted to the required type if possible, otherwise we  *      abort with an exception.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmresrc.c - Resource Descriptor disassembly  *              $Revision: 3 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmresrc.c - Resource Descriptor disassembly  *              $Revision: 5 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_DEBUGGER
+value|ACPI_CA_DEBUGGER
 end_define
 
 begin_macro
@@ -448,7 +448,7 @@ argument_list|(
 literal|"/*** Missing EndDependentFunctions descriptor */"
 argument_list|)
 expr_stmt|;
-comment|/*                  * We could fix the problem, but then the ASL would not match the AML                   * So, we don't do this:                  * AcpiDmEndDependentDescriptor (DescriptorBody, Length, Level);                  */
+comment|/*                  * We could fix the problem, but then the ASL would not match the AML                  * So, we don't do this:                  * AcpiDmEndDependentDescriptor (DescriptorBody, Length, Level);                  */
 block|}
 return|return;
 comment|/*          * "Large" type descriptors          */
@@ -585,7 +585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsResourceDescriptor  *  * PARAMETERS:  Op          - Buffer Op to be examined  *  * RETURN:      TRUE if this Buffer Op contains a valid resource   *              descriptor.  *  * DESCRIPTION: Walk a byte list to determine if it consists of a valid set  *              of resource descriptors.  Nothing is output.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsResourceDescriptor  *  * PARAMETERS:  Op          - Buffer Op to be examined  *  * RETURN:      TRUE if this Buffer Op contains a valid resource  *              descriptor.  *  * DESCRIPTION: Walk a byte list to determine if it consists of a valid set  *              of resource descriptors.  Nothing is output.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -707,7 +707,7 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/*      * Walk the byte list.  Abort on any invalid descriptor ID or       * or length      */
+comment|/*      * Walk the byte list.  Abort on any invalid descriptor ID or      * or length      */
 for|for
 control|(
 name|CurrentByteOffset

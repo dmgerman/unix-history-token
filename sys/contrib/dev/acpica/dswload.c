@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 70 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -841,7 +841,7 @@ name|NATIVE_CHAR
 modifier|*
 name|BufferPtr
 decl_stmt|;
-name|ACPI_FUNCTION_NAME
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"DsLoad2BeginOp"
 argument_list|)
@@ -908,11 +908,11 @@ operator|)
 operator|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*          * Get the name we are going to enter or lookup in the namespace          */
 if|if
@@ -942,11 +942,11 @@ name|BufferPtr
 condition|)
 block|{
 comment|/* No name, just exit */
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -1121,18 +1121,18 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*          * Enter the named type into the internal namespace.  We enter the name          * as we go downward in the parse tree.  Any necessary subobjects that involve          * arguments to the opcode must be created as we go back up the parse tree later.          */
 name|Status
@@ -1190,11 +1190,11 @@ operator|!
 name|Op
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_NO_MEMORY
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Initialize the new op */
 if|if
@@ -1237,11 +1237,11 @@ operator|=
 name|Node
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1290,7 +1290,7 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
-name|ACPI_FUNCTION_NAME
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"DsLoad2EndOp"
 argument_list|)
@@ -1335,11 +1335,11 @@ name|AML_NSOBJECT
 operator|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1410,6 +1410,16 @@ name|AcpiNsOpensScope
 argument_list|(
 name|ObjectType
 argument_list|)
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|!=
+name|AML_INT_METHODCALL_OP
+operator|)
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -1443,11 +1453,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/*      * Named operations are as follows:      *      * AML_ALIAS      * AML_BANKFIELD      * AML_CREATEBITFIELD      * AML_CREATEBYTEFIELD      * AML_CREATEDWORDFIELD      * AML_CREATEFIELD      * AML_CREATEQWORDFIELD      * AML_CREATEWORDFIELD      * AML_DATA_REGION      * AML_DEVICE      * AML_EVENT      * AML_FIELD      * AML_INDEXFIELD      * AML_METHOD      * AML_METHODCALL      * AML_MUTEX      * AML_NAME      * AML_NAMEDFIELD      * AML_OPREGION      * AML_POWERRES      * AML_PROCESSOR      * AML_SCOPE      * AML_THERMALZONE      */
@@ -1998,11 +2008,11 @@ name|NumOperands
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

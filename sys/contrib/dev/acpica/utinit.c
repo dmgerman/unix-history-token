@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 112 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 113 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -447,12 +447,12 @@ literal|"Shutting down ACPI Subsystem...\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Close the Namespace */
-name|AcpiNsTerminate
-argument_list|()
-expr_stmt|;
 comment|/* Close the AcpiEvent Handling */
 name|AcpiEvTerminate
+argument_list|()
+expr_stmt|;
+comment|/* Close the Namespace */
+name|AcpiNsTerminate
 argument_list|()
 expr_stmt|;
 comment|/* Close the globals */

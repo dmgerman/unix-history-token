@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 79 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 80 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -257,7 +257,7 @@ name|MappedLength
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*           * Don't attempt to map memory beyond the end of the region, and          * constrain the maximum mapping size to something reasonable.          */
+comment|/*          * Don't attempt to map memory beyond the end of the region, and          * constrain the maximum mapping size to something reasonable.          */
 name|WindowSize
 operator|=
 call|(
@@ -411,7 +411,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Perform the memory read or write     *     * Note: For machines that do not support non-aligned transfers, the target     * address was checked for alignment above.  We do not attempt to break the     * transfer up into smaller (byte-size) chunks because the AML specifically     * asked for a transfer width that the hardware may require.     */
+comment|/*     * Perform the memory read or write     *     * Note: For machines that do not support non-aligned transfers, the target     * address was checked for alignment above.  We do not attempt to break the     * transfer up into smaller (byte-size) chunks because the AML specifically     * asked for a transfer width that the hardware may require.     */
 switch|switch
 condition|(
 name|Function

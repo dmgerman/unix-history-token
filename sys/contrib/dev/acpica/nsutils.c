@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 110 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 112 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1038,7 +1038,7 @@ name|InternalName
 index|[
 name|i
 index|]
-operator|!=
+operator|==
 literal|'^'
 condition|)
 block|{
@@ -1048,6 +1048,10 @@ name|i
 operator|+
 literal|1
 expr_stmt|;
+block|}
+else|else
+block|{
+break|break;
 block|}
 block|}
 if|if
@@ -1932,12 +1936,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 argument_list|)
 end_if
 
@@ -1995,7 +1999,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ACPI_DEBUG */
+comment|/* ACPI_DEBUG_OUTPUT */
 end_comment
 
 begin_comment

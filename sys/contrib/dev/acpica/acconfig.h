@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 107 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 109 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * ACPI_DEBUG           - This switch enables all the debug facilities of the  *                        ACPI subsystem.  This includes the DEBUG_PRINT output  *                        statements.  When disabled, all DEBUG_PRINT  *                        statements are compiled out.  *  * ACPI_APPLICATION     - Use this switch if the subsystem is going to be run  *                        at the application level.  *  */
+comment|/*  * ACPI_DEBUG_OUTPUT    - This switch enables all the debug facilities of the  *                        ACPI subsystem.  This includes the DEBUG_PRINT output  *                        statements.  When disabled, all DEBUG_PRINT  *                        statements are compiled out.  *  * ACPI_APPLICATION     - Use this switch if the subsystem is going to be run  *                        at the application level.  *  */
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20020725
+value|0x20020815
 end_define
 
 begin_comment

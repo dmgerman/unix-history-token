@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmwalk - AML disassembly tree walk  *              $Revision: 6 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmwalk - AML disassembly tree walk  *              $Revision: 8 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_DEBUGGER
+value|ACPI_CA_DEBUGGER
 end_define
 
 begin_macro
@@ -654,7 +654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDescendingOp  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: First visitation of a parse object during tree descent.    *              Decode opcode name and begin parameter list(s), if any.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDescendingOp  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: First visitation of a parse object during tree descent.  *              Decode opcode name and begin parameter list(s), if any.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1465,7 +1465,7 @@ operator|==
 name|ACPI_DASM_RESOURCE
 condition|)
 block|{
-comment|/*                  * We have a resource list.  Don't need to output                   * the buffer size Op.  Open up a new block                  */
+comment|/*                  * We have a resource list.  Don't need to output                  * the buffer size Op.  Open up a new block                  */
 name|NextOp
 operator|->
 name|Common

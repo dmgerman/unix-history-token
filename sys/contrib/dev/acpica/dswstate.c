@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 68 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2012,6 +2012,14 @@ name|Thread
 operator|=
 name|Thread
 expr_stmt|;
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|StartOp
+operator|=
+name|Origin
+expr_stmt|;
 comment|/* Init the method args/local */
 if|#
 directive|if
@@ -2131,6 +2139,10 @@ operator|&
 name|WalkState
 operator|->
 name|ParserState
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ExtraOp
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -2301,19 +2313,60 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Setup the current scope */
-name|ParserState
-operator|->
-name|StartNode
+comment|/*           * Setup the current scope.          * Find a Named Op that has a namespace node associated with it.          * search upwards from this Op.  Current scope is the first          * Op with a namespace node.          */
+name|ExtraOp
 operator|=
 name|ParserState
 operator|->
 name|StartOp
+expr_stmt|;
+while|while
+condition|(
+name|ExtraOp
+operator|&&
+operator|!
+name|ExtraOp
+operator|->
+name|Common
+operator|.
+name|Node
+condition|)
+block|{
+name|ExtraOp
+operator|=
+name|ExtraOp
+operator|->
+name|Common
+operator|.
+name|Parent
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|ExtraOp
+condition|)
+block|{
+name|ParserState
+operator|->
+name|StartNode
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ParserState
+operator|->
+name|StartNode
+operator|=
+name|ExtraOp
 operator|->
 name|Common
 operator|.
 name|Node
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ParserState

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 105 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 106 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -359,7 +359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsInitializeObjects  *  * PARAMETERS:  TableDesc       - Descriptor for parent ACPI table  *              StartNode       - Root of subtree to be initialized.  *  * RETURN:      Status  *  * DESCRIPTION: Walk the namespace starting at "StartNode" and perform any   *              necessary initialization on the objects found therein  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsInitializeObjects  *  * PARAMETERS:  TableDesc       - Descriptor for parent ACPI table  *              StartNode       - Root of subtree to be initialized.  *  * RETURN:      Status  *  * DESCRIPTION: Walk the namespace starting at "StartNode" and perform any  *              necessary initialization on the objects found therein  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -910,7 +910,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Second arg is the buffer data (optional) ByteList can be either      * individual bytes or a string initializer.  In either case, a       * ByteList appears in the AML.      */
+comment|/*      * Second arg is the buffer data (optional) ByteList can be either      * individual bytes or a string initializer.  In either case, a      * ByteList appears in the AML.      */
 name|Arg
 operator|=
 name|Op
@@ -985,7 +985,7 @@ operator|.
 name|Integer32
 expr_stmt|;
 block|}
-comment|/*      * The buffer length (number of bytes) will be the larger of:      * 1) The specified buffer length and       * 2) The length of the initializer byte list      */
+comment|/*      * The buffer length (number of bytes) will be the larger of:      * 1) The specified buffer length and      * 2) The length of the initializer byte list      */
 name|ObjDesc
 operator|->
 name|Buffer

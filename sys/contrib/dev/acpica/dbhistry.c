@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dbhistry - debugger HISTORY command  *              $Revision: 24 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dbhistry - debugger HISTORY command  *              $Revision: 25 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,14 +22,14 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 end_ifdef
 
 begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_DEBUGGER
+value|ACPI_CA_DEBUGGER
 end_define
 
 begin_macro
@@ -429,7 +429,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ENABLE_DEBUGGER */
+comment|/* ACPI_DEBUGGER */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 99 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 101 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 end_define
 
 begin_endif
@@ -97,7 +97,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 end_define
 
 begin_define
@@ -109,7 +109,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 end_define
 
 begin_define
@@ -138,7 +138,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 end_define
 
 begin_define
@@ -364,7 +364,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 end_ifdef
 
 begin_if
@@ -1038,7 +1038,7 @@ name|ACPI_ASM_MACROS
 end_ifndef
 
 begin_comment
-comment|/*  * Calling conventions:  *  * ACPI_SYSTEM_XFACE        - Interfaces to host OS (handlers, threads)  * ACPI_EXTERNAL_XFACE      - External ACPI interfaces   * ACPI_INTERNAL_XFACE      - Internal ACPI interfaces  * ACPI_INTERNAL_VAR_XFACE  - Internal variable-parameter list interfaces  */
+comment|/*  * Calling conventions:  *  * ACPI_SYSTEM_XFACE        - Interfaces to host OS (handlers, threads)  * ACPI_EXTERNAL_XFACE      - External ACPI interfaces  * ACPI_INTERNAL_XFACE      - Internal ACPI interfaces  * ACPI_INTERNAL_VAR_XFACE  - Internal variable-parameter list interfaces  */
 end_comment
 
 begin_define

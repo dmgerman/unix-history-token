@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 60 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 61 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -28,14 +28,14 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 end_ifdef
 
 begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_DEBUGGER
+value|ACPI_CA_DEBUGGER
 end_define
 
 begin_macro
@@ -398,12 +398,6 @@ block|}
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PARSER_ONLY
-end_ifndef
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbClassifyOneObject  *  * PARAMETERS:  Callback for WalkNamespace  *  * RETURN:      Status  *  * DESCRIPTION: Enumerate both the object descriptor (including subobjects) and  *              the parent namespace node.  *  ******************************************************************************/
 end_comment
@@ -578,11 +572,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayStatistics  *  * PARAMETERS:  TypeArg         - Subcommand  *  * RETURN:      Status  *  * DESCRIPTION: Display various statistics  *  ******************************************************************************/
 end_comment
@@ -683,9 +672,6 @@ condition|(
 name|Type
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|PARSER_ONLY
 case|case
 name|CMD_STAT_ALLOCATIONS
 case|:
@@ -698,8 +684,6 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
-endif|#
-directive|endif
 case|case
 name|CMD_STAT_TABLES
 case|:
@@ -731,9 +715,6 @@ break|break;
 case|case
 name|CMD_STAT_OBJECTS
 case|:
-ifndef|#
-directive|ifndef
-name|PARSER_ONLY
 name|AcpiDbCountNamespaceObjects
 argument_list|()
 expr_stmt|;
@@ -810,8 +791,6 @@ argument_list|,
 name|AcpiGbl_NumObjects
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|CMD_STAT_MEMORY
@@ -1398,7 +1377,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 argument_list|)
 name|Size
 operator|=
@@ -1471,7 +1450,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ENABLE_DEBUGGER  */
+comment|/* ACPI_DEBUGGER  */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 118 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 119 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -296,7 +296,7 @@ name|BitLength
 operator|=
 name|FieldBitLength
 expr_stmt|;
-comment|/*      * Decode the access type so we can compute offsets.  The access type gives      * two pieces of information - the width of each field access and the      * necessary ByteAlignment (address granularity) of the access.      *      * For AnyAcc, the AccessBitWidth is the largest width that is both       * necessary and possible in an attempt to access the whole field in one      * I/O operation.  However, for AnyAcc, the ByteAlignment is always one       * byte.      *      * For all Buffer Fields, the ByteAlignment is always one byte.      *      * For all other access types (Byte, Word, Dword, Qword), the Bitwidth is       * the same (equivalent) as the ByteAlignment.      */
+comment|/*      * Decode the access type so we can compute offsets.  The access type gives      * two pieces of information - the width of each field access and the      * necessary ByteAlignment (address granularity) of the access.      *      * For AnyAcc, the AccessBitWidth is the largest width that is both      * necessary and possible in an attempt to access the whole field in one      * I/O operation.  However, for AnyAcc, the ByteAlignment is always one      * byte.      *      * For all Buffer Fields, the ByteAlignment is always one byte.      *      * For all other access types (Byte, Word, Dword, Qword), the Bitwidth is      * the same (equivalent) as the ByteAlignment.      */
 name|AccessBitWidth
 operator|=
 name|AcpiExDecodeFieldAccess
@@ -337,7 +337,7 @@ name|AccessBitWidth
 argument_list|)
 expr_stmt|;
 comment|/* 1,  2,  4,  8 */
-comment|/*      * BaseByteOffset is the address of the start of the field within the       * region.  It is the byte address of the first *datum* (field-width data       * unit) of the field. (i.e., the first datum that contains at least the       * first *bit* of the field.)      *      * Note: ByteAlignment is always either equal to the AccessBitWidth or 8       * (Byte access), and it defines the addressing granularity of the parent       * region or buffer.      */
+comment|/*      * BaseByteOffset is the address of the start of the field within the      * region.  It is the byte address of the first *datum* (field-width data      * unit) of the field. (i.e., the first datum that contains at least the      * first *bit* of the field.)      *      * Note: ByteAlignment is always either equal to the AccessBitWidth or 8      * (Byte access), and it defines the addressing granularity of the parent      * region or buffer.      */
 name|NearestByteAddress
 operator|=
 name|ACPI_ROUND_BITS_DOWN_TO_BYTES
@@ -358,7 +358,7 @@ argument_list|,
 name|ByteAlignment
 argument_list|)
 expr_stmt|;
-comment|/*      * StartFieldBitOffset is the offset of the first bit of the field within       * a field datum.      */
+comment|/*      * StartFieldBitOffset is the offset of the first bit of the field within      * a field datum.      */
 name|ObjDesc
 operator|->
 name|CommonField
@@ -381,7 +381,7 @@ name|BaseByteOffset
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Valid bits -- the number of bits that compose a partial datum,      * 1) At the end of the field within the region (arbitrary starting bit       *    offset)      * 2) At the end of a buffer used to contain the field (starting offset       *    always zero)      */
+comment|/*      * Valid bits -- the number of bits that compose a partial datum,      * 1) At the end of the field within the region (arbitrary starting bit      *    offset)      * 2) At the end of a buffer used to contain the field (starting offset      *    always zero)      */
 name|ObjDesc
 operator|->
 name|CommonField
@@ -421,7 +421,7 @@ operator|%
 name|AccessBitWidth
 argument_list|)
 expr_stmt|;
-comment|/*      * DatumValidBits is the number of valid field bits in the first       * field datum.      */
+comment|/*      * DatumValidBits is the number of valid field bits in the first      * field datum.      */
 name|ObjDesc
 operator|->
 name|CommonField

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 87 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 90 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUGGER
+name|ACPI_CA_DEBUGGER
 value|0x00000200
 end_define
 
@@ -107,15 +107,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_ALL_COMPONENTS
-value|0x00000FFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_COMPONENT_DEFAULT
-value|(ACPI_ALL_COMPONENTS)
+name|ACPI_CA_DISASSEMBLER
+value|0x00000800
 end_define
 
 begin_comment
@@ -134,6 +127,20 @@ define|#
 directive|define
 name|ACPI_TOOLS
 value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALL_COMPONENTS
+value|0x00003FFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMPONENT_DEFAULT
+value|(ACPI_ALL_COMPONENTS)
 end_define
 
 begin_comment
@@ -330,8 +337,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_LV_OPTIMIZATIONS
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_LV_VERBOSITY2
-value|0x00300000 | ACPI_LV_VERBOSITY1
+value|0x00700000 | ACPI_LV_VERBOSITY1
 end_define
 
 begin_define
@@ -558,6 +572,13 @@ define|#
 directive|define
 name|ACPI_DB_FUNCTIONS
 value|ACPI_DEBUG_LEVEL (ACPI_LV_FUNCTIONS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DB_OPTIMIZATIONS
+value|ACPI_DEBUG_LEVEL (ACPI_LV_OPTIMIZATIONS)
 end_define
 
 begin_define

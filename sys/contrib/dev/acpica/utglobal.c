@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 165 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 168 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -270,7 +270,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 end_ifdef
 
 begin_decl_stmt
@@ -497,6 +497,27 @@ block|,
 literal|"0"
 block|}
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_NO_METHOD_EXECUTION
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_CONSTANT_EVAL_ONLY
+argument_list|)
+block|{
+literal|"_OSI"
+block|,
+name|ACPI_TYPE_METHOD
+block|,
+literal|"1"
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
@@ -1561,12 +1582,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 argument_list|)
 end_if
 
@@ -2438,7 +2459,7 @@ name|ANOBJ_END_OF_PEER_LIST
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 name|AcpiGbl_LowestStackPointer
 operator|=
 name|ACPI_SIZE_MAX
