@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c	(Berkeley)	1.4	83/10/07	*/
+comment|/* main.c	(Berkeley)	1.5	83/10/18	*/
 end_comment
 
 begin_include
@@ -662,7 +662,7 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-literal|0
+name|synerr
 argument_list|)
 expr_stmt|;
 block|}
