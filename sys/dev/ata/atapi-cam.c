@@ -2643,7 +2643,10 @@ operator|=
 name|ccb_h
 operator|->
 name|timeout
+operator|/
+literal|1000
 expr_stmt|;
+comment|/* XXX lost granularity */
 name|request
 operator|->
 name|retries
@@ -3037,7 +3040,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|static const int8_t ccb[16] = { ATAPI_REQUEST_SENSE, 0, 0, 0, 		sizeof(struct atapi_sense), 0, 0, 0, 0, 0, 0, 		0, 0, 0, 0, 0 };  	    bcopy (ccb, request->u.atapi.ccb, sizeof ccb); 	    request->data = (caddr_t)&csio->sense_data; 	    request->bytecount = sizeof(struct atapi_sense); 	    request->transfersize = min(request->bytecount, 65534); 	    request->timeout = csio->ccb_h.timeout; 	    request->retries = 2; 	    request->flags = ATA_R_QUIET|ATA_R_ATAPI|ATA_R_IMMEDIATE; 	    hcb->flags |= AUTOSENSE;  	    mtx_unlock (&Giant); 	    ata_queue_request(request); 	    return;
+block|static const int8_t ccb[16] = { ATAPI_REQUEST_SENSE, 0, 0, 0, 		sizeof(struct atapi_sense), 0, 0, 0, 0, 0, 0, 		0, 0, 0, 0, 0 };  	    bcopy (ccb, request->u.atapi.ccb, sizeof ccb); 	    request->data = (caddr_t)&csio->sense_data; 	    request->bytecount = sizeof(struct atapi_sense); 	    request->transfersize = min(request->bytecount, 65534); 	    request->timeout = csio->ccb_h.timeout / 1000; 	    request->retries = 2; 	    request->flags = ATA_R_QUIET|ATA_R_ATAPI|ATA_R_IMMEDIATE; 	    hcb->flags |= AUTOSENSE;  	    mtx_unlock (&Giant); 	    ata_queue_request(request); 	    return;
 else|#
 directive|else
 comment|/* The ATA driver has already requested sense for us. */
