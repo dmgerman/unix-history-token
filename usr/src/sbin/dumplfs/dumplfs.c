@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	5.4 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -380,7 +380,7 @@ parameter_list|,
 name|sp
 parameter_list|)
 define|\
-value|(void)printf("%d\t%s\t%d\t%s", \ 	    i, (((sp)->su_flags) ? "DIRTY" : "CLEAN"), \ 	    (sp)->su_nbytes, ctime((time_t *)&(sp)->su_lastmod))
+value|(void)printf("%d\t%c%c%c\t%d\t%s", i, \ 	    (((sp)->su_flags& SEGUSE_ACTIVE) ? 'A' : ' '), \ 	    (((sp)->su_flags& SEGUSE_DIRTY) ? 'D' : 'C'), \ 	    (((sp)->su_flags& SEGUSE_SUPERBLOCK) ? 'S' : ' '), \ 	    (sp)->su_nbytes, ctime((time_t *)&(sp)->su_lastmod))
 end_define
 
 begin_comment
@@ -3063,7 +3063,34 @@ modifier|*
 name|ipage
 decl_stmt|;
 block|{
-return|return;
+name|CLEANERINFO
+modifier|*
+name|cip
+decl_stmt|;
+name|cip
+operator|=
+operator|(
+name|CLEANERINFO
+operator|*
+operator|)
+name|ipage
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"Cleaner Info\nclean\t%d\tdirty\t%d\n"
+argument_list|,
+name|cip
+operator|->
+name|clean
+argument_list|,
+name|cip
+operator|->
+name|dirty
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
