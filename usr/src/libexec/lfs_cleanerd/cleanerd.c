@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	5.2 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -577,6 +577,8 @@ decl_stmt|;
 comment|/* number of file systems */
 name|int
 name|i
+decl_stmt|,
+name|nclean
 decl_stmt|;
 name|count
 operator|=
@@ -643,6 +645,10 @@ control|)
 block|{
 for|for
 control|(
+name|nclean
+operator|=
+literal|0
+operator|,
 name|lfp
 operator|=
 name|fsp
@@ -661,11 +667,19 @@ operator|,
 operator|++
 name|i
 control|)
+name|nclean
+operator|+=
 name|clean_loop
 argument_list|(
 name|lfp
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If some file systems were actually cleaned, run again 		 * to make sure that some nasty process hasn't just 		 * filled the disk system up. 		 */
+if|if
+condition|(
+name|nclean
+condition|)
+continue|continue;
 ifdef|#
 directive|ifdef
 name|VERBOSE
@@ -797,13 +811,6 @@ operator|*
 name|BUSY_LIM
 condition|)
 block|{
-name|clean_fs
-argument_list|(
-name|fsp
-argument_list|,
-name|cost_benefit
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"Cleaner Running  at %s (need space)\n"
@@ -813,6 +820,13 @@ argument_list|(
 operator|&
 name|now
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|clean_fs
+argument_list|(
+name|fsp
+argument_list|,
+name|cost_benefit
 argument_list|)
 expr_stmt|;
 return|return
