@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.32 (Berkeley) %G%"
+literal|"@(#)main.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1547,17 +1547,6 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NAMED_BIND
-name|_res
-operator|.
-name|options
-operator||=
-name|RES_DEBUG
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'f'
@@ -1959,6 +1948,35 @@ endif|DBM
 block|}
 block|}
 end_while
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|8
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|_res
+operator|.
+name|options
+operator||=
+name|RES_DEBUG
+expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* 	**  Do basic initialization. 	**	Read system control file. 	**	Extract special fields for local use. 	*/
