@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.28	81/03/10	*/
+comment|/*	tm.c	4.29	81/03/11	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * TM11/TE10 tape driver  *  * TODO:  *	test driver with more than one slave  *	test driver with more than one controller  *	test reset code  *	test rewinds without hanging in driver  *	what happens if you offline tape during rewind?  *	test using file system on tape  */
+comment|/*  * TM11/TE10 tape driver  *  * TODO:  *	test driver with more than one slave  *	test driver with more than one controller  *	test reset code  *	what happens if you offline tape during rewind?  *	test using file system on tape  */
 end_comment
 
 begin_include
@@ -647,6 +647,8 @@ modifier|*
 name|sc
 decl_stmt|;
 name|int
+name|olddens
+decl_stmt|,
 name|dens
 decl_stmt|;
 name|teunit
@@ -700,6 +702,49 @@ name|ENXIO
 expr_stmt|;
 return|return;
 block|}
+name|olddens
+operator|=
+name|sc
+operator|->
+name|sc_dens
+expr_stmt|;
+name|dens
+operator|=
+name|TM_IE
+operator||
+name|TM_GO
+operator||
+operator|(
+name|ui
+operator|->
+name|ui_slave
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|&
+name|T_1600BPI
+operator|)
+operator|==
+literal|0
+condition|)
+name|dens
+operator||=
+name|TM_D800
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dens
+operator|=
+name|dens
+expr_stmt|;
 name|get
 label|:
 name|tmcommand
@@ -737,36 +782,11 @@ goto|goto
 name|get
 goto|;
 block|}
-name|dens
-operator|=
-name|TM_IE
-operator||
-name|TM_GO
-operator||
-operator|(
-name|ui
+name|sc
 operator|->
-name|ui_slave
-operator|<<
-literal|8
-operator|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|&
-name|T_1600BPI
-operator|)
-operator|==
-literal|0
-condition|)
-name|dens
-operator||=
-name|TM_D800
+name|sc_dens
+operator|=
+name|olddens
 expr_stmt|;
 if|if
 condition|(
