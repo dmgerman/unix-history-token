@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -624,14 +624,6 @@ name|u_long
 name|dirty
 decl_stmt|;
 comment|/* K: number of dirty segments */
-name|u_long
-name|last_seg
-decl_stmt|;
-comment|/* K: index of last seg written */
-name|time_t
-name|last_time
-decl_stmt|;
-comment|/* K: timestamp of last seg written */
 block|}
 name|CLEANERINFO
 typedef|;
