@@ -2864,9 +2864,17 @@ block|{
 comment|/* called just before a select to conserve IO to terminal */
 if|if
 condition|(
+operator|!
 name|Initialized
-operator|&&
-operator|(
+condition|)
+block|{
+return|return
+literal|1
+return|;
+comment|/* No output if not initialized */
+block|}
+if|if
+condition|(
 operator|(
 name|Lowest
 operator|<=
@@ -2880,7 +2888,6 @@ name|terminalCursorAddress
 operator|!=
 name|CorrectTerminalCursor
 argument_list|()
-operator|)
 operator|)
 condition|)
 block|{
@@ -2899,18 +2906,14 @@ name|Highest
 condition|)
 block|{
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 comment|/* no more output now */
 block|}
 else|else
 block|{
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/* more output for future */
 block|}
