@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.50 1996/02/02 22:57:27 joerg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.51 1996/02/02 22:59:47 joerg Exp $  */
 end_comment
 
 begin_include
@@ -807,6 +807,51 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|st_modes
+name|mode_tandberg4200
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* minor 0,1,2,3 */
+block|{
+literal|0
+block|,
+name|ST_Q_FORCE_VAR_MODE
+block|,
+literal|0
+block|}
+block|,
+comment|/* minor 4,5,6,7 */
+block|{
+literal|0
+block|,
+literal|0
+block|,
+name|QIC_150
+block|}
+block|,
+comment|/* minor 8,9,10,11 */
+block|{
+literal|0
+block|,
+literal|0
+block|,
+name|QIC_120
+block|}
+comment|/* minor 12,13,14,15 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|st_modes
 name|mode_archive2525
 init|=
 block|{
@@ -1169,6 +1214,30 @@ block|,
 name|ST_Q_NEEDS_PAGE_0
 block|,
 name|mode_tandberg3600
+block|}
+block|,
+block|{
+name|T_SEQUENTIAL
+block|,
+name|T_SEQUENTIAL
+block|,
+name|T_REMOV
+block|,
+literal|"TANDBERG"
+block|,
+literal|" TDC 42*"
+block|,
+literal|"*"
+block|,
+literal|"st"
+block|,
+name|SC_ONE_LU
+block|,
+name|ST_Q_SNS_HLP
+operator||
+name|ST_Q_NO_1024
+block|,
+name|mode_tandberg4200
 block|}
 block|,
 block|{
