@@ -248,7 +248,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
 name|int
 name|path_mtu_discovery
 init|=
