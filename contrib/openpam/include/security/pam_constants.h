@@ -265,6 +265,9 @@ block|,
 name|PAM_AUTHTOK_PROMPT
 init|=
 literal|10
+block|,
+comment|/* OpenPAM extension */
+name|PAM_NUM_ITEMS
 comment|/* OpenPAM extension */
 block|}
 enum|;

@@ -90,5 +90,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Error codes:  *  *     !PAM_SYMBOL_ERR  *	PAM_SYSTEM_ERR  *	PAM_BUF_ERR  *	PAM_CONV_ERR  */
+end_comment
+
+begin_comment
+comment|/**  * The =pam_prompt function constructs a message from the specified format  * string and arguments and passes it to the given PAM context's  * conversation function.  *  * A pointer to the response, or =NULL if the conversation function did  * not return one, is stored in the location pointed to by the =resp  * argument.  *  * See =pam_vprompt for further details.  *  *>pam_error  *>pam_info  *>pam_vprompt  */
+end_comment
+
 end_unit
 

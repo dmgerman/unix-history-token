@@ -38,6 +38,39 @@ block|{
 endif|#
 directive|endif
 comment|/*  * API extensions  */
+specifier|const
+name|char
+modifier|*
+name|openpam_get_option
+parameter_list|(
+name|pam_handle_t
+modifier|*
+name|_pamh
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_option
+parameter_list|)
+function_decl|;
+name|int
+name|openpam_set_option
+parameter_list|(
+name|pam_handle_t
+modifier|*
+name|_pamh
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_option
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_value
+parameter_list|)
+function_decl|;
 name|int
 name|pam_error
 parameter_list|(
@@ -527,7 +560,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static struct pam_module _pam_module = { name PAM_SOEXT, {		\     pam_sm_authenticate, pam_sm_setcred, pam_sm_acct_mgmt,		\     pam_sm_open_session, pam_sm_close_session, pam_sm_chauthtok },	\     NULL, 0, NULL, NULL };						\ DATA_SET(_openpam_modules, _pam_module)
+value|static struct pam_module _pam_module = { name PAM_SOEXT, {		\     pam_sm_authenticate, pam_sm_setcred, pam_sm_acct_mgmt,		\     pam_sm_open_session, pam_sm_close_session, pam_sm_chauthtok },	\     NULL, 0, NULL, NULL };						\ DATA_SET(_openpam_static_modules, _pam_module)
 end_define
 
 begin_else

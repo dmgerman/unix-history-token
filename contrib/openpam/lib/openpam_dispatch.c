@@ -69,7 +69,7 @@ comment|/* !defined(OPENPAM_RELAX_CHECKS) */
 end_comment
 
 begin_comment
-comment|/*  * Execute a module chain  */
+comment|/*  * OpenPAM internal  *  * Execute a module chain  */
 end_comment
 
 begin_function
@@ -673,6 +673,10 @@ end_endif
 
 begin_comment
 comment|/* !defined(OPENPAM_RELAX_CHECKS) */
+end_comment
+
+begin_comment
+comment|/*  * NODOC  *  * Error codes:  */
 end_comment
 
 end_unit

@@ -9,6 +9,10 @@ directive|include
 file|<security/pam_appl.h>
 end_include
 
+begin_comment
+comment|/*  * XSSO 4.2.1  * XSSO 6 page 36  *  * Perform authentication to a secondary domain within the PAM framework  */
+end_comment
+
 begin_function
 name|int
 name|pam_authenticate_secondary
@@ -48,6 +52,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * NODOC  */
+end_comment
 
 end_unit
 

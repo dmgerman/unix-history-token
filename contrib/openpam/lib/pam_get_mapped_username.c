@@ -9,6 +9,10 @@ directive|include
 file|<security/pam_appl.h>
 end_include
 
+begin_comment
+comment|/*  * XSSO 4.2.1  * XSSO 6 page 50  *  * Get valid matched identity in new domain  */
+end_comment
+
 begin_function
 name|int
 name|pam_get_mapped_username
@@ -55,6 +59,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * NODOC  */
+end_comment
 
 end_unit
 

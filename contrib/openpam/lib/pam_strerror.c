@@ -76,7 +76,7 @@ name|PAM_SYMBOL_ERR
 case|:
 return|return
 operator|(
-literal|"symbol not found in module"
+literal|"invalid symbol"
 operator|)
 return|;
 case|case
@@ -244,7 +244,7 @@ name|PAM_AUTHTOK_DISABLE_AGING
 case|:
 return|return
 operator|(
-literal|"authentication token ageing disabled"
+literal|"authentication token aging disabled"
 operator|)
 return|;
 case|case
@@ -316,6 +316,10 @@ return|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/**  * The =pam_strerror function returns a pointer to a string containing a  * textual description of the error indicated by the =error_number  * argument, in the context of the PAM transaction described by the =pamh  * argument.  */
+end_comment
 
 end_unit
 
