@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -127,7 +127,7 @@ name|union_lookup1
 parameter_list|(
 name|udvp
 parameter_list|,
-name|dvp
+name|dvpp
 parameter_list|,
 name|vpp
 parameter_list|,
@@ -141,7 +141,8 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|dvp
+modifier|*
+name|dvpp
 decl_stmt|;
 name|struct
 name|vnode
@@ -164,10 +165,20 @@ modifier|*
 name|tdvp
 decl_stmt|;
 name|struct
+name|vnode
+modifier|*
+name|dvp
+decl_stmt|;
+name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
+name|dvp
+operator|=
+operator|*
+name|dvpp
+expr_stmt|;
 comment|/* 	 * If stepping up the directory tree, check for going 	 * back across the mount point, in which case do what 	 * lookup would do by stepping back down the mount 	 * hierarchy. 	 */
 if|if
 condition|(
@@ -178,15 +189,14 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-comment|/* 			 * Don't do the NOCROSSMOUNT check 			 * at this level.  By definition, 			 * union fs deals with namespaces, not 			 * filesystems. 			 */
-if|if
+while|while
 condition|(
+operator|(
+name|dvp
+operator|!=
+name|udvp
+operator|)
+operator|&&
 operator|(
 name|dvp
 operator|->
@@ -194,14 +204,16 @@ name|v_flag
 operator|&
 name|VROOT
 operator|)
-operator|==
-literal|0
 condition|)
-break|break;
+block|{
+comment|/* 			 * Don't do the NOCROSSMOUNT check 			 * at this level.  By definition, 			 * union fs deals with namespaces, not 			 * filesystems. 			 */
 name|tdvp
 operator|=
 name|dvp
 expr_stmt|;
+operator|*
+name|dvpp
+operator|=
 name|dvp
 operator|=
 name|dvp
@@ -516,6 +528,7 @@ name|um
 operator|->
 name|um_uppervp
 argument_list|,
+operator|&
 name|upperdvp
 argument_list|,
 operator|&
@@ -626,6 +639,7 @@ name|um
 operator|->
 name|um_lowervp
 argument_list|,
+operator|&
 name|lowerdvp
 argument_list|,
 operator|&
