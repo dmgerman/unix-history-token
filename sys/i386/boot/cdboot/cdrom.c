@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright © 1997 Pluto Technologies International, Inc.  Boulder CO  * Copyright © 1997 interface business GmbH, Dresden.  *	All rights reserved.  *  * This code was written by Jörg Wunsch, Dresden.  * Direct comments to<joerg_wunsch@interface-business.de>.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * Copyright © 1997 Pluto Technologies International, Inc.  Boulder CO  * Copyright © 1997 interface business GmbH, Dresden.  *	All rights reserved.  *  * This code was written by Jörg Wunsch, Dresden.  * Direct comments to<joerg_wunsch@interface-business.de>.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $Id: cdrom.c,v 1.1 1997/07/11 05:52:39 joerg Exp $  */
 end_comment
 
 begin_include
@@ -1079,14 +1079,38 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * Dir entry of length 0.  That's the last 			 * entry in this block, advance to the next 			 * block (if any).  In case we get beyond the 			 * end of the directory, we'll fall off the 			 * loop due to the rootdirsize condition in 			 * the `for' statement. 			 */
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"EOD\n"
+literal|"entrylen 0\n"
 operator|)
 argument_list|)
 expr_stmt|;
-break|break;
+name|entrylen
+operator|=
+operator|(
+operator|~
+operator|(
+operator|(
+name|ptr
+operator|-
+name|rootdirbuf
+operator|)
+operator|+
+name|BLKSIZE
+operator|-
+literal|1
+operator|)
+operator|)
+operator|&
+operator|(
+name|BLKSIZE
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
