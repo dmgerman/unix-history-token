@@ -234,6 +234,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Path to locale storage directory  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|_PathLocale
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * The locales we are going to try and load  */
 end_comment
 
