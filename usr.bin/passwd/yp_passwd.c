@@ -315,8 +315,6 @@ modifier|*
 name|master
 decl_stmt|;
 name|int
-name|c
-decl_stmt|,
 name|err
 decl_stmt|,
 name|status
@@ -564,12 +562,6 @@ literal|0
 index|]
 condition|)
 block|{
-name|char
-name|prompt
-index|[
-literal|40
-index|]
-decl_stmt|;
 name|s
 operator|=
 name|getpass
