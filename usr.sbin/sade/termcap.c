@@ -394,6 +394,8 @@ condition|?
 name|ts
 operator|.
 name|ts_lines
+operator|-
+literal|1
 else|:
 operator|(
 name|OnVTY

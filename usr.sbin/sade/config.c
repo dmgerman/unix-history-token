@@ -2558,6 +2558,13 @@ literal|"carry the packages collection, then we recommend either a CD\n"
 literal|"distribution or the master distribution on ftp.freebsd.org."
 argument_list|)
 expr_stmt|;
+name|mediaDevice
+operator|->
+name|shutdown
+argument_list|(
+name|mediaDevice
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
@@ -2566,7 +2573,7 @@ return|;
 block|}
 name|msgNotify
 argument_list|(
-literal|"Got INDEX successfully, now building packages menu.."
+literal|"Located INDEX, now reading package data from it..."
 argument_list|)
 expr_stmt|;
 name|index_init

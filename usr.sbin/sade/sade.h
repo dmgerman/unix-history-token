@@ -3443,20 +3443,6 @@ end_comment
 
 begin_function_decl
 name|int
-name|index_get
-parameter_list|(
-name|char
-modifier|*
-name|fname
-parameter_list|,
-name|PkgNodePtr
-name|papa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|index_read
 parameter_list|(
 name|FILE
