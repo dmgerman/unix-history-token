@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acu.c	4.9 (Berkeley) %G%"
+literal|"@(#)acu.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,7 +348,7 @@ name|acu
 operator|->
 name|acu_name
 argument_list|,
-literal|"no answer"
+literal|"call failed"
 argument_list|)
 expr_stmt|;
 name|tried
@@ -574,7 +574,7 @@ name|acu
 operator|->
 name|acu_name
 argument_list|,
-literal|"no answer"
+literal|"call failed"
 argument_list|)
 expr_stmt|;
 name|tried
@@ -621,7 +621,7 @@ return|return
 operator|(
 name|tried
 condition|?
-literal|"no answer"
+literal|"call failed"
 else|:
 literal|"missing phone number"
 operator|)
