@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.5 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1543,14 +1543,6 @@ name|lfsp
 operator|->
 name|lfs_idaddr
 expr_stmt|;
-name|ip
-operator|->
-name|if_st_atime
-operator|=
-name|lfsp
-operator|->
-name|lfs_tstamp
-expr_stmt|;
 comment|/* Initialize the ROOT Directory */
 name|sb_addr
 operator|=
@@ -1614,14 +1606,6 @@ name|lfsp
 operator|->
 name|lfs_idaddr
 expr_stmt|;
-name|ip
-operator|->
-name|if_st_atime
-operator|=
-name|lfsp
-operator|->
-name|lfs_tstamp
-expr_stmt|;
 comment|/* Initialize the lost+found Directory */
 name|sb_addr
 operator|=
@@ -1684,14 +1668,6 @@ operator|=
 name|lfsp
 operator|->
 name|lfs_idaddr
-expr_stmt|;
-name|ip
-operator|->
-name|if_st_atime
-operator|=
-name|lfsp
-operator|->
-name|lfs_tstamp
 expr_stmt|;
 comment|/* Make all the other dinodes invalid */
 for|for
