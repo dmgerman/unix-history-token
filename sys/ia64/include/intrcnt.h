@@ -312,6 +312,22 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|intrnames
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|eintrnames
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
