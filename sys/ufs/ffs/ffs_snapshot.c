@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|KERNCRED
-value|proc0.p_ucred
+value|thread0.td_ucred
 end_define
 
 begin_define

@@ -611,9 +611,9 @@ name|fmode
 argument_list|,
 literal|0
 argument_list|,
-name|proc0
+name|thread0
 operator|.
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -667,9 +667,9 @@ name|wvp
 argument_list|,
 name|td
 argument_list|,
-name|proc0
+name|thread0
 operator|.
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|LEASE_WRITE
 argument_list|)
@@ -699,9 +699,9 @@ name|UIO_SYSSPACE
 argument_list|,
 name|ioflg
 argument_list|,
-name|proc0
+name|thread0
 operator|.
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|NULL
 argument_list|,
@@ -855,9 +855,9 @@ name|wvp
 argument_list|,
 name|FWRITE
 argument_list|,
-name|proc0
+name|thread0
 operator|.
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
