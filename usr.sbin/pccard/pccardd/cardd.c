@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.20 1997/10/28 17:51:25 nate Exp $"
+literal|"$Id: cardd.c,v 1.21 1997/11/19 02:31:37 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -958,6 +958,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|state
@@ -968,7 +971,13 @@ name|sp
 operator|->
 name|state
 condition|)
-return|return;
+name|logmsg
+argument_list|(
+literal|"State same as before, continuing anyway"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sp
 operator|->
 name|state
