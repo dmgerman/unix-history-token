@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tp_input.c	1.2	82/05/15	*/
+comment|/*	tp_input.c	1.3	82/10/09	*/
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"../h/systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/clock.h"
 end_include
 
 begin_include
@@ -42,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/dn_systm.h"
+file|"../netdecnet/dn_systm.h"
 end_include
 
 begin_include
@@ -54,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/tp.h"
+file|"../netdecnet/tp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/tp_var.h"
+file|"../netdecnet/tp_var.h"
 end_include
 
 begin_comment
