@@ -1289,7 +1289,7 @@ begin_struct
 struct|struct
 name|in_addr
 block|{
-name|u_int32_t
+name|in_addr_t
 name|s_addr
 decl_stmt|;
 block|}

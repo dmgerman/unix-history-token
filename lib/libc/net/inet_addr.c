@@ -94,7 +94,7 @@ comment|/*  * ASCII internet address interpretation routine.  * The value return
 end_comment
 
 begin_function
-name|u_long
+name|in_addr_t
 comment|/* XXX should be struct in_addr :( */
 name|inet_addr
 parameter_list|(
@@ -166,7 +166,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_long
+name|in_addr_t
 name|val
 decl_stmt|;
 name|char

@@ -66,7 +66,7 @@ comment|/*  * Internet network address interpretation routine.  * The library ro
 end_comment
 
 begin_function
-name|u_long
+name|in_addr_t
 name|inet_network
 parameter_list|(
 name|cp
@@ -79,20 +79,18 @@ name|cp
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|in_addr_t
 name|val
 decl_stmt|,
 name|base
 decl_stmt|,
 name|n
-decl_stmt|,
-name|i
 decl_stmt|;
 specifier|register
 name|char
 name|c
 decl_stmt|;
-name|u_long
+name|in_addr_t
 name|parts
 index|[
 literal|4
@@ -102,6 +100,10 @@ modifier|*
 name|pp
 init|=
 name|parts
+decl_stmt|;
+specifier|register
+name|int
+name|i
 decl_stmt|;
 name|again
 label|:

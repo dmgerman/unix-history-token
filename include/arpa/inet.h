@@ -186,8 +186,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|in_addr_t
 name|inet_addr
 name|__P
 argument_list|(
@@ -219,8 +218,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|in_addr_t
 name|inet_lnaof
 name|__P
 argument_list|(
@@ -239,9 +237,9 @@ name|inet_makeaddr
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|in_addr_t
 operator|,
-name|u_long
+name|in_addr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -254,7 +252,7 @@ name|inet_neta
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|in_addr_t
 operator|,
 name|char
 operator|*
@@ -266,8 +264,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|in_addr_t
 name|inet_netof
 name|__P
 argument_list|(
@@ -280,8 +277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|in_addr_t
 name|inet_network
 name|__P
 argument_list|(

@@ -247,6 +247,17 @@ end_comment
 begin_typedef
 typedef|typedef
 name|u_int32_t
+name|in_addr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* base type for internet address */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
 name|ino_t
 typedef|;
 end_typedef

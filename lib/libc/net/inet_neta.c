@@ -126,7 +126,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * char *  * inet_neta(src, dst, size)  *	format a u_long network number into presentation format.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	format of ``src'' is as for inet_network().  * author:  *	Paul Vixie (ISC), July 1996  */
+comment|/*  * char *  * inet_neta(src, dst, size)  *	format a in_addr_t network number into presentation format.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	format of ``src'' is as for inet_network().  * author:  *	Paul Vixie (ISC), July 1996  */
 end_comment
 
 begin_function
@@ -140,7 +140,7 @@ name|dst
 parameter_list|,
 name|size
 parameter_list|)
-name|u_long
+name|in_addr_t
 name|src
 decl_stmt|;
 name|char
