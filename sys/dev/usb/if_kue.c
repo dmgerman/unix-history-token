@@ -3877,6 +3877,10 @@ name|kue_rxfilt
 argument_list|)
 expr_stmt|;
 comment|/* I'm not sure how to tune these. */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* 	 * Leave this one alone for now; setting it 	 * wrong causes lockups on some machines/controllers. 	 */
 name|kue_setword
 argument_list|(
 name|sc
@@ -3886,6 +3890,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|kue_setword
 argument_list|(
 name|sc
