@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	4.1 82/08/25"
+literal|"@(#)route.c	4.2 82/10/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -664,7 +664,7 @@ name|netent
 modifier|*
 name|np
 init|=
-name|getnetaddr
+name|getnetbyaddr
 argument_list|(
 name|net
 argument_list|)
@@ -686,14 +686,21 @@ name|struct
 name|hostent
 modifier|*
 name|hp
-init|=
-name|gethostaddr
-argument_list|(
-name|in
-operator|.
-name|s_addr
-argument_list|)
 decl_stmt|;
+name|hp
+operator|=
+name|gethostbyaddr
+argument_list|(
+operator|&
+name|in
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hp
