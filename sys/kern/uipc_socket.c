@@ -3712,7 +3712,11 @@ operator|==
 name|MT_SONAME
 argument_list|,
 operator|(
-literal|"receive 1a"
+literal|"m->m_type == %d"
+operator|,
+name|m
+operator|->
+name|m_type
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4046,7 +4050,11 @@ operator|==
 name|MT_HEADER
 argument_list|,
 operator|(
-literal|"receive 3"
+literal|"m->m_type == %d"
+operator|,
+name|m
+operator|->
+name|m_type
 operator|)
 argument_list|)
 expr_stmt|;
