@@ -7050,6 +7050,35 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|isa_pnp_id
+name|lpc_ids
+index|[]
+init|=
+block|{
+block|{
+literal|0x0004d041
+block|,
+literal|"Standard parallel printer port"
+block|}
+block|,
+comment|/* PNP0400 */
+block|{
+literal|0x0104d041
+block|,
+literal|"ECP parallel printer port"
+block|}
+block|,
+comment|/* PNP0401 */
+block|{
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -7107,17 +7136,6 @@ name|tmp
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* If we are a PNP device, abort.  Otherwise we attach to *everthing* */
-if|if
-condition|(
-name|isa_get_logicalid
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-return|return
-name|ENXIO
-return|;
 name|parent
 operator|=
 name|device_get_parent
@@ -7125,6 +7143,35 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ISA_PNP_PROBE
+argument_list|(
+name|parent
+argument_list|,
+name|dev
+argument_list|,
+name|lpc_ids
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|ENXIO
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
 comment|/* XXX shall be set after detection */
 name|device_set_desc
 argument_list|(
