@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.c#165 $  *  * $FreeBSD$  */
+comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.c#170 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -2136,7 +2136,7 @@ argument_list|)
 expr_stmt|;
 name|next_scbid
 operator|=
-name|ahd_inw
+name|ahd_inw_scbram
 argument_list|(
 name|ahd
 argument_list|,
@@ -2205,7 +2205,7 @@ operator|*
 name|hscb_ptr
 operator|++
 operator|=
-name|ahd_inb
+name|ahd_inb_scbram
 argument_list|(
 name|ahd
 argument_list|,
@@ -2262,7 +2262,7 @@ argument_list|)
 expr_stmt|;
 name|next_scbid
 operator|=
-name|ahd_inw
+name|ahd_inw_scbram
 argument_list|(
 name|ahd
 argument_list|,
@@ -7430,7 +7430,7 @@ argument_list|)
 expr_stmt|;
 name|next
 operator|=
-name|ahd_inw
+name|ahd_inw_scbram
 argument_list|(
 name|ahd
 argument_list|,
@@ -8915,7 +8915,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|ahd_inb
+name|ahd_inb_scbram
 argument_list|(
 name|ahd
 argument_list|,
@@ -11938,6 +11938,26 @@ condition|(
 operator|(
 name|ppr_options
 operator|&
+name|MSG_EXT_PPR_RD_STRM
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"(RDSTRM"
+argument_list|)
+expr_stmt|;
+name|options
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|ppr_options
+operator|&
 name|MSG_EXT_PPR_DT_REQ
 operator|)
 operator|!=
@@ -11946,6 +11966,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
+name|options
+condition|?
+literal|"|DT"
+else|:
 literal|"(DT"
 argument_list|)
 expr_stmt|;
@@ -21928,6 +21954,11 @@ argument_list|(
 name|ahd
 argument_list|)
 expr_stmt|;
+name|ahd_update_modes
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_set_modes
 argument_list|(
 name|ahd
@@ -22122,8 +22153,8 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Mode should be SCSI after a chip reset, but lets 	 * set it just to be safe. 	 */
-name|ahd_set_modes
+comment|/* 	 * Mode should be SCSI after a chip reset, but lets 	 * set it just to be safe.  We touch the MODE_PTR 	 * register directly so as to bypass the lazy update 	 * code in ahd_set_modes(). 	 */
+name|ahd_known_modes
 argument_list|(
 name|ahd
 argument_list|,
@@ -22132,13 +22163,20 @@ argument_list|,
 name|AHD_MODE_SCSI
 argument_list|)
 expr_stmt|;
-name|ahd_known_modes
+name|ahd_outb
+argument_list|(
+name|ahd
+argument_list|,
+name|MODE_PTR
+argument_list|,
+name|ahd_build_mode_state
 argument_list|(
 name|ahd
 argument_list|,
 name|AHD_MODE_SCSI
 argument_list|,
 name|AHD_MODE_SCSI
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Restore SXFRCTL1. 	 * 	 * We must always initialize STPWEN to 1 before we 	 * restore the saved values.  STPWEN is initialized 	 * to a tri-state condition which can only be cleared 	 * by turning it on. 	 */
@@ -34243,9 +34281,6 @@ decl_stmt|;
 name|u_int
 name|qfreeze_cnt
 decl_stmt|;
-name|ahd_mode_state
-name|saved_modes
-decl_stmt|;
 comment|/* 	 * The sequencer freezes its select-out queue 	 * anytime a SCSI status error occurs.  We must 	 * handle the error and decrement the QFREEZE count 	 * to allow the sequencer to continue. 	 */
 name|hscb
 operator|=
@@ -34255,13 +34290,6 @@ name|hscb
 expr_stmt|;
 comment|/* Freeze the queue until the client sees the error. */
 name|ahd_pause
-argument_list|(
-name|ahd
-argument_list|)
-expr_stmt|;
-name|saved_modes
-operator|=
-name|ahd_save_modes
 argument_list|(
 name|ahd
 argument_list|)

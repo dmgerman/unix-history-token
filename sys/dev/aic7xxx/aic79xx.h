@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#84 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#85 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -801,82 +801,89 @@ name|AHD_PCIX_MMAPIO_BUG
 init|=
 literal|0x0080
 block|,
+comment|/* Reads to SCBRAM fail to reset the discard timer. */
+name|AHD_PCIX_SCBRAM_RD_BUG
+init|=
+literal|0x0100
+block|,
 comment|/* Bug workarounds that can be disabled on non-PCIX busses. */
 name|AHD_PCIX_BUG_MASK
 init|=
 name|AHD_PCIX_CHIPRST_BUG
 operator||
 name|AHD_PCIX_MMAPIO_BUG
+operator||
+name|AHD_PCIX_SCBRAM_RD_BUG
 block|,
 comment|/* 	 * LQOSTOP0 status set even for forced selections with ATN 	 * to perform non-packetized message delivery. 	 */
 name|AHD_LQO_ATNO_BUG
 init|=
-literal|0x0100
+literal|0x0200
 block|,
 comment|/* FIFO auto-flush does not always trigger.  */
 name|AHD_AUTOFLUSH_BUG
 init|=
-literal|0x0200
+literal|0x0400
 block|,
 comment|/* The CLRLQO registers are not self-clearing. */
 name|AHD_CLRLQO_AUTOCLR_BUG
 init|=
-literal|0x0400
+literal|0x0800
 block|,
 comment|/* The PACKETIZED status bit refers to the previous connection. */
 name|AHD_PKTIZED_STATUS_BUG
 init|=
-literal|0x0800
+literal|0x1000
 block|,
 comment|/* "Short Luns" are not placed into outgoing LQ packets correctly. */
 name|AHD_PKT_LUN_BUG
 init|=
-literal|0x1000
+literal|0x2000
 block|,
 comment|/* 	 * Only the FIFO allocated to the non-packetized connection may 	 * be in use during a non-packetzied connection. 	 */
 name|AHD_NONPACKFIFO_BUG
 init|=
-literal|0x2000
+literal|0x4000
 block|,
 comment|/* 	 * Writing to a DFF SCBPTR register may fail if concurent with 	 * a hardware write to the other DFF SCBPTR register.  This is 	 * not currently a concern in our sequencer since all chips with 	 * this bug have the AHD_NONPACKFIFO_BUG and all writes of concern 	 * occur in non-packetized connections. 	 */
 name|AHD_MDFF_WSCBPTR_BUG
 init|=
-literal|0x4000
+literal|0x8000
 block|,
 comment|/* SGHADDR updates are slow. */
 name|AHD_REG_SLOW_SETTLE_BUG
 init|=
-literal|0x8000
+literal|0x10000
 block|,
 comment|/* 	 * Changing the MODE_PTR coincident with an interrupt that 	 * switches to a different mode will cause the interrupt to 	 * be in the mode written outside of interrupt context. 	 */
 name|AHD_SET_MODE_BUG
 init|=
-literal|0x10000
+literal|0x20000
 block|,
 comment|/* Non-packetized busfree revision does not work. */
 name|AHD_BUSFREEREV_BUG
 init|=
-literal|0x20000
+literal|0x40000
 block|,
 comment|/* 	 * Paced transfers are indicated with a non-standard PPR 	 * option bit in the neg table, 160MHz is indicated by 	 * sync factor 0x7, and the offset if off by a factor of 2. 	 */
 name|AHD_PACED_NEGTABLE_BUG
 init|=
-literal|0x40000
+literal|0x80000
 block|,
 comment|/* LQOOVERRUN false positives. */
 name|AHD_LQOOVERRUN_BUG
 init|=
-literal|0x80000
+literal|0x100000
 block|,
 comment|/* 	 * Controller write to INTSTAT will lose to a host 	 * write to CLRINT. 	 */
 name|AHD_INTCOLLISION_BUG
 init|=
-literal|0x100000
+literal|0x200000
 block|,
 comment|/* 	 * The GEM318 violates the SCSI spec by not waiting 	 * the mandated bus settle delay between phase changes 	 * in some situations.  Some aic79xx chip revs. are more 	 * strict in this regard and will treat REQ assertions 	 * that fall within the bus settle delay window as 	 * glitches.  This flag tells the firmware to tolerate 	 * early REQ assertions. 	 */
 name|AHD_EARLY_REQ_BUG
 init|=
-literal|0x200000
+literal|0x400000
 block|}
 name|ahd_bug
 typedef|;
