@@ -6457,15 +6457,6 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
-name|unit
-operator|=
-name|com
-operator|->
-name|unit
-expr_stmt|;
 name|s
 operator|=
 name|spltty
