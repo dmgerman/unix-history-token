@@ -5278,6 +5278,10 @@ block|{
 case|case
 name|ST_DEC_4100
 case|:
+case|case
+operator|-
+name|ST_DEC_4100
+case|:
 name|mask
 operator|=
 literal|0xc0000000
