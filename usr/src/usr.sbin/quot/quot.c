@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.17 (Berkeley) 89/07/30"
+literal|"@(#)quot.c	4.18 (Berkeley) 90/04/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/inode.h>
+file|<ufs/dinode.h>
 end_include
 
 begin_include
@@ -518,6 +518,16 @@ name|strcmp
 argument_list|(
 name|fs
 operator|->
+name|fs_vfstype
+argument_list|,
+literal|"ufs"
+argument_list|)
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|fs
+operator|->
 name|fs_type
 argument_list|,
 name|FSTAB_RO
@@ -540,6 +550,7 @@ name|fs_type
 argument_list|,
 name|FSTAB_RQ
 argument_list|)
+operator|)
 condition|)
 continue|continue;
 name|cp
