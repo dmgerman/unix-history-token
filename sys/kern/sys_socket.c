@@ -105,6 +105,8 @@ name|soo_ioctl
 block|,
 name|soo_poll
 block|,
+name|sokqfilter
+block|,
 name|soo_stat
 block|,
 name|soo_close

@@ -246,6 +246,12 @@ name|uio
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|knote
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -415,6 +421,21 @@ typedef|, struct
 name|proc
 modifier|*
 name|p
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_kqfilter_t
+name|__P
+typedef|((
+name|dev_t
+name|dev
+typedef|, struct
+name|knote
+modifier|*
+name|kn
 typedef|));
 end_typedef
 
@@ -668,7 +689,7 @@ begin_define
 define|#
 directive|define
 name|D_MEMDISK
-value|0x10000
+value|0x00010000
 end_define
 
 begin_comment
@@ -679,7 +700,7 @@ begin_define
 define|#
 directive|define
 name|D_NAGGED
-value|0x20000
+value|0x00020000
 end_define
 
 begin_comment
@@ -690,7 +711,7 @@ begin_define
 define|#
 directive|define
 name|D_CANFREE
-value|0x40000
+value|0x00040000
 end_define
 
 begin_comment
@@ -701,11 +722,22 @@ begin_define
 define|#
 directive|define
 name|D_TRACKCLOSE
-value|0x80000
+value|0x00080000
 end_define
 
 begin_comment
 comment|/* track all closes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_KQFILTER
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* has kqfilter entry */
 end_comment
 
 begin_comment
@@ -770,6 +802,11 @@ name|d_flags
 decl_stmt|;
 name|int
 name|d_bmaj
+decl_stmt|;
+comment|/* additions below are not binary compatible with 4.2 and below */
+name|d_kqfilter_t
+modifier|*
+name|d_kqfilter
 decl_stmt|;
 block|}
 struct|;
@@ -982,6 +1019,12 @@ end_decl_stmt
 begin_decl_stmt
 name|d_mmap_t
 name|nommap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_kqfilter_t
+name|nokqfilter
 decl_stmt|;
 end_decl_stmt
 
