@@ -3433,6 +3433,11 @@ operator|~
 name|ATA_ATAPI_MASTER
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|NATADISK
+operator|>
+literal|0
 comment|/* now we know whats there, do the real attach, first the ATA disks */
 for|for
 control|(
@@ -3500,6 +3505,21 @@ name|ATA_SLAVE
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|NATAPICD
+operator|>
+literal|0
+operator|||
+name|NATAPIFD
+operator|>
+literal|0
+operator|||
+name|NATAPIST
+operator|>
+literal|0
 comment|/* then the atapi devices */
 for|for
 control|(
@@ -3567,6 +3587,8 @@ name|ATA_SLAVE
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ata_attach_hook
