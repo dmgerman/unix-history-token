@@ -1297,7 +1297,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1482,7 +1483,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1778,8 +1780,6 @@ parameter_list|)
 block|{
 name|u_int
 name|ntail
-decl_stmt|,
-name|upd
 decl_stmt|;
 name|struct
 name|mbuf
@@ -1835,10 +1835,6 @@ name|size
 operator|-
 literal|1
 operator|)
-expr_stmt|;
-name|upd
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2190,15 +2186,7 @@ name|tail
 operator|=
 name|ntail
 expr_stmt|;
-name|upd
-operator|++
-expr_stmt|;
 block|}
-if|if
-condition|(
-name|upd
-condition|)
-block|{
 name|WRITE4
 argument_list|(
 name|sc
@@ -2219,7 +2207,6 @@ name|HE_REGS_RBP_TAIL
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
