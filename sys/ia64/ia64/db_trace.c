@@ -436,6 +436,12 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|unw_delete
+argument_list|(
+operator|&
+name|rs
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
