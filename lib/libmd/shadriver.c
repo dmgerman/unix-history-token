@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MDDRIVER.C - test driver for MD2, MD4 and MD5  * $Id: mddriver.c,v 1.4 1997/08/25 05:24:26 joerg Exp $  */
+comment|/* SHADRIVER.C - test driver for SHA-1 (and SHA-0)  * $Id: mddriver.c,v 1.4 1997/08/25 05:24:26 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -8,20 +8,20 @@ comment|/* Copyright (C) 1990-2, RSA Data Security, Inc. Created 1990. All    ri
 end_comment
 
 begin_comment
-comment|/* The following makes MD default to MD5 if it has not already been      defined with C compiler flags.  */
+comment|/* The following makes SHA default to SHA-1 if it has not already been      defined with C compiler flags.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MD
+name|SHA
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MD
-value|5
+name|SHA
+value|1
 end_define
 
 begin_endif
@@ -53,77 +53,25 @@ directive|include
 file|<string.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|MD
-operator|==
-literal|2
-end_if
-
 begin_include
 include|#
 directive|include
-file|"md2.h"
+file|"sha.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|MDData
-value|MD2Data
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
 directive|if
-name|MD
+name|SHA
 operator|==
-literal|4
+literal|1
 end_if
-
-begin_include
-include|#
-directive|include
-file|"md4.h"
-end_include
 
 begin_define
 define|#
 directive|define
-name|MDData
-value|MD4Data
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|MD
-operator|==
-literal|5
-end_if
-
-begin_include
-include|#
-directive|include
-file|"md5.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|MDData
-value|MD5Data
+name|SHA_Data
+value|SHA1_Data
 end_define
 
 begin_endif
@@ -138,7 +86,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|MDString
+name|SHAString
 parameter_list|(
 name|string
 parameter_list|)
@@ -150,18 +98,22 @@ block|{
 name|char
 name|buf
 index|[
-literal|33
+literal|2
+operator|*
+literal|20
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"MD%d (\"%s\") = %s\n"
+literal|"SHA-%d (\"%s\") = %s\n"
 argument_list|,
-name|MD
+name|SHA
 argument_list|,
 name|string
 argument_list|,
-name|MDData
+name|SHA_Data
 argument_list|(
 name|string
 argument_list|,
@@ -187,42 +139,37 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"MD%d test suite:\n"
+literal|"SHA-%d test suite:\n"
 argument_list|,
-name|MD
+name|SHA
 argument_list|)
 expr_stmt|;
-name|MDString
+name|SHAString
 argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|MDString
-argument_list|(
-literal|"a"
-argument_list|)
-expr_stmt|;
-name|MDString
+name|SHAString
 argument_list|(
 literal|"abc"
 argument_list|)
 expr_stmt|;
-name|MDString
+name|SHAString
 argument_list|(
 literal|"message digest"
 argument_list|)
 expr_stmt|;
-name|MDString
+name|SHAString
 argument_list|(
 literal|"abcdefghijklmnopqrstuvwxyz"
 argument_list|)
 expr_stmt|;
-name|MDString
+name|SHAString
 argument_list|(
 literal|"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 argument_list|)
 expr_stmt|;
-name|MDString
+name|SHAString
 argument_list|(
 literal|"1234567890123456789012345678901234567890\ 1234567890123456789012345678901234567890"
 argument_list|)

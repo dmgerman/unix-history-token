@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mdXhl.c  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: mdXhl.c,v 1.10 1997/02/22 15:07:23 peter Exp $  *  */
+comment|/* mdXhl.c  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: mdXhl.c,v 1.11 1997/08/25 05:24:25 joerg Exp $  *  */
 end_comment
 
 begin_include
@@ -66,7 +66,7 @@ name|unsigned
 name|char
 name|digest
 index|[
-literal|16
+name|LENGTH
 index|]
 decl_stmt|;
 specifier|static
@@ -86,7 +86,11 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
-literal|33
+literal|2
+operator|*
+name|LENGTH
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -112,7 +116,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+name|LENGTH
 condition|;
 name|i
 operator|++
