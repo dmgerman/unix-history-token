@@ -1328,6 +1328,8 @@ argument_list|,
 name|LOG_PID
 operator||
 name|LOG_NOWAIT
+operator||
+name|LOG_PERROR
 argument_list|,
 name|LOG_DAEMON
 argument_list|)
@@ -1804,6 +1806,21 @@ literal|"daemon(0,0) failed: %m"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* From now on we don't want syslog messages going to stderr. */
+name|closelog
+argument_list|()
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"inetd"
+argument_list|,
+name|LOG_PID
+operator||
+name|LOG_NOWAIT
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
 comment|/* 		 * In case somebody has started inetd manually, we need to 		 * clear the logname, so that old servers run as root do not 		 * get the user's logname.. 		 */
 if|if
 condition|(
@@ -8444,7 +8461,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
 literal|"IPv4 bind is ignored for %s"
 argument_list|,
@@ -8674,7 +8691,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
 literal|"IPv6 bind is ignored for %s"
 argument_list|,
@@ -8847,7 +8864,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
 literal|"IPv4 bind is ignored for %s"
 argument_list|,
