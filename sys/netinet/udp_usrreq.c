@@ -1895,10 +1895,15 @@ name|opts
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|sockaddr_in6
 name|udp_in6
 decl_stmt|;
+endif|#
+directive|endif
 name|INP_LOCK_ASSERT
 argument_list|(
 name|last
