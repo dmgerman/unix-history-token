@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	4.5 %G%"
+literal|"@(#)rcmd.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,9 +421,8 @@ argument_list|,
 name|lport
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|write
 argument_list|(
 name|s
@@ -437,7 +436,32 @@ argument_list|)
 operator|+
 literal|1
 argument_list|)
+operator|!=
+name|strlen
+argument_list|(
+name|num
+argument_list|)
+operator|+
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"write: setting up stderr"
+argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|s2
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 block|{
 name|int
 name|len
