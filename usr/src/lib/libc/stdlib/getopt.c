@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getopt.c	4.7 (Berkeley) %G%"
+literal|"@(#)getopt.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,16 +90,6 @@ define|#
 directive|define
 name|EMSG
 value|""
-end_define
-
-begin_define
-define|#
-directive|define
-name|tell
-parameter_list|(
-name|s
-parameter_list|)
-value|{ \ 	if (opterr) { \ 		fputs(*nargv, stderr); \ 		fputs(s, stderr); \ 		fputc(optopt, stderr); \ 		fputc((int)'\n', stderr); \ 	} \ 	return(BADCH); \ }
 end_define
 
 begin_macro
@@ -248,11 +238,30 @@ condition|)
 operator|++
 name|optind
 expr_stmt|;
-name|tell
+if|if
+condition|(
+name|opterr
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|": illegal option -- "
+name|stderr
+argument_list|,
+literal|"%s: illegal option -- %c\n"
+argument_list|,
+operator|*
+name|nargv
+argument_list|,
+name|optopt
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|BADCH
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -305,11 +314,30 @@ name|place
 operator|=
 name|EMSG
 expr_stmt|;
-name|tell
+if|if
+condition|(
+name|opterr
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|": option requires an argument -- "
+name|stderr
+argument_list|,
+literal|"%s: option requires an argument -- %c\n"
+argument_list|,
+operator|*
+name|nargv
+argument_list|,
+name|optopt
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|BADCH
+operator|)
+return|;
 block|}
 else|else
 comment|/* white space */
