@@ -477,6 +477,13 @@ argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SleepState
+operator|>
+name|ACPI_STATE_S1
+condition|)
+block|{
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
@@ -493,6 +500,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|enable
 argument_list|()
 expr_stmt|;
