@@ -357,7 +357,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*   * The second structure is the Kernel Schedulable Entity. (KSE)  * It represents the ability to take a slot in th scheduler queue.  * As long as this is scheduled, it cound continue to run any threads that  * are assigned to the KSEGRP (see later) until either it runs out  * of runnable threads of high enough priority, or CPU.  * It runs on one CPU and is assigned a quantum of time. When a thread is  * blocked, The KSE continues to run and will search for another thread  * in a runnable state amongst those it has. It May decide to return to user  * mode with a new 'empty' thread if there are no runnable threads.  * Threads are temporarily associated with a KSE for scheduling reasons.  */
+comment|/*   * The second structure is the Kernel Schedulable Entity. (KSE)  * It represents the ability to take a slot in the scheduler queue.  * As long as this is scheduled, it could continue to run any threads that  * are assigned to the KSEGRP (see later) until either it runs out  * of runnable threads of high enough priority, or CPU.  * It runs on one CPU and is assigned a quantum of time. When a thread is  * blocked, The KSE continues to run and will search for another thread  * in a runnable state amongst those it has. It May decide to return to user  * mode with a new 'empty' thread if there are no runnable threads.  * Threads are temporarily associated with a KSE for scheduling reasons.  */
 end_comment
 
 begin_struct_decl
