@@ -25,42 +25,42 @@ begin_define
 define|#
 directive|define
 name|WI_PORT0
-value|0
+value|(0<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|WI_PORT1
-value|1
+value|(1<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|WI_PORT2
-value|2
+value|(2<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|WI_PORT3
-value|3
+value|(3<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|WI_PORT4
-value|4
+value|(4<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|WI_PORT5
-value|5
+value|(5<< 8)
 end_define
 
 begin_define
@@ -150,18 +150,7 @@ begin_define
 define|#
 directive|define
 name|WI_DEFAULT_PORT
-value|(WI_PORT0<< 8)
-end_define
-
-begin_comment
-comment|/* Default TX rate: 2Mbps, auto fallback */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_DEFAULT_TX_RATE
-value|3
+value|WI_PORT0
 end_define
 
 begin_comment
@@ -301,13 +290,6 @@ define|#
 directive|define
 name|WI_DEFAULT_IBSS
 value|OS_STRING_NAME " IBSS"
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_DEFAULT_CHAN
-value|3
 end_define
 
 begin_define
@@ -1167,14 +1149,6 @@ begin_comment
 comment|/* async rx completed */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|WI_INTRS
-define|\
-value|(WI_EV_RX|WI_EV_TX|WI_EV_TX_EXC|WI_EV_ALLOC|WI_EV_INFO|WI_EV_INFO_DROP)
-end_define
-
 begin_comment
 comment|/* Host software registers */
 end_comment
@@ -1390,7 +1364,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_gen
+name|wi_lt_hdr
 block|{
 name|u_int16_t
 name|wi_len
@@ -1398,58 +1372,10 @@ decl_stmt|;
 name|u_int16_t
 name|wi_type
 decl_stmt|;
-name|u_int16_t
-name|wi_val
-decl_stmt|;
+comment|/* value is vary depends on resource id */
 block|}
 struct|;
 end_struct
-
-begin_struct
-struct|struct
-name|wi_ltv_str
-block|{
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
-name|u_int16_t
-name|wi_str
-index|[
-literal|17
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|WI_SETVAL
-parameter_list|(
-name|recno
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|do {					\ 		struct wi_ltv_gen	g;	\ 						\ 		g.wi_len = 2;			\ 		g.wi_type = recno;		\ 		g.wi_val = htole16(val);	\ 		wi_write_record(sc,&g);	\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_SETSTR
-parameter_list|(
-name|recno
-parameter_list|,
-name|str
-parameter_list|)
-define|\
-value|do {							\ 		struct wi_ltv_str	s;			\ 		int			l;			\ 								\ 		l = (strlen(str) + 1)& ~0x1;			\ 		bzero((char *)&s, sizeof(s));			\ 		s.wi_len = (l / 2) + 2;				\ 		s.wi_type = recno;				\ 		s.wi_str[0] = htole16(strlen(str));		\ 		bcopy(str, (char *)&s.wi_str[1], strlen(str));	\ 		wi_write_record(sc, (struct wi_ltv_gen *)&s);	\ 	} while (0)
-end_define
 
 begin_comment
 comment|/*  * Download buffer location and length (0xFD01).  */
@@ -1457,14 +1383,8 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_dnld_buf
+name|wi_dnld_buf
 block|{
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
 name|u_int16_t
 name|wi_buf_pg
 decl_stmt|;
@@ -1487,14 +1407,8 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_memsz
+name|wi_memsz
 block|{
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
 name|u_int16_t
 name|wi_mem_ram
 decl_stmt|;
@@ -1511,14 +1425,8 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_ver
+name|wi_ver
 block|{
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
 name|u_int16_t
 name|wi_ver
 index|[
@@ -1937,14 +1845,8 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_cis
+name|wi_cis
 block|{
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
 name|u_int16_t
 name|wi_cis
 index|[
@@ -1961,14 +1863,8 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_commqual
+name|wi_commqual
 block|{
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
 name|u_int16_t
 name|wi_coms_qual
 decl_stmt|;
@@ -1988,14 +1884,8 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_scalethresh
+name|wi_scalethresh
 block|{
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
 name|u_int16_t
 name|wi_energy_detect
 decl_stmt|;
@@ -2024,28 +1914,16 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_pcf
+name|wi_pcf
 block|{
 name|u_int16_t
-name|wi_len
+name|wi_medium_occupancy_limit
 decl_stmt|;
 name|u_int16_t
-name|wi_type
+name|wi_cfp_period
 decl_stmt|;
 name|u_int16_t
-name|wi_energy_detect
-decl_stmt|;
-name|u_int16_t
-name|wi_carrier_detect
-decl_stmt|;
-name|u_int16_t
-name|wi_defer
-decl_stmt|;
-name|u_int16_t
-name|wi_cell_search
-decl_stmt|;
-name|u_int16_t
-name|wi_range
+name|wi_cfp_max_duration
 decl_stmt|;
 block|}
 struct|;
@@ -2054,6 +1932,13 @@ end_struct
 begin_comment
 comment|/*  * Connection control characteristics. (0xFC00)  * 0 == IBSS (802.11 compliant mode) (Only PRISM2)  * 1 == Basic Service Set (BSS)  * 2 == Wireless Distribudion System (WDS)  * 3 == Pseudo IBSS   *	(Only PRISM2; not 802.11 compliant mode, testing use only)  * 6 == HOST AP (Only PRISM2)  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_PORTTYPE_IBSS
+value|0x0
+end_define
 
 begin_define
 define|#
@@ -2079,13 +1964,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_PORTTYPE_IBSS
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
 name|WI_PORTTYPE_HOSTAP
 value|0x6
 end_define
@@ -2096,18 +1974,12 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_macaddr
+name|wi_macaddr
 block|{
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
-name|u_int16_t
+name|u_int8_t
 name|wi_mac_addr
 index|[
-literal|3
+literal|6
 index|]
 decl_stmt|;
 block|}
@@ -2120,18 +1992,15 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_ssid
+name|wi_ssid
 block|{
 name|u_int16_t
 name|wi_len
 decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
-name|u_int16_t
-name|wi_id
+name|u_int8_t
+name|wi_ssid
 index|[
-literal|17
+literal|32
 index|]
 decl_stmt|;
 block|}
@@ -2144,18 +2013,15 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_nodename
+name|wi_nodename
 block|{
 name|u_int16_t
-name|wi_len
+name|wi_nodelen
 decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
-name|u_int16_t
+name|u_int8_t
 name|wi_nodename
 index|[
-literal|17
+literal|32
 index|]
 decl_stmt|;
 block|}
@@ -2168,20 +2034,33 @@ end_comment
 
 begin_struct
 struct|struct
-name|wi_ltv_mcast
+name|wi_mcast
 block|{
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
 name|struct
 name|ether_addr
 name|wi_mcast
 index|[
 literal|16
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Join request. (0xFCE2)  */
+end_comment
+
+begin_struct
+struct|struct
+name|wi_joinreq
+block|{
+name|struct
+name|ether_addr
+name|wi_bssid
+decl_stmt|;
+name|u_int16_t
+name|wi_chan
 decl_stmt|;
 block|}
 struct|;
@@ -2266,6 +2145,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WI_INFO_HOST_SCAN_RESULTS
+value|0xF104
+end_define
+
+begin_comment
+comment|/* Scan results */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WI_INFO_LINK_STAT
 value|0xF200
 end_define
@@ -2273,6 +2163,60 @@ end_define
 begin_comment
 comment|/* Link status */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_INFO_LINK_STAT_CONNECTED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_INFO_LINK_STAT_DISCONNECTED
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_INFO_LINK_STAT_AP_CHG
+value|3
+end_define
+
+begin_comment
+comment|/* AP Change */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_INFO_LINK_STAT_AP_OOR
+value|4
+end_define
+
+begin_comment
+comment|/* AP Out Of Range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_INFO_LINK_STAT_AP_INR
+value|5
+end_define
+
+begin_comment
+comment|/* AP In Range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_INFO_LINK_STAT_ASSOC_FAILED
+value|6
+end_define
 
 begin_define
 define|#
@@ -2285,8 +2229,231 @@ begin_comment
 comment|/* Association status */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WI_INFO_AUTH_REQUEST
+value|0xF202
+end_define
+
 begin_comment
-comment|/*  * Hermes transmit/receive frame structure  */
+comment|/* Authentication Request (AP) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_INFO_POWERSAVE_COUNT
+value|0xF203
+end_define
+
+begin_comment
+comment|/* PowerSave User Count (AP) */
+end_comment
+
+begin_struct
+struct|struct
+name|wi_assoc
+block|{
+name|u_int16_t
+name|wi_assoc_stat
+decl_stmt|;
+comment|/* Association Status */
+define|#
+directive|define
+name|ASSOC
+value|1
+define|#
+directive|define
+name|REASSOC
+value|2
+define|#
+directive|define
+name|DISASSOC
+value|3
+define|#
+directive|define
+name|ASSOCFAIL
+value|4
+define|#
+directive|define
+name|AUTHFAIL
+value|5
+name|u_int8_t
+name|wi_assoc_sta
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* Station Address */
+name|u_int8_t
+name|wi_assoc_osta
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* OLD Station Address */
+name|u_int16_t
+name|wi_assoc_reason
+decl_stmt|;
+comment|/* Reason */
+name|u_int16_t
+name|wi_assoc_reserve
+decl_stmt|;
+comment|/* Reserved */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Scan Results of Prism2 chip  */
+end_comment
+
+begin_struct
+struct|struct
+name|wi_scan_header
+block|{
+name|u_int16_t
+name|wi_reserve
+decl_stmt|;
+comment|/* future use */
+name|u_int16_t
+name|wi_reason
+decl_stmt|;
+comment|/* The reason this scan was initiated 						   1: Host initiated 						   2: Firmware initiated 						   3: Inquiry request from host */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wi_scan_data_p2
+block|{
+name|u_int16_t
+name|wi_chid
+decl_stmt|;
+comment|/* BSS Channel ID from Probe Res.(PR)*/
+name|u_int16_t
+name|wi_noise
+decl_stmt|;
+comment|/* Average Noise Level of the PR */
+name|u_int16_t
+name|wi_signal
+decl_stmt|;
+comment|/* Signal Level on the PR */
+name|u_int8_t
+name|wi_bssid
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* MACaddress of BSS responder from PR */
+name|u_int16_t
+name|wi_interval
+decl_stmt|;
+comment|/* BSS beacon interval */
+name|u_int16_t
+name|wi_capinfo
+decl_stmt|;
+comment|/* BSS Capability Information 						   IEEE Std 802.11(1997) ,see 7.3.1.4 */
+name|u_int16_t
+name|wi_namelen
+decl_stmt|;
+comment|/* Length of SSID strings */
+name|u_int8_t
+name|wi_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* SSID strings */
+name|u_int16_t
+name|wi_suprate
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* Supported Rates element from the PR 						   IEEE Std 802.11(1997) ,see 7.3.2.2 */
+name|u_int16_t
+name|wi_rate
+decl_stmt|;
+comment|/* Data rate of the PR */
+define|#
+directive|define
+name|WI_APRATE_1
+value|0x0A
+comment|/* 1 Mbps */
+define|#
+directive|define
+name|WI_APRATE_2
+value|0x14
+comment|/* 2 Mbps */
+define|#
+directive|define
+name|WI_APRATE_5
+value|0x37
+comment|/* 5.5 Mbps */
+define|#
+directive|define
+name|WI_APRATE_11
+value|0x6E
+comment|/* 11 Mbps */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Scan Results of Lucent chip  */
+end_comment
+
+begin_struct
+struct|struct
+name|wi_scan_data
+block|{
+name|u_int16_t
+name|wi_chid
+decl_stmt|;
+comment|/* BSS Channel ID from PR */
+name|u_int16_t
+name|wi_noise
+decl_stmt|;
+comment|/* Average Noise Level of the PR */
+name|u_int16_t
+name|wi_signal
+decl_stmt|;
+comment|/* Signal Level on the PR */
+name|u_int8_t
+name|wi_bssid
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* MACaddress of BSS responder from PR */
+name|u_int16_t
+name|wi_interval
+decl_stmt|;
+comment|/* BSS beacon interval */
+name|u_int16_t
+name|wi_capinfo
+decl_stmt|;
+comment|/* BSS Capability Information 						   IEEE Std 802.11(1997) ,see 7.3.1.4 */
+name|u_int16_t
+name|wi_namelen
+decl_stmt|;
+comment|/* Length of SSID strings */
+name|u_int8_t
+name|wi_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* SSID strings */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * transmit/receive frame structure  */
 end_comment
 
 begin_struct
@@ -2298,138 +2465,102 @@ name|wi_status
 decl_stmt|;
 comment|/* 0x00 */
 name|u_int16_t
-name|wi_rsvd0
+name|wi_rx_tstamp1
 decl_stmt|;
 comment|/* 0x02 */
 name|u_int16_t
-name|wi_rsvd1
+name|wi_rx_tstamp0
 decl_stmt|;
 comment|/* 0x04 */
-name|u_int16_t
-name|wi_q_info
+name|u_int8_t
+name|wi_rx_silence
 decl_stmt|;
 comment|/* 0x06 */
-name|u_int16_t
-name|wi_rsvd2
+name|u_int8_t
+name|wi_rx_signal
+decl_stmt|;
+comment|/* 0x07 */
+name|u_int8_t
+name|wi_rx_rate
 decl_stmt|;
 comment|/* 0x08 */
 name|u_int8_t
+name|wi_rx_flow
+decl_stmt|;
+comment|/* 0x09 */
+name|u_int8_t
 name|wi_tx_rtry
 decl_stmt|;
-comment|/* 0x0A */
+comment|/* 0x0a */
+comment|/* Prism2 AP Only */
 name|u_int8_t
 name|wi_tx_rate
 decl_stmt|;
-comment|/* 0x0B */
+comment|/* 0x0b */
+comment|/* Prism2 AP Only */
 name|u_int16_t
 name|wi_tx_ctl
 decl_stmt|;
-comment|/* 0x0C */
-name|u_int16_t
-name|wi_frame_ctl
+comment|/* 0x0c */
+name|struct
+name|ieee80211_frame_addr4
+name|wi_whdr
 decl_stmt|;
-comment|/* 0x0E */
-name|u_int16_t
-name|wi_id
-decl_stmt|;
-comment|/* 0x10 */
-name|u_int8_t
-name|wi_addr1
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 0x12 */
-name|u_int8_t
-name|wi_addr2
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 0x18 */
-name|u_int8_t
-name|wi_addr3
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 0x1E */
-name|u_int16_t
-name|wi_seq_ctl
-decl_stmt|;
-comment|/* 0x24 */
-name|u_int8_t
-name|wi_addr4
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 0x26 */
+comment|/* 0x0e */
 name|u_int16_t
 name|wi_dat_len
 decl_stmt|;
-comment|/* 0x2C */
-name|u_int8_t
-name|wi_dst_addr
-index|[
-literal|6
-index|]
+comment|/* 0x2c */
+name|struct
+name|ether_header
+name|wi_ehdr
 decl_stmt|;
-comment|/* 0x2E */
-name|u_int8_t
-name|wi_src_addr
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 0x34 */
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-comment|/* 0x3A */
-name|u_int16_t
-name|wi_dat
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* 0x3C */
-comment|/* SNAP header */
-name|u_int16_t
-name|wi_type
-decl_stmt|;
-comment|/* 0x42 */
+comment|/* 0x2e */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
+begin_comment
+comment|/* Tx Status Field */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|WI_802_3_OFFSET
-value|0x2E
+name|WI_TXSTAT_RET_ERR
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|WI_802_11_OFFSET
-value|0x44
+name|WI_TXSTAT_AGED_ERR
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|WI_802_11_OFFSET_RAW
-value|0x3C
+name|WI_TXSTAT_DISCONNECT
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|WI_802_11_OFFSET_HDR
-value|0x0E
+name|WI_TXSTAT_FORM_ERR
+value|0x0008
 end_define
+
+begin_comment
+comment|/* Rx Status Field */
+end_comment
 
 begin_define
 define|#
@@ -2457,6 +2588,20 @@ define|#
 directive|define
 name|WI_STAT_MAC_PORT
 value|0x0700
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_STAT_PCF
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RXSTAT_MSG_TYPE
+value|0xE000
 end_define
 
 begin_define
@@ -2506,34 +2651,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WI_RXSTAT_MSG_TYPE
-value|0xE000
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_ENC_TX_802_3
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_ENC_TX_802_11
-value|0x11
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_ENC_TX_MGMT
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
 name|WI_ENC_TX_E_II
 value|0x0E
 end_define
@@ -2552,18 +2669,15 @@ name|WI_ENC_TX_TUNNEL
 value|0xF8
 end_define
 
-begin_define
-define|#
-directive|define
-name|WI_TXCNTL_MACPORT
-value|0x00FF
-end_define
+begin_comment
+comment|/* TxControl Field (enhanced) */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|WI_TXCNTL_STRUCTTYPE
-value|0xFF00
+name|WI_TXCNTL_TX_OK
+value|0x0002
 end_define
 
 begin_define
@@ -2576,8 +2690,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_TXCNTL_TX_OK
-value|0x0002
+name|WI_TXCNTL_STRUCT_TYPE
+value|0x0018
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_ENC_TX_802_3
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_ENC_TX_802_11
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_TXCNTL_ALTRTRY
+value|0x0020
 end_define
 
 begin_define
@@ -2585,67 +2720,6 @@ define|#
 directive|define
 name|WI_TXCNTL_NOCRYPT
 value|0x0080
-end_define
-
-begin_comment
-comment|/*  * SNAP (sub-network access protocol) constants for transmission  * of IP datagrams over IEEE 802 networks, taken from RFC1042.  * We need these for the LLC/SNAP header fields in the TX/RX frame  * structure.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_SNAP_K1
-value|0xaa
-end_define
-
-begin_comment
-comment|/* assigned global SAP for SNAP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_SNAP_K2
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_SNAP_CONTROL
-value|0x03
-end_define
-
-begin_comment
-comment|/* unnumbered information format */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_SNAP_WORD0
-value|(WI_SNAP_K1 | (WI_SNAP_K1<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_SNAP_WORD1
-value|(WI_SNAP_K2 | (WI_SNAP_CONTROL<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_SNAPHDR_LEN
-value|0x6
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_FCS_LEN
-value|0x4
 end_define
 
 begin_comment

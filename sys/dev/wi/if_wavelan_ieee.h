@@ -139,6 +139,20 @@ name|WI_RID_MIF
 value|0x0700
 end_define
 
+begin_define
+define|#
+directive|define
+name|WI_RID_SCAN_APS
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_READ_APS
+value|0x0900
+end_define
+
 begin_struct
 struct|struct
 name|wi_80211_hdr
@@ -551,12 +565,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
 begin_struct
 struct|struct
 name|wi_counters
@@ -627,11 +635,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Network parameters, static configuration entities.  */
@@ -1057,9 +1060,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_RID_OWN_BEACON_INT
+value|0xFC33
+end_define
+
+begin_comment
+comment|/* beacon xmit time for BSS creation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WI_RID_CNF_DBM_ADJUST
 value|0xFC46
 end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_DBM_ADJUST
+value|0xFC46
+end_define
+
+begin_comment
+comment|/* RSSI - WI_RID_DBM_ADJUST ~ dBm */
+end_comment
 
 begin_define
 define|#
@@ -1313,12 +1338,6 @@ name|WI_RID_TICK_TIME
 value|0xFCE0
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
 begin_struct
 struct|struct
 name|wi_key
@@ -1336,6 +1355,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|WI_NLTV_KEYS
+value|4
+end_define
+
 begin_struct
 struct|struct
 name|wi_ltv_keys
@@ -1350,17 +1376,12 @@ name|struct
 name|wi_key
 name|wi_keys
 index|[
-literal|4
+name|WI_NLTV_KEYS
 index|]
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * NIC information  */
@@ -1635,12 +1656,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WI_RID_OWN_BEACON_INT
+name|WI_RID_CUR_BEACON_INT
 value|0xFD45
 end_define
 
 begin_comment
-comment|/* beacon xmit time for BSS creation */
+comment|/* current beacon interval */
 end_comment
 
 begin_define
@@ -1827,6 +1848,162 @@ end_define
 begin_comment
 comment|/* point coordination func cap */
 end_comment
+
+begin_comment
+comment|/*  * Scan Information  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_RID_BCAST_SCAN_REQ
+value|0xFCAB
+end_define
+
+begin_comment
+comment|/* Broadcast Scan request (Symbol) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSCAN_5SEC
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSCAN_ONETIME
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSCAN_PASSIVE
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSCAN_BCAST
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_SCAN_REQ
+value|0xFCE1
+end_define
+
+begin_comment
+comment|/* Scan request (STA only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_RID_JOIN_REQ
+value|0xFCE2
+end_define
+
+begin_comment
+comment|/* Join request (STA only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_RID_AUTH_STATION
+value|0xFCE3
+end_define
+
+begin_comment
+comment|/* Authenticates Station (AP) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_RID_CHANNEL_REQ
+value|0xFCE4
+end_define
+
+begin_comment
+comment|/* Channel Information Request (AP) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_RID_SCAN_RESULTS
+value|0xFD88
+end_define
+
+begin_comment
+comment|/* Scan Results Table */
+end_comment
+
+begin_struct
+struct|struct
+name|wi_apinfo
+block|{
+name|int
+name|scanreason
+decl_stmt|;
+comment|/* ScanReason */
+name|char
+name|bssid
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* BSSID (mac address) */
+name|int
+name|channel
+decl_stmt|;
+comment|/* Channel */
+name|int
+name|signal
+decl_stmt|;
+comment|/* Signal level */
+name|int
+name|noise
+decl_stmt|;
+comment|/* Average Noise Level*/
+name|int
+name|quality
+decl_stmt|;
+comment|/* Quality */
+name|int
+name|namelen
+decl_stmt|;
+comment|/* Length of SSID string */
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* SSID string */
+name|int
+name|capinfo
+decl_stmt|;
+comment|/* Capability info. */
+name|int
+name|interval
+decl_stmt|;
+comment|/* BSS Beacon Interval */
+name|int
+name|rate
+decl_stmt|;
+comment|/* Data Rate */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Modem information  */

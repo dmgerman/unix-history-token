@@ -143,12 +143,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/wi/wi_hostap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/wi/if_wivar.h>
 end_include
 
@@ -261,7 +255,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|wi_generic_detach
+name|wi_detach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -321,7 +315,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|wi_generic_detach
+name|wi_detach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -400,6 +394,22 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|if_wi
+argument_list|,
+name|wlan
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1090,7 +1100,7 @@ endif|#
 directive|endif
 return|return
 operator|(
-name|wi_generic_attach
+name|wi_attach
 argument_list|(
 name|dev
 argument_list|)
