@@ -1707,7 +1707,7 @@ modifier|*
 modifier|*
 name|isp_xflist
 decl_stmt|;
-comment|/* 	 * request/result queue pointers and dma handles for them. 	 */
+comment|/* 	 * request/result queue pointers and DMA handles for them. 	 */
 name|caddr_t
 name|isp_rquest
 decl_stmt|;
