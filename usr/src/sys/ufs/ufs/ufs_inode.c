@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	7.38 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1076,6 +1076,8 @@ begin_macro
 name|ufs_inactive
 argument_list|(
 argument|vp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1084,6 +1086,14 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
