@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.10 1995/11/16 11:48:08 bde Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.11 1996/01/05 18:31:43 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -1831,7 +1831,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"mountmsdosfs(): root directory is not a multiple of the clustersize in length\n"
+literal|"mountmsdosfs(): Warning: root directory is not a multiple of the clustersize in length\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute mask and shift value for isolating cluster relative byte 	 * offsets and cluster numbers from a file offset. 	 */
