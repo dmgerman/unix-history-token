@@ -3816,7 +3816,7 @@ name|MIB4
 parameter_list|(
 name|m
 parameter_list|)
-value|ray_mib_4_default.##m
+value|ray_mib_4_default.m
 name|MIB4
 argument_list|(
 name|mib_net_type
@@ -4227,7 +4227,7 @@ name|MIB5
 parameter_list|(
 name|m
 parameter_list|)
-value|ray_mib_5_default.##m
+value|ray_mib_5_default.m
 name|MIB5
 argument_list|(
 name|mib_net_type
@@ -9992,7 +9992,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|(RAY_DEBUG& RAY_DBG_MGT)
+comment|/* (RAY_DEBUG& RAY_DBG_MGT) */
 break|break;
 case|case
 name|IEEE80211_ELEMID_IBSSPARMS
