@@ -631,11 +631,12 @@ modifier|*
 name|lp
 decl_stmt|;
 name|int
-name|irq
-decl_stmt|,
 name|zero
 init|=
 literal|0
+decl_stmt|;
+name|u_long
+name|irq
 decl_stmt|;
 name|lp
 operator|=

@@ -1281,8 +1281,6 @@ name|zero
 init|=
 literal|0
 decl_stmt|,
-name|irq
-decl_stmt|,
 name|unit
 init|=
 name|device_get_unit
@@ -1292,6 +1290,9 @@ argument_list|)
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|u_long
+name|irq
 decl_stmt|;
 name|sc
 operator|->
@@ -3345,6 +3346,8 @@ argument_list|)
 decl_stmt|;
 name|int
 name|sts
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i

@@ -670,8 +670,6 @@ name|type
 decl_stmt|;
 name|va_list
 name|p_list
-init|=
-literal|0
 decl_stmt|;
 name|va_start
 argument_list|(
