@@ -274,43 +274,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static void pmap_break(void) { }
-comment|/* #define PMAP_DEBUG_VA(va) if ((va) == 0x120058000) pmap_break(); else */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PMAP_DEBUG_VA
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PMAP_DEBUG_VA
-parameter_list|(
-name|va
-parameter_list|)
-value|do {} while(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Get PDEs and PTEs for user/kernel address space  */
 end_comment
@@ -5367,11 +5330,6 @@ decl_stmt|;
 name|int
 name|wasvalid
 decl_stmt|;
-name|PMAP_DEBUG_VA
-argument_list|(
-name|tva
-argument_list|)
-expr_stmt|;
 name|pte
 operator|=
 name|pmap_find_kpte
@@ -5460,11 +5418,6 @@ name|i
 operator|++
 control|)
 block|{
-name|PMAP_DEBUG_VA
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
 name|pte
 operator|=
 name|pmap_find_kpte
@@ -6758,12 +6711,6 @@ argument_list|,
 name|pte
 argument_list|)
 condition|)
-block|{
-name|PMAP_DEBUG_VA
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
 name|pmap_invalidate_page
 argument_list|(
 name|pmap
@@ -6771,7 +6718,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-block|}
 name|pmap_install
 argument_list|(
 name|oldpmap
@@ -6835,11 +6781,6 @@ operator|->
 name|pte_p
 condition|)
 return|return;
-name|PMAP_DEBUG_VA
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Enter on the PV list since its part of our managed memory. 	 */
 name|pmap_insert_entry
 argument_list|(

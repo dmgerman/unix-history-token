@@ -256,43 +256,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static void pmap_break(void) { }
-comment|/* #define PMAP_DEBUG_VA(va) if ((va) == 0x120058000) pmap_break(); else */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PMAP_DEBUG_VA
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PMAP_DEBUG_VA
-parameter_list|(
-name|va
-parameter_list|)
-value|do {} while(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Some macros for manipulating virtual addresses  */
 end_comment
@@ -2719,11 +2682,6 @@ operator|=
 operator|*
 name|pte
 expr_stmt|;
-name|PMAP_DEBUG_VA
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
 operator|*
 name|pte
 operator|=
@@ -2788,11 +2746,6 @@ block|{
 name|pte
 operator|=
 name|vtopte
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
-name|PMAP_DEBUG_VA
 argument_list|(
 name|va
 argument_list|)
@@ -2869,11 +2822,6 @@ operator|=
 operator|*
 name|pte
 expr_stmt|;
-name|PMAP_DEBUG_VA
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
 operator|*
 name|pte
 operator|=
@@ -2914,11 +2862,6 @@ decl_stmt|;
 name|pte
 operator|=
 name|vtopte
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
-name|PMAP_DEBUG_VA
 argument_list|(
 name|va
 argument_list|)
@@ -7190,11 +7133,6 @@ operator|=
 operator|*
 name|ptq
 expr_stmt|;
-name|PMAP_DEBUG_VA
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
 operator|*
 name|ptq
 operator|=
@@ -7659,13 +7597,6 @@ name|tpte
 operator|=
 operator|*
 name|pte
-expr_stmt|;
-name|PMAP_DEBUG_VA
-argument_list|(
-name|pv
-operator|->
-name|pv_va
-argument_list|)
 expr_stmt|;
 operator|*
 name|pte
@@ -8527,11 +8458,6 @@ operator|!=
 name|newpte
 condition|)
 block|{
-name|PMAP_DEBUG_VA
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
 operator|*
 name|pte
 operator|=
@@ -8770,11 +8696,6 @@ literal|0
 return|;
 block|}
 comment|/* 	 * Enter on the PV list if part of our managed memory. Note that we 	 * raise IPL while manipulating pv_table since pmap_enter can be 	 * called at interrupt time. 	 */
-name|PMAP_DEBUG_VA
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
 name|pmap_insert_entry
 argument_list|(
 name|pmap
@@ -10359,13 +10280,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|PMAP_DEBUG_VA
-argument_list|(
-name|pv
-operator|->
-name|pv_va
-argument_list|)
-expr_stmt|;
 operator|*
 name|pte
 operator|=
