@@ -719,11 +719,6 @@ name|int
 modifier|*
 name|newref
 decl_stmt|;
-name|vop_t
-modifier|*
-modifier|*
-name|opv_desc_vector
-decl_stmt|;
 name|struct
 name|vnodeop_desc
 modifier|*
@@ -814,15 +809,6 @@ name|vnodeopv_num
 operator|++
 expr_stmt|;
 comment|/* See if we have turned up a new vnode op desc */
-name|opv_desc_vector
-operator|=
-operator|*
-operator|(
-name|opv
-operator|->
-name|opv_desc_vector_p
-operator|)
-expr_stmt|;
 for|for
 control|(
 name|i
