@@ -217,15 +217,6 @@ begin_comment
 comment|/* Fore-required data alignment */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-end_if
-
 begin_comment
 comment|/*  * Strategy 1 Small - mbuf  * Strategy 1 Large - cluster mbuf  *  * XXX buffer controls - the RECV_MAX_SEGS calculation comes out wrong  * using the true buffer size values if the CP really only does full-cell  * filling of a particular buffer - we must clarify this...it also appears  * the minimum buffer size is 64, even if the CP can only fit in 1 cell.  */
 end_comment
@@ -240,14 +231,6 @@ end_define
 begin_comment
 comment|/* XXX sizeof(Buf_handle) */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|199103
-end_if
 
 begin_undef
 undef|#
@@ -306,72 +289,9 @@ begin_comment
 comment|/* Buffer-to-handle offset */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BUF1_SM_HOFF
-value|(MMINOFF)
-end_define
-
-begin_comment
-comment|/* Buffer-to-handle offset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUF1_SM_HDR
-value|(MMINOFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUF1_SM_LEN
-value|(MLEN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUF1_LG_HOFF
-value|(MMINOFF + 16)
-end_define
-
-begin_comment
-comment|/* Buffer-to-handle offset */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * BUF1_SM_DOFF - CP data offset into buffer data space  * BUF1_SM_SIZE - Buffer size  *  * These should be defined as follows, but we need compile-time constants:  *  *	#define	BUF1_SM_DOFF (roundup(BUF1_SM_HOFF + SIZEOF_Buf_handle,   *			BUF_DATA_ALIGN) - BUF1_SM_HDR)  *	#define	BUF1_SM_SIZE	MAX(BUF1_SM_LEN - BUF1_SM_DOFF, 64)  *  */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-operator|(
-name|BSD
-operator|>=
-literal|199103
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|FORE_PCI
-argument_list|)
-operator|)
-end_if
 
 begin_define
 define|#
@@ -386,93 +306,6 @@ directive|define
 name|BUF1_SM_SIZE
 value|(BUF1_SM_LEN - BUF1_SM_DOFF)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-operator|(
-name|BSD
-operator|<
-literal|199103
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|FORE_SBUS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|sun4c
-argument_list|)
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BUF1_SM_DOFF
-value|(BUF_DATA_ALIGN - BUF1_SM_HDR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUF1_SM_SIZE
-value|(BUF1_SM_LEN - BUF1_SM_DOFF)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-operator|(
-name|BSD
-operator|<
-literal|199103
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|FORE_SBUS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|sun4m
-argument_list|)
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BUF1_SM_DOFF
-value|(BUF_DATA_ALIGN - BUF1_SM_HDR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUF1_SM_SIZE
-value|(64)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -560,15 +393,6 @@ end_define
 
 begin_comment
 comment|/* Buffers in each supply queue entry */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(BSD) */
 end_comment
 
 begin_endif
