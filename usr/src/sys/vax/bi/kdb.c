@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)kdb.c	7.1 (Berkeley) %G%  *  * KDB50/MSCP device driver  */
+comment|/*  *	@(#)kdb.c	7.2 (Berkeley) %G%  *  * KDB50/MSCP device driver  */
 end_comment
 
 begin_comment
@@ -1278,11 +1278,11 @@ argument_list|(
 expr|struct
 name|pte
 argument_list|)
-argument_list|)
-operator|,
+argument_list|,
 name|M_DEVBUF
-operator|,
+argument_list|,
 name|M_NOWAIT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
