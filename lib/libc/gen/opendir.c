@@ -419,7 +419,7 @@ name|sfb
 operator|.
 name|f_fstypename
 argument_list|,
-literal|"union"
+literal|"unionfs"
 argument_list|)
 operator|||
 operator|(
