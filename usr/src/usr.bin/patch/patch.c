@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)patch.c	5.7 (Berkeley) %G%"
+literal|"@(#)patch.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7890,6 +7890,16 @@ name|p_end
 operator|-
 name|repl_beginning
 expr_stmt|;
+name|p_char
+index|[
+name|p_end
+operator|+
+literal|1
+index|]
+operator|=
+literal|'^'
+expr_stmt|;
+comment|/* add a stopper for apply_hunk */
 block|}
 elseif|else
 if|if
@@ -8490,15 +8500,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p_end
-operator|!=
-name|p_ptrn_lines
-operator|+
-literal|1
-condition|)
-block|{
 name|context
 operator|++
 expr_stmt|;
@@ -8509,7 +8510,6 @@ index|]
 operator|=
 literal|' '
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|' '
@@ -8693,6 +8693,16 @@ name|p_end
 operator|-
 name|repl_beginning
 expr_stmt|;
+name|p_char
+index|[
+name|p_end
+operator|+
+literal|1
+index|]
+operator|=
+literal|'^'
+expr_stmt|;
+comment|/* add a stopper for apply_hunk */
 block|}
 else|else
 block|{
