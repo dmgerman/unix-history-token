@@ -503,6 +503,51 @@ name|sa_quirks
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* units are bits 4-7, 16-21 (1024 units) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAUNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+define|\
+value|(((minor(DEV)& 0xF0)>> 4) |  ((minor(DEV)& 0x3f0000)>> 16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAMODE
+parameter_list|(
+name|z
+parameter_list|)
+value|((minor(z)& 0x3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SADENSITY
+parameter_list|(
+name|z
+parameter_list|)
+value|(((minor(z)>> 2)& 0x3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_IS_CTRL
+parameter_list|(
+name|z
+parameter_list|)
+value|(minor(z)& (1<< 29))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -552,7 +597,7 @@ parameter_list|,
 name|access
 parameter_list|)
 define|\
-value|((ctl<< 29) | ((unit& 0x3f0)<< 16) | (unit& 0xf) | \ 	(mode<< 2) | access)
+value|((ctl<< 29) | ((unit& 0x3f0)<< 16) | ((unit& 0xf)<< 4) | \ 	(mode<< 0x2) | (access& 0x3))
 end_define
 
 begin_define
@@ -1558,51 +1603,6 @@ name|sadriver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* units are bits 4-7, 16-21 (1024 units) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAUNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-define|\
-value|(((minor(DEV)& 0xF0)>> 4) |  ((minor(DEV)& 0x3f0000)>> 16))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAMODE
-parameter_list|(
-name|z
-parameter_list|)
-value|((minor(z)& 0x3))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SADENSITY
-parameter_list|(
-name|z
-parameter_list|)
-value|(((minor(z)>> 2)& 0x3))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SA_IS_CTRL
-parameter_list|(
-name|z
-parameter_list|)
-value|(minor(z)& (1<< 29))
-end_define
 
 begin_comment
 comment|/* For 2.2-stable support */
@@ -6010,7 +6010,7 @@ index|[
 name|i
 index|]
 operator|.
-name|nr_dev
+name|er_dev
 operator|=
 name|make_dev
 argument_list|(
