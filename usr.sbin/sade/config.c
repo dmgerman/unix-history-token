@@ -1697,13 +1697,14 @@ block|{
 name|Boolean
 name|name_set
 init|=
-operator|(
-name|Boolean
-operator|)
 name|variable_get
 argument_list|(
 name|VAR_NAMESERVER
 argument_list|)
+condition|?
+literal|1
+else|:
+literal|0
 decl_stmt|;
 if|if
 condition|(

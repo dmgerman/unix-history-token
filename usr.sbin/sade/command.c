@@ -768,6 +768,10 @@ name|msgNotify
 argument_list|(
 literal|"Doing %s"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|commandStack
 index|[
 name|i
@@ -813,6 +817,10 @@ name|msgDebug
 argument_list|(
 literal|"Command `%s' returns status %d\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|commandStack
 index|[
 name|i
@@ -831,7 +839,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* It's a function pointer - call it with the key and the data */
+comment|/* It's a function pointer - call it with the key and                    the data */
 name|func
 operator|=
 operator|(
@@ -856,7 +864,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"%x: Execute(%s, %s)"
+literal|"%p: Execute(%s, %s)"
 argument_list|,
 name|func
 argument_list|,
@@ -867,6 +875,10 @@ index|]
 operator|->
 name|key
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|commandStack
 index|[
 name|i
@@ -914,7 +926,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"Function @ %x returns status %d\n"
+literal|"Function @ %p returns status %d\n"
 argument_list|,
 name|commandStack
 index|[
