@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	1.11 %G%"
+literal|"@(#)cmd3.c	1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1494,6 +1494,13 @@ operator|->
 name|m_flag
 operator||=
 name|MPRESERVE
+expr_stmt|;
+name|mp
+operator|->
+name|m_flag
+operator|&=
+operator|~
+name|MBOX
 expr_stmt|;
 name|dot
 operator|=
