@@ -2033,17 +2033,21 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+operator|(
 name|so
 operator|->
 name|so_state
 operator|&
 name|SS_NOFDREF
-condition|)
-name|panic
-argument_list|(
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
 literal|"soclose: NOFDREF"
+operator|)
 argument_list|)
 expr_stmt|;
 name|so
