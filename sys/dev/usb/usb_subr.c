@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.98 2002/02/20 20:30:13 christos Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.99 2002/07/11 21:14:34 augustss Exp $	*/
 end_comment
 
 begin_comment
 comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/* Also already have from NetBSD:  *	$NetBSD: usb_subr.c,v 1.102 2003/01/01 16:21:50 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.103 2003/01/10 11:19:13 augustss Exp $  */
 end_comment
 
 begin_comment
