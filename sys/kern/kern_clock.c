@@ -259,30 +259,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|long
-name|tk_cancc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|tk_nin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|tk_nout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|tk_rawcc
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Clock handling routines.  *  * This code is written to operate with two timers that run independently of  * each other.  *  * The main timer, running hz times per second, is used to trigger interval  * timers, timeouts and rescheduling as needed.  *  * The second timer handles kernel and user profiling,  * and does resource use estimation.  If the second timer is programmable,  * it is randomized to avoid aliasing between the two clocks.  For example,  * the randomization prevents an adversary from always giving up the cpu  * just before its quantum expires.  Otherwise, it would never accumulate  * cpu ticks.  The mean frequency of the second timer is stathz.  *  * If no second timer exists, stathz will be zero; in this case we drive  * profiling and statistics off the main clock.  This WILL NOT be accurate;  * do not do it unless absolutely necessary.  *  * The statistics clock may (or may not) be run at a higher rate while  * profiling.  This profile clock runs at profhz.  We require that profhz  * be an integral multiple of stathz.  *  * If the statistics clock is running fast, it must be divided by the ratio  * profhz/stathz for statistics.  (For profiling, every tick counts.)  *  * Time-of-day is maintained using a "timecounter", which may or may  * not be related to the hardware generating the above mentioned  * interrupts.  */
 end_comment
