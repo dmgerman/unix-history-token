@@ -4150,9 +4150,14 @@ decl_stmt|;
 name|u_int32_t
 name|testval
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_ENABLE_IO_MODES
 name|u_int16_t
 name|cmd
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|type
 decl_stmt|;
