@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fmt.c	8.4 (Berkeley) %G%"
+literal|"@(#)fmt.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,6 +227,15 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dst
+operator|!=
+name|buf
+condition|)
+operator|--
+name|dst
+expr_stmt|;
 operator|*
 name|dst
 operator|=
