@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: wc.c,v 1.6 1997/02/22 19:57:44 peter Exp $"
+literal|"$Id: wc.c,v 1.7 1997/03/29 04:33:57 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -569,6 +569,7 @@ condition|)
 block|{
 while|while
 condition|(
+operator|(
 name|len
 operator|=
 name|read
@@ -579,6 +580,7 @@ name|buf
 argument_list|,
 name|MAXBSIZE
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -783,6 +785,7 @@ name|gotsp
 operator|=
 literal|1
 init|;
+operator|(
 name|len
 operator|=
 name|read
@@ -793,6 +796,7 @@ name|buf
 argument_list|,
 name|MAXBSIZE
 argument_list|)
+operator|)
 condition|;
 control|)
 block|{
@@ -971,7 +975,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: wc [-clw] [files]\n"
+literal|"usage: wc [-clw] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
