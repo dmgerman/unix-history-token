@@ -2210,38 +2210,9 @@ name|struct
 name|callout_handle
 name|my_stat_ch
 decl_stmt|;
-comment|/* Add by Surfer 2001/12/2 */
-name|struct
-name|mtx
-name|my_mtx
-decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* Add by Surfer 2001/12/2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MY_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->my_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MY_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->my_mtx)
-end_define
 
 begin_comment
 comment|/*  * register space access macros  */
