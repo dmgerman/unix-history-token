@@ -889,7 +889,7 @@ switch|switch
 condition|(
 name|pid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 condition|)
 block|{
@@ -902,7 +902,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"fork"
+literal|"vfork"
 argument_list|)
 expr_stmt|;
 case|case
@@ -930,13 +930,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|err
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|shell
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
