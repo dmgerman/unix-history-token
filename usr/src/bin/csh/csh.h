@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -713,6 +713,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Character pid for $$ */
+end_comment
+
+begin_decl_stmt
+name|int
+name|backpid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pid of the last background process */
 end_comment
 
 begin_decl_stmt
@@ -1798,6 +1808,9 @@ name|Char
 modifier|*
 modifier|*
 name|alvec
+decl_stmt|,
+modifier|*
+name|alvecp
 decl_stmt|;
 end_decl_stmt
 
