@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrey A. Chernov.  *  * Fixed and further modified on 5-Sep-1995 by Jukka Ukkonen<jau@funet.fi>.  *  * 11-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              A couple of further fixes to my own earlier "fixes".  *  * 18-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              Added an ability to specify addresses relative to the  *              beginning of a track. This is in fact a variation of  *              doing the simple play_msf() call.  *  * 11-Oct-1995: Serge V.Vakulenko<vak@cronyx.ru>  *              New eject algorithm.  *              Some code style reformatting.  *  * $Id: cdcontrol.c,v 1.11 1996/02/09 00:22:17 ache Exp $  */
+comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrey A. Chernov.  *  * Fixed and further modified on 5-Sep-1995 by Jukka Ukkonen<jau@funet.fi>.  *  * 11-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              A couple of further fixes to my own earlier "fixes".  *  * 18-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              Added an ability to specify addresses relative to the  *              beginning of a track. This is in fact a variation of  *              doing the simple play_msf() call.  *  * 11-Oct-1995: Serge V.Vakulenko<vak@cronyx.ru>  *              New eject algorithm.  *              Some code style reformatting.  *  * $Id: cdcontrol.c,v 1.12 1996/02/09 01:16:23 ache Exp $  */
 end_comment
 
 begin_include
@@ -4248,6 +4248,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ss
+operator|.
+name|data
+operator|->
+name|what
+operator|.
+name|media_catalog
+operator|.
+name|mc_valid
+operator|&&
 name|ss
 operator|.
 name|data
