@@ -1000,7 +1000,7 @@ name|ip6s_delivered
 operator|--
 expr_stmt|;
 block|}
-name|INP_INFO_RLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|ripcbinfo
