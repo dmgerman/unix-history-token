@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scroll.c	5.11 (Berkeley) %G%"
+literal|"@(#)scroll.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"scroll: (%0.2o)\n"
 argument_list|,
@@ -151,7 +151,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"scroll: win == curscr\n"
 argument_list|)

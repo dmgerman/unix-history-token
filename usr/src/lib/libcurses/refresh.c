@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.42 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,7 +375,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"wrefresh: (%0.2o): curwin = %d\n"
 argument_list|,
@@ -384,7 +384,7 @@ argument_list|,
 name|curwin
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"wrefresh: \tfirstch\tlastch\n"
 argument_list|)
@@ -481,7 +481,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"#####################################\n"
 argument_list|)
@@ -502,14 +502,14 @@ name|i
 operator|++
 control|)
 block|{
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"C: %d:"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|" 0x%x \n"
 argument_list|,
@@ -538,7 +538,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%c"
 argument_list|,
@@ -557,7 +557,7 @@ operator|.
 name|ch
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -577,7 +577,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%x"
 argument_list|,
@@ -596,19 +596,19 @@ operator|.
 name|attr
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"W: %d:"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|" 0x%x \n"
 argument_list|,
@@ -622,7 +622,7 @@ operator|->
 name|hash
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|" 0x%x "
 argument_list|,
@@ -651,7 +651,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%c"
 argument_list|,
@@ -670,7 +670,7 @@ operator|.
 name|ch
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -690,7 +690,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%x"
 argument_list|,
@@ -709,7 +709,7 @@ operator|.
 name|attr
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -738,7 +738,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%d\t%d\t%d\n"
 argument_list|,
@@ -920,7 +920,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"wrefresh: line %d notdirty \n"
 argument_list|,
@@ -947,7 +947,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\t%d\t%d\n"
 argument_list|,
@@ -978,7 +978,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"refresh: ly=%d, lx=%d\n"
 argument_list|,
@@ -1670,7 +1670,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makech: 1: wx = %d, ly= %d, lx = %d, newy = %d, newx = %d, force =%d\n"
 argument_list|,
@@ -1823,7 +1823,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makech: clsp = %d, nlsp = %d\n"
 argument_list|,
@@ -1867,7 +1867,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makech: using CE\n"
 argument_list|)
@@ -2250,7 +2250,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makech: putchar(%c)\n"
 argument_list|,
@@ -2297,7 +2297,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makech: 2: wx = %d, lx = %d\n"
 argument_list|,
@@ -2388,7 +2388,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makech: 3: wx = %d, lx = %d\n"
 argument_list|,
@@ -2908,7 +2908,7 @@ return|return;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"quickch:bsize=%d,starts=%d,startw=%d,curw=%d,curs=%d,top=%d,bot=%d\n"
 argument_list|,
@@ -2961,7 +2961,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"#####################################\n"
 argument_list|)
@@ -2982,14 +2982,14 @@ name|i
 operator|++
 control|)
 block|{
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"C: %d:"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|" 0x%x \n"
 argument_list|,
@@ -3018,7 +3018,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%c"
 argument_list|,
@@ -3037,7 +3037,7 @@ operator|.
 name|ch
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -3057,7 +3057,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%x"
 argument_list|,
@@ -3076,19 +3076,19 @@ operator|.
 name|attr
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"W: %d:"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|" 0x%x \n"
 argument_list|,
@@ -3102,7 +3102,7 @@ operator|->
 name|hash
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|" 0x%x "
 argument_list|,
@@ -3131,7 +3131,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%c"
 argument_list|,
@@ -3150,7 +3150,7 @@ operator|.
 name|ch
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -3170,7 +3170,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%x"
 argument_list|,
@@ -3189,7 +3189,7 @@ operator|.
 name|attr
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -3337,7 +3337,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"quickch: n=%d startw=%d curw=%d i = %d target=%d "
 argument_list|,
@@ -3378,7 +3378,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"-- notdirty"
 argument_list|)
@@ -3481,7 +3481,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"-- blanked out: dirty"
 argument_list|)
@@ -3534,7 +3534,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|" -- blank line already: dirty"
 argument_list|)
@@ -3548,7 +3548,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|" -- dirty"
 argument_list|)
@@ -3576,7 +3576,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -3625,7 +3625,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n"
 argument_list|)
@@ -3646,7 +3646,7 @@ name|i
 operator|++
 control|)
 block|{
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"C: %d:"
 argument_list|,
@@ -3668,7 +3668,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%c"
 argument_list|,
@@ -3687,12 +3687,12 @@ operator|.
 name|ch
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"W: %d:"
 argument_list|,
@@ -3714,7 +3714,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%c"
 argument_list|,
@@ -3733,7 +3733,7 @@ operator|.
 name|ch
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\n"
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)erase.c	5.11 (Berkeley) %G%"
+literal|"@(#)erase.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"werase: (%0.2o)\n"
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clrtoeol.c	5.11 (Berkeley) %G%"
+literal|"@(#)clrtoeol.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,7 +226,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"CLRTOEOL: minx = %d, maxx = %d, firstch = %d, lastch = %d\n"
 argument_list|,

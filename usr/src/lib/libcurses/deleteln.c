@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deleteln.c	5.16 (Berkeley) %G%"
+literal|"@(#)deleteln.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"deleteln: (%0.2o)\n"
 argument_list|,

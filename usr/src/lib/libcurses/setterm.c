@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.18 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,7 +437,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"setterm: (\"%s\")\nLINES = %d, COLS = %d\n"
 argument_list|,
@@ -493,7 +493,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"setterm: tty = %s\n"
 argument_list|,
@@ -625,7 +625,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"setterm: LINES = %d, COLS = %d\n"
 argument_list|,
@@ -838,7 +838,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"2.2s = %s\n"
 argument_list|,
@@ -917,7 +917,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"2.2s = %s"
 argument_list|,
@@ -966,7 +966,7 @@ condition|;
 name|cp
 operator|++
 control|)
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -977,7 +977,7 @@ name|cp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"\"\n"
 argument_list|)

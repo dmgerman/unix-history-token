@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.18 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,7 +159,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"mvcur: moving cursor from (%d, %d) to (%d, %d)\n"
 argument_list|,

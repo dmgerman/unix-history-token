@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.34 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -2330,7 +2330,7 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|__TRACE
+name|__CTRACE
 name|__P
 argument_list|(
 operator|(

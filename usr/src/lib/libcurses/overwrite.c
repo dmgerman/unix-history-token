@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)overwrite.c	5.13 (Berkeley) %G%"
+literal|"@(#)overwrite.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,7 +87,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"overwrite: (%0.2o, %0.2o);\n"
 argument_list|,
@@ -184,7 +184,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"overwrite: from (%d, %d) to (%d, %d)\n"
 argument_list|,

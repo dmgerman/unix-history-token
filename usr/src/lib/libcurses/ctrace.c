@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctrace.c	5.4 (Berkeley) %G%"
+literal|"@(#)ctrace.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +103,7 @@ name|void
 if|#
 directive|if
 name|__STDC__
-name|__TRACE
+name|__CTRACE
 parameter_list|(
 specifier|const
 name|char
@@ -114,7 +114,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|__TRACE
+function|__CTRACE
 parameter_list|(
 name|fmt
 parameter_list|,

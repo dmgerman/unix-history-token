@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newwin.c	5.16 (Berkeley) %G%"
+literal|"@(#)newwin.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,7 +202,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"newwin: win->ch_off = %d\n"
 argument_list|,
@@ -355,7 +355,7 @@ comment|/* Make sure window fits inside the original one. */
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"subwin: (%0.2o, %d, %d, %d, %d)\n"
 argument_list|,
@@ -669,7 +669,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"__set_subwin: win->ch_off = %d\n"
 argument_list|,
@@ -733,7 +733,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makenew: (%d, %d, %d, %d)\n"
 argument_list|,
@@ -773,7 +773,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makenew: nl = %d\n"
 argument_list|,
@@ -987,7 +987,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makenew: nc = %d\n"
 argument_list|,
@@ -1044,7 +1044,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makenew: win->flags = %0.2o\n"
 argument_list|,
@@ -1053,7 +1053,7 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makenew: win->maxy = %d\n"
 argument_list|,
@@ -1062,7 +1062,7 @@ operator|->
 name|maxy
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makenew: win->maxx = %d\n"
 argument_list|,
@@ -1071,7 +1071,7 @@ operator|->
 name|maxx
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makenew: win->begy = %d\n"
 argument_list|,
@@ -1080,7 +1080,7 @@ operator|->
 name|begy
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"makenew: win->begx = %d\n"
 argument_list|,

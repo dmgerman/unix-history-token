@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.20 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"ADDBYTES('%c') at (%d, %d)\n"
 argument_list|,
@@ -184,7 +184,7 @@ default|default:
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"ADDBYTES(%0.2o, %d, %d)\n"
 argument_list|,
@@ -316,7 +316,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"ADDBYTES: 1: y = %d, x = %d, firstch = %d, lastch = %d\n"
 argument_list|,
@@ -451,7 +451,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"ADDBYTES: change gives f/l: %d/%d [%d/%d]\n"
 argument_list|,
@@ -549,7 +549,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"ADDBYTES: 2: y = %d, x = %d, firstch = %d, lastch = %d\n"
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)overlay.c	5.12 (Berkeley) %G%"
+literal|"@(#)overlay.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,7 +93,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"overlay: (%0.2o, %0.2o);\n"
 argument_list|,
@@ -175,7 +175,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"overlay: from (%d,%d) to (%d,%d)\n"
 argument_list|,

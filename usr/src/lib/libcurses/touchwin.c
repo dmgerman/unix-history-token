@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touchwin.c	5.11 (Berkeley) %G%"
+literal|"@(#)touchwin.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +107,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"touchwin: (%0.2o)\n"
 argument_list|,
@@ -181,7 +181,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"touchwin: (%0.2o)\n"
 argument_list|,
@@ -268,7 +268,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"touchline: (%0.2o, %d, %d, %d, %d)\n"
 argument_list|,
@@ -283,7 +283,7 @@ argument_list|,
 name|force
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"touchline: first = %d, last = %d\n"
 argument_list|,
@@ -448,7 +448,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"touchline: first = %d, last = %d\n"
 argument_list|,

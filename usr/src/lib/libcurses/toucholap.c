@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)toucholap.c	5.10 (Berkeley) %G%"
+literal|"@(#)toucholap.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"touchoverlap: (%0.2o, %0.2o);\n"
 argument_list|,
@@ -155,7 +155,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"touchoverlap: from (%d,%d) to (%d,%d)\n"
 argument_list|,
@@ -168,7 +168,7 @@ argument_list|,
 name|endx
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"touchoverlap: win1 (%d,%d) to (%d,%d)\n"
 argument_list|,
@@ -197,7 +197,7 @@ operator|->
 name|maxx
 argument_list|)
 expr_stmt|;
-name|__TRACE
+name|__CTRACE
 argument_list|(
 literal|"touchoverlap: win2 (%d,%d) to (%d,%d)\n"
 argument_list|,
