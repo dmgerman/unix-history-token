@@ -3699,6 +3699,12 @@ operator|=
 name|token_str
 expr_stmt|;
 block|}
+else|else
+name|str_free
+argument_list|(
+name|token_str
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
