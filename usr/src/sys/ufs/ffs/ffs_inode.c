@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.42 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.43 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -178,15 +178,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|struct
-name|vnodeops
-name|ffs_vnodeops
-decl_stmt|,
-name|ffs_specops
-decl_stmt|,
-name|ffs_fifoops
-decl_stmt|;
 specifier|register
 name|struct
 name|fs
@@ -508,8 +499,7 @@ argument_list|,
 operator|&
 name|ffs_specops
 argument_list|,
-operator|&
-name|ffs_fifoops
+name|FFS_FIFOOPS
 argument_list|,
 operator|&
 name|vp

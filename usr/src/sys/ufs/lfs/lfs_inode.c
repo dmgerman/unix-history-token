@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -168,13 +168,6 @@ name|dev
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-specifier|extern
-name|struct
-name|vnodeops
-name|lfs_fifoops
-decl_stmt|,
-name|lfs_specops
 decl_stmt|;
 name|ump
 operator|=
@@ -363,8 +356,7 @@ argument_list|,
 operator|&
 name|lfs_specops
 argument_list|,
-operator|&
-name|lfs_fifoops
+name|LFS_FIFOOPS
 argument_list|,
 operator|&
 name|vp
