@@ -1111,11 +1111,12 @@ name|vap
 operator|->
 name|va_size
 operator|=
+name|strlen
+argument_list|(
 name|de
 operator|->
-name|de_dirent
-operator|->
-name|d_namlen
+name|de_symlink
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
