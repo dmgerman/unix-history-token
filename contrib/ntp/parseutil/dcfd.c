@@ -682,7 +682,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* LEAP warning (1 hour prior to occurence) */
+comment|/* LEAP warning (1 hour prior to occurrence) */
 end_comment
 
 begin_define
@@ -5616,7 +5616,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * loose terminal if in daemon operation 		 */
+comment|/* 		 * lose terminal if in daemon operation 		 */
 if|if
 condition|(
 operator|!
@@ -6530,9 +6530,9 @@ name|PRINTF
 argument_list|(
 name|offsets
 condition|?
-literal|"%s, %2d:%02d:%02d, %d.%02d.%02d,<%s%s%s%s> (%c%d.%06ds)"
+literal|"%s, %2ld:%02ld:%02d, %ld.%02ld.%02ld,<%s%s%s%s> (%c%ld.%06lds)"
 else|:
-literal|"%s, %2d:%02d:%02d, %d.%02d.%02d,<%s%s%s%s>"
+literal|"%s, %2ld:%02ld:%02d, %ld.%02ld.%02ld,<%s%s%s%s>"
 argument_list|,
 name|wday
 index|[

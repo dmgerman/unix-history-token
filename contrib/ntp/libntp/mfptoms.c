@@ -26,7 +26,7 @@ parameter_list|,
 name|u_long
 name|fpf
 parameter_list|,
-name|int
+name|short
 name|ndec
 parameter_list|)
 block|{

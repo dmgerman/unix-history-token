@@ -3894,7 +3894,7 @@ comment|/* clock type (ntp control) */
 name|u_long
 name|cl_maxunsync
 decl_stmt|;
-comment|/* time to trust oscillator after loosing synch */
+comment|/* time to trust oscillator after losing synch */
 name|u_long
 name|cl_speed
 decl_stmt|;
@@ -4676,7 +4676,7 @@ operator|*
 literal|60
 operator|)
 block|,
-comment|/* time to trust oscillator after loosing synch */
+comment|/* time to trust oscillator after losing synch */
 name|B9600
 block|,
 comment|/* terminal input& output baudrate */
@@ -4828,7 +4828,7 @@ name|CLK_REALTYPE
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)(((x)->ttlmax)& 0x7F))
+value|((int)(((x)->ttl)& 0x7F))
 end_define
 
 begin_define
@@ -4858,7 +4858,7 @@ name|CLK_PPS
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)->ttlmax)& 0x80)
+value|(((x)->ttl)& 0x80)
 end_define
 
 begin_comment
@@ -12868,15 +12868,12 @@ literal|"clock %s fault '%s' (0x%02x)"
 argument_list|,
 name|refnumtoa
 argument_list|(
+operator|&
 name|parse
 operator|->
 name|peer
 operator|->
 name|srcadr
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
 argument_list|,
 name|ceventstr
@@ -12919,15 +12916,12 @@ literal|"clock %s event '%s' (0x%02x)"
 argument_list|,
 name|refnumtoa
 argument_list|(
+operator|&
 name|parse
 operator|->
 name|peer
 operator|->
 name|srcadr
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
 argument_list|,
 name|ceventstr
@@ -15280,13 +15274,13 @@ block|{
 name|ANT_INFO
 name|antinfo
 decl_stmt|;
-name|char
+name|u_char
 name|buffer
 index|[
 literal|512
 index|]
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|p
 decl_stmt|;
@@ -15301,10 +15295,6 @@ argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|buffer
 argument_list|,
 literal|"meinberg_antenna_status=\""
@@ -15387,12 +15377,6 @@ argument_list|)
 expr_stmt|;
 name|mbg_tm_str
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|,
@@ -15427,12 +15411,6 @@ argument_list|)
 expr_stmt|;
 name|mbg_tm_str
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|,
@@ -15488,12 +15466,6 @@ argument_list|)
 expr_stmt|;
 name|mbg_tm_str
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|,
@@ -15573,13 +15545,13 @@ block|{
 name|CFGH
 name|cfgh
 decl_stmt|;
-name|char
+name|u_char
 name|buffer
 index|[
 literal|512
 index|]
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|p
 decl_stmt|;
@@ -15622,12 +15594,6 @@ argument_list|)
 expr_stmt|;
 name|mbg_tgps_str
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|,
@@ -15685,12 +15651,6 @@ argument_list|)
 expr_stmt|;
 name|mbg_tgps_str
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|,
@@ -15748,12 +15708,6 @@ argument_list|)
 expr_stmt|;
 name|mbg_tgps_str
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|,
@@ -21996,7 +21950,7 @@ end_else
 begin_function
 specifier|static
 name|int
-name|rawdcfdtr_init
+name|rawdcfdtr_init_1
 parameter_list|(
 name|struct
 name|parseunit

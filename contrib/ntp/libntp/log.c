@@ -3,6 +3,33 @@ begin_comment
 comment|/* Microsoft Developer Support Copyright (c) 1993 Microsoft Corporation. */
 end_comment
 
+begin_comment
+comment|/* Skip asynch rpc inclusion */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__RPCASYNC_H__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__RPCASYNC_H__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<windows.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -19,12 +46,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<windows.h>
 end_include
 
 begin_include
@@ -52,7 +73,7 @@ value|{if(!(bSuccess)) printf("%s: Error %d from %s \     on line %d\n", __FILE_
 end_define
 
 begin_comment
-comment|/********************************************************************* * FUNCTION: addSourceToRegistry(void)                                * *                                                                    * * PURPOSE: Add a source name key, message DLL name value, and        * *          message type supported value to the registry              * *                                                                    * * INPUT: source name, path of message DLL                            * *                                                                    * * RETURNS: none                                                      * *********************************************************************/
+comment|/********************************************************************* * FUNCTION: addSourceToRegistry(LPSTR pszAppname, LPSTR pszMsgDLL)   * *                                                                    * * PURPOSE: Add a source name key, message DLL name value, and        * *          message type supported value to the registry              * *                                                                    * * INPUT: source name, path of message DLL                            * *                                                                    * * RETURNS: none                                                      * *********************************************************************/
 end_comment
 
 begin_function
@@ -76,7 +97,33 @@ decl_stmt|;
 name|BOOL
 name|bSuccess
 decl_stmt|;
+name|char
+name|regarray
+index|[
+literal|200
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|lpregarray
+init|=
+name|regarray
+decl_stmt|;
 comment|/* When an application uses the RegisterEventSource or OpenEventLog      function to get a handle of an event log, the event loggging service      searches for the specified source name in the registry. You can add a      new source name to the registry by opening a new registry subkey      under the Application key and adding registry values to the new      subkey. */
+name|strcpy
+argument_list|(
+name|lpregarray
+argument_list|,
+literal|"SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|lpregarray
+argument_list|,
+name|pszAppname
+argument_list|)
+expr_stmt|;
 comment|/* Create a new key for our application */
 name|bSuccess
 operator|=
@@ -84,7 +131,7 @@ name|RegCreateKey
 argument_list|(
 name|HKEY_LOCAL_MACHINE
 argument_list|,
-literal|"SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\NTP"
+name|lpregarray
 argument_list|,
 operator|&
 name|hk

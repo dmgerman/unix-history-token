@@ -125,6 +125,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"ntp_sprintf.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3084,6 +3090,14 @@ operator|->
 name|offset
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
 name|refclock_receive
 argument_list|(
 name|peer
@@ -3107,7 +3121,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse a mx4200 time recovery message. Returns a string if error.  *  * A typical message looks like this.  Checksum has already been stripped.  *  *    $PMVXG,830,T,YYYY,MM,DD,HH:MM:SS,U,S,FFFFFF,PPPPP,BBBBBB,LL  *  *	Field	Field Contents  *	-----	--------------  *		Block Label: $PMVXG  *		Sentence Type: 830=Time Recovery Results  *			This sentence is output approximately 1 second  *			preceding the 1PPS output.  It indicates the  *			exact time of the next pulse, whether or not the  *			time mark will be valid (based on operator-specified  *			error tolerance), the time to which the pulse is  *			synchronized, the receiver operating mode,  *			and the time error of the *last* 1PPS output.  *	1  char Time Mark Valid: T=Valid, F=Not Valid  *	2  int  Year: 1993-  *	3  int  Month of Year: 1-12  *	4  int  Day of Month: 1-31  *	5  int  Time of Day: HH:MM:SS  *	6  char Time Synchronization: U=UTC, G=GPS  *	7  char Time Recovery Mode: D=Dynamic, S=Static,  *			K=Known Position, N=No Time Recovery  *	8  int  Oscillator Offset: The filter's estimate of the oscillator  *			frequency error, in parts per billion (ppb).  *	9  int  Time Mark Error: The computed error of the *last* pulse  *			output, in nanoseconds.  *	10 int  User Time Bias: Operator specified bias, in nanoseconds  *	11 int  Leap Second Flag: Indicates that a leap second will  *			occur.  This value is usually zero, except during  *			the week prior to the leap second occurence, when  *			this value will be set to +1 or -1.  A value of  *			+1 indicates that GPS time will be 1 second  *			further ahead of UTC time.  *  */
+comment|/*  * Parse a mx4200 time recovery message. Returns a string if error.  *  * A typical message looks like this.  Checksum has already been stripped.  *  *    $PMVXG,830,T,YYYY,MM,DD,HH:MM:SS,U,S,FFFFFF,PPPPP,BBBBBB,LL  *  *	Field	Field Contents  *	-----	--------------  *		Block Label: $PMVXG  *		Sentence Type: 830=Time Recovery Results  *			This sentence is output approximately 1 second  *			preceding the 1PPS output.  It indicates the  *			exact time of the next pulse, whether or not the  *			time mark will be valid (based on operator-specified  *			error tolerance), the time to which the pulse is  *			synchronized, the receiver operating mode,  *			and the time error of the *last* 1PPS output.  *	1  char Time Mark Valid: T=Valid, F=Not Valid  *	2  int  Year: 1993-  *	3  int  Month of Year: 1-12  *	4  int  Day of Month: 1-31  *	5  int  Time of Day: HH:MM:SS  *	6  char Time Synchronization: U=UTC, G=GPS  *	7  char Time Recovery Mode: D=Dynamic, S=Static,  *			K=Known Position, N=No Time Recovery  *	8  int  Oscillator Offset: The filter's estimate of the oscillator  *			frequency error, in parts per billion (ppb).  *	9  int  Time Mark Error: The computed error of the *last* pulse  *			output, in nanoseconds.  *	10 int  User Time Bias: Operator specified bias, in nanoseconds  *	11 int  Leap Second Flag: Indicates that a leap second will  *			occur.  This value is usually zero, except during  *			the week prior to the leap second occurrence, when  *			this value will be set to +1 or -1.  A value of  *			+1 indicates that GPS time will be 1 second  *			further ahead of UTC time.  *  */
 end_comment
 
 begin_function
@@ -3670,18 +3684,6 @@ operator|->
 name|second
 operator|=
 name|second
-expr_stmt|;
-name|pp
-operator|->
-name|msec
-operator|=
-literal|0
-expr_stmt|;
-name|pp
-operator|->
-name|usec
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * Toss if sentence is marked invalid 	 */
 if|if
@@ -5239,53 +5241,26 @@ operator|++
 operator|=
 literal|'$'
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* BSD is rational */
 name|n
 operator|=
-name|vsnprintf
+name|VSNPRINTF
 argument_list|(
+operator|(
 name|cp
-argument_list|,
+operator|,
 sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
 operator|-
 literal|1
-argument_list|,
+operator|,
 name|fmt
-argument_list|,
+operator|,
 name|ap
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* SunOS sucks */
-operator|(
-name|void
 operator|)
-name|vsprintf
-argument_list|(
-name|cp
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
 argument_list|)
 expr_stmt|;
-name|n
-operator|=
-name|strlen
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* notdef */
 name|ck
 operator|=
 name|mx4200_cksum
@@ -5302,16 +5277,13 @@ expr_stmt|;
 operator|++
 name|n
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* BSD is rational */
 name|n
 operator|+=
-name|snprintf
+name|SNPRINTF
 argument_list|(
+operator|(
 name|cp
-argument_list|,
+operator|,
 sizeof|sizeof
 argument_list|(
 name|buf
@@ -5320,34 +5292,13 @@ operator|-
 name|n
 operator|-
 literal|5
-argument_list|,
+operator|,
 literal|"*%02X\r\n"
-argument_list|,
+operator|,
 name|ck
+operator|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* SunOS sucks */
-name|sprintf
-argument_list|(
-name|cp
-argument_list|,
-literal|"*%02X\r\n"
-argument_list|,
-name|ck
-argument_list|)
-expr_stmt|;
-name|n
-operator|+=
-name|strlen
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* notdef */
 name|m
 operator|=
 name|write

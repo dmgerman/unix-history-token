@@ -895,7 +895,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PUBKEY
+name|OPENSSL
 end_ifdef
 
 begin_define
@@ -929,28 +929,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|CS_DHPARAMS
+name|CS_REVTIME
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_REVTIME
+name|CS_LEAPTAB
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_LEAPTAB
+name|CS_TAI
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_TAI
+name|CS_DIGEST
 value|27
 end_define
 
@@ -958,7 +958,7 @@ begin_define
 define|#
 directive|define
 name|CS_MAXCODE
-value|CS_TAI
+value|CS_DIGEST
 end_define
 
 begin_else
@@ -979,7 +979,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PUBKEY */
+comment|/* OPENSSL */
 end_comment
 
 begin_comment
@@ -1241,7 +1241,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CP_TTLMAX
+name|CP_RANK
 value|37
 end_define
 
@@ -1255,7 +1255,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PUBKEY
+name|OPENSSL
 end_ifdef
 
 begin_define
@@ -1275,57 +1275,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|CP_PUBLIC
+name|CP_INITSEQ
 value|41
 end_define
 
 begin_define
 define|#
 directive|define
-name|CP_CERTIF
+name|CP_INITKEY
 value|42
 end_define
 
 begin_define
 define|#
 directive|define
-name|CP_SESKEY
+name|CP_INITTSP
 value|43
 end_define
 
 begin_define
 define|#
 directive|define
-name|CP_SASKEY
+name|CP_DIGEST
 value|44
 end_define
 
 begin_define
 define|#
 directive|define
-name|CP_INITSEQ
+name|CP_IDENT
 value|45
 end_define
 
 begin_define
 define|#
 directive|define
-name|CP_INITKEY
-value|46
-end_define
-
-begin_define
-define|#
-directive|define
-name|CP_INITTSP
-value|47
-end_define
-
-begin_define
-define|#
-directive|define
 name|CP_MAXCODE
-value|CP_INITTSP
+value|CP_IDENT
 end_define
 
 begin_else
@@ -1346,7 +1332,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PUBKEY */
+comment|/* OPENSSL */
 end_comment
 
 begin_comment
@@ -1460,7 +1446,7 @@ struct|struct
 name|ctl_trap
 block|{
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|tr_addr
 decl_stmt|;
 comment|/* address of trap recipient */

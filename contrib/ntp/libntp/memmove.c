@@ -83,6 +83,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"l_stdlib.h"
+end_include
+
 begin_comment
 comment|/*  * sizeof(word) MUST BE A POWER OF TWO  * SO THAT wmask BELOW IS ALL ONES  */
 end_comment
@@ -279,7 +285,7 @@ name|wsize
 expr_stmt|;
 name|TLOOP
 argument_list|(
-argument|*(word *)dst = *(word *)src; src += wsize; dst += wsize
+argument|*(word *)dst = *(const word *)src; src += wsize; 		    dst += wsize
 argument_list|)
 empty_stmt|;
 name|t
@@ -382,7 +388,7 @@ name|wsize
 expr_stmt|;
 name|TLOOP
 argument_list|(
-argument|src -= wsize; dst -= wsize; *(word *)dst = *(word *)src
+argument|src -= wsize; dst -= wsize; 		    *(word *)dst = *(const word *)src
 argument_list|)
 empty_stmt|;
 name|t

@@ -1198,8 +1198,9 @@ argument_list|)
 expr_stmt|;
 name|pp
 operator|->
-name|msec
+name|nsec
 operator|=
+operator|(
 name|BP1
 argument_list|(
 literal|9
@@ -1211,15 +1212,20 @@ name|BP2
 argument_list|(
 literal|9
 argument_list|)
+operator|)
+operator|*
+literal|1000000
 expr_stmt|;
 name|pp
 operator|->
-name|usec
-operator|=
+name|nsec
+operator|+=
 name|BP1
 argument_list|(
 literal|10
 argument_list|)
+operator|*
+literal|1000
 expr_stmt|;
 block|}
 else|else
@@ -1274,8 +1280,9 @@ argument_list|)
 expr_stmt|;
 name|pp
 operator|->
-name|msec
+name|nsec
 operator|=
+operator|(
 name|BP1
 argument_list|(
 literal|8
@@ -1287,15 +1294,20 @@ name|BP2
 argument_list|(
 literal|8
 argument_list|)
+operator|)
+operator|*
+literal|1000000
 expr_stmt|;
 name|pp
 operator|->
-name|usec
-operator|=
+name|nsec
+operator|+=
 name|BP1
 argument_list|(
 literal|9
 argument_list|)
+operator|*
+literal|1000
 expr_stmt|;
 block|}
 if|if
@@ -1430,7 +1442,7 @@ name|rbufp
 operator|->
 name|recv_time
 expr_stmt|;
-comment|/* Is it better then get_systime()? */
+comment|/* Is it better than get_systime()? */
 comment|/* pp->leap = LEAP_NOWARNING; */
 comment|/*          * Process the new sample in the median filter and determine the          * timecode timestamp.          */
 if|if
@@ -1447,6 +1459,14 @@ name|peer
 argument_list|,
 name|CEVNT_BADTIME
 argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
 expr_stmt|;
 name|refclock_receive
 argument_list|(

@@ -802,12 +802,6 @@ name|modechar
 operator|=
 literal|' '
 expr_stmt|;
-name|pp
-operator|->
-name|msec
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 name|pp
@@ -926,7 +920,7 @@ name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-literal|"%c%1d%c%4d%3d%*c%2d:%2d:%2d.%2d%c"
+literal|"%c%1d%c%4d%3d%*c%2d:%2d:%2d.%2ld%c"
 argument_list|,
 operator|&
 name|syncchar
@@ -965,7 +959,7 @@ argument_list|,
 operator|&
 name|pp
 operator|->
-name|msec
+name|nsec
 argument_list|,
 operator|&
 name|leapchar
@@ -976,9 +970,9 @@ condition|)
 block|{
 name|pp
 operator|->
-name|msec
+name|nsec
 operator|*=
-literal|10
+literal|10000000
 expr_stmt|;
 comment|/* M320 returns 10's of msecs */
 if|if
@@ -1335,6 +1329,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
 name|record_clock_stats
 argument_list|(
 operator|&
@@ -1345,11 +1352,6 @@ argument_list|,
 name|pp
 operator|->
 name|a_lastcode
-argument_list|)
-expr_stmt|;
-name|refclock_receive
-argument_list|(
-name|peer
 argument_list|)
 expr_stmt|;
 name|peer

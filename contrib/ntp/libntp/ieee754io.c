@@ -527,7 +527,6 @@ name|unsigned
 name|int
 name|maxexp
 decl_stmt|;
-name|unsigned
 name|int
 name|mbits
 decl_stmt|;

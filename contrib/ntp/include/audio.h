@@ -12,12 +12,23 @@ end_include
 begin_define
 define|#
 directive|define
-name|AUDIO_BUFSIZ
-value|160
+name|MAXGAIN
+value|255
 end_define
 
 begin_comment
-comment|/* codec buffer size (Solaris only) */
+comment|/* max codec gain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MONGAIN
+value|127
+end_define
+
+begin_comment
+comment|/* codec monitor gain */
 end_comment
 
 begin_comment
@@ -32,6 +43,10 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -43,6 +58,8 @@ name|audio_gain
 name|P
 argument_list|(
 operator|(
+name|int
+operator|,
 name|int
 operator|,
 name|int

@@ -212,7 +212,7 @@ comment|/* 	fudgefactor	= fudgetime1; 	os_delay	= fudgetime2; 	   offset_fudge	=
 end_comment
 
 begin_comment
-comment|/* This should support the use of an EES M201 receiver with RS232  * output (modified to transmit time once per second).  *  * For the format of the message sent by the clock, see the EESM_  * definitions below.  *  * It appears to run free for an integral number of minutes, until the error  * reaches 4mS, at which point it steps at second = 01.  * It appears that sometimes it steps 4mS (say at 7 min interval),  * then the next minute it decides that it was an error, so steps back.  * On the next minute it steps forward again :-(  * This is typically 16.5uS/S then 3975uS at the 4min re-sync,  * or 9.5uS/S then 3990.5uS at a 7min re-sync,  * at which point it may loose the "00" second time stamp.  * I assume that the most accurate time is just AFTER the re-sync.  * Hence remember the last cycle interval,  *  * Can run in any one of:  *  *	PPSCD	PPS signal sets CD which interupts, and grabs the current TOD  *	(sun)		*in the interupt code*, so as to avoid problems with  *			the STREAMS scheduling.  *  * It appears that it goes 16.5 uS slow each second, then every 4 mins it  * generates no "00" second tick, and gains 3975 uS. Ho Hum ! (93/2/7)  */
+comment|/* This should support the use of an EES M201 receiver with RS232  * output (modified to transmit time once per second).  *  * For the format of the message sent by the clock, see the EESM_  * definitions below.  *  * It appears to run free for an integral number of minutes, until the error  * reaches 4mS, at which point it steps at second = 01.  * It appears that sometimes it steps 4mS (say at 7 min interval),  * then the next minute it decides that it was an error, so steps back.  * On the next minute it steps forward again :-(  * This is typically 16.5uS/S then 3975uS at the 4min re-sync,  * or 9.5uS/S then 3990.5uS at a 7min re-sync,  * at which point it may lose the "00" second time stamp.  * I assume that the most accurate time is just AFTER the re-sync.  * Hence remember the last cycle interval,  *  * Can run in any one of:  *  *	PPSCD	PPS signal sets CD which interupts, and grabs the current TOD  *	(sun)		*in the interupt code*, so as to avoid problems with  *			the STREAMS scheduling.  *  * It appears that it goes 16.5 uS slow each second, then every 4 mins it  * generates no "00" second tick, and gains 3975 uS. Ho Hum ! (93/2/7)  */
 end_comment
 
 begin_comment
@@ -3410,7 +3410,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"I: ees clock %d: %x == %x: await more"
+literal|"I: ees clock %d: %p == %p: await more"
 argument_list|,
 name|ees
 operator|->

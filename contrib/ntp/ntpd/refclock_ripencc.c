@@ -3304,20 +3304,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|pps_hardpps
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pps_assert
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * ripencc_start - open the GPS devices and initialize data for processing  */
 end_comment
@@ -3934,9 +3920,9 @@ name|ripencc_ppsapi
 argument_list|(
 name|peer
 argument_list|,
-name|pps_assert
+literal|0
 argument_list|,
-name|pps_hardpps
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -5493,7 +5479,7 @@ name|rd_tmp
 expr_stmt|;
 name|pp
 operator|->
-name|msec
+name|nsec
 operator|=
 literal|0
 expr_stmt|;
@@ -7806,7 +7792,7 @@ name|second
 expr_stmt|;
 name|pp
 operator|->
-name|msec
+name|nsec
 operator|=
 literal|0
 expr_stmt|;
@@ -24031,7 +24017,7 @@ parameter_list|)
 block|{
 comment|/* force header is to help auto-output function */
 comment|/* last_rptcode is to determine whether to print a header */
-comment|/* for the first occurence of a series of reports */
+comment|/* for the first occurrence of a series of reports */
 specifier|static
 name|int
 name|last_rptcode

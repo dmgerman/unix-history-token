@@ -201,15 +201,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|volatile
-name|int
-name|debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -388,18 +379,21 @@ comment|/* ntv.time.tv_frac_sec (us/ns) */
 name|l_fp
 name|ts
 decl_stmt|;
+specifier|volatile
 name|unsigned
 name|ts_mask
 init|=
 name|TS_MASK
 decl_stmt|;
 comment|/* defaults to 20 bits (us) */
+specifier|volatile
 name|unsigned
 name|ts_roundbit
 init|=
 name|TS_ROUNDBIT
 decl_stmt|;
 comment|/* defaults to 20 bits (us) */
+specifier|volatile
 name|int
 name|fdigits
 init|=
@@ -419,6 +413,7 @@ name|cost
 init|=
 literal|0
 decl_stmt|;
+specifier|volatile
 name|int
 name|rawtime
 init|=
@@ -535,13 +530,6 @@ case|case
 literal|'c'
 case|:
 name|cost
-operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'d'
-case|:
-name|debug
 operator|++
 expr_stmt|;
 break|break;
@@ -713,7 +701,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-%s]\n\n\ %s%s%s\ -c		display the time taken to call ntp_gettime (us)\n\ -e esterror	estimate of the error (us)\n\ -f frequency	Frequency error (-500 .. 500) (ppm)\n\ -h		display this help info\n\ -m maxerror	max possible error (us)\n\ -o offset	current offset (ms)\n\ -r		print the unix and NTP time raw\n\ -l leap		Set the leap bits\n\ -t timeconstant	log2 of PLL time constant (0 .. %d)\n"
+literal|"usage: %s [-%s]\n\n\ %s%s%s\ -c		display the time taken to call ntp_gettime (us)\n\ -e esterror	estimate of the error (us)\n\ -f frequency	Frequency error (-500 .. 500) (ppm)\n\ -h		display this help info\n\ -m maxerror	max possible error (us)\n\ -o offset	current offset (ms)\n\ -r		print the unix and NTP time raw\n\ -s status	Set the status bits\n\ -t timeconstant	log2 of PLL time constant (0 .. %d)\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -1389,8 +1377,11 @@ operator|>
 literal|3
 name|printf
 argument_list|(
-literal|", TAI offset %d\n"
+literal|", TAI offset %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntv
 operator|.
 name|tai

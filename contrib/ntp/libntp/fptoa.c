@@ -23,7 +23,7 @@ parameter_list|(
 name|s_fp
 name|fpv
 parameter_list|,
-name|int
+name|short
 name|ndec
 parameter_list|)
 block|{

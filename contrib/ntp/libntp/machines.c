@@ -67,11 +67,18 @@ directive|ifdef
 name|SYS_WINNT
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<conio.h>
-end_include
+begin_function_decl
+name|int
+name|_getch
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Declare the one function rather than include conio.h */
+end_comment
 
 begin_else
 else|#
@@ -1824,9 +1831,32 @@ condition|(
 name|rc
 condition|)
 block|{
+name|struct
+name|timeval
+name|adjtv
+decl_stmt|;
 name|set_tod_using
 operator|=
 literal|"settimeofday"
+expr_stmt|;
+comment|/* 		 * Some broken systems don't reset adjtime() when the 		 * clock is stepped. 		 */
+name|adjtv
+operator|.
+name|tv_sec
+operator|=
+name|adjtv
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+name|adjtime
+argument_list|(
+operator|&
+name|adjtv
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=

@@ -39,7 +39,7 @@ name|next_server
 decl_stmt|;
 comment|/* next server in build list */
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|srcadr
 decl_stmt|;
 comment|/* address of remote host */
@@ -369,6 +369,17 @@ end_define
 begin_comment
 comment|/* mimimum servers with valid time */
 end_comment
+
+begin_comment
+comment|/*  * Define the max number of sockets we can open  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_AF
+value|2
+end_define
 
 end_unit
 

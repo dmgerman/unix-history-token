@@ -153,6 +153,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LENWWVB1
+value|22
+end_define
+
+begin_comment
+comment|/* format 1 timecode length */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LENWWVB2
 value|24
 end_define
@@ -555,7 +566,7 @@ name|peer
 operator|->
 name|burst
 operator|=
-name|NSTAGE
+name|MAXSTAGE
 expr_stmt|;
 return|return
 operator|(
@@ -805,28 +816,6 @@ name|tcswitch
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"wwvb: timecode %d %s\n"
-argument_list|,
-name|pp
-operator|->
-name|lencode
-argument_list|,
-name|pp
-operator|->
-name|a_lastcode
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. This code uses the timecode length to determine 	 * format 0, 2 or 3. If the timecode has invalid length or is 	 * not in proper format, we declare bad format and exit. 	 */
 name|syncchar
 operator|=
@@ -839,12 +828,6 @@ operator|=
 literal|' '
 expr_stmt|;
 name|tz
-operator|=
-literal|0
-expr_stmt|;
-name|pp
-operator|->
-name|msec
 operator|=
 literal|0
 expr_stmt|;
@@ -904,6 +887,12 @@ argument_list|)
 operator|==
 literal|8
 condition|)
+name|pp
+operator|->
+name|nsec
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|LENWWVB2
@@ -917,7 +906,7 @@ name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-literal|"%c%c %2d %3d %2d:%2d:%2d.%3d %c"
+literal|"%c%c %2d %3d %2d:%2d:%2d.%3ld %c"
 argument_list|,
 operator|&
 name|syncchar
@@ -953,7 +942,7 @@ argument_list|,
 operator|&
 name|pp
 operator|->
-name|msec
+name|nsec
 argument_list|,
 operator|&
 name|leapchar
@@ -961,6 +950,12 @@ argument_list|)
 operator|==
 literal|9
 condition|)
+name|pp
+operator|->
+name|nsec
+operator|*=
+literal|1000000
+expr_stmt|;
 break|break;
 case|case
 name|LENWWVB3
@@ -1030,6 +1025,12 @@ argument_list|,
 name|day
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|nsec
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 block|}
 default|default:
@@ -1087,6 +1088,14 @@ operator|->
 name|disp
 operator|=
 literal|.001
+expr_stmt|;
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
 expr_stmt|;
 break|break;
 case|case
@@ -1289,12 +1298,6 @@ argument_list|,
 name|CEVNT_FAULT
 argument_list|)
 expr_stmt|;
-else|else
-name|pp
-operator|->
-name|polls
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|peer
@@ -1324,6 +1327,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
 name|record_clock_stats
 argument_list|(
 operator|&
@@ -1336,16 +1344,38 @@ operator|->
 name|a_lastcode
 argument_list|)
 expr_stmt|;
-name|refclock_receive
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
 argument_list|(
-name|peer
+literal|"wwvb: timecode %d %s\n"
+argument_list|,
+name|pp
+operator|->
+name|lencode
+argument_list|,
+name|pp
+operator|->
+name|a_lastcode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|peer
 operator|->
 name|burst
 operator|=
-name|NSTAGE
+name|MAXSTAGE
+expr_stmt|;
+name|pp
+operator|->
+name|polls
+operator|++
 expr_stmt|;
 comment|/* 	 * If the monitor flag is set (flag4), we dump the internal 	 * quality table at the first timecode beginning the day. 	 */
 if|if

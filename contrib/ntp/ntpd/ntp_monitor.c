@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntp_monitor.c - monitor who is using the ntpd server  */
+comment|/*  * ntp_monitor - monitor ntpd statistics  */
 end_comment
 
 begin_ifdef
@@ -74,7 +74,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * I'm still not sure I like what I've done here.  It certainly consumes  * memory like it is going out of style, and also may not be as low  * overhead as I'd imagined.  *  * Anyway, we record statistics based on source address, mode and version  * (for now, anyway.  Check the code).  The receive procedure calls us with  * the incoming rbufp before it does anything else.  *  * Each entry is doubly linked into two lists, a hash table and a  * most-recently-used list.  When a packet arrives it is looked up  * in the hash table.  If found, the statistics are updated and the  * entry relinked at the head of the MRU list.  If not found, a new  * entry is allocated, initialized and linked into both the hash  * table and at the head of the MRU list.  *  * Memory is usually allocated by grabbing a big chunk of new memory  * and cutting it up into littler pieces.  The exception to this when we  * hit the memory limit.  Then we free memory by grabbing entries off  * the tail for the MRU list, unlinking from the hash table, and  * reinitializing.  *  * trimmed back memory consumption ... jdg 8/94  */
+comment|/*  * I'm still not sure I like what I've done here. It certainly consumes  * memory like it is going out of style, and also may not be as low  * overhead as I'd imagined.  *  * Anyway, we record statistics based on source address, mode and  * version (for now, anyway. Check the code).  The receive procedure  * calls us with the incoming rbufp before it does anything else.  *  * Each entry is doubly linked into two lists, a hash table and a  * most-recently-used list. When a packet arrives it is looked up in  * the hash table.  If found, the statistics are updated and the entry  * relinked at the head of the MRU list. If not found, a new entry is  * allocated, initialized and linked into both the hash table and at the  * head of the MRU list.  *  * Memory is usually allocated by grabbing a big chunk of new memory and  * cutting it up into littler pieces. The exception to this when we hit  * the memory limit. Then we free memory by grabbing entries off the  * tail for the MRU list, unlinking from the hash table, and  * reinitializing.  *  * trimmed back memory consumption ... jdg 8/94  */
 end_comment
 
 begin_comment
@@ -150,11 +150,11 @@ name|MON_HASH
 parameter_list|(
 name|addr
 parameter_list|)
-value|((int)(ntohl((addr))& MON_HASH_MASK))
+value|sock_hash(addr)
 end_define
 
 begin_comment
-comment|/*  * Pointers to the hash table, the MRU list and the count table.  Memory  * for the hash and count tables is only allocated if monitoring is turned on.  */
+comment|/*  * Pointers to the hash table, the MRU list and the count table.  Memory  * for the hash and count tables is only allocated if monitoring is  * turned on.  */
 end_comment
 
 begin_decl_stmt
@@ -170,20 +170,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* array of list ptrs */
+comment|/* list ptrs */
 end_comment
 
 begin_decl_stmt
 name|struct
 name|mon_data
 name|mon_mru_list
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mon_data
-name|mon_fifo_list
 decl_stmt|;
 end_decl_stmt
 
@@ -201,7 +194,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the free list or null if none */
+comment|/* free list or null if none */
 end_comment
 
 begin_decl_stmt
@@ -212,7 +205,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* total number of structures allocated */
+comment|/* total structures allocated */
 end_comment
 
 begin_decl_stmt
@@ -223,7 +216,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of times we've called malloc() */
+comment|/* times called malloc() */
 end_comment
 
 begin_comment
@@ -235,6 +228,22 @@ name|int
 name|mon_enabled
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* enable switch */
+end_comment
+
+begin_decl_stmt
+name|u_long
+name|mon_age
+init|=
+literal|3000
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* preemption limit */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -305,10 +314,6 @@ name|NULL
 expr_stmt|;
 name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|mon_hash
 index|[
@@ -323,10 +328,6 @@ argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|mon_mru_list
 argument_list|,
@@ -334,21 +335,6 @@ literal|0
 argument_list|,
 sizeof|sizeof
 name|mon_mru_list
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|mon_fifo_list
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-name|mon_fifo_list
 argument_list|)
 expr_stmt|;
 block|}
@@ -386,7 +372,6 @@ operator|==
 name|MON_OFF
 condition|)
 return|return;
-comment|/* Ooops.. */
 if|if
 condition|(
 operator|!
@@ -426,20 +411,6 @@ name|mru_prev
 operator|=
 operator|&
 name|mon_mru_list
-expr_stmt|;
-name|mon_fifo_list
-operator|.
-name|fifo_next
-operator|=
-operator|&
-name|mon_fifo_list
-expr_stmt|;
-name|mon_fifo_list
-operator|.
-name|fifo_prev
-operator|=
-operator|&
-name|mon_fifo_list
 expr_stmt|;
 name|mon_enabled
 operator|=
@@ -581,20 +552,6 @@ operator|=
 operator|&
 name|mon_mru_list
 expr_stmt|;
-name|mon_fifo_list
-operator|.
-name|fifo_next
-operator|=
-operator|&
-name|mon_fifo_list
-expr_stmt|;
-name|mon_fifo_list
-operator|.
-name|fifo_prev
-operator|=
-operator|&
-name|mon_fifo_list
-expr_stmt|;
 block|}
 end_function
 
@@ -624,9 +581,9 @@ name|mon_data
 modifier|*
 name|md
 decl_stmt|;
-specifier|register
-name|u_long
-name|netnum
+name|struct
+name|sockaddr_storage
+name|addr
 decl_stmt|;
 specifier|register
 name|int
@@ -650,21 +607,43 @@ name|rbufp
 operator|->
 name|recv_pkt
 expr_stmt|;
-name|netnum
-operator|=
-name|NSRCADR
+name|memset
 argument_list|(
 operator|&
+name|addr
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|addr
+argument_list|,
+operator|&
+operator|(
 name|rbufp
 operator|->
 name|recv_srcadr
+operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hash
 operator|=
 name|MON_HASH
 argument_list|(
-name|netnum
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 name|mode
@@ -690,25 +669,31 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * Match address only to conserve MRU size. 		 */
 if|if
 condition|(
+name|SOCKCMP
+argument_list|(
+operator|&
 name|md
 operator|->
 name|rmtadr
-operator|==
-name|netnum
-operator|&&
-comment|/* ?? md->interface == rbufp->dstadr&& ?? */
-name|md
-operator|->
-name|mode
-operator|==
-operator|(
-name|u_char
-operator|)
-name|mode
+argument_list|,
+operator|&
+name|addr
+argument_list|)
 condition|)
 block|{
+name|md
+operator|->
+name|drop_count
+operator|=
+name|current_time
+operator|-
+name|md
+operator|->
+name|lasttime
+expr_stmt|;
 name|md
 operator|->
 name|lasttime
@@ -722,17 +707,6 @@ operator|++
 expr_stmt|;
 name|md
 operator|->
-name|version
-operator|=
-name|PKT_VERSION
-argument_list|(
-name|pkt
-operator|->
-name|li_vn_mode
-argument_list|)
-expr_stmt|;
-name|md
-operator|->
 name|rmtport
 operator|=
 name|NSRCPORT
@@ -743,7 +717,27 @@ operator|->
 name|recv_srcadr
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Shuffle him to the head of the 			 * mru list.  What a crock. 			 */
+name|md
+operator|->
+name|mode
+operator|=
+operator|(
+name|u_char
+operator|)
+name|mode
+expr_stmt|;
+name|md
+operator|->
+name|version
+operator|=
+name|PKT_VERSION
+argument_list|(
+name|pkt
+operator|->
+name|li_vn_mode
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Shuffle to the head of the MRU list. 			 */
 name|md
 operator|->
 name|mru_next
@@ -814,13 +808,40 @@ operator|>=
 name|MAXMONMEM
 condition|)
 block|{
-comment|/* 		 * Get it from MRU list 		 */
+comment|/* 		 * Preempt from the MRU list if old enough. 		 */
 name|md
 operator|=
 name|mon_mru_list
 operator|.
 name|mru_prev
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|u_long
+operator|)
+name|RANDOM
+operator|&
+literal|0xffffffff
+operator|)
+operator|/
+name|FRAC
+operator|>
+call|(
+name|double
+call|)
+argument_list|(
+name|current_time
+operator|-
+name|md
+operator|->
+name|lasttime
+argument_list|)
+operator|/
+name|mon_age
+condition|)
+return|return;
 name|md
 operator|->
 name|mru_prev
@@ -843,27 +864,6 @@ argument_list|(
 name|md
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Get it from FIFO list 		 */
-name|md
-operator|->
-name|fifo_prev
-operator|->
-name|fifo_next
-operator|=
-name|md
-operator|->
-name|fifo_next
-expr_stmt|;
-name|md
-operator|->
-name|fifo_next
-operator|->
-name|fifo_prev
-operator|=
-name|md
-operator|->
-name|fifo_prev
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -873,11 +873,9 @@ name|mon_free
 operator|==
 name|NULL
 condition|)
-comment|/* if free list empty */
 name|mon_getmoremem
 argument_list|()
 expr_stmt|;
-comment|/* then get more */
 name|md
 operator|=
 name|mon_free
@@ -892,19 +890,15 @@ block|}
 comment|/* 	 * Got one, initialize it 	 */
 name|md
 operator|->
-name|lasttime
+name|avg_interval
 operator|=
-name|md
-operator|->
-name|firsttime
-operator|=
-name|current_time
+literal|0
 expr_stmt|;
 name|md
 operator|->
-name|lastdrop
+name|lasttime
 operator|=
-literal|0
+name|current_time
 expr_stmt|;
 name|md
 operator|->
@@ -914,9 +908,42 @@ literal|1
 expr_stmt|;
 name|md
 operator|->
-name|rmtadr
+name|drop_count
 operator|=
-name|netnum
+literal|0
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|md
+operator|->
+name|rmtadr
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|md
+operator|->
+name|rmtadr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|md
+operator|->
+name|rmtadr
+argument_list|,
+operator|&
+name|addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|md
 operator|->
@@ -962,6 +989,10 @@ name|md
 operator|->
 name|cast_flags
 operator|=
+call|(
+name|u_char
+call|)
+argument_list|(
 operator|(
 operator|(
 name|rbufp
@@ -999,8 +1030,9 @@ condition|?
 name|MDF_BCAST
 else|:
 name|MDF_UCAST
+argument_list|)
 expr_stmt|;
-comment|/* 	 * Drop him into front of the hash table. 	 * Also put him on top of the MRU list 	 * and at bottom of FIFO list 	 */
+comment|/* 	 * Drop him into front of the hash table. Also put him on top of 	 * the MRU list. 	 */
 name|md
 operator|->
 name|hash_next
@@ -1043,35 +1075,6 @@ expr_stmt|;
 name|mon_mru_list
 operator|.
 name|mru_next
-operator|=
-name|md
-expr_stmt|;
-name|md
-operator|->
-name|fifo_prev
-operator|=
-name|mon_fifo_list
-operator|.
-name|fifo_prev
-expr_stmt|;
-name|md
-operator|->
-name|fifo_next
-operator|=
-operator|&
-name|mon_fifo_list
-expr_stmt|;
-name|mon_fifo_list
-operator|.
-name|fifo_prev
-operator|->
-name|fifo_next
-operator|=
-name|md
-expr_stmt|;
-name|mon_fifo_list
-operator|.
-name|fifo_prev
 operator|=
 name|md
 expr_stmt|;
@@ -1206,6 +1209,7 @@ name|hash
 operator|=
 name|MON_HASH
 argument_list|(
+operator|&
 name|md
 operator|->
 name|rmtadr

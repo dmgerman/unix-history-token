@@ -808,12 +808,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * We get down to business. Check the timecode format and decode 	 * its contents. This code uses the first character to see whether 	 * we're looking at a date or a time.  We store data data across 	 * calls since it is transmitted a few seconds ahead of the 	 * timestamp. 	 */
-name|pp
-operator|->
-name|msec
-operator|=
-literal|0
-expr_stmt|;
 name|got_good
 operator|=
 literal|0
@@ -1153,6 +1147,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
 name|record_clock_stats
 argument_list|(
 operator|&
@@ -1163,11 +1170,6 @@ argument_list|,
 name|pp
 operator|->
 name|a_lastcode
-argument_list|)
-expr_stmt|;
-name|refclock_receive
-argument_list|(
-name|peer
 argument_list|)
 expr_stmt|;
 name|up

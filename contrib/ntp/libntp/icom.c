@@ -39,6 +39,12 @@ directive|include
 file|"ntp_tty.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"l_stdlib.h"
+end_include
+
 begin_comment
 comment|/*  * Scraps  */
 end_comment

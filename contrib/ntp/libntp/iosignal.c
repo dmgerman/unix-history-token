@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntp_io.c - input/output routines for ntpd.	The socket-opening code  *		   was shamelessly stolen from ntpd.  */
+comment|/*  * iosignal.c - input/output routines for ntpd.	The socket-opening code  *		   was shamelessly stolen from ntpd.  */
 end_comment
 
 begin_include
@@ -178,7 +178,7 @@ comment|/*  * SIGPOLL and SIGIO ROUTINES.  */
 end_comment
 
 begin_comment
-comment|/*  * Some systems (MOST) define SIGPOLL == SIGIO, others SIGIO == SIGPOLL, and  * a few have separate SIGIO and SIGPOLL signals.  This code checks for the  * SIGIO == SIGPOLL case at compile time.  * Do not defined USE_SIGPOLL or USE_SIGIO.  * these are interal only to ntp_io.c!  */
+comment|/*  * Some systems (MOST) define SIGPOLL == SIGIO, others SIGIO == SIGPOLL, and  * a few have separate SIGIO and SIGPOLL signals.  This code checks for the  * SIGIO == SIGPOLL case at compile time.  * Do not define USE_SIGPOLL or USE_SIGIO.  * these are interal only to iosignal.c!  */
 end_comment
 
 begin_if
@@ -266,6 +266,36 @@ begin_define
 define|#
 directive|define
 name|USE_SIGIO
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__QNXNTO__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unix.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|FNDELAY
+value|O_NDELAY
 end_define
 
 begin_endif

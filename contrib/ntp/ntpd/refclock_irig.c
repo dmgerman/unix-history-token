@@ -110,7 +110,7 @@ file|"audio.h"
 end_include
 
 begin_comment
-comment|/*  * Audio IRIG-B/E demodulator/decoder  *  * This driver receives, demodulates and decodes IRIG-B/E signals when  * connected to the audio codec /dev/audio. The IRIG signal format is an  * amplitude-modulated carrier with pulse-width modulated data bits. For  * IRIG-B, the carrier frequency is 1000 Hz and bit rate 100 b/s; for  * IRIG-E, the carrier frequenchy is 100 Hz and bit rate 10 b/s. The  * driver automatically recognizes which format is in use.  *  * The program processes 8000-Hz mu-law companded samples using separate  * signal filters for IRIG-B and IRIG-E, a comb filter, envelope  * detector and automatic threshold corrector. Cycle crossings relative  * to the corrected slice level determine the width of each pulse and  * its value - zero, one or position identifier. The data encode 20 BCD  * digits which determine the second, minute, hour and day of the year  * and sometimes the year and synchronization condition. The comb filter  * exponentially averages the corresponding samples of successive baud  * intervals in order to reliably identify the reference carrier cycle.  * A type-II phase-lock loop (PLL) performs additional integration and  * interpolation to accurately determine the zero crossing of that  * cycle, which determines the reference timestamp. A pulse-width  * discriminator demodulates the data pulses, which are then encoded as  * the BCD digits of the timecode.  *  * The timecode and reference timestamp are updated once each second  * with IRIG-B (ten seconds with IRIG-E) and local clock offset samples  * saved for later processing. At poll intervals of 64 s, the saved  * samples are processed by a trimmed-mean filter and used to update the  * system clock.  *  * An automatic gain control feature provides protection against  * overdriven or underdriven input signal amplitudes. It is designed to  * maintain adequate demodulator signal amplitude while avoiding  * occasional noise spikes. In order to assure reliable capture, the  * decompanded input signal amplitude must be greater than 100 units and  * the codec sample frequency error less than 250 PPM (.025 percent).  *  * The program performs a number of error checks to protect against  * overdriven or underdriven input signal levels, incorrect signal  * format or improper hardware configuration. Specifically, if any of  * the following errors occur for a time measurement, the data are  * rejected.  *  * o The peak carrier amplitude is less than DRPOUT (100). This usually  *   means dead IRIG signal source, broken cable or wrong input port.  *  * o The frequency error is greater than MAXFREQ +-250 PPM (.025%). This  *   usually means broken codec hardware or wrong codec configuration.  *  * o The modulation index is less than MODMIN (0.5). This usually means  *   overdriven IRIG signal or wrong IRIG format.  *  * o A frame synchronization error has occurred. This usually means wrong  *   IRIG signal format or the IRIG signal source has lost  *   synchronization (signature control).  *  * o A data decoding error has occurred. This usually means wrong IRIG  *   signal format.  *  * o The current second of the day is not exactly one greater than the  *   previous one. This usually means a very noisy IRIG signal or  *   insufficient CPU resources.  *  * o An audio codec error (overrun) occurred. This usually means  *   insufficient CPU resources, as sometimes happens with Sun SPARC  *   IPCs when doing something useful.  *  * Note that additional checks are done elsewhere in the reference clock  * interface routines.  *  * Debugging aids  *  * The timecode format used for debugging and data recording includes  * data helpful in diagnosing problems with the IRIG signal and codec  * connections. With debugging enabled (-d -d -d on the ntpd command  * line), the driver produces one line for each timecode in the  * following format:  *  * 00 1 98 23 19:26:52 721 143 0.694 47 20 0.083 66.5 3094572411.00027  *  * The most recent line is also written to the clockstats file at 64-s  * intervals.  *  * The first field contains the error flags in hex, where the hex bits  * are interpreted as below. This is followed by the IRIG status  * indicator, year of century, day of year and time of day. The status  * indicator and year are not produced by some IRIG devices. Following  * these fields are the signal amplitude (0-8100), codec gain (0-255),  * field phase (0-79), time constant (2-20), modulation index (0-1),  * carrier phase error (0+-0.5) and carrier frequency error (PPM). The  * last field is the on-time timestamp in NTP format.  *  * The fraction part of the on-time timestamp is a good indicator of how  * well the driver is doing. With an UltrSPARC 30, this thing can keep  * the clock within a few tens of microseconds relative to the IRIG-B  * signal. Accuracy with IRIG-E is about ten times worse.  *  * Unlike other drivers, which can have multiple instantiations, this  * one supports only one. It does not seem likely that more than one  * audio codec would be useful in a single machine. More than one would  * probably chew up too much CPU time anyway.  *  * Fudge factors  *  * Fudge flag2 selects the audio input port, where 0 is the mike port  * (default) and 1 is the line-in port. It does not seem useful to  * select the compact disc player port. Fudge flag3 enables audio  * monitoring of the input signal. For this purpose, the speaker volume  * must be set before the driver is started. Fudge flag4 causes the  * debugging output described above to be recorded in the clockstats  * file. Any of these flags can be changed during operation with the  * ntpdc program.  */
+comment|/*  * Audio IRIG-B/E demodulator/decoder  *  * This driver receives, demodulates and decodes IRIG-B/E signals when  * connected to the audio codec /dev/audio. The IRIG signal format is an  * amplitude-modulated carrier with pulse-width modulated data bits. For  * IRIG-B, the carrier frequency is 1000 Hz and bit rate 100 b/s; for  * IRIG-E, the carrier frequenchy is 100 Hz and bit rate 10 b/s. The  * driver automatically recognizes which format is in use.  *  * The program processes 8000-Hz mu-law companded samples using separate  * signal filters for IRIG-B and IRIG-E, a comb filter, envelope  * detector and automatic threshold corrector. Cycle crossings relative  * to the corrected slice level determine the width of each pulse and  * its value - zero, one or position identifier. The data encode 20 BCD  * digits which determine the second, minute, hour and day of the year  * and sometimes the year and synchronization condition. The comb filter  * exponentially averages the corresponding samples of successive baud  * intervals in order to reliably identify the reference carrier cycle.  * A type-II phase-lock loop (PLL) performs additional integration and  * interpolation to accurately determine the zero crossing of that  * cycle, which determines the reference timestamp. A pulse-width  * discriminator demodulates the data pulses, which are then encoded as  * the BCD digits of the timecode.  *  * The timecode and reference timestamp are updated once each second  * with IRIG-B (ten seconds with IRIG-E) and local clock offset samples  * saved for later processing. At poll intervals of 64 s, the saved  * samples are processed by a trimmed-mean filter and used to update the  * system clock.  *  * An automatic gain control feature provides protection against  * overdriven or underdriven input signal amplitudes. It is designed to  * maintain adequate demodulator signal amplitude while avoiding  * occasional noise spikes. In order to assure reliable capture, the  * decompanded input signal amplitude must be greater than 100 units and  * the codec sample frequency error less than 250 PPM (.025 percent).  *  * The program performs a number of error checks to protect against  * overdriven or underdriven input signal levels, incorrect signal  * format or improper hardware configuration. Specifically, if any of  * the following errors occur for a time measurement, the data are  * rejected.  *  * o The peak carrier amplitude is less than DRPOUT (100). This usually  *   means dead IRIG signal source, broken cable or wrong input port.  *  * o The frequency error is greater than MAXFREQ +-250 PPM (.025%). This  *   usually means broken codec hardware or wrong codec configuration.  *  * o The modulation index is less than MODMIN (0.5). This usually means  *   overdriven IRIG signal or wrong IRIG format.  *  * o A frame synchronization error has occurred. This usually means  *   wrong IRIG signal format or the IRIG signal source has lost  *   synchronization (signature control).  *  * o A data decoding error has occurred. This usually means wrong IRIG  *   signal format.  *  * o The current second of the day is not exactly one greater than the  *   previous one. This usually means a very noisy IRIG signal or  *   insufficient CPU resources.  *  * o An audio codec error (overrun) occurred. This usually means  *   insufficient CPU resources, as sometimes happens with Sun SPARC  *   IPCs when doing something useful.  *  * Note that additional checks are done elsewhere in the reference clock  * interface routines.  *  * Debugging aids  *  * The timecode format used for debugging and data recording includes  * data helpful in diagnosing problems with the IRIG signal and codec  * connections. With debugging enabled (-d on the ntpd command line),  * the driver produces one line for each timecode in the following  * format:  *  * 00 1 98 23 19:26:52 721 143 0.694 20 0.1 66.5 3094572411.00027  *  * The most recent line is also written to the clockstats file at 64-s  * intervals.  *  * The first field contains the error flags in hex, where the hex bits  * are interpreted as below. This is followed by the IRIG status  * indicator, year of century, day of year and time of day. The status  * indicator and year are not produced by some IRIG devices. Following  * these fields are the signal amplitude (0-8100), codec gain (0-255),  * modulation index (0-1), time constant (2-20), carrier phase error  * (us) and carrier frequency error (PPM). The last field is the on-time  * timestamp in NTP format.  *  * The fraction part of the on-time timestamp is a good indicator of how  * well the driver is doing. With an UltrSPARC 30 and Solaris 2.7, this  * thing can keep the clock within a few tens of microseconds relative  * to the IRIG-B signal. Accuracy with IRIG-E is about ten times worse.  * Unfortunately, Sun broke the 2.7 audio driver in 2.8, which has a  * 10-ms sawtooth modulation. The driver attempts to remove the  * modulation by some clever estimation techniques which mostly work.  * Your experience may vary.  *  * Unlike other drivers, which can have multiple instantiations, this  * one supports only one. It does not seem likely that more than one  * audio codec would be useful in a single machine. More than one would  * probably chew up too much CPU time anyway.  *  * Fudge factors  *  * Fudge flag4 causes the dubugging output described above to be  * recorded in the clockstats file. When the audio driver is compiled,  * fudge flag2 selects the audio input port, where 0 is the mike port  * (default) and 1 is the line-in port. It does not seem useful to  * select the compact disc player port. Fudge flag3 enables audio  * monitoring of the input signal. For this purpose, the monitor gain is  * set to a default value. Fudgetime2 is used as a frequency vernier for  * broken codec sample frequency.  */
 end_comment
 
 begin_comment
@@ -159,6 +159,17 @@ end_define
 
 begin_comment
 comment|/* WRU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUDIO_BUFSIZ
+value|320
+end_define
+
+begin_comment
+comment|/* audio buffer size (40 ms) */
 end_comment
 
 begin_define
@@ -274,6 +285,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAXCLP
+value|100
+end_define
+
+begin_comment
+comment|/* max clips above reference per s */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DRPOUT
 value|100.
 end_define
@@ -315,8 +337,34 @@ begin_comment
 comment|/* the real thing */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IRIG_SUCKS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WIGGLE
+value|11
+end_define
+
 begin_comment
-comment|/*  * Experimentally determined fudge factors  */
+comment|/* wiggle filter length */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IRIG_SUCKS */
+end_comment
+
+begin_comment
+comment|/*  * Experimentally determined filter delays  */
 end_comment
 
 begin_define
@@ -327,7 +375,7 @@ value|.0019
 end_define
 
 begin_comment
-comment|/* IRIG-B phase delay */
+comment|/* IRIG-B filter delay */
 end_comment
 
 begin_define
@@ -338,7 +386,7 @@ value|.0019
 end_define
 
 begin_comment
-comment|/* IRIG-E phase delay */
+comment|/* IRIG-E filter delay */
 end_comment
 
 begin_comment
@@ -459,6 +507,17 @@ begin_comment
 comment|/* codec error (overrun) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IRIG_ERR_SIGERR
+value|0x80
+end_define
+
+begin_comment
+comment|/* IRIG status error (Spectracom) */
+end_comment
+
 begin_comment
 comment|/*  * IRIG unit control structure  */
 end_comment
@@ -483,13 +542,6 @@ name|tick
 decl_stmt|;
 comment|/* audio sample increment */
 name|double
-name|comp
-index|[
-name|SIZE
-index|]
-decl_stmt|;
-comment|/* decompanding table */
-name|double
 name|integ
 index|[
 name|BAUD
@@ -509,7 +561,11 @@ comment|/* phase detector integrator */
 name|double
 name|yxing
 decl_stmt|;
-comment|/* phase detector display */
+comment|/* cycle phase */
+name|double
+name|exing
+decl_stmt|;
+comment|/* envelope phase */
 name|double
 name|modndx
 decl_stmt|;
@@ -526,18 +582,14 @@ name|int
 name|errflg
 decl_stmt|;
 comment|/* error flags */
-name|int
-name|bufcnt
+comment|/* 	 * Audio codec variables 	 */
+name|double
+name|comp
+index|[
+name|SIZE
+index|]
 decl_stmt|;
-comment|/* samples in buffer */
-name|int
-name|bufptr
-decl_stmt|;
-comment|/* buffer index pointer */
-name|int
-name|pollcnt
-decl_stmt|;
-comment|/* poll counter */
+comment|/* decompanding table */
 name|int
 name|port
 decl_stmt|;
@@ -547,6 +599,10 @@ name|gain
 decl_stmt|;
 comment|/* codec gain */
 name|int
+name|mongain
+decl_stmt|;
+comment|/* codec monitor gain */
+name|int
 name|clipcnt
 decl_stmt|;
 comment|/* sample clipped count */
@@ -554,10 +610,6 @@ name|int
 name|seccnt
 decl_stmt|;
 comment|/* second interval counter */
-name|int
-name|decim
-decl_stmt|;
-comment|/* sample decimation factor */
 comment|/* 	 * RF variables 	 */
 name|double
 name|hpf
@@ -614,13 +666,13 @@ name|lastsig
 decl_stmt|;
 comment|/* last carrier sample */
 name|double
-name|xxing
-decl_stmt|;
-comment|/* phase detector interpolated output */
-name|double
 name|fdelay
 decl_stmt|;
 comment|/* filter delay */
+name|int
+name|decim
+decl_stmt|;
+comment|/* sample decimation factor */
 name|int
 name|envphase
 decl_stmt|;
@@ -654,14 +706,6 @@ name|badcnt
 decl_stmt|;
 comment|/* decimation interval counter */
 comment|/* 	 * Decoder variables 	 */
-name|l_fp
-name|montime
-decl_stmt|;
-comment|/* reference timestamp for eyeball */
-name|int
-name|timecnt
-decl_stmt|;
-comment|/* timecode counter */
 name|int
 name|pulse
 decl_stmt|;
@@ -698,6 +742,37 @@ name|int
 name|bitcnt
 decl_stmt|;
 comment|/* bit count in subfield */
+ifdef|#
+directive|ifdef
+name|IRIG_SUCKS
+name|l_fp
+name|wigwag
+decl_stmt|;
+comment|/* wiggle accumulator */
+name|int
+name|wp
+decl_stmt|;
+comment|/* wiggle filter pointer */
+name|l_fp
+name|wiggle
+index|[
+name|WIGGLE
+index|]
+decl_stmt|;
+comment|/* wiggle filter */
+name|l_fp
+name|wigbot
+index|[
+name|WIGGLE
+index|]
+decl_stmt|;
+comment|/* wiggle bottom fisher*/
+endif|#
+directive|endif
+comment|/* IRIG_SUCKS */
+name|l_fp
+name|wuggle
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -939,7 +1014,7 @@ parameter_list|(
 name|int
 name|unit
 parameter_list|,
-comment|/* instance number (not used) */
+comment|/* instance number (used for PCM) */
 name|struct
 name|peer
 modifier|*
@@ -976,6 +1051,10 @@ operator|=
 name|audio_init
 argument_list|(
 name|DEVICE_AUDIO
+argument_list|,
+name|AUDIO_BUFSIZ
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1188,12 +1267,6 @@ operator|->
 name|gain
 operator|=
 literal|127
-expr_stmt|;
-name|up
-operator|->
-name|pollcnt
-operator|=
-literal|2
 expr_stmt|;
 comment|/* 	 * The companded samples are encoded sign-magnitude. The table 	 * contains all the 256 values in the interest of speed. 	 */
 name|up
@@ -1444,6 +1517,10 @@ modifier|*
 name|dpt
 decl_stmt|;
 comment|/* buffer pointer */
+name|int
+name|bufcnt
+decl_stmt|;
+comment|/* buffer counter */
 name|l_fp
 name|ltemp
 decl_stmt|;
@@ -1477,30 +1554,14 @@ operator|->
 name|unitptr
 expr_stmt|;
 comment|/* 	 * Main loop - read until there ain't no more. Note codec 	 * samples are bit-inverted. 	 */
-name|up
-operator|->
-name|timestamp
-operator|=
-name|rbufp
-operator|->
-name|recv_time
-expr_stmt|;
-name|up
-operator|->
-name|bufcnt
-operator|=
-name|rbufp
-operator|->
-name|recv_length
-expr_stmt|;
 name|DTOLFP
 argument_list|(
 operator|(
 name|double
 operator|)
-name|up
+name|rbufp
 operator|->
-name|bufcnt
+name|recv_length
 operator|/
 name|SECOND
 argument_list|,
@@ -1511,13 +1572,21 @@ expr_stmt|;
 name|L_SUB
 argument_list|(
 operator|&
-name|up
+name|rbufp
 operator|->
-name|timestamp
+name|recv_time
 argument_list|,
 operator|&
 name|ltemp
 argument_list|)
+expr_stmt|;
+name|up
+operator|->
+name|timestamp
+operator|=
+name|rbufp
+operator|->
+name|recv_time
 expr_stmt|;
 name|dpt
 operator|=
@@ -1527,23 +1596,17 @@ name|recv_buffer
 expr_stmt|;
 for|for
 control|(
-name|up
-operator|->
-name|bufptr
+name|bufcnt
 operator|=
 literal|0
 init|;
-name|up
-operator|->
-name|bufptr
-operator|<
-name|up
-operator|->
 name|bufcnt
-condition|;
-name|up
+operator|<
+name|rbufp
 operator|->
-name|bufptr
+name|recv_length
+condition|;
+name|bufcnt
 operator|++
 control|)
 block|{
@@ -1561,7 +1624,7 @@ operator|&
 literal|0xff
 index|]
 expr_stmt|;
-comment|/* 		 * Clip noise spikes greater than MAXSIG. If no clips, 		 * increase the gain a tad; if the clips are too high,  		 * decrease a tad. Choose either IRIG-B or IRIG-E 		 * according to the energy at the respective filter 		 * output. 		 */
+comment|/* 		 * Clip noise spikes greater than MAXSIG. If no clips, 		 * increase the gain a tad; if the clips are too high,  		 * decrease a tad. 		 */
 if|if
 condition|(
 name|sample
@@ -1599,7 +1662,7 @@ name|clipcnt
 operator|++
 expr_stmt|;
 block|}
-comment|/* 		 * Variable frequency oscillator. A phase change of one 		 * unit produces a change of 360 degrees; a frequency 		 * change of one unit produces a change of 1 Hz. 		 */
+comment|/* 		 * Variable frequency oscillator. The codec oscillator 		 * runs at the nominal rate of 8000 samples per second, 		 * or 125 us per sample. A frequency change of one unit 		 * results in either duplicating or deleting one sample 		 * per second, which results in a frequency change of 		 * 125 PPM. 		 */
 name|up
 operator|->
 name|phase
@@ -1609,6 +1672,16 @@ operator|->
 name|freq
 operator|/
 name|SECOND
+expr_stmt|;
+name|up
+operator|->
+name|phase
+operator|+=
+name|pp
+operator|->
+name|fudgetime2
+operator|/
+literal|1e6
 expr_stmt|;
 if|if
 condition|(
@@ -1681,7 +1754,7 @@ operator|->
 name|tick
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Once each second, determine the IRIG format, codec 		 * port and gain. 		 */
+comment|/* 		 * Once each second, determine the IRIG format and gain. 		 */
 name|up
 operator|->
 name|seccnt
@@ -1744,6 +1817,24 @@ operator|=
 name|IRIG_E
 expr_stmt|;
 block|}
+name|irig_gain
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
+name|up
+operator|->
+name|irig_b
+operator|=
+name|up
+operator|->
+name|irig_e
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+comment|/* 	 * Set the input port and monitor gain for the next buffer. 	 */
 if|if
 condition|(
 name|pp
@@ -1765,24 +1856,6 @@ name|port
 operator|=
 literal|1
 expr_stmt|;
-name|irig_gain
-argument_list|(
-name|peer
-argument_list|)
-expr_stmt|;
-name|up
-operator|->
-name|irig_b
-operator|=
-name|up
-operator|->
-name|irig_e
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-comment|/* 	 * Squawk to the monitor speaker if enabled. 	 */
 if|if
 condition|(
 name|pp
@@ -1791,39 +1864,18 @@ name|sloppyclockflag
 operator|&
 name|CLK_FLAG3
 condition|)
-if|if
-condition|(
-name|write
-argument_list|(
-name|pp
-operator|->
-name|io
-operator|.
-name|fd
-argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
-name|rbufp
-operator|->
-name|recv_space
-argument_list|,
-operator|(
-name|u_int
-operator|)
 name|up
 operator|->
-name|bufcnt
-argument_list|)
-operator|<
+name|mongain
+operator|=
+name|MONGAIN
+expr_stmt|;
+else|else
+name|up
+operator|->
+name|mongain
+operator|=
 literal|0
-condition|)
-name|perror
-argument_list|(
-literal|"irig:"
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1882,7 +1934,7 @@ name|pp
 operator|->
 name|unitptr
 expr_stmt|;
-comment|/* 	 * IRIG-B filter. 4th-order elliptic, 800-Hz highpass, 0.3 dB 	 * passband ripple, -50 dB stopband ripple, phase delay -.0022 	 * s) 	 */
+comment|/* 	 * IRIG-B filter. 4th-order elliptic, 800-Hz highpass, 0.3 dB 	 * passband ripple, -50 dB stopband ripple, phase delay .0022 	 * s) 	 */
 name|irig_b
 operator|=
 operator|(
@@ -2269,6 +2321,10 @@ name|up
 decl_stmt|;
 comment|/* 	 * Local variables 	 */
 name|double
+name|xxing
+decl_stmt|;
+comment|/* phase detector interpolated output */
+name|double
 name|lope
 decl_stmt|;
 comment|/* integrator output */
@@ -2280,10 +2336,6 @@ name|double
 name|dtemp
 decl_stmt|;
 comment|/* double temp */
-name|int
-name|i
-decl_stmt|;
-comment|/* index temp */
 name|pp
 operator|=
 name|peer
@@ -2407,8 +2459,6 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|up
-operator|->
 name|xxing
 operator|=
 name|lope
@@ -2432,12 +2482,10 @@ name|carphase
 operator|-
 literal|4
 operator|+
-name|up
-operator|->
 name|xxing
 operator|)
 operator|/
-literal|8.
+name|CYCLE
 expr_stmt|;
 block|}
 name|up
@@ -2491,7 +2539,7 @@ if|if
 condition|(
 name|up
 operator|->
-name|intmax
+name|maxsignal
 operator|>
 literal|0
 condition|)
@@ -2895,16 +2943,19 @@ name|pulse
 operator|=
 literal|9
 expr_stmt|;
-name|dtemp
+name|up
+operator|->
+name|exing
 operator|=
-name|BAUD
 operator|-
 name|up
 operator|->
-name|zxing
+name|yxing
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
+name|fabs
+argument_list|(
 name|up
 operator|->
 name|envxing
@@ -2912,20 +2963,7 @@ operator|-
 name|up
 operator|->
 name|envphase
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|<
-literal|0
-condition|)
-name|i
-operator|-=
-name|i
-expr_stmt|;
-if|if
-condition|(
-name|i
+argument_list|)
 operator|<=
 literal|1
 condition|)
@@ -2984,7 +3022,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|dtemp
+name|up
+operator|->
+name|exing
 operator|-=
 name|up
 operator|->
@@ -3014,14 +3054,20 @@ name|envphase
 expr_stmt|;
 block|}
 comment|/* 		 * Determine a reference timestamp, accounting for the 		 * codec delay and filter delay. Note the timestamp is 		 * for the previous frame, so we have to backtrack for 		 * this plus the delay since the last carrier positive 		 * zero crossing. 		 */
-name|DTOLFP
-argument_list|(
+name|dtemp
+operator|=
 name|up
 operator|->
 name|decim
 operator|*
 operator|(
-name|dtemp
+operator|(
+name|up
+operator|->
+name|exing
+operator|+
+name|BAUD
+operator|)
 operator|/
 name|SECOND
 operator|+
@@ -3031,6 +3077,10 @@ operator|+
 name|up
 operator|->
 name|fdelay
+expr_stmt|;
+name|DTOLFP
+argument_list|(
+name|dtemp
 argument_list|,
 operator|&
 name|ltemp
@@ -3163,11 +3213,20 @@ name|irigunit
 modifier|*
 name|up
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IRIG_SUCKS
+name|int
+name|i
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* IRIG_SUCKS */
 comment|/* 	 * Local variables 	 */
 name|char
 name|syncchar
 decl_stmt|;
-comment|/* sync character (Spectracom only) */
+comment|/* sync character (Spectracom) */
 name|char
 name|sbs
 index|[
@@ -3253,14 +3312,6 @@ name|lastbit
 operator|=
 literal|0
 expr_stmt|;
-name|up
-operator|->
-name|montime
-operator|=
-name|pp
-operator|->
-name|lastrec
-expr_stmt|;
 if|if
 condition|(
 name|up
@@ -3270,43 +3321,265 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|IRIG_SUCKS
+name|l_fp
+name|ltemp
+decl_stmt|;
+comment|/* 			 * You really don't wanna know what comes down 			 * here. Leave it to say Solaris 2.8 broke the 			 * nice clean audio stream, apparently affected 			 * by a 5-ms sawtooth jitter. Sundown on 			 * Solaris. This leaves a little twilight. 			 * 			 * The scheme involves differentiation, forward 			 * learning and integration. The sawtooth has a 			 * period of 11 seconds. The timestamp 			 * differences are integrated and subtracted 			 * from the signal. 			 */
+name|ltemp
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
+name|L_SUB
+argument_list|(
+operator|&
+name|ltemp
+argument_list|,
+operator|&
+name|pp
+operator|->
+name|lastref
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ltemp
+operator|.
+name|l_f
+operator|<
+literal|0
+condition|)
+name|ltemp
+operator|.
+name|l_i
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+else|else
+name|ltemp
+operator|.
+name|l_i
+operator|=
+literal|0
+expr_stmt|;
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|L_ISNEG
+argument_list|(
+operator|&
+name|ltemp
+argument_list|)
+condition|)
+name|L_CLR
+argument_list|(
+operator|&
 name|up
 operator|->
-name|timecnt
+name|wigwag
+argument_list|)
+expr_stmt|;
+else|else
+name|L_ADD
+argument_list|(
+operator|&
+name|up
+operator|->
+name|wigwag
+argument_list|,
+operator|&
+name|ltemp
+argument_list|)
+expr_stmt|;
+name|L_SUB
+argument_list|(
+operator|&
+name|pp
+operator|->
+name|lastrec
+argument_list|,
+operator|&
+name|up
+operator|->
+name|wigwag
+argument_list|)
+expr_stmt|;
+name|up
+operator|->
+name|wiggle
+index|[
+name|up
+operator|->
+name|wp
+index|]
+operator|=
+name|ltemp
+expr_stmt|;
+comment|/* 			 * Bottom fisher. To understand this, you have 			 * to know about velocity microphones and AM 			 * transmitters. No further explanation is 			 * offered, as this is truly a black art. 			 */
+name|up
+operator|->
+name|wigbot
+index|[
+name|up
+operator|->
+name|wp
+index|]
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|WIGGLE
+condition|;
+name|i
 operator|++
+control|)
+block|{
+if|if
+condition|(
+name|i
+operator|!=
+name|up
+operator|->
+name|wp
+condition|)
+name|up
+operator|->
+name|wigbot
+index|[
+name|i
+index|]
+operator|.
+name|l_ui
+operator|++
+expr_stmt|;
+name|L_SUB
+argument_list|(
+operator|&
+name|pp
+operator|->
+name|lastrec
+argument_list|,
+operator|&
+name|up
+operator|->
+name|wigbot
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|L_ISNEG
+argument_list|(
+operator|&
+name|pp
+operator|->
+name|lastrec
+argument_list|)
+condition|)
+name|L_ADD
+argument_list|(
+operator|&
+name|pp
+operator|->
+name|lastrec
+argument_list|,
+operator|&
+name|up
+operator|->
+name|wigbot
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|pp
+operator|->
+name|lastrec
+operator|=
+name|up
+operator|->
+name|wigbot
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+name|up
+operator|->
+name|wp
+operator|++
+expr_stmt|;
+name|up
+operator|->
+name|wp
+operator|%=
+name|WIGGLE
+expr_stmt|;
+name|up
+operator|->
+name|wuggle
+operator|=
+name|pp
+operator|->
+name|lastrec
 expr_stmt|;
 name|refclock_process
 argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
+else|#
+directive|else
+comment|/* IRIG_SUCKS */
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
 name|up
 operator|->
-name|timecnt
-operator|>=
-name|MAXSTAGE
-condition|)
-block|{
-name|refclock_receive
+name|wuggle
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
+name|refclock_process
 argument_list|(
-name|peer
+name|pp
 argument_list|)
 expr_stmt|;
-name|up
-operator|->
-name|timecnt
-operator|=
-literal|0
-expr_stmt|;
-name|up
-operator|->
-name|pollcnt
-operator|=
-literal|2
-expr_stmt|;
+endif|#
+directive|endif
+comment|/* IRIG_SUCKS */
 block|}
 name|up
 operator|->
@@ -3434,7 +3707,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * End of field. Decode the timecode, adjust the 			 * gain and set the input port. Set the port 			 * here on the assumption somebody might even 			 * change it on-wing. 			 */
+comment|/* 			 * End of field. Decode the timecode and wind 			 * the clock. Not all IRIG generators have the 			 * year; if so, it is nonzero after year 2000. 			 * Not all have the hardware status bit; if so, 			 * it is lit when the source is okay and dim 			 * when bad. We watch this only if the year is 			 * nonzero. Not all are configured for signature 			 * control. If so, all BCD digits are set to 			 * zero if the source is bad. In this case the 			 * refclock_process() will reject the timecode 			 * as invalid. 			 */
 name|up
 operator|->
 name|xptr
@@ -3525,6 +3798,34 @@ if|if
 condition|(
 name|pp
 operator|->
+name|year
+operator|>
+literal|0
+condition|)
+block|{
+name|pp
+operator|->
+name|year
+operator|+=
+literal|2000
+expr_stmt|;
+if|if
+condition|(
+name|syncchar
+operator|==
+literal|'0'
+condition|)
+name|up
+operator|->
+name|errflg
+operator||=
+name|IRIG_ERR_CHECK
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pp
+operator|->
 name|second
 operator|!=
 name|up
@@ -3551,7 +3852,7 @@ name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-literal|"%02x %c %2d %3d %02d:%02d:%02d %4.0f %3d %6.3f %2d %2d %6.3f %6.1f %s"
+literal|"%02x %c %2d %3d %02d:%02d:%02d %4.0f %3d %6.3f %2d %6.1f %6.1f %s"
 argument_list|,
 name|up
 operator|->
@@ -3593,15 +3894,15 @@ name|modndx
 argument_list|,
 name|up
 operator|->
-name|envxing
-argument_list|,
-name|up
-operator|->
 name|tc
 argument_list|,
 name|up
 operator|->
-name|yxing
+name|exing
+operator|*
+literal|1e6
+operator|/
+name|SECOND
 argument_list|,
 name|up
 operator|->
@@ -3616,7 +3917,7 @@ argument_list|(
 operator|&
 name|up
 operator|->
-name|montime
+name|wuggle
 argument_list|,
 literal|6
 argument_list|)
@@ -3635,18 +3936,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|up
-operator|->
-name|timecnt
-operator|==
-literal|0
-operator|||
 name|pp
 operator|->
 name|sloppyclockflag
 operator|&
 name|CLK_FLAG4
 condition|)
+block|{
 name|record_clock_stats
 argument_list|(
 operator|&
@@ -3665,8 +3961,6 @@ name|DEBUG
 if|if
 condition|(
 name|debug
-operator|>
-literal|2
 condition|)
 name|printf
 argument_list|(
@@ -3682,6 +3976,7 @@ directive|endif
 comment|/* DEBUG */
 block|}
 block|}
+block|}
 name|up
 operator|->
 name|lastbit
@@ -3692,7 +3987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * irig_poll - called by the transmit procedure  *  * This routine keeps track of status. If nothing is heard for two  * successive poll intervals, a timeout event is declared and any  * orphaned timecode updates are sent to foster care.   */
+comment|/*  * irig_poll - called by the transmit procedure  *  * This routine sweeps up the timecode updates since the last poll. For  * IRIG-B there should be at least 60 updates; for IRIG-E there should  * be at least 6. If nothing is heard, a timeout event is declared and  * any orphaned timecode updates are sent to foster care.   */
 end_comment
 
 begin_function
@@ -3738,14 +4033,15 @@ name|pp
 operator|->
 name|unitptr
 expr_stmt|;
-comment|/* 	 * Keep book for tattletales 	 */
 if|if
 condition|(
-name|up
+name|pp
 operator|->
-name|pollcnt
+name|coderecv
 operator|==
-literal|0
+name|pp
+operator|->
+name|codeproc
 condition|)
 block|{
 name|refclock_report
@@ -3755,19 +4051,47 @@ argument_list|,
 name|CEVNT_TIMEOUT
 argument_list|)
 expr_stmt|;
-name|up
-operator|->
-name|timecnt
-operator|=
-literal|0
-expr_stmt|;
 return|return;
 block|}
-name|up
-operator|->
-name|pollcnt
-operator|--
+else|else
+block|{
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
 expr_stmt|;
+name|record_clock_stats
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|,
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"irig: %s\n"
+argument_list|,
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
+block|}
 name|pp
 operator|->
 name|polls
@@ -3841,13 +4165,13 @@ name|up
 operator|->
 name|gain
 operator|>
-literal|255
+name|MAXGAIN
 condition|)
 name|up
 operator|->
 name|gain
 operator|=
-literal|255
+name|MAXGAIN
 expr_stmt|;
 block|}
 elseif|else
@@ -3857,9 +4181,7 @@ name|up
 operator|->
 name|clipcnt
 operator|>
-name|SECOND
-operator|/
-literal|100
+name|MAXCLP
 condition|)
 block|{
 name|up
@@ -3888,6 +4210,10 @@ argument_list|(
 name|up
 operator|->
 name|gain
+argument_list|,
+name|up
+operator|->
+name|mongain
 argument_list|,
 name|up
 operator|->

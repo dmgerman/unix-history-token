@@ -476,6 +476,10 @@ name|BMAX
 index|]
 decl_stmt|;
 comment|/* packet assembly buffer */
+name|int
+name|type
+decl_stmt|;
+comment|/* Clock mode type */
 block|}
 struct|;
 end_struct

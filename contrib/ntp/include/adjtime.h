@@ -65,6 +65,39 @@ directive|include
 file|"ntp_types.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__QNXNTO__
+end_ifdef
+
+begin_function_decl
+name|int
+name|adjtime
+parameter_list|(
+specifier|const
+name|struct
+name|timeval
+modifier|*
+name|oldtime
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
+name|newtime
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not __QNXNTO__ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -142,6 +175,15 @@ directive|define
 name|DELTA2
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not __QNXNTO__ */
+end_comment
 
 end_unit
 

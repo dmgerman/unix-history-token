@@ -27,6 +27,27 @@ directive|include
 file|<math.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ntp_crypto.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL */
+end_comment
+
 begin_comment
 comment|/*  * Calendar arithmetic - contributed by G. Healton  */
 end_comment
@@ -278,7 +299,11 @@ value|123
 end_define
 
 begin_comment
-comment|/* included for sake of non-unix machines */
+comment|/* included for non-unix machines */
+end_comment
+
+begin_comment
+comment|/*  * Poll interval parameters  */
 end_comment
 
 begin_define
@@ -295,28 +320,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NTP_MINDPOLL
-value|6
-end_define
-
-begin_comment
-comment|/* log2 default min poll interval (64 s) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTP_MAXDPOLL
-value|10
-end_define
-
-begin_comment
-comment|/* log2 default max poll interval (~17 m) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NTP_MINPOLL
 value|4
 end_define
@@ -328,34 +331,93 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NTP_MINDPOLL
+value|6
+end_define
+
+begin_comment
+comment|/* log2 default min poll (64 s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_MAXDPOLL
+value|10
+end_define
+
+begin_comment
+comment|/* log2 default max poll (~17 m) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NTP_MAXPOLL
 value|17
 end_define
 
 begin_comment
-comment|/* log2 max poll interval (~4.5 h) */
+comment|/* log2 max poll interval (~36 h) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NTP_MINCLOCK
-value|3
+name|NTP_BURST
+value|8
 end_define
 
 begin_comment
-comment|/* minimum survivors */
+comment|/* packets in burst */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NTP_MAXCLOCK
-value|10
+name|BURST_DELAY
+value|2
 end_define
 
 begin_comment
-comment|/* maximum candidates */
+comment|/* interburst delay (s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESP_DELAY
+value|1
+end_define
+
+begin_comment
+comment|/* crypto response delay (s) */
+end_comment
+
+begin_comment
+comment|/*  * Clock filter algorithm tuning parameters  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINDISPERSE
+value|.01
+end_define
+
+begin_comment
+comment|/* min dispersion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXDISPERSE
+value|16.
+end_define
+
+begin_comment
+comment|/* max dispersion */
 end_comment
 
 begin_define
@@ -366,51 +428,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* 8 suitable for crystal time base */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTP_MAXKEY
-value|65535
-end_define
-
-begin_comment
-comment|/* maximum authentication key number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTP_MAXSESSION
-value|100
-end_define
-
-begin_comment
-comment|/* maximum session key list entries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTP_AUTOMAX
-value|13
-end_define
-
-begin_comment
-comment|/* log2 default max session key lifetime */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEY_REVOKE
-value|16
-end_define
-
-begin_comment
-comment|/* log2 default key revoke timeout */
+comment|/* clock filter stages */
 end_comment
 
 begin_define
@@ -424,37 +442,52 @@ begin_comment
 comment|/* clock filter weight */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CLOCK_SGATE
-value|4.
-end_define
-
 begin_comment
-comment|/* popcorn spike gate */
+comment|/*  * Selection algorithm tuning parameters  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BURST_INTERVAL1
+name|NTP_MINCLOCK
 value|4
 end_define
 
 begin_comment
-comment|/* first interburst interval (log2) */
+comment|/* minimum survivors */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BURST_INTERVAL2
-value|1
+name|NTP_MAXCLOCK
+value|50
 end_define
 
 begin_comment
-comment|/* succeeding interburst intervals (log2) */
+comment|/* maximum candidates */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXDISTANCE
+value|1.
+end_define
+
+begin_comment
+comment|/* max root distance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_SGATE
+value|3.
+end_define
+
+begin_comment
+comment|/* popcorn spike gate */
 end_comment
 
 begin_define
@@ -466,6 +499,113 @@ end_define
 
 begin_comment
 comment|/* huff-n'-puff sample interval (s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HYST
+value|.5
+end_define
+
+begin_comment
+comment|/* anti-clockhop hysteresis */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HYST_TC
+value|.875
+end_define
+
+begin_comment
+comment|/* anti-clockhop hysteresis decay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_TTL
+value|8
+end_define
+
+begin_comment
+comment|/* max ttl mapping vector size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_MAXEXTEN
+value|1024
+end_define
+
+begin_comment
+comment|/* maximum extension field size */
+end_comment
+
+begin_comment
+comment|/*  * Miscellaneous stuff  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_MAXKEY
+value|65535
+end_define
+
+begin_comment
+comment|/* maximum authentication key number */
+end_comment
+
+begin_comment
+comment|/*  * Limits of things  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXFILENAME
+value|128
+end_define
+
+begin_comment
+comment|/* max length of file name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXHOSTNAME
+value|512
+end_define
+
+begin_comment
+comment|/* max length of host/node name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_MAXSTRLEN
+value|256
+end_define
+
+begin_comment
+comment|/* maximum string length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXINTERFACES
+value|512
+end_define
+
+begin_comment
+comment|/* max number of interfaces */
 end_comment
 
 begin_comment
@@ -549,184 +689,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAXDISPERSE
-value|16.
-end_define
-
-begin_comment
-comment|/* max dispersion (square) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MINDISPERSE
-value|.01
-end_define
-
-begin_comment
-comment|/* min dispersion */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXDISTANCE
-value|1.
-end_define
-
-begin_comment
-comment|/* max root distance */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EVENT_TIMEOUT
 value|0
 end_define
 
 begin_comment
 comment|/* one second, that is */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AUTOKEY
-end_ifdef
-
-begin_comment
-comment|/*  * The following structures are used in the autokey protocol.  *  * The autokey structure holds the values used to authenticate key IDs.  */
-end_comment
-
-begin_struct
-struct|struct
-name|autokey
-block|{
-comment|/* network byte order */
-name|tstamp_t
-name|tstamp
-decl_stmt|;
-comment|/* timestamp */
-name|keyid_t
-name|key
-decl_stmt|;
-comment|/* key ID */
-name|int32
-name|seq
-decl_stmt|;
-comment|/* key number */
-name|u_int32
-name|siglen
-decl_stmt|;
-comment|/* signature length */
-name|u_int32
-name|pkt
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* start of signature field */
-name|u_char
-modifier|*
-name|sig
-decl_stmt|;
-comment|/* signature */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The cookie structure holds the current private value used to  * construct session keys.  */
-end_comment
-
-begin_struct
-struct|struct
-name|cookie
-block|{
-comment|/* network byte order */
-name|tstamp_t
-name|tstamp
-decl_stmt|;
-comment|/* timestamp */
-name|keyid_t
-name|key
-decl_stmt|;
-comment|/* key ID */
-name|u_int32
-name|siglen
-decl_stmt|;
-comment|/* signature length */
-name|u_int32
-name|pkt
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* start of signature field */
-name|u_char
-modifier|*
-name|sig
-decl_stmt|;
-comment|/* signature */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The value structure holds variable length data such as public  * key, agreement parameters, public valule and leapsecond table.  */
-end_comment
-
-begin_struct
-struct|struct
-name|value
-block|{
-comment|/* network byte order */
-name|tstamp_t
-name|tstamp
-decl_stmt|;
-comment|/* timestamp */
-name|tstamp_t
-name|fstamp
-decl_stmt|;
-comment|/* filestamp */
-name|u_int32
-name|vallen
-decl_stmt|;
-comment|/* value length */
-name|u_int32
-name|pkt
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* start of value field */
-name|u_char
-modifier|*
-name|ptr
-decl_stmt|;
-comment|/* data pointer */
-name|u_int32
-name|siglen
-decl_stmt|;
-comment|/* signature length */
-name|u_char
-modifier|*
-name|sig
-decl_stmt|;
-comment|/* signature */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AUTOKEY */
 end_comment
 
 begin_comment
@@ -737,33 +705,33 @@ begin_struct
 struct|struct
 name|interface
 block|{
-name|int
+name|SOCKET
 name|fd
 decl_stmt|;
 comment|/* socket this is opened on */
-name|int
+name|SOCKET
 name|bfd
 decl_stmt|;
 comment|/* socket for receiving broadcasts */
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|sin
 decl_stmt|;
 comment|/* interface address */
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|bcast
 decl_stmt|;
 comment|/* broadcast address */
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|mask
 decl_stmt|;
 comment|/* interface mask */
 name|char
 name|name
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* name of interface */
@@ -775,6 +743,14 @@ name|int
 name|last_ttl
 decl_stmt|;
 comment|/* last TTL specified */
+name|u_int
+name|addr_refid
+decl_stmt|;
+comment|/* IPv4 addr or IPv6 hash */
+name|int
+name|num_mcast
+decl_stmt|;
+comment|/* No. of IP addresses in multicast socket */
 specifier|volatile
 name|long
 name|received
@@ -799,23 +775,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INT_BROADCAST
+name|INT_UP
 value|1
 end_define
 
 begin_comment
-comment|/* can broadcast out this interface */
+comment|/* Interface is up */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INT_BCASTOPEN
+name|INT_PPP
 value|2
 end_define
 
 begin_comment
-comment|/* broadcast socket is open */
+comment|/* Point-to-point interface */
 end_comment
 
 begin_define
@@ -832,12 +808,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INT_MULTICAST
+name|INT_BROADCAST
 value|8
 end_define
 
 begin_comment
+comment|/* can broadcast out this interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INT_MULTICAST
+value|16
+end_define
+
+begin_comment
 comment|/* multicasting enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INT_BCASTOPEN
+value|32
+end_define
+
+begin_comment
+comment|/* broadcast socket is open */
 end_comment
 
 begin_comment
@@ -986,7 +984,7 @@ name|ass_next
 decl_stmt|;
 comment|/* link pointer in associd hash */
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|srcadr
 decl_stmt|;
 comment|/* address of remote host */
@@ -1049,9 +1047,9 @@ name|num_events
 decl_stmt|;
 comment|/* number of error events */
 name|u_char
-name|ttlmax
+name|ttl
 decl_stmt|;
-comment|/* max ttl/refclock mode */
+comment|/* ttl/refclock mode */
 comment|/* 	 * Variables used by reference clock support 	 */
 name|struct
 name|refclockproc
@@ -1107,7 +1105,7 @@ decl_stmt|;
 comment|/* current key ID */
 ifdef|#
 directive|ifdef
-name|AUTOKEY
+name|OPENSSL
 define|#
 directive|define
 name|clear_to_zero
@@ -1120,49 +1118,75 @@ name|u_int32
 name|crypto
 decl_stmt|;
 comment|/* peer status word */
-ifdef|#
-directive|ifdef
-name|PUBKEY
-name|struct
-name|value
-name|pubkey
+name|EVP_PKEY
+modifier|*
+name|pkey
 decl_stmt|;
 comment|/* public key */
-name|struct
-name|value
-name|certif
-decl_stmt|;
-comment|/* certificate */
-name|u_char
+specifier|const
+name|EVP_MD
 modifier|*
-name|keystr
+name|digest
 decl_stmt|;
-comment|/* host name */
-endif|#
-directive|endif
-comment|/* PUBKEY */
+comment|/* message digest algorithm */
+name|char
+modifier|*
+name|subject
+decl_stmt|;
+comment|/* certificate subject name */
+name|char
+modifier|*
+name|issuer
+decl_stmt|;
+comment|/* certificate issuer name */
 name|keyid_t
 name|pkeyid
 decl_stmt|;
 comment|/* previous key ID */
 name|keyid_t
-name|hcookie
-decl_stmt|;
-comment|/* host cookie */
-name|struct
-name|cookie
 name|pcookie
 decl_stmt|;
 comment|/* peer cookie */
-name|struct
-name|autokey
-name|recauto
+name|EVP_PKEY
+modifier|*
+name|ident_pkey
 decl_stmt|;
-comment|/* autokey */
-name|u_int32
+comment|/* identity key */
+name|tstamp_t
+name|fstamp
+decl_stmt|;
+comment|/* identity filestamp */
+name|BIGNUM
+modifier|*
+name|iffval
+decl_stmt|;
+comment|/* IFF/GQ challenge */
+name|BIGNUM
+modifier|*
+name|grpkey
+decl_stmt|;
+comment|/* GQ group key */
+name|struct
+name|value
+name|cookval
+decl_stmt|;
+comment|/* cookie values */
+name|struct
+name|value
+name|recval
+decl_stmt|;
+comment|/* receive autokey values */
+name|struct
+name|value
+name|tai_leap
+decl_stmt|;
+comment|/* leapseconds values */
+name|struct
+name|exten
+modifier|*
 name|cmmd
 decl_stmt|;
-comment|/* peer command */
+comment|/* extension pointer */
 comment|/* 	 * Variables used by authenticated server 	 */
 name|keyid_t
 modifier|*
@@ -1174,41 +1198,34 @@ name|keynumber
 decl_stmt|;
 comment|/* current key number */
 name|struct
-name|autokey
-name|sndauto
+name|value
+name|encrypt
 decl_stmt|;
-comment|/* autokey */
+comment|/* send encrypt values */
+name|struct
+name|value
+name|sndval
+decl_stmt|;
+comment|/* send autokey values */
 else|#
 directive|else
-comment|/* AUTOKEY */
+comment|/* OPENSSL */
 define|#
 directive|define
 name|clear_to_zero
 value|status
 endif|#
 directive|endif
-comment|/* AUTOKEY */
+comment|/* OPENSSL */
 comment|/* 	 * Ephemeral state variables 	 */
 name|u_char
 name|status
 decl_stmt|;
 comment|/* peer status */
 name|u_char
-name|pollsw
-decl_stmt|;
-comment|/* what it says */
-name|u_char
-name|ttl
-decl_stmt|;
-comment|/* ttl for manycast mode */
-name|u_char
 name|reach
 decl_stmt|;
 comment|/* reachability register */
-name|u_char
-name|unreach
-decl_stmt|;
-comment|/* unreachable count */
 name|u_long
 name|epoch
 decl_stmt|;
@@ -1284,6 +1301,10 @@ name|double
 name|estbdelay
 decl_stmt|;
 comment|/* clock offset to broadcast server */
+name|double
+name|hyst
+decl_stmt|;
+comment|/* anti-clockhop hysteresis */
 comment|/* 	 * Variables set by received packet 	 */
 name|double
 name|rootdelay
@@ -1302,6 +1323,10 @@ define|#
 directive|define
 name|end_clear_to_zero
 value|update
+name|u_int
+name|unreach
+decl_stmt|;
+comment|/* unreachable count */
 name|u_long
 name|outdate
 decl_stmt|;
@@ -1373,6 +1398,10 @@ name|u_long
 name|selbroken
 decl_stmt|;
 comment|/* not used */
+name|u_long
+name|rank
+decl_stmt|;
+comment|/* number of times selected or in cluster */
 block|}
 struct|;
 end_struct
@@ -1437,7 +1466,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* unspecified (probably old NTP version) */
+comment|/* unspecified (old version) */
 end_comment
 
 begin_define
@@ -1540,7 +1569,7 @@ value|((u_char)0)
 end_define
 
 begin_comment
-comment|/* stratum claimed by primary clock */
+comment|/* default stratum */
 end_comment
 
 begin_comment
@@ -1697,34 +1726,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FLAG_AUTOKEY
+name|FLAG_ASSOC
 value|0x0800
 end_define
 
 begin_comment
-comment|/* autokey confirmed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLAG_ASSOC
-value|0x1000
-end_define
-
-begin_comment
-comment|/* autokey reqeust */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLAG_PROVEN
-value|0x2000
-end_define
-
-begin_comment
-comment|/* proventic confirmed */
+comment|/* autokey request */
 end_comment
 
 begin_comment
@@ -2219,7 +2226,7 @@ value|38
 end_define
 
 begin_comment
-comment|/* hopf DCF77/GPS serial line receiver  */
+comment|/* hopf DCF77/GPS serial receiver  */
 end_comment
 
 begin_define
@@ -2296,8 +2303,69 @@ value|44
 end_define
 
 begin_comment
-comment|/* Grow as needed... */
+comment|/* NeoClock4X DCF77 or TDF receiver */
 end_comment
+
+begin_comment
+comment|/*  * Macro for sockaddr_storage structures operations  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCKCMP
+parameter_list|(
+name|sock1
+parameter_list|,
+name|sock2
+parameter_list|)
+define|\
+value|(((struct sockaddr_storage *)sock1)->ss_family \ 	    == ((struct sockaddr_storage *)sock2)->ss_family ? \  	((struct sockaddr_storage *)sock1)->ss_family == AF_INET ? \  	memcmp(&((struct sockaddr_in *)sock1)->sin_addr, \&((struct sockaddr_in *)sock2)->sin_addr, \ 	    sizeof(struct in_addr)) == 0 : \ 	memcmp(&((struct sockaddr_in6 *)sock1)->sin6_addr, \&((struct sockaddr_in6 *)sock2)->sin6_addr, \ 	    sizeof(struct in6_addr)) == 0 : \ 	0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOCKNUL
+parameter_list|(
+name|sock1
+parameter_list|)
+define|\
+value|(((struct sockaddr_storage *)sock1)->ss_family == AF_INET ? \  	(((struct sockaddr_in *)sock1)->sin_addr.s_addr == 0) : \  	(IN6_IS_ADDR_UNSPECIFIED(&((struct sockaddr_in6 *)sock1)->sin6_addr)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOCKLEN
+parameter_list|(
+name|sock
+parameter_list|)
+define|\
+value|(((struct sockaddr_storage *)sock)->ss_family == AF_INET ? \  	(sizeof(struct sockaddr_in)) : (sizeof(struct sockaddr_in6)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANYSOCK
+parameter_list|(
+name|sock
+parameter_list|)
+define|\
+value|memset(((struct sockaddr_in *)sock), 0, \ 	    sizeof(struct sockaddr_storage))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANY_INTERFACE_CHOOSE
+parameter_list|(
+name|sock
+parameter_list|)
+define|\
+value|(((struct sockaddr_storage *)sock)->ss_family == AF_INET ? \  	any_interface : any6_interface)
+end_define
 
 begin_comment
 comment|/*  * We tell reference clocks from real peers by giving the reference  * clocks an address of the form 127.127.t.u, where t is the type and  * u is the unit number.  We define some of this here since we will need  * some sanity checks to make sure this address isn't interpretted as  * that of a normal peer.  */
@@ -2374,7 +2442,7 @@ name|NSRCADR
 parameter_list|(
 name|src
 parameter_list|)
-value|((src)->sin_addr.s_addr)
+value|(((struct sockaddr_in *)src)->sin_addr.s_addr)
 end_define
 
 begin_comment
@@ -2388,7 +2456,7 @@ name|NSRCPORT
 parameter_list|(
 name|src
 parameter_list|)
-value|((src)->sin_port)
+value|(((struct sockaddr_in *)src)->sin_port)
 end_define
 
 begin_comment
@@ -2422,6 +2490,59 @@ end_define
 begin_comment
 comment|/* host port */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CAST_V4
+parameter_list|(
+name|src
+parameter_list|)
+value|((struct sockaddr_in *)&(src))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAST_V6
+parameter_list|(
+name|src
+parameter_list|)
+value|((struct sockaddr_in6 *)&(src))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_INADDR
+parameter_list|(
+name|src
+parameter_list|)
+value|(CAST_V4(src)->sin_addr.s_addr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_INADDR6
+parameter_list|(
+name|src
+parameter_list|)
+value|(CAST_V6(src)->sin6_addr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_HOSTMASK
+parameter_list|(
+name|addr
+parameter_list|,
+name|family
+parameter_list|)
+define|\
+value|do { \ 		memset((char *)(addr), 0, sizeof(struct sockaddr_storage)); \ 		(addr)->ss_family = (family); \ 		if ((family) == AF_INET) \ 			GET_INADDR(*(addr)) = 0xffffffff; \ 		else \ 			memset(&GET_INADDR6(*(addr)), 0xff, \ 			    sizeof(struct in6_addr)); \ 	} while(0)
+end_define
 
 begin_comment
 comment|/*  * NTP packet format.  The mac field is optional.  It isn't really  * an l_fp either, but for now declaring it that way is convenient.  * See Appendix A in the specification.  *  * Note that all u_fp and l_fp values arrive in network byte order  * and must be converted (except the mac, which isn't, really).  */
@@ -2497,14 +2618,11 @@ comment|/* MD5 */
 comment|/* 	 * The length of the packet less MAC must be a multiple of 64 	 * with an RSA modulus and Diffie-Hellman prime of 64 octets 	 * and maximum host name of 128 octets, the maximum autokey 	 * command is 152 octets and maximum autokey response is 460 	 * octets. A packet can contain no more than one command and one 	 * response, so the maximum total extension field length is 672 	 * octets. But, to handle humungus certificates, the bank must 	 * be broke. 	 */
 ifdef|#
 directive|ifdef
-name|AUTOKEY
-ifdef|#
-directive|ifdef
-name|PUBKEY
+name|OPENSSL
 name|u_int32
 name|exten
 index|[
-literal|5000
+name|NTP_MAXEXTEN
 operator|/
 literal|4
 index|]
@@ -2512,21 +2630,7 @@ decl_stmt|;
 comment|/* max extension field */
 else|#
 directive|else
-name|u_int32
-name|exten
-index|[
-literal|672
-operator|/
-literal|4
-index|]
-decl_stmt|;
-comment|/* max extension field */
-endif|#
-directive|endif
-comment|/* PUBKEY */
-else|#
-directive|else
-comment|/* AUTOKEY */
+comment|/* OPENSSL */
 name|u_int32
 name|exten
 index|[
@@ -2536,7 +2640,7 @@ decl_stmt|;
 comment|/* misused */
 endif|#
 directive|endif
-comment|/* AUTOKEY */
+comment|/* OPENSSL */
 name|u_char
 name|mac
 index|[
@@ -2633,11 +2737,22 @@ begin_define
 define|#
 directive|define
 name|PEER_EVENT
-value|0x80
+value|0x080
 end_define
 
 begin_comment
 comment|/* this is a peer event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRPT_EVENT
+value|0x100
+end_define
+
+begin_comment
+comment|/* this is a crypto event */
 end_comment
 
 begin_comment
@@ -2898,7 +3013,7 @@ begin_define
 define|#
 directive|define
 name|HASH_SIZE
-value|32
+value|128
 end_define
 
 begin_define
@@ -2915,7 +3030,7 @@ name|HASH_ADDR
 parameter_list|(
 name|src
 parameter_list|)
-value|((SRCADR((src))^(SRCADR((src))>>8))& HASH_MASK)
+value|sock_hash(src)
 end_define
 
 begin_comment
@@ -3152,6 +3267,55 @@ name|PROTO_CAL
 value|13
 end_define
 
+begin_define
+define|#
+directive|define
+name|PROTO_MINCLOCK
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_MINSANE
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_FLOOR
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_CEILING
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_COHORT
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_CALLDELAY
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_ADJ
+value|20
+end_define
+
 begin_comment
 comment|/*  * Configuration items for the loop filter  */
 end_comment
@@ -3255,6 +3419,17 @@ begin_comment
 comment|/* set huff-n'-puff filter length */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOOP_FREQ
+value|10
+end_define
+
+begin_comment
+comment|/* set initial frequency */
+end_comment
+
 begin_comment
 comment|/*  * Configuration items for the stats printer  */
 end_comment
@@ -3295,12 +3470,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MJD_1970
-value|40587
+name|MJD_1900
+value|15020
 end_define
 
 begin_comment
-comment|/* MJD for 1 Jan 1970 */
+comment|/* MJD for 1 Jan 1900 */
 end_comment
 
 begin_comment
@@ -3355,35 +3530,24 @@ modifier|*
 name|mru_prev
 decl_stmt|;
 comment|/* previous structure in MRU list */
-name|struct
-name|mon_data
-modifier|*
-name|fifo_next
-decl_stmt|;
-comment|/* next structure in FIFO list */
-name|struct
-name|mon_data
-modifier|*
-name|fifo_prev
-decl_stmt|;
-comment|/* previous structure in FIFO list */
 name|u_long
-name|lastdrop
+name|drop_count
 decl_stmt|;
-comment|/* last time dropped due to RES_LIMIT*/
+comment|/* dropped due RESLIMIT*/
+name|double
+name|avg_interval
+decl_stmt|;
+comment|/* average interpacket interval */
 name|u_long
 name|lasttime
 decl_stmt|;
-comment|/* last time data updated */
-name|u_long
-name|firsttime
-decl_stmt|;
-comment|/* time structure initialized */
+comment|/* interval since last packet */
 name|u_long
 name|count
 decl_stmt|;
-comment|/* count we have seen */
-name|u_int32
+comment|/* total packet count */
+name|struct
+name|sockaddr_storage
 name|rmtadr
 decl_stmt|;
 comment|/* address of remote host */
@@ -3483,6 +3647,17 @@ begin_comment
 comment|/* broadcast client */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MDF_ACLNT
+value|0x40
+end_define
+
+begin_comment
+comment|/* manycast client */
+end_comment
+
 begin_comment
 comment|/*  * Values used with mon_enabled to indicate reason for enabling monitoring  */
 end_comment
@@ -3537,11 +3712,47 @@ comment|/* link to next entry */
 name|u_int32
 name|addr
 decl_stmt|;
-comment|/* host address (host byte order) */
+comment|/* Ipv4 host address (host byte order) */
 name|u_int32
 name|mask
 decl_stmt|;
-comment|/* mask for address (host byte order) */
+comment|/* Ipv4 mask for address (host byte order) */
+name|u_long
+name|count
+decl_stmt|;
+comment|/* number of packets matched */
+name|u_short
+name|flags
+decl_stmt|;
+comment|/* accesslist flags */
+name|u_short
+name|mflags
+decl_stmt|;
+comment|/* match flags */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|restrictlist6
+block|{
+name|struct
+name|restrictlist6
+modifier|*
+name|next
+decl_stmt|;
+comment|/* link to next entry */
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+comment|/* Ipv6 host address */
+name|struct
+name|in6_addr
+name|mask6
+decl_stmt|;
+comment|/* Ipv6 mask address */
 name|u_long
 name|count
 decl_stmt|;
@@ -3570,7 +3781,7 @@ value|0x001
 end_define
 
 begin_comment
-comment|/* ignore if matched */
+comment|/* ignore packet */
 end_comment
 
 begin_define
@@ -3581,7 +3792,7 @@ value|0x002
 end_define
 
 begin_comment
-comment|/* don't give him any time */
+comment|/* access denied */
 end_comment
 
 begin_define
@@ -3592,84 +3803,91 @@ value|0x004
 end_define
 
 begin_comment
-comment|/* don't trust if matched */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RES_NOQUERY
-value|0x008
-end_define
-
-begin_comment
-comment|/* don't allow queries if matched */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RES_NOMODIFY
-value|0x010
-end_define
-
-begin_comment
-comment|/* don't allow him to modify server */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RES_NOPEER
-value|0x020
-end_define
-
-begin_comment
-comment|/* don't allocate memory resources */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RES_NOTRAP
-value|0x040
-end_define
-
-begin_comment
-comment|/* don't allow him to set traps */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RES_LPTRAP
-value|0x080
-end_define
-
-begin_comment
-comment|/* traps set by him are low priority */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RES_LIMITED
-value|0x100
-end_define
-
-begin_comment
-comment|/* limit per net number of clients */
+comment|/* authentication required */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RES_VERSION
+value|0x008
+end_define
+
+begin_comment
+comment|/* version mismatch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_NOPEER
+value|0x010
+end_define
+
+begin_comment
+comment|/* new association denied */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_LIMITED
+value|0x020
+end_define
+
+begin_comment
+comment|/* packet rate exceeded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_FLAGS
+value|(RES_IGNORE | RES_DONTSERVE |\ 				    RES_DONTTRUST | RES_VERSION |\ 				    RES_NOPEER | RES_LIMITED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_NOQUERY
+value|0x040
+end_define
+
+begin_comment
+comment|/* mode 6/7 packet denied */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_NOMODIFY
+value|0x080
+end_define
+
+begin_comment
+comment|/* mode 6/7 modify denied */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_NOTRAP
+value|0x100
+end_define
+
+begin_comment
+comment|/* mode 6/7 set trap denied */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_LPTRAP
 value|0x200
 end_define
 
 begin_comment
-comment|/* serve only current version */
+comment|/* mode 6/7 low priority trap */
 end_comment
 
 begin_define
@@ -3680,15 +3898,25 @@ value|0x400
 end_define
 
 begin_comment
-comment|/* demobilize association */
+comment|/* send kiss of death packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_TIMEOUT
+value|0x800
+end_define
+
+begin_comment
+comment|/* timeout this entry */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RES_ALLFLAGS
-define|\
-value|(RES_IGNORE | RES_DONTSERVE | RES_DONTTRUST | RES_NOQUERY | \      RES_NOMODIFY | RES_NOPEER | RES_NOTRAP | RES_LPTRAP | \      RES_LIMITED | RES_VERSION | RES_DEMOBILIZE)
+value|(RES_FLAGS | RES_NOQUERY |\ 				    RES_NOMODIFY | RES_NOTRAP |\ 				    RES_LPTRAP | RES_DEMOBILIZE |\ 				    RES_TIMEOUT)
 end_define
 
 begin_comment
@@ -3753,45 +3981,6 @@ end_define
 begin_comment
 comment|/* remove a restrict entry */
 end_comment
-
-begin_comment
-comment|/*  * Experimental alternate selection algorithm identifiers  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SELECT_1
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SELECT_2
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SELECT_3
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SELECT_4
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|SELECT_5
-value|5
-end_define
 
 begin_comment
 comment|/*  * Endpoint structure for the select algorithm  */

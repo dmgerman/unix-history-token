@@ -2621,12 +2621,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: nlist didn't find needed symbols from<%s>: %m\n"
+literal|"%s: nlist didn't find needed symbols from<%s>: %s\n"
 argument_list|,
 name|progname
 argument_list|,
 operator|*
 name|kname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -951,7 +951,7 @@ argument_list|(
 literal|"p->valid still set\n"
 argument_list|)
 expr_stmt|;
-comment|// not an error!
+comment|/* not an error! */
 block|}
 block|}
 break|break;

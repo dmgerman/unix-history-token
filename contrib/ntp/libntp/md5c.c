@@ -13,10 +13,16 @@ directive|include
 file|"global.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_MD5INIT
+end_ifndef
+
 begin_include
 include|#
 directive|include
-file|"md5.h"
+file|"ntp_md5.h"
 end_include
 
 begin_comment
@@ -643,12 +649,12 @@ name|unsigned
 name|int
 name|i
 decl_stmt|,
-name|index
+name|idx
 decl_stmt|,
 name|partLen
 decl_stmt|;
 comment|/* Compute number of bytes mod 64 */
-name|index
+name|idx
 operator|=
 call|(
 name|unsigned
@@ -727,7 +733,7 @@ name|partLen
 operator|=
 literal|64
 operator|-
-name|index
+name|idx
 expr_stmt|;
 comment|/* Transform as many times as possible.    */
 if|if
@@ -747,7 +753,7 @@ name|context
 operator|->
 name|buffer
 index|[
-name|index
+name|idx
 index|]
 argument_list|,
 operator|(
@@ -798,7 +804,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|index
+name|idx
 operator|=
 literal|0
 expr_stmt|;
@@ -819,7 +825,7 @@ name|context
 operator|->
 name|buffer
 index|[
-name|index
+name|idx
 index|]
 argument_list|,
 operator|(
@@ -870,7 +876,7 @@ index|]
 decl_stmt|;
 name|unsigned
 name|int
-name|index
+name|idx
 decl_stmt|,
 name|padLen
 decl_stmt|;
@@ -887,7 +893,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* Pad out to 56 mod 64.    */
-name|index
+name|idx
 operator|=
 call|(
 name|unsigned
@@ -911,7 +917,7 @@ expr_stmt|;
 name|padLen
 operator|=
 operator|(
-name|index
+name|idx
 operator|<
 literal|56
 operator|)
@@ -919,13 +925,13 @@ condition|?
 operator|(
 literal|56
 operator|-
-name|index
+name|idx
 operator|)
 else|:
 operator|(
 literal|120
 operator|-
-name|index
+name|idx
 operator|)
 expr_stmt|;
 name|MD5Update
@@ -2806,6 +2812,22 @@ name|value
 expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|md5_bs
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
