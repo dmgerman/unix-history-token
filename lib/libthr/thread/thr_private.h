@@ -358,7 +358,7 @@ name|thrd
 parameter_list|,
 name|newstate
 parameter_list|)
-value|do {				\ 	if (newstate == PS_RUNNING) { 					\ 		if (thr_kill(thrd->thr_id, SIGTHR))			\ 			abort();					\ 	}								\ 	PTHREAD_SET_STATE(thrd, newstate);				\ } while (0)
+value|do {				\ 	if (newstate == PS_RUNNING) 					\ 		thr_wake(thrd->thr_id);					\ 	PTHREAD_SET_STATE(thrd, newstate);				\ } while (0)
 end_define
 
 begin_comment

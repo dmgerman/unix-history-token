@@ -3741,7 +3741,7 @@ literal|0
 operator|&&
 name|error
 operator|!=
-name|EAGAIN
+name|ETIMEDOUT
 operator|&&
 name|error
 operator|!=

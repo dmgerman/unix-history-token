@@ -975,7 +975,7 @@ literal|0
 operator|&&
 name|rval
 operator|!=
-name|EAGAIN
+name|ETIMEDOUT
 operator|&&
 name|rval
 operator|!=
