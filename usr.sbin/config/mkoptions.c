@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkoptions.c,v 1.10 1999/04/18 13:36:29 peter Exp $"
+literal|"$Id: mkoptions.c,v 1.11 1999/04/24 18:59:19 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -534,6 +534,11 @@ modifier|*
 name|inw
 decl_stmt|;
 name|struct
+name|opt_list
+modifier|*
+name|ol
+decl_stmt|;
+name|struct
 name|opt
 modifier|*
 name|op
@@ -561,6 +566,9 @@ name|oldvalue
 decl_stmt|;
 name|int
 name|seen
+decl_stmt|;
+name|int
+name|tidy
 decl_stmt|;
 name|file
 operator|=
@@ -745,6 +753,10 @@ name|seen
 operator|=
 literal|0
 expr_stmt|;
+name|tidy
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -812,16 +824,17 @@ argument_list|(
 name|inw
 argument_list|)
 expr_stmt|;
+comment|/* get the option value */
+if|if
+condition|(
+operator|(
 name|cp
 operator|=
 name|get_word
 argument_list|(
 name|inf
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
+operator|)
 operator|==
 literal|0
 operator|||
@@ -865,6 +878,58 @@ name|seen
 operator|++
 expr_stmt|;
 block|}
+for|for
+control|(
+name|ol
+operator|=
+name|otab
+init|;
+name|ol
+operator|!=
+literal|0
+condition|;
+name|ol
+operator|=
+name|ol
+operator|->
+name|o_next
+control|)
+if|if
+condition|(
+name|eq
+argument_list|(
+name|inw
+argument_list|,
+name|ol
+operator|->
+name|o_name
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+operator|!
+name|seen
+operator|&&
+operator|!
+name|ol
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: unknown option `%s' removed from %s\n"
+argument_list|,
+name|inw
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+name|tidy
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
 name|op
 operator|=
 operator|(
@@ -912,6 +977,7 @@ name|op_head
 operator|=
 name|op
 expr_stmt|;
+block|}
 comment|/* EOL? */
 name|cp
 operator|=
@@ -942,6 +1008,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|tidy
+operator|&&
+operator|(
 operator|(
 name|value
 operator|==
@@ -963,6 +1033,7 @@ name|value
 argument_list|,
 name|oldvalue
 argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
