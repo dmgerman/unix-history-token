@@ -927,6 +927,7 @@ name|w
 operator|.
 name|ws_row
 expr_stmt|;
+elseif|else
 else|#
 directive|else
 ifdef|#
@@ -962,11 +963,11 @@ name|w
 operator|.
 name|uw_vs
 expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 else|else
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|sc_height
 operator|=
 name|tgetnum
