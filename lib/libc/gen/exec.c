@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: exec.c,v 1.10 1998/10/15 17:14:15 des Exp $"
+literal|"$Id: exec.c,v 1.11 1999/03/23 16:40:34 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1199,7 +1199,7 @@ argument_list|(
 operator|(
 name|cnt
 operator|+
-literal|3
+literal|2
 operator|)
 operator|*
 sizeof|sizeof
@@ -1253,15 +1253,6 @@ name|char
 operator|*
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|memp
-index|[
-name|cnt
-operator|+
-literal|2
-index|]
-operator|=
-name|NULL
 expr_stmt|;
 operator|(
 name|void
