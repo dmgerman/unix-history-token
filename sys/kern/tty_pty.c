@@ -718,7 +718,7 @@ name|pt_ioctl
 modifier|*
 name|pti
 decl_stmt|;
-comment|/* 	 * XXX: Gross hack for DEVFS: 	 * If we openned this device, ensure we have the 	 * next one too, so people can open it. 	 */
+comment|/* 	 * XXX: Gross hack for DEVFS: 	 * XXX: DEVFS is no more, should this be removed? 	 * If we openned this device, ensure we have the 	 * next one too, so people can open it. 	 */
 name|minr
 operator|=
 name|lminor
@@ -4186,6 +4186,7 @@ name|ptc_cdevsw
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Gross hack for DEVFS */
+comment|/* XXX: DEVFS is no more, should this be removed? */
 name|ptyinit
 argument_list|(
 literal|0

@@ -93,12 +93,6 @@ directive|define
 name|DPT_MEASURE_PERFORMANCE
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEVFS
-end_define
-
 begin_include
 include|#
 directive|include

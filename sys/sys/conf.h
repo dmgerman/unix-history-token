@@ -94,16 +94,6 @@ name|cdevsw
 modifier|*
 name|si_devsw
 decl_stmt|;
-name|void
-modifier|*
-name|si_devfs
-decl_stmt|;
-comment|/* save cookie for devfs operations */
-name|void
-modifier|*
-name|si_bdevfs
-decl_stmt|;
-comment|/* XXX block device (should go away) */
 name|int
 name|si_iosize_max
 decl_stmt|;
@@ -588,41 +578,6 @@ name|tp
 typedef|,
 name|int
 name|flag
-typedef|));
-end_typedef
-
-begin_comment
-comment|/* This is type of the function DEVFS uses to hook into the kernel with */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-name|devfs_create_t
-name|__P
-typedef|((
-name|dev_t
-name|dev
-typedef|,
-name|uid_t
-name|uid
-typedef|,
-name|gid_t
-name|gid
-typedef|,
-name|int
-name|perms
-typedef|));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-name|devfs_remove_t
-name|__P
-typedef|((
-name|dev_t
-name|dev
 typedef|));
 end_typedef
 
@@ -1331,14 +1286,6 @@ operator|(
 name|void
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|devfs_create_t
-modifier|*
-name|devfs_create_hook
 decl_stmt|;
 end_decl_stmt
 
