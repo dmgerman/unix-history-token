@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.9 (Berkeley) %G%  *  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.10 (Berkeley) %G%  *  */
 end_comment
 
 begin_comment
@@ -4866,26 +4866,6 @@ operator|+
 name|pp
 operator|->
 name|p_offset
-expr_stmt|;
-name|pp
-operator|=
-operator|&
-name|udalabel
-index|[
-name|ui
-operator|->
-name|ui_unit
-index|]
-operator|.
-name|d_partitions
-index|[
-name|udapart
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-index|]
 expr_stmt|;
 name|sz
 operator|=
