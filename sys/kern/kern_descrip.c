@@ -9185,6 +9185,11 @@ name|p_ucred
 operator|->
 name|cr_uid
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -9198,11 +9203,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 name|FILEDESC_LOCK
@@ -9326,11 +9326,6 @@ block|}
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 if|if
