@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -539,14 +539,28 @@ name|RTF_HOST
 operator|)
 operator|==
 literal|0
+operator|&&
+name|SIN
+argument_list|(
+name|rt_mask
+argument_list|(
+name|rt
+argument_list|)
+argument_list|)
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|!=
+literal|0xffffffff
 condition|)
-comment|/* Route to IF? XXX*/
 name|rt
 operator|->
 name|rt_flags
 operator||=
 name|RTF_CLONING
 expr_stmt|;
+comment|/* Route to IF? XXX*/
 if|if
 condition|(
 name|rt
