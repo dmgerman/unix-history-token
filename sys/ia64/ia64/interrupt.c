@@ -280,18 +280,10 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-name|hardclock
+name|handleclock
 argument_list|(
-operator|(
-expr|struct
-name|clockframe
-operator|*
-operator|)
 name|framep
 argument_list|)
-expr_stmt|;
-name|setdelayed
-argument_list|()
 expr_stmt|;
 comment|/* divide hz (1024) by 8 to get stathz (128) */
 if|if
