@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tsort.c	4.2 (Berkeley) %G%"
+literal|"@(#)tsort.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -441,6 +441,11 @@ operator|=
 name|DEAD
 expr_stmt|;
 block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
