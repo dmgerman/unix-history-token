@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.22	82/10/31	*/
+comment|/*	ioctl.h	4.23	82/11/22	*/
 end_comment
 
 begin_comment
@@ -844,6 +844,17 @@ end_define
 
 begin_comment
 comment|/* get local special chars */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSTI
+value|_IOW(t, 114, char)
+end_define
+
+begin_comment
+comment|/* simulate terminal input */
 end_comment
 
 begin_define
