@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -144,7 +150,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|fd
+name|global_fd_for_cleanup
 decl_stmt|,
 name|quiet
 decl_stmt|,
@@ -177,6 +183,9 @@ name|void
 name|do_DAO
 parameter_list|(
 name|int
+name|fd
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -187,6 +196,9 @@ begin_function_decl
 name|void
 name|do_TAO
 parameter_list|(
+name|int
+name|fd
+parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -214,6 +226,9 @@ begin_function_decl
 name|int
 name|write_file
 parameter_list|(
+name|int
+name|fd
+parameter_list|,
 name|struct
 name|track_info
 modifier|*
@@ -289,11 +304,13 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|ch
-decl_stmt|,
 name|arg
 decl_stmt|,
 name|addr
+decl_stmt|,
+name|ch
+decl_stmt|,
+name|fd
 decl_stmt|;
 name|int
 name|dao
@@ -609,6 +626,10 @@ name|EX_IOERR
 argument_list|,
 literal|"ioctl(CDRIOCWRITESPEED)"
 argument_list|)
+expr_stmt|;
+name|global_fd_for_cleanup
+operator|=
+name|fd
 expr_stmt|;
 name|err_set_exit
 argument_list|(
@@ -1497,6 +1518,8 @@ name|dao
 condition|)
 name|do_DAO
 argument_list|(
+name|fd
+argument_list|,
 name|test_write
 argument_list|,
 name|multi
@@ -1505,6 +1528,8 @@ expr_stmt|;
 else|else
 name|do_TAO
 argument_list|(
+name|fd
+argument_list|,
 name|test_write
 argument_list|,
 name|preemp
@@ -1937,6 +1962,9 @@ begin_function
 name|void
 name|do_DAO
 parameter_list|(
+name|int
+name|fd
+parameter_list|,
 name|int
 name|test_write
 parameter_list|,
@@ -2749,6 +2777,8 @@ if|if
 condition|(
 name|write_file
 argument_list|(
+name|fd
+argument_list|,
 operator|&
 name|tracks
 index|[
@@ -2778,6 +2808,9 @@ begin_function
 name|void
 name|do_TAO
 parameter_list|(
+name|int
+name|fd
+parameter_list|,
 name|int
 name|test_write
 parameter_list|,
@@ -2916,6 +2949,8 @@ if|if
 condition|(
 name|write_file
 argument_list|(
+name|fd
+argument_list|,
 operator|&
 name|tracks
 index|[
@@ -3027,7 +3062,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"format list entries=%d\n"
+literal|"format list entries=%zd\n"
 argument_list|,
 name|capacities
 operator|.
@@ -3460,6 +3495,9 @@ begin_function
 name|int
 name|write_file
 parameter_list|(
+name|int
+name|fd
+parameter_list|,
 name|struct
 name|track_info
 modifier|*
@@ -3549,12 +3587,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"addr = %d size = %qd blocks = %d\n"
+literal|"addr = %d size = %jd blocks = %d\n"
 argument_list|,
 name|track_info
 operator|->
 name|addr
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|track_info
 operator|->
 name|file_size
@@ -3591,12 +3632,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"writing from file %s size %qd KB\n"
+literal|"writing from file %s size %jd KB\n"
 argument_list|,
 name|track_info
 operator|->
 name|file_name
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|filesize
 argument_list|)
 expr_stmt|;
@@ -3713,13 +3757,19 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nonly wrote %d of %qd bytes err=%d\n"
+literal|"\nonly wrote %d of %jd bytes: %s\n"
 argument_list|,
 name|res
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|count
 argument_list|,
+name|strerror
+argument_list|(
 name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3745,8 +3795,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"written this track %qd KB"
+literal|"written this track %jd KB"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|size
 operator|/
 literal|1024
@@ -3789,8 +3842,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" total %qd KB\r"
+literal|" total %jd KB\r"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tot_size
 operator|/
 literal|1024
@@ -3995,7 +4051,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|fd
+name|global_fd_for_cleanup
 argument_list|,
 name|CDRIOCSETBLOCKSIZE
 argument_list|,
