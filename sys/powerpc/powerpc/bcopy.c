@@ -475,5 +475,34 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|ovbcopy
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|src0
+parameter_list|,
+name|void
+modifier|*
+name|dst0
+parameter_list|,
+name|size_t
+name|length
+parameter_list|)
+block|{
+name|memcpy
+argument_list|(
+name|dst0
+argument_list|,
+name|src0
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 
