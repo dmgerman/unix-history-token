@@ -19,6 +19,33 @@ directive|define
 name|_NETINET6_ICMPV6_H_
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__KAME_NETINET_ICMP6_H_INCLUDED_
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"do not include netinet6/icmp6.h directly, include netinet/icmp6.h"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

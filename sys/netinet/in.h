@@ -2302,11 +2302,23 @@ begin_comment
 comment|/* INET6 stuff */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__KAME_NETINET_IN_H_INCLUDED_
+end_define
+
 begin_include
 include|#
 directive|include
 file|<netinet6/in6.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|__KAME_NETINET_IN_H_INCLUDED_
+end_undef
 
 begin_ifdef
 ifdef|#

@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6.h>
+file|<netinet/ip6.h>
 end_include
 
 begin_include
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/icmp6.h>
+file|<netinet/icmp6.h>
 end_include
 
 begin_include

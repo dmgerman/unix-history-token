@@ -15,11 +15,23 @@ directive|define
 name|_NETINET_ICMP6_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|__KAME_NETINET_ICMP6_H_INCLUDED_
+end_define
+
 begin_include
 include|#
 directive|include
 file|<netinet6/icmp6.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|__KAME_NETINET_ICMP6_H_INCLUDED_
+end_undef
 
 begin_endif
 endif|#

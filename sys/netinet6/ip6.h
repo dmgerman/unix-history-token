@@ -19,6 +19,48 @@ directive|define
 name|_NETINET6_IPV6_H_
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__KAME_NETINET_IP6_H_INCLUDED_
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX: waiting for contrib/addrtoname.c fix */
+end_comment
+
+begin_error
+error|#
+directive|error
+literal|"do not include netinet6/ip6.h directly, include netinet/ip6.h"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Definition for internet protocol version 6.  * RFC 2460  */
 end_comment
