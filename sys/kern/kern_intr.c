@@ -190,6 +190,11 @@ block|{
 name|int
 name|pri
 decl_stmt|;
+name|flags
+operator|&=
+operator|~
+name|INTR_MPSAFE
+expr_stmt|;
 switch|switch
 condition|(
 name|flags
