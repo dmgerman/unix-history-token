@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_sl.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_sl.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -185,15 +185,8 @@ file|"if_slvar.h"
 end_include
 
 begin_comment
-comment|/*  * SLMTU is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, that there be enough extra room for the ifnet pointer that  * IP input requires and, if we get a compressed packet, there's  * enough extra room to expand the header into a max length tcp/ip  * header (128 bytes).  So, SLMTU can be at most  * 	MCLBYTES - 128   *  * To insure we get good interactive response, the MTU wants to be  * the smallest size that amortizes the header cost.  (Remember  * that even with type-of-service queuing, we have to wait for any  * in-progress packet to finish.  I.e., we wait, on the average,  * 1/2 * mtu / cps, where cps is the line speed in characters per  * second.  E.g., 533ms wait for a 1024 byte MTU on a 9600 baud  * line.  The average compressed header size is 6-8 bytes so any  * MTU> 90 bytes will give us 90% of the line bandwidth.  A 100ms  * wait is tolerable (500ms is not), so want an MTU around 256.  * (Since TCP will send 212 byte segments (to allow for 40 byte  * headers), the typical packet size on the wire will be around 220  * bytes).  In 4.3tahoe+ systems, we can set an MTU in a route  * so we do that& leave the interface MTU relatively high (so we  * don't IP fragment when acting as a gateway to someone using a  * stupid MTU).  */
+comment|/*  * SLMAX is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, and if we get a compressed packet, there's enough extra  * room to expand the header into a max length tcp/ip header (128  * bytes).  So, SLMAX can be at most  *	MCLBYTES - 128  *  * SLMTU is a hard limit on output packet size.  To insure good  * interactive response, SLMTU wants to be the smallest size that  * amortizes the header cost.  (Remember that even with  * type-of-service queuing, we have to wait for any in-progress  * packet to finish.  I.e., we wait, on the average, 1/2 * mtu /  * cps, where cps is the line speed in characters per second.  * E.g., 533ms wait for a 1024 byte MTU on a 9600 baud line.  The  * average compressed header size is 6-8 bytes so any MTU> 90  * bytes will give us 90% of the line bandwidth.  A 100ms wait is  * tolerable (500ms is not), so want an MTU around 296.  (Since TCP  * will send 256 byte segments (to allow for 40 byte headers), the  * typical packet size on the wire will be around 260 bytes).  In  * 4.3tahoe+ systems, we can set an MTU in a route so we do that&  * leave the interface MTU relatively high (so we don't IP fragment  * when acting as a gateway to someone using a stupid MTU).  *  * Similar considerations apply to SLIP_HIWAT:  It's the amount of  * data that will be queued 'downstream' of us (i.e., in clists  * waiting to be picked up by the tty output interrupt).  If we  * queue a lot of data downstream, it's immune to our t.o.s. queuing.  * E.g., if SLIP_HIWAT is 1024, the interactive traffic in mixed  * telnet/ftp will see a 1 sec wait, independent of the mtu (the  * wait is dependent on the ftp window size but that's typically  * 1k - 4k).  So, we want SLIP_HIWAT just big enough to amortize  * the cost (in idle time on the wire) of the tty driver running  * off the end of its clists& having to call back slstart for a  * new packet.  For a tty interface with any buffering at all, this  * cost will be zero.  Even with a totally brain dead interface (like  * the one on a typical workstation), the cost will be<= 1 character  * time.  So, setting SLIP_HIWAT to ~100 guarantees that we'll lose  * at most 1% while maintaining good interactive response.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SLMTU
-value|576
-end_define
 
 begin_define
 define|#
@@ -205,20 +198,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|SLMAX
+value|(MCLBYTES - BUFOFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SLBUFSIZE
-value|(SLMTU + BUFOFFSET)
+value|(SLMAX + BUFOFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLMTU
+value|296
 end_define
 
 begin_define
 define|#
 directive|define
 name|SLIP_HIWAT
-value|1024
+value|roundup(50,CBSIZE)
 end_define
-
-begin_comment
-comment|/* don't start a new packet if HIWAT on queue */
-end_comment
 
 begin_define
 define|#
@@ -616,7 +619,7 @@ name|sc
 operator|->
 name|sc_ep
 operator|-
-name|SLMTU
+name|SLMAX
 expr_stmt|;
 name|sc
 operator|->
@@ -1039,7 +1042,7 @@ case|:
 define|#
 directive|define
 name|SC_MASK
-value|(SC_COMPRESS|SC_NOICMP)
+value|0xffff
 name|s
 operator|=
 name|splimp
@@ -1309,12 +1312,23 @@ operator|>>
 literal|16
 argument_list|)
 condition|)
+block|{
 name|ifq
 operator|=
 operator|&
 name|sc
 operator|->
 name|sc_fastq
+expr_stmt|;
+name|p
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|p
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1325,7 +1339,7 @@ operator|&
 name|SC_COMPRESS
 condition|)
 block|{
-comment|/* if two copies of sl_compress_tcp are running 			 * for the same line, the compression state can 			 * get screwed up.  We're assuming that sloutput 			 * was invoked at splnet so this isn't possible 			 * (this assumption is correct for 4.xbsd, x<=4). 			 * In a multi-threaded kernel, a lockout might 			 * be needed here. */
+comment|/* 			 * The last parameter turns off connection id 			 * compression for background traffic:  Since 			 * fastq traffic can jump ahead of the background 			 * traffic, we don't know what order packets will 			 * go on the line. 			 */
 name|p
 operator|=
 name|sl_compress_tcp
@@ -1338,6 +1352,8 @@ operator|&
 name|sc
 operator|->
 name|sc_comp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2466,6 +2482,16 @@ operator|&=
 literal|0x4f
 expr_stmt|;
 comment|/* XXX */
+comment|/* 			 * We've got something that's not an IP packet. 			 * If compression is enabled, try to decompress it. 			 * Otherwise, if `auto-enable' compression is on and 			 * it's a reasonable packet, decompress it and then 			 * enable compression.  Otherwise, drop it. 			 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|SC_COMPRESS
+condition|)
+block|{
 name|len
 operator|=
 name|sl_uncompress_tcp
@@ -2494,6 +2520,69 @@ name|len
 operator|<=
 literal|0
 condition|)
+goto|goto
+name|error
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|SC_AUTOCOMP
+operator|)
+operator|&&
+name|c
+operator|==
+name|TYPE_UNCOMPRESSED_TCP
+operator|&&
+name|len
+operator|>=
+literal|40
+condition|)
+block|{
+name|len
+operator|=
+name|sl_uncompress_tcp
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_buf
+argument_list|,
+name|len
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|c
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_comp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|error
+goto|;
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|SC_COMPRESS
+expr_stmt|;
+block|}
+else|else
 goto|goto
 name|error
 goto|;
@@ -2646,7 +2735,7 @@ name|sc
 operator|->
 name|sc_ep
 operator|-
-name|SLMTU
+name|SLMAX
 expr_stmt|;
 name|sc
 operator|->
