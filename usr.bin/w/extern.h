@@ -26,7 +26,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|pr_idle
 name|__P
 argument_list|(
