@@ -174,7 +174,7 @@ argument_list|,
 literal|"usage: %s create [-v] name dev1 dev2 [dev3 [...]]\n"
 literal|"       %s destroy [-fv] name\n"
 literal|"       %s label [-v] name dev1 dev2 [dev3 [...]]\n"
-literal|"       %s clear [-v] dev1 dev2 [dev3 [...]]\n"
+literal|"       %s clear [-v] dev1 [dev2 [...]]\n"
 literal|"       %s list\n"
 argument_list|,
 name|comm
