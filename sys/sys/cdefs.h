@@ -724,6 +724,10 @@ directive|if
 name|__FreeBSD_cc_version
 operator|>=
 literal|300001
+operator|&&
+name|__FreeBSD_cc_version
+operator|<
+literal|500003
 end_if
 
 begin_define
