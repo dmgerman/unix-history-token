@@ -1243,6 +1243,10 @@ argument_list|,
 name|in
 argument_list|)
 expr_stmt|;
+name|eval
+operator|=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|unlink
