@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,22 +130,11 @@ directive|include
 file|"trap.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|ATTY
-end_if
-
 begin_include
 include|#
 directive|include
 file|"var.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
