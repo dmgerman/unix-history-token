@@ -4327,10 +4327,9 @@ name|si
 argument_list|)
 condition|)
 block|{
+comment|/* XXX: FIXME! */
 return|return
-name|si
-operator|.
-name|si_udev
+literal|0
 return|;
 block|}
 else|else
