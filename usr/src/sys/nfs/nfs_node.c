@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -595,7 +595,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -764,6 +764,19 @@ name|NQNFSNONCACHE
 operator||
 name|NQNFSWRITE
 operator|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+literal|0
+argument_list|,
+name|ap
+operator|->
+name|a_p
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
