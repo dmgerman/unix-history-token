@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.4 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/reboot.h>
+end_include
 
 begin_include
 include|#
@@ -13,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|"saio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/reboot.h"
 end_include
 
 begin_ifndef
@@ -44,6 +50,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* XXX -- see sys/reboot.h */
+end_comment
 
 begin_define
 define|#
@@ -79,14 +89,14 @@ literal|2
 index|]
 init|=
 block|{
-literal|0
+literal|'\0'
 block|,
-literal|0
+literal|'\0'
 block|,
 comment|/* 0 = ct */
-literal|0
+literal|'\0'
 block|,
-literal|0
+literal|'\0'
 block|,
 comment|/* 1 = fd */
 literal|'r'
@@ -94,9 +104,9 @@ block|,
 literal|'d'
 block|,
 comment|/* 2 = rd */
-literal|0
+literal|'\0'
 block|,
-literal|0
+literal|'\0'
 block|,
 comment|/* 3 = sw */
 literal|'s'
@@ -113,13 +123,6 @@ define|#
 directive|define
 name|MAXTYPE
 value|(sizeof(devname) / sizeof(devname[0]))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNIX
-value|"vmunix"
 end_define
 
 begin_decl_stmt
