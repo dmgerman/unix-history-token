@@ -24,10 +24,6 @@ struct|struct
 name|mfsnode
 block|{
 name|struct
-name|lock
-name|mfs_lock
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|mfs_vnode
