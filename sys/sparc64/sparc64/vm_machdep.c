@@ -1655,7 +1655,7 @@ modifier|*
 name|m
 parameter_list|,
 name|int
-name|pri
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -1691,6 +1691,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|SFB_NOWAIT
+condition|)
+goto|goto break;
 name|sf_buf_alloc_want
 operator|++
 expr_stmt|;
@@ -1711,9 +1718,17 @@ name|sf_freelist
 operator|.
 name|sf_lock
 argument_list|,
-name|PVM
+operator|(
+name|flags
+operator|&
+name|SFB_CATCH
+operator|)
+condition|?
+name|PCATCH
 operator||
-name|pri
+name|PVM
+else|:
+name|PVM
 argument_list|,
 literal|"sfbufa"
 argument_list|,

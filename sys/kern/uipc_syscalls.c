@@ -8874,7 +8874,7 @@ name|sf_buf_alloc
 argument_list|(
 name|pg
 argument_list|,
-name|PCATCH
+name|SFB_CATCH
 argument_list|)
 operator|)
 operator|==
