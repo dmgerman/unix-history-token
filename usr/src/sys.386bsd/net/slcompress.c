@@ -1,11 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)slcompress.c	7.7 (Berkeley) 5/7/91  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	Van Jacobson (van@ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00112  * --------------------         -----   ----------------------  *  * 14 Mar 93    David Greenman		Upgrade bpf to match tcpdump 2.2.1  */
 end_comment
 
-begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  *  * static char rcsid[] =  * "$Header: slcompress.c,v 1.19 89/12/31 08:52:59 van Exp $";  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#) $Header: slcompress.c,v 1.22 92/05/24 11:48:20 van Exp $ (LBL)"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -257,6 +280,12 @@ operator|->
 name|last_xmit
 operator|=
 literal|255
+expr_stmt|;
+name|comp
+operator|->
+name|flags
+operator|=
+name|SLF_TOSS
 expr_stmt|;
 block|}
 end_function
@@ -654,6 +683,19 @@ name|hlen
 operator|<<=
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|hlen
+operator|>
+name|m
+operator|->
+name|m_len
+condition|)
+return|return
+operator|(
+name|TYPE_IP
+operator|)
+return|;
 goto|goto
 name|uncompressed
 goto|;
@@ -735,6 +777,19 @@ name|hlen
 operator|<<=
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|hlen
+operator|>
+name|m
+operator|->
+name|m_len
+condition|)
+return|return
+operator|(
+name|TYPE_IP
+operator|)
+return|;
 if|if
 condition|(
 operator|(

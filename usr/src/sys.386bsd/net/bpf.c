@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne of Lawrence Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)bpf.c	7.4 (Berkeley) 6/17/91  *  * static char rcsid[] =  * "$Header: /usr/bill/working/sys/net/RCS/bpf.c,v 1.1 92/01/15 20:28:02 william Exp Locker: william $";  */
+comment|/*-  * Copyright (c) 1990-1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)bpf.c	7.5 (Berkeley) 7/15/91  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.49 92/05/25 14:43:09 mccanne Exp $";  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00112  * --------------------         -----   ----------------------  *  * 14 Mar 93	David Greenman		Upgrade bpf to match tcpdump 2.2.1  * 24 Mar 93	Rodney W. Grimes	Fixed selwakeup to use pid_t from proc,  *					disabled definition of inline.  */
 end_comment
 
 begin_include
@@ -12,12 +12,58 @@ end_include
 begin_if
 if|#
 directive|if
-operator|(
 name|NBPFILTER
 operator|>
 literal|0
-operator|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|inline
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|inline
+value|__inline__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_include
 include|#
@@ -52,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -67,17 +119,28 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
+begin_comment
+comment|/* #include<sys/map.h> */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|sparc
-end_ifdef
+argument_list|)
+operator|&&
+name|BSD
+operator|<
+literal|199103
+end_if
 
 begin_include
 include|#
@@ -156,6 +219,97 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
+begin_comment
+comment|/*  * Older BSDs don't have kernel malloc.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|<
+literal|199103
+end_if
+
+begin_extern
+extern|extern bcopy(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|static
+name|caddr_t
+name|bpf_alloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_include
+include|#
+directive|include
+file|<net/bpf_compat.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|BPF_BUFSIZE
+value|(MCLBYTES-8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIOMOVE
+parameter_list|(
+name|cp
+parameter_list|,
+name|len
+parameter_list|,
+name|code
+parameter_list|,
+name|uio
+parameter_list|)
+value|uiomove(cp, len, code, uio)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BPF_BUFSIZE
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIOMOVE
+parameter_list|(
+name|cp
+parameter_list|,
+name|len
+parameter_list|,
+name|code
+parameter_list|,
+name|uio
+parameter_list|)
+value|uiomove(cp, len, uio)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -175,16 +329,15 @@ begin_decl_stmt
 name|int
 name|bpf_bufsize
 init|=
-name|MCLBYTES
+name|BPF_BUFSIZE
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  bpf_iflist is the list of interfaces; each corresponds to an ifnet  *  bpf_dtab holds the descriptors, indexed by minor device #  *  * We really don't need NBPFILTER bpf_if entries, but this eliminates  * the need to account for all possible drivers here.  * This problem will go away when these structures are allocated dynamically.  */
+comment|/*  *  bpf_iflist is the list of interfaces; each corresponds to an ifnet  *  bpf_dtab holds the descriptors, indexed by minor device #  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|bpf_if
 modifier|*
@@ -193,7 +346,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|bpf_d
 name|bpf_dtab
@@ -221,6 +373,14 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|bpf_freed
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|bpf_setif
 parameter_list|()
@@ -231,6 +391,14 @@ begin_function_decl
 specifier|static
 name|int
 name|bpf_initd
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|bpf_allocbufs
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -339,6 +507,20 @@ operator|=
 literal|24
 expr_stmt|;
 break|break;
+case|case
+name|DLT_NULL
+case|:
+name|sockp
+operator|->
+name|sa_family
+operator|=
+name|AF_UNSPEC
+expr_stmt|;
+name|hlen
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 default|default:
 return|return
 operator|(
@@ -393,6 +575,11 @@ operator|>
 name|MLEN
 condition|)
 block|{
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199103
 name|MCLGET
 argument_list|(
 name|m
@@ -413,6 +600,24 @@ operator|==
 literal|0
 condition|)
 block|{
+else|#
+directive|else
+name|MCLGET
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|!=
+name|MCLBYTES
+condition|)
+block|{
+endif|#
+directive|endif
 name|error
 operator|=
 name|ENOBUFS
@@ -437,6 +642,8 @@ comment|/* 	 * Make room for link header. 	 */
 if|if
 condition|(
 name|hlen
+operator|!=
+literal|0
 condition|)
 block|{
 name|m
@@ -445,6 +652,11 @@ name|m_len
 operator|-=
 name|hlen
 expr_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199103
 name|m
 operator|->
 name|m_data
@@ -452,9 +664,19 @@ operator|+=
 name|hlen
 expr_stmt|;
 comment|/* XXX */
+else|#
+directive|else
+name|m
+operator|->
+name|m_off
+operator|+=
+name|hlen
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
-name|uiomove
+name|UIOMOVE
 argument_list|(
 operator|(
 name|caddr_t
@@ -464,6 +686,8 @@ operator|->
 name|sa_data
 argument_list|,
 name|hlen
+argument_list|,
+name|UIO_WRITE
 argument_list|,
 name|uio
 argument_list|)
@@ -478,7 +702,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|uiomove
+name|UIOMOVE
 argument_list|(
 name|mtod
 argument_list|(
@@ -490,6 +714,8 @@ argument_list|,
 name|len
 operator|-
 name|hlen
+argument_list|,
+name|UIO_WRITE
 argument_list|,
 name|uio
 argument_list|)
@@ -517,13 +743,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * Attach 'd' to the bpf interface 'bp', i.e. make 'd' listen on 'bp'.  * Must be called at splimp.  */
-end_comment
-
-begin_function
+comment|/*  * Attach file to the bpf interface, i.e. make d listen on bp.  * Must be called at splimp.  */
 specifier|static
 name|void
 name|bpf_attachd
@@ -543,14 +763,13 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
-comment|/* Point d at bp. */
+comment|/* 	 * Point d at bp, and add d to the interface's list of listeners. 	 * Finally, point the driver's bpf cookie at the interface so 	 * it will divert packets to bpf. 	 */
 name|d
 operator|->
 name|bd_bif
 operator|=
 name|bp
 expr_stmt|;
-comment|/* Add d to bp's list of listeners. */
 name|d
 operator|->
 name|bd_next
@@ -565,7 +784,6 @@ name|bif_dlist
 operator|=
 name|d
 expr_stmt|;
-comment|/* 	 * Let the driver know we're here (if it doesn't already). 	 */
 operator|*
 name|bp
 operator|->
@@ -574,9 +792,7 @@ operator|=
 name|bp
 expr_stmt|;
 block|}
-end_function
-
-begin_function
+comment|/*  * Detach a file from its interface.  */
 specifier|static
 name|void
 name|bpf_detachd
@@ -634,11 +850,11 @@ condition|)
 comment|/* 			 * Something is really wrong if we were able to put 			 * the driver into promiscuous mode, but can't 			 * take it out. 			 */
 name|panic
 argument_list|(
-literal|"bpf_detachd: ifpromisc failed"
+literal|"bpf: ifpromisc failed"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Remove 'd' from the interface's descriptor list. */
+comment|/* Remove d from the interface's descriptor list. */
 name|p
 operator|=
 operator|&
@@ -712,13 +928,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * Mark a descriptor free by making it point to itself.   * This is probably cheaper than marking with a constant since  * the address should be in a register anyway.  */
-end_comment
-
-begin_define
+comment|/*  * Mark a descriptor free by making it point to itself.  * This is probably cheaper than marking with a constant since  * the address should be in a register anyway.  */
 define|#
 directive|define
 name|D_ISFREE
@@ -726,9 +936,6 @@ parameter_list|(
 name|d
 parameter_list|)
 value|((d) == (d)->bd_next)
-end_define
-
-begin_define
 define|#
 directive|define
 name|D_MARKFREE
@@ -736,9 +943,6 @@ parameter_list|(
 name|d
 parameter_list|)
 value|((d)->bd_next = (d))
-end_define
-
-begin_define
 define|#
 directive|define
 name|D_MARKUSED
@@ -746,17 +950,8 @@ parameter_list|(
 name|d
 parameter_list|)
 value|((d)->bd_next = 0)
-end_define
-
-begin_comment
-comment|/*  *  bpfopen - open ethernet device  *  *  Errors:	ENXIO	- illegal minor device number  *		EBUSY	- too many files open  */
-end_comment
-
-begin_comment
+comment|/*  * Open ethernet device.  Returns ENXIO for illegal minor device number,  * EBUSY if file is open by another process.  */
 comment|/* ARGSUSED */
-end_comment
-
-begin_function
 name|int
 name|bpfopen
 parameter_list|(
@@ -771,11 +966,6 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-name|int
-name|error
-decl_stmt|,
-name|s
-decl_stmt|;
 specifier|register
 name|struct
 name|bpf_d
@@ -797,11 +987,6 @@ name|ENXIO
 operator|)
 return|;
 comment|/* 	 * Each minor can be opened by only one process.  If the requested 	 * minor is in use, return EBUSY. 	 */
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|d
 operator|=
 operator|&
@@ -821,19 +1006,11 @@ argument_list|(
 name|d
 argument_list|)
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
-block|}
-else|else
 comment|/* Mark "free" and do most initialization. */
 name|bzero
 argument_list|(
@@ -850,72 +1027,33 @@ name|d
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|error
+name|d
+operator|->
+name|bd_bufsize
 operator|=
-name|bpf_initd
-argument_list|(
-name|d
-argument_list|)
+name|bpf_bufsize
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|D_MARKFREE
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Close the descriptor by detaching it from its interface,  * deallocating its buffers, and marking it free.  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
-end_comment
-
-begin_macro
+name|int
 name|bpfclose
-argument_list|(
-argument|dev
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|flag
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -932,6 +1070,7 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
+specifier|register
 name|int
 name|s
 decl_stmt|;
@@ -956,77 +1095,190 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* Free the buffer space. */
-if|if
-condition|(
-name|d
-operator|->
-name|bd_hbuf
-condition|)
-name|free
+name|bpf_freed
 argument_list|(
 name|d
-operator|->
-name|bd_hbuf
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/*  * Support for SunOS, which does not have tsleep.  */
+if|#
+directive|if
+name|BSD
+operator|<
+literal|199103
+specifier|static
+name|bpf_timeout
+argument_list|(
+argument|arg
+argument_list|)
+name|caddr_t
+name|arg
+expr_stmt|;
+block|{
+name|struct
+name|bpf_d
+modifier|*
+name|d
+init|=
+operator|(
+expr|struct
+name|bpf_d
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+name|d
+operator|->
+name|bd_timedout
+operator|=
+literal|1
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
+define|#
+directive|define
+name|BPF_SLEEP
+parameter_list|(
+name|chan
+parameter_list|,
+name|pri
+parameter_list|,
+name|s
+parameter_list|,
+name|t
+parameter_list|)
+value|bpf_sleep((struct bpf_d *)chan)
+name|int
+name|bpf_sleep
+parameter_list|(
+name|d
+parameter_list|)
+specifier|register
+name|struct
+name|bpf_d
+modifier|*
+name|d
+decl_stmt|;
+block|{
+specifier|register
+name|int
+name|rto
+init|=
+name|d
+operator|->
+name|bd_rtout
+decl_stmt|;
+specifier|register
+name|int
+name|st
+decl_stmt|;
 if|if
 condition|(
-name|d
-operator|->
-name|bd_fbuf
+name|rto
+operator|!=
+literal|0
 condition|)
-name|free
-argument_list|(
+block|{
 name|d
 operator|->
-name|bd_fbuf
+name|bd_timedout
+operator|=
+literal|0
+expr_stmt|;
+name|timeout
+argument_list|(
+name|bpf_timeout
 argument_list|,
-name|M_DEVBUF
+operator|(
+name|caddr_t
+operator|)
+name|d
+argument_list|,
+name|rto
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|d
-operator|->
-name|bd_sbuf
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|d
-operator|->
-name|bd_filter
-condition|)
-name|free
+block|}
+name|st
+operator|=
+name|sleep
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
 name|d
-operator|->
-name|bd_filter
 argument_list|,
-name|M_DEVBUF
+name|PRINET
+operator||
+name|PCATCH
 argument_list|)
 expr_stmt|;
-name|D_MARKFREE
+if|if
+condition|(
+name|rto
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|d
+operator|->
+name|bd_timedout
+operator|==
+literal|0
+condition|)
+name|untimeout
 argument_list|(
+name|bpf_timeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|d
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|st
+operator|==
+literal|0
+condition|)
+return|return
+name|EWOULDBLOCK
+return|;
 block|}
-end_block
-
-begin_comment
-comment|/*  * Rotate the packet buffers in descriptor d.  Move the store buffer  * into the hold slot, and the free buffer into the store slot.    * Zero the length of the new store buffer.  */
-end_comment
-
-begin_define
+return|return
+operator|(
+name|st
+operator|!=
+literal|0
+operator|)
+condition|?
+name|EINTR
+else|:
+literal|0
+return|;
+block|}
+else|#
+directive|else
+define|#
+directive|define
+name|BPF_SLEEP
+value|tsleep
+endif|#
+directive|endif
+comment|/*  * Rotate the packet buffers in descriptor d.  Move the store buffer  * into the hold slot, and the free buffer into the store slot.  * Zero the length of the new store buffer.  */
 define|#
 directive|define
 name|ROTATE_BUFFERS
@@ -1035,13 +1287,7 @@ name|d
 parameter_list|)
 define|\
 value|(d)->bd_hbuf = (d)->bd_sbuf; \ 	(d)->bd_hlen = (d)->bd_slen; \ 	(d)->bd_sbuf = (d)->bd_fbuf; \ 	(d)->bd_slen = 0; \ 	(d)->bd_fbuf = 0;
-end_define
-
-begin_comment
 comment|/*  *  bpfread - read next chunk of packets from buffers  */
-end_comment
-
-begin_function
 name|int
 name|bpfread
 parameter_list|(
@@ -1080,7 +1326,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* 	 * Restrict application to use a buffer the same size as  	 * as kernel buffers. 	 */
+comment|/* 	 * Restrict application to use a buffer the same size as 	 * as kernel buffers. 	 */
 if|if
 condition|(
 name|uio
@@ -1101,7 +1347,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If the hold buffer is empty, then set a timer and sleep 	 * until either the timeout has occurred or enough packets have 	 * arrived to fill the store buffer. 	 */
+comment|/* 	 * If the hold buffer is empty, then do a timed sleep, which 	 * ends when the timeout expires or when enough packets 	 * have arrived to fill the store buffer. 	 */
 while|while
 condition|(
 name|d
@@ -1134,7 +1380,7 @@ break|break;
 block|}
 name|error
 operator|=
-name|tsleep
+name|BPF_SLEEP
 argument_list|(
 operator|(
 name|caddr_t
@@ -1188,7 +1434,7 @@ name|d
 operator|->
 name|bd_hbuf
 condition|)
-comment|/* 				 * We filled up the buffer in between  				 * getting the timeout and arriving 				 * here, so we don't need to rotate. 				 */
+comment|/* 				 * We filled up the buffer in between 				 * getting the timeout and arriving 				 * here, so we don't need to rotate. 				 */
 break|break;
 if|if
 condition|(
@@ -1224,10 +1470,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*   	 * Move data from hold buffer into user space. 	 * We know the entire buffer is transferred since 	 * we checked above that the read buffer is bpf_bufsize bytes. 	 */
+comment|/* 	 * Move data from hold buffer into user space. 	 * We know the entire buffer is transferred since 	 * we checked above that the read buffer is bpf_bufsize bytes. 	 */
 name|error
 operator|=
-name|uiomove
+name|UIOMOVE
 argument_list|(
 name|d
 operator|->
@@ -1236,6 +1482,8 @@ argument_list|,
 name|d
 operator|->
 name|bd_hlen
+argument_list|,
+name|UIO_READ
 argument_list|,
 name|uio
 argument_list|)
@@ -1259,6 +1507,12 @@ name|bd_hbuf
 operator|=
 literal|0
 expr_stmt|;
+name|d
+operator|->
+name|bd_hlen
+operator|=
+literal|0
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1270,13 +1524,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * If there are processes sleeping on this descriptor, wake them up.    */
-end_comment
-
-begin_function
+comment|/*  * If there are processes sleeping on this descriptor, wake them up.  */
 specifier|static
 specifier|inline
 name|void
@@ -1299,6 +1547,14 @@ operator|)
 name|d
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|selwakeup(&d->bd_sel);
+comment|/* XXX */
+block|d->bd_sel.si_pid = 0;
+else|#
+directive|else
 if|if
 condition|(
 name|d
@@ -1311,6 +1567,8 @@ argument_list|(
 name|d
 operator|->
 name|bd_selproc
+operator|->
+name|p_pid
 argument_list|,
 operator|(
 name|int
@@ -1333,10 +1591,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
-end_function
-
-begin_function
 name|int
 name|bpfwrite
 parameter_list|(
@@ -1473,6 +1730,37 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199103
+name|error
+operator|=
+call|(
+modifier|*
+name|ifp
+operator|->
+name|if_output
+call|)
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|,
+operator|&
+name|dst
+argument_list|,
+operator|(
+expr|struct
+name|rtentry
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|error
 operator|=
 call|(
@@ -1490,25 +1778,21 @@ operator|&
 name|dst
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The driver frees the mbuf.  	 */
+comment|/* 	 * The driver frees the mbuf. 	 */
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * Reset a descriptor by flushing its packet bufferand clearing the receive  * and drop counts.  Should be called at splimp.  */
-end_comment
-
-begin_function
+comment|/*  * Reset a descriptor by flushing its packet buffer and clearing the  * receive and drop counts.  Should be called at splimp.  */
 specifier|static
 name|void
 name|reset_d
@@ -1552,6 +1836,12 @@ literal|0
 expr_stmt|;
 name|d
 operator|->
+name|bd_hlen
+operator|=
+literal|0
+expr_stmt|;
+name|d
+operator|->
 name|bd_rcount
 operator|=
 literal|0
@@ -1563,17 +1853,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGFLEN		Get max filter len.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set ethernet read filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  */
-end_comment
-
-begin_comment
+comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set ethernet read filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  */
 comment|/* ARGSUSED */
-end_comment
-
-begin_function
 name|int
 name|bpfioctl
 parameter_list|(
@@ -1728,20 +2009,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/* 	 * Get max filter len. 	 */
-case|case
-name|BIOCGFLEN
-case|:
-operator|*
-operator|(
-name|u_int
-operator|*
-operator|)
-name|addr
-operator|=
-name|BPF_MAXINSNS
-expr_stmt|;
-break|break;
 comment|/* 	 * Get buffer len [for read()]. 	 */
 case|case
 name|BIOCGBLEN
@@ -1758,7 +2025,92 @@ operator|->
 name|bd_bufsize
 expr_stmt|;
 break|break;
-comment|/* 	 * Set ethernet read filter. 	 */
+comment|/* 	 * Set buffer length. 	 */
+case|case
+name|BIOCSBLEN
+case|:
+if|#
+directive|if
+name|BSD
+operator|<
+literal|199103
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|d
+operator|->
+name|bd_bif
+operator|!=
+literal|0
+condition|)
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+else|else
+block|{
+specifier|register
+name|u_int
+name|size
+init|=
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|addr
+decl_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+name|BPF_MAXBUFSIZE
+condition|)
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|addr
+operator|=
+name|size
+operator|=
+name|BPF_MAXBUFSIZE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|size
+operator|<
+name|BPF_MINBUFSIZE
+condition|)
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|addr
+operator|=
+name|size
+operator|=
+name|BPF_MINBUFSIZE
+expr_stmt|;
+name|d
+operator|->
+name|bd_bufsize
+operator|=
+name|size
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+break|break;
+comment|/* 	 * Set link layer read filter. 	 */
 case|case
 name|BIOCSETF
 case|:
@@ -1831,12 +2183,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|d
-operator|->
-name|bd_promisc
-operator|=
-literal|1
-expr_stmt|;
 name|error
 operator|=
 name|ifpromisc
@@ -1849,6 +2195,18 @@ name|bif_ifp
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|d
+operator|->
+name|bd_promisc
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|splx
@@ -2090,6 +2448,36 @@ operator|)
 name|addr
 expr_stmt|;
 break|break;
+case|case
+name|BIOCVERSION
+case|:
+block|{
+name|struct
+name|bpf_version
+modifier|*
+name|bv
+init|=
+operator|(
+expr|struct
+name|bpf_version
+operator|*
+operator|)
+name|addr
+decl_stmt|;
+name|bv
+operator|->
+name|bv_major
+operator|=
+name|BPF_MAJOR_VERSION
+expr_stmt|;
+name|bv
+operator|->
+name|bv_minor
+operator|=
+name|BPF_MINOR_VERSION
+expr_stmt|;
+break|break;
+block|}
 block|}
 return|return
 operator|(
@@ -2097,13 +2485,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/*   * Set d's packet filter program to 'fp'.  If 'd' already has a filter,  * free it and replace it.  Returns EINVAL for bogus requests.  */
-end_comment
-
-begin_function
+comment|/*  * Set d's packet filter program to fp.  If this file already has a filter,  * free it and replace it.  Returns EINVAL for bogus requests.  */
 name|int
 name|bpf_setf
 parameter_list|(
@@ -2272,14 +2654,9 @@ name|fcode
 argument_list|,
 name|size
 argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-if|if
-condition|(
+operator|==
+literal|0
+operator|&&
 name|bpf_validate
 argument_list|(
 name|fcode
@@ -2350,13 +2727,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * Detach 'd' from its current interface (if attached at all) and attach to   * the interface named 'name'.  Return ioctl error code or 0.  */
-end_comment
-
-begin_function
+comment|/*  * Detach a file from its current interface (if attached at all) and attach  * to the interface indicated by the name stored in ifr.  * Return an errno or 0.  */
 specifier|static
 name|int
 name|bpf_setif
@@ -2389,8 +2760,10 @@ name|int
 name|unit
 decl_stmt|,
 name|s
+decl_stmt|,
+name|error
 decl_stmt|;
-comment|/* 	 * Separate string into name part and unit number.  Put a null 	 * byte at the end of the name part, and compute the number.  	 * If the a unit number is unspecified, the default is 0, 	 * as initialized above.  XXX This should be common code. 	 */
+comment|/* 	 * Separate string into name part and unit number.  Put a null 	 * byte at the end of the name part, and compute the number. 	 * If the a unit number is unspecified, the default is 0, 	 * as initialized above.  XXX This should be common code. 	 */
 name|unit
 operator|=
 literal|0
@@ -2521,7 +2894,7 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * We found the requested interface.  If we're 		 * already attached to it, just flush the buffer. 		 * If it's not up, return an error. 		 */
+comment|/* 		 * We found the requested interface. 		 * If it's not up, return an error. 		 * Allocate the packet buffers if we need to. 		 * If we're already attached to requested interface, 		 * just flush the buffer. 		 */
 if|if
 condition|(
 operator|(
@@ -2539,6 +2912,34 @@ operator|(
 name|ENETDOWN
 operator|)
 return|;
+if|if
+condition|(
+name|d
+operator|->
+name|bd_sbuf
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|bpf_allocbufs
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|s
 operator|=
 name|splimp
@@ -2559,7 +2960,7 @@ name|d
 operator|->
 name|bd_bif
 condition|)
-comment|/*  				 * Detach if attached to something else. 				 */
+comment|/* 				 * Detach if attached to something else. 				 */
 name|bpf_detachd
 argument_list|(
 name|d
@@ -2596,13 +2997,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * Lookup the name of the 'ifp' interface and return it in 'ifr->ifr_name'.  * We augment the ifp's base name with its unit number.  */
-end_comment
-
-begin_function
+comment|/*  * Convert an interface name plus unit number of an ifp to a single  * name which is returned in the ifr.  */
 specifier|static
 name|void
 name|bpf_ifname
@@ -2648,7 +3043,7 @@ operator|*
 name|s
 operator|++
 condition|)
-empty_stmt|;
+continue|continue;
 comment|/* XXX Assume that unit number is less than 10. */
 operator|*
 name|d
@@ -2666,15 +3061,53 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * Support for select() system call  * Inspired by the code in tty.c for the same purpose.  *  * bpfselect - returns true iff the specific operation  *	will not block indefinitely.  Otherwise, return  *	false but make a note that a selwakeup() must be done.  */
-end_comment
-
-begin_function
+comment|/*  * The new select interface passes down the proc pointer; the old select  * stubs had to grab it out of the user struct.  This glue allows either case.  */
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199103
+define|#
+directive|define
+name|bpf_select
+value|bpfselect
+else|#
+directive|else
 name|int
 name|bpfselect
+parameter_list|(
+name|dev
+parameter_list|,
+name|rw
+parameter_list|)
+specifier|register
+name|dev_t
+name|dev
+decl_stmt|;
+name|int
+name|rw
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|bpf_select
+argument_list|(
+name|dev
+argument_list|,
+name|rw
+argument_list|,
+name|u
+operator|.
+name|u_procp
+argument_list|)
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/*  * Support for select() system call  * Inspired by the code in tty.c for the same purpose.  *  * Return true iff the specific operation will not block indefinitely.  * Otherwise, return false but make a note that a selwakeup() must be done.  */
+name|int
+name|bpf_select
 parameter_list|(
 name|dev
 parameter_list|,
@@ -2766,7 +3199,13 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * No data ready.  If there's already a select() waiting on this 	 * minor device then this is a collision.  This shouldn't happen  	 * because minors really should not be shared, but if a process 	 * forks while one of these is open, it is possible that both 	 * processes could select on the same descriptor. 	 */
+if|#
+directive|if
+literal|0
+block|selrecord(p,&d->bd_sel);
+else|#
+directive|else
+comment|/* 	 * No data ready.  If there's already a select() waiting on this 	 * minor device then this is a collision.  This shouldn't happen 	 * because minors really should not be shared, but if a process 	 * forks while one of these is open, it is possible that both 	 * processes could select on the same descriptor. 	 */
 if|if
 condition|(
 name|d
@@ -2798,6 +3237,8 @@ name|bd_selproc
 operator|=
 name|p
 expr_stmt|;
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
@@ -2809,13 +3250,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * bpf_tap - incoming linkage from device drivers  */
-end_comment
-
-begin_function
+comment|/*  * Incoming linkage from device drivers.  Process the packet pkt, of length  * pktlen, which is stored in a contiguous buffer.  The packet is parsed  * by each process' filter, and if accepted, stashed into the corresponding  * buffer.  */
 name|void
 name|bpf_tap
 parameter_list|(
@@ -2923,13 +3358,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Copy data from an mbuf chain into a buffer.  This code is derived  * from m_copydata in sys/uipc_mbuf.c.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|bpf_mcopy
@@ -3032,13 +3461,7 @@ name|count
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
-comment|/*  * bpf_mtap - incoming linkage from device drivers, when packet  *   is in an mbuf chain  */
-end_comment
-
-begin_function
+comment|/*  * Incoming linkage from device drivers, when packet is in an mbuf chain.  */
 name|void
 name|bpf_mtap
 parameter_list|(
@@ -3094,7 +3517,7 @@ name|m
 init|;
 name|m0
 operator|!=
-name|m
+literal|0
 condition|;
 name|m0
 operator|=
@@ -3176,13 +3599,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
-comment|/*  * Move the packet data from interface memory (pkt) into the  * store buffer.  Return 1 if it's time to wakeup a listener (buffer full),  * otherwise 0.  'copy' is the routine called to do the actual data   * transfer.  'bcopy' is passed in to copy contiguous chunks, while  * 'bpf_mcopy' is passed in to copy mbuf chains.  In the latter  * case, 'pkt' is really an mbuf.  */
-end_comment
-
-begin_decl_stmt
+comment|/*  * Move the packet data from interface memory (pkt) into the  * store buffer.  Return 1 if it's time to wakeup a listener (buffer full),  * otherwise 0.  "copy" is the routine called to do the actual data  * transfer.  bcopy is passed in to copy contiguous chunks, while  * bpf_mcopy is passed in to copy mbuf chains.  In the latter case,  * pkt is really an mbuf.  */
 specifier|static
 name|void
 name|catchpacket
@@ -3202,26 +3619,17 @@ name|bpf_d
 modifier|*
 name|d
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|u_char
 modifier|*
 name|pkt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|u_int
 name|pktlen
 decl_stmt|,
 name|snaplen
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 specifier|register
 name|void
 function_decl|(
@@ -3230,9 +3638,6 @@ name|cpfn
 function_decl|)
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3313,7 +3718,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*  			 * We haven't completed the previous read yet,  			 * so drop the packet. 			 */
+comment|/* 			 * We haven't completed the previous read yet, 			 * so drop the packet. 			 */
 operator|++
 name|d
 operator|->
@@ -3365,10 +3770,12 @@ operator|+
 name|curlen
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|sun
-name|uniqtime
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199103
+name|microtime
 argument_list|(
 operator|&
 name|hp
@@ -3376,12 +3783,13 @@ operator|->
 name|bh_tstamp
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|hp300
-name|microtime
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+name|uniqtime
 argument_list|(
 operator|&
 name|hp
@@ -3397,8 +3805,6 @@ name|bh_tstamp
 operator|=
 name|time
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|hp
@@ -3449,16 +3855,10 @@ operator|+
 name|totlen
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
-comment|/*   * Initialize all nonzero fields of a descriptor.  */
-end_comment
-
-begin_function
+comment|/*  * Initialize all nonzero fields of a descriptor.  */
 specifier|static
 name|int
-name|bpf_initd
+name|bpf_allocbufs
 parameter_list|(
 name|d
 parameter_list|)
@@ -3469,12 +3869,6 @@ modifier|*
 name|d
 decl_stmt|;
 block|{
-name|d
-operator|->
-name|bd_bufsize
-operator|=
-name|bpf_bufsize
-expr_stmt|;
 name|d
 operator|->
 name|bd_fbuf
@@ -3566,13 +3960,99 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * Register 'ifp' with bpf.  XXX  * and 'driverp' is a pointer to the 'struct bpf_if *' in the driver's softc.  */
-end_comment
-
-begin_function
+comment|/*  * Free buffers currently in use by a descriptor.  * Called on close.  */
+specifier|static
+name|void
+name|bpf_freed
+parameter_list|(
+name|d
+parameter_list|)
+specifier|register
+name|struct
+name|bpf_d
+modifier|*
+name|d
+decl_stmt|;
+block|{
+comment|/* 	 * We don't need to lock out interrupts since this descriptor has 	 * been detached from its interface and it yet hasn't been marked 	 * free. 	 */
+if|if
+condition|(
+name|d
+operator|->
+name|bd_sbuf
+operator|!=
+literal|0
+condition|)
+block|{
+name|free
+argument_list|(
+name|d
+operator|->
+name|bd_sbuf
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|bd_hbuf
+operator|!=
+literal|0
+condition|)
+name|free
+argument_list|(
+name|d
+operator|->
+name|bd_hbuf
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|bd_fbuf
+operator|!=
+literal|0
+condition|)
+name|free
+argument_list|(
+name|d
+operator|->
+name|bd_fbuf
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|d
+operator|->
+name|bd_filter
+condition|)
+name|free
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|d
+operator|->
+name|bd_filter
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|D_MARKFREE
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*  * Attach an interface to bpf.  driverp is a pointer to a (struct bpf_if *)  * in the driver's softc; dlt is the link layer type; hdrlen is the fixed  * size of the link header (variable length headers not yet supported).  */
 name|void
 name|bpfattach
 parameter_list|(
@@ -3607,6 +4087,42 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|#
+directive|if
+name|BSD
+operator|<
+literal|199103
+specifier|static
+name|struct
+name|bpf_if
+name|bpf_ifs
+index|[
+name|NBPFILTER
+index|]
+decl_stmt|;
+specifier|static
+name|int
+name|bpfifno
+decl_stmt|;
+name|bp
+operator|=
+operator|(
+name|bpfifno
+operator|<
+name|NBPFILTER
+operator|)
+condition|?
+operator|&
+name|bpf_ifs
+index|[
+name|bpfifno
+operator|++
+index|]
+else|:
+literal|0
+expr_stmt|;
+else|#
+directive|else
 name|bp
 operator|=
 operator|(
@@ -3627,6 +4143,8 @@ argument_list|,
 name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bp
@@ -3685,7 +4203,7 @@ name|bif_driverp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Compute the length of the bpf header.  This is not necessarily 	 * equal to SIZEOF_BPF_HDR because we want to insert spacing such  	 * that the network layer header begins on a longword boundary (for  	 * performance reasons and to alleviate alignment restrictions). 	 */
+comment|/* 	 * Compute the length of the bpf header.  This is not necessarily 	 * equal to SIZEOF_BPF_HDR because we want to insert spacing such 	 * that the network layer header begins on a longword boundary (for 	 * performance reasons and to alleviate alignment restrictions). 	 */
 name|bp
 operator|->
 name|bif_hdrlen
@@ -3748,17 +4266,13 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199103
 comment|/* XXX This routine belongs in net/if.c. */
-end_comment
-
-begin_comment
-comment|/*  * Set/clear promiscuous mode on interface ifp based on the truth value`  * of pswitch.  The calls are reference counted so that only the first  * on request actually has an effect, as does the final off request.  * Results are undefined if the off and on requests are not matched.  */
-end_comment
-
-begin_function
+comment|/*  * Set/clear promiscuous mode on interface ifp based on the truth value  * of pswitch.  The calls are reference counted so that only the first  * "on" request actually has an effect, as does the final "off" request.  * Results are undefined if the "off" and "on" requests are not matched.  */
 name|int
 name|ifpromisc
 parameter_list|(
@@ -3779,7 +4293,7 @@ name|struct
 name|ifreq
 name|ifr
 decl_stmt|;
-comment|/*  	 * If the device is not configured up, we cannot put it in 	 * promiscuous mode. 	 */
+comment|/* 	 * If the device is not configured up, we cannot put it in 	 * promiscuous mode. 	 */
 if|if
 condition|(
 operator|(
@@ -3877,12 +4391,143 @@ argument_list|)
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|BSD
+operator|<
+literal|199103
+comment|/*  * Allocate some memory for bpf.  This is temporary SunOS support, and  * is admittedly a hack.  * If resources unavaiable, return 0.  */
+specifier|static
+name|caddr_t
+name|bpf_alloc
+parameter_list|(
+name|size
+parameter_list|,
+name|canwait
+parameter_list|)
+specifier|register
+name|int
+name|size
+decl_stmt|;
+specifier|register
+name|int
+name|canwait
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|size
+operator|>
+operator|(
+name|MCLBYTES
+operator|-
+literal|8
+operator|)
+condition|)
+return|return
+literal|0
+return|;
+name|MGET
+argument_list|(
+name|m
+argument_list|,
+name|canwait
+argument_list|,
+name|MT_DATA
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|size
+operator|>
+operator|(
+name|MLEN
+operator|-
+literal|8
+operator|)
+condition|)
+block|{
+name|MCLGET
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|!=
+name|MCLBYTES
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+block|}
+operator|*
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
+argument_list|)
+operator|=
+name|m
+expr_stmt|;
+return|return
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|caddr_t
+argument_list|)
+operator|+
+literal|8
+return|;
+block|}
 end_function
 
 begin_endif
 endif|#
 directive|endif
-endif|(NBPFILTER> 0)
+end_endif
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 end_unit
