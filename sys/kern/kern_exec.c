@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.47.2.6 1997/04/04 07:30:44 davidg Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.47.2.7 1997/04/18 02:37:08 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1039,6 +1039,42 @@ operator|->
 name|argc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * For security and other reasons, the file descriptor table cannot 	 * be shared after an exec. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_fd
+operator|->
+name|fd_refcnt
+operator|>
+literal|1
+condition|)
+block|{
+name|struct
+name|filedesc
+modifier|*
+name|tmp
+decl_stmt|;
+name|tmp
+operator|=
+name|fdcopy
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|fdfree
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_fd
+operator|=
+name|tmp
+expr_stmt|;
+block|}
 comment|/* close files on exec */
 name|fdcloseexec
 argument_list|(
@@ -1129,7 +1165,7 @@ name|p_pptr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Implement image setuid/setgid. Disallow if the process is 	 * being traced. 	 */
+comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 */
 if|if
 condition|(
 operator|(
@@ -1143,6 +1179,20 @@ operator||
 name|VSGID
 operator|)
 operator|)
+operator|&&
+operator|(
+name|imgp
+operator|->
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_NOSUID
+operator|)
+operator|==
+literal|0
 operator|&&
 operator|(
 name|p
@@ -2554,38 +2604,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Disable setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 */
-if|if
-condition|(
-operator|(
-name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_NOSUID
-operator|)
-operator|||
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_TRACED
-operator|)
-condition|)
-name|attr
-operator|->
-name|va_mode
-operator|&=
-operator|~
-operator|(
-name|VSUID
-operator||
-name|VSGID
-operator|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
