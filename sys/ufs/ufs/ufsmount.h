@@ -179,6 +179,10 @@ name|u_long
 name|um_seqinc
 decl_stmt|;
 comment|/* inc between seq blocks */
+name|long
+name|um_numindirdeps
+decl_stmt|;
+comment|/* indirdeps for this filesys */
 name|time_t
 name|um_btime
 index|[
