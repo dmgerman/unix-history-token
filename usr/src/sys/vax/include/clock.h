@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.h	4.4	81/02/19	*/
+comment|/*	clock.h	4.5	81/02/23	*/
 end_comment
 
 begin_comment
@@ -11,35 +11,35 @@ begin_define
 define|#
 directive|define
 name|ICCS_RUN
-value|0x1
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICCS_TRANS
-value|0x10
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICCS_SS
-value|0x20
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICCS_IE
-value|0x40
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICCS_INT
-value|0x80
+value|0x00000080
 end_define
 
 begin_define
