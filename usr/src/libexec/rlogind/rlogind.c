@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.14 83/05/22"
+literal|"@(#)rlogind.c	4.15 83/06/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -1525,7 +1525,7 @@ index|]
 argument_list|,
 literal|1
 argument_list|,
-name|SOF_OOB
+name|MSG_OOB
 argument_list|)
 expr_stmt|;
 block|}
