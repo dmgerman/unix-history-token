@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.18 83/07/01"
+literal|"@(#)rlogind.c	4.19 84/03/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -800,7 +800,7 @@ name|fromp
 operator|->
 name|sin_port
 operator|=
-name|htons
+name|ntohs
 argument_list|(
 operator|(
 name|u_short
@@ -842,18 +842,6 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|,
-modifier|*
-name|cp
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|fromp
-operator|->
-name|sin_addr
 decl_stmt|;
 name|fatal
 argument_list|(
@@ -888,10 +876,6 @@ operator|->
 name|sin_port
 operator|>=
 name|IPPORT_RESERVED
-operator|||
-name|hp
-operator|==
-literal|0
 condition|)
 name|fatal
 argument_list|(
@@ -1021,12 +1005,9 @@ expr_stmt|;
 comment|/*NOTREACHED*/
 name|gotpty
 label|:
-name|dup2
-argument_list|(
+name|netf
+operator|=
 name|f
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 name|line
 index|[
@@ -1173,15 +1154,16 @@ decl_stmt|,
 modifier|*
 name|fbp
 decl_stmt|;
-name|int
+specifier|register
 name|pcc
-init|=
+operator|=
 literal|0
-decl_stmt|,
+operator|,
 name|fcc
-init|=
+operator|=
 literal|0
-decl_stmt|,
+expr_stmt|;
+name|int
 name|on
 init|=
 literal|1
@@ -1189,6 +1171,11 @@ decl_stmt|;
 comment|/* FILE *console = fopen("/dev/console", "w");  */
 comment|/* setbuf(console, 0); */
 comment|/* fprintf(console, "f %d p %d\r\n", f, p); */
+name|close
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
 name|ioctl
 argument_list|(
 name|f
@@ -1296,18 +1283,9 @@ operator|<<
 name|p
 operator|)
 expr_stmt|;
+comment|/* fprintf(console, "ibits from %d obits from %d\r\n", ibits, obits); */
 if|if
 condition|(
-name|fcc
-operator|<
-literal|0
-operator|&&
-name|pcc
-operator|<
-literal|0
-condition|)
-break|break;
-comment|/* fprintf(console, "ibits from %d obits from %d\r\n", ibits, obits); */
 name|select
 argument_list|(
 literal|16
@@ -1321,10 +1299,28 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
+argument_list|)
+operator|<
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
+name|fatalperror
+argument_list|(
+name|f
+argument_list|,
+literal|"select"
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* fprintf(console, "ibits %d obits %d\r\n", ibits, obits); */
 if|if
 condition|(
@@ -1337,6 +1333,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* shouldn't happen... */
 name|sleep
 argument_list|(
 literal|5
@@ -1450,11 +1447,7 @@ name|pcc
 operator|<=
 literal|0
 condition|)
-name|pcc
-operator|=
-operator|-
-literal|1
-expr_stmt|;
+break|break;
 elseif|else
 if|if
 condition|(
@@ -1489,6 +1482,7 @@ name|TIOCPKT_DOSTOP
 operator|)
 condition|)
 block|{
+comment|/* The following 3 lines do nothing. */
 name|int
 name|nstop
 init|=
@@ -1568,6 +1562,25 @@ argument_list|,
 name|pcc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cc
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EWOULDBLOCK
+condition|)
+block|{
+comment|/* also shouldn't happen */
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* fprintf(console, "%d of %d to f\r\n", cc, pcc); */
 if|if
 condition|(
@@ -1851,11 +1864,24 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 specifier|extern
+name|int
+name|sys_nerr
+decl_stmt|;
+specifier|extern
 name|char
 modifier|*
 name|sys_errlist
 index|[]
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|errno
+operator|<
+name|sys_nerr
+condition|)
 operator|(
 name|void
 operator|)
@@ -1871,6 +1897,21 @@ name|sys_errlist
 index|[
 name|errno
 index|]
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s: Error %d"
+argument_list|,
+name|msg
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 name|fatal
