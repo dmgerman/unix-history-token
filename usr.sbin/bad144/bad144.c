@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -22,8 +23,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -33,6 +37,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -44,8 +49,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * bad144  *  * This program prints and/or initializes a bad block record for a pack,  * in the format used by the DEC standard 144.  * It can also add bad sector(s) to the record, moving the sector  * replacements as necessary.  *  * It is preferable to write the bad information with a standard formatter,  * but this program will do.  *   * RP06 sectors are marked as bad by inverting the format bit in the  * header; on other drives the valid-sector bit is cleared.  */
@@ -90,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -97,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -211,8 +231,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|daddr_t
-name|sn
+name|u_short
+name|dkcksum
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|disklabel
+operator|*
+name|lp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+name|argc
+operator|,
+name|char
+operator|*
+name|argv
+index|[]
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -238,15 +285,15 @@ name|compare
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|bt_bad
+specifier|const
+name|void
 operator|*
-name|b1
+name|cvb1
 operator|,
-expr|struct
-name|bt_bad
+specifier|const
+name|void
 operator|*
-name|b2
+name|cvb2
 operator|)
 argument_list|)
 decl_stmt|;
@@ -353,6 +400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -379,7 +427,7 @@ name|sn
 decl_stmt|,
 name|bn
 index|[
-literal|126
+name|DKBAD_MAXBAD
 index|]
 decl_stmt|;
 name|int
@@ -604,7 +652,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"%s/r%sc"
+literal|"%s/r%s%c"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
@@ -612,6 +660,10 @@ name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+literal|'a'
+operator|+
+name|RAW_PART
 argument_list|)
 expr_stmt|;
 else|else
@@ -788,7 +840,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Disk sector size too large/small (%ld)\n"
+literal|"Disk sector size too large/small (%lu)\n"
 argument_list|,
 name|dp
 operator|->
@@ -832,7 +884,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bad block information at sector %lu in %s:\n"
+literal|"bad block information at sector %ld in %s:\n"
 argument_list|,
 name|sn
 argument_list|,
@@ -898,7 +950,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|126
+name|DKBAD_MAXBAD
 condition|;
 name|i
 operator|++
@@ -927,7 +979,7 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"sn=%lu, cn=%d, tn=%d, sn=%d\n"
+literal|"sn=%ld, cn=%d, tn=%d, sn=%d\n"
 argument_list|,
 name|badsn
 argument_list|(
@@ -1014,7 +1066,7 @@ name|i
 operator|+
 name|argc
 operator|>
-literal|126
+name|DKBAD_MAXBAD
 condition|)
 block|{
 name|printf
@@ -1026,7 +1078,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"limited to 126 by information format\n"
+literal|"limited to %d by information format\n"
+argument_list|,
+name|DKBAD_MAXBAD
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1072,7 +1126,7 @@ if|if
 condition|(
 name|argc
 operator|>
-literal|126
+name|DKBAD_MAXBAD
 condition|)
 block|{
 name|printf
@@ -1082,7 +1136,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"limited to 126 by information format\n"
+literal|"limited to %d by information format\n"
+argument_list|,
+name|DKBAD_MAXBAD
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1111,16 +1167,15 @@ operator|>
 literal|0
 condition|)
 block|{
-name|daddr_t
 name|sn
-init|=
+operator|=
 name|atoi
 argument_list|(
 operator|*
 name|argv
 operator|++
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|argc
 operator|--
 expr_stmt|;
@@ -1137,7 +1192,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%lu: out of range [0,%lu) for disk %s\n"
+literal|"%ld: out of range [0,%ld) for disk %s\n"
 argument_list|,
 name|sn
 argument_list|,
@@ -1243,7 +1298,7 @@ while|while
 condition|(
 name|i
 operator|<
-literal|126
+name|DKBAD_MAXBAD
 condition|)
 block|{
 name|curbad
@@ -1255,8 +1310,7 @@ index|]
 operator|.
 name|bt_trksec
 operator|=
-operator|-
-literal|1
+name|DKBAD_NOTRKSEC
 expr_stmt|;
 name|curbad
 operator|.
@@ -1267,8 +1321,7 @@ index|]
 operator|.
 name|bt_cyl
 operator|=
-operator|-
-literal|1
+name|DKBAD_NOCYL
 expr_stmt|;
 name|i
 operator|++
@@ -1282,10 +1335,6 @@ block|{
 comment|/* 		 * Sort the new bad sectors into the list. 		 * Then shuffle the replacement sectors so that 		 * the previous bad sectors get the same replacement data. 		 */
 name|qsort
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|curbad
 operator|.
 name|bt_bad
@@ -1373,6 +1422,9 @@ name|lseek
 argument_list|(
 name|f
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|dp
 operator|->
 name|d_secsize
@@ -1387,7 +1439,7 @@ operator|+
 name|i
 operator|)
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
@@ -1403,7 +1455,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"write badsect file at %ld\n"
+literal|"write badsect file at %lu\n"
 argument_list|,
 name|size
 operator|-
@@ -1515,29 +1567,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|i
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
-name|ioctl
-argument_list|(
-name|f
-argument_list|,
-name|DIOCWLABEL
-argument_list|,
+name|nflag
+operator|==
+literal|0
+operator|&&
+operator|(
+name|dp
+operator|->
+name|d_flags
 operator|&
-name|i
-argument_list|)
-operator|<
+name|D_BADSECT
+operator|)
+operator|==
 literal|0
 condition|)
-name|Perror
-argument_list|(
-literal|"ioctl DIOCWLABEL(1)"
-argument_list|)
-expr_stmt|;
+block|{
 name|dp
 operator|->
 name|d_flags
@@ -1561,66 +1607,37 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lseek
-argument_list|(
-name|f
-argument_list|,
-literal|0
-argument_list|,
-name|L_SET
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|Perror
-argument_list|(
-literal|"lseek"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|write
-argument_list|(
-name|f
-argument_list|,
-name|label
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|label
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|Perror
-argument_list|(
-literal|"read"
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
 name|ioctl
 argument_list|(
 name|f
 argument_list|,
-name|DIOCWLABEL
+name|DIOCWDINFO
 argument_list|,
-operator|&
-name|i
+name|dp
 argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+block|{
+name|fprintf
 argument_list|(
-literal|"ioctl DIOCWLABEL(0)"
+name|stderr
+argument_list|,
+literal|"Can't write disklabel to enable bad sector handling: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 ifdef|#
 directive|ifdef
 name|DIOCSBAD
@@ -1744,13 +1761,16 @@ name|lseek
 argument_list|(
 name|f
 argument_list|,
-name|sn
-operator|*
 name|dp
 operator|->
 name|d_secsize
+operator|*
+operator|(
+name|off_t
+operator|)
+name|sn
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
@@ -1810,7 +1830,7 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"bad144: read bad sector file at sn %lu"
+literal|"bad144: read bad sector file at sn %ld"
 argument_list|,
 name|sn
 argument_list|)
@@ -1943,7 +1963,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|126
+name|DKBAD_MAXBAD
 condition|;
 name|i
 operator|++
@@ -1958,13 +1978,13 @@ name|bt
 operator|->
 name|bt_cyl
 operator|==
-literal|0xffff
+name|DKBAD_NOCYL
 operator|&&
 name|bt
 operator|->
 name|bt_trksec
 operator|==
-literal|0xffff
+name|DKBAD_NOTRKSEC
 condition|)
 break|break;
 if|if
@@ -2019,7 +2039,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sn=%lu, cn=%d, tn=%d, sn=%u\n"
+literal|"sn=%ld, cn=%d, tn=%d, sn=%d\n"
 argument_list|,
 name|badsn
 argument_list|(
@@ -2122,7 +2142,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad144: bad sector file contains duplicates (sn %lu)\n"
+literal|"bad144: bad sector file contains duplicates (sn %ld)\n"
 argument_list|,
 name|sn
 argument_list|)
@@ -2419,13 +2439,16 @@ name|lseek
 argument_list|(
 name|f
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|dp
 operator|->
 name|d_secsize
 operator|*
 name|s1
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
@@ -2471,7 +2494,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad144: can't read sector, %lu: "
+literal|"bad144: can't read sector, %ld: "
 argument_list|,
 name|s1
 argument_list|)
@@ -2503,13 +2526,16 @@ name|lseek
 argument_list|(
 name|f
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|dp
 operator|->
 name|d_secsize
 operator|*
 name|s2
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
@@ -2525,7 +2551,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"copying %lu to %lu\n"
+literal|"copying %ld to %ld\n"
 argument_list|,
 name|s1
 argument_list|,
@@ -2558,7 +2584,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad144: can't write replacement sector, %lu: "
+literal|"bad144: can't write replacement sector, %ld: "
 argument_list|,
 name|s2
 argument_list|)
@@ -2662,13 +2688,16 @@ name|lseek
 argument_list|(
 name|f
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|dp
 operator|->
 name|d_secsize
 operator|*
 name|sn
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
@@ -2684,7 +2713,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"zeroing %lu\n"
+literal|"zeroing %ld\n"
 argument_list|,
 name|sn
 argument_list|)
@@ -2715,7 +2744,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad144: can't write replacement sector, %lu: "
+literal|"bad144: can't write replacement sector, %ld: "
 argument_list|,
 name|sn
 argument_list|)
@@ -2737,23 +2766,35 @@ begin_function
 name|int
 name|compare
 parameter_list|(
-name|b1
+name|cvb1
 parameter_list|,
-name|b2
+name|cvb2
 parameter_list|)
-specifier|register
-name|struct
-name|bt_bad
+specifier|const
+name|void
 modifier|*
-name|b1
+name|cvb1
 decl_stmt|,
 decl|*
-name|b2
+name|cvb2
 decl_stmt|;
 end_function
 
 begin_block
 block|{
+specifier|const
+name|struct
+name|bt_bad
+modifier|*
+name|b1
+init|=
+name|cvb1
+decl_stmt|,
+modifier|*
+name|b2
+init|=
+name|cvb2
+decl_stmt|;
 if|if
 condition|(
 name|b1
@@ -3316,7 +3357,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't read header on blk %d, can't reformat\n"
+literal|"Can't read header on blk %ld, can't reformat\n"
 argument_list|,
 name|blk
 argument_list|)
@@ -3508,7 +3549,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"format blk %d\n"
+literal|"format blk %ld\n"
 argument_list|,
 name|blk
 argument_list|)
@@ -3717,7 +3758,7 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"bad144: write format %d"
+literal|"bad144: write format %ld"
 argument_list|,
 name|blk
 argument_list|)
