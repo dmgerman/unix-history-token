@@ -1819,11 +1819,6 @@ name|FILE
 modifier|*
 name|cfile
 decl_stmt|;
-name|umask
-argument_list|(
-literal|022
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|getuid
