@@ -723,6 +723,11 @@ literal|0
 expr_stmt|;
 name|softdepslowdown
 operator|=
+name|DOINGSOFTDEP
+argument_list|(
+name|ovp
+argument_list|)
+operator|&&
 name|softdep_slowdown
 argument_list|(
 name|ovp
