@@ -9316,7 +9316,7 @@ block|}
 block|}
 if|if
 condition|(
-name|TD_IS_SLEEPING
+name|TD_ON_SLEEPQ
 argument_list|(
 name|td
 argument_list|)
