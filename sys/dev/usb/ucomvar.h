@@ -540,19 +540,10 @@ decl_stmt|;
 name|u_char
 name|sc_mcr
 decl_stmt|;
-name|int
-name|sc_refcnt
-decl_stmt|;
 name|u_char
 name|sc_dying
 decl_stmt|;
 comment|/* disconnecting */
-name|struct
-name|cdev
-modifier|*
-name|dev
-decl_stmt|;
-comment|/* special device node */
 block|}
 struct|;
 end_struct
