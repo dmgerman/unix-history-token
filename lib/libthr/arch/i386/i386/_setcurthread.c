@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<machine/segments.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"thr_private.h"
 end_include
 
 begin_define
@@ -61,6 +73,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+modifier|*
+name|ldt_entries
+index|[
+name|MAXTHR
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|ldt_inited
@@ -70,12 +92,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-modifier|*
-name|ldt_entries
-index|[
-name|MAXTHR
-index|]
+specifier|static
+name|spinlock_t
+name|ldt_lock
+init|=
+name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +109,10 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Initialize the array of ldt_entries and the next free slot.  * This routine must be called with the global ldt lock held.  */
+end_comment
 
 begin_function
 specifier|static
@@ -165,6 +190,12 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|ldt_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ldt_free
@@ -197,6 +228,12 @@ name|ldt_free
 operator|=
 name|entry
 expr_stmt|;
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|ldt_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -209,7 +246,8 @@ name|ucontext_t
 modifier|*
 name|uc
 parameter_list|,
-name|void
+name|struct
+name|pthread
 modifier|*
 name|thr
 parameter_list|)
@@ -229,6 +267,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * If we are setting up the initial thread, the gs register 	 * won't be setup for the current thread. In any case, we 	 * don't need protection from re-entrancy at this point in 	 * the life of the program. 	 */
+if|if
+condition|(
+name|thr
+operator|!=
+name|_thread_initial
+condition|)
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|ldt_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ldt_inited
@@ -262,10 +313,26 @@ operator|)
 operator|*
 name|ldt_entry
 expr_stmt|;
+if|if
+condition|(
+name|thr
+operator|!=
+name|_thread_initial
+condition|)
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|ldt_lock
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Cache the address of the thread structure here.  This is 	 * what the gs register will point to. 	 */
 operator|*
 name|ldt_entry
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|thr
 expr_stmt|;
 name|ldt_index
