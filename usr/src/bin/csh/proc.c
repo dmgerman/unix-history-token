@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c	5.23 (Berkeley) %G%"
+literal|"@(#)proc.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -890,6 +890,7 @@ name|jobflags
 operator|&
 name|PINTERRUPTED
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -901,7 +902,7 @@ name|QUOTE
 argument_list|,
 name|cshout
 argument_list|)
-operator|,
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -912,6 +913,7 @@ argument_list|,
 name|cshout
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -938,7 +940,7 @@ name|QUOTE
 argument_list|,
 name|cshout
 argument_list|)
-operator|,
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1518,11 +1520,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|fprintf
+name|fputc
 argument_list|(
-name|cshout
+literal|'\n'
 argument_list|,
-literal|"\n"
+name|cshout
 argument_list|)
 expr_stmt|;
 if|if
@@ -1744,6 +1746,7 @@ name|STRprintexitvalue
 argument_list|)
 operator|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1756,6 +1759,7 @@ argument_list|,
 name|reason
 argument_list|)
 expr_stmt|;
+block|}
 name|set
 argument_list|(
 name|STRstatus
@@ -3155,6 +3159,12 @@ name|jobflags
 decl_stmt|,
 name|pstatus
 decl_stmt|;
+name|bool
+name|hadnl
+init|=
+literal|1
+decl_stmt|;
+comment|/* did we just have a newline */
 name|char
 modifier|*
 name|format
@@ -3252,12 +3262,16 @@ operator|!=
 name|pp
 operator|&&
 operator|!
+name|hadnl
+operator|&&
+operator|!
 operator|(
 name|flag
 operator|&
 name|FANCY
 operator|)
 operator|&&
+operator|(
 operator|(
 name|pstatus
 operator|==
@@ -3268,6 +3282,7 @@ operator|->
 name|p_reason
 operator|==
 name|reason
+operator|)
 operator|||
 operator|!
 operator|(
@@ -3277,6 +3292,7 @@ name|REASON
 operator|)
 operator|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -3287,6 +3303,11 @@ argument_list|,
 name|cshout
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -3294,7 +3315,11 @@ condition|(
 name|tp
 operator|!=
 name|pp
+operator|&&
+operator|!
+name|hadnl
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -3305,12 +3330,18 @@ argument_list|,
 name|cshout
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flag
 operator|&
 name|NUMBER
 condition|)
+block|{
 if|if
 condition|(
 name|pp
@@ -3368,6 +3399,11 @@ argument_list|,
 literal|"       "
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flag
@@ -3388,6 +3424,10 @@ name|pp
 operator|->
 name|p_pid
 argument_list|)
+expr_stmt|;
+name|hadnl
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -3443,6 +3483,10 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|prcomd
 goto|;
@@ -3487,6 +3531,10 @@ argument_list|,
 literal|"Running "
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|PINTERRUPTED
@@ -3497,6 +3545,7 @@ case|:
 case|case
 name|PSIGNALED
 case|:
+comment|/*                      * tell what happened to the background job                      * From: Michael Schroeder                      *<mlschroe@immd4.informatik.uni-erlangen.de>                      */
 if|if
 condition|(
 operator|(
@@ -3516,11 +3565,24 @@ name|reason
 operator|!=
 name|SIGINT
 operator|&&
+operator|(
 name|reason
 operator|!=
 name|SIGPIPE
+operator|||
+operator|(
+name|pp
+operator|->
+name|p_flags
+operator|&
+name|PPOU
+operator|)
+operator|==
+literal|0
+operator|)
 operator|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -3540,6 +3602,11 @@ operator|.
 name|pname
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|0
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|PNEXITED
@@ -3553,6 +3620,7 @@ name|flag
 operator|&
 name|REASON
 condition|)
+block|{
 if|if
 condition|(
 name|pp
@@ -3586,6 +3654,11 @@ argument_list|,
 literal|"Done"
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|0
+expr_stmt|;
+block|}
 break|break;
 default|default:
 operator|(
@@ -3665,6 +3738,10 @@ argument_list|,
 name|cshout
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|0
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3682,6 +3759,7 @@ name|p_flags
 operator|&
 name|PDUMPED
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -3692,6 +3770,11 @@ argument_list|,
 literal|" (core dumped)"
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|tp
@@ -3707,6 +3790,7 @@ name|flag
 operator|&
 name|AMPERSAND
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -3717,6 +3801,11 @@ argument_list|,
 literal|"&"
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flag
@@ -3772,6 +3861,10 @@ argument_list|,
 name|cshout
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -3794,6 +3887,11 @@ operator|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|hadnl
+condition|)
 operator|(
 name|void
 operator|)
@@ -3825,6 +3923,10 @@ operator|->
 name|p_btime
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3837,10 +3939,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|flag
-operator|!=
-name|SHELLDIR
+operator|!
+name|hadnl
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -3851,6 +3953,11 @@ argument_list|,
 name|cshout
 argument_list|)
 expr_stmt|;
+name|hadnl
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flag
@@ -3903,6 +4010,10 @@ name|cshout
 argument_list|,
 literal|")\n"
 argument_list|)
+expr_stmt|;
+name|hadnl
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -3959,6 +4070,10 @@ name|ptprint
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+name|hadnl
+operator|=
+literal|1
 expr_stmt|;
 block|}
 operator|(
