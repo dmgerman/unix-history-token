@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pen.c	4.1 (Berkeley) %G%"
+literal|"@(#)pen.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,11 @@ argument_list|(
 name|dcname
 argument_list|,
 literal|2
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|next_fd
