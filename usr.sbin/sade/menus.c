@@ -6315,7 +6315,7 @@ block|,
 block|{
 literal|"2 KDE"
 block|,
-literal|"The K Desktop Environment"
+literal|"The K Desktop Environment (Lite Edition)"
 block|,
 name|NULL
 block|,
@@ -6330,7 +6330,7 @@ block|,
 block|{
 literal|"3 GNOME 2"
 block|,
-literal|"The GNOME 2 Desktop Environment"
+literal|"The GNOME 2 Desktop Environment (Lite Edition)"
 block|,
 name|NULL
 block|,

@@ -2988,7 +2988,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"kde"
+literal|"kde-lite"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3027,7 +3027,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"gnome2"
+literal|"gnome2-lite"
 argument_list|)
 expr_stmt|;
 if|if
