@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.16 (Berkeley) 84/03/13"
+literal|"@(#)docmd.c	4.17 (Berkeley) 84/03/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -351,8 +351,6 @@ name|setjmp
 argument_list|(
 name|env
 argument_list|)
-operator|!=
-literal|0
 condition|)
 goto|goto
 name|done
@@ -575,7 +573,7 @@ name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
-name|SIG_DFL
+name|cleanup
 argument_list|)
 expr_stmt|;
 operator|(
@@ -704,6 +702,13 @@ name|cur_host
 operator|!=
 name|NULL
 operator|&&
+name|rem
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|cur_host
@@ -721,6 +726,11 @@ return|;
 name|closeconn
 argument_list|()
 expr_stmt|;
+name|cur_host
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|ruser
 operator|=
 name|rindex
@@ -773,10 +783,6 @@ literal|"updating host %s\n"
 argument_list|,
 name|rhost
 argument_list|)
-expr_stmt|;
-name|cur_host
-operator|=
-name|rhost
 expr_stmt|;
 operator|(
 name|void
@@ -967,11 +973,17 @@ name|n
 operator|==
 name|VERSION
 condition|)
+block|{
+name|cur_host
+operator|=
+name|rhost
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 name|error
 argument_list|(
@@ -1049,14 +1061,16 @@ end_macro
 
 begin_block
 block|{
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
+if|if
+condition|(
+name|iamremote
+condition|)
+name|cleanup
+argument_list|()
 expr_stmt|;
-name|fprintf
+name|log
 argument_list|(
-name|stderr
+name|lfp
 argument_list|,
 literal|"rdist: lost connection\n"
 argument_list|)

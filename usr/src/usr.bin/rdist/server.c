@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.15 (Berkeley) 84/02/09"
+literal|"@(#)server.c	4.16 (Berkeley) 84/03/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -2136,7 +2136,7 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|cleanup
+name|lostconn
 argument_list|()
 expr_stmt|;
 block|}
@@ -4664,7 +4664,7 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|cleanup
+name|lostconn
 argument_list|()
 expr_stmt|;
 block|}
@@ -4899,7 +4899,7 @@ index|]
 operator|==
 literal|'\2'
 condition|)
-name|cleanup
+name|lostconn
 argument_list|()
 expr_stmt|;
 break|break;
@@ -6512,7 +6512,7 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|cleanup
+name|lostconn
 argument_list|()
 expr_stmt|;
 block|}
@@ -6657,7 +6657,7 @@ index|]
 operator|==
 literal|'\2'
 condition|)
-name|cleanup
+name|lostconn
 argument_list|()
 expr_stmt|;
 return|return
