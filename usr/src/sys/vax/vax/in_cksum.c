@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_cksum.c 1.3 81/10/18 */
+comment|/* in_cksum.c 1.4 81/10/20 */
 end_comment
 
 begin_include
@@ -54,9 +54,9 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|u_short
+name|long
 modifier|*
-name|w
+name|l
 decl_stmt|;
 comment|/* known to be r9 */
 specifier|register
@@ -66,6 +66,12 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* known to be r8 */
+specifier|register
+name|u_short
+modifier|*
+name|w
+decl_stmt|;
+comment|/* known to be r7 */
 specifier|register
 name|int
 name|mlen
@@ -175,6 +181,14 @@ name|len
 operator|-=
 name|mlen
 expr_stmt|;
+name|l
+operator|=
+operator|(
+name|long
+operator|*
+operator|)
+name|w
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -186,10 +200,15 @@ operator|>=
 literal|0
 condition|)
 block|{
+asm|asm("clrl r0");
+comment|/* clears carry */
+undef|#
+directive|undef
+name|ADD
 define|#
 directive|define
 name|ADD
-value|asm("movzwl (r9)+,r0; addl2 r0,r8");
+value|asm("adwc (r9)+,r8;");
 name|ADD
 expr_stmt|;
 name|ADD
@@ -206,22 +225,7 @@ name|ADD
 expr_stmt|;
 name|ADD
 expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
+asm|asm("adwc $0,r8");
 block|}
 name|mlen
 operator|+=
@@ -238,18 +242,42 @@ operator|>=
 literal|0
 condition|)
 block|{
+asm|asm("clrl r0");
 name|ADD
 expr_stmt|;
 name|ADD
 expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
+asm|asm("adwc $0,r8");
 block|}
 name|mlen
 operator|+=
 literal|8
+expr_stmt|;
+name|sum
+operator|=
+operator|(
+operator|(
+name|sum
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xffff
+operator|)
+operator|+
+operator|(
+name|sum
+operator|&
+literal|0xffff
+operator|)
+expr_stmt|;
+name|w
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|l
 expr_stmt|;
 while|while
 condition|(
@@ -262,8 +290,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|ADD
-expr_stmt|;
+asm|asm("movzwl (r7)+,r0; addl2 r0,r8");
 block|}
 if|if
 condition|(
@@ -345,10 +372,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * These routines are implemented as inline expansions  * and are mentioned here for reference only  *  *	htons and ntohs		do byte reverse of a 16 bit integer  *	htonl and ntohl		do byte reverse of a 32 bit integer  */
-end_comment
 
 end_unit
 
