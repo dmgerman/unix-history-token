@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ln.c 4.5 %G%"
+literal|"@(#)ln.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,6 +477,8 @@ condition|(
 name|errno
 operator|==
 name|EEXIST
+operator|||
+name|sflag
 condition|)
 name|perror
 argument_list|(
