@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.38	82/10/21	*/
+comment|/*	udp_usrreq.c	4.39	82/10/22	*/
 end_comment
 
 begin_include
@@ -489,8 +489,6 @@ argument_list|(
 name|ui
 operator|->
 name|ui_dst
-operator|.
-name|s_net
 argument_list|)
 argument_list|,
 name|INADDR_ANY

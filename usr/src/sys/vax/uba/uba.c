@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.54	82/10/21	*/
+comment|/*	uba.c	4.55	82/10/22	*/
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"../h/dk.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_include
@@ -596,6 +602,9 @@ name|uh
 operator|->
 name|uh_map
 argument_list|,
+operator|(
+name|long
+operator|)
 name|npf
 argument_list|)
 operator|)
@@ -679,8 +688,14 @@ name|uh
 operator|->
 name|uh_map
 argument_list|,
+operator|(
+name|long
+operator|)
 name|npf
 argument_list|,
+operator|(
+name|long
+operator|)
 name|reg
 argument_list|)
 expr_stmt|;
@@ -1297,8 +1312,14 @@ name|uh
 operator|->
 name|uh_map
 argument_list|,
+operator|(
+name|long
+operator|)
 name|npf
 argument_list|,
+operator|(
+name|long
+operator|)
 name|reg
 argument_list|)
 expr_stmt|;
@@ -1462,8 +1483,14 @@ name|uhp
 operator|->
 name|uh_map
 argument_list|,
+operator|(
+name|long
+operator|)
 name|NUBMREG
 argument_list|,
+operator|(
+name|long
+operator|)
 literal|1
 argument_list|,
 literal|"uba"
