@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<miscfs/nullfs/null.h>
 end_include
 
