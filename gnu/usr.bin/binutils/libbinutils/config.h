@@ -163,6 +163,14 @@ comment|/* #undef HAVE_DCGETTEXT */
 end_comment
 
 begin_comment
+comment|/* Define if you have the getc_unlocked function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETC_UNLOCKED */
+end_comment
+
+begin_comment
 comment|/* Define if you have the getcwd function.  */
 end_comment
 
@@ -407,6 +415,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<sys/stat.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/types.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TYPES_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
 end_comment
 
@@ -441,7 +471,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.11" */
+comment|/* #define VERSION "2.11.93" */
 end_comment
 
 begin_comment
@@ -497,6 +527,22 @@ directive|define
 name|EXECUTABLE_SUFFIX
 value|""
 end_define
+
+begin_comment
+comment|/* Is fopen64 available? */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FOPEN64 */
+end_comment
+
+begin_comment
+comment|/* Enable LFS */
+end_comment
+
+begin_comment
+comment|/* #undef _LARGEFILE64_SOURCE */
+end_comment
 
 begin_comment
 comment|/* Is the type time_t defined in<time.h>? */

@@ -8,15 +8,7 @@ comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
 begin_comment
-comment|/* config.in.  Generated automatically from configure.in by autoheader.  */
-end_comment
-
-begin_comment
-comment|/* Define if using alloca.c.  */
-end_comment
-
-begin_comment
-comment|/* #undef C_ALLOCA */
+comment|/* config.in.  Generated automatically from configure.in by autoheader 2.13.  */
 end_comment
 
 begin_comment
@@ -25,33 +17,6 @@ end_comment
 
 begin_comment
 comment|/* #undef const */
-end_comment
-
-begin_comment
-comment|/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP systems.    This function is required for alloca.c support on those systems.  */
-end_comment
-
-begin_comment
-comment|/* #undef CRAY_STACKSEG_END */
-end_comment
-
-begin_comment
-comment|/* Define if you have alloca, as a function or macro.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ALLOCA
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have<alloca.h> and it should be used (not on Ultrix).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ALLOCA_H */
 end_comment
 
 begin_comment
@@ -109,14 +74,6 @@ comment|/* #undef _POSIX_SOURCE */
 end_comment
 
 begin_comment
-comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time.  STACK_DIRECTION> 0 => grows toward higher addresses  STACK_DIRECTION< 0 => grows toward lower addresses  STACK_DIRECTION = 0 => direction of growth unknown  */
-end_comment
-
-begin_comment
-comment|/* #undef STACK_DIRECTION */
-end_comment
-
-begin_comment
 comment|/* Define if you have the ANSI C header files.  */
 end_comment
 
@@ -144,6 +101,14 @@ end_comment
 
 begin_comment
 comment|/* #undef vfork */
+end_comment
+
+begin_comment
+comment|/* Define if you have the _doprnt function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE__DOPRNT */
 end_comment
 
 begin_comment
@@ -242,6 +207,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_CLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the ffs function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FFS
 value|1
 end_define
 
@@ -680,6 +656,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<alloca.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ALLOCA_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<fcntl.h> header file.  */
 end_comment
 
@@ -831,6 +815,17 @@ comment|/* #undef NEED_DECLARATION_ERRNO */
 end_comment
 
 begin_comment
+comment|/* Define if you have the `uintptr_t' type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINTPTR_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the sys_errlist variable. */
 end_comment
 
@@ -861,6 +856,25 @@ define|#
 directive|define
 name|HAVE_SYS_SIGLIST
 value|1
+end_define
+
+begin_comment
+comment|/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP    systems. This function is required for alloca.c support on those    systems. */
+end_comment
+
+begin_comment
+comment|/* #undef CRAY_STACKSEG_END */
+end_comment
+
+begin_comment
+comment|/* Define if you know the direction of stack growth for your system;    otherwise it will be automatically deduced at run-time.         STACK_DIRECTION> 0 => grows toward higher addresses         STACK_DIRECTION< 0 => grows toward lower addresses         STACK_DIRECTION = 0 => direction of growth unknown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STACK_DIRECTION
+value|-1
 end_define
 
 end_unit
