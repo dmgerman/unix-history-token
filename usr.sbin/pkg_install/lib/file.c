@@ -1688,11 +1688,12 @@ block|}
 block|}
 block|}
 else|else
+comment|/* XXX: need to handle .tgz also */
 name|strcpy
 argument_list|(
 name|args
 argument_list|,
-literal|"-z"
+literal|"-j"
 argument_list|)
 expr_stmt|;
 name|strcat
