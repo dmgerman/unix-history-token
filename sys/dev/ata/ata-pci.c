@@ -558,6 +558,9 @@ return|return
 literal|"Intel ICH3 ATA100 controller"
 return|;
 case|case
+literal|0x24ca8086
+case|:
+case|case
 literal|0x24cb8086
 case|:
 return|return
